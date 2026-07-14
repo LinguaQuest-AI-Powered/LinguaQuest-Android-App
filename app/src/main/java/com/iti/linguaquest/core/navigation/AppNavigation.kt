@@ -21,19 +21,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
-class AppNavigator {
-    val backStack = mutableStateListOf<Any>(Screen.Home)
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 
-    fun navigateTo(screen: Screen) {
+class RootNavigator {
+    val backStack = mutableStateListOf<RootScreen>(RootScreen.Main)
+
+    fun navigateTo(screen: RootScreen) {
         backStack.add(screen)
     }
 
-    fun navigateToTopLevel(screen: Screen) {
+    fun popBackStack() {
+        if (backStack.size > 1) {
+            backStack.removeAt(backStack.size - 1)
+        }
+    }
+}
+
+class NestedNavigator {
+    val backStack = mutableStateListOf<NestedScreen>(NestedScreen.Home)
+
+    fun navigateToTopLevel(screen: NestedScreen) {
         if (backStack.lastOrNull() == screen) return
         
         backStack.clear()
-        backStack.add(Screen.Home)
-        if (screen != Screen.Home) {
+        backStack.add(NestedScreen.Home)
+        if (screen != NestedScreen.Home) {
             backStack.add(screen)
         }
     }
@@ -47,73 +60,92 @@ class AppNavigator {
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
-    val navigator = remember { AppNavigator() }
-    val currentScreen = navigator.backStack.lastOrNull()
-    val isTopLevel = BottomNavScreen.entries.any { it.route == currentScreen }
+    val rootNavigator = remember { RootNavigator() }
+
+    NavDisplay(
+        backStack = rootNavigator.backStack,
+        modifier = modifier.fillMaxSize(),
+        onBack = { rootNavigator.popBackStack() },
+        transitionSpec = {
+            slideInHorizontally(
+                animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
+                initialOffsetX = { fullWidth -> fullWidth }
+            ) + fadeIn(animationSpec = tween(300)) togetherWith
+            slideOutHorizontally(
+                animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
+                targetOffsetX = { fullWidth -> -fullWidth }
+            ) + fadeOut(animationSpec = tween(300))
+        },
+        popTransitionSpec = {
+            slideInHorizontally(
+                animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
+                initialOffsetX = { fullWidth -> -fullWidth }
+            ) + fadeIn(animationSpec = tween(300)) togetherWith
+            slideOutHorizontally(
+                animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
+                targetOffsetX = { fullWidth -> fullWidth }
+            ) + fadeOut(animationSpec = tween(300))
+        },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        entryProvider = entryProvider {
+//            entry<RootScreen.Main> {
+//                MainScreen(rootNavigator = rootNavigator)
+//            }
+//
+//            entry<RootScreen.Details> { key ->
+//                DetailsScreen(
+//                    id = key.id,
+//                    onBack = { rootNavigator.popBackStack() }
+//                )
+//            }
+        }
+    )
+}
+
+@Composable
+fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
+    val nestedNavigator = remember { NestedNavigator() }
+    val currentScreen = nestedNavigator.backStack.lastOrNull()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            if (isTopLevel) {
-                NavigationBar {
-                    BottomNavScreen.entries.forEach { bottomNavScreen ->
-                        NavigationBarItem(
-                            selected = currentScreen == bottomNavScreen.route,
-                            onClick = { navigator.navigateToTopLevel(bottomNavScreen.route) },
-                            icon = { Icon(bottomNavScreen.icon, contentDescription = bottomNavScreen.routeName) },
-                            label = { Text(bottomNavScreen.routeName) }
-                        )
-                    }
+            NavigationBar {
+                BottomNavScreen.entries.forEach { bottomNavScreen ->
+                    NavigationBarItem(
+                        selected = currentScreen == bottomNavScreen.route,
+                        onClick = { nestedNavigator.navigateToTopLevel(bottomNavScreen.route) },
+                        icon = { Icon(bottomNavScreen.icon, contentDescription = bottomNavScreen.routeName) },
+                        label = { Text(bottomNavScreen.routeName) }
+                    )
                 }
             }
         }
     ) { innerPadding ->
         NavDisplay(
-            backStack = navigator.backStack,
+            backStack = nestedNavigator.backStack,
             modifier = Modifier.padding(innerPadding),
-            onBack = { navigator.popBackStack() },
-            transitionSpec = {
-                slideInHorizontally(
-                    animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
-                    initialOffsetX = { fullWidth -> fullWidth }
-                ) + fadeIn(animationSpec = tween(300)) togetherWith
-                slideOutHorizontally(
-                    animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
-                    targetOffsetX = { fullWidth -> -fullWidth }
-                ) + fadeOut(animationSpec = tween(300))
-            },
-            popTransitionSpec = {
-                slideInHorizontally(
-                    animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
-                    initialOffsetX = { fullWidth -> -fullWidth }
-                ) + fadeIn(animationSpec = tween(300)) togetherWith
-                slideOutHorizontally(
-                    animationSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioNoBouncy),
-                    targetOffsetX = { fullWidth -> fullWidth }
-                ) + fadeOut(animationSpec = tween(300))
-            },
+            onBack = { nestedNavigator.popBackStack() },
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator()
+            ),
             entryProvider = entryProvider {
-//                entry<Screen.Home> {
+//                entry<NestedScreen.Home> {
 //                    HomeScreen(
 //                        onNavigateToDetails = { id ->
-//                            navigator.navigateTo(Screen.Details(id))
+//                            rootNavigator.navigateTo(RootScreen.Details(id))
 //                        }
 //                    )
 //                }
 //
-//                entry<Screen.Profile> {
+//                entry<NestedScreen.Profile> {
 //                    ProfileScreen()
-//                }
-//
-//                entry<Screen.Details> { key ->
-//                    DetailsScreen(
-//                        id = key.id,
-//                        onBack = { navigator.popBackStack() }
-//                    )
 //                }
             }
         )
     }
 }
-
-
