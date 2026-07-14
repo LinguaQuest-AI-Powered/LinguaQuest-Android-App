@@ -1,6 +1,7 @@
 package com.iti.linguaquest.core.sharedComponents
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -21,12 +22,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.ui.theme.AppColors
-
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.ui.theme.LinguaQuestTheme
 
 @Composable
 fun AppTextField(
@@ -51,12 +60,16 @@ fun AppTextField(
         modifier = modifier.fillMaxWidth()
             .border(
                 width = borderWidth,
-                color = if (isError) Color.Red else AppColors.TextFieldBorderColor,
+                 color =
+                    if (isError)
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(50)
             ),
         enabled = enabled,
         isError = isError,
-        placeholder = { Text(placeholder, color = AppColors.TextFieldPlaceholderColor) },
+        placeholder = { Text(placeholder, color =MaterialTheme.colorScheme.onSurfaceVariant) },
         singleLine = true,
         shape = RoundedCornerShape(50),
         leadingIcon = leadingIcon?.let {
@@ -64,7 +77,7 @@ fun AppTextField(
                 Icon(
                     painter = it,
                     contentDescription = null,
-                    tint = AppColors.TextFieldPlaceholderColor,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -78,7 +91,7 @@ fun AppTextField(
                                 if (isPasswordVisible) R.drawable.eye else R.drawable.eyelock
                             ),
                             contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
-                            tint = AppColors.TextFieldPlaceholderColor
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -90,7 +103,7 @@ fun AppTextField(
                         Icon(
                             painter = trailingIcon,
                             contentDescription = null,
-                            tint = AppColors.TextFieldPlaceholderColor,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -103,14 +116,65 @@ fun AppTextField(
             keyboardType = if (isPassword) KeyboardType.Password else keyboardType
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = AppColors.SocialButtonFillColor,
-            unfocusedContainerColor = AppColors.SocialButtonFillColor,
-            disabledContainerColor = AppColors.SocialButtonFillColor,
-            focusedBorderColor = AppColors.TextFieldBorderColor,
-            unfocusedBorderColor = AppColors.TextFieldBorderColor,
-            focusedTextColor = AppColors.TextFieldPlaceholderColor,
-            unfocusedTextColor = AppColors.TextFieldPlaceholderColor,
-            cursorColor = AppColors.TextOnSocialButton
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            focusedBorderColor =
+                MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            cursorColor = MaterialTheme.colorScheme.primary
         )
     )
+}
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun AppTextFieldPreview() {
+    LinguaQuestTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+Spacer(
+    modifier = Modifier.padding(16.dp).height(10.dp)
+)
+            AppTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "Email",
+                leadingIcon = painterResource(R.drawable.email)
+            )
+
+
+            AppTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "Password",
+                isPassword = true,
+                leadingIcon = painterResource(R.drawable.lock),
+                trailingIcon = painterResource(R.drawable.eye)
+            )
+
+            AppTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "Password",
+                isPassword = true,
+                leadingIcon = painterResource(R.drawable.lock),
+                trailingIcon = painterResource(R.drawable.eyelock)
+            )
+
+            AppTextField(
+                value = "Disabled",
+                onValueChange = {},
+                enabled = false
+            )
+        }
+    }
 }
