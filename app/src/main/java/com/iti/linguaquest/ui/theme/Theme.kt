@@ -1,58 +1,98 @@
 package com.iti.linguaquest.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+import androidx.compose.runtime.CompositionLocalProvider
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = AppColors.PrimaryColor,
+    onPrimary = AppColors.TextOnPrimaryButton,
+
+    secondary = AppColors.SecondaryColor,
+    onSecondary = AppColors.TextOnSecondaryButton,
+
+    tertiary = AppColors.Teal,
+
+    background = AppColors.Background,
+    surface = AppColors.Background,
+
+    onBackground = AppColors.Brown,
+    onSurface = AppColors.Brown,
+
+    outline = AppColors.SocialBorderColor,
+
+    error = AppColors.Red
+)
+
+private val DarkColorScheme = darkColorScheme(
+
+    primary = AppColors.PrimaryColor,
+    onPrimary = AppColors.TextOnPrimaryButton,
+
+    secondary = AppColors.SecondaryColor,
+    onSecondary = AppColors.TextOnSecondaryButton,
+
+    tertiary = AppColors.Teal,
+
+    background = AppColors.SocialButtonFillColor,
+    surface = AppColors.SocialButtonFillColor,
+
+    onBackground = AppColors.Brown,
+    onSurface = AppColors.Brown,
+
+    outline = AppColors.SocialBorderColor,
+
+    error = AppColors.Red
+)
+
+private val LightExtraColors = LinguaQuestColors(
+
+    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldBorder = AppColors.TextFieldBorderColor,
+    textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
+
+    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonText = AppColors.TextOnSocialButton,
+    iconsColor = AppColors.IconsColor,
+    socialButtonBorder = AppColors.SocialBorderColor
+)
+
+private val DarkExtraColors = LinguaQuestColors(
+
+    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldBorder = AppColors.TextFieldBorderColor,
+    textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
+
+    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonText = AppColors.TextOnSocialButton,
+    iconsColor = AppColors.IconsColor,
+    socialButtonBorder = AppColors.SocialBorderColor
 )
 
 @Composable
 fun LinguaQuestTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val materialColors =
+        if (darkTheme) DarkColorScheme else LightColorScheme
+
+    val extraColors =
+        if (darkTheme) DarkExtraColors else LightExtraColors
+
+    CompositionLocalProvider(
+        LocalLinguaQuestColors provides extraColors
+    ) {
+
+        MaterialTheme(
+            colorScheme = materialColors,
+            typography = AppTypography,
+            content = content
+        )
     }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
 }
