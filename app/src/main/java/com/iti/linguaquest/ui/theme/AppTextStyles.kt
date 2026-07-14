@@ -39,7 +39,7 @@ object AppTextStyles {
 
     val Button
         @Composable
-        get() = MaterialTheme.typography.labelLarge
+        get() = MaterialTheme.typography.titleLarge
 
     val Caption
         @Composable

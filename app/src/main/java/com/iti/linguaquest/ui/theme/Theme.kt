@@ -16,13 +16,13 @@ private val LightColorScheme = lightColorScheme(
 
     tertiary = AppColors.Teal,
 
-    background = AppColors.SocialButtonFillColor,
-    surface = AppColors.SocialButtonFillColor,
+    background = AppColors.Background,
+    surface = AppColors.Background,
 
     onBackground = AppColors.Brown,
     onSurface = AppColors.Brown,
-
-    error = AppColors.PrimaryColor
+    outline = AppColors.SocialBorderColor,
+    error = AppColors.Red,
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -41,8 +41,8 @@ private val DarkColorScheme = darkColorScheme(
 
     onBackground = AppColors.Brown,
     onSurface = AppColors.Brown,
-
-    error = AppColors.PrimaryColor
+    outline = AppColors.SocialBorderColor,
+    error = AppColors.Red
 )
 
 @Composable

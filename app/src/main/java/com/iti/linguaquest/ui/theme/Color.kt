@@ -22,4 +22,6 @@ object AppColors {
     val TextFieldBorderColor = Color(0xFFDBC2AD)
     val TextFieldPlaceholderColor = Color(0xFF554434)
     val Brown = Color(0xFF544435)
+    val Background = Color(0xFFFFF8F4)
+    val Red = Color.Red
 }
