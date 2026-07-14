@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.ui.theme.LinguaQuestColors
 import com.iti.linguaquest.ui.theme.LinguaQuestTheme
 
 @Composable
@@ -57,10 +58,11 @@ fun AppTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .border(
                 width = borderWidth,
-                 color =
+                color =
                     if (isError)
                         MaterialTheme.colorScheme.error
                     else
@@ -69,7 +71,7 @@ fun AppTextField(
             ),
         enabled = enabled,
         isError = isError,
-        placeholder = { Text(placeholder, color =MaterialTheme.colorScheme.onSurfaceVariant) },
+        placeholder = { Text(placeholder, color = LinguaQuestTheme.colors.textFieldPlaceholder) },
         singleLine = true,
         shape = RoundedCornerShape(50),
         leadingIcon = leadingIcon?.let {
@@ -77,7 +79,7 @@ fun AppTextField(
                 Icon(
                     painter = it,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = LinguaQuestTheme.colors.iconsColor,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -91,10 +93,11 @@ fun AppTextField(
                                 if (isPasswordVisible) R.drawable.eye else R.drawable.eyelock
                             ),
                             contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = LinguaQuestTheme.colors.iconsColor
                         )
                     }
                 }
+
                 trailingIcon != null -> {
                     IconButton(
                         onClick = { onTrailingIconClick?.invoke() },
@@ -116,19 +119,18 @@ fun AppTextField(
             keyboardType = if (isPassword) KeyboardType.Password else keyboardType
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = LinguaQuestTheme.colors.textFieldFill,
+            unfocusedContainerColor = LinguaQuestTheme.colors.textFieldFill,
             disabledContainerColor = MaterialTheme.colorScheme.surface,
             focusedBorderColor =
                 MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            focusedTextColor = LinguaQuestTheme.colors.textFieldPlaceholder,
+            unfocusedTextColor = LinguaQuestTheme.colors.textFieldPlaceholder,
             cursorColor = MaterialTheme.colorScheme.primary
         )
     )
 }
-
 
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -141,13 +143,15 @@ private fun AppTextFieldPreview() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-Spacer(
-    modifier = Modifier.padding(16.dp).height(10.dp)
-)
+            Spacer(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(10.dp)
+            )
             AppTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Email",
+                placeholder = "Email address",
                 leadingIcon = painterResource(R.drawable.email)
             )
 
@@ -158,7 +162,6 @@ Spacer(
                 placeholder = "Password",
                 isPassword = true,
                 leadingIcon = painterResource(R.drawable.lock),
-                trailingIcon = painterResource(R.drawable.eye)
             )
 
             AppTextField(
@@ -167,14 +170,8 @@ Spacer(
                 placeholder = "Password",
                 isPassword = true,
                 leadingIcon = painterResource(R.drawable.lock),
-                trailingIcon = painterResource(R.drawable.eyelock)
             )
 
-            AppTextField(
-                value = "Disabled",
-                onValueChange = {},
-                enabled = false
-            )
         }
     }
 }

@@ -95,26 +95,38 @@ fun AppButton(
             .alpha(alpha)
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp).height(28.dp).width(258.dp),
+            modifier = Modifier
+                .padding(vertical = 16.dp, horizontal = 24.dp)
+                .height(28.dp)
+                .width(258.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null && iconPosition == IconPosition.START) {
-                Icon(icon, null, tint = if (tintIcon) style.content else Color.Unspecified, modifier = Modifier.size(20.dp))
+                Icon(
+                    icon,
+                    null,
+                    tint = if (tintIcon) style.content else Color.Unspecified,
+                    modifier = Modifier.size(20.dp)
+                )
                 Spacer(Modifier.width(8.dp))
             }
-            Text(text, color = style.content,
+            Text(
+                text, color = style.content,
                 style = AppTextStyles.Button,
-                )
+            )
             if (icon != null && iconPosition == IconPosition.END) {
                 Spacer(Modifier.width(8.dp))
-                Icon(icon, null, tint = if (tintIcon) style.content else Color.Unspecified, modifier = Modifier.size(20.dp))
+                Icon(
+                    icon,
+                    null,
+                    tint = if (tintIcon) style.content else Color.Unspecified,
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }
 }
-
-
 
 
 @Preview(showBackground = true)
@@ -148,13 +160,15 @@ fun AppButtonVariantsPreview() {
                 onClick = {},
                 variant = ButtonVariant.PRIMARY,
                 iconPosition = IconPosition.END,
-                icon = painterResource(com.iti.linguaquest.R.drawable.arrow_right),)
+                icon = painterResource(com.iti.linguaquest.R.drawable.arrow_right),
+            )
             AppButton(
                 text = "Sign Up",
                 onClick = {},
                 variant = ButtonVariant.SECONDARY,
                 iconPosition = IconPosition.START,
-                icon = painterResource(com.iti.linguaquest.R.drawable.skip),)
+                icon = painterResource(com.iti.linguaquest.R.drawable.skip),
+            )
         }
     }
 }

@@ -6,6 +6,66 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
+//private val LightColorScheme = lightColorScheme(
+//
+//    primary = AppColors.PrimaryColor,
+//    onPrimary = AppColors.TextOnPrimaryButton,
+//
+//    secondary = AppColors.SecondaryColor,
+//    onSecondary = AppColors.TextOnSecondaryButton,
+//
+//    tertiary = AppColors.Teal,
+//
+//    background = AppColors.Background,
+//    surface = AppColors.Background,
+//
+//    onBackground = AppColors.Brown,
+//    onSurface = AppColors.Brown,
+//    outline = AppColors.SocialBorderColor,
+//    error = AppColors.Red,
+//)
+//
+//private val DarkColorScheme = darkColorScheme(
+//
+//    // Temporary: same colors as light theme
+//    primary = AppColors.PrimaryColor,
+//    onPrimary = AppColors.TextOnPrimaryButton,
+//
+//    secondary = AppColors.SecondaryColor,
+//    onSecondary = AppColors.TextOnSecondaryButton,
+//
+//    tertiary = AppColors.Teal,
+//
+//    background = AppColors.SocialButtonFillColor,
+//    surface = AppColors.SocialButtonFillColor,
+//
+//    onBackground = AppColors.Brown,
+//    onSurface = AppColors.Brown,
+//    outline = AppColors.SocialBorderColor,
+//    error = AppColors.Red
+//)
+//
+//@Composable
+//fun LinguaQuestTheme(
+//    darkTheme: Boolean = isSystemInDarkTheme(),
+//    content: @Composable () -> Unit
+//) {
+//
+//    val colors = if (darkTheme) {
+//        DarkColorScheme
+//    } else {
+//        LightColorScheme
+//    }
+//
+//    MaterialTheme(
+//        colorScheme = colors,
+//        typography = AppTypography,
+//        content = content
+//    )
+//}
+
+import androidx.compose.runtime.CompositionLocalProvider
+
 private val LightColorScheme = lightColorScheme(
 
     primary = AppColors.PrimaryColor,
@@ -21,13 +81,14 @@ private val LightColorScheme = lightColorScheme(
 
     onBackground = AppColors.Brown,
     onSurface = AppColors.Brown,
+
     outline = AppColors.SocialBorderColor,
-    error = AppColors.Red,
+
+    error = AppColors.Red
 )
 
 private val DarkColorScheme = darkColorScheme(
 
-    // Temporary: same colors as light theme
     primary = AppColors.PrimaryColor,
     onPrimary = AppColors.TextOnPrimaryButton,
 
@@ -41,8 +102,34 @@ private val DarkColorScheme = darkColorScheme(
 
     onBackground = AppColors.Brown,
     onSurface = AppColors.Brown,
+
     outline = AppColors.SocialBorderColor,
+
     error = AppColors.Red
+)
+
+private val LightExtraColors = LinguaQuestColors(
+
+    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldBorder = AppColors.TextFieldBorderColor,
+    textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
+
+    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonText = AppColors.TextOnSocialButton,
+    iconsColor = AppColors.IconsColor,
+    socialButtonBorder = AppColors.SocialBorderColor
+)
+
+private val DarkExtraColors = LinguaQuestColors(
+
+    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldBorder = AppColors.TextFieldBorderColor,
+    textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
+
+    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonText = AppColors.TextOnSocialButton,
+    iconsColor = AppColors.IconsColor,
+    socialButtonBorder = AppColors.SocialBorderColor
 )
 
 @Composable
@@ -51,15 +138,20 @@ fun LinguaQuestTheme(
     content: @Composable () -> Unit
 ) {
 
-    val colors = if (darkTheme) {
-        DarkColorScheme
-    } else {
-        LightColorScheme
-    }
+    val materialColors =
+        if (darkTheme) DarkColorScheme else LightColorScheme
 
-    MaterialTheme(
-        colorScheme = colors,
-        typography = AppTypography,
-        content = content
-    )
+    val extraColors =
+        if (darkTheme) DarkExtraColors else LightExtraColors
+
+    CompositionLocalProvider(
+        LocalLinguaQuestColors provides extraColors
+    ) {
+
+        MaterialTheme(
+            colorScheme = materialColors,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }
