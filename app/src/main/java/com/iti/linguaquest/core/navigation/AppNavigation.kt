@@ -14,10 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -28,10 +24,13 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.features.auth.presentation.ui.screen.OTPScreen
 
 class RootNavigator {
-    val backStack = mutableStateListOf<RootScreen>(RootScreen.OTP)
+    val backStack = mutableStateListOf<RootScreen>(RootScreen.Login)
 
     fun navigateTo(screen: RootScreen) {
         backStack.add(screen)
@@ -78,8 +77,22 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
+            entry<RootScreen.Login> {
+                LoginScreen(
+                    onSignUp = { rootNavigator.navigateTo(RootScreen.SignUp) },
+                    onForgotPassword = { rootNavigator.navigateTo(RootScreen.ForgotPassword) },
+                    onLoginSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                )
+            }
+
             entry<RootScreen.Main> {
-                MainScreen(rootNavigator = rootNavigator)
+                Text(text = stringResource(R.string.main_screen), modifier = Modifier.fillMaxSize().padding(16.dp))
+            }
+            entry<RootScreen.SignUp> {
+                Text(text = stringResource(R.string.sign_up_screen), modifier = Modifier.fillMaxSize().padding(16.dp))
+            }
+            entry<RootScreen.ForgotPassword> {
+                Text(text = stringResource(R.string.forgot_password_screen), modifier = Modifier.fillMaxSize().padding(16.dp))
             }
 
             entry<RootScreen.Details> { key ->
@@ -112,10 +125,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 @Composable
 fun DetailsScreen(id: Int, onBack: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "Details Screen for ID: $id")
+        Text(text = stringResource(R.string.details_screen_id, id))
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onBack) {
-            Text("Pop Screen")
+            Text(stringResource(R.string.pop_screen))
         }
     }
 }

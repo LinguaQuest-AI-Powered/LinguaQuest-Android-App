@@ -1,0 +1,12 @@
+package com.iti.linguaquest.features.auth.domain.usecase
+
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import javax.inject.Inject
+
+class LoginWithGoogleUseCase @Inject constructor(
+    private val repository: AuthRepository,
+) {
+    suspend operator fun invoke(
+        idToken: String,
+    ) = repository.loginWithGoogle(idToken)
+}
