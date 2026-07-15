@@ -21,12 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.ProficiencyLevel
 
 @Composable
  fun LevelCard(level: ProficiencyLevel, isSelected: Boolean, onClick: () -> Unit) {

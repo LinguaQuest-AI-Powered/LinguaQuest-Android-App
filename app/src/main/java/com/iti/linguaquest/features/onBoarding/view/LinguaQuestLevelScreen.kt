@@ -20,11 +20,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.features.onBoarding.viewModel.LevelViewModel
-import com.iti.linguaquest.features.onBoarding.contract.LevelEffect
-import com.iti.linguaquest.features.onBoarding.contract.LevelIntent
-import com.iti.linguaquest.features.onBoarding.contract.LevelState
-import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
+import com.iti.linguaquest.features.onBoarding.viewModel.levelViewModel.LevelViewModel
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelEffect
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelIntent
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelState
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.ProficiencyLevel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.tooling.preview.Preview
 import com.iti.linguaquest.features.onBoarding.components.LevelCard

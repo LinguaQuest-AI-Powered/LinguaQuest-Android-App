@@ -21,11 +21,11 @@ import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.onBoarding.components.LanguageDropdown
 import com.iti.linguaquest.features.onBoarding.components.PopularLanguageRow
-import com.iti.linguaquest.features.onBoarding.viewModel.LanguagesViewModel
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesEffect
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesIntent
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesState
-import com.iti.linguaquest.features.onBoarding.contract.defaultLanguages
+import com.iti.linguaquest.features.onBoarding.viewModel.languageViewModel.LanguagesViewModel
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesEffect
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesIntent
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesState
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.defaultLanguages
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.flow.collectLatest
 

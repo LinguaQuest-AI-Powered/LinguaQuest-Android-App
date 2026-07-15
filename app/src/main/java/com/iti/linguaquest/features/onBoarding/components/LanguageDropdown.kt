@@ -44,7 +44,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import com.iti.linguaquest.features.onBoarding.contract.LanguageOption
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguageOption
 
 @Composable
 fun LanguageDropdown(

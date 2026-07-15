@@ -1,14 +1,22 @@
-package com.iti.linguaquest.features.onBoarding.viewModel
+package com.iti.linguaquest.features.onBoarding.viewModel.languageViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.UserPreferencesRepository
-import com.iti.linguaquest.features.onBoarding.contract.LanguageOption
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesEffect
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesIntent
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesState
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguageOption
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesEffect
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesIntent
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

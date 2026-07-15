@@ -1,15 +1,21 @@
-package com.iti.linguaquest.features.onBoarding.viewModel
-
+package com.iti.linguaquest.features.onBoarding.viewModel.levelViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.UserPreferencesRepository
-import com.iti.linguaquest.features.onBoarding.contract.LevelEffect
-import com.iti.linguaquest.features.onBoarding.contract.LevelIntent
-import com.iti.linguaquest.features.onBoarding.contract.LevelState
-import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelEffect
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelIntent
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelState
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.ProficiencyLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
