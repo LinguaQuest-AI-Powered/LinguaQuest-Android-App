@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.ui.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
 fun OtpInputField(

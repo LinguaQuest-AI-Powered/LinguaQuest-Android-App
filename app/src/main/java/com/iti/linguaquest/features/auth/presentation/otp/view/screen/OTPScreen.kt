@@ -1,13 +1,10 @@
-package com.iti.linguaquest.features.auth.presentation.ui.screen
+package com.iti.linguaquest.features.auth.presentation.otp.view.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -15,28 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
-import com.iti.linguaquest.core.sharedComponents.ButtonVariant
-import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.features.auth.presentation.contract.OTPState
-import com.iti.linguaquest.ui.theme.AppTextStyles
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.iti.linguaquest.features.auth.presentation.contract.OTPEffect
-import com.iti.linguaquest.features.auth.presentation.contract.OTPIntent
-import com.iti.linguaquest.features.auth.presentation.ui.component.OtpContentCard
-import com.iti.linguaquest.features.auth.presentation.viewmodel.OTPViewModel
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
+import com.iti.linguaquest.features.auth.presentation.otp.view.component.OtpContentCard
+import com.iti.linguaquest.features.auth.presentation.otp.viewmodel.OTPViewModel
 
 
 @Composable

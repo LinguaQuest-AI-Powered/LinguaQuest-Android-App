@@ -27,7 +27,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.auth.presentation.ui.screen.OTPScreen
+import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 
 class RootNavigator {
     val backStack = mutableStateListOf<RootScreen>(RootScreen.Login)

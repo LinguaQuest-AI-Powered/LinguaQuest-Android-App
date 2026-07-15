@@ -1,10 +1,10 @@
-package com.iti.linguaquest.features.auth.presentation.viewmodel
+package com.iti.linguaquest.features.auth.presentation.otp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.features.auth.presentation.contract.OTPEffect
-import com.iti.linguaquest.features.auth.presentation.contract.OTPIntent
-import com.iti.linguaquest.features.auth.presentation.contract.OTPState
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

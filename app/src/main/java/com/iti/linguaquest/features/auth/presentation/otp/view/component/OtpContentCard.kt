@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.auth.presentation.ui.component
+package com.iti.linguaquest.features.auth.presentation.otp.view.component
 
 
 import androidx.compose.foundation.background
@@ -27,10 +27,10 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.features.auth.presentation.contract.OTPIntent
-import com.iti.linguaquest.features.auth.presentation.contract.OTPState
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
+import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
 import com.iti.linguaquest.features.auth.presentation.ui.screen.OtpInputField
-import com.iti.linguaquest.ui.theme.AppTextStyles
 
 @Composable
 fun OtpContentCard(
