@@ -25,11 +25,12 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
+import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 
 class RootNavigator {
-    val backStack = mutableStateListOf<RootScreen>(RootScreen.Login)
+    val backStack = mutableStateListOf<RootScreen>(RootScreen.NewPassword)
 
     fun navigateTo(screen: RootScreen) {
         backStack.add(screen)
@@ -92,6 +93,12 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             }
             entry<RootScreen.ForgotPassword> {
                 Text(text = stringResource(R.string.forgot_password_screen), modifier = Modifier.fillMaxSize().padding(16.dp))
+            }
+            entry<RootScreen.NewPassword> {
+                NewPasswordScreen(
+                    onBackToLogin = { rootNavigator.popBackStack() },
+                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                )
             }
 
             entry<RootScreen.Details> { key ->

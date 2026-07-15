@@ -222,8 +222,8 @@ private fun LoginContentPreview() {
 
 private fun resolveHeroImageRes(email: String, password: String, localEmailError: Boolean, localPasswordError: Boolean, state: LoginState): Int {
     return when {
-        hasErrorState(localEmailError, localPasswordError, state) -> R.drawable.lingo_login_error
-        hasUserInput(email, password) -> R.drawable.lingo_login_writing
+        hasErrorState(localEmailError, localPasswordError, state) -> R.drawable.lingo_error
+        hasUserInput(email, password) -> R.drawable.lingo_writing
         else -> R.drawable.lingo
     }
 }
