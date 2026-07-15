@@ -20,6 +20,19 @@ enum class BottomNavScreen(
 
 @Serializable
 sealed interface RootScreen : NavKey {
+
+    @Serializable
+    data object Splash : RootScreen
+
+    @Serializable
+    data object Onboarding : RootScreen
+
+    @Serializable
+    data object Languages : RootScreen
+
+    @Serializable
+    data object Level : RootScreen
+
     @Serializable
     data object Login : RootScreen
     @Serializable
@@ -30,8 +43,11 @@ sealed interface RootScreen : NavKey {
     data object NewPassword : RootScreen
     @Serializable
     data object Main : RootScreen
+
     @Serializable
     data class Details(val id: Int) : RootScreen
+    @Serializable
+    data object OTP : RootScreen
 }
 
 @Serializable

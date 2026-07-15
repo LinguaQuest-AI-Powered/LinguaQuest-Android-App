@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppTextStyles
 
@@ -99,9 +100,7 @@ fun AppButton(
     ) {
         Row(
             modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 24.dp)
-                .height(28.dp)
-                .width(258.dp),
+                .padding(vertical = 16.dp, horizontal = 24.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -124,6 +123,8 @@ fun AppButton(
                 Text(
                     text, color = actualContentColor,
                     style = AppTextStyles.Button,
+                    overflow =  TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
                 if (icon != null && iconPosition == IconPosition.END) {
                     Spacer(Modifier.width(8.dp))
