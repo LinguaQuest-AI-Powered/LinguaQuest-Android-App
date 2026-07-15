@@ -63,7 +63,10 @@ private val LightExtraColors = LinguaQuestColors(
     splashBottomRightColor = AppColors.SplashBottomRightColor,
 
     socialButtonBorder = AppColors.SocialBorderColor,
-    titleAndCationsColor = AppColors.TitleAndCaptionColor
+    titleAndCationsColor = AppColors.TitleAndCaptionColor,
+    blackColor = AppColors.Black,
+    whiteColor = AppColors.White,
+    cardLevelFilledColor = AppColors.cardLevelFilledColor
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -78,7 +81,10 @@ private val DarkExtraColors = LinguaQuestColors(
     splashTopLeftColor = AppColors.SplashTopLeftColor,
     splashBottomRightColor = AppColors.SplashBottomRightColor,
     socialButtonBorder = AppColors.SocialBorderColor,
-    titleAndCationsColor = AppColors.TitleAndCaptionColor
+    titleAndCationsColor = AppColors.TitleAndCaptionColor,
+    blackColor = AppColors.Black,
+    whiteColor = AppColors.White,
+    cardLevelFilledColor = AppColors.cardLevelFilledColor
 )
 
 @Composable

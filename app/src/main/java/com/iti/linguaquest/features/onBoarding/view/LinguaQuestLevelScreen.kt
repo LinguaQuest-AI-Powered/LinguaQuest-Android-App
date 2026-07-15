@@ -1,9 +1,12 @@
 package com.iti.linguaquest.features.onBoarding.view
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,13 +66,13 @@ fun LevelScreenContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize().verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp,vertical = 32.dp)
     ) {
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(20.dp))
 
         Image(
-            painter = painterResource(R.drawable.lingo_splash_parrot),
+            painter = painterResource(R.drawable.lingo_level_language),
             contentDescription = null,
             modifier = Modifier
                 .size(140.dp)
@@ -90,13 +93,18 @@ fun LevelScreenContent(
 
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-            modifier = Modifier.fillMaxWidth()
+            color = LinguaQuestTheme.colors.whiteColor,
+            modifier = Modifier.fillMaxWidth(),
+            border = BorderStroke(
+                width =  2.dp,
+                color =  MaterialTheme.colorScheme.secondary
+            )
         ) {
             Text(
                 text =stringResource(R.string.choose_where_your_journey_begins),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(16.dp)
+                style = MaterialTheme.typography.titleSmall,
+                color =  LinguaQuestTheme.colors.titleAndCationsColor,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             )
         }
 
