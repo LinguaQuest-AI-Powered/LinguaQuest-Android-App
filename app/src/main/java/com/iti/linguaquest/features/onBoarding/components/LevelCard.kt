@@ -21,10 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.onBoarding.contract.levelContract.ProficiencyLevel
 
 @Composable
  fun LevelCard(level: ProficiencyLevel, isSelected: Boolean, onClick: () -> Unit) {
@@ -34,10 +35,10 @@ import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
         ProficiencyLevel.ADVANCED -> R.drawable.ic_medal
     }
     val iconBg = if (level == ProficiencyLevel.BEGINNER)
-        Color(0xFF4DD0C8)
+        MaterialTheme.colorScheme.tertiary
     else
-        MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
-    val iconTint = if (level == ProficiencyLevel.BEGINNER) Color.White else MaterialTheme.colorScheme.secondary
+        LinguaQuestTheme.colors.cardLevelFilledColor
+    val iconTint = if (level == ProficiencyLevel.BEGINNER) Color.White else  MaterialTheme.colorScheme.primary
 
     Surface(
         onClick = onClick,
@@ -45,20 +46,24 @@ import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(
             width = if (isSelected) 3.dp else 1.dp,
-            color = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outlineVariant
+            color = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Surface(shape = CircleShape, color = iconBg, modifier = Modifier.size(44.dp)) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(painter = painterResource(iconRes), contentDescription = null, tint = iconTint)
+                    Icon(painter = painterResource(iconRes), contentDescription = null, tint = iconTint,modifier = Modifier.size(18.dp))
                 }
             }
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(text = level.displayName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = level.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(text = level.displayName, style = AppTextStyles.SectionTitle ,
+                    color = LinguaQuestTheme.colors.blackColor
+                )
+                Text(text = level.description,
+                    style = AppTextStyles.Caption ,
+                    color = LinguaQuestTheme.colors.titleAndCationsColor)
             }
         }
     }

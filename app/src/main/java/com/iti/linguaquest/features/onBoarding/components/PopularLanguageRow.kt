@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.features.onBoarding.contract.LanguageOption
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguageOption
 
 @Composable
 fun PopularLanguageRow(language: LanguageOption, onClick: () -> Unit) {

@@ -1,14 +1,22 @@
-package com.iti.linguaquest.features.onBoarding.viewModel
+package com.iti.linguaquest.features.onBoarding.viewModel.languageViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.UserPreferencesRepository
-import com.iti.linguaquest.features.onBoarding.contract.LanguageOption
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesEffect
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesIntent
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesState
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguageOption
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesEffect
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesIntent
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +30,28 @@ class LanguagesViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<LanguagesEffect>()
     val effect: SharedFlow<LanguagesEffect> = _effect.asSharedFlow()
+
+    init {
+        loadSavedLanguages()
+    }
+
+    private fun loadSavedLanguages() {
+        viewModelScope.launch {
+            combine(
+                userPreferencesRepository.nativeLanguage,
+                userPreferencesRepository.targetLanguage
+            ) { savedNative, savedTarget -> savedNative to savedTarget }
+                .collectLatest { (savedNative, savedTarget) ->
+                    _state.update {
+                        it.copy(
+                            nativeLanguage = savedNative ?: it.nativeLanguage,
+                            targetLanguage = savedTarget,
+                            isContinueEnabled = savedTarget != null
+                        )
+                    }
+                }
+        }
+    }
 
     fun onIntent(intent: LanguagesIntent) {
         when (intent) {
@@ -37,6 +67,9 @@ class LanguagesViewModel @Inject constructor(
         _state.update {
             it.copy(nativeLanguage = language.displayName, isNativeDropdownExpanded = false)
         }
+        viewModelScope.launch {
+            userPreferencesRepository.saveNativeLanguage(language.displayName)
+        }
     }
 
     private fun selectTargetLanguage(language: LanguageOption) {
@@ -46,6 +79,9 @@ class LanguagesViewModel @Inject constructor(
                 isTargetDropdownExpanded = false,
                 isContinueEnabled = true
             )
+        }
+        viewModelScope.launch {
+            userPreferencesRepository.saveTargetLanguage(language.displayName)
         }
     }
 
