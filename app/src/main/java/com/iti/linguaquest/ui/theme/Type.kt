@@ -13,7 +13,7 @@ val AppTypography = Typography(
 
     displayLarge = BaseTextStyle.copy(
         fontWeight = FontWeight.Bold,
-        fontSize = 57.sp
+        fontSize = 28.sp
     ),
 
     displayMedium = BaseTextStyle.copy(
@@ -27,7 +27,7 @@ val AppTypography = Typography(
     ),
 
     headlineLarge = BaseTextStyle.copy(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Medium,
         fontSize = 32.sp
     ),
 
@@ -42,8 +42,8 @@ val AppTypography = Typography(
     ),
 
     titleLarge = BaseTextStyle.copy(
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
     ),
 
     titleMedium = BaseTextStyle.copy(
