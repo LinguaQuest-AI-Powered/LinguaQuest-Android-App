@@ -28,9 +28,10 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import com.iti.linguaquest.features.auth.presentation.ui.screen.OTPScreen
 
 class RootNavigator {
-    val backStack = mutableStateListOf<RootScreen>(RootScreen.Main)
+    val backStack = mutableStateListOf<RootScreen>(RootScreen.OTP)
 
     fun navigateTo(screen: RootScreen) {
         backStack.add(screen)
@@ -85,6 +86,22 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 DetailsScreen(
                     id = key.id,
                     onBack = { rootNavigator.popBackStack() }
+                )
+            }
+
+            entry<RootScreen.OTP> {
+                OTPScreen(
+                    onNavigateBack = {
+                        rootNavigator.popBackStack()
+                    },
+                    onNavigateToLogin = {
+                        rootNavigator.popBackStack()
+                        // TODO: Navigate to login
+                    },
+                    onNavigateToNext = {
+                        rootNavigator.navigateTo(RootScreen.Main)
+                        // TODO: Navigate to login
+                    }
                 )
             }
         }
