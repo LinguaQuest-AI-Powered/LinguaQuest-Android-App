@@ -42,8 +42,8 @@ val AppTypography = Typography(
     ),
 
     titleLarge = BaseTextStyle.copy(
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
     ),
 
     titleMedium = BaseTextStyle.copy(
