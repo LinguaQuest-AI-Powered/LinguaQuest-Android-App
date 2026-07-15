@@ -4,6 +4,31 @@
     <string name="onboarding_title_p2">real world!</string>
     <string name="get_started">Get Started</string>
     <string name="already_have_an_account">I already have an account</string>
+
+    <string name="choose_your_languages">Choose your languages</string>
+    <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>
+    <string name="i_speak">I SPEAK...</string>
+    <string name="i_want_to_learn">I WANT TO LEARN...</string>
+    <string name="popular_choices">Popular Choices</string>
+    <string name="continue_button">Continue</string>
+    <string name="What_is_your_level">What\'s your level?</string>
+    <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
+
+    // Languages displayed name
+    <string name="spanish_language_displayName">Spanish</string>
+    <string name="japanese_language_displayName">Japanese</string>
+    <string name="english_language_displayName">English</string>
+    <string name="germany_language_displayName">Germany</string>
+
+    // Languages code
+    <string name="spanish_language_code">es</string>
+    <string name="japanese_language_code">ja</string>
+    <string name="english_language_code">en</string>
+    <string name="germany_language_code">ge</string>
+
+    <string name="select_language">Select language</string>
+
+
     <string name="default_web_client_id">placeholder-web-client-id</string>
 
     <string name="login_welcome_back">Welcome back!</string>
