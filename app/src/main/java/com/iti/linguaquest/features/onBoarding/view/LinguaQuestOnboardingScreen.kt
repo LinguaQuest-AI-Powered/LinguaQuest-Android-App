@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding
+package com.iti.linguaquest.features.onBoarding.view
 
 
 import androidx.compose.foundation.Image
