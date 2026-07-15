@@ -24,18 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.ui.theme.Quicksand
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.core.R
-import com.iti.linguaquest.ui.theme.AppTextStyles
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.AppTextStyles
 
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 enum class IconPosition { NONE, START, END }
 enum class ButtonVariant { PRIMARY, SECONDARY, SOCIAL }
@@ -79,18 +76,23 @@ fun AppButton(
     iconPosition: IconPosition = IconPosition.NONE,
     tintIcon: Boolean = true,
     shape: Shape = RoundedCornerShape(50),
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isLoading: Boolean = false,
+    isError: Boolean = false
 ) {
     val style = variant.toStyle()
 
-    val alpha by animateFloatAsState(if (enabled) 1f else 0.5f, label = "buttonAlpha")
+    val alpha by animateFloatAsState(if (enabled && !isLoading) 1f else 0.5f, label = "buttonAlpha")
+
+    val actualBorderColor = if (isError) MaterialTheme.colorScheme.error else style.borderColor
+    val actualContentColor = if (isError) MaterialTheme.colorScheme.error else style.content
 
     Surface(
         onClick = onClick,
-        enabled = enabled,
+        enabled = enabled && !isLoading,
         shape = shape,
         color = style.background,
-        border = style.borderColor?.let { BorderStroke(2.dp, it) },
+        border = actualBorderColor?.let { BorderStroke(if (variant == ButtonVariant.SOCIAL) 1.dp else 2.dp, it) },
         modifier = modifier
             .fillMaxWidth()
             .alpha(alpha)
@@ -98,36 +100,40 @@ fun AppButton(
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp, horizontal = 24.dp)
-            ,
+                .height(28.dp)
+                .width(258.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (icon != null && iconPosition == IconPosition.START) {
-                Icon(
-                    icon,
-                    null,
-                    tint = if (tintIcon) style.content else Color.Unspecified,
-                    modifier = Modifier.size(20.dp)
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = actualContentColor,
+                    strokeWidth = 2.dp
                 )
-                Spacer(Modifier.width(8.dp))
-            }
-            Text(
-                text, color = style.content,
-                style = AppTextStyles.Button.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (icon != null && iconPosition == IconPosition.END) {
-                Spacer(Modifier.width(8.dp))
-                Icon(
-                    icon,
-                    null,
-                    tint = if (tintIcon) style.content else Color.Unspecified,
-                    modifier = Modifier.size(20.dp)
+            } else {
+                if (icon != null && iconPosition == IconPosition.START) {
+                    Icon(
+                        icon,
+                        null,
+                        tint = if (tintIcon) actualContentColor else Color.Unspecified,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                }
+                Text(
+                    text, color = actualContentColor,
+                    style = AppTextStyles.Button,
                 )
+                if (icon != null && iconPosition == IconPosition.END) {
+                    Spacer(Modifier.width(8.dp))
+                    Icon(
+                        icon,
+                        null,
+                        tint = if (tintIcon) actualContentColor else Color.Unspecified,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
     }
@@ -165,14 +171,14 @@ fun AppButtonVariantsPreview() {
                 onClick = {},
                 variant = ButtonVariant.PRIMARY,
                 iconPosition = IconPosition.END,
-                icon = painterResource(com.iti.linguaquest.R.drawable.arrow_right),
+                icon = painterResource(R.drawable.arrow_right),
             )
             AppButton(
                 text = "Sign Up",
                 onClick = {},
                 variant = ButtonVariant.SECONDARY,
                 iconPosition = IconPosition.START,
-                icon = painterResource(com.iti.linguaquest.R.drawable.skip),
+                icon = painterResource(R.drawable.skip),
             )
         }
     }

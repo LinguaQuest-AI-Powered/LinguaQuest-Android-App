@@ -4,24 +4,43 @@
     <string name="onboarding_title_p2">real world!</string>
     <string name="get_started">Get Started</string>
     <string name="already_have_an_account">I already have an account</string>
-    <string name="choose_your_languages">Choose your languages</string>
-    <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>
-    <string name="i_speak">I SPEAK...</string>
-    <string name="i_want_to_learn">I WANT TO LEARN...</string>
-    <string name="popular_choices">Popular Choices</string>
-    <string name="continue_button">Continue</string>
-    <string name="What_is_your_level">What\'s your level?</string>
-    <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
+    <string name="default_web_client_id">placeholder-web-client-id</string>
 
-    // Languages displayed name
-    <string name="spanish_language_displayName">Spanish</string>
-    <string name="japanese_language_displayName">Japanese</string>
-    <string name="english_language_displayName">English</string>
-    <string name="germany_language_displayName">Germany</string>
+    <string name="login_welcome_back">Welcome back!</string>
+    <string name="login_ready_to_continue">Ready to continue?</string>
+    <string name="login_title">Log In</string>
+    <string name="login_subtitle">Sign in to your account</string>
+    <string name="login_email_address">Email Address</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_log_in">Log in</string>
+    <string name="login_or_continue_with">Or continue with</string>
+    <string name="login_google">Google</string>
+    <string name="login_continue_as_guest">Continue as guest</string>
+    <string name="login_new_here">New here?</string>
+    <string name="login_sign_up">Sign up</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="home_label">Home</string>
+    <string name="profile_label">Profile</string>
 
-    // Languages code
-    <string name="spanish_language_code">es</string>
-    <string name="japanese_language_code">ja</string>
-    <string name="english_language_code">en</string>
-    <string name="germany_language_code">ge</string>
+    <string name="login_error_invalid_email">Invalid email format.</string>
+    <string name="login_error_invalid_credentials">Invalid email or password.</string>
+    <string name="login_error_email_not_verified">Email not verified.</string>
+    <string name="login_error_weak_password">Password is too weak.</string>
+    <string name="login_error_user_disabled">User disabled.</string>
+    <string name="login_error_token_not_valid">Session expired.</string>
+    <string name="login_error_operation_not_allowed">Operation not allowed.</string>
+    <string name="login_error_generic">Something went wrong.</string>
+    <string name="login_error_password_required">Password is required.</string>
+    <string name="login_error_email_required">Email is required.</string>
+
+    <string name="home_screen">Home Screen</string>
+    <string name="profile_screen">Profile Screen</string>
+    <string name="go_to_details_1">Go to Details 1</string>
+    <string name="main_screen">Main Screen</string>
+    <string name="sign_up_screen">Sign Up Screen</string>
+    <string name="forgot_password_screen">Forgot Password Screen</string>
+    <string name="details_screen_id">Details Screen for ID: %1$d</string>
+    <string name="pop_screen">Pop Screen</string>
 </resources>

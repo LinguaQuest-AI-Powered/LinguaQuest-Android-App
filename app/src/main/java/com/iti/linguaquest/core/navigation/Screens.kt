@@ -7,13 +7,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+import com.iti.linguaquest.R
+
 enum class BottomNavScreen(
-    val routeName: String,
+    @androidx.annotation.StringRes val labelRes: Int,
     val icon: ImageVector,
     val route: NestedScreen
 ) {
-    Home("Home", Icons.Default.Home, NestedScreen.Home),
-    Profile("Profile", Icons.Default.Person, NestedScreen.Profile)
+    Home(R.string.home_label, Icons.Default.Home, NestedScreen.Home),
+    Profile(R.string.profile_label, Icons.Default.Person, NestedScreen.Profile)
 }
 
 @Serializable
@@ -31,6 +33,12 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data object Level : RootScreen
 
+    @Serializable
+    data object Login : RootScreen
+    @Serializable
+    data object SignUp : RootScreen
+    @Serializable
+    data object ForgotPassword : RootScreen
     @Serializable
     data object Main : RootScreen
 

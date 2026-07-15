@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
-import com.iti.linguaquest.ui.theme.AppTextStyles
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
