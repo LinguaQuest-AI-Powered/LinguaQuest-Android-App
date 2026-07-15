@@ -1,6 +1,4 @@
 package com.iti.linguaquest.features.onBoarding.contract
-
-
 import com.iti.linguaquest.R
 
 data class LanguagesState(
@@ -17,18 +15,6 @@ data class LanguageOption(
     val displayName: String,
     val flagRes: Int
 )
-
-sealed interface LanguagesIntent {
-    data class SelectNativeLanguage(val language: LanguageOption) : LanguagesIntent
-    data class SelectTargetLanguage(val language: LanguageOption) : LanguagesIntent
-    data object ToggleNativeDropdown : LanguagesIntent
-    data object ToggleTargetDropdown : LanguagesIntent
-    data object ContinueClicked : LanguagesIntent
-}
-
-sealed interface LanguagesEffect {
-    data object NavigateToLevelScreen : LanguagesEffect
-}
 
 val defaultLanguages = listOf(
     LanguageOption("es", "Spanish", R.drawable.flag_spain),

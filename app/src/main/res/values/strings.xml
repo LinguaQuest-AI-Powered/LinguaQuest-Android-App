@@ -26,6 +26,8 @@
     <string name="english_language_code">en</string>
     <string name="germany_language_code">ge</string>
 
+    <string name="select_language">Select language</string>
+
 
     <string name="default_web_client_id">placeholder-web-client-id</string>
 

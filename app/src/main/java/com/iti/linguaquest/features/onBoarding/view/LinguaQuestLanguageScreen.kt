@@ -93,7 +93,7 @@ private fun LanguagesScreenContent(
         LanguageDropdown(
             label = stringResource(R.string.i_want_to_learn),
             selectedText = state.targetLanguage,
-            placeholder = "Select language",
+            placeholder = stringResource(R.string.select_language),
             isExpanded = state.isTargetDropdownExpanded,
             onToggle = { onIntent(LanguagesIntent.ToggleTargetDropdown) },
             options = state.availableLanguages,
