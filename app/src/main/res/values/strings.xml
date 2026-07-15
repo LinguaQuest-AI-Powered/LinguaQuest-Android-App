@@ -43,4 +43,11 @@
     <string name="forgot_password_screen">Forgot Password Screen</string>
     <string name="details_screen_id">Details Screen for ID: %1$d</string>
     <string name="pop_screen">Pop Screen</string>
+
+    <string name="otp_verify_title">Verify your email</string>
+    <string name="otp_verify_subtitle">We sent a code to your inbox. Please enter it below.</string>
+    <string name="otp_resend_code">Resend code</string>
+    <string name="otp_verify_button">Verify</string>
+    <string name="otp_back_to_login">Back to Login</string>
 </resources>
+

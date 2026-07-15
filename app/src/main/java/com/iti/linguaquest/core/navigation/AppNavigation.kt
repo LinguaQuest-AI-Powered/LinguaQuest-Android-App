@@ -30,7 +30,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 
 class RootNavigator {
-    val backStack = mutableStateListOf<RootScreen>(RootScreen.Login)
+    val backStack = mutableStateListOf<RootScreen>(RootScreen.OTP)
 
     fun navigateTo(screen: RootScreen) {
         backStack.add(screen)
