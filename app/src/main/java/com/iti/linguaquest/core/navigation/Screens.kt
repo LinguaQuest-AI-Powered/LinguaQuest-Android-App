@@ -44,6 +44,8 @@ sealed interface RootScreen : NavKey {
 
     @Serializable
     data class Details(val id: Int) : RootScreen
+    @Serializable
+    data object OTP : RootScreen
 }
 
 @Serializable

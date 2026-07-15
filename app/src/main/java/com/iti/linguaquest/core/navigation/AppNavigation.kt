@@ -34,6 +34,7 @@ import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
+import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 
 class RootNavigator {
 
@@ -148,8 +149,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
             entry<RootScreen.SignUp> {
                 SignUpScreen(
-                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
-                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    onNavigateToLogin = { rootNavigator.popBackStack() },
+                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.OTP) }
                 )
             }
 
@@ -169,12 +170,39 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             entry<RootScreen.Details> { key ->
                 DetailsScreen(
                     id = key.id,
-                    onBack = {
+                    onBack = { rootNavigator.popBackStack() }
+                )
+            }
+
+            entry<RootScreen.OTP> {
+                OTPScreen(
+                    onNavigateBack = {
                         rootNavigator.popBackStack()
+                    },
+                    onNavigateToLogin = {
+                        val loginIndex = rootNavigator.backStack.indexOf(RootScreen.Login)
+                        if (loginIndex != -1) {
+                            while (rootNavigator.backStack.size > loginIndex + 1) {
+                                rootNavigator.popBackStack()
+                            }
+                        } else {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
+                    },
+                    onNavigateToNext = {
+                        val loginIndex = rootNavigator.backStack.indexOf(RootScreen.Login)
+                        if (loginIndex != -1) {
+                            while (rootNavigator.backStack.size > loginIndex + 1) {
+                                rootNavigator.popBackStack()
+                            }
+                        } else {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
                     }
                 )
             }
-        })
+        }
+    )
 }
 
 
