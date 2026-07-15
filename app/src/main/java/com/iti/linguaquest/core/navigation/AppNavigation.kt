@@ -149,8 +149,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
             entry<RootScreen.SignUp> {
                 SignUpScreen(
-                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
-                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    onNavigateToLogin = { rootNavigator.popBackStack() },
+                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.OTP) }
                 )
             }
 
@@ -180,12 +180,24 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                         rootNavigator.popBackStack()
                     },
                     onNavigateToLogin = {
-                        rootNavigator.popBackStack()
-                        // TODO: Navigate to login
+                        val loginIndex = rootNavigator.backStack.indexOf(RootScreen.Login)
+                        if (loginIndex != -1) {
+                            while (rootNavigator.backStack.size > loginIndex + 1) {
+                                rootNavigator.popBackStack()
+                            }
+                        } else {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
                     },
                     onNavigateToNext = {
-                        rootNavigator.navigateTo(RootScreen.Main)
-                        // TODO: Navigate to login
+                        val loginIndex = rootNavigator.backStack.indexOf(RootScreen.Login)
+                        if (loginIndex != -1) {
+                            while (rootNavigator.backStack.size > loginIndex + 1) {
+                                rootNavigator.popBackStack()
+                            }
+                        } else {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
                     }
                 )
             }
