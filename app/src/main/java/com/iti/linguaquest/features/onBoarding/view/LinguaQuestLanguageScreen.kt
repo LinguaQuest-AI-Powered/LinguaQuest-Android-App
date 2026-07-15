@@ -25,7 +25,7 @@ import com.iti.linguaquest.features.onBoarding.contract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.contract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.contract.LanguagesState
 import com.iti.linguaquest.features.onBoarding.contract.defaultLanguages
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

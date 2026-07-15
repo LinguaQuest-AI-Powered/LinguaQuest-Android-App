@@ -25,7 +25,7 @@ import com.iti.linguaquest.features.onBoarding.contract.ProficiencyLevel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.tooling.preview.Preview
 import com.iti.linguaquest.features.onBoarding.components.LevelCard
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
