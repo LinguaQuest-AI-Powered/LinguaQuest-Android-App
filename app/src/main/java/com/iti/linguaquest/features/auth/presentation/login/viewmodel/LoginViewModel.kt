@@ -169,8 +169,8 @@ class LoginViewModel @Inject constructor(
 
     private fun LoginState.withUpdatedImage(): LoginState {
         val newImage = when {
-            emailError || passwordError || generalErrorRes != null -> R.drawable.lingo_login_error
-            email.isNotBlank() || password.isNotBlank() -> R.drawable.lingo_login_writing
+            emailError || passwordError || generalErrorRes != null -> R.drawable.lingo_error
+            email.isNotBlank() || password.isNotBlank() -> R.drawable.lingo_writing
             else -> R.drawable.lingo
         }
         return this.copy(headerImageRes = newImage)
