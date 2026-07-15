@@ -1,15 +1,18 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
 import com.iti.linguaquest.core.network.LinguaQuestResult
-import com.iti.linguaquest.features.auth.domain.model.AuthUserModel
-import com.iti.linguaquest.features.auth.domain.repo.AuthRepository
+import com.iti.linguaquest.features.auth.domain.model.AuthError
+import com.iti.linguaquest.features.auth.domain.model.AuthUser
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class LoginUserUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, password: String): LinguaQuestResult<AuthUserModel, LinguaQuestDataError> {
-        return repository.login(email = email, password = password)
+    suspend operator fun invoke(
+        email: String,
+        password: String
+    ): LinguaQuestResult<AuthUser, AuthError> {
+        return authRepository.login(email, password)
     }
 }
