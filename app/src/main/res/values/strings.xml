@@ -77,5 +77,31 @@
     <string name="forgot_password_screen">Forgot Password Screen</string>
     <string name="details_screen_id">Details Screen for ID: %1$d</string>
     <string name="pop_screen">Pop Screen</string>
+
+    <string name="new_password_title">New\npassword</string>
+    <string name="new_password_subtitle">Let\'s get you back to learning! Choose a strong password.</string>
+    <string name="new_password_hint">Enter new password</string>
+    <string name="confirm_password_hint">Confirm new password</string>
+    <string name="new_password_strength_label">Password Strength</string>
+    <string name="new_password_reset_button">Reset Password</string>
+    <string name="new_password_back_to_login">← Back to Login</string>
+    <string name="new_password_error_required">Password is required.</string>
+    <string name="new_password_error_too_short">Password must be at least 8 characters.</string>
+    <string name="new_password_error_no_uppercase">Password must contain an uppercase letter.</string>
+    <string name="new_password_error_no_number">Password must contain a number.</string>
+    <string name="new_password_error_no_match">Passwords do not match.</string>
+    <string name="new_password_error_confirm_required">Please confirm your password.</string>
+    <string name="new_password_error_generic">Something went wrong. Please try again.</string>
+
+    <string name="forget_password_title">Forget\npassword?</string>
+    <string name="forget_password_subtitle">Don\'t worry, Lingo will help you find it! Enter your email to receive a reset link.</string>
+    <string name="forget_password_email_hint">Enter your email</string>
+    <string name="forget_password_send_button">Send reset link</string>
+    <string name="forget_password_error_invalid_email">Please enter a valid email address.</string>
+    <string name="otp_verify_title">Verify your email</string>
+    <string name="otp_verify_subtitle">We sent a code to your inbox. Please enter it below.</string>
+    <string name="otp_resend_code">Resend code</string>
+    <string name="otp_verify_button">Verify</string>
+    <string name="otp_back_to_login">Back to Login</string>
 </resources>
 

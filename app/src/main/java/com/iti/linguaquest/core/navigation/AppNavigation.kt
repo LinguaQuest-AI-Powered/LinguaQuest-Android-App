@@ -1,5 +1,5 @@
-package com.iti.linguaquest.core.navigation
 
+package com.iti.linguaquest.core.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
@@ -34,6 +34,9 @@ import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
+import com.iti.linguaquest.features.auth.presentation.forgetpassword.view.ForgetPasswordScreen
+import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
+import kotlin.time.Duration.Companion.milliseconds
 
 class RootNavigator {
 
@@ -99,7 +102,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 LinguaQuestSplashScreen()
 
                 LaunchedEffect(Unit) {
-                    delay(2000)
+                    delay(2000.milliseconds)
                     rootNavigator.navigateTo(RootScreen.Onboarding)
                 }
             }
@@ -154,11 +157,15 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             }
 
             entry<RootScreen.ForgotPassword> {
-                Text(
-                    text = stringResource(R.string.forgot_password_screen),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                ForgetPasswordScreen(
+                    onBackToLogin = { rootNavigator.popBackStack() },
+                    onSendSucceeded = { rootNavigator.popBackStack() }
+                )
+            }
+            entry<RootScreen.NewPassword> {
+                NewPasswordScreen(
+                    onBackToLogin = { rootNavigator.popBackStack() },
+                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
                 )
             }
 

@@ -40,10 +40,14 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data object ForgotPassword : RootScreen
     @Serializable
+    data object NewPassword : RootScreen
+    @Serializable
     data object Main : RootScreen
 
     @Serializable
     data class Details(val id: Int) : RootScreen
+    @Serializable
+    data object OTP : RootScreen
 }
 
 @Serializable

@@ -190,3 +190,19 @@ private fun LoginContentPreview() {
         )
     }
 }
+
+private fun resolveHeroImageRes(email: String, password: String, localEmailError: Boolean, localPasswordError: Boolean, state: LoginState): Int {
+    return when {
+        hasErrorState(localEmailError, localPasswordError, state) -> R.drawable.lingo_error
+        hasUserInput(email, password) -> R.drawable.lingo_writing
+        else -> R.drawable.lingo
+    }
+}
+
+private fun hasUserInput(email: String, password: String): Boolean {
+    return email.isNotBlank() || password.isNotBlank()
+}
+
+private fun hasErrorState(localEmailError: Boolean, localPasswordError: Boolean, state: LoginState): Boolean {
+    return localEmailError || localPasswordError || state.emailError || state.passwordError || state.generalErrorRes != null
+}
