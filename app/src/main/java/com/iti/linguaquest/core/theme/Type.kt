@@ -53,7 +53,7 @@ val AppTypography = Typography(
 
     titleSmall = BaseTextStyle.copy(
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+        fontSize = 14.sp
     ),
 
     bodyLarge = BaseTextStyle.copy(

@@ -27,4 +27,5 @@ object AppColors {
     val Red = Color.Red
     val SplashTopLeftColor=Color(0xFF008994)
     val SplashBottomRightColor=Color(0xFF004D54)
+    val TitleAndCaptionColor =Color(0xFF554434)
 }

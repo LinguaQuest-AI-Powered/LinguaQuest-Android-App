@@ -43,7 +43,7 @@ object AppTextStyles {
 
     val Caption
         @Composable
-        get() = MaterialTheme.typography.bodySmall
+        get() = MaterialTheme.typography.titleSmall
 
     val DialogTitle
         @Composable
