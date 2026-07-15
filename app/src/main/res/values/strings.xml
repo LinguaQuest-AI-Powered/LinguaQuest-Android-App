@@ -19,6 +19,12 @@
     <string name="login_continue_as_guest">Continue as guest</string>
     <string name="login_new_here">New here?</string>
     <string name="login_sign_up">Sign up</string>
+    <string name="signup_title">Create your account</string>
+    <string name="signup_subtitle">Create an account to start your language learning journey.</string>
+    <string name="signup_username">Username</string>
+    <string name="signup_confirm_password">Confirm Password</string>
+    <string name="signup_button">Create Account</string>
+    <string name="signup_already_have_account">Already have an account?</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
     <string name="home_label">Home</string>
@@ -34,6 +40,9 @@
     <string name="login_error_generic">Something went wrong.</string>
     <string name="login_error_password_required">Password is required.</string>
     <string name="login_error_email_required">Email is required.</string>
+    <string name="signup_error_name_required">Username is required.</string>
+    <string name="signup_error_name_too_short">Username must be at least 2 characters.</string>
+    <string name="signup_error_passwords_do_not_match">Passwords do not match.</string>
 
     <string name="home_screen">Home Screen</string>
     <string name="profile_screen">Profile Screen</string>
