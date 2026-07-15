@@ -38,8 +38,8 @@ private val DarkColorScheme = darkColorScheme(
 
     tertiary = AppColors.Teal,
 
-    background = AppColors.SocialButtonFillColor,
-    surface = AppColors.SocialButtonFillColor,
+    background = AppColors.BackGround,
+    surface = AppColors.BackGround,
 
     onBackground = AppColors.Brown,
     onSurface = AppColors.Brown,
@@ -51,11 +51,11 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightExtraColors = LinguaQuestColors(
 
-    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldFill = AppColors.BackGround,
     textFieldBorder = AppColors.TextFieldBorderColor,
     textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
 
-    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonFill = AppColors.BackGround,
     socialButtonText = AppColors.TextOnSocialButton,
     iconsColor = AppColors.IconsColor,
 
@@ -67,11 +67,11 @@ private val LightExtraColors = LinguaQuestColors(
 
 private val DarkExtraColors = LinguaQuestColors(
 
-    textFieldFill = AppColors.TextFieldFillColor,
+    textFieldFill = AppColors.BackGround,
     textFieldBorder = AppColors.TextFieldBorderColor,
     textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
 
-    socialButtonFill = AppColors.SocialButtonFillColor,
+    socialButtonFill = AppColors.BackGround,
     socialButtonText = AppColors.TextOnSocialButton,
     iconsColor = AppColors.IconsColor,
     splashTopLeftColor = AppColors.SplashTopLeftColor,

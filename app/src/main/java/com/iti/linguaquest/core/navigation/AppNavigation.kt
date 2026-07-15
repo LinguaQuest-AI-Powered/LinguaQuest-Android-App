@@ -24,7 +24,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import com.iti.linguaquest.features.auth.login.presentation.view.LoginScreen
+import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 
