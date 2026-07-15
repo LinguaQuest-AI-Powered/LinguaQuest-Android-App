@@ -1,4 +1,4 @@
-package com.iti.linguaquest.feature.auth.login.domain.model
+package com.iti.linguaquest.features.auth.login.domain.model
 
 data class AuthLoginResult(
     val accessToken: String,

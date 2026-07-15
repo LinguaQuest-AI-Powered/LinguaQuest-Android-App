@@ -1,4 +1,4 @@
-package com.iti.linguaquest.ui.theme
+package com.iti.linguaquest.core.theme
 
 import androidx.compose.ui.graphics.Color
 

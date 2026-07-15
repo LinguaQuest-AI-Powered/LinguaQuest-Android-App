@@ -15,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.iti.linguaquest.R
 
 class NestedNavigator {
     val backStack = mutableStateListOf<NestedScreen>(NestedScreen.Home)
@@ -54,8 +56,8 @@ fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
                     NavigationBarItem(
                         selected = currentScreen == bottomNavScreen.route,
                         onClick = { nestedNavigator.navigateToTopLevel(bottomNavScreen.route) },
-                        icon = { Icon(bottomNavScreen.icon, contentDescription = bottomNavScreen.routeName) },
-                        label = { Text(bottomNavScreen.routeName) }
+                        icon = { Icon(bottomNavScreen.icon, contentDescription = stringResource(id = bottomNavScreen.labelRes)) },
+                        label = { Text(stringResource(id = bottomNavScreen.labelRes)) }
                     )
                 }
             }
@@ -89,10 +91,10 @@ fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreen(onNavigateToDetails: (Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "Home Screen")
+        Text(text = stringResource(R.string.home_screen))
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { onNavigateToDetails(1) }) {
-            Text("Go to Details 1")
+            Text(stringResource(R.string.go_to_details_1))
         }
     }
 }
@@ -100,6 +102,6 @@ fun HomeScreen(onNavigateToDetails: (Int) -> Unit, modifier: Modifier = Modifier
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "Profile Screen")
+        Text(text = stringResource(R.string.profile_screen))
     }
 }

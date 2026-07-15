@@ -1,4 +1,4 @@
-package com.iti.linguaquest.feature.auth.login.presentation.view
+package com.iti.linguaquest.features.auth.share
 
 import androidx.activity.ComponentActivity
 import androidx.credentials.CredentialManager

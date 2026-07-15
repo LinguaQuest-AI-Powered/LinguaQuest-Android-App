@@ -1,7 +1,7 @@
-package com.iti.linguaquest.feature.auth.login.di
+package com.iti.linguaquest.features.auth.login.di
 
-import com.iti.linguaquest.feature.auth.login.data.repository.LoginRepositoryImpl
-import com.iti.linguaquest.feature.auth.login.domain.repository.LoginRepository
+import com.iti.linguaquest.features.auth.login.data.repository.LoginRepositoryImpl
+import com.iti.linguaquest.features.auth.login.domain.repository.LoginRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

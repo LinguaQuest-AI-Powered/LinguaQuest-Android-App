@@ -1,6 +1,5 @@
-package com.iti.linguaquest.feature.auth.login.presentation.contract
+package com.iti.linguaquest.features.auth.login.presentation.contract
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
 
 data class LoginState(
     val email: String = "",
@@ -9,5 +8,8 @@ data class LoginState(
     val isLoading: Boolean = false,
     val emailError: Boolean = false,
     val passwordError: Boolean = false,
-    val generalError: LinguaQuestDataError? = null,
+    val googleError: Boolean = false,
+    val generalErrorRes: Int? = null,
+    val emailErrorRes: Int? = null,
+    val passwordErrorRes: Int? = null,
 )

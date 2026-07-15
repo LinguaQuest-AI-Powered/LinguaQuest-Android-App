@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.ui.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
 fun ErrorView(

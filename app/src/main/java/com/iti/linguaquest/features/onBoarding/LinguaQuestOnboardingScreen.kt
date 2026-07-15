@@ -26,10 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
-import com.iti.linguaquest.core.sharedComponents.ButtonVariant
-import com.iti.linguaquest.ui.theme.AppTextStyles
-import com.iti.linguaquest.ui.theme.LinguaQuestTheme
+import com.iti.linguaquest.feature.auth.share.components.AppButton
+import com.iti.linguaquest.feature.auth.share.components.ButtonVariant
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
