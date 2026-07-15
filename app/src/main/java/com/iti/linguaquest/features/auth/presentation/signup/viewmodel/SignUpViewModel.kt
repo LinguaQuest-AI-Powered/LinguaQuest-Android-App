@@ -177,8 +177,8 @@ class SignUpViewModel @Inject constructor(
 
     private fun SignUpState.withUpdatedImage(): SignUpState {
         val newImage = when {
-            usernameError || emailError || passwordError || confirmPasswordError || generalErrorRes != null -> R.drawable.lingo_login_error
-            username.isNotBlank() || email.isNotBlank() || password.isNotBlank() || confirmPassword.isNotBlank() -> R.drawable.lingo_login_writing
+            usernameError || emailError || passwordError || confirmPasswordError || generalErrorRes != null -> R.drawable.lingo_error
+            username.isNotBlank() || email.isNotBlank() || password.isNotBlank() || confirmPassword.isNotBlank() -> R.drawable.lingo_writing
             else -> R.drawable.lingo_register
         }
         return this.copy(headerImageRes = newImage)
