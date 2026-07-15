@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.ui.theme.Quicksand
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.R
 import com.iti.linguaquest.ui.theme.AppTextStyles
 
@@ -97,8 +98,7 @@ fun AppButton(
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp, horizontal = 24.dp)
-                .height(28.dp)
-                .width(258.dp),
+            ,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -113,7 +113,12 @@ fun AppButton(
             }
             Text(
                 text, color = style.content,
-                style = AppTextStyles.Button,
+                style = AppTextStyles.Button.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             if (icon != null && iconPosition == IconPosition.END) {
                 Spacer(Modifier.width(8.dp))

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">LinguaQuest</string>
+    <string name="onboarding_title_p1">Learn languages by exploring the </string>
+    <string name="onboarding_title_p2">real world!</string>
+    <string name="get_started">Get Started</string>
+    <string name="already_have_an_account">I already have an account</string>
 </resources>

@@ -75,7 +75,7 @@ fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
                 )
 
                 Image(
-                    painter = painterResource(id = R.drawable.linguaquest_parrot),
+                    painter = painterResource(id = R.drawable.lingo_splash_parrot),
                     contentDescription = "LinguaQuest mascot",
                     modifier = Modifier
                         .fillMaxSize(0.72f)
