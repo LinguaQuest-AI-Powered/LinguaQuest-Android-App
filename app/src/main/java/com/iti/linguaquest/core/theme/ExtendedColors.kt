@@ -18,7 +18,12 @@ data class LinguaQuestColors(
     val splashBottomRightColor: Color,
     val socialButtonFill: Color,
     val socialButtonText: Color,
-    val socialButtonBorder: Color
+    val socialButtonBorder: Color,
+    val titleAndCationsColor: Color,
+    val blackColor: Color,
+    val whiteColor: Color,
+    val cardLevelFilledColor: Color,
+
 )
 
 internal val LocalLinguaQuestColors =

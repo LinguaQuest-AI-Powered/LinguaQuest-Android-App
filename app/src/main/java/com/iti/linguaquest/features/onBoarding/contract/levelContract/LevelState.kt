@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding.contract
+package com.iti.linguaquest.features.onBoarding.contract.levelContract
 
 enum class ProficiencyLevel(val displayName: String, val description: String) {
     BEGINNER("Beginner", "I'm just starting my adventure"),

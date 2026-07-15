@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding.contract
+package com.iti.linguaquest.features.onBoarding.contract.languageContract
 import com.iti.linguaquest.R
 
 data class LanguagesState(

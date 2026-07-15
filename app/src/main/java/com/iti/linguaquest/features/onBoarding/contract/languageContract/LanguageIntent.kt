@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding.contract
+package com.iti.linguaquest.features.onBoarding.contract.languageContract
 
 sealed interface LanguagesIntent {
     data class SelectNativeLanguage(val language: LanguageOption) : LanguagesIntent

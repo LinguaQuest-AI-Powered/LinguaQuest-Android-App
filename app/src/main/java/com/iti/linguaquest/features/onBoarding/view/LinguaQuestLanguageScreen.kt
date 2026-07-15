@@ -18,13 +18,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.onBoarding.components.LanguageDropdown
 import com.iti.linguaquest.features.onBoarding.components.PopularLanguageRow
-import com.iti.linguaquest.features.onBoarding.viewModel.LanguagesViewModel
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesEffect
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesIntent
-import com.iti.linguaquest.features.onBoarding.contract.LanguagesState
-import com.iti.linguaquest.features.onBoarding.contract.defaultLanguages
+import com.iti.linguaquest.features.onBoarding.viewModel.languageViewModel.LanguagesViewModel
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesEffect
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesIntent
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesState
+import com.iti.linguaquest.features.onBoarding.contract.languageContract.defaultLanguages
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -71,8 +72,8 @@ private fun LanguagesScreenContent(
         Spacer(Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.let_set_up_your_learning_journey),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = AppTextStyles.Caption,
+            color = LinguaQuestTheme.colors.titleAndCationsColor,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
@@ -107,8 +108,8 @@ private fun LanguagesScreenContent(
 
         Text(
             text = stringResource(R.string.popular_choices),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = AppTextStyles.LessonTitle,
+            color = LinguaQuestTheme.colors.titleAndCationsColor,
         )
 
         Spacer(Modifier.height(8.dp))
