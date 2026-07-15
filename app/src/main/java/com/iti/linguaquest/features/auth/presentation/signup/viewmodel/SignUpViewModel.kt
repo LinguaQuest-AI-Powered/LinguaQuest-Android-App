@@ -6,8 +6,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
-import com.iti.linguaquest.features.auth.domain.usecase.LoginWithGoogleUseCase
-import com.iti.linguaquest.features.auth.domain.usecase.SignUpWithEmailUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.RegisterUserUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.SignInWithGoogleUseCase
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpEffect
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpIntent
@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val signUpWithEmailUseCase: SignUpWithEmailUseCase,
-    private val loginWithGoogleUseCase: LoginWithGoogleUseCase,
+    private val signUpWithEmailUseCase: RegisterUserUseCase,
+    private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -103,13 +103,13 @@ class SignUpViewModel @Inject constructor(
     private fun signUpWithEmail(username: String, email: String, password: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-            when (val result = signUpWithEmailUseCase(username, email, password)) {
-                is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false) }
-                    sendEffect(SignUpEffect.SignUpSucceeded)
-                }
-                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
-            }
+//            when (val result = signUpWithEmailUseCase(username, email, password)) {
+//                is LinguaQuestResult.Success -> {
+//                    _state.update { it.copy(isLoading = false) }
+//                    sendEffect(SignUpEffect.SignUpSucceeded)
+//                }
+//                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
+//            }
         }
     }
 

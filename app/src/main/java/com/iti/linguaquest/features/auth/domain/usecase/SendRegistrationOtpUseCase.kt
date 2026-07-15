@@ -1,16 +1,14 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
-import com.iti.linguaquest.core.network.EmptyResult
-import com.iti.linguaquest.core.network.LinguaQuestDataError
 import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class VerifyEmailOtpUseCase @Inject constructor(
+class SendRegistrationOtpUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, otpCode: String): LinguaQuestResult<Unit, AuthError> {
-        return authRepository.verifyEmailOtp(email, otpCode)
+    suspend operator fun invoke(email: String): LinguaQuestResult<Unit, AuthError> {
+        return authRepository.sendRegistrationOtp(email)
     }
 }

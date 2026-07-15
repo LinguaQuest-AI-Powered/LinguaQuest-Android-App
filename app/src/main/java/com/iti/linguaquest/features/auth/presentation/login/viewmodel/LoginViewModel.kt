@@ -6,8 +6,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
-import com.iti.linguaquest.features.auth.domain.usecase.LoginWithEmailUseCase
-import com.iti.linguaquest.features.auth.domain.usecase.LoginWithGoogleUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.LoginUserUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.SignInWithGoogleUseCase
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginEffect
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginState
@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginWithEmailUseCase: LoginWithEmailUseCase,
-    private val loginWithGoogleUseCase: LoginWithGoogleUseCase,
+    private val loginUserUseCase: LoginUserUseCase,
+    private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -88,7 +88,7 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-            when (val result = loginWithEmailUseCase(email, password)) {
+            when (val result = loginUserUseCase(email, password)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
                     sendEffect(LoginEffect.LoginSucceeded)

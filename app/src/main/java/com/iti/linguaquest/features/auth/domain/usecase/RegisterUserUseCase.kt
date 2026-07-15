@@ -1,13 +1,13 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
 import com.iti.linguaquest.core.network.LinguaQuestResult
-import com.iti.linguaquest.features.auth.domain.model.AuthUserModel
-import com.iti.linguaquest.features.auth.domain.repo.AuthRepository
+import com.iti.linguaquest.features.auth.domain.model.AuthError
+import com.iti.linguaquest.features.auth.domain.model.AuthUser
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class RegisterUserUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
         email: String,
@@ -15,13 +15,7 @@ class RegisterUserUseCase @Inject constructor(
         password: String,
         nativeLanguage: String,
         targetLanguage: String
-    ): LinguaQuestResult<AuthUserModel, LinguaQuestDataError> {
-        return repository.register(
-            email = email,
-            username = username,
-            password = password,
-            nativeLanguage = nativeLanguage,
-            targetLanguage = targetLanguage
-        )
+    ): LinguaQuestResult<AuthUser, AuthError> {
+        return authRepository.register(email, username, password, nativeLanguage, targetLanguage)
     }
 }
