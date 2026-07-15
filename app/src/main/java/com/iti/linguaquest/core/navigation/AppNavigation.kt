@@ -31,6 +31,7 @@ import com.iti.linguaquest.features.onBoarding.view.LinguaQuestSplashScreen
 import com.iti.linguaquest.features.onBoarding.view.OnboardingScreen
 import kotlinx.coroutines.delay
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
+import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 
@@ -146,11 +147,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             }
 
             entry<RootScreen.SignUp> {
-                Text(
-                    text = stringResource(R.string.sign_up_screen),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                SignUpScreen(
+                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
+                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
                 )
             }
 
