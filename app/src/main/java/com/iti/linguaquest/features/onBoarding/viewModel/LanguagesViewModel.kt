@@ -23,6 +23,28 @@ class LanguagesViewModel @Inject constructor(
     private val _effect = MutableSharedFlow<LanguagesEffect>()
     val effect: SharedFlow<LanguagesEffect> = _effect.asSharedFlow()
 
+    init {
+        loadSavedLanguages()
+    }
+
+    private fun loadSavedLanguages() {
+        viewModelScope.launch {
+            combine(
+                userPreferencesRepository.nativeLanguage,
+                userPreferencesRepository.targetLanguage
+            ) { savedNative, savedTarget -> savedNative to savedTarget }
+                .collectLatest { (savedNative, savedTarget) ->
+                    _state.update {
+                        it.copy(
+                            nativeLanguage = savedNative ?: it.nativeLanguage,
+                            targetLanguage = savedTarget,
+                            isContinueEnabled = savedTarget != null
+                        )
+                    }
+                }
+        }
+    }
+
     fun onIntent(intent: LanguagesIntent) {
         when (intent) {
             is LanguagesIntent.SelectNativeLanguage -> selectNativeLanguage(intent.language)
@@ -37,6 +59,9 @@ class LanguagesViewModel @Inject constructor(
         _state.update {
             it.copy(nativeLanguage = language.displayName, isNativeDropdownExpanded = false)
         }
+        viewModelScope.launch {
+            userPreferencesRepository.saveNativeLanguage(language.displayName)
+        }
     }
 
     private fun selectTargetLanguage(language: LanguageOption) {
@@ -46,6 +71,9 @@ class LanguagesViewModel @Inject constructor(
                 isTargetDropdownExpanded = false,
                 isContinueEnabled = true
             )
+        }
+        viewModelScope.launch {
+            userPreferencesRepository.saveTargetLanguage(language.displayName)
         }
     }
 
