@@ -58,6 +58,10 @@ private val LightExtraColors = LinguaQuestColors(
     socialButtonFill = AppColors.SocialButtonFillColor,
     socialButtonText = AppColors.TextOnSocialButton,
     iconsColor = AppColors.IconsColor,
+
+    splashTopLeftColor = AppColors.SplashTopLeftColor,
+    splashBottomRightColor = AppColors.SplashBottomRightColor,
+
     socialButtonBorder = AppColors.SocialBorderColor
 )
 
@@ -70,6 +74,8 @@ private val DarkExtraColors = LinguaQuestColors(
     socialButtonFill = AppColors.SocialButtonFillColor,
     socialButtonText = AppColors.TextOnSocialButton,
     iconsColor = AppColors.IconsColor,
+    splashTopLeftColor = AppColors.SplashTopLeftColor,
+    splashBottomRightColor = AppColors.SplashBottomRightColor,
     socialButtonBorder = AppColors.SocialBorderColor
 )
 
