@@ -9,10 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordEffect
+import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.newpassword.viewmodel.NewPasswordViewModel
 
 @Composable
 fun NewPasswordScreen(
+    resetToken: String,
     onBackToLogin: () -> Unit,
     onResetSuccess: () -> Unit,
     viewModel: NewPasswordViewModel = hiltViewModel(),
@@ -34,7 +36,20 @@ fun NewPasswordScreen(
 
     NewPasswordContent(
         state = state,
-        onIntent = viewModel::onIntent,
+        onIntent = { intent ->
+            when (intent) {
+                is NewPasswordIntent.ResetPasswordClicked -> {
+                    viewModel.onIntent(
+                        NewPasswordIntent.ResetPasswordClicked(
+                            resetToken = resetToken,
+                            newPassword = intent.newPassword,
+                            confirmPassword = intent.confirmPassword
+                        )
+                    )
+                }
+                else -> viewModel.onIntent(intent)
+            }
+        },
         newPasswordShakeTrigger = newPasswordShakeTrigger,
         confirmPasswordShakeTrigger = confirmPasswordShakeTrigger,
     )

@@ -50,6 +50,7 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 
 
 class RootNavigator {
@@ -204,10 +205,27 @@ fun AppNavigation(
                         onSendSucceeded = { rootNavigator.popBackStack() }
                     )
                 }
-                entry<RootScreen.NewPassword> {
+                entry<RootScreen.OTP> { screen ->
+                    OTPScreen(
+                        email = screen.email,
+                        isPasswordReset = screen.isPasswordReset,
+                        onNavigateBack = { rootNavigator.popBackStack() },
+                        onNavigateToLogin = { rootNavigator.navigateTo(RootScreen.Login) },
+                        onNavigateToNext = { resetToken ->
+                            if (screen.isPasswordReset && resetToken != null) {
+                                rootNavigator.navigateTo(RootScreen.NewPassword(resetToken))
+                            } else {
+                                rootNavigator.navigateTo(RootScreen.Login)
+                            }
+                        }
+                    )
+                }
+
+                entry<RootScreen.NewPassword> {screen->
                     NewPasswordScreen(
                         onBackToLogin = { rootNavigator.popBackStack() },
-                        onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                        onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) },
+                        resetToken = screen.resetToken
                     )
                 }
 

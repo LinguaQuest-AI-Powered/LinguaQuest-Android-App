@@ -12,13 +12,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.features.auth.domain.usecase.SetNewPasswordUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val MIN_PASSWORD_LENGTH = 8
 
 @HiltViewModel
-class NewPasswordViewModel @Inject constructor() : ViewModel() {
+class NewPasswordViewModel @Inject constructor(
+    private val setNewPasswordUseCase: SetNewPasswordUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(NewPasswordState())
     val state = _state.asStateFlow()
@@ -28,13 +32,13 @@ class NewPasswordViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: NewPasswordIntent) {
         when (intent) {
-            is NewPasswordIntent.ResetPasswordClicked -> validateAndReset(intent.newPassword, intent.confirmPassword)
+            is NewPasswordIntent.ResetPasswordClicked -> validateAndReset(intent.resetToken, intent.newPassword, intent.confirmPassword)
 
             NewPasswordIntent.BackToLoginClicked -> sendEffect(NewPasswordEffect.NavigateBackToLogin)
         }
     }
 
-    private fun validateAndReset(newPassword: String, confirmPassword: String) {
+    private fun validateAndReset(resetToken: String, newPassword: String, confirmPassword: String) {
         val newPasswordValidation = validateNewPassword(newPassword)
         val confirmPasswordValidation = validateConfirmPassword(newPassword, confirmPassword)
 
@@ -55,7 +59,7 @@ class NewPasswordViewModel @Inject constructor() : ViewModel() {
         if (hasConfirmPasswordError) sendEffect(NewPasswordEffect.ShakeConfirmPassword)
 
         if (!hasNewPasswordError && !hasConfirmPasswordError) {
-            performReset()
+            performReset(resetToken, newPassword)
         }
     }
 
@@ -77,11 +81,16 @@ class NewPasswordViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun performReset() {
+    private fun performReset(resetToken: String, newPassword: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
+            val result = setNewPasswordUseCase(newPassword, resetToken)
             _state.update { it.copy(isLoading = false) }
-            sendEffect(NewPasswordEffect.ResetSucceeded)
+            if (result is LinguaQuestResult.Success) {
+                sendEffect(NewPasswordEffect.ResetSucceeded)
+            } else {
+                _state.update { it.copy(generalErrorRes = R.string.new_password_error_generic) }
+            }
         }
     }
 

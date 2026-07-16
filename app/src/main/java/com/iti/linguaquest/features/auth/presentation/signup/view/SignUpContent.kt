@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,7 +39,6 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginDimens
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpIntent
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpState
@@ -62,12 +59,22 @@ fun SignUpContent(
     googleShakeTrigger: Int,
     modifier: Modifier = Modifier,
 ) {
-    var localUsernameShakeTrigger by remember { mutableIntStateOf(0) }
-    var localEmailShakeTrigger by remember { mutableIntStateOf(0) }
-    var localPasswordShakeTrigger by remember { mutableIntStateOf(0) }
-    var localConfirmPasswordShakeTrigger by remember { mutableIntStateOf(0) }
+    var username by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+
+    var localUsernameError by rememberSaveable { mutableStateOf(false) }
+    var localEmailError by rememberSaveable { mutableStateOf(false) }
+    var localPasswordError by rememberSaveable { mutableStateOf(false) }
+    var localConfirmPasswordError by rememberSaveable { mutableStateOf(false) }
+
 
     val focusManager = LocalFocusManager.current
+    val onSignUpClick = {
+        focusManager.clearFocus()
+        onIntent(SignUpIntent.SignUpClicked(username, email, password, confirmPassword))
+    }
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
     val confirmPasswordFocusRequester = remember { FocusRequester() }
@@ -89,32 +96,42 @@ fun SignUpContent(
             Spacer(modifier = Modifier.height(LoginDimens.ScreenPadding * 2))
 
             AuthCardLayout(
-                imageRes = state.headerImageRes,
+                imageRes = resolveHeroImageRes(
+                    username = username,
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    localUsernameError = localUsernameError,
+                    localEmailError = localEmailError,
+                    localPasswordError = localPasswordError,
+                    localConfirmPasswordError = localConfirmPasswordError,
+                    state = state
+                ),
                 titleRes = R.string.signup_title,
                 subtitleRes = R.string.signup_subtitle
             ) {
 
                 AuthTextField(
-                    value = state.username,
-                    onValueChange = { onIntent(SignUpIntent.UsernameChanged(it)) },
+                    value = username,
+                    onValueChange = { username = it; localUsernameError = false },
                     placeholder = stringResource(id = R.string.signup_username),
                     leadingIcon = rememberVectorPainter(image = Icons.Default.Person),
                     imeAction = ImeAction.Next,
                     keyboardActions = KeyboardActions(onNext = { emailFocusRequester.requestFocus() }),
-                    isError = state.usernameError,
+                    isError = localUsernameError || state.usernameError,
                     errorMessage = state.usernameErrorRes?.let { stringResource(id = it) },
                     modifier = Modifier.shake(usernameShakeTrigger)
                 )
 
                 AuthTextField(
-                    value = state.email,
-                    onValueChange = { onIntent(SignUpIntent.EmailChanged(it)) },
+                    value = email,
+                    onValueChange = { email = it; localEmailError = false },
                     placeholder = stringResource(id = R.string.login_email_address),
                     leadingIcon = painterResource(id = R.drawable.email),
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
                     keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
-                    isError = state.emailError,
+                    isError = localEmailError || state.emailError,
                     errorMessage = state.emailErrorRes?.let { stringResource(id = it) },
                     modifier = Modifier
                         .shake(emailShakeTrigger)
@@ -122,13 +139,13 @@ fun SignUpContent(
                 )
 
                 AuthTextField(
-                    value = state.password,
-                    onValueChange = { onIntent(SignUpIntent.PasswordChanged(it)) },
+                    value = password,
+                    onValueChange = { password = it; localPasswordError = false },
                     placeholder = stringResource(id = R.string.login_password),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     imeAction = ImeAction.Next,
                     keyboardActions = KeyboardActions(onNext = { confirmPasswordFocusRequester.requestFocus() }),
-                    isError = state.passwordError,
+                    isError = localPasswordError || state.passwordError,
                     errorMessage = state.passwordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
@@ -138,16 +155,13 @@ fun SignUpContent(
                 )
 
                 AuthTextField(
-                    value = state.confirmPassword,
-                    onValueChange = { onIntent(SignUpIntent.ConfirmPasswordChanged(it)) },
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it; localConfirmPasswordError = false },
                     placeholder = stringResource(id = R.string.signup_confirm_password),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     imeAction = ImeAction.Done,
-                    keyboardActions = KeyboardActions(onDone = {
-                        focusManager.clearFocus()
-                        onIntent(SignUpIntent.SignUpClicked)
-                    }),
-                    isError = state.confirmPasswordError,
+                    keyboardActions = KeyboardActions(onDone = { onSignUpClick() }),
+                    isError = localConfirmPasswordError || state.confirmPasswordError,
                     errorMessage = state.confirmPasswordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
@@ -169,10 +183,7 @@ fun SignUpContent(
 
                 AppButton(
                     text = stringResource(id = R.string.signup_button),
-                    onClick = {
-                        focusManager.clearFocus()
-                        onIntent(SignUpIntent.SignUpClicked)
-                    },
+                    onClick = { onSignUpClick() },
                     enabled = !state.isLoading,
                     isLoading = state.isLoading,
                     variant = ButtonVariant.PRIMARY,
@@ -206,6 +217,27 @@ fun SignUpContent(
     }
 }
 
+private fun resolveHeroImageRes(
+    username: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    localUsernameError: Boolean,
+    localEmailError: Boolean,
+    localPasswordError: Boolean,
+    localConfirmPasswordError: Boolean,
+    state: SignUpState,
+): Int {
+    val hasError = localUsernameError || localEmailError || localPasswordError || localConfirmPasswordError
+        || state.usernameError || state.emailError || state.passwordError || state.confirmPasswordError
+        || state.generalErrorRes != null
+    val hasInput = username.isNotBlank() || email.isNotBlank() || password.isNotBlank() || confirmPassword.isNotBlank()
+    return when {
+        hasError -> R.drawable.lingo_error
+        hasInput -> R.drawable.lingo_writing
+        else -> R.drawable.lingo_register
+    }
+}
 @Preview(showBackground = true)
 @Composable
 private fun SignUpContentPreview() {

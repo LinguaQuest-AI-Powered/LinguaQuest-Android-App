@@ -14,7 +14,7 @@ import com.iti.linguaquest.features.auth.presentation.forgetpassword.viewmodel.F
 @Composable
 fun ForgetPasswordScreen(
     onBackToLogin: () -> Unit,
-    onSendSucceeded: () -> Unit,
+    onSendSucceeded: (String) -> Unit,
     viewModel: ForgetPasswordViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -24,7 +24,7 @@ fun ForgetPasswordScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 ForgetPasswordEffect.ShakeEmail -> emailShakeTrigger++
-                ForgetPasswordEffect.SendSucceeded -> onSendSucceeded()
+                is ForgetPasswordEffect.SendSucceeded -> onSendSucceeded(effect.email)
                 ForgetPasswordEffect.NavigateBackToLogin -> onBackToLogin()
             }
         }

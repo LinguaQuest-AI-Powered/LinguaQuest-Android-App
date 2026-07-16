@@ -1,0 +1,44 @@
+package com.iti.linguaquest.features.auth.data.datasource.remote
+
+import com.iti.linguaquest.core.network.SuccessResponseDto
+import retrofit2.http.Body
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+
+interface AuthApiService {
+
+    @POST("auth/register")
+    suspend fun register(
+        @Body body: RegisterRequestDto
+    ): SuccessResponseDto<RegisterResponseDataDto>
+
+    @POST("auth/login")
+    suspend fun login(
+        @Body body: LoginRequestDto
+    ): SuccessResponseDto<LoginResponseDataDto>
+
+    @POST("auth/oauth/google")
+    suspend fun loginWithGoogle(
+        @Body body: OAuthGoogleRequestDto
+    ): SuccessResponseDto<OAuthResponseDataDto>
+
+    @POST("auth/otp/send")
+    suspend fun sendOtp(
+        @Body body: OtpSendRequestDto
+    ): SuccessResponseDto<Unit>
+
+    @POST("auth/otp/verify")
+    suspend fun verifyEmailOtp(
+        @Body body: OtpVerifyRequestDto
+    ): SuccessResponseDto<Unit>
+
+    @POST("auth/forget-password/otp/verify")
+    suspend fun verifyPasswordResetOtp(
+        @Body body: OtpVerifyRequestDto
+    ): SuccessResponseDto<VerifyResetOtpResponseDto>
+
+    @PATCH("auth/forget-password")
+    suspend fun setNewPassword(
+        @Body body: ResetPasswordRequestDto
+    ): SuccessResponseDto<Unit>
+}
