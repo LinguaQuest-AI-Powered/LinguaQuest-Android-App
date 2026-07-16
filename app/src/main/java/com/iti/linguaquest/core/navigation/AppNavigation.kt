@@ -8,19 +8,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -32,10 +25,9 @@ import com.iti.linguaquest.features.onBoarding.view.OnboardingScreen
 import kotlinx.coroutines.delay
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
-import androidx.compose.ui.res.stringResource
-import com.iti.linguaquest.R
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.view.ForgetPasswordScreen
 import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
+import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import kotlin.time.Duration.Companion.milliseconds
 
 class RootNavigator {
@@ -113,7 +105,6 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                         rootNavigator.navigateTo(RootScreen.Languages)
                     },
                     onLoginClick = {
-                        // User already has an account
                         rootNavigator.navigateTo(RootScreen.Login)
                     }
                 )
@@ -151,49 +142,44 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
             entry<RootScreen.SignUp> {
                 SignUpScreen(
-                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
-                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    onNavigateToLogin = { rootNavigator.popBackStack() },
+                    onSignUpSuccess = { email -> rootNavigator.navigateTo(RootScreen.OTP(email, false)) }
                 )
             }
 
             entry<RootScreen.ForgotPassword> {
                 ForgetPasswordScreen(
                     onBackToLogin = { rootNavigator.popBackStack() },
-                    onSendSucceeded = { rootNavigator.popBackStack() }
+                    onSendSucceeded = { email -> rootNavigator.navigateTo(RootScreen.OTP(email, true)) }
                 )
             }
-            entry<RootScreen.NewPassword> {
+
+            entry<RootScreen.OTP> { screen ->
+                OTPScreen(
+                    email = screen.email,
+                    isPasswordReset = screen.isPasswordReset,
+                    onNavigateBack = { rootNavigator.popBackStack() },
+                    onNavigateToLogin = { rootNavigator.navigateTo(RootScreen.Login) },
+                    onNavigateToNext = { resetToken ->
+                        if (screen.isPasswordReset && resetToken != null) {
+                            rootNavigator.navigateTo(RootScreen.NewPassword(resetToken))
+                        } else {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
+                    }
+                )
+            }
+
+            entry<RootScreen.NewPassword> { screen ->
                 NewPasswordScreen(
+                    resetToken = screen.resetToken,
                     onBackToLogin = { rootNavigator.popBackStack() },
-                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Login) }
                 )
             }
 
             entry<RootScreen.Main> {
                 MainScreen(rootNavigator)
             }
-
-            entry<RootScreen.Details> { key ->
-                DetailsScreen(
-                    id = key.id,
-                    onBack = {
-                        rootNavigator.popBackStack()
-                    }
-                )
-            }
         })
-}
-
-
-@Composable
-fun DetailsScreen(id: Int, onBack: () -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier = modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
-        Text(text = stringResource(R.string.details_screen_id, id))
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onBack) {
-            Text(stringResource(R.string.pop_screen))
-        }
-    }
 }

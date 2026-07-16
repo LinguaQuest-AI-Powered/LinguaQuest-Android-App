@@ -36,13 +36,7 @@ class LoginViewModel @Inject constructor(
 
     fun onIntent(intent: LoginIntent) {
         when (intent) {
-            is LoginIntent.EmailChanged -> {
-                _state.update { it.copy(email = intent.email, emailError = false, emailErrorRes = null).withUpdatedImage() }
-            }
-            is LoginIntent.PasswordChanged -> {
-                _state.update { it.copy(password = intent.password, passwordError = false, passwordErrorRes = null).withUpdatedImage() }
-            }
-            LoginIntent.LoginClicked -> handleLoginClicked()
+            is LoginIntent.LoginClicked -> handleLoginClicked(intent.email, intent.password)
 
             LoginIntent.GoogleSignInClicked -> startGoogleSignIn()
 
@@ -58,9 +52,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun handleLoginClicked() {
-        val email = state.value.email
-        val password = state.value.password
+    private fun handleLoginClicked(email: String, password: String) {
         val emailValid = ValidationUtils.isValidEmail(email)
         val passwordValid = ValidationUtils.isValidPassword(password)
         
@@ -68,14 +60,14 @@ class LoginViewModel @Inject constructor(
             _state.update { it.copy(
                 emailError = true, 
                 emailErrorRes = if (email.isBlank()) R.string.login_error_email_required else R.string.login_error_invalid_email
-            ).withUpdatedImage() }
+            ) }
             sendEffect(LoginEffect.ShakeEmail)
         }
         if (!passwordValid) {
             _state.update { it.copy(
                 passwordError = true,
                 passwordErrorRes = if (password.isBlank()) R.string.login_error_password_required else R.string.login_error_weak_password
-            ).withUpdatedImage() }
+            ) }
             sendEffect(LoginEffect.ShakePassword)
         }
         
@@ -124,8 +116,8 @@ class LoginViewModel @Inject constructor(
                 emailErrorRes = if (emailHasError) error.toMessageRes() else null,
                 passwordError = passwordHasError,
                 passwordErrorRes = if (passwordHasError) error.toMessageRes() else null,
-                googleError = false,
-            ).withUpdatedImage()
+                googleError = false
+            )
         }
 
         when (error) {
@@ -145,8 +137,8 @@ class LoginViewModel @Inject constructor(
             it.copy(
                 isLoading = false,
                 googleError = true,
-                generalErrorRes = error.toMessageRes(),
-            ).withUpdatedImage()
+                generalErrorRes = error.toMessageRes()
+            )
         }
         sendEffect(LoginEffect.ShakeGoogleSignIn)
     }
@@ -156,7 +148,7 @@ class LoginViewModel @Inject constructor(
             it.copy(
                 googleError = false,
                 generalErrorRes = null,
-            ).withUpdatedImage()
+            )
         }
         sendEffect(LoginEffect.LaunchGoogleSignIn)
     }
@@ -165,14 +157,5 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _effects.send(effect)
         }
-    }
-
-    private fun LoginState.withUpdatedImage(): LoginState {
-        val newImage = when {
-            emailError || passwordError || generalErrorRes != null -> R.drawable.lingo_error
-            email.isNotBlank() || password.isNotBlank() -> R.drawable.lingo_writing
-            else -> R.drawable.lingo
-        }
-        return this.copy(headerImageRes = newImage)
     }
 }

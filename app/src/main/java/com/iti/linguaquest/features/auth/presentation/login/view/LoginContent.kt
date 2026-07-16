@@ -19,10 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.iti.linguaquest.core.utils.ValidationUtils
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -60,7 +58,17 @@ fun LoginContent(
     googleShakeTrigger: Int,
     modifier: Modifier = Modifier,
 ) {
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    var localEmailError by rememberSaveable { mutableStateOf(false) }
+    var localPasswordError by rememberSaveable { mutableStateOf(false) }
+
     val focusManager = LocalFocusManager.current
+    val onLoginClick = {
+        focusManager.clearFocus()
+        onIntent(LoginIntent.LoginClicked(email, password))
+    }
     val passwordFocusRequester = remember { FocusRequester() }
 
     Box(
@@ -80,34 +88,37 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(LoginDimens.ScreenPadding * 2))
             
             AuthCardLayout(
-                imageRes = state.headerImageRes,
+                imageRes = resolveHeroImageRes(
+                    email = email,
+                    password = password,
+                    localEmailError = localEmailError,
+                    localPasswordError = localPasswordError,
+                    state = state
+                ),
                 titleRes = R.string.login_welcome_back,
                 subtitleRes = R.string.login_ready_to_continue
             ) {
                 AuthTextField(
-                    value = state.email,
-                    onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
+                    value = email,
+                    onValueChange = { email = it; localEmailError = false },
                     placeholder = stringResource(id = R.string.login_email_address),
                     leadingIcon = painterResource(id = R.drawable.email),
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
                     keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
-                    isError = state.emailError,
+                    isError = localEmailError || state.emailError,
                     errorMessage = state.emailErrorRes?.let { stringResource(id = it) },
                     modifier = Modifier.shake(emailShakeTrigger)
                 )
 
                 AuthTextField(
-                    value = state.password,
-                    onValueChange = { onIntent(LoginIntent.PasswordChanged(it)) },
+                    value = password,
+                    onValueChange = { password = it; localPasswordError = false },
                     placeholder = stringResource(id = R.string.login_password),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     imeAction = ImeAction.Done,
-                    keyboardActions = KeyboardActions(onDone = {
-                        focusManager.clearFocus()
-                        onIntent(LoginIntent.LoginClicked)
-                    }),
-                    isError = state.passwordError,
+                    keyboardActions = KeyboardActions(onDone = { onLoginClick() }),
+                    isError = localPasswordError || state.passwordError,
                     errorMessage = state.passwordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
@@ -140,10 +151,7 @@ fun LoginContent(
 
                 AppButton(
                     text = stringResource(id = R.string.login_log_in),
-                    onClick = {
-                        focusManager.clearFocus()
-                        onIntent(LoginIntent.LoginClicked)
-                    },
+                    onClick = { onLoginClick() },
                     enabled = !state.isLoading,
                     isLoading = state.isLoading,
                     variant = ButtonVariant.PRIMARY,

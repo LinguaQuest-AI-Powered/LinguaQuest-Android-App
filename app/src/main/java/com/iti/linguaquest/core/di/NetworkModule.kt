@@ -3,6 +3,7 @@ package com.iti.linguaquest.core.di
 import com.iti.linguaquest.BuildConfig
 import com.iti.linguaquest.core.network.NetworkConfig
 import com.google.gson.GsonBuilder
+import com.iti.linguaquest.features.auth.data.datasource.remote.AuthApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,5 +50,13 @@ object NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(
+        retrofit: Retrofit
+    ): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
     }
 }

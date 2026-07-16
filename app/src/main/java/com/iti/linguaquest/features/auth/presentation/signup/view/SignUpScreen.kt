@@ -1,3 +1,4 @@
+
 package com.iti.linguaquest.features.auth.presentation.signup.view
 
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ import com.iti.linguaquest.features.auth.presentation.signup.viewmodel.SignUpVie
 @Composable
 fun SignUpScreen(
     onNavigateToLogin: () -> Unit,
-    onSignUpSuccess: () -> Unit,
+    onSignUpSuccess: (String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -28,7 +29,7 @@ fun SignUpScreen(
     LaunchedEffect(viewModel.effects) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is SignUpEffect.SignUpSucceeded -> onSignUpSuccess()
+                is SignUpEffect.SignUpSucceeded -> onSignUpSuccess(effect.email)
                 is SignUpEffect.NavigateToLogin -> onNavigateToLogin()
                 is SignUpEffect.LaunchGoogleSignIn -> {
                 }

@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.auth.presentation.otp.view.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,7 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,20 +41,26 @@ import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 
 @Composable
 fun OTPScreen(
+    email: String,
+    isPasswordReset: Boolean,
     viewModel: OTPViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    onNavigateToNext: () -> Unit
+    onNavigateToNext: (String?) -> Unit
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
+        viewModel.onIntent(OTPIntent.Initialize(email, isPasswordReset))
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OTPEffect.NavigateBack -> onNavigateBack()
                 is OTPEffect.NavigateToLogin -> onNavigateToLogin()
-                is OTPEffect.NavigateToNextScreen -> onNavigateToNext()
-                is OTPEffect.ShowError -> {  }
+                is OTPEffect.NavigateToNextScreen -> onNavigateToNext(effect.resetToken)
+                is OTPEffect.ShowError -> {
+                    Toast.makeText(context, effect.messageRes, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

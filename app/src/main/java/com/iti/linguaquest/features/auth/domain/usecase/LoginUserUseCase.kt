@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.auth.domain.usecase
 
 import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
-import com.iti.linguaquest.features.auth.domain.model.AuthUser
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
@@ -12,7 +11,7 @@ class LoginUserUseCase @Inject constructor(
     suspend operator fun invoke(
         email: String,
         password: String
-    ): LinguaQuestResult<AuthUser, AuthError> {
-        return authRepository.login(email, password)
-    }
+    ): LinguaQuestResult<Unit, AuthError> =
+        authRepository.login(email, password)
+
 }
