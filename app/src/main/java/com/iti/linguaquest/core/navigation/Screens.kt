@@ -47,6 +47,9 @@ sealed interface RootScreen : NavKey {
     data object Main : RootScreen
 
     @Serializable
+    data class GameFlow(val levelId: Int) : RootScreen
+
+    @Serializable
     data class Details(val id: Int) : RootScreen
     @Serializable
     data class OTP(val email: String, val isPasswordReset: Boolean) : RootScreen
@@ -60,4 +63,23 @@ sealed interface NestedScreen : NavKey {
     data object Home : NestedScreen
     @Serializable
     data object Profile : NestedScreen
+}
+
+
+@Serializable
+sealed interface GameFlowScreen : NavKey {
+    @Serializable
+    data object GameLobby : GameFlowScreen
+
+    @Serializable
+    data object Camera : GameFlowScreen
+
+    @Serializable
+    data object Processing : GameFlowScreen
+
+    @Serializable
+    data object Success : GameFlowScreen
+
+    @Serializable
+    data object Failure : GameFlowScreen
 }

@@ -50,13 +50,14 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import androidx.navigation3.runtime.rememberNavBackStack
+import com.iti.linguaquest.features.game.presentation.GameFlowHost
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
+    val rootBackStack = rememberNavBackStack(RootScreen.GameFlow(levelId = 1))
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -239,6 +240,13 @@ fun AppNavigation(
                         onBack = {
                             rootBackStack.removeLastOrNull()
                         }
+                    )
+                }
+
+                entry<RootScreen.GameFlow> { screen ->
+                    GameFlowHost(
+                        levelId = screen.levelId,
+                        rootBackStack = rootBackStack
                     )
                 }
             })
