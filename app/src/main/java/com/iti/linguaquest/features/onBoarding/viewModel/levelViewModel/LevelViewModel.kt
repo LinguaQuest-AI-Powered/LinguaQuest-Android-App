@@ -3,6 +3,12 @@ package com.iti.linguaquest.features.onBoarding.viewModel.levelViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.UserPreferencesRepository
+import com.iti.linguaquest.core.sharedComponents.dialog.DialogController
+import com.iti.linguaquest.core.sharedComponents.dialog.DialogUiState
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelEffect
 import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelIntent
 import com.iti.linguaquest.features.onBoarding.contract.levelContract.LevelState
@@ -56,6 +62,7 @@ class LevelViewModel @Inject constructor(
 
     private fun selectLevel(level: ProficiencyLevel) {
         _state.update { it.copy(selectedLevel = level) }
+
         viewModelScope.launch {
             userPreferencesRepository.saveProficiencyLevel(level.name)
         }
