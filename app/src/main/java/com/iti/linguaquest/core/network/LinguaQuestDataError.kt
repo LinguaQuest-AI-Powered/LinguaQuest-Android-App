@@ -24,6 +24,21 @@ sealed interface LinguaQuestDataError : AppError {
         EMAIL_NOT_VERIFIED,
         TOKEN_NOT_VALID,
         OPERATION_NOT_ALLOWED,
+
+        EMAIL_NOT_FOUND,
+        USERNAME_ALREADY_EXISTS,
+        INVALID_OTP,
+        OTP_EXPIRED,
+        INVALID_REFRESH_TOKEN,
+        REFRESH_TOKEN_EXPIRED,
+        INVALID_RESET_TOKEN,
+        RESET_TOKEN_EXPIRED,
+        INVALID_ID_TOKEN,
+        INVALID_IDENTITY_TOKEN,
+        VALIDATION_ERROR,
+        EMAIL_ALREADY_EXISTS,
+        TOO_MANY_REQUESTS,
+        INTERNAL_SERVER_ERROR,
         UNKNOWN
     }
 

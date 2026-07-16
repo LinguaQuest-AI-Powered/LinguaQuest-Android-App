@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.auth.presentation.otp.contract
 
 sealed interface OTPIntent {
+    data class Initialize(val email: String, val isPasswordReset: Boolean) : OTPIntent
     data class OnOtpCodeChanged(val code: String) : OTPIntent
     object OnVerifyClicked : OTPIntent
     object OnResendCodeClicked : OTPIntent

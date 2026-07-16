@@ -15,10 +15,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.features.auth.domain.usecase.SendPasswordResetOtpUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.SendRegistrationOtpUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.VerifyEmailOtpUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.VerifyPasswordResetOtpUseCase
+import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import javax.inject.Inject
 
 @HiltViewModel
-class OTPViewModel @Inject constructor() : ViewModel() {
+class OTPViewModel @Inject constructor(
+    private val verifyEmailOtpUseCase: VerifyEmailOtpUseCase,
+    private val verifyPasswordResetOtpUseCase: VerifyPasswordResetOtpUseCase,
+    private val sendRegistrationOtpUseCase: SendRegistrationOtpUseCase,
+    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase
+) : ViewModel() {
+
+    private var email: String = ""
+    private var isPasswordReset: Boolean = false
 
     private val _state = MutableStateFlow(OTPState())
     val state: StateFlow<OTPState> = _state.asStateFlow()
@@ -34,6 +48,10 @@ class OTPViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: OTPIntent) {
         when (intent) {
+            is OTPIntent.Initialize -> {
+                this.email = intent.email
+                this.isPasswordReset = intent.isPasswordReset
+            }
             is OTPIntent.OnOtpCodeChanged -> {
                 if (intent.code.length <= 4) {
                     _state.update {
@@ -54,10 +72,40 @@ class OTPViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun verifyOtp() {
-        sendEffect(OTPEffect.NavigateToNextScreen)
+        val otpCode = _state.value.otpCode
+        viewModelScope.launch {
+            if (isPasswordReset) {
+                when (val result = verifyPasswordResetOtpUseCase(email, otpCode)) {
+                    is LinguaQuestResult.Success -> {
+                        sendEffect(OTPEffect.NavigateToNextScreen(result.data))
+                    }
+                    is LinguaQuestResult.Failure -> {
+                        sendEffect(OTPEffect.ShowError(result.error.toMessageRes()))
+                    }
+                }
+            } else {
+                when (val result = verifyEmailOtpUseCase(email, otpCode)) {
+                    is LinguaQuestResult.Success -> {
+                        sendEffect(OTPEffect.NavigateToNextScreen(null))
+                    }
+                    is LinguaQuestResult.Failure -> {
+                        sendEffect(OTPEffect.ShowError(result.error.toMessageRes()))
+                    }
+                }
+            }
+        }
     }
 
     private fun startTimer() {
+        viewModelScope.launch {
+            if (email.isNotEmpty()) {
+                if (isPasswordReset) {
+                    sendPasswordResetOtpUseCase(email)
+                } else {
+                    sendRegistrationOtpUseCase(email)
+                }
+            }
+        }
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
             _state.update { it.copy(isTimerActive = true) }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ValidationUtils
+import com.iti.linguaquest.features.auth.domain.usecase.SendPasswordResetOtpUseCase
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordEffect
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordState
@@ -17,7 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ForgetPasswordViewModel @Inject constructor() : ViewModel() {
+class ForgetPasswordViewModel @Inject constructor(
+    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ForgetPasswordState())
     val state = _state.asStateFlow()
@@ -46,16 +49,20 @@ class ForgetPasswordViewModel @Inject constructor() : ViewModel() {
         if (!isValidEmail) {
             sendEffect(ForgetPasswordEffect.ShakeEmail)
         } else {
-            performSend()
+            performSend(email)
         }
     }
 
-    private fun performSend() {
+    private fun performSend(email: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-            // Stub network call
+            val result = sendPasswordResetOtpUseCase(email)
             _state.update { it.copy(isLoading = false) }
-            sendEffect(ForgetPasswordEffect.SendSucceeded)
+            if (result is com.iti.linguaquest.core.network.LinguaQuestResult.Success) {
+                sendEffect(ForgetPasswordEffect.SendSucceeded(email))
+            } else {
+                _state.update { it.copy(generalErrorRes = R.string.login_error_generic) }
+            }
         }
     }
 

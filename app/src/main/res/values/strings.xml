@@ -102,5 +102,7 @@
     <string name="otp_resend_code">Resend code</string>
     <string name="otp_verify_button">Verify</string>
     <string name="otp_back_to_login">Back to Login</string>
+    <string name="otp_error_invalid">Invalid OTP code.</string>
+    <string name="otp_error_expired">OTP code has expired.</string>
 </resources>
 

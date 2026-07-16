@@ -35,19 +35,12 @@ class SignUpViewModel @Inject constructor(
 
     fun onIntent(intent: SignUpIntent) {
         when (intent) {
-            is SignUpIntent.UsernameChanged -> {
-                _state.update { it.copy(username = intent.username, usernameError = false, usernameErrorRes = null).withUpdatedImage() }
-            }
-            is SignUpIntent.EmailChanged -> {
-                _state.update { it.copy(email = intent.email, emailError = false, emailErrorRes = null).withUpdatedImage() }
-            }
-            is SignUpIntent.PasswordChanged -> {
-                _state.update { it.copy(password = intent.password, passwordError = false, passwordErrorRes = null).withUpdatedImage() }
-            }
-            is SignUpIntent.ConfirmPasswordChanged -> {
-                _state.update { it.copy(confirmPassword = intent.password, confirmPasswordError = false, confirmPasswordErrorRes = null).withUpdatedImage() }
-            }
-            SignUpIntent.SignUpClicked -> handleSignUpClicked()
+            is SignUpIntent.SignUpClicked -> handleSignUpClicked(
+                intent.username,
+                intent.email,
+                intent.password,
+                intent.confirmPassword
+            )
             SignUpIntent.LoginClicked -> sendEffect(SignUpEffect.NavigateToLogin)
             SignUpIntent.GoogleSignInClicked -> startGoogleSignIn()
             is SignUpIntent.GoogleLoginSubmitted -> loginWithGoogle(intent.idToken)
@@ -55,12 +48,12 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignUpClicked() {
-        val username = state.value.username
-        val email = state.value.email
-        val password = state.value.password
-        val confirmPassword = state.value.confirmPassword
-
+    private fun handleSignUpClicked(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
         val usernameValid = ValidationUtils.isValidName(username)
         val emailValid = ValidationUtils.isValidEmail(email)
         val passwordValid = ValidationUtils.isValidPassword(password)
@@ -68,30 +61,30 @@ class SignUpViewModel @Inject constructor(
 
         if (!usernameValid) {
             _state.update { it.copy(
-                usernameError = true,
+                usernameError = true, 
                 usernameErrorRes = if (username.isBlank()) R.string.signup_error_name_required else R.string.signup_error_name_too_short
-            ).withUpdatedImage() }
+            ) }
             sendEffect(SignUpEffect.ShakeUsername)
         }
         if (!emailValid) {
             _state.update { it.copy(
-                emailError = true,
+                emailError = true, 
                 emailErrorRes = if (email.isBlank()) R.string.login_error_email_required else R.string.login_error_invalid_email
-            ).withUpdatedImage() }
+            ) }
             sendEffect(SignUpEffect.ShakeEmail)
         }
         if (!passwordValid) {
             _state.update { it.copy(
                 passwordError = true,
                 passwordErrorRes = if (password.isBlank()) R.string.login_error_password_required else R.string.login_error_weak_password
-            ).withUpdatedImage() }
+            ) }
             sendEffect(SignUpEffect.ShakePassword)
         }
         if (!passwordsMatch && passwordValid) {
             _state.update { it.copy(
                 confirmPasswordError = true,
                 confirmPasswordErrorRes = R.string.signup_error_passwords_do_not_match
-            ).withUpdatedImage() }
+            ) }
             sendEffect(SignUpEffect.ShakeConfirmPassword)
         }
 
@@ -103,13 +96,13 @@ class SignUpViewModel @Inject constructor(
     private fun signUpWithEmail(username: String, email: String, password: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-//            when (val result = signUpWithEmailUseCase(username, email, password)) {
-//                is LinguaQuestResult.Success -> {
-//                    _state.update { it.copy(isLoading = false) }
-//                    sendEffect(SignUpEffect.SignUpSucceeded)
-//                }
-//                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
-//            }
+            when (val result = signUpWithEmailUseCase(email, username, password, "Arabic", "Spanish")) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(SignUpEffect.SignUpSucceeded(email))
+                }
+                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
+            }
         }
     }
 
@@ -119,7 +112,7 @@ class SignUpViewModel @Inject constructor(
             when (val result = loginWithGoogleUseCase(idToken)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false, googleError = false) }
-                    sendEffect(SignUpEffect.SignUpSucceeded)
+                    sendEffect(SignUpEffect.SignUpSucceeded(""))
                 }
                 is LinguaQuestResult.Failure -> handleGoogleFailure(result.error)
             }
@@ -137,8 +130,8 @@ class SignUpViewModel @Inject constructor(
                 emailErrorRes = if (emailHasError) error.toMessageRes() else null,
                 passwordError = passwordHasError,
                 passwordErrorRes = if (passwordHasError) error.toMessageRes() else null,
-                googleError = false,
-            ).withUpdatedImage()
+                googleError = false
+            )
         }
 
         when (error) {
@@ -153,8 +146,8 @@ class SignUpViewModel @Inject constructor(
             it.copy(
                 isLoading = false,
                 googleError = true,
-                generalErrorRes = error.toMessageRes(),
-            ).withUpdatedImage()
+                generalErrorRes = error.toMessageRes()
+            )
         }
         sendEffect(SignUpEffect.ShakeGoogleSignIn)
     }
@@ -164,7 +157,7 @@ class SignUpViewModel @Inject constructor(
             it.copy(
                 googleError = false,
                 generalErrorRes = null,
-            ).withUpdatedImage()
+            )
         }
         sendEffect(SignUpEffect.LaunchGoogleSignIn)
     }
@@ -173,14 +166,5 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             _effects.send(effect)
         }
-    }
-
-    private fun SignUpState.withUpdatedImage(): SignUpState {
-        val newImage = when {
-            usernameError || emailError || passwordError || confirmPasswordError || generalErrorRes != null -> R.drawable.lingo_error
-            username.isNotBlank() || email.isNotBlank() || password.isNotBlank() || confirmPassword.isNotBlank() -> R.drawable.lingo_writing
-            else -> R.drawable.lingo_register
-        }
-        return this.copy(headerImageRes = newImage)
     }
 }
