@@ -12,41 +12,22 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.R
 
-class NestedNavigator {
-    val backStack = mutableStateListOf<NestedScreen>(NestedScreen.Home)
-
-    fun navigateToTopLevel(screen: NestedScreen) {
-        if (backStack.lastOrNull() == screen) return
-        
-        backStack.clear()
-        backStack.add(NestedScreen.Home)
-        if (screen != NestedScreen.Home) {
-            backStack.add(screen)
-        }
-    }
-
-    fun popBackStack() {
-        if (backStack.size > 1) {
-            backStack.removeAt(backStack.size - 1)
-        }
-    }
-}
-
 @Composable
-fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
-    val nestedNavigator = remember { NestedNavigator() }
-    val currentScreen = nestedNavigator.backStack.lastOrNull()
+fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
+    val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
+    val currentScreen = nestedBackStack.lastOrNull()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -55,7 +36,15 @@ fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
                 BottomNavScreen.entries.forEach { bottomNavScreen ->
                     NavigationBarItem(
                         selected = currentScreen == bottomNavScreen.route,
-                        onClick = { nestedNavigator.navigateToTopLevel(bottomNavScreen.route) },
+                        onClick = {
+                            nestedBackStack.apply {
+                                clear()
+                                navigateSingleTop(NestedScreen.Home)
+                                if (bottomNavScreen.route != NestedScreen.Home) {
+                                    navigateSingleTop(bottomNavScreen.route)
+                                }
+                            }
+                        },
                         icon = { Icon(bottomNavScreen.icon, contentDescription = stringResource(id = bottomNavScreen.labelRes)) },
                         label = { Text(stringResource(id = bottomNavScreen.labelRes)) }
                     )
@@ -64,9 +53,9 @@ fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
         }
     ) { innerPadding ->
         NavDisplay(
-            backStack = nestedNavigator.backStack,
+            backStack = nestedBackStack,
             modifier = Modifier.padding(innerPadding),
-            onBack = { nestedNavigator.popBackStack() },
+            onBack = { nestedBackStack.removeLastOrNull() },
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
@@ -75,7 +64,7 @@ fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
                 entry<NestedScreen.Home> {
                     HomeScreen(
                         onNavigateToDetails = { id ->
-                            rootNavigator.navigateTo(RootScreen.Details(id))
+                            rootBackStack.navigateSingleTop(RootScreen.Details(id))
                         }
                     )
                 }

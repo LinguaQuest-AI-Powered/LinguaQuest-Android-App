@@ -1,4 +1,3 @@
-
 package com.iti.linguaquest.core.navigation
 
 import androidx.compose.animation.core.tween
@@ -18,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,28 +49,14 @@ import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
-
-
-class RootNavigator {
-
-    val backStack = mutableStateListOf<RootScreen>(RootScreen.Splash)
-    fun navigateTo(screen: RootScreen) {
-        backStack.add(screen)
-    }
-
-    fun popBackStack() {
-        if (backStack.size > 1) {
-            backStack.removeAt(backStack.size - 1)
-        }
-    }
-}
+import androidx.navigation3.runtime.rememberNavBackStack
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootNavigator = remember { RootNavigator() }
+    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -102,9 +86,9 @@ fun AppNavigation(
         }
     ) { innerPadding ->
         NavDisplay(
-            backStack = rootNavigator.backStack,
+            backStack = rootBackStack,
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
-            onBack = { rootNavigator.popBackStack() },
+            onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
                     animationSpec = spring(
@@ -147,17 +131,20 @@ fun AppNavigation(
 
                     LaunchedEffect(Unit) {
                         delay(2000.milliseconds)
-                        rootNavigator.navigateTo(RootScreen.Onboarding)
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(RootScreen.Onboarding)
+                        }
                     }
                 }
 
                 entry<RootScreen.Onboarding> {
                     OnboardingScreen(
                         onGetStartedClick = {
-                            rootNavigator.navigateTo(RootScreen.Languages)
+                            rootBackStack.navigateSingleTop(RootScreen.Languages)
                         },
                         onLoginClick = {
-                            rootNavigator.navigateTo(RootScreen.Login)
+                            rootBackStack.navigateSingleTop(RootScreen.Login)
                         }
                     )
                 }
@@ -165,7 +152,7 @@ fun AppNavigation(
                 entry<RootScreen.Languages> {
                     LanguagesScreen(
                         onContinue = {
-                            rootNavigator.navigateTo(RootScreen.Level)
+                            rootBackStack.navigateSingleTop(RootScreen.Level)
                         }
                     )
                 }
@@ -173,7 +160,7 @@ fun AppNavigation(
                 entry<RootScreen.Level> {
                     LevelScreen(
                         onContinue = {
-                            rootNavigator.navigateTo(RootScreen.Login)
+                            rootBackStack.navigateSingleTop(RootScreen.Login)
                         }
                     )
                 }
@@ -181,63 +168,76 @@ fun AppNavigation(
                 entry<RootScreen.Login> {
                     LoginScreen(
                         onSignUp = {
-                            rootNavigator.navigateTo(RootScreen.SignUp)
+                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
                         },
                         onForgotPassword = {
-                            rootNavigator.navigateTo(RootScreen.ForgotPassword)
+                            rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
                         },
                         onLoginSuccess = {
-                            rootNavigator.navigateTo(RootScreen.Main)
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(RootScreen.Main)
+                            }
                         }
                     )
                 }
 
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
-                        onNavigateToLogin = { rootNavigator.popBackStack() },
-                        onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                        onNavigateToLogin = { rootBackStack.removeLastOrNull() },
+                        onSignUpSuccess = {
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(RootScreen.Main)
+                            }
+                        }
                     )
                 }
 
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
-                        onBackToLogin = { rootNavigator.popBackStack() },
-                        onSendSucceeded = { rootNavigator.popBackStack() }
+                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onSendSucceeded = { rootBackStack.removeLastOrNull() }
                     )
                 }
                 entry<RootScreen.OTP> { screen ->
                     OTPScreen(
                         email = screen.email,
                         isPasswordReset = screen.isPasswordReset,
-                        onNavigateBack = { rootNavigator.popBackStack() },
-                        onNavigateToLogin = { rootNavigator.navigateTo(RootScreen.Login) },
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onNavigateToLogin = { rootBackStack.navigateSingleTop(RootScreen.Login) },
                         onNavigateToNext = { resetToken ->
                             if (screen.isPasswordReset && resetToken != null) {
-                                rootNavigator.navigateTo(RootScreen.NewPassword(resetToken))
+                                rootBackStack.navigateSingleTop(RootScreen.NewPassword(resetToken))
                             } else {
-                                rootNavigator.navigateTo(RootScreen.Login)
+                                rootBackStack.navigateSingleTop(RootScreen.Login)
                             }
                         }
                     )
                 }
 
-                entry<RootScreen.NewPassword> {screen->
+                entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
-                        onBackToLogin = { rootNavigator.popBackStack() },
-                        onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) },
+                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onResetSuccess = {
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(RootScreen.Main)
+                            }
+                        },
                         resetToken = screen.resetToken
                     )
                 }
 
                 entry<RootScreen.Main> {
-                    MainScreen(rootNavigator)
+                    MainScreen(rootBackStack)
                 }
 
                 entry<RootScreen.Details> { key ->
                     DetailsScreen(
                         id = key.id,
                         onBack = {
-                            rootNavigator.popBackStack()
+                            rootBackStack.removeLastOrNull()
                         }
                     )
                 }
