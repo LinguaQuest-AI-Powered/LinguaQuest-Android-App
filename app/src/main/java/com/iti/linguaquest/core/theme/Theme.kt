@@ -66,7 +66,10 @@ private val LightExtraColors = LinguaQuestColors(
     titleAndCationsColor = AppColors.TitleAndCaptionColor,
     blackColor = AppColors.Black,
     whiteColor = AppColors.White,
-    cardLevelFilledColor = AppColors.cardLevelFilledColor
+    cardLevelFilledColor = AppColors.cardLevelFilledColor,
+    progressTrackRemainedColor = AppColors.progressTrackColor,
+    IconBoxBackground = AppColors.IconBoxBackground,
+    ChipBackground = AppColors.ChipBackground
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -84,7 +87,10 @@ private val DarkExtraColors = LinguaQuestColors(
     titleAndCationsColor = AppColors.TitleAndCaptionColor,
     blackColor = AppColors.Black,
     whiteColor = AppColors.White,
-    cardLevelFilledColor = AppColors.cardLevelFilledColor
+    cardLevelFilledColor = AppColors.cardLevelFilledColor,
+    progressTrackRemainedColor = AppColors.progressTrackColor,
+    IconBoxBackground = AppColors.IconBoxBackground,
+    ChipBackground = AppColors.ChipBackground
 )
 
 @Composable
