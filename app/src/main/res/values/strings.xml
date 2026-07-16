@@ -105,5 +105,7 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
+     <string name="gallery_label">Gallery</string>
+
 </resources>
 

@@ -4,6 +4,11 @@ import androidx.compose.ui.graphics.Color
 
 object AppColors {
 
+    val CreamBackground = Color(0xFFFFF8F2)
+    val BrownText = Color(0xFF5D4037)
+    val OrangeActive = Color(0xFFFFA726)
+    val ShadowOrange = Color(0xFFC77800)
+
     // Primary
     val PrimaryColor = Color(0xFFFF9F29)
     val TextOnPrimaryButton = Color(0xFFFFFFFF)
