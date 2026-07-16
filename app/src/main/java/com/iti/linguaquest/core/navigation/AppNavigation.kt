@@ -1,5 +1,6 @@
 
 package com.iti.linguaquest.core.navigation
+
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
@@ -37,6 +38,19 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.view.ForgetPasswordScreen
 import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
 import kotlin.time.Duration.Companion.milliseconds
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
+import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
+import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
+import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+
 
 class RootNavigator {
 
@@ -52,138 +66,168 @@ class RootNavigator {
     }
 }
 
-
 @Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
+fun AppNavigation(
+    modifier: Modifier = Modifier,
+    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
+) {
     val rootNavigator = remember { RootNavigator() }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
-    NavDisplay(
-        backStack = rootNavigator.backStack,
+    LaunchedEffect(Unit) {
+        globalUiHostViewModel.snackbarController.events.collectLatest { event ->
+            snackbarHostState.currentSnackbarData?.dismiss()
+            val result = snackbarHostState.showSnackbar(
+                AppSnackbarVisuals(
+                    message = event.message.asString(context),
+                    actionLabel = event.actionLabel?.asString(context),
+                    duration = event.duration,
+                    type = event.type
+                )
+            )
+            if (result == SnackbarResult.ActionPerformed) event.onAction?.invoke()
+        }
+    }
+
+    Scaffold(
         modifier = modifier.fillMaxSize(),
-        onBack = { rootNavigator.popBackStack() },
-        transitionSpec = {
-            slideInHorizontally(
-                animationSpec = spring(
-                    stiffness = Spring.StiffnessLow,
-                    dampingRatio = Spring.DampingRatioNoBouncy
-                ),
-                initialOffsetX = { fullWidth -> fullWidth }
-            ) + fadeIn(animationSpec = tween(300)) togetherWith
-                    slideOutHorizontally(
-                        animationSpec = spring(
-                            stiffness = Spring.StiffnessLow,
-                            dampingRatio = Spring.DampingRatioNoBouncy
-                        ),
-                        targetOffsetX = { fullWidth -> -fullWidth }
-                    ) + fadeOut(animationSpec = tween(300))
-        },
-        popTransitionSpec = {
-            slideInHorizontally(
-                animationSpec = spring(
-                    stiffness = Spring.StiffnessLow,
-                    dampingRatio = Spring.DampingRatioNoBouncy
-                ),
-                initialOffsetX = { fullWidth -> -fullWidth }
-            ) + fadeIn(animationSpec = tween(300)) togetherWith
-                    slideOutHorizontally(
-                        animationSpec = spring(
-                            stiffness = Spring.StiffnessLow,
-                            dampingRatio = Spring.DampingRatioNoBouncy
-                        ),
-                        targetOffsetX = { fullWidth -> fullWidth }
-                    ) + fadeOut(animationSpec = tween(300))
-        },
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        entryProvider = entryProvider {
-            entry<RootScreen.Splash> {
-                LinguaQuestSplashScreen()
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.navigationBarsPadding()
+            )
+        }
+    ) { innerPadding ->
+        NavDisplay(
+            backStack = rootNavigator.backStack,
+            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            onBack = { rootNavigator.popBackStack() },
+            transitionSpec = {
+                slideInHorizontally(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessLow,
+                        dampingRatio = Spring.DampingRatioNoBouncy
+                    ),
+                    initialOffsetX = { fullWidth -> fullWidth }
+                ) + fadeIn(animationSpec = tween(300)) togetherWith
+                        slideOutHorizontally(
+                            animationSpec = spring(
+                                stiffness = Spring.StiffnessLow,
+                                dampingRatio = Spring.DampingRatioNoBouncy
+                            ),
+                            targetOffsetX = { fullWidth -> -fullWidth }
+                        ) + fadeOut(animationSpec = tween(300))
+            },
+            popTransitionSpec = {
+                slideInHorizontally(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessLow,
+                        dampingRatio = Spring.DampingRatioNoBouncy
+                    ),
+                    initialOffsetX = { fullWidth -> -fullWidth }
+                ) + fadeIn(animationSpec = tween(300)) togetherWith
+                        slideOutHorizontally(
+                            animationSpec = spring(
+                                stiffness = Spring.StiffnessLow,
+                                dampingRatio = Spring.DampingRatioNoBouncy
+                            ),
+                            targetOffsetX = { fullWidth -> fullWidth }
+                        ) + fadeOut(animationSpec = tween(300))
+            },
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator()
+            ),
+            entryProvider = entryProvider {
+                entry<RootScreen.Splash> {
+                    LinguaQuestSplashScreen()
 
-                LaunchedEffect(Unit) {
-                    delay(2000.milliseconds)
-                    rootNavigator.navigateTo(RootScreen.Onboarding)
+                    LaunchedEffect(Unit) {
+                        delay(2000.milliseconds)
+                        rootNavigator.navigateTo(RootScreen.Onboarding)
+                    }
                 }
-            }
 
-            entry<RootScreen.Onboarding> {
-                OnboardingScreen(
-                    onGetStartedClick = {
-                        rootNavigator.navigateTo(RootScreen.Languages)
-                    },
-                    onLoginClick = {
-                        // User already has an account
-                        rootNavigator.navigateTo(RootScreen.Login)
-                    }
-                )
-            }
+                entry<RootScreen.Onboarding> {
+                    OnboardingScreen(
+                        onGetStartedClick = {
+                            rootNavigator.navigateTo(RootScreen.Languages)
+                        },
+                        onLoginClick = {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
+                    )
+                }
 
-            entry<RootScreen.Languages> {
-                LanguagesScreen(
-                    onContinue = {
-                        rootNavigator.navigateTo(RootScreen.Level)
-                    }
-                )
-            }
+                entry<RootScreen.Languages> {
+                    LanguagesScreen(
+                        onContinue = {
+                            rootNavigator.navigateTo(RootScreen.Level)
+                        }
+                    )
+                }
 
-            entry<RootScreen.Level> {
-                LevelScreen(
-                    onContinue = {
-                        rootNavigator.navigateTo(RootScreen.Login)
-                    }
-                )
-            }
+                entry<RootScreen.Level> {
+                    LevelScreen(
+                        onContinue = {
+                            rootNavigator.navigateTo(RootScreen.Login)
+                        }
+                    )
+                }
 
-            entry<RootScreen.Login> {
-                LoginScreen(
-                    onSignUp = {
-                        rootNavigator.navigateTo(RootScreen.SignUp)
-                    },
-                    onForgotPassword = {
-                        rootNavigator.navigateTo(RootScreen.ForgotPassword)
-                    },
-                    onLoginSuccess = {
-                        rootNavigator.navigateTo(RootScreen.Main)
-                    }
-                )
-            }
+                entry<RootScreen.Login> {
+                    LoginScreen(
+                        onSignUp = {
+                            rootNavigator.navigateTo(RootScreen.SignUp)
+                        },
+                        onForgotPassword = {
+                            rootNavigator.navigateTo(RootScreen.ForgotPassword)
+                        },
+                        onLoginSuccess = {
+                            rootNavigator.navigateTo(RootScreen.Main)
+                        }
+                    )
+                }
 
-            entry<RootScreen.SignUp> {
-                SignUpScreen(
-                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
-                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
-                )
-            }
+                entry<RootScreen.SignUp> {
+                    SignUpScreen(
+                        onNavigateToLogin = { rootNavigator.popBackStack() },
+                        onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    )
+                }
 
-            entry<RootScreen.ForgotPassword> {
-                ForgetPasswordScreen(
-                    onBackToLogin = { rootNavigator.popBackStack() },
-                    onSendSucceeded = { rootNavigator.popBackStack() }
-                )
-            }
-            entry<RootScreen.NewPassword> {
-                NewPasswordScreen(
-                    onBackToLogin = { rootNavigator.popBackStack() },
-                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
-                )
-            }
+                entry<RootScreen.ForgotPassword> {
+                    ForgetPasswordScreen(
+                        onBackToLogin = { rootNavigator.popBackStack() },
+                        onSendSucceeded = { rootNavigator.popBackStack() }
+                    )
+                }
+                entry<RootScreen.NewPassword> {
+                    NewPasswordScreen(
+                        onBackToLogin = { rootNavigator.popBackStack() },
+                        onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+                    )
+                }
 
-            entry<RootScreen.Main> {
-                MainScreen(rootNavigator)
-            }
+                entry<RootScreen.Main> {
+                    MainScreen(rootNavigator)
+                }
 
-            entry<RootScreen.Details> { key ->
-                DetailsScreen(
-                    id = key.id,
-                    onBack = {
-                        rootNavigator.popBackStack()
-                    }
-                )
-            }
-        })
+                entry<RootScreen.Details> { key ->
+                    DetailsScreen(
+                        id = key.id,
+                        onBack = {
+                            rootNavigator.popBackStack()
+                        }
+                    )
+                }
+            })
+    }
+
+    GlobalDialogHost(globalUiHostViewModel.dialogController)
 }
-
 
 @Composable
 fun DetailsScreen(id: Int, onBack: () -> Unit, modifier: Modifier = Modifier) {
@@ -197,3 +241,162 @@ fun DetailsScreen(id: Int, onBack: () -> Unit, modifier: Modifier = Modifier) {
         }
     }
 }
+//class RootNavigator {
+//
+//    val backStack = mutableStateListOf<RootScreen>(RootScreen.Splash)
+//    fun navigateTo(screen: RootScreen) {
+//        backStack.add(screen)
+//    }
+//
+//    fun popBackStack() {
+//        if (backStack.size > 1) {
+//            backStack.removeAt(backStack.size - 1)
+//        }
+//    }
+//}
+//
+//
+//@Composable
+//fun AppNavigation(modifier: Modifier = Modifier) {
+//    val rootNavigator = remember { RootNavigator() }
+//
+//    NavDisplay(
+//        backStack = rootNavigator.backStack,
+//        modifier = modifier.fillMaxSize(),
+//        onBack = { rootNavigator.popBackStack() },
+//        transitionSpec = {
+//            slideInHorizontally(
+//                animationSpec = spring(
+//                    stiffness = Spring.StiffnessLow,
+//                    dampingRatio = Spring.DampingRatioNoBouncy
+//                ),
+//                initialOffsetX = { fullWidth -> fullWidth }
+//            ) + fadeIn(animationSpec = tween(300)) togetherWith
+//                    slideOutHorizontally(
+//                        animationSpec = spring(
+//                            stiffness = Spring.StiffnessLow,
+//                            dampingRatio = Spring.DampingRatioNoBouncy
+//                        ),
+//                        targetOffsetX = { fullWidth -> -fullWidth }
+//                    ) + fadeOut(animationSpec = tween(300))
+//        },
+//        popTransitionSpec = {
+//            slideInHorizontally(
+//                animationSpec = spring(
+//                    stiffness = Spring.StiffnessLow,
+//                    dampingRatio = Spring.DampingRatioNoBouncy
+//                ),
+//                initialOffsetX = { fullWidth -> -fullWidth }
+//            ) + fadeIn(animationSpec = tween(300)) togetherWith
+//                    slideOutHorizontally(
+//                        animationSpec = spring(
+//                            stiffness = Spring.StiffnessLow,
+//                            dampingRatio = Spring.DampingRatioNoBouncy
+//                        ),
+//                        targetOffsetX = { fullWidth -> fullWidth }
+//                    ) + fadeOut(animationSpec = tween(300))
+//        },
+//        entryDecorators = listOf(
+//            rememberSaveableStateHolderNavEntryDecorator(),
+//            rememberViewModelStoreNavEntryDecorator()
+//        ),
+//        entryProvider = entryProvider {
+//            entry<RootScreen.Splash> {
+//                LinguaQuestSplashScreen()
+//
+//                LaunchedEffect(Unit) {
+//                    delay(2000.milliseconds)
+//                    rootNavigator.navigateTo(RootScreen.Onboarding)
+//                }
+//            }
+//
+//            entry<RootScreen.Onboarding> {
+//                OnboardingScreen(
+//                    onGetStartedClick = {
+//                        rootNavigator.navigateTo(RootScreen.Languages)
+//                    },
+//                    onLoginClick = {
+//                        // User already has an account
+//                        rootNavigator.navigateTo(RootScreen.Login)
+//                    }
+//                )
+//            }
+//
+//            entry<RootScreen.Languages> {
+//                LanguagesScreen(
+//                    onContinue = {
+//                        rootNavigator.navigateTo(RootScreen.Level)
+//                    }
+//                )
+//            }
+//
+//            entry<RootScreen.Level> {
+//                LevelScreen(
+//                    onContinue = {
+//                        rootNavigator.navigateTo(RootScreen.Login)
+//                    }
+//                )
+//            }
+//
+//            entry<RootScreen.Login> {
+//                LoginScreen(
+//                    onSignUp = {
+//                        rootNavigator.navigateTo(RootScreen.SignUp)
+//                    },
+//                    onForgotPassword = {
+//                        rootNavigator.navigateTo(RootScreen.ForgotPassword)
+//                    },
+//                    onLoginSuccess = {
+//                        rootNavigator.navigateTo(RootScreen.Main)
+//                    }
+//                )
+//            }
+//
+//            entry<RootScreen.SignUp> {
+//                SignUpScreen(
+//                    onNavigateToLogin = { rootNavigator.popBackStack() }, // Assuming login is right behind signup in stack
+//                    onSignUpSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+//                )
+//            }
+//
+//            entry<RootScreen.ForgotPassword> {
+//                ForgetPasswordScreen(
+//                    onBackToLogin = { rootNavigator.popBackStack() },
+//                    onSendSucceeded = { rootNavigator.popBackStack() }
+//                )
+//            }
+//            entry<RootScreen.NewPassword> {
+//                NewPasswordScreen(
+//                    onBackToLogin = { rootNavigator.popBackStack() },
+//                    onResetSuccess = { rootNavigator.navigateTo(RootScreen.Main) }
+//                )
+//            }
+//
+//            entry<RootScreen.Main> {
+//                MainScreen(rootNavigator)
+//            }
+//
+//            entry<RootScreen.Details> { key ->
+//                DetailsScreen(
+//                    id = key.id,
+//                    onBack = {
+//                        rootNavigator.popBackStack()
+//                    }
+//                )
+//            }
+//        })
+//}
+//
+//
+//@Composable
+//fun DetailsScreen(id: Int, onBack: () -> Unit, modifier: Modifier = Modifier) {
+//    Column(modifier = modifier
+//        .fillMaxSize()
+//        .padding(16.dp)) {
+//        Text(text = stringResource(R.string.details_screen_id, id))
+//        Spacer(modifier = Modifier.height(16.dp))
+//        Button(onClick = onBack) {
+//            Text(stringResource(R.string.pop_screen))
+//        }
+//    }
+//}
