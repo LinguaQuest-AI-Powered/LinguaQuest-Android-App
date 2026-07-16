@@ -31,4 +31,14 @@ object AppColors {
     val Black =Color.Black
     val White =Color(0xffFFFFFF)
     val cardLevelFilledColor =Color(0xffFCEBDE)
+
+    // Dialog Colors
+    val DialogGradientTopRight = Color(0xFFFCEBAE)
+    val DialogGradientBottomLeft = Color(0xFFC4FFEF)
+    val DialogOutline = Color(0xFFD6F5F3)
+    val DialogSecondaryButtonOutline = Color(0xFF68FADD)
+    val DialogLightTipBackground = Color(0xFFFFF7E6)
+    val DialogPriceTagBackground = Color(0xFFFFF1EB)
+    val DialogCloseButtonBackground = Color(0xFFE0E0E0).copy(alpha = 0.6f)
+    val DialogShadow = Color(0x33000000)
 }

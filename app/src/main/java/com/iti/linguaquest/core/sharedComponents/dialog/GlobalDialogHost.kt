@@ -13,22 +13,19 @@ fun GlobalDialogHost(dialogController: DialogController) {
     val dialog by dialogController.state.collectAsStateWithLifecycle()
 
     dialog?.let { d ->
-        AlertDialog(
+        AppDialog(
+            title = d.title.asString(),
+            message = d.message.asString(),
+            imageRes = d.imageRes,
             onDismissRequest = { d.onDismiss?.invoke(); dialogController.hide() },
-            title = { Text(d.title.asString()) },
-            text = { Text(d.message.asString()) },
-            confirmButton = {
-                TextButton(onClick = { d.onConfirm?.invoke(); dialogController.hide() }) {
-                    Text(d.confirmText.asString())
-                }
-            },
-            dismissButton = d.dismissText?.let { text ->
-                {
-                    TextButton(onClick = { d.onDismiss?.invoke(); dialogController.hide() }) {
-                        Text(text.asString())
-                    }
-                }
-            }
+            showCloseIcon = d.showCloseIcon,
+            primaryButtonText = d.confirmText.asString(),
+            onPrimaryClick = { d.onConfirm?.invoke(); dialogController.hide() },
+            primaryButtonIcon = d.primaryIconRes,
+            secondaryButtonText = d.dismissText?.asString(),
+            onSecondaryClick = if (d.dismissText != null) { { d.onDismiss?.invoke(); dialogController.hide() } } else null,
+            secondaryButtonIcon = d.secondaryIconRes,
+            customContent = d.customContent
         )
     }
 }

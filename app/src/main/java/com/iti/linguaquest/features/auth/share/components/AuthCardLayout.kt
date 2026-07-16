@@ -14,13 +14,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -53,18 +52,8 @@ fun AuthCardLayout(
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.background,
-                                Color(0xFFFFFFFF),
-                                Color(0xFFFFF4D8)
-                            )
-                        )
-                    )
+            AppGradientBackgroundBox(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier
