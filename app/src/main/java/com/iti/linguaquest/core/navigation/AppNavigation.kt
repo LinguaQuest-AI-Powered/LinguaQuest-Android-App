@@ -168,7 +168,7 @@ fun AppNavigation(
                 entry<RootScreen.Login> {
                     LoginScreen(
                         onSignUp = {
-                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
+                            rootBackStack.navigateSingleTop(RootScreen.Main)
                         },
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
