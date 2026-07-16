@@ -50,4 +50,12 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(
+        retrofit: Retrofit
+    ): com.iti.linguaquest.features.auth.data.datasource.AuthApiService {
+        return retrofit.create(com.iti.linguaquest.features.auth.data.datasource.AuthApiService::class.java)
+    }
 }

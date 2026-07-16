@@ -13,16 +13,16 @@ interface AuthRepository {
         password: String,
         nativeLanguage: String,
         targetLanguage: String
-    ): LinguaQuestResult<AuthUser, AuthError>
+    ): LinguaQuestResult<Unit, AuthError>
 
     suspend fun login(
         email: String,
         password: String
-    ): LinguaQuestResult<AuthUser, AuthError>
+    ): LinguaQuestResult<Unit, AuthError>
 
     suspend fun signInWithGoogle(
         idToken: String
-    ): LinguaQuestResult<AuthUser, AuthError>
+    ): LinguaQuestResult<Unit, AuthError>
 
     suspend fun sendRegistrationOtp(email: String): LinguaQuestResult<Unit, AuthError>
     suspend fun sendPasswordResetOtp(email: String): LinguaQuestResult<Unit, AuthError>

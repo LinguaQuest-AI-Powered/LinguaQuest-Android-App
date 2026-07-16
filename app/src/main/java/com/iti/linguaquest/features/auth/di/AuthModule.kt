@@ -17,4 +17,10 @@ abstract class AuthModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRemoteDataSource(
+        authRemoteDataSourceImpl: com.iti.linguaquest.features.auth.data.datasource.AuthRemoteDataSourceImpl
+    ): com.iti.linguaquest.features.auth.data.datasource.AuthRemoteDataSource
 }

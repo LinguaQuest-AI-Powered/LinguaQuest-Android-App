@@ -12,7 +12,7 @@ class LoginUserUseCase @Inject constructor(
     suspend operator fun invoke(
         email: String,
         password: String
-    ): LinguaQuestResult<AuthUser, AuthError> {
-        return authRepository.login(email, password)
-    }
+    ): LinguaQuestResult<Unit, AuthError> =
+        authRepository.login(email, password)
+
 }
