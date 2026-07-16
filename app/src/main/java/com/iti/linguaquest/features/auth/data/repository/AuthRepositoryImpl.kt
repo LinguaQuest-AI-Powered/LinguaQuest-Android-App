@@ -6,13 +6,13 @@ import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.core.network.asEmptyDataResult
 import com.iti.linguaquest.core.network.map
 import com.iti.linguaquest.core.network.onSuccess
-import com.iti.linguaquest.features.auth.data.datasource.AuthRemoteDataSource
-import com.iti.linguaquest.features.auth.data.datasource.EmailRequestDto
-import com.iti.linguaquest.features.auth.data.datasource.LoginRequestDto
-import com.iti.linguaquest.features.auth.data.datasource.OAuthGoogleRequestDto
-import com.iti.linguaquest.features.auth.data.datasource.RegisterRequestDto
-import com.iti.linguaquest.features.auth.data.datasource.ResetPasswordRequestDto
-import com.iti.linguaquest.features.auth.data.datasource.VerifyOtpRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
+import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.OtpVerifyRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.ResetPasswordRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.LoginRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.OAuthGoogleRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.RegisterRequestDto
 import com.iti.linguaquest.features.auth.data.mapper.toAuthError
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
@@ -64,45 +64,47 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendRegistrationOtp(email: String): LinguaQuestResult<Unit, AuthError> {
-        return remoteDataSource.sendRegistrationOtp(EmailRequestDto(email))
+        return remoteDataSource.sendOtp(OtpSendRequestDto(email, "SIGNUP"))
             .mapError()
     }
 
     override suspend fun sendPasswordResetOtp(email: String): LinguaQuestResult<Unit, AuthError> {
-        TODO("Not yet implemented")
-
+        return remoteDataSource.sendOtp(OtpSendRequestDto(email, "PASSWORD_RESET"))
+            .mapError()
     }
 
     override suspend fun verifyEmailOtp(
         email: String,
         otpCode: String
     ): LinguaQuestResult<Unit, AuthError> {
-        TODO("Not yet implemented")
-
+        return remoteDataSource.verifyEmailOtp(OtpVerifyRequestDto(email, otpCode))
+            .mapError()
     }
 
     override suspend fun verifyPasswordResetOtp(
         email: String,
         otpCode: String
     ): LinguaQuestResult<String, AuthError> {
-        TODO("Not yet implemented")
-
+        return remoteDataSource.verifyPasswordResetOtp(OtpVerifyRequestDto(email, otpCode))
+            .map { it.resetToken }
+            .mapError()
     }
 
     override suspend fun setNewPassword(
         newPassword: String,
         resetToken: String
     ): LinguaQuestResult<Unit, AuthError> {
-        TODO("Not yet implemented")
-
+        return remoteDataSource.setNewPassword(ResetPasswordRequestDto(resetToken, newPassword))
+            .mapError()
     }
 
     override fun isLoggedIn(): Flow<Boolean> {
-        TODO("Not yet implemented")
+        return tokensLocalDataSource.isLoggedIn
     }
 
     override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
-        TODO("Not yet implemented")
+        tokensLocalDataSource.clearTokens()
+        return LinguaQuestResult.Success(Unit)
     }
 
     private fun <T> LinguaQuestResult<T, LinguaQuestDataError>.mapError(): LinguaQuestResult<T, AuthError> {

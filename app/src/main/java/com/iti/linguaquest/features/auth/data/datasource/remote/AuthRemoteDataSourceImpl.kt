@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.auth.data.datasource
+package com.iti.linguaquest.features.auth.data.datasource.remote
 
 import com.iti.linguaquest.core.network.LinguaQuestDataError
 import com.iti.linguaquest.core.network.LinguaQuestResult
@@ -18,7 +18,16 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun loginWithGoogle(body: OAuthGoogleRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> =
         safeApiCall { api.loginWithGoogle(body).data }
 
-    override suspend fun sendRegistrationOtp(body: EmailRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
-        safeApiCall { api.sendRegistrationOtp(body).data }
+    override suspend fun sendOtp(body: OtpSendRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
+        safeApiCall { api.sendOtp(body).data }
+
+    override suspend fun verifyEmailOtp(body: OtpVerifyRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
+        safeApiCall { api.verifyEmailOtp(body).data }
+
+    override suspend fun verifyPasswordResetOtp(body: OtpVerifyRequestDto): LinguaQuestResult<VerifyResetOtpResponseDto, LinguaQuestDataError> =
+        safeApiCall { api.verifyPasswordResetOtp(body).data }
+
+    override suspend fun setNewPassword(body: ResetPasswordRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
+        safeApiCall { api.setNewPassword(body).data }
 
 }

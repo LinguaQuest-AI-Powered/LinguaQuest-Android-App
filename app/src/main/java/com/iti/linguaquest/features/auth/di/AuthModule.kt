@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.auth.di
 
+import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
+import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSourceImpl
 import com.iti.linguaquest.features.auth.data.repository.AuthRepositoryImpl
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import dagger.Binds
@@ -21,6 +23,6 @@ abstract class AuthModule {
     @Binds
     @Singleton
     abstract fun bindAuthRemoteDataSource(
-        authRemoteDataSourceImpl: com.iti.linguaquest.features.auth.data.datasource.AuthRemoteDataSourceImpl
-    ): com.iti.linguaquest.features.auth.data.datasource.AuthRemoteDataSource
+        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
+    ): AuthRemoteDataSource
 }

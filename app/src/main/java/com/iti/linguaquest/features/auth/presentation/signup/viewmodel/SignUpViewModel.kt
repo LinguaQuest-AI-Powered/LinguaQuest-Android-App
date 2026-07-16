@@ -103,13 +103,13 @@ class SignUpViewModel @Inject constructor(
     private fun signUpWithEmail(username: String, email: String, password: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-//            when (val result = signUpWithEmailUseCase(username, email, password)) {
-//                is LinguaQuestResult.Success -> {
-//                    _state.update { it.copy(isLoading = false) }
-//                    sendEffect(SignUpEffect.SignUpSucceeded)
-//                }
-//                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
-//            }
+            when (val result = signUpWithEmailUseCase(email, username, password, "Arabic", "Spanish")) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(SignUpEffect.SignUpSucceeded(email))
+                }
+                is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
+            }
         }
     }
 
@@ -119,7 +119,7 @@ class SignUpViewModel @Inject constructor(
             when (val result = loginWithGoogleUseCase(idToken)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false, googleError = false) }
-                    sendEffect(SignUpEffect.SignUpSucceeded)
+                    sendEffect(SignUpEffect.SignUpSucceeded(""))
                 }
                 is LinguaQuestResult.Failure -> handleGoogleFailure(result.error)
             }
