@@ -52,6 +52,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
+import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
@@ -154,23 +155,11 @@ fun QuestCard(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    OutlinedButton(
-                        onClick = onSkipClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(50),
-                        border = BorderStroke(2.dp, AppColors.DialogSecondaryButtonOutline),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = AppColors.DialogSecondaryButtonOutline
-                        ),
-                        contentPadding = PaddingValues(vertical = 16.dp, horizontal = 24.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.skip),
-                            style = AppTextStyles.Button,
-                            color = AppColors.DialogSecondaryButtonOutline
-                        )
-                    }
+                    AppOutlinedButton(
+                        text = stringResource(id = R.string.skip),
+                        onClick = onSkipClick
+                    )
+
                 }
             }
         }
