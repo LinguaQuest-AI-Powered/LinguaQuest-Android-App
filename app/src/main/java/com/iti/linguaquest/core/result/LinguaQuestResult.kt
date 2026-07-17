@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.network
+package com.iti.linguaquest.core.result
 
 sealed interface LinguaQuestResult<out D, out E : AppError> {
 

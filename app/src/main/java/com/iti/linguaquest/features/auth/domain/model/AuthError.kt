@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.auth.domain.model
 
-import com.iti.linguaquest.core.network.AppError
+import com.iti.linguaquest.core.result.AppError
 
 sealed interface AuthError : AppError {
     data object InvalidEmail : AuthError

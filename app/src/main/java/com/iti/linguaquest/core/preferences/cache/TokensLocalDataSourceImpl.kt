@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.cache
+package com.iti.linguaquest.core.preferences.cache
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.flow.Flow

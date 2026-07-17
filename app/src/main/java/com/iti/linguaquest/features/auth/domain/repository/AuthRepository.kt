@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.auth.domain.repository
 
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import kotlinx.coroutines.flow.Flow
 
