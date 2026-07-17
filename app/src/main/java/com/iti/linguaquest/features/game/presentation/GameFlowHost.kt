@@ -14,27 +14,23 @@ import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.core.navigation.GameFlowScreen
 import com.iti.linguaquest.core.navigation.navigateSingleTop
 import com.iti.linguaquest.features.game.presentation.camera.view.CameraScreen
-import com.iti.linguaquest.features.game.presentation.failure.view.GameFailureScreen
 import com.iti.linguaquest.features.game.presentation.game.view.GameScreen
-import com.iti.linguaquest.features.game.presentation.proccessing.view.CameraProcessingScreen
+import com.iti.linguaquest.features.game.presentation.result.view.GameResultScreen
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
-import com.iti.linguaquest.features.game.presentation.success.view.GameSuccessScreen
 
 @Composable
 fun GameFlowHost(
     levelId: Int,
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
-    sharedViewModel: GameSharedViewModel = hiltViewModel() // Scoped to this host
+    sharedViewModel: GameSharedViewModel = hiltViewModel()
 ) {
-    // Initialize the nested back stack starting at the GameLobby
     val gameBackStack = rememberNavBackStack(GameFlowScreen.GameLobby)
 
     NavDisplay(
         backStack = gameBackStack,
         modifier = modifier.fillMaxSize(),
         onBack = {
-            // If we are at the root of the game flow, pop the entire flow from the main app
             if (gameBackStack.size == 1) {
                 rootBackStack.removeLastOrNull()
             } else {
@@ -56,37 +52,20 @@ fun GameFlowHost(
             entry<GameFlowScreen.Camera> {
                 CameraScreen(
                     sharedViewModel = sharedViewModel,
-                    onSubmitPhoto = { gameBackStack.navigateSingleTop(GameFlowScreen.Processing) },
+                    onSubmitPhoto = {
+                        gameBackStack.navigateSingleTop(GameFlowScreen.Result)
+                    },
                     onBack = { gameBackStack.removeLastOrNull() }
                 )
             }
-            entry<GameFlowScreen.Processing> {
-                CameraProcessingScreen(
+            entry<GameFlowScreen.Result> {
+                GameResultScreen(
                     sharedViewModel = sharedViewModel,
-                    onSuccess = {
-                        gameBackStack.clear()
-                        gameBackStack.navigateSingleTop(GameFlowScreen.Success)
-                    },
-                    onFailure = {
-                        gameBackStack.clear()
-                        gameBackStack.navigateSingleTop(GameFlowScreen.Failure)
-                    }
-                )
-            }
-            entry<GameFlowScreen.Success> {
-                GameSuccessScreen(
-                    sharedViewModel = sharedViewModel,
-                    onNextLevel = { /* Handle logic, perhaps pop back to lobby */ },
-                    onExit = { rootBackStack.removeLastOrNull() }
-                )
-            }
-            entry<GameFlowScreen.Failure> {
-                GameFailureScreen(
-                    sharedViewModel = sharedViewModel,
-                    onRetry = {
+                    onNavigateToCamera = {
                         gameBackStack.clear()
                         gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
                     },
+                    onNavigateToNextLevel = { /* Handle logic, perhaps pop back to lobby */ },
                     onExit = { rootBackStack.removeLastOrNull() }
                 )
             }
