@@ -26,6 +26,9 @@ class CameraViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: CameraIntent) {
         when (intent) {
+            is CameraIntent.PermissionResult -> {
+                _state.update { it.copy(hasPermission = intent.isGranted) }
+            }
             is CameraIntent.CapturePhoto -> {
                 sendEffect(CameraEffect.NavigateToProcessing(intent.uri))
             }
