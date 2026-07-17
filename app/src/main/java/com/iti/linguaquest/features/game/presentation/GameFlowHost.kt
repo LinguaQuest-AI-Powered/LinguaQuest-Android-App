@@ -14,18 +14,19 @@ import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.core.navigation.GameFlowScreen
 import com.iti.linguaquest.core.navigation.navigateSingleTop
 import com.iti.linguaquest.features.game.presentation.camera.view.CameraScreen
-import com.iti.linguaquest.features.game.presentation.game.view.GameScreen
+import com.iti.linguaquest.features.game.presentation.level.LevelScreen
 import com.iti.linguaquest.features.game.presentation.result.view.GameResultScreen
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
 @Composable
 fun GameFlowHost(
-    levelId: Int,
+    worldId: Int,
+    levelNumber: Int,
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
     sharedViewModel: GameSharedViewModel = hiltViewModel()
 ) {
-    val gameBackStack = rememberNavBackStack(GameFlowScreen.GameLobby)
+    val gameBackStack = rememberNavBackStack(GameFlowScreen.Level)
 
     NavDisplay(
         backStack = gameBackStack,
@@ -42,11 +43,15 @@ fun GameFlowHost(
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<GameFlowScreen.GameLobby> {
-                GameScreen(
+            entry<GameFlowScreen.Level> {
+                LevelScreen(
+                    worldId = worldId,
+                    levelNumber = levelNumber,
                     sharedViewModel = sharedViewModel,
-                    onStartCamera = { gameBackStack.navigateSingleTop(GameFlowScreen.Camera) },
-                    onExit = { rootBackStack.removeLastOrNull() }
+                    onBack = { rootBackStack.removeLastOrNull() },
+                    onStartCamera = {
+                        gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
+                    }
                 )
             }
             entry<GameFlowScreen.Camera> {

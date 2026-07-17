@@ -8,6 +8,8 @@ object AppColors {
     val BrownText = Color(0xFF5D4037)
     val OrangeActive = Color(0xFFFFA726)
     val ShadowOrange = Color(0xFFC77800)
+    val ProfileCardColor = Color(0xff0F9F3EB)
+    val ProfileCardBorderColor = Color(0xFFDAC2AE)
 
     // Primary
     val PrimaryColor = Color(0xFFFF9F29)
@@ -36,4 +38,17 @@ object AppColors {
     val Black =Color.Black
     val White =Color(0xffFFFFFF)
     val cardLevelFilledColor =Color(0xffFCEBDE)
+
+    // Dialog Colors
+    val DialogGradientTopRight = Color(0xFFD3FDF2)
+    val DialogGradientBottomLeft = Color(0xFFFCEBAE)
+    val DialogOutline = Color(0xFFD6F5F3)
+    val DialogSecondaryButtonOutline = Color(0xFF68FADD)
+    val DialogLightTipBackground = Color(0xFFFFF7E6)
+    val DialogPriceTagBackground = Color(0xFFFFF1EB)
+    val DialogCloseButtonBackground = Color(0xFFE0E0E0).copy(alpha = 0.6f)
+    val DialogShadow = Color(0x33000000)
+    val progressTrackColor =Color(0xFFF0D9C4)
+     val ChipBackground = Color(0xFFFCE9D6)
+     val IconBoxBackground = Color(0xFFFCE9D6)
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.iti.linguaquest.core.cache.TokensLocalDataSource
-import com.iti.linguaquest.core.cache.TokensLocalDataSourceImpl
+import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

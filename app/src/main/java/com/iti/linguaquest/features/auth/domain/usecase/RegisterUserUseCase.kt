@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -12,9 +12,7 @@ class RegisterUserUseCase @Inject constructor(
         email: String,
         username: String,
         password: String,
-        nativeLanguage: String,
-        targetLanguage: String
     ): LinguaQuestResult<Unit, AuthError>  = authRepository.register(
-            email = email, username, password, nativeLanguage, targetLanguage)
+            email = email, username, password)
 
 }

@@ -12,8 +12,13 @@ import javax.inject.Singleton
 data class DialogUiState(
     val title: UiText,
     val message: UiText,
+    val imageRes: Int? = null,
     val confirmText: UiText = UiText.DynamicString("OK"),
     val dismissText: UiText? = null,
+    val showCloseIcon: Boolean = false,
+    val primaryIconRes: Int? = null,
+    val secondaryIconRes: Int? = null,
+    val customContent: (@androidx.compose.runtime.Composable () -> Unit)? = null,
     val onConfirm: (() -> Unit)? = null,
     val onDismiss: (() -> Unit)? = null
 )
