@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.level.presentation
+package com.iti.linguaquest.features.game.presentation.level
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,23 +17,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.iti.linguaquest.features.level.presentation.components.HintsBottomSheet
-import com.iti.linguaquest.features.level.presentation.components.LevelTopBar
-import com.iti.linguaquest.features.level.presentation.components.QuestCard
-import com.iti.linguaquest.features.level.presentation.contract.LevelEffect
-import com.iti.linguaquest.features.level.presentation.contract.LevelIntent
-import com.iti.linguaquest.features.level.presentation.viewmodel.LevelViewModel
+import com.iti.linguaquest.features.game.presentation.level.components.HintsBottomSheet
+import com.iti.linguaquest.features.game.presentation.level.components.LevelTopBar
+import com.iti.linguaquest.features.game.presentation.level.components.QuestCard
+import com.iti.linguaquest.features.game.presentation.level.contract.LevelEffect
+import com.iti.linguaquest.features.game.presentation.level.contract.LevelIntent
+import com.iti.linguaquest.features.game.presentation.level.viewmodel.LevelViewModel
 
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.SpeechManager
+import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
 @Composable
 fun LevelScreen(
     worldId: Int,
     levelNumber: Int,
+    sharedViewModel: GameSharedViewModel,
     onBack: () -> Unit,
+    onStartCamera: () -> Unit,
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -51,18 +55,22 @@ fun LevelScreen(
         viewModel.loadLevelDetails(worldId, levelNumber)
     }
 
+    LaunchedEffect(worldId, levelNumber) {
+        viewModel.loadLevelDetails(worldId, levelNumber)
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 LevelEffect.NavigateBack -> onBack()
                 LevelEffect.LaunchCamera -> {
-                    // TODO: integrate camera feature
+                    sharedViewModel.setTargetWord(state.wordToGuess)
+                    onStartCamera()
                 }
                 is LevelEffect.PlaySound -> {
                     speechManager.speak(effect.word, effect.languageCode)
                 }
                 LevelEffect.SkipLevel -> {
-                    // TODO: handle skipping the level
                     onBack()
                 }
             }
@@ -89,7 +97,7 @@ fun LevelScreen(
 
             QuestCard(
                 wordToGuess = state.wordToGuess,
-                hintText = stringResource(id = com.iti.linguaquest.R.string.scan_hint_format, state.wordToGuess),
+                hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                 onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                 onSkipClick = { viewModel.onIntent(LevelIntent.SkipClicked) },
                 onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },

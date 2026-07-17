@@ -42,6 +42,8 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
+import com.iti.linguaquest.features.game.presentation.GameFlowHost
+import com.iti.linguaquest.features.game.presentation.level.LevelScreen
 
 @Composable
 fun AppNavigation(
@@ -229,20 +231,23 @@ fun AppNavigation(
                     MapScreen(
                         worldId = screen.worldId,
                         onBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLevel = { levelNum -> 
-                            rootBackStack.navigateSingleTop(RootScreen.Level(worldId = screen.worldId, levelNumber = levelNum))
+                        onNavigateToLevel = { levelNum ->
+                            rootBackStack.navigateSingleTop(
+                                RootScreen.GameFlow(worldId = screen.worldId, levelNumber = levelNum)
+                            )
                         }
                     )
                 }
 
-                entry<RootScreen.Level> { screen ->
-                    com.iti.linguaquest.features.level.presentation.LevelScreen(
+                entry<RootScreen.GameFlow> { screen ->
+                    GameFlowHost(
                         worldId = screen.worldId,
                         levelNumber = screen.levelNumber,
-                        onBack = { rootBackStack.removeLastOrNull() }
+                        rootBackStack = rootBackStack
                     )
                 }
-            })
+            }
+        )
     }
 
     GlobalDialogHost(globalUiHostViewModel.dialogController)

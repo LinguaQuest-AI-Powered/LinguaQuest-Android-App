@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.level.presentation.contract
+package com.iti.linguaquest.features.game.presentation.level.contract
 
 sealed interface LevelIntent {
     data object BackClicked : LevelIntent

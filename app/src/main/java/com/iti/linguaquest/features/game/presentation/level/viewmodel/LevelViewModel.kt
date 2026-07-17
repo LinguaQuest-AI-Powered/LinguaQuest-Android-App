@@ -1,11 +1,11 @@
-package com.iti.linguaquest.features.level.presentation.viewmodel
+package com.iti.linguaquest.features.game.presentation.level.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.features.level.presentation.contract.LevelEffect
-import com.iti.linguaquest.features.level.presentation.contract.LevelIntent
-import com.iti.linguaquest.features.level.presentation.contract.LevelState
+import com.iti.linguaquest.features.game.presentation.level.contract.LevelEffect
+import com.iti.linguaquest.features.game.presentation.level.contract.LevelIntent
+import com.iti.linguaquest.features.game.presentation.level.contract.LevelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

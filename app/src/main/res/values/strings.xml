@@ -105,6 +105,16 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
+     <string name="camera_permission_required">Camera permission is required.</string>
+    <string name="go_back">Go Back</string>
+    <string name="captured_preview">Captured Preview</string>
+    <string name="find_label">Find:</string>
+    <string name="retry">Retry</string>
+    <string name="submit">Submit</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="toggle_flash">Toggle Flash</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="camera_alt">Camera</string>
      <string name="gallery_label">Gallery</string>
      <string name="Add_New">Add New</string>
 

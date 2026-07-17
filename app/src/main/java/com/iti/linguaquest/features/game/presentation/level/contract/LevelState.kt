@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.level.presentation.contract
+package com.iti.linguaquest.features.game.presentation.level.contract
 
 data class LevelState(
     val levelNumber: Int = 1,

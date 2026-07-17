@@ -1,5 +1,6 @@
-package com.iti.linguaquest.features.level.presentation.components
+package com.iti.linguaquest.features.game.presentation.level.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -157,7 +158,7 @@ fun QuestCard(
                         onClick = onSkipClick,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(50),
-                        border = androidx.compose.foundation.BorderStroke(2.dp, AppColors.DialogSecondaryButtonOutline),
+                        border = BorderStroke(2.dp, AppColors.DialogSecondaryButtonOutline),
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = AppColors.DialogSecondaryButtonOutline

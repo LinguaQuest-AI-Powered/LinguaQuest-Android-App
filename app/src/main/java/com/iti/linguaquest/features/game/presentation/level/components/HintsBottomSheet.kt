@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.level.presentation.components
+package com.iti.linguaquest.features.game.presentation.level.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
