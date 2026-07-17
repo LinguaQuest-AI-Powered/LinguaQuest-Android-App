@@ -112,7 +112,19 @@
      <string name="currently_language">CURRENTLY LEARNING</string>
      <string name="level">Level</string>
      <string name="days">Days</string>
+     <string name="coins_label">COINS</string>
+     <string name="total_xp_label">TOTAL XP</string>
+     <string name="streak_label">STREAK</string>
+     <string name="worlds_label">WORLDS</string>
      <string name="continue_lesson">CONTINUE LESSON</string>
+     <string name="leaderboard_title">Leaderboard</string>
+     <string name="achievements_title">Achievements</string>
+     <string name="learning_label">Learning</string>
+     <string name="change_label">Change</string>
+     <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
+     <string name="settings_label">Settings</string>
+     <string name="view_all_label">VIEW ALL</string>
+     <string name="you_label">You</string>
 
     // WorldDifficulty
     <string name="medium">MEDIUM</string>
