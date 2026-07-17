@@ -11,7 +11,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -34,7 +36,7 @@ fun CameraSideOptions(
         ) {
             Icon(
                 imageVector = if (isFlashEnabled) Icons.Default.FlashOn else Icons.Default.FlashOff,
-                contentDescription = "Toggle Flash"
+                contentDescription = stringResource(R.string.toggle_flash)
             )
         }
 
@@ -47,7 +49,7 @@ fun CameraSideOptions(
         ) {
             Icon(
                 imageVector = Icons.Default.Cameraswitch,
-                contentDescription = "Flip Camera"
+                contentDescription = stringResource(R.string.flip_camera)
             )
         }
     }

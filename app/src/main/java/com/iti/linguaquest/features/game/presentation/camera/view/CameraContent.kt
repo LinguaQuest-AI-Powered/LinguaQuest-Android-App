@@ -22,8 +22,10 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraButton
 import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraSideOptions
@@ -106,12 +108,12 @@ fun CameraContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Camera permission is required.",
+                text = stringResource(R.string.camera_permission_required),
                 color = LinguaQuestTheme.colors.whiteColor
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Button(onClick = onBackClicked) {
-                Text("Go Back")
+                Text(stringResource(R.string.go_back))
             }
         }
     }

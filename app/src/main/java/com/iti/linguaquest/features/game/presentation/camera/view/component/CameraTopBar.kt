@@ -25,8 +25,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -52,7 +54,7 @@ fun CameraTopBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = ""
+                contentDescription = stringResource(R.string.go_back)
             )
         }
 
@@ -70,14 +72,14 @@ fun CameraTopBar(
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon",
+                    contentDescription = stringResource(R.string.search_icon),
                     tint = LinguaQuestTheme.colors.whiteColor
                 )
                 Spacer(modifier = Modifier.size(8.dp))
 
                 Text(
                     text = buildAnnotatedString {
-                        append("Find:\n")
+                        append(stringResource(R.string.find_label) + "\n")
                         withStyle(
                             style = SpanStyle(
                                 color = MaterialTheme.colorScheme.primary,
