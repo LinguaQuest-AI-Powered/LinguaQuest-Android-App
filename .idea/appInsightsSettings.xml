@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.iti.linguaquest" />
+                  <option name="mobileSdkAppId" value="1:569083981229:android:9b00bf2871879336aac524" />
+                  <option name="projectId" value="lingua-quest-676e1" />
+                  <option name="projectNumber" value="569083981229" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -26,6 +26,10 @@ data class LinguaQuestColors(
     val progressTrackRemainedColor: Color,
     val IconBoxBackground: Color,
     val ChipBackground: Color,
+    val OrangeActive: Color,
+    val BrownText: Color,
+    val ProfileCardColor: Color,
+    val ProfileCardBorderColor: Color,
 
 
 )

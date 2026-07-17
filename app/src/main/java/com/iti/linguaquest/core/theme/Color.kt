@@ -8,6 +8,8 @@ object AppColors {
     val BrownText = Color(0xFF5D4037)
     val OrangeActive = Color(0xFFFFA726)
     val ShadowOrange = Color(0xFFC77800)
+    val ProfileCardColor = Color(0xff0F9F3EB)
+    val ProfileCardBorderColor = Color(0xFFDAC2AE)
 
     // Primary
     val PrimaryColor = Color(0xFFFF9F29)
