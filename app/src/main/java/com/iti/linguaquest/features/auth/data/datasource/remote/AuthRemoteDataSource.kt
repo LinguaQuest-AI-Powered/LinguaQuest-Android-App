@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.auth.data.datasource.remote
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
 
 interface AuthRemoteDataSource {
     suspend fun register(body: RegisterRequestDto): LinguaQuestResult<RegisterResponseDataDto, LinguaQuestDataError>

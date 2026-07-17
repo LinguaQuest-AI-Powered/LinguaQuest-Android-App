@@ -1,12 +1,13 @@
 package com.iti.linguaquest.features.auth.data.repository
 
-import com.iti.linguaquest.core.cache.TokensLocalDataSource
-import com.iti.linguaquest.core.network.LinguaQuestDataError
-import com.iti.linguaquest.core.network.LinguaQuestResult
-import com.iti.linguaquest.core.network.asEmptyDataResult
-import com.iti.linguaquest.core.network.map
-import com.iti.linguaquest.core.network.onSuccess
+
 import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.result.asEmptyDataResult
+import com.iti.linguaquest.core.result.map
+import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpVerifyRequestDto

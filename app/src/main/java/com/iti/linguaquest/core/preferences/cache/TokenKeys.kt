@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.cache
+package com.iti.linguaquest.core.preferences.cache
 
 object TokenKeys {
     const val ACCESS_TOKEN = "access_token"
