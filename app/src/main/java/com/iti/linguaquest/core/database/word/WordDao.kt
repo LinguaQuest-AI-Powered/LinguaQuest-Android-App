@@ -31,11 +31,11 @@ interface WordDao {
     @Query("SELECT * FROM words WHERE id = :wordId")
     suspend fun getWordById(wordId: Int): WordEntity?
 
-     @Query("SELECT * FROM words WHERE isFavorite = 1")
-    fun getFavoriteWords(): Flow<List<WordEntity>>
+     @Query("SELECT * FROM words WHERE isCorrect = 1")
+    fun getIsCorrectWords(): Flow<List<WordEntity>>
 
-    @Query("UPDATE words SET isFavorite = :isFavorite WHERE id = :wordId")
-    suspend fun setFavoriteStatus(wordId: Int, isFavorite: Boolean)
+    @Query("UPDATE words SET isCorrect = :isCorrect WHERE id = :wordId")
+    suspend fun setCorrectStatus(wordId: Int, isCorrect: Boolean)
 
      @Query("SELECT * FROM words WHERE imagePath != ''")
     fun getWordsWithImages(): Flow<List<WordEntity>>

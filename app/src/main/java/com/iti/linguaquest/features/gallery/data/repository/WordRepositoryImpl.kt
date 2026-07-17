@@ -43,10 +43,10 @@ class WordRepositoryImpl @Inject constructor(
         localDataSource.deleteWordById(wordId)
 
 
-    override suspend fun setFavoriteStatus(
+    override suspend fun setCorrectStatus(
         wordId: Int,
-        isFavorite: Boolean
+        isCorrect: Boolean
     ): EmptyResult<LinguaQuestDataError.Local> =
-        localDataSource.setFavoriteStatus(wordId, isFavorite)
+          localDataSource.setCorrectStatus(wordId, isCorrect)
 
 }

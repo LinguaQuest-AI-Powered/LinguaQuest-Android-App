@@ -36,10 +36,11 @@ class WordLocalDataSourceImpl @Inject constructor(
         safeDatabaseCall { wordDao.deleteWordById(wordId) }
 
 
-    override suspend fun setFavoriteStatus(
+    override suspend fun setCorrectStatus(
         wordId: Int,
-        isFavorite: Boolean
+        isCorrect: Boolean
     ): EmptyResult<LinguaQuestDataError.Local> =
-        safeDatabaseCall { wordDao.setFavoriteStatus(wordId, isFavorite) }
+          safeDatabaseCall { wordDao.setCorrectStatus(wordId, isCorrect) }
+
 
 }

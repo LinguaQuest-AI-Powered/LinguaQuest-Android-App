@@ -106,6 +106,13 @@
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
      <string name="gallery_label">Gallery</string>
+     <string name="Add_New">Add New</string>
 
+    <string name="my_captures">My Captures</string>
+    <string name="objects_collected">%1$d objects collected</string>
+    <string name="captures_so_far">0 captures so far</string>
+    <string name="empty_gallery_title">No Captures Yet</string>
+    <string name="empty_gallery_desc">You haven\'t captured any words yet.\nTap the button above to add your first capture.</string>
+    <string name="add_new">Add New</string>
+    <string name="general_error">An error occurred. Please try again.</string>
 </resources>
-

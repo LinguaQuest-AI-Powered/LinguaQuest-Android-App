@@ -12,8 +12,8 @@ interface WordLocalDataSource {
     suspend fun getWordById(wordId: Int): LinguaQuestResult<WordEntity?, LinguaQuestDataError.Local>
     suspend fun deleteWord(word: WordEntity): EmptyResult<LinguaQuestDataError.Local>
     suspend fun deleteWordById(wordId: Int): EmptyResult<LinguaQuestDataError.Local>
-    suspend fun setFavoriteStatus(
+    suspend fun setCorrectStatus(
         wordId: Int,
-        isFavorite: Boolean
+        isCorrect: Boolean
     ): EmptyResult<LinguaQuestDataError.Local>
 }

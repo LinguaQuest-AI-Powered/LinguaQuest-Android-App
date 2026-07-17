@@ -13,5 +13,5 @@ data class WordEntity(
     val targetLanguage: String,
     val category: String,
     val imagePath: String,
-    val isFavorite: Boolean = false
+    val isCorrect: Boolean = false
 )
