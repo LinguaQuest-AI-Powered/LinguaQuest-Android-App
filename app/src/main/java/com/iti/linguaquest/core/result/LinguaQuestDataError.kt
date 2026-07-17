@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.network
+package com.iti.linguaquest.core.result
 
 
 sealed interface LinguaQuestDataError : AppError {
@@ -50,6 +50,12 @@ sealed interface LinguaQuestDataError : AppError {
         QUOTA_EXCEEDED,
         DATA_LOSS,
         CANCELLED
+    }
+    enum class Local : LinguaQuestDataError {
+        DISK_FULL,
+        NOT_FOUND,
+        CONSTRAINT_VIOLATION,
+        UNKNOWN
     }
 
     data class CustomServerMessage(

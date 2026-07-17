@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.cache
+package com.iti.linguaquest.core.preferences.cache
 
 import kotlinx.coroutines.flow.Flow
 

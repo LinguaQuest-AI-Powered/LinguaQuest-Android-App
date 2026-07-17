@@ -1,7 +1,7 @@
 package com.iti.linguaquest.feature.auth.login.domain.usecase
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.feature.auth.login.domain.model.AuthLoginResult
 import com.iti.linguaquest.feature.auth.login.domain.model.AuthUser
 import com.iti.linguaquest.feature.auth.login.domain.repository.LoginRepository

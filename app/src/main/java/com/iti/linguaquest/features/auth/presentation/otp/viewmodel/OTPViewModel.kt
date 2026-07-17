@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.usecase.SendPasswordResetOtpUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.SendRegistrationOtpUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.VerifyEmailOtpUseCase

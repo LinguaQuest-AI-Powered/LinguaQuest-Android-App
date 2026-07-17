@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.auth.data.mapper
 
-import com.iti.linguaquest.core.network.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 
 
