@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.components
+package com.iti.linguaquest.features.home.presentation.view.components
 
 
 import androidx.compose.foundation.Image
@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,8 +32,6 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.core.theme.AppColors.BrownText
-import com.iti.linguaquest.core.theme.AppColors.OrangeActive
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable

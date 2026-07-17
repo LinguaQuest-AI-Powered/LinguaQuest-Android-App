@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.components
+package com.iti.linguaquest.features.home.presentation.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

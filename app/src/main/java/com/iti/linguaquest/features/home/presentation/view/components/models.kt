@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.components
+package com.iti.linguaquest.features.home.presentation.view.components
 
 
 import androidx.annotation.DrawableRes

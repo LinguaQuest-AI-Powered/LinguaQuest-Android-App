@@ -17,12 +17,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.home.presentation.components.ContinueLessonCard
-import com.iti.linguaquest.features.home.presentation.components.ExploreWorldsSection
-import com.iti.linguaquest.features.home.presentation.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.components.LessonPreview
-import com.iti.linguaquest.features.home.presentation.components.WorldDifficulty
-import com.iti.linguaquest.features.home.presentation.components.WorldItem
+import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
+import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
+import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
+import com.iti.linguaquest.features.home.presentation.view.components.LessonPreview
+import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
+import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
 @Composable
 fun HomeScreen(
@@ -49,7 +49,7 @@ fun HomeScreen(
                 isCompleted = true
             ),
             WorldItem(
-                id = "parrot",
+                id = "animals",
                 title = "Animals World",
                 imageRes = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.HARD,
@@ -57,6 +57,7 @@ fun HomeScreen(
             )
         )
     }
+
     val lesson = remember {
         LessonPreview(
             lessonId = 1,
@@ -67,48 +68,65 @@ fun HomeScreen(
         )
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
         Image(
-            painter = painterResource(id = R.drawable.lingo_bg),
+            painter = painterResource(R.drawable.lingo_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-        ) {
-            LanguageProgressCard(
-                languageName = "Spanish",
-                level = 12,
-                streakDays = 7,
-                progress = 0.55f,
-                flagRes = R.drawable.flag_spain
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ExploreWorldsSection(
-                worlds = worlds,
-                onSeeMoreClick = { /* TODO: navigate to full worlds list */ },
-                onWorldClick = { world -> /* TODO: navigate into world.id */ },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ContinueLessonCard(
-                lesson = lesson,
-                onContinueClick = { onNavigateToDetails(lesson.lessonId) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        HomeContent(
+            worlds = worlds,
+            lesson = lesson,
+            onNavigateToDetails = onNavigateToDetails
+        )
     }
 }
 
+@Composable
+fun HomeContent(
+    worlds: List<WorldItem>,
+    lesson: LessonPreview,
+    onNavigateToDetails: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+    ) {
+
+        LanguageProgressCard(
+            languageName = "Spanish",
+            level = 12,
+            streakDays = 7,
+            progress = 0.55f,
+            flagRes = R.drawable.flag_spain
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        ExploreWorldsSection(
+            worlds = worlds,
+            onSeeMoreClick = { },
+            onWorldClick = { },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        ContinueLessonCard(
+            lesson = lesson,
+            onContinueClick = {
+                onNavigateToDetails(lesson.lessonId)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
