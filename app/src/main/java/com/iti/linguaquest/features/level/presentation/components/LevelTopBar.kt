@@ -39,11 +39,10 @@ fun LevelTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(top = 40.dp) // status bar inset
+            .padding(top = 40.dp)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back Button
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -60,7 +59,6 @@ fun LevelTopBar(
             }
         }
 
-        // Title
         Text(
             text = stringResource(id = R.string.level_title, levelNumber),
             color = AppColors.BrownText,
@@ -69,8 +67,6 @@ fun LevelTopBar(
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
-
-        // Coin Count
         Row(
             modifier = Modifier
                 .background(Color(0xFFFDF7F2), RoundedCornerShape(16.dp))
@@ -80,7 +76,7 @@ fun LevelTopBar(
             Icon(
                 painter = rememberVectorPainter(Icons.Default.MonetizationOn),
                 contentDescription = stringResource(id = R.string.coins),
-                tint = Color(0xFFE5A822), // Golden coin color
+                tint = Color(0xFFE5A822),
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))

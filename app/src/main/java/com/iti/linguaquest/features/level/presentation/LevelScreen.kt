@@ -14,25 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.features.level.presentation.components.HintsBottomSheet
 import com.iti.linguaquest.features.level.presentation.components.LevelTopBar
-import com.iti.linguaquest.features.level.presentation.components.MascotHelp
 import com.iti.linguaquest.features.level.presentation.components.QuestCard
 import com.iti.linguaquest.features.level.presentation.contract.LevelEffect
 import com.iti.linguaquest.features.level.presentation.contract.LevelIntent
 import com.iti.linguaquest.features.level.presentation.viewmodel.LevelViewModel
 
-import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import java.util.Locale
+import com.iti.linguaquest.core.utils.SpeechManager
 
 @Composable
 fun LevelScreen(
@@ -43,31 +38,12 @@ fun LevelScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var tts by remember { mutableStateOf<TextToSpeech?>(null) }
-    var isTtsReady by remember { mutableStateOf(false) }
-    var playWhenReady by remember { mutableStateOf(false) }
+    
+    val speechManager = remember { SpeechManager(context) }
 
-    DisposableEffect(context) {
-        val textToSpeech = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                isTtsReady = true
-            }
-        }
-        textToSpeech.setSpeechRate(0.8f)
-        tts = textToSpeech
+    DisposableEffect(speechManager) {
         onDispose {
-            textToSpeech.stop()
-            textToSpeech.shutdown()
-        }
-    }
-
-    LaunchedEffect(isTtsReady, state.languageCode) {
-        if (isTtsReady) {
-            tts?.language = Locale(state.languageCode)
-            if (playWhenReady) {
-                tts?.speak(state.wordToGuess, TextToSpeech.QUEUE_FLUSH, null, null)
-                playWhenReady = false
-            }
+            speechManager.shutdown()
         }
     }
 
@@ -82,12 +58,8 @@ fun LevelScreen(
                 LevelEffect.LaunchCamera -> {
                     // TODO: integrate camera feature
                 }
-                LevelEffect.PlaySound -> {
-                    if (isTtsReady) {
-                        tts?.speak(state.wordToGuess, TextToSpeech.QUEUE_FLUSH, null, null)
-                    } else {
-                        playWhenReady = true
-                    }
+                is LevelEffect.PlaySound -> {
+                    speechManager.speak(effect.word, effect.languageCode)
                 }
                 LevelEffect.SkipLevel -> {
                     // TODO: handle skipping the level
@@ -96,10 +68,12 @@ fun LevelScreen(
             }
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFDF7F2)) // Soft beige background from design
+            .background(Color(0xFFFDF7F2)),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -111,12 +85,6 @@ fun LevelScreen(
                 onBack = { viewModel.onIntent(LevelIntent.BackClicked) }
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            MascotHelp(
-                onClick = { viewModel.onIntent(LevelIntent.MascotTapped) }
-            )
-
             Spacer(modifier = Modifier.height(16.dp))
 
             QuestCard(
@@ -125,6 +93,7 @@ fun LevelScreen(
                 onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                 onSkipClick = { viewModel.onIntent(LevelIntent.SkipClicked) },
                 onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
+                onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
@@ -138,14 +107,4 @@ fun LevelScreen(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun LevelScreenPreview() {
-    LevelScreen(
-        worldId = 1,
-        levelNumber = 1,
-        onBack = {}
-    )
 }

@@ -41,7 +41,7 @@ object AppColors {
 
     // Dialog Colors
     val DialogGradientTopRight = Color(0xFFFCEBAE)
-    val DialogGradientBottomLeft = Color(0xFFC4FFEF)
+    val DialogGradientBottomLeft = Color(0xFFD3FDF2)
     val DialogOutline = Color(0xFFD6F5F3)
     val DialogSecondaryButtonOutline = Color(0xFF68FADD)
     val DialogLightTipBackground = Color(0xFFFFF7E6)

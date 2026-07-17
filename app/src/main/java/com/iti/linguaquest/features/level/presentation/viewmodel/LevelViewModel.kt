@@ -50,7 +50,12 @@ class LevelViewModel @Inject constructor(
             LevelIntent.SkipClicked -> sendEffect(LevelEffect.SkipLevel)
             LevelIntent.RevealFirstLetterClicked -> deductCoinsAndHideSheet(25)
             LevelIntent.ShowCategoryClueClicked -> deductCoinsAndHideSheet(50)
-            LevelIntent.SoundClicked -> sendEffect(LevelEffect.PlaySound)
+            LevelIntent.SoundClicked -> sendEffect(
+                LevelEffect.PlaySound(
+                    word = _state.value.wordToGuess,
+                    languageCode = _state.value.languageCode
+                )
+            )
         }
     }
 
