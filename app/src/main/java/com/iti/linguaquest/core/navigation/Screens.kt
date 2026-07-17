@@ -3,6 +3,7 @@ package com.iti.linguaquest.core.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
@@ -15,6 +16,7 @@ enum class BottomNavScreen(
     val route: NestedScreen
 ) {
     Home(R.string.home_label, Icons.Default.Home, NestedScreen.Home),
+    Gallery(R.string.gallery_label, Icons.Default.PhotoLibrary, NestedScreen.Gallery),
     Profile(R.string.profile_label, Icons.Default.Person, NestedScreen.Profile)
 }
 
@@ -52,6 +54,8 @@ sealed interface RootScreen : NavKey {
 
 @Serializable
 sealed interface NestedScreen : NavKey {
+    @Serializable
+    data object Gallery : NestedScreen
     @Serializable
     data object Home : NestedScreen
     @Serializable

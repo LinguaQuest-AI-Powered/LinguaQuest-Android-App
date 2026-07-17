@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.signup.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.usecase.RegisterUserUseCase
@@ -96,7 +96,7 @@ class SignUpViewModel @Inject constructor(
     private fun signUpWithEmail(username: String, email: String, password: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-            when (val result = signUpWithEmailUseCase(email, username, password, "Arabic", "Spanish")) {
+            when (val result = signUpWithEmailUseCase(email, username, password)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
                     sendEffect(SignUpEffect.SignUpSucceeded(email))

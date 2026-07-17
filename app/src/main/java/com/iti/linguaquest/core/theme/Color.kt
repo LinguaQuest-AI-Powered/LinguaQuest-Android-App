@@ -4,6 +4,11 @@ import androidx.compose.ui.graphics.Color
 
 object AppColors {
 
+    val CreamBackground = Color(0xFFFFF8F2)
+    val BrownText = Color(0xFF5D4037)
+    val OrangeActive = Color(0xFFFFA726)
+    val ShadowOrange = Color(0xFFC77800)
+
     // Primary
     val PrimaryColor = Color(0xFFFF9F29)
     val TextOnPrimaryButton = Color(0xFFFFFFFF)
@@ -41,4 +46,7 @@ object AppColors {
     val DialogPriceTagBackground = Color(0xFFFFF1EB)
     val DialogCloseButtonBackground = Color(0xFFE0E0E0).copy(alpha = 0.6f)
     val DialogShadow = Color(0x33000000)
+    val progressTrackColor =Color(0xFFF0D9C4)
+     val ChipBackground = Color(0xFFFCE9D6)
+     val IconBoxBackground = Color(0xFFFCE9D6)
 }

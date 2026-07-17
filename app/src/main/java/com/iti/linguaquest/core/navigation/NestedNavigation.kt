@@ -1,107 +1,158 @@
 package com.iti.linguaquest.core.navigation
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.R
-
-class NestedNavigator {
-    val backStack = mutableStateListOf<NestedScreen>(NestedScreen.Home)
-
-    fun navigateToTopLevel(screen: NestedScreen) {
-        if (backStack.lastOrNull() == screen) return
-        
-        backStack.clear()
-        backStack.add(NestedScreen.Home)
-        if (screen != NestedScreen.Home) {
-            backStack.add(screen)
-        }
-    }
-
-    fun popBackStack() {
-        if (backStack.size > 1) {
-            backStack.removeAt(backStack.size - 1)
-        }
-    }
-}
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
+import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 
 @Composable
-fun MainScreen(rootNavigator: RootNavigator, modifier: Modifier = Modifier) {
-    val nestedNavigator = remember { NestedNavigator() }
-    val currentScreen = nestedNavigator.backStack.lastOrNull()
+fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
+    val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
+    val currentScreen = nestedBackStack.lastOrNull()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = {
+            LinguaQuestTopAppBar(
+                xp = 1250,
+                lives = 45
+            )
+        },
         bottomBar = {
-            NavigationBar {
-                BottomNavScreen.entries.forEach { bottomNavScreen ->
-                    NavigationBarItem(
-                        selected = currentScreen == bottomNavScreen.route,
-                        onClick = { nestedNavigator.navigateToTopLevel(bottomNavScreen.route) },
-                        icon = { Icon(bottomNavScreen.icon, contentDescription = stringResource(id = bottomNavScreen.labelRes)) },
-                        label = { Text(stringResource(id = bottomNavScreen.labelRes)) }
-                    )
+            GameBottomNavBar(
+                items = BottomNavScreen.entries,
+                currentRoute = currentScreen,
+                onItemClick = { bottomNavScreen ->
+                    nestedBackStack.apply {
+                        clear()
+                        navigateSingleTop(NestedScreen.Home)
+                        if (bottomNavScreen.route != NestedScreen.Home) {
+                            navigateSingleTop(bottomNavScreen.route)
+                        }
+                    }
                 }
-            }
+            )
         }
     ) { innerPadding ->
         NavDisplay(
-            backStack = nestedNavigator.backStack,
-            modifier = Modifier.padding(innerPadding),
-            onBack = { nestedNavigator.popBackStack() },
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
-            ),
-            entryProvider = entryProvider {
-                entry<NestedScreen.Home> {
-                    HomeScreen(
-                        onNavigateToDetails = { id ->
-                            rootNavigator.navigateTo(RootScreen.Details(id))
-                        }
-                    )
+            backStack = nestedBackStack,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding()),
+            onBack = { nestedBackStack.removeLastOrNull() },
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                entryProvider = entryProvider {
+                    entry<NestedScreen.Home> {
+                        HomeScreen(
+                            onNavigateToDetails = { id ->
+                                rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                            }
+                        )
+                    }
+                    entry<NestedScreen.Gallery> {
+                        GalleryScreen(
+                            onNavigateToWordDetails = { id ->
+                                rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                            }
+                        )
+                    }
+                    entry<NestedScreen.Profile> {
+                        ProfileScreen()
+                    }
                 }
-
-                entry<NestedScreen.Profile> {
-                    ProfileScreen()
-                }
-            }
-        )
-    }
+            )
+        }
 }
 
 @Composable
-fun HomeScreen(onNavigateToDetails: (Int) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = stringResource(R.string.home_screen))
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { onNavigateToDetails(1) }) {
-            Text(stringResource(R.string.go_to_details_1))
+fun HomeScreen(
+    onNavigateToDetails: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+
+        Image(
+            painter = painterResource(id = R.drawable.lingo_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.home_screen))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { onNavigateToDetails(1) }) {
+                Text(stringResource(R.string.go_to_details_1))
+            }
         }
     }
 }
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+fun ProfileScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         Text(text = stringResource(R.string.profile_screen))
+    }
+}
+
+@Composable
+fun GalleryScreen(
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+
+        Image(
+            painter = painterResource(id = R.drawable.lingo_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.home_screen))
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.iti.linguaquest.core.network
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
