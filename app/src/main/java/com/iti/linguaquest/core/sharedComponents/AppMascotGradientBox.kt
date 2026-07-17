@@ -23,7 +23,7 @@ fun AppMascotGradientBox(
     imageRes: Int,
     modifier: Modifier = Modifier,
     mascotOverlapHeight: Dp = 70.dp,
-    mascotSize: Dp = 160.dp,
+    mascotSize: Dp = 180.dp,
     onMascotClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -48,7 +48,7 @@ fun AppMascotGradientBox(
         }
 
         val baseImageModifier = Modifier
-            .offset(y = (-10).dp)
+            .offset(y = (-20).dp)
             .size(mascotSize)
         val finalImageModifier = if (onMascotClick != null) {
             baseImageModifier.clickable(

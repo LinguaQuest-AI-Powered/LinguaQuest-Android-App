@@ -53,10 +53,11 @@ fun GameResultScreen(
         }
         is GameResultUiState.Success -> {
             GameSuccessView(
-                state = currentState,
-                targetWord = sharedState.targetWord,
-                onNextLevel = { viewModel.onIntent(GameResultIntent.NextLevelClicked) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
+                xpGained = currentState.xpAwarded,
+                coinsGained = currentState.coinsAwarded,
+                currentLevel = currentState.currentLevel,
+                progressPercent = currentState.progressPercent,
+                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
             )
         }
         is GameResultUiState.Failure -> {
