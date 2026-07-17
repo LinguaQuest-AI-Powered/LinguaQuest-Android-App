@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -15,6 +16,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun CameraSideOptions(
+    isFlashEnabled: Boolean,
     onToggleFlash: () -> Unit,
     onFlipCamera: () -> Unit,
     modifier: Modifier = Modifier
@@ -31,7 +33,7 @@ fun CameraSideOptions(
             )
         ) {
             Icon(
-                imageVector = Icons.Default.FlashOff,
+                imageVector = if (isFlashEnabled) Icons.Default.FlashOn else Icons.Default.FlashOff,
                 contentDescription = "Toggle Flash"
             )
         }

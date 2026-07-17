@@ -4,12 +4,13 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.iti.linguaquest.features.game.presentation.camera.CameraViewModel
+import com.iti.linguaquest.features.game.presentation.camera.viewmodel.CameraViewModel
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
 import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraOverlay
 import com.iti.linguaquest.features.game.presentation.camera.view.component.takePhoto
@@ -33,6 +34,18 @@ fun CameraScreen(
         }
     }
 
+    LaunchedEffect(cameraState.isFrontCamera) {
+        cameraController.cameraSelector = if (cameraState.isFrontCamera) {
+            CameraSelector.DEFAULT_FRONT_CAMERA
+        } else {
+            CameraSelector.DEFAULT_BACK_CAMERA
+        }
+    }
+
+    LaunchedEffect(cameraState.isFlashEnabled) {
+        cameraController.enableTorch(cameraState.isFlashEnabled)
+    }
+
     CameraOverlay(
         effectFlow = viewModel.effect,
         onPermissionResult = { isGranted ->
@@ -50,8 +63,11 @@ fun CameraScreen(
             hasPermission = cameraState.hasPermission,
             targetWord = sharedState.targetWord,
             isHintUsed = sharedState.isHintUsed,
+            isFlashEnabled = cameraState.isFlashEnabled,
             cameraController = cameraController,
             onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) },
+            onToggleFlash = { viewModel.onIntent(CameraIntent.ToggleFlash) },
+            onFlipCamera = { viewModel.onIntent(CameraIntent.ToggleCameraLens) },
             onCaptureClicked = {
                 takePhoto(context, cameraController) { uri ->
                     viewModel.onIntent(CameraIntent.CapturePhoto(uri))

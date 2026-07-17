@@ -9,4 +9,5 @@ sealed interface CameraIntent {
     object RetryCapture : CameraIntent
     object ToggleFlash : CameraIntent
     object BackClicked : CameraIntent
+    object ToggleCameraLens : CameraIntent
 }

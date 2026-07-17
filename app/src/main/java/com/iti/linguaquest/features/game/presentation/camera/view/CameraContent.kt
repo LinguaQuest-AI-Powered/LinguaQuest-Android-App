@@ -34,8 +34,11 @@ fun CameraContent(
     hasPermission: Boolean,
     targetWord: String,
     isHintUsed: Boolean,
+    isFlashEnabled: Boolean,
     cameraController: LifecycleCameraController,
     onBackClicked: () -> Unit,
+    onToggleFlash: () -> Unit,
+    onFlipCamera: () -> Unit,
     onCaptureClicked: () -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -82,8 +85,9 @@ fun CameraContent(
                 onBackClicked = onBackClicked,
                 sideOptions = {
                     CameraSideOptions(
-                        onToggleFlash = { /* TODO: Wire Flash */ },
-                        onFlipCamera = { /* TODO: Wire Flip Camera */ },
+                        isFlashEnabled = isFlashEnabled,
+                        onToggleFlash = onToggleFlash,
+                        onFlipCamera = onFlipCamera,
                     )
                 },
             )

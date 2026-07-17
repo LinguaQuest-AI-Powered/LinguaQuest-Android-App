@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.game.presentation.camera
+package com.iti.linguaquest.features.game.presentation.camera.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.iti.linguaquest.features.game.presentation.camera.contract.CameraEffe
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,24 +31,42 @@ class CameraViewModel @Inject constructor() : ViewModel() {
                 _state.update { it.copy(hasPermission = intent.isGranted) }
             }
             is CameraIntent.CapturePhoto -> {
-                // Instantly update UI to show the static preview
                 _state.update { it.copy(capturedUri = intent.uri) }
             }
             CameraIntent.RetryCapture -> {
-                // Discard the photo and return to the live viewfinder
-                _state.update { it.copy(capturedUri = null) }
+                retryCapture()
             }
             CameraIntent.SubmitPhoto -> {
-                // Ensure we have a URI, then trigger navigation
                 _state.value.capturedUri?.let { uri ->
                     sendEffect(CameraEffect.NavigateToProcessing(uri))
                 }
+            }
+            CameraIntent.ToggleCameraLens -> {
+                _state.update { it.copy(isFrontCamera = !it.isFrontCamera) }
             }
             CameraIntent.ToggleFlash -> {
                 _state.update { it.copy(isFlashEnabled = !it.isFlashEnabled) }
             }
             CameraIntent.BackClicked -> {
                 sendEffect(CameraEffect.NavigateBack)
+            }
+        }
+    }
+
+    private fun retryCapture(){
+        val currentUri = _state.value.capturedUri
+
+        _state.update { it.copy(capturedUri = null) }
+
+        currentUri?.path?.let { path ->
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val file = java.io.File(path)
+                    if (file.exists()) {
+                        file.delete()
+                    }
+                } catch (e: Exception) {
+                }
             }
         }
     }
