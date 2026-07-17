@@ -106,5 +106,18 @@
     <string name="otp_error_expired">OTP code has expired.</string>
      <string name="gallery_label">Gallery</string>
 
+     <string name="progress">Progress</string>
+     <string name="see_more">See more</string>
+     <string name="explore_worlds">Explore Worlds</string>
+     <string name="currently_language">CURRENTLY LEARNING</string>
+     <string name="level">Level</string>
+     <string name="days">Days</string>
+     <string name="continue_lesson">CONTINUE LESSON</string>
+
+    // WorldDifficulty
+    <string name="medium">MEDIUM</string>
+    <string name="easy">EASY</string>
+    <string name="hard">HARD</string>
+
 </resources>
 

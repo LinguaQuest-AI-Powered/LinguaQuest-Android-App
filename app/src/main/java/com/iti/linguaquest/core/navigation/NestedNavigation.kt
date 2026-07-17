@@ -25,6 +25,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
+import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 
 @Composable
 fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
@@ -84,35 +85,6 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
     }
 }
 
-@Composable
-fun HomeScreen(
-    onNavigateToDetails: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-
-        Image(
-            painter = painterResource(id = R.drawable.lingo_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.home_screen))
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = { onNavigateToDetails(1) }) {
-                Text(stringResource(R.string.go_to_details_1))
-            }
-        }
-    }
-}
 
 @Composable
 fun ProfileScreen(
