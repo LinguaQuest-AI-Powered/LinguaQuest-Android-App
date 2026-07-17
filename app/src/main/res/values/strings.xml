@@ -119,5 +119,22 @@
     <string name="easy">EASY</string>
     <string name="hard">HARD</string>
 
+    // Level Feature
+    <string name="level_title">Level %1$d</string>
+    <string name="back">Back</string>
+    <string name="coins">Coins</string>
+    <string name="mascot_help_text">TAP ME IF YOU\nWANT HELP</string>
+    <string name="mascot_content_desc">Mascot</string>
+    <string name="play_sound">Play Sound</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="skip">Skip</string>
+    <string name="close">Close</string>
+    <string name="thinking_mascot_content_desc">Thinking Mascot</string>
+    <string name="need_a_hint">Need a hint?</string>
+    <string name="reveal_first_letter">Reveal first letter</string>
+    <string name="show_category_clue">Show category clue</string>
+    <string name="use_hint">Use Hint</string>
+    <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+
 </resources>
 

@@ -1,10 +1,7 @@
 package com.iti.linguaquest.features.map.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,24 +16,22 @@ import com.iti.linguaquest.features.map.presentation.viewmodel.MapViewModel
 
 @Composable
 fun MapScreen(
-    totalLevels: Int,
-    completedLevels: Int,
+    worldId: Int,
     onBack: () -> Unit = {},
+    onNavigateToLevel: (Int) -> Unit = {},
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(totalLevels, completedLevels) {
-        viewModel.loadLevels(totalLevels, completedLevels)
+    LaunchedEffect(worldId) {
+        viewModel.loadLevels(worldId)
     }
 
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 MapEffect.NavigateBack -> onBack()
-                is MapEffect.NavigateToLevel -> {
-                    // TODO: navigate to the game / quiz for this level
-                }
+                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelNumber)
             }
         }
     }

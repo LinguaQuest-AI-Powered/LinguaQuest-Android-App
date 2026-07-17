@@ -35,12 +35,12 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun loadLevels(totalLevels: Int, completedLevels: Int) {
+    fun loadLevels(worldId: Int) {
         if (_state.value.levels.isNotEmpty()) return
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val domainLevels = getMapLevelsUseCase(totalLevels, completedLevels)
+            val domainLevels = getMapLevelsUseCase(worldId)
             
             val uiLevels = domainLevels.map { level ->
                 val status = when {
