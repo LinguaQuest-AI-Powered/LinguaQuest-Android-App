@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.signup.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.usecase.RegisterUserUseCase

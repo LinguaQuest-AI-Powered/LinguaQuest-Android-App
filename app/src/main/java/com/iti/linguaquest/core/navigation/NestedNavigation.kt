@@ -1,21 +1,10 @@
 package com.iti.linguaquest.core.navigation
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -24,8 +13,15 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.mockData.mockProfileState
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
+import com.iti.linguaquest.features.profile.presentation.model.Achievement
+import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
+import com.iti.linguaquest.features.profile.presentation.model.ProfileState
+import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
+import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
+
 
 @Composable
 fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
@@ -75,51 +71,19 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                     )
                 }
                 entry<NestedScreen.Gallery> {
-                    GalleryScreen()
+                    GalleryScreen(
+                        onNavigateToWordDetails = { id ->
+                            rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                        }
+                    )
                 }
                 entry<NestedScreen.Profile> {
-                    ProfileScreen()
+                    ProfileScreen(state = mockProfileState)
                 }
-            }
-        )
+            })
+
     }
+
 }
 
 
-@Composable
-fun ProfileScreen(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(text = stringResource(R.string.profile_screen))
-    }
-}
-
-@Composable
-fun GalleryScreen(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-
-        Image(
-            painter = painterResource(id = R.drawable.lingo_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.home_screen))
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}

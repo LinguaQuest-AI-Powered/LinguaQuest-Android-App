@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import com.iti.linguaquest.core.network.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.usecase.SetNewPasswordUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
