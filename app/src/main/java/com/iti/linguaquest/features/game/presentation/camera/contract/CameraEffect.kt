@@ -5,4 +5,6 @@ import android.net.Uri
 sealed interface CameraEffect {
     data class NavigateToProcessing(val imageUri: Uri) : CameraEffect
     object NavigateBack : CameraEffect
+    object RequestCameraPermission : CameraEffect
+    object OpenAppSettings : CameraEffect
 }

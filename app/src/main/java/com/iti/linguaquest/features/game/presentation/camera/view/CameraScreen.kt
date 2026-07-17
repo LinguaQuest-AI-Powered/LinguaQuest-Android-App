@@ -12,7 +12,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.iti.linguaquest.features.game.presentation.camera.viewmodel.CameraViewModel
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
+import com.iti.linguaquest.features.game.presentation.camera.contract.PermissionStatus
 import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraOverlay
+import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraPermissionView
 import com.iti.linguaquest.features.game.presentation.camera.view.component.takePhoto
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
@@ -57,10 +59,15 @@ fun CameraScreen(
         },
         onNavigateBack = onBack
     )
-
-    if (cameraState.capturedUri == null) {
+    if (cameraState.permissionStatus != PermissionStatus.GRANTED) {
+        CameraPermissionView(
+            status = cameraState.permissionStatus,
+            onGrantClicked = { viewModel.onIntent(CameraIntent.GrantPermissionClicked) },
+            onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) }
+        )
+    } else if (cameraState.capturedUri == null) {
         CameraContent(
-            hasPermission = cameraState.hasPermission,
+            hasPermission = true,
             targetWord = sharedState.targetWord,
             isHintUsed = sharedState.isHintUsed,
             isFlashEnabled = cameraState.isFlashEnabled,

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraEffect
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraState
+import com.iti.linguaquest.features.game.presentation.camera.contract.PermissionStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -28,7 +29,14 @@ class CameraViewModel @Inject constructor() : ViewModel() {
     fun onIntent(intent: CameraIntent) {
         when (intent) {
             is CameraIntent.PermissionResult -> {
-                _state.update { it.copy(hasPermission = intent.isGranted) }
+                _state.update { it.copy(permissionStatus = intent.status) }
+            }
+            CameraIntent.GrantPermissionClicked -> {
+                if (_state.value.permissionStatus == PermissionStatus.PERMANENTLY_DENIED) {
+                    sendEffect(CameraEffect.OpenAppSettings)
+                } else {
+                    sendEffect(CameraEffect.RequestCameraPermission)
+                }
             }
             is CameraIntent.CapturePhoto -> {
                 _state.update { it.copy(capturedUri = intent.uri) }
