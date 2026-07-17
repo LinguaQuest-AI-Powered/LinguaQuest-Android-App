@@ -30,7 +30,18 @@ class CameraViewModel @Inject constructor() : ViewModel() {
                 _state.update { it.copy(hasPermission = intent.isGranted) }
             }
             is CameraIntent.CapturePhoto -> {
-                sendEffect(CameraEffect.NavigateToProcessing(intent.uri))
+                // Instantly update UI to show the static preview
+                _state.update { it.copy(capturedUri = intent.uri) }
+            }
+            CameraIntent.RetryCapture -> {
+                // Discard the photo and return to the live viewfinder
+                _state.update { it.copy(capturedUri = null) }
+            }
+            CameraIntent.SubmitPhoto -> {
+                // Ensure we have a URI, then trigger navigation
+                _state.value.capturedUri?.let { uri ->
+                    sendEffect(CameraEffect.NavigateToProcessing(uri))
+                }
             }
             CameraIntent.ToggleFlash -> {
                 _state.update { it.copy(isFlashEnabled = !it.isFlashEnabled) }

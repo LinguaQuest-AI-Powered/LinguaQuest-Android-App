@@ -45,16 +45,24 @@ fun CameraScreen(
         onNavigateBack = onBack
     )
 
-    CameraContent(
-        hasPermission = cameraState.hasPermission,
-        targetWord = sharedState.targetWord,
-        isHintUsed = sharedState.isHintUsed,
-        cameraController = cameraController,
-        onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) },
-        onCaptureClicked = {
-            takePhoto(context, cameraController) { uri ->
-                viewModel.onIntent(CameraIntent.CapturePhoto(uri))
+    if (cameraState.capturedUri == null) {
+        CameraContent(
+            hasPermission = cameraState.hasPermission,
+            targetWord = sharedState.targetWord,
+            isHintUsed = sharedState.isHintUsed,
+            cameraController = cameraController,
+            onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) },
+            onCaptureClicked = {
+                takePhoto(context, cameraController) { uri ->
+                    viewModel.onIntent(CameraIntent.CapturePhoto(uri))
+                }
             }
-        }
-    )
+        )
+    } else {
+        CameraPreviewContent(
+            imageUri = cameraState.capturedUri!!,
+            onRetryClicked = { viewModel.onIntent(CameraIntent.RetryCapture) },
+            onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto) }
+        )
+    }
 }
