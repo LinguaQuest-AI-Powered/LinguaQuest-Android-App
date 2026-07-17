@@ -33,7 +33,10 @@ sealed interface RootScreen : NavKey {
     data object Languages : RootScreen
 
     @Serializable
-    data object Level : RootScreen
+    data object OnboardingLevel : RootScreen
+
+    @Serializable
+    data class Level(val worldId: Int, val levelNumber: Int) : RootScreen
 
     @Serializable
     data object Login : RootScreen
@@ -45,6 +48,9 @@ sealed interface RootScreen : NavKey {
     data class NewPassword(val resetToken: String) : RootScreen
     @Serializable
     data object Main : RootScreen
+
+    @Serializable
+    data class Map(val worldId: Int) : RootScreen
 
     @Serializable
     data class Details(val id: Int) : RootScreen
