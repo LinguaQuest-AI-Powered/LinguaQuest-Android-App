@@ -48,6 +48,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
+import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
 fun QuestCard(
@@ -69,7 +73,7 @@ fun QuestCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 110.dp), // Approximate height of bubble + top half of image
+                .padding(top = 110.dp),
             shape = RoundedCornerShape(32.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent
@@ -149,21 +153,20 @@ fun QuestCard(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Skip Button
-                    androidx.compose.material3.OutlinedButton(
+                    OutlinedButton(
                         onClick = onSkipClick,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(50),
                         border = androidx.compose.foundation.BorderStroke(2.dp, AppColors.DialogSecondaryButtonOutline),
-                        colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(
+                        colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = AppColors.DialogSecondaryButtonOutline
                         ),
-                        contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 16.dp, horizontal = 24.dp)
+                        contentPadding = PaddingValues(vertical = 16.dp, horizontal = 24.dp)
                     ) {
                         Text(
                             text = stringResource(id = R.string.skip),
-                            style = com.iti.linguaquest.core.theme.AppTextStyles.Button,
+                            style = AppTextStyles.Button,
                             color = AppColors.DialogSecondaryButtonOutline
                         )
                     }
@@ -171,7 +174,6 @@ fun QuestCard(
             }
         }
 
-        // Mascot Help Floating
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -198,7 +200,7 @@ fun QuestCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Image(
-                painter = painterResource(id = R.drawable.lingo_on_boarding_parrot),
+                painter = painterResource(id = R.drawable.lingo),
                 contentDescription = stringResource(id = R.string.mascot_content_desc),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.size(imageSize)

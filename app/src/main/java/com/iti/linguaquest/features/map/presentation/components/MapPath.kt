@@ -12,13 +12,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Draws the winding dirt-road path that connects the level nodes.
- *
- * @param nodePositions  Pairs of (offsetX, offsetY) in dp – matching the positions
- *                       used by [LevelNode].  The center of each node is approximated
- *                       as  (offsetX + 50.dp,  offsetY + 50.dp).
- */
+
 @Composable
 fun MapPath(nodePositions: List<Pair<Dp, Dp>>) {
     Canvas(modifier = Modifier.fillMaxSize()) {
@@ -46,13 +40,11 @@ fun MapPath(nodePositions: List<Pair<Dp, Dp>>) {
             lineTo(points.last().x, points.last().y - 200f)
         }
 
-        // Outer dark-brown stroke
         drawPath(
             path = path,
             color = Color(0xFF8B5A2B),
             style = Stroke(width = 50.dp.toPx(), cap = StrokeCap.Round)
         )
-        // Inner lighter-brown fill
         drawPath(
             path = path,
             color = Color(0xFFA06F43),

@@ -48,7 +48,7 @@ fun Mascot(offsetX: Dp, offsetY: Dp) {
             }
             Spacer(modifier = Modifier.height(4.dp))
             Image(
-                painter = painterResource(id = R.drawable.lingo_on_boarding_parrot),
+                painter = painterResource(id = R.drawable.lingo_onboarding_1),
                 contentDescription = "Mascot",
                 modifier = Modifier.size(100.dp)
             )

@@ -52,14 +52,12 @@ fun HintsBottomSheet(
         onDismissRequest = onDismiss,
         containerColor = Color.White,
         dragHandle = {
-            // Header with coins and close button
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Coins
                 Row(
                     modifier = Modifier
                         .background(Color(0xFFFDF7F2), RoundedCornerShape(16.dp))
@@ -83,7 +81,6 @@ fun HintsBottomSheet(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // Close Button
                 Box(
                     modifier = Modifier
                         .size(32.dp)
@@ -109,9 +106,8 @@ fun HintsBottomSheet(
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 32.dp)
         ) {
-            // Mascot
             Image(
-                painter = painterResource(id = R.drawable.lingo_on_boarding_parrot),
+                painter = painterResource(id = R.drawable.lingo_hint),
                 contentDescription = stringResource(id = R.string.thinking_mascot_content_desc),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.size(100.dp)
@@ -128,7 +124,6 @@ fun HintsBottomSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Hints Options
             HintItem(
                 icon = Icons.Default.TextFields,
                 title = stringResource(id = R.string.reveal_first_letter),
@@ -163,7 +158,6 @@ private fun HintItem(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Icon
         Icon(
             painter = rememberVectorPainter(icon),
             contentDescription = null,
@@ -173,7 +167,6 @@ private fun HintItem(
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // Texts
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
@@ -197,7 +190,6 @@ private fun HintItem(
             }
         }
 
-        // Button
         Box(
             modifier = Modifier
                 .background(Color(0xFFFF9800), RoundedCornerShape(16.dp))
