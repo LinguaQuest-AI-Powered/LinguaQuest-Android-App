@@ -131,3 +131,28 @@ fun ProfileScreen(
         Text(text = stringResource(R.string.profile_screen))
     }
 }
+
+@Composable
+fun GalleryScreen(
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+
+        Image(
+            painter = painterResource(id = R.drawable.lingo_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.home_screen))
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}

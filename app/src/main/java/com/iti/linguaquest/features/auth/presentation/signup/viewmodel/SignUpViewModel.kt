@@ -96,7 +96,7 @@ class SignUpViewModel @Inject constructor(
     private fun signUpWithEmail(username: String, email: String, password: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
-            when (val result = signUpWithEmailUseCase(email, username, password, "Arabic", "Spanish")) {
+            when (val result = signUpWithEmailUseCase(email, username, password)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
                     sendEffect(SignUpEffect.SignUpSucceeded(email))

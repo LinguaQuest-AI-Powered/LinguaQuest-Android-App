@@ -36,4 +36,7 @@ object AppColors {
     val Black =Color.Black
     val White =Color(0xffFFFFFF)
     val cardLevelFilledColor =Color(0xffFCEBDE)
+    val progressTrackColor =Color(0xFFF0D9C4)
+     val ChipBackground = Color(0xFFFCE9D6)
+     val IconBoxBackground = Color(0xFFFCE9D6)
 }
