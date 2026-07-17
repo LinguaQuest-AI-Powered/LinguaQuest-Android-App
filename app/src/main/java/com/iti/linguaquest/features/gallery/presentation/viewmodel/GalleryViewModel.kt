@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.gallery.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
@@ -12,7 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
- import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,62 +49,13 @@ class GalleryViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, errorRes = null) }
 
 
-            kotlinx.coroutines.flow.flowOf(
-                listOf(
-                    WordEntity(
-                        sourceWord = "Dog",
-                        translatedWord = "كلب",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ),
-                    WordEntity(
-                        sourceWord = "Cat",
-                        translatedWord = "قطة",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ), WordEntity(
-                        sourceWord = "Cat",
-                        translatedWord = "قطة",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ), WordEntity(
-                        sourceWord = "Cat",
-                        translatedWord = "قطة",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ), WordEntity(
-                        sourceWord = "Cat",
-                        translatedWord = "قطة",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ),
-                    WordEntity(
-                         sourceWord = "Cat",
-                        translatedWord = "قطة",
-                        sourceLanguage = "en",
-                        targetLanguage = "ar",
-                        imagePath = "https://images.unsplash.com/photo-1506521781263-d8422e82f27a",
-                        category = "Animals",
-                        isCorrect = true
-                    ),
-
-                    ))
-                         .collect { words ->
+            getWordsWithImagesUseCase()
+                .catch {
+                    _state.update { state ->
+                        state.copy(isLoading = false, errorRes = R.string.general_error)
+                    }
+                }
+                .collect { words ->
                     val categories = extractCategories(words)
                     val selectedCategory = _state.value.selectedCategory
                     val filteredWords = filterWords(words, selectedCategory)

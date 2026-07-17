@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
+import com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -54,7 +55,13 @@ fun GalleryScreen(
 
     val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorRes == null
 
-    Box(modifier = modifier.fillMaxSize()) {
+    LaunchedEffect(isEmpty) {
+         showBackground = !isEmpty
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
