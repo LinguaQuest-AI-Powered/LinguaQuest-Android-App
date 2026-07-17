@@ -10,8 +10,6 @@ interface AuthRepository {
         email: String,
         username: String,
         password: String,
-        nativeLanguage: String,
-        targetLanguage: String
     ): LinguaQuestResult<Unit, AuthError>
 
     suspend fun login(

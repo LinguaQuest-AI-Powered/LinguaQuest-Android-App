@@ -17,7 +17,7 @@ interface AuthApiService {
         @Body body: LoginRequestDto
     ): SuccessResponseDto<LoginResponseDataDto>
 
-    @POST("auth/oauth/google")
+    @POST("auth/oauth/firebase")
     suspend fun loginWithGoogle(
         @Body body: OAuthGoogleRequestDto
     ): SuccessResponseDto<OAuthResponseDataDto>

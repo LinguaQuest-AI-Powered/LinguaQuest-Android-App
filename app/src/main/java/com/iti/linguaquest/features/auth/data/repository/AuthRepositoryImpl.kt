@@ -6,6 +6,7 @@ import com.iti.linguaquest.core.network.LinguaQuestResult
 import com.iti.linguaquest.core.network.asEmptyDataResult
 import com.iti.linguaquest.core.network.map
 import com.iti.linguaquest.core.network.onSuccess
+import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpVerifyRequestDto
@@ -18,19 +19,22 @@ import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
-    private val tokensLocalDataSource: TokensLocalDataSource
+    private val tokensLocalDataSource: TokensLocalDataSource,
+    private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource
 ) : AuthRepository {
 
     override suspend fun register(
         email: String,
         username: String,
         password: String,
-        nativeLanguage: String,
-        targetLanguage: String
     ): LinguaQuestResult<Unit, AuthError> {
+
+        val nativeLanguage = userPreferencesLocalDataSource.nativeLanguage.first() ?: ""
+        val targetLanguage = userPreferencesLocalDataSource.targetLanguage.first() ?: ""
 
         val request = RegisterRequestDto(email, username, password, nativeLanguage, targetLanguage)
 

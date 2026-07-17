@@ -12,9 +12,7 @@ class RegisterUserUseCase @Inject constructor(
         email: String,
         username: String,
         password: String,
-        nativeLanguage: String,
-        targetLanguage: String
     ): LinguaQuestResult<Unit, AuthError>  = authRepository.register(
-            email = email, username, password, nativeLanguage, targetLanguage)
+            email = email, username, password)
 
 }
