@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -27,6 +32,7 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 @Composable
 fun HomeScreen(
     onNavigateToDetails: (Int) -> Unit,
+    onWorldMapClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
 
@@ -83,6 +89,21 @@ fun HomeScreen(
             lesson = lesson,
             onNavigateToDetails = onNavigateToDetails
         )
+
+        FloatingActionButton(
+            onClick = onWorldMapClick,
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(20.dp)
+        ) {
+            Image(
+                painter = painterResource(R.drawable.world_home_icon),
+                contentDescription = "world_map_content_description",
+                modifier = Modifier.size(28.dp)
+            )
+        }
     }
 }
 

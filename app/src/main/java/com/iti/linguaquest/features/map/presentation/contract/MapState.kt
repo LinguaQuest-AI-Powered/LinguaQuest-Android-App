@@ -1,0 +1,16 @@
+package com.iti.linguaquest.features.map.presentation.contract
+
+import com.iti.linguaquest.features.map.presentation.components.LevelStatus
+
+data class MapLevelUiModel(
+    val levelNumber: Int,
+    val status: LevelStatus,
+    val stars: Int
+)
+
+data class MapState(
+    val isLoading: Boolean = false,
+    val worldTitle: String = "Park World",
+    val levels: List<MapLevelUiModel> = emptyList(),
+    val currentLevelIndex: Int = -1
+)

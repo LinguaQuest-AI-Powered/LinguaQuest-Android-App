@@ -104,6 +104,16 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
+     <string name="camera_permission_required">Camera permission is required.</string>
+    <string name="go_back">Go Back</string>
+    <string name="captured_preview">Captured Preview</string>
+    <string name="find_label">Find:</string>
+    <string name="retry">Retry</string>
+    <string name="submit">Submit</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="toggle_flash">Toggle Flash</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="camera_alt">Camera</string>
      <string name="gallery_label">Gallery</string>
      <string name="Add_New">Add New</string>
 
@@ -120,7 +130,19 @@
      <string name="currently_language">CURRENTLY LEARNING</string>
      <string name="level">Level</string>
      <string name="days">Days</string>
+     <string name="coins_label">COINS</string>
+     <string name="total_xp_label">TOTAL XP</string>
+     <string name="streak_label">STREAK</string>
+     <string name="worlds_label">WORLDS</string>
      <string name="continue_lesson">CONTINUE LESSON</string>
+     <string name="leaderboard_title">Leaderboard</string>
+     <string name="achievements_title">Achievements</string>
+     <string name="learning_label">Learning</string>
+     <string name="change_label">Change</string>
+     <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
+     <string name="settings_label">Settings</string>
+     <string name="view_all_label">VIEW ALL</string>
+     <string name="you_label">You</string>
 
     // WorldDifficulty
     <string name="medium">MEDIUM</string>
@@ -145,6 +167,23 @@
     <string name="review_section_fun_emoji">💡</string>
     <string name="review_section_fun_label">DID YOU KNOW?</string>
     <string name="review_language_arrow"> → </string>
+
+    // Level Feature
+    <string name="level_title">Level %1$d</string>
+    <string name="back">Back</string>
+    <string name="coins">Coins</string>
+    <string name="mascot_help_text">TAP ME IF YOU\nWANT HELP</string>
+    <string name="mascot_content_desc">Mascot</string>
+    <string name="play_sound">Play Sound</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="skip">Skip</string>
+    <string name="close">Close</string>
+    <string name="thinking_mascot_content_desc">Thinking Mascot</string>
+    <string name="need_a_hint">Need a hint?</string>
+    <string name="reveal_first_letter">Reveal first letter</string>
+    <string name="show_category_clue">Show category clue</string>
+    <string name="use_hint">Use Hint</string>
+    <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
 
 </resources>
 
