@@ -50,6 +50,8 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import androidx.navigation3.runtime.rememberNavBackStack
+import com.iti.linguaquest.core.navigation.SharedWordHolder
+import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 
 @Composable
 fun AppNavigation(
@@ -240,6 +242,19 @@ fun AppNavigation(
                             rootBackStack.removeLastOrNull()
                         }
                     )
+                }
+
+                entry<RootScreen.Review> { key ->
+                    val word = SharedWordHolder.pendingWord
+                    if (word != null) {
+                        SharedWordHolder.pendingWord = null
+                        ReviewScreen(
+                            word = word,
+                            onBack = { rootBackStack.removeLastOrNull() }
+                        )
+                    } else {
+                         LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                    }
                 }
             })
     }

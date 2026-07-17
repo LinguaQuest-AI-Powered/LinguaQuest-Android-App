@@ -29,7 +29,6 @@
     <string name="select_language">Select language</string>
 
 
-    <string name="default_web_client_id">placeholder-web-client-id</string>
 
     <string name="login_welcome_back">Welcome back!</string>
     <string name="login_ready_to_continue">Ready to continue?</string>
@@ -127,6 +126,25 @@
     <string name="medium">MEDIUM</string>
     <string name="easy">EASY</string>
     <string name="hard">HARD</string>
+
+    <!-- Review Screen -->
+    <string name="review_screen_title">AI Review</string>
+    <string name="review_back_content_description">Back</string>
+    <string name="review_loading_message">AI is reviewing your word…</string>
+    <string name="review_error_emoji">😔</string>
+    <string name="review_retry_button">Try Again</string>
+    <string name="review_ai_badge_label">✦ AI Review</string>
+    <string name="review_stop_speaking_description">Stop speaking</string>
+    <string name="review_speak_description">Speak</string>
+    <string name="review_section_sentence_emoji">📖</string>
+    <string name="review_section_sentence_label">SENTENCE</string>
+    <string name="review_section_translation_emoji">🌍</string>
+    <string name="review_section_translation_label">TRANSLATION</string>
+    <string name="review_section_memory_emoji">🧠</string>
+    <string name="review_section_memory_label">MEMORY TRICK</string>
+    <string name="review_section_fun_emoji">💡</string>
+    <string name="review_section_fun_label">DID YOU KNOW?</string>
+    <string name="review_language_arrow"> → </string>
 
 </resources>
 

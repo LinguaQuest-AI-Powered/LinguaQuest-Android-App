@@ -61,8 +61,7 @@ fun GalleryContent(
                     modifier = Modifier.weight(1f)
                 ) {
                     items(
-                        items = state.filteredWords,
-                        key = { it.id }
+                        items = state.filteredWords
                     ) { word ->
                         WordCard(
                             word = word,

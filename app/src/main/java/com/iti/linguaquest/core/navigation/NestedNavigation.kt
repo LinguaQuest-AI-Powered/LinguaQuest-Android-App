@@ -32,9 +32,17 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
     val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
     val currentScreen = nestedBackStack.lastOrNull()
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        topBar = {
+    Box(modifier = modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.lingo_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            topBar = {
             LinguaQuestTopAppBar(
                 xp = 1250,
                 lives = 45
@@ -60,7 +68,7 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
             backStack = nestedBackStack,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding()),
+                .padding(innerPadding),
             onBack = { nestedBackStack.removeLastOrNull() },
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
@@ -76,8 +84,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                     }
                     entry<NestedScreen.Gallery> {
                         GalleryScreen(
-                            onNavigateToWordDetails = { id ->
-                                rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                            onNavigateToReview = { word ->
+                                SharedWordHolder.pendingWord = word
+                                rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
                             }
                         )
                     }
@@ -87,6 +96,7 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 }
             )
         }
+    }
 }
 
 @Composable
@@ -131,28 +141,4 @@ fun ProfileScreen(
         Text(text = stringResource(R.string.profile_screen))
     }
 }
-
-@Composable
-fun GalleryScreen(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-
-        Image(
-            painter = painterResource(id = R.drawable.lingo_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.home_screen))
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
+

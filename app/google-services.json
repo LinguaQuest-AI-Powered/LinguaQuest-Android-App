@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "569083981229-0719ulc6bt7jdgp8fl9v75afkrshifst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.linguaquest",
+            "certificate_hash": "4a1b83dbf38ca35d704e522ff01cd1738e076d1a"
+          }
+        },
+        {
           "client_id": "569083981229-e4v38jkj8sk23qa3nvv52ouag4n98kuq.apps.googleusercontent.com",
           "client_type": 3
         }

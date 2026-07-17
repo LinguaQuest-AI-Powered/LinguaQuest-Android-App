@@ -28,13 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun GalleryScreen(
-    onNavigateToWordDetails: (Int) -> Unit,
+    onNavigateToReview: (WordEntity) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
@@ -43,7 +44,7 @@ fun GalleryScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is GalleryEffect.NavigateToWordDetails -> onNavigateToWordDetails(effect.wordId)
+                is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
                 is GalleryEffect.ShowError -> {
                     // TODO: Handle error showing, like using a Snackbar from GlobalUiHost
                 }
@@ -53,16 +54,7 @@ fun GalleryScreen(
 
     val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorRes == null
 
-    Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        if (!isEmpty) {
-            Image(
-                painter = painterResource(id = R.drawable.lingo_bg),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
