@@ -43,20 +43,20 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation3.runtime.rememberNavBackStack
 import kotlinx.coroutines.flow.collectLatest
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
-import androidx.navigation3.runtime.rememberNavBackStack
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
+    val rootBackStack = rememberNavBackStack(RootScreen.Map(totalLevels = 8, completedLevels = 2))
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -231,6 +231,14 @@ fun AppNavigation(
 
                 entry<RootScreen.Main> {
                     MainScreen(rootBackStack)
+                }
+
+                entry<RootScreen.Map> { screen ->
+                    com.iti.linguaquest.features.map.presentation.MapScreen(
+                        totalLevels = screen.totalLevels,
+                        completedLevels = screen.completedLevels,
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
                 }
 
                 entry<RootScreen.Details> { key ->

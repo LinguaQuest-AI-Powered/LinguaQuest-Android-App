@@ -47,6 +47,9 @@ sealed interface RootScreen : NavKey {
     data object Main : RootScreen
 
     @Serializable
+    data class Map(val totalLevels: Int, val completedLevels: Int) : RootScreen
+
+    @Serializable
     data class Details(val id: Int) : RootScreen
     @Serializable
     data class OTP(val email: String, val isPasswordReset: Boolean) : RootScreen
