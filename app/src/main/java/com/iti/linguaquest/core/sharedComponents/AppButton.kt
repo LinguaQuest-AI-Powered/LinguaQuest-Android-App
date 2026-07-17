@@ -79,14 +79,16 @@ fun AppButton(
     shape: Shape = RoundedCornerShape(50),
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    isError: Boolean = false
+    isError: Boolean = false,
+    contentColorOverride: Color? = null,
+    borderColorOverride: Color? = null
 ) {
     val style = variant.toStyle()
 
     val alpha by animateFloatAsState(if (enabled && !isLoading) 1f else 0.5f, label = "buttonAlpha")
 
-    val actualBorderColor = if (isError) MaterialTheme.colorScheme.error else style.borderColor
-    val actualContentColor = if (isError) MaterialTheme.colorScheme.error else style.content
+    val actualBorderColor = if (isError) MaterialTheme.colorScheme.error else (borderColorOverride ?: style.borderColor)
+    val actualContentColor = if (isError) MaterialTheme.colorScheme.error else (contentColorOverride ?: style.content)
 
     Surface(
         onClick = onClick,
