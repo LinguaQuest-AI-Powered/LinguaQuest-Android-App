@@ -61,6 +61,9 @@ sealed interface RootScreen : NavKey {
     data class Review(val wordId: Int) : RootScreen
     @Serializable
     data class OTP(val email: String, val isPasswordReset: Boolean) : RootScreen
+
+    @Serializable
+    data object Settings : RootScreen
 }
 @Serializable
 sealed interface NestedScreen : NavKey {

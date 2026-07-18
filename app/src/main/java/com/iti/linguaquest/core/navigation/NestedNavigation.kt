@@ -97,7 +97,12 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                         )
                     }
                     entry<NestedScreen.Profile> {
-                        ProfileScreen(state = mockProfileState)
+                        ProfileScreen(
+                            state = mockProfileState,
+                            onSettingsClick = {
+                                rootBackStack.navigateSingleTop(RootScreen.Settings)
+                            }
+                        )
                     }
 
                 }
