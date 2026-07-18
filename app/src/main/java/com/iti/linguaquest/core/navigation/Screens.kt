@@ -64,6 +64,9 @@ sealed interface RootScreen : NavKey {
 
     @Serializable
     data object Settings : RootScreen
+
+    @Serializable
+    data object Leaderboard : RootScreen
     @Serializable
     data object AllWorlds : RootScreen
 }

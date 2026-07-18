@@ -44,6 +44,7 @@ import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
+import com.iti.linguaquest.features.leaderboard.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.SettingScreen
 
@@ -267,6 +268,9 @@ fun AppNavigation(
                     )
                 }
 
+                entry<RootScreen.Leaderboard> {
+                     LeaderboardScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
