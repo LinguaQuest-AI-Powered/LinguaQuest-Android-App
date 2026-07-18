@@ -18,10 +18,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
@@ -31,6 +36,8 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -42,6 +49,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showDailyRewardDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = true
@@ -64,7 +72,8 @@ fun HomeScreen(
         } else {
             HomeContent(
                 state = state,
-                onIntent = viewModel::onIntent
+                onIntent = viewModel::onIntent,
+                onDailyRewardClick = { showDailyRewardDialog = true }
             )
         }
 
@@ -83,12 +92,36 @@ fun HomeScreen(
             )
         }
     }
+
+    if (showDailyRewardDialog) {
+        Dialog(
+            onDismissRequest = { showDailyRewardDialog = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                DailyRewardCard(
+                    currentDay = 3,
+                    rewardAmount = 50,
+                    onClaimClick = {
+                        // TODO: wire real claim logic once daily-reward endpoint/domain exists
+                        showDailyRewardDialog = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable
 fun HomeContent(
     state: HomeState,
     onIntent: (HomeIntent) -> Unit,
+    onDailyRewardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -97,6 +130,13 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
+        DailyStreakBonusBanner(
+            onClick = onDailyRewardClick,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         state.languageProgress?.let { progress ->
             LanguageProgressCard(
                 languageName = progress.languageName,

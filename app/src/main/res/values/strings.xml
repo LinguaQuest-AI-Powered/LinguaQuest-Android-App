@@ -203,6 +203,22 @@
     <string name="settings_log_out">Log Out</string>
     <string name="settings_delete_account">Delete Account</string>
 
+    <!-- Daily Rewards -->
+    <string name="daily_reward_title">Daily\nReward!</string>
+    <string name="daily_reward_subtitle">You found a treasure on your\nadventure today.</string>
+    <string name="daily_reward_coins_format">+%1$d Coins</string>
+    <string name="claim_reward">Claim Reward</string>
+    <string name="day_format">Day %1$d</string>
+    <string name="daily_streak_bonus">Daily Streak Bonus!</string>
+    <string name="claim_your_daily_reward">Claim your daily reward!</string>
+    <string name="cd_daily_reward">Daily Reward</string>
+    <string name="cd_coin">Coin</string>
+    <string name="cd_gift">Gift</string>
+    <string name="cd_completed">Completed</string>
+    <string name="cd_current">Current</string>
+    <string name="cd_locked">Locked</string>
+    <string name="cd_navigate">Navigate</string>
+
     <string name="error_no_internet">Error NO Internet</string>
     <string name="error_timeout">Error Time Out</string>
     <string name="error_server">Error Server</string>
