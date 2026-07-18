@@ -44,6 +44,7 @@ import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
+import com.iti.linguaquest.features.setting.SettingScreen
 
 @Composable
 fun AppNavigation(
@@ -257,6 +258,12 @@ fun AppNavigation(
                     } else {
                          LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
                     }
+                }
+                
+                entry<RootScreen.Settings> {
+                     SettingScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
                 }
             })
     }

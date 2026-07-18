@@ -186,5 +186,20 @@
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
 
+    <!-- Settings Screen -->
+    <string name="settings_customize_journey">Customize your learning journey</string>
+    <string name="settings_category_account">ACCOUNT &amp; JOURNEY</string>
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_learning_language">Learning Language</string>
+    <string name="settings_daily_goal">Daily Goal</string>
+    <string name="settings_learning_streak">Learning Streak</string>
+    <string name="settings_category_app_experience">APP EXPERIENCE</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_sound_effects">Sound Effects</string>
+    <string name="settings_privacy_security">Privacy &amp; Security</string>
+    <string name="settings_help_support">Help &amp; Support</string>
+    <string name="settings_about_app">About App</string>
+    <string name="settings_log_out">Log Out</string>
+    <string name="settings_delete_account">Delete Account</string>
 </resources>
-
