@@ -218,4 +218,12 @@
     <string name="cd_current">Current</string>
     <string name="cd_locked">Locked</string>
     <string name="cd_navigate">Navigate</string>
+
+    <string name="error_no_internet">Error NO Internet</string>
+    <string name="error_timeout">Error Time Out</string>
+    <string name="error_server">Error Server</string>
+    <string name="error_generic">Generic Error</string>
+    <string name="error_bad_request">error_bad_request</string>
+    <string name="error_unauthorized">error_unauthorized</string>
+    <string name="error_too_many_requests">error_too_many_requests</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,76 +27,55 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
+import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
+import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.view.components.LessonPreview
-import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
-import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
+import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
     onNavigateToDetails: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var showDailyRewardDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = true
     }
 
-    val worlds = remember {
-        listOf(
-            WorldItem(
-                id = "kitchen",
-                title = "Kitchen World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.EASY,
-                progress = 0.4f,
-                isCompleted = true
-            ),
-            WorldItem(
-                id = "city",
-                title = "City World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.MEDIUM,
-                progress = 0.1f,
-                isCompleted = true
-            ),
-            WorldItem(
-                id = "animals",
-                title = "Animals World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.HARD,
-                progress = 0.9f
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
+                is HomeEffect.NavigateToWorld -> { /* go to world detail screen when exists */ }
+                HomeEffect.NavigateToAllWorlds -> { /* go to full worlds list screen when exists */ }
+            }
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+
+        if (state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            HomeContent(
+                state = state,
+                onIntent = viewModel::onIntent,
+                onDailyRewardClick = { showDailyRewardDialog = true }
             )
-        )
-    }
-
-    val lesson = remember {
-        LessonPreview(
-            lessonId = 1,
-            word = "Apple",
-            partOfSpeech = "Noun",
-            translation = "La Pomme",
-            iconRes = R.drawable.apple_icon
-        )
-    }
-
-    var showDailyRewardDialog by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-
-        HomeContent(
-            worlds = worlds,
-            lesson = lesson,
-            onNavigateToDetails = onNavigateToDetails,
-            onDailyRewardClick = { showDailyRewardDialog = true }
-        )
+        }
 
         FloatingActionButton(
             onClick = onWorldMapClick,
@@ -128,7 +108,7 @@ fun HomeScreen(
                     currentDay = 3,
                     rewardAmount = 50,
                     onClaimClick = {
-                        // Handle claim logic here
+                        // TODO: wire real claim logic once daily-reward endpoint/domain exists
                         showDailyRewardDialog = false
                     }
                 )
@@ -139,9 +119,8 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    worlds: List<WorldItem>,
-    lesson: LessonPreview,
-    onNavigateToDetails: (Int) -> Unit,
+    state: HomeState,
+    onIntent: (HomeIntent) -> Unit,
     onDailyRewardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -151,7 +130,6 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-
         DailyStreakBonusBanner(
             onClick = onDailyRewardClick,
             modifier = Modifier.fillMaxWidth()
@@ -159,32 +137,34 @@ fun HomeContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        LanguageProgressCard(
-            languageName = "Spanish",
-            level = 12,
-            streakDays = 7,
-            progress = 0.55f,
-            flagRes = R.drawable.flag_spain
-        )
+        state.languageProgress?.let { progress ->
+            LanguageProgressCard(
+                languageName = progress.languageName,
+                level = progress.level,
+                streakDays = progress.streakDays,
+                progress = progress.progress,
+                flagRes = progress.flagRes
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         ExploreWorldsSection(
-            worlds = worlds,
-            onSeeMoreClick = { },
-            onWorldClick = { },
+            worlds = state.worlds,
+            onSeeMoreClick = { onIntent(HomeIntent.SeeMoreWorldsClicked) },
+            onWorldClick = { world -> onIntent(HomeIntent.WorldClicked(world)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ContinueLessonCard(
-            lesson = lesson,
-            onContinueClick = {
-                onNavigateToDetails(lesson.lessonId)
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+        state.continueLesson?.let { lesson ->
+            ContinueLessonCard(
+                lesson = lesson,
+                onContinueClick = { onIntent(HomeIntent.ContinueLessonClicked) },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
