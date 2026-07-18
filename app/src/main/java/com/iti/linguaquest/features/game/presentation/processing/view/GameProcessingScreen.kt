@@ -18,8 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.iti.linguaquest.R
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingEffect
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingIntent
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackIntent
@@ -38,10 +41,10 @@ fun GameProcessingScreen(
     processingViewModel: GameProcessingViewModel = hiltViewModel(),
     whackViewModel: GameWhackViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val whackState by whackViewModel.state.collectAsState()
     val sharedState by sharedViewModel.sharedState.collectAsState()
 
-    // Handle initial processing start and collect effects
     LaunchedEffect(Unit) {
         processingViewModel.onIntent(GameProcessingIntent.StartProcessing)
 
@@ -54,10 +57,10 @@ fun GameProcessingScreen(
                     )
                 }
                 is GameProcessingEffect.NavigateToFailure -> {
-                    VerificationOutcome.Failure(reason = effect.reason)
+                    VerificationOutcome.Failure(reason = context.getString(effect.reasonResId))
                 }
                 is GameProcessingEffect.NavigateToError -> {
-                    VerificationOutcome.Error(errorMessage = effect.errorMessage)
+                    VerificationOutcome.Error(errorMessage = context.getString(effect.errorMessageResId))
                 }
             }
             sharedViewModel.setVerificationOutcome(outcome)
@@ -65,15 +68,12 @@ fun GameProcessingScreen(
         }
     }
 
-    // The main container acting as the blurred background wrapper
-    // We use a dark color temporarily to represent the static background
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.DarkGray.copy(alpha = 0.5f))
     ) {
 
-        // Smoothly crossfade between the initial loading view and the mini-game
         Crossfade(
             targetState = whackState.isGameActive,
             label = "ProcessingToGameCrossfade"
@@ -93,9 +93,6 @@ fun GameProcessingScreen(
             }
         }
 
-        // ==========================================
-        // TEMPORARY DEV OVERLAY FOR SIMULATION
-        // ==========================================
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -108,21 +105,21 @@ fun GameProcessingScreen(
                 onClick = { processingViewModel.onIntent(GameProcessingIntent.SimulateAiSuccess) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Green.copy(alpha = 0.8f))
             ) {
-                Text("Success")
+                Text(stringResource(id = R.string.game_processing_btn_success))
             }
 
             Button(
                 onClick = { processingViewModel.onIntent(GameProcessingIntent.SimulateAiFailure) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow.copy(alpha = 0.8f))
             ) {
-                Text("Fail", color = Color.Black)
+                Text(stringResource(id = R.string.game_processing_btn_fail), color = Color.Black)
             }
 
             Button(
                 onClick = { processingViewModel.onIntent(GameProcessingIntent.SimulateNetworkError) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red.copy(alpha = 0.8f))
             ) {
-                Text("Error")
+                Text(stringResource(id = R.string.game_processing_btn_error))
             }
         }
     }

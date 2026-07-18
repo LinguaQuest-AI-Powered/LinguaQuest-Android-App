@@ -22,16 +22,13 @@ fun GameProcessingView(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
 
-        // 1. Background Image with Dark Tint
         ProcessingBackground(imageUri = imageUri)
 
-        // 2. Center: The Interactive Darting Mascot
         FloatingLingo(
             onLingoTapped = onStartGameClicked,
             modifier = Modifier.align(Alignment.Center)
         )
 
-        // 3. Bottom: Fixed Hint and Rotating Status
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
@@ -73,9 +74,8 @@ fun FloatingLingo(
 
     Image(
         painter = painterResource(id = R.drawable.lingo_searching),
-        contentDescription = "Catchable Lingo",
+        contentDescription = stringResource(id = R.string.game_processing_catchable_lingo_desc),
         modifier = modifier
-            // 1. Offset using the lambda correctly moves the clickable hit-box
             .offset {
                 IntOffset(
                     x = posX.value.roundToInt(),
@@ -83,13 +83,11 @@ fun FloatingLingo(
                 )
             }
             .size(lingoSizeDp)
-            // 2. Clickable modifier with no ripple effect
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onLingoTapped
             )
-            // 3. Keep graphicsLayer just for the visual horizontal flip
             .graphicsLayer {
                 this.scaleX = scaleX.value
             }

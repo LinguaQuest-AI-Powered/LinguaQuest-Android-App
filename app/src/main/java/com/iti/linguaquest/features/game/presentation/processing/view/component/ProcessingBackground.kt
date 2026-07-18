@@ -8,7 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun ProcessingBackground(
@@ -19,17 +22,16 @@ fun ProcessingBackground(
         if (imageUri != null) {
             AsyncImage(
                 model = imageUri,
-                contentDescription = "Captured Image",
+                contentDescription = stringResource(id = R.string.game_processing_captured_image_desc),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         }
 
-        // Dark overlay to ensure foreground elements are visible
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.6f))
+                .background(LinguaQuestTheme.colors.blackColor.copy(alpha = 0.6f))
         )
     }
 }

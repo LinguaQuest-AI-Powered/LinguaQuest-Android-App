@@ -12,13 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun GameHintText(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "PulseHint")
 
-    // Smoothly fade the text between 50% and 100% opacity
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.5f,
         targetValue = 1f,
@@ -30,8 +32,8 @@ fun GameHintText(modifier: Modifier = Modifier) {
     )
 
     Text(
-        text = "✨ Catch Lingo to play a game! ✨",
-        color = Color.Yellow.copy(alpha = alpha),
+        text = stringResource(id = R.string.game_processing_catch_lingo_hint),
+        color = LinguaQuestTheme.colors.OrangeActive.copy(alpha = alpha),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
         modifier = modifier

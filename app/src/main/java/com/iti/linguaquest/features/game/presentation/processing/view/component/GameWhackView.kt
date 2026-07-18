@@ -15,7 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackState
 
 @Composable
@@ -26,7 +28,6 @@ fun GameWhackView(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
 
-        // Unified Top Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -35,27 +36,24 @@ fun GameWhackView(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Side: Persistent AI Processing Indicator
             Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(16.dp),
                     strokeWidth = 2.dp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "AI is thinking...")
+                Text(text = stringResource(id = R.string.game_processing_ai_thinking))
             }
 
-            // Right Side: Coin Counter
-            Text(text = "Coins: ${state.currentCoins}")
+            Text(text = stringResource(id = R.string.game_processing_coins_counter, state.currentCoins))
         }
 
-        // Dummy Lingo target
         if (state.isLingoVisible) {
             Button(
                 onClick = onLingoWhacked,
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                Text("Whack Lingo!")
+                Text(stringResource(id = R.string.game_processing_btn_whack_lingo))
             }
         }
     }

@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.game.presentation.processing.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingEffect
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingIntent
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingState
@@ -25,17 +26,15 @@ class GameProcessingViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: GameProcessingIntent) {
         when (intent) {
-            GameProcessingIntent.StartProcessing -> {
-                // Future implementation: Hit the AI API
-            }
+            GameProcessingIntent.StartProcessing -> {}
             GameProcessingIntent.SimulateAiSuccess -> {
                 sendEffect(GameProcessingEffect.NavigateToSuccess(50, 10))
             }
             GameProcessingIntent.SimulateAiFailure -> {
-                sendEffect(GameProcessingEffect.NavigateToFailure("That looks like a shoe, not an apple!"))
+                sendEffect(GameProcessingEffect.NavigateToFailure(R.string.game_processing_simulate_failure_reason))
             }
             GameProcessingIntent.SimulateNetworkError -> {
-                sendEffect(GameProcessingEffect.NavigateToError("Connection timed out."))
+                sendEffect(GameProcessingEffect.NavigateToError(R.string.game_processing_simulate_error_message))
             }
         }
     }
