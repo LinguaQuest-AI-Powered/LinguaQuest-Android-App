@@ -47,7 +47,7 @@ fun WorldCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(all = 15.dp)
             .clickable(enabled = !isLocked) { onClick() }
     ) {
@@ -109,7 +109,7 @@ fun WorldCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Unlock at Level ${world.unlockLevel}",
+                        text = stringResource(R.string.unlock_at_level_format, world.unlockLevel),
                         style = AppTextStyles.Caption.copy(
                             fontWeight = FontWeight.Bold,
                             color = BrownText

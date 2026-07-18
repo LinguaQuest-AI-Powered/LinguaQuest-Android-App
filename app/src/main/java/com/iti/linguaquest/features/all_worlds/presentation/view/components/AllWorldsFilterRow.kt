@@ -26,6 +26,9 @@ import com.iti.linguaquest.core.theme.AppColors.BrownText
 import com.iti.linguaquest.core.theme.AppColors.PrimaryColor
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
 
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
+
 @Composable
 fun AllWorldsFilterRow(
     selectedFilter: WorldDifficulty?,
@@ -39,7 +42,7 @@ fun AllWorldsFilterRow(
     ) {
         item {
             FilterChip(
-                text = "All",
+                text = stringResource(R.string.all_filter),
                 isSelected = selectedFilter == null,
                 dotColor = null,
                 onClick = { onFilterSelected(null) }
@@ -65,9 +68,9 @@ fun FilterChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (isSelected) PrimaryColor else Color.White
-    val textColor = if (isSelected) Color.White else BrownText
-    val borderColor = if (isSelected) PrimaryColor else Color(0xFFE0D4C8)
+    val backgroundColor = if (isSelected) PrimaryColor else com.iti.linguaquest.core.theme.AppColors.White
+    val textColor = if (isSelected) com.iti.linguaquest.core.theme.AppColors.White else BrownText
+    val borderColor = if (isSelected) PrimaryColor else com.iti.linguaquest.core.theme.AppColors.SocialBorderColor
 
     Row(
         modifier = modifier

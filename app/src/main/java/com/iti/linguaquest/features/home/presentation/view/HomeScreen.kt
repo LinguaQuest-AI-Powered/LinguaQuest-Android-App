@@ -30,6 +30,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -43,17 +44,17 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     onNavigateToDetails: (Int) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onWorldMapClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showDailyRewardDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = true
+        SharedBackgroundState.showBackground = true
     }
 
     LaunchedEffect(Unit) {

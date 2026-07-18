@@ -35,7 +35,6 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
     private fun loadWorlds() {
         _state.update { it.copy(isLoading = true) }
         
-        // Mock data
         val worlds = listOf(
             WorldItem(
                 id = "kitchen",
@@ -48,7 +47,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
             WorldItem(
                 id = "city",
                 title = "City World",
-                imageRes = R.drawable.kitchen_icon, // replace with real image if exists
+                imageRes = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.MEDIUM,
                 progress = 0.10f,
                 isCompleted = false
