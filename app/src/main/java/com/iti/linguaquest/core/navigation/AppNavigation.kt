@@ -269,8 +269,15 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Leaderboard> {
-                     LeaderboardScreen(
+                    LeaderboardScreen(
                         onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+                entry<RootScreen.Achievement> {
+                    com.iti.linguaquest.features.achivement.AchievementScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
+                    )
+                }
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },

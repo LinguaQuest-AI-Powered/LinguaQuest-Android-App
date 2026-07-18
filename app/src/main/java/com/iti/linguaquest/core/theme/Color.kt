@@ -56,4 +56,14 @@ object AppColors {
     val LeaderboardGold = Color(0xFFFCE17E)
     val LeaderboardBlue = Color(0xFF85D3DB)
     val LeaderboardBronze = Color(0xFFC2AA4E)
+
+    // Achievement Colors
+    val AchievementCyanBackground = Color(0xFFC8F6FA)
+    val AchievementCyanText = Color(0xFF00B0BA)
+    val AchievementCardBorder = Color(0xFFE5D5C5)
+    val AchievementDivider = Color(0xFFD4C4B4)
+    val AchievementButtonShadow = Color(0xFFD68A1A)
+    val AchievementTabInactive = Color(0xFFDCD0C0)
+    val AchievementHeaderGradientTop = Color(0xFFFFF7F0)
+    val AchievementHeaderGradientBottom = Color(0xFFFFEBD9)
 }
