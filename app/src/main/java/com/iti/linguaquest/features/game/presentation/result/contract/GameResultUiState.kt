@@ -1,7 +1,6 @@
 package com.iti.linguaquest.features.game.presentation.result.contract
 
 sealed interface GameResultUiState {
-    object Processing : GameResultUiState
 
     data class Success(
         val xpAwarded: Int = 0,

@@ -80,4 +80,6 @@ sealed interface GameFlowScreen : NavKey {
 
     @Serializable
     data object Result : GameFlowScreen
+    @Serializable
+    object Processing : GameFlowScreen
 }
