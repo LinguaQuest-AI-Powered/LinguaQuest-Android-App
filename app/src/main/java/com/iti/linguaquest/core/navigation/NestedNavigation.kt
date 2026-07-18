@@ -111,6 +111,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                         ProfileScreen(
                             onSettingsClick = {
                                 rootBackStack.navigateSingleTop(RootScreen.Settings)
+                            },
+                            onViewAllLeaderboardClick = {
+                                rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
                             }
                         )
                     }

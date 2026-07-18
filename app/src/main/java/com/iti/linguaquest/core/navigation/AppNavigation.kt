@@ -45,6 +45,7 @@ import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
+import com.iti.linguaquest.features.leaderboard.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.SettingScreen
 
@@ -95,7 +96,9 @@ fun AppNavigation(
     ) { innerPadding ->
         NavDisplay(
             backStack = rootBackStack,
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
@@ -247,7 +250,10 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelNum ->
                             rootBackStack.navigateSingleTop(
-                                RootScreen.GameFlow(worldId = screen.worldId, levelNumber = levelNum)
+                                RootScreen.GameFlow(
+                                    worldId = screen.worldId,
+                                    levelNumber = levelNum
+                                )
                             )
                         }
                     )
@@ -279,14 +285,20 @@ fun AppNavigation(
                     )
                 }
 
-                entry<RootScreen.AllWorlds> {
-                    AllWorldsScreen(
-                        onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { }
-                    )
+                entry<RootScreen.Leaderboard> {
+                    LeaderboardScreen(
+                        onBack = { rootBackStack.removeLastOrNull() })
+
+                    entry<RootScreen.AllWorlds> {
+                        AllWorldsScreen(
+                            onNavigateBack = { rootBackStack.removeLastOrNull() },
+                            onNavigateToWorldDetails = { }
+                        )
+                    }
+
                 }
+
+                GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }
-
-    GlobalDialogHost(globalUiHostViewModel.dialogController)
 }

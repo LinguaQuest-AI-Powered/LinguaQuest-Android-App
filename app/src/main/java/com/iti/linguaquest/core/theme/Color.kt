@@ -62,4 +62,9 @@ object AppColors {
     val SuccessAccent = Color(0xFF3FA35E)
     val ErrorAccent = Color(0xFFE0503C)
     val InfoAccent = Color(0xFF4B7BEC)
+
+    // Leaderboard Colors
+    val LeaderboardGold = Color(0xFFFCE17E)
+    val LeaderboardBlue = Color(0xFF85D3DB)
+    val LeaderboardBronze = Color(0xFFC2AA4E)
 }
