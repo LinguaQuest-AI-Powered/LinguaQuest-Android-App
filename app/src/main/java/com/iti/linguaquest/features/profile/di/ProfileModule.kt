@@ -1,8 +1,10 @@
 package com.iti.linguaquest.features.profile.di
 
 
+import com.iti.linguaquest.features.profile.data.repository.ProfileRepositoryImpl
 import com.iti.linguaquest.features.profile.datasource.remote.FakeProfileRemoteDataSource
 import com.iti.linguaquest.features.profile.datasource.remote.ProfileApiService
+import com.iti.linguaquest.features.profile.datasource.remote.ProfileRemoteDataSource
 import com.iti.linguaquest.features.profile.domain.repository.ProfileRepository
 import dagger.Binds
 import dagger.Module
@@ -18,13 +20,14 @@ abstract class ProfileModule {
 
     @Binds
     @Singleton
-    abstract fun bindProfileRepository(impl: FakeProfileRemoteDataSource): ProfileRepository
-    // Swap to ProfileRepositoryImpl when backend is ready
+    abstract fun bindProfileRemoteDataSource(
+        impl: FakeProfileRemoteDataSource
+    ): ProfileRemoteDataSource
 
-    companion object {
-        @Provides
-        @Singleton
-        fun provideProfileApiService(retrofit: Retrofit): ProfileApiService =
-            retrofit.create(ProfileApiService::class.java)
-    }
+    @Binds
+    @Singleton
+    abstract fun bindProfileRepository(
+        impl: ProfileRepositoryImpl
+    ): ProfileRepository
+
 }

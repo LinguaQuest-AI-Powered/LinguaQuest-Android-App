@@ -17,7 +17,9 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
-class FakeProfileRemoteDataSource @Inject constructor() : ProfileRepository {
+class FakeProfileRemoteDataSource @Inject constructor() :
+    ProfileRemoteDataSource
+{
 
     override suspend fun getProfileSummary(): LinguaQuestResult<ProfileSummary, LinguaQuestDataError> {
         delay(600.milliseconds)
