@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import kotlinx.coroutines.flow.collectLatest
@@ -40,17 +41,20 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
-import com.iti.linguaquest.features.game.presentation.level.LevelScreen
+import com.iti.linguaquest.features.leaderboard.LeaderboardScreen
+import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
+import com.iti.linguaquest.features.setting.SettingScreen
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootBackStack = rememberNavBackStack(RootScreen.Map(worldId = 1))
+    val rootBackStack = rememberNavBackStack(RootScreen.Login)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -60,9 +64,12 @@ fun AppNavigation(
             val result = snackbarHostState.showSnackbar(
                 AppSnackbarVisuals(
                     message = event.message.asString(context),
+                    title = event.title?.asString(context),
                     actionLabel = event.actionLabel?.asString(context),
                     duration = event.duration,
-                    type = event.type
+                    type = event.type,
+                    showCloseIcon = event.showCloseIcon,
+                    icon = event.icon
                 )
             )
             if (result == SnackbarResult.ActionPerformed) event.onAction?.invoke()
@@ -73,15 +80,25 @@ fun AppNavigation(
         modifier = modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
+            val density = LocalDensity.current
+            val bottomBarHeightPx = SharedBottomBarState.heightPx
+            val bottomBarHeightDp = with(density) { bottomBarHeightPx.toDp() }
+
             AppSnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier.navigationBarsPadding()
+                modifier = if (bottomBarHeightPx > 0) {
+                    Modifier.padding(bottom = bottomBarHeightDp)
+                } else {
+                    Modifier.navigationBarsPadding()
+                }
             )
         }
     ) { innerPadding ->
         NavDisplay(
             backStack = rootBackStack,
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
@@ -233,7 +250,10 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelNum ->
                             rootBackStack.navigateSingleTop(
-                                RootScreen.GameFlow(worldId = screen.worldId, levelNumber = levelNum)
+                                RootScreen.GameFlow(
+                                    worldId = screen.worldId,
+                                    levelNumber = levelNum
+                                )
                             )
                         }
                     )
@@ -246,9 +266,39 @@ fun AppNavigation(
                         rootBackStack = rootBackStack
                     )
                 }
-            }
-        )
-    }
+                entry<RootScreen.Review> { key ->
+                    val word = SharedWordHolder.pendingWord
+                    if (word != null) {
+                        SharedWordHolder.pendingWord = null
+                        ReviewScreen(
+                            word = word,
+                            onBack = { rootBackStack.removeLastOrNull() }
+                        )
+                    } else {
+                        LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                    }
+                }
 
-    GlobalDialogHost(globalUiHostViewModel.dialogController)
+                entry<RootScreen.Settings> {
+                    SettingScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.Leaderboard> {
+
+                    LeaderboardScreen(
+                        onBack = { rootBackStack.removeLastOrNull() })}
+
+                entry<RootScreen.AllWorlds> {
+                    AllWorldsScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onNavigateToWorldDetails = { }
+                    )
+
+                }
+
+                GlobalDialogHost(globalUiHostViewModel.dialogController)
+            })
+    }
 }

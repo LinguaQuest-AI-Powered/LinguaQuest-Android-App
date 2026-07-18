@@ -12,12 +12,13 @@ enum class WorldDifficulty(val label: String, val badgeColor: Color) {
 
 
 data class WorldItem(
-    val id: String,
+    val id: Int,
     val title: String,
     @DrawableRes val imageRes: Int,
     val difficulty: WorldDifficulty,
     val progress: Float,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val unlockLevel: Int? = null
 )
 
 data class LessonPreview(

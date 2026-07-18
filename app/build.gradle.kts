@@ -98,5 +98,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    implementation(libs.firebase.ai)
+    debugImplementation(libs.firebase.appcheck.debug)
+
     implementation(libs.konfetti.compose)
 }

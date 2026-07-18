@@ -7,7 +7,7 @@ import com.iti.linguaquest.core.database.word.WordEntity
 
 @Database(
     entities = [WordEntity::class],
-    version = 1,
+    version = 5  ,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

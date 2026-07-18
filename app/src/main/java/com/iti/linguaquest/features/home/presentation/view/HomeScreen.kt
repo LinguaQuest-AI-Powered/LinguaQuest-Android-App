@@ -12,83 +12,75 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
+import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
+import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.view.components.LessonPreview
-import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
-import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
+import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     onNavigateToDetails: (Int) -> Unit,
+    onNavigateToAllWorlds: () -> Unit,
+    onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var showDailyRewardDialog by remember { mutableStateOf(false) }
 
-    val worlds = remember {
-        listOf(
-            WorldItem(
-                id = "kitchen",
-                title = "Kitchen World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.EASY,
-                progress = 0.4f,
-                isCompleted = true
-            ),
-            WorldItem(
-                id = "city",
-                title = "City World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.MEDIUM,
-                progress = 0.1f,
-                isCompleted = true
-            ),
-            WorldItem(
-                id = "animals",
-                title = "Animals World",
-                imageRes = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.HARD,
-                progress = 0.9f
+    LaunchedEffect(Unit) {
+        SharedBackgroundState.showBackground = true
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
+                is HomeEffect.NavigateToWorld -> {
+                    onNavigateToWorldMap(effect.worldId)
+                }
+                HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
+            }
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+
+        if (state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            HomeContent(
+                state = state,
+                onIntent = viewModel::onIntent,
+                onDailyRewardClick = { showDailyRewardDialog = true }
             )
-        )
-    }
-
-    val lesson = remember {
-        LessonPreview(
-            lessonId = 1,
-            word = "Apple",
-            partOfSpeech = "Noun",
-            translation = "La Pomme",
-            iconRes = R.drawable.apple_icon
-        )
-    }
-
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(R.drawable.lingo_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        HomeContent(
-            worlds = worlds,
-            lesson = lesson,
-            onNavigateToDetails = onNavigateToDetails
-        )
+        }
 
         FloatingActionButton(
             onClick = onWorldMapClick,
@@ -105,13 +97,36 @@ fun HomeScreen(
             )
         }
     }
+
+    if (showDailyRewardDialog) {
+        Dialog(
+            onDismissRequest = { showDailyRewardDialog = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                DailyRewardCard(
+                    currentDay = 3,
+                    rewardAmount = 50,
+                    onClaimClick = {
+                        // TODO: wire real claim logic once daily-reward endpoint/domain exists
+                        showDailyRewardDialog = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable
 fun HomeContent(
-    worlds: List<WorldItem>,
-    lesson: LessonPreview,
-    onNavigateToDetails: (Int) -> Unit,
+    state: HomeState,
+    onIntent: (HomeIntent) -> Unit,
+    onDailyRewardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -120,33 +135,41 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-
-        LanguageProgressCard(
-            languageName = "Spanish",
-            level = 12,
-            streakDays = 7,
-            progress = 0.55f,
-            flagRes = R.drawable.flag_spain
+        DailyStreakBonusBanner(
+            onClick = onDailyRewardClick,
+            modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        state.languageProgress?.let { progress ->
+            LanguageProgressCard(
+                languageName = progress.languageName,
+                level = progress.level,
+                streakDays = progress.streakDays,
+                progress = progress.progress,
+                flagRes = progress.flagRes
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         ExploreWorldsSection(
-            worlds = worlds,
-            onSeeMoreClick = { },
-            onWorldClick = { },
+            worlds = state.worlds,
+            onSeeMoreClick = { onIntent(HomeIntent.SeeMoreWorldsClicked) },
+            onWorldClick = { world -> onIntent(HomeIntent.WorldClicked(world)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ContinueLessonCard(
-            lesson = lesson,
-            onContinueClick = {
-                onNavigateToDetails(lesson.lessonId)
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+        state.continueLesson?.let { lesson ->
+            ContinueLessonCard(
+                lesson = lesson,
+                onContinueClick = { onIntent(HomeIntent.ContinueLessonClicked) },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
     }

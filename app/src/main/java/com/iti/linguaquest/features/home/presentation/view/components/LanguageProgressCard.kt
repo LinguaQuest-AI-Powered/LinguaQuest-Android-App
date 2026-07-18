@@ -44,7 +44,7 @@ fun LanguageProgressCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -52,7 +52,7 @@ fun LanguageProgressCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Image(

@@ -30,6 +30,14 @@ data class LinguaQuestColors(
     val BrownText: Color,
     val ProfileCardColor: Color,
     val ProfileCardBorderColor: Color,
+    val Charcoal : Color,
+    val Espresso : Color,
+    val Amber : Color,
+    val Linen : Color,
+    val Sand : Color,
+    val SuccessAccent : Color,
+    val ErrorAccent : Color,
+    val InfoAccent : Color
 
 
 )
