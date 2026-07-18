@@ -6,6 +6,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
+import com.iti.linguaquest.core.theme.AppColors
 
 private val LightColorScheme = lightColorScheme(
 
@@ -73,7 +75,15 @@ private val LightExtraColors = LinguaQuestColors(
     OrangeActive = AppColors.OrangeActive,
     BrownText = AppColors.BrownText,
     ProfileCardColor = AppColors.ProfileCardColor,
-    ProfileCardBorderColor = AppColors.ProfileCardBorderColor
+    ProfileCardBorderColor = AppColors.ProfileCardBorderColor,
+    Charcoal = AppColors.Charcoal,
+    Espresso = AppColors.Espresso,
+    Amber = AppColors.Amber,
+    Linen = AppColors.Linen,
+    Sand = AppColors.Sand,
+    SuccessAccent = AppColors.SuccessAccent,
+    ErrorAccent = AppColors.ErrorAccent,
+    InfoAccent = AppColors.InfoAccent
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -98,7 +108,15 @@ private val DarkExtraColors = LinguaQuestColors(
     OrangeActive = AppColors.OrangeActive,
     BrownText = AppColors.BrownText,
     ProfileCardColor = AppColors.ProfileCardColor,
-    ProfileCardBorderColor = AppColors.ProfileCardBorderColor
+    ProfileCardBorderColor = AppColors.ProfileCardBorderColor,
+    Charcoal = AppColors.Charcoal,
+    Espresso = AppColors.Espresso,
+    Amber = AppColors.Amber,
+    Linen = AppColors.Linen,
+    Sand = AppColors.Sand,
+    SuccessAccent = AppColors.SuccessAccent,
+    ErrorAccent = AppColors.ErrorAccent,
+    InfoAccent = AppColors.InfoAccent,
 )
 
 @Composable

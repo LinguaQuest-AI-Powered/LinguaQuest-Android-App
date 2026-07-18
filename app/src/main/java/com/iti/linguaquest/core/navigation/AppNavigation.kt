@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import kotlinx.coroutines.flow.collectLatest
@@ -63,9 +64,12 @@ fun AppNavigation(
             val result = snackbarHostState.showSnackbar(
                 AppSnackbarVisuals(
                     message = event.message.asString(context),
+                    title = event.title?.asString(context),
                     actionLabel = event.actionLabel?.asString(context),
                     duration = event.duration,
-                    type = event.type
+                    type = event.type,
+                    showCloseIcon = event.showCloseIcon,
+                    icon = event.icon
                 )
             )
             if (result == SnackbarResult.ActionPerformed) event.onAction?.invoke()
@@ -76,15 +80,25 @@ fun AppNavigation(
         modifier = modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
+            val density = LocalDensity.current
+            val bottomBarHeightPx = SharedBottomBarState.heightPx
+            val bottomBarHeightDp = with(density) { bottomBarHeightPx.toDp() }
+
             AppSnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier.navigationBarsPadding()
+                modifier = if (bottomBarHeightPx > 0) {
+                    Modifier.padding(bottom = bottomBarHeightDp)
+                } else {
+                    Modifier.navigationBarsPadding()
+                }
             )
         }
     ) { innerPadding ->
         NavDisplay(
             backStack = rootBackStack,
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
@@ -236,7 +250,10 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelNum ->
                             rootBackStack.navigateSingleTop(
-                                RootScreen.GameFlow(worldId = screen.worldId, levelNumber = levelNum)
+                                RootScreen.GameFlow(
+                                    worldId = screen.worldId,
+                                    levelNumber = levelNum
+                                )
                             )
                         }
                     )
@@ -258,27 +275,30 @@ fun AppNavigation(
                             onBack = { rootBackStack.removeLastOrNull() }
                         )
                     } else {
-                         LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                        LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
                     }
                 }
-                
+
                 entry<RootScreen.Settings> {
-                     SettingScreen(
+                    SettingScreen(
                         onBack = { rootBackStack.removeLastOrNull() }
                     )
                 }
 
                 entry<RootScreen.Leaderboard> {
-                     LeaderboardScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
+
+                    LeaderboardScreen(
+                        onBack = { rootBackStack.removeLastOrNull() })}
+
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToWorldDetails = { }
                     )
+
                 }
+
+                GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }
-
-    GlobalDialogHost(globalUiHostViewModel.dialogController)
 }
