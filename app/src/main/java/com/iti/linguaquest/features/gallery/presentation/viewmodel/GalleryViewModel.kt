@@ -40,7 +40,7 @@ class GalleryViewModel @Inject constructor(
             GalleryIntent.LoadWords -> loadWords()
             is GalleryIntent.CategorySelected -> filterByCategory(intent.category)
             is GalleryIntent.DeleteWordClicked -> deleteWord(intent.word)
-            is GalleryIntent.WordItemClicked -> navigateToWordDetails(intent.wordId)
+            is GalleryIntent.WordItemClicked -> navigateToReview(intent.wordId)
         }
     }
 
@@ -54,7 +54,8 @@ class GalleryViewModel @Inject constructor(
                     _state.update { state ->
                         state.copy(isLoading = false, errorRes = R.string.general_error)
                     }
-                }.collect { words ->
+                }
+                .collect { words ->
                     val categories = extractCategories(words)
                     val selectedCategory = _state.value.selectedCategory
                     val filteredWords = filterWords(words, selectedCategory)
@@ -89,9 +90,10 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToWordDetails(wordId: Int) {
+    private fun navigateToReview(wordId: Int) {
         viewModelScope.launch {
-            _effects.send(GalleryEffect.NavigateToWordDetails(wordId))
+            val word = _state.value.words.find { it.id == wordId } ?: return@launch
+            _effects.send(GalleryEffect.NavigateToReview(word))
         }
     }
 

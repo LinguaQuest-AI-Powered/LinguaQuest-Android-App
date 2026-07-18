@@ -5,8 +5,8 @@ import androidx.room3.PrimaryKey
 
 @Entity(tableName = "words")
 data class WordEntity(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val sourceWord: String,
     val translatedWord: String,
     val sourceLanguage: String,

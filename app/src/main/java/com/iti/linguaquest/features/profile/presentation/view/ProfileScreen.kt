@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,10 @@ fun ProfileScreen(
     onViewAllLeaderboardClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = false
+    }
+
     ProfileContent(
         state = state,
         onSettingsClick = onSettingsClick,

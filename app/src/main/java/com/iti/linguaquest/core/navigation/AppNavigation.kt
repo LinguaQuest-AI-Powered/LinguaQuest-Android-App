@@ -43,14 +43,14 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
-import com.iti.linguaquest.features.game.presentation.level.LevelScreen
+import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootBackStack = rememberNavBackStack(RootScreen.Map(worldId = 1))
+    val rootBackStack = rememberNavBackStack(RootScreen.Login)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -246,8 +246,19 @@ fun AppNavigation(
                         rootBackStack = rootBackStack
                     )
                 }
-            }
-        )
+                entry<RootScreen.Review> { key ->
+                    val word = SharedWordHolder.pendingWord
+                    if (word != null) {
+                        SharedWordHolder.pendingWord = null
+                        ReviewScreen(
+                            word = word,
+                            onBack = { rootBackStack.removeLastOrNull() }
+                        )
+                    } else {
+                         LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                    }
+                }
+            })
     }
 
     GlobalDialogHost(globalUiHostViewModel.dialogController)

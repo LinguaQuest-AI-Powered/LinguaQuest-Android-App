@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,9 @@ fun HomeScreen(
     onWorldMapClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = true
+    }
 
     val worlds = remember {
         listOf(
@@ -77,12 +81,6 @@ fun HomeScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Image(
-            painter = painterResource(R.drawable.lingo_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
 
         HomeContent(
             worlds = worlds,

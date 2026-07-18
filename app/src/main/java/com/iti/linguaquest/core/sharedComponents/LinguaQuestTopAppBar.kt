@@ -15,20 +15,22 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
@@ -52,10 +54,10 @@ fun LinguaQuestTopAppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(AppColors.CreamBackground)
+            .background(MaterialTheme.colorScheme.background)
             .border(
                 width = 0.5.dp,
-                color = AppColors.BrownText.copy(alpha = 0.12f),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(0.dp)
             )
              .statusBarsPadding()
@@ -67,23 +69,24 @@ fun LinguaQuestTopAppBar(
 
             Image(
                 painter = painterResource(id = R.drawable.lingo_app_bar),
-                contentDescription = "LinguaQuest Logo",
+                contentDescription = stringResource(R.string.app_logo_description),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(AppColors.CreamBackground, CircleShape)
+                    .size(48.dp)
+                    .background(MaterialTheme.colorScheme.background, CircleShape)
                     .border(
                         width = 2.dp,
-                        color = AppColors.OrangeActive,
+                        color = MaterialTheme.colorScheme.onSurface,
                         shape = CircleShape
                     )
+                    .padding(3.dp)
+                    .clip(CircleShape)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "LinguaQuest",
-                color = AppColors.OrangeActive,
-                fontSize = 20.sp,
+                text = stringResource(R.string.app_name),
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
                 letterSpacing = (-0.3).sp
             )
@@ -94,14 +97,14 @@ fun LinguaQuestTopAppBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             StatChip(
-                iconRes = R.drawable.ic_star,
+                iconRes = R.drawable.ic_start,
                 value = animatedXp,
-                textColor = AppColors.BrownText
+                textColor = MaterialTheme.colorScheme.onSurface
             )
             StatChip(
-                iconRes = R.drawable.ic_medal,
+                iconRes = R.drawable.ic_doller,
                 value = animatedLives,
-                textColor = AppColors.BrownText
+                textColor = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -117,16 +120,11 @@ private fun StatChip(
 ) {
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .background(AppColors.CreamBackground)
-            .border(
-                width = 1.5.dp,
-                color = AppColors.BrownText.copy(alpha = 0.18f),
-                shape = RoundedCornerShape(50)
-            )
-            .padding(horizontal = 10.dp, vertical = 5.dp),
+            .shadow(elevation = 3.dp, shape = RoundedCornerShape(50), spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(50))
+            .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Image(
             painter = painterResource(id = iconRes),
@@ -150,3 +148,4 @@ private fun LinguaQuestTopAppBarPreview() {
         LinguaQuestTopAppBar(xp = 1250, lives = 45)
     }
 }
+

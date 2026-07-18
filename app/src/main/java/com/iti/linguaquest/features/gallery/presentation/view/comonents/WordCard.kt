@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,15 +45,15 @@ fun WordCard(
             .fillMaxWidth()
             .clickable { onWordClick(word.id) },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColors.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
 
-             Box(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
+                    .aspectRatio(1f)
             ) {
                 AsyncImage(
                     model = word.imagePath,
@@ -62,7 +64,7 @@ fun WordCard(
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                 )
 
-                 Box(
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(10.dp)
@@ -74,7 +76,7 @@ fun WordCard(
                 ) {
                     Text(
                         text = word.category.uppercase(),
-                        color = AppColors.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1
@@ -82,10 +84,10 @@ fun WordCard(
                 }
             }
 
-             Box(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(AppColors.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 10.dp, vertical = 10.dp)
             ) {
                  Column(
@@ -95,7 +97,7 @@ fun WordCard(
                 ) {
                     Text(
                         text = word.sourceWord,
-                        color = AppColors.Brown,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 13.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -103,7 +105,7 @@ fun WordCard(
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = word.translatedWord,
-                        color = AppColors.PrimaryColor,
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -130,8 +132,8 @@ fun WordCard(
                     if (word.isCorrect) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Correct",
-                            tint = AppColors.White,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(18.dp)
                         )
                     }
