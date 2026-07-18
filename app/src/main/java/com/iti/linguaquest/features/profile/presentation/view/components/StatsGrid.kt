@@ -15,13 +15,13 @@ import com.iti.linguaquest.features.profile.presentation.model.ProfileState
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StatCard(
-                icon = R.drawable.coin_icon,
+                icon = R.drawable.ic_coin,
                 value = state.coins.toString(),
                 label = stringResource(R.string.coins_label),
                 modifier = Modifier.weight(1f)
             )
             StatCard(
-                icon = R.drawable.xp_icon,
+                icon = R.drawable.ic_xp,
                 value = state.totalXp.toString(),
                 label = stringResource(R.string.total_xp_label),
                 modifier = Modifier.weight(1f)

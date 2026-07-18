@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AllWorldsScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToWorldDetails: (String) -> Unit,
+    onNavigateToWorldDetails: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AllWorldsViewModel = hiltViewModel()
 ) {

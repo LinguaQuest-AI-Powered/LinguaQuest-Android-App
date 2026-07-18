@@ -47,6 +47,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToDetails: (Int) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
+    onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -61,7 +62,9 @@ fun HomeScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
-                is HomeEffect.NavigateToWorld -> { /* go to world detail screen when exists */ }
+                is HomeEffect.NavigateToWorld -> {
+                    onNavigateToWorldMap(effect.worldId)
+                }
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
             }
         }

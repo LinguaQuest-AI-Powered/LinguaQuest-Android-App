@@ -12,7 +12,7 @@ enum class WorldDifficulty(val label: String, val badgeColor: Color) {
 
 
 data class WorldItem(
-    val id: String,
+    val id: Int,
     val title: String,
     @DrawableRes val imageRes: Int,
     val difficulty: WorldDifficulty,

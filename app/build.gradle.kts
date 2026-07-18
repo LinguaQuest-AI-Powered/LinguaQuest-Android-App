@@ -98,8 +98,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.kotlinx.coroutines.play.services)
 
-    // Firebase AI Logic (Gemini API access)
     implementation(libs.firebase.ai)
-    // App Check debug provider - debug builds only, never ship in release
     debugImplementation(libs.firebase.appcheck.debug)
+
+    implementation(libs.konfetti.compose)
 }

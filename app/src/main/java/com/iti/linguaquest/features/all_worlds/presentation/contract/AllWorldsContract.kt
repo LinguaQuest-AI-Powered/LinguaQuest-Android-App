@@ -23,6 +23,6 @@ sealed interface AllWorldsIntent {
 }
 
 sealed interface AllWorldsEffect {
-    data class NavigateToWorldDetails(val worldId: String) : AllWorldsEffect
+    data class NavigateToWorldDetails(val worldId: Int) : AllWorldsEffect
     data object NavigateBack : AllWorldsEffect
 }

@@ -236,6 +236,24 @@
     <string name="all_filter">All</string>
     <string name="unlock_at_level_format">Unlock at Level %1$d</string>
     <string name="cd_back">Back</string>
+    <!-- Game Processing Package Strings -->
+    <string name="game_processing_simulate_failure_reason">That looks like a shoe, not an apple!</string>
+    <string name="game_processing_simulate_error_message">Connection timed out.</string>
+    <string name="game_processing_btn_success">Success</string>
+    <string name="game_processing_btn_fail">Fail</string>
+    <string name="game_processing_btn_error">Error</string>
+    <string name="game_processing_catchable_lingo_desc">Catchable Lingo</string>
+    <string name="game_processing_catch_lingo_hint">✨ Catch Lingo to play a game! ✨</string>
+    <string name="game_processing_ai_thinking">AI is thinking...</string>
+    <string name="game_processing_coins_counter">Coins: %1$d</string>
+    <string name="game_processing_btn_whack_lingo">Whack Lingo!</string>
+    <string name="game_processing_captured_image_desc">Captured Image</string>
+    <string name="game_processing_status_inspecting">Lingo is inspecting the pixels...</string>
+    <string name="game_processing_status_consulting">Consulting the dictionary...</string>
+    <string name="game_processing_status_squinting">Squinting really hard...</string>
+    <string name="game_processing_status_evaluating">Evaluating your photography skills...</string>
+    <string name="game_processing_status_almost_there">Almost there...</string>
+
 
     <!-- Achievements Screen -->
     <string name="achievement_tab_all">All</string>

@@ -15,6 +15,7 @@ import com.iti.linguaquest.core.navigation.GameFlowScreen
 import com.iti.linguaquest.core.navigation.navigateSingleTop
 import com.iti.linguaquest.features.game.presentation.camera.view.CameraScreen
 import com.iti.linguaquest.features.game.presentation.level.LevelScreen
+import com.iti.linguaquest.features.game.presentation.processing.view.GameProcessingScreen
 import com.iti.linguaquest.features.game.presentation.result.view.GameResultScreen
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
@@ -58,9 +59,18 @@ fun GameFlowHost(
                 CameraScreen(
                     sharedViewModel = sharedViewModel,
                     onSubmitPhoto = {
-                        gameBackStack.navigateSingleTop(GameFlowScreen.Result)
+                        gameBackStack.navigateSingleTop(GameFlowScreen.Processing)
                     },
                     onBack = { gameBackStack.removeLastOrNull() }
+                )
+            }
+
+            entry<GameFlowScreen.Processing> {
+                GameProcessingScreen(
+                    sharedViewModel = sharedViewModel,
+                    onNavigateToResult = {
+                        gameBackStack.navigateSingleTop(GameFlowScreen.Result)
+                    }
                 )
             }
             entry<GameFlowScreen.Result> {

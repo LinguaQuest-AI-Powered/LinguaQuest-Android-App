@@ -47,7 +47,7 @@ fun HomeSummary.toLanguageProgressUi(): LanguageProgressUi = LanguageProgressUi(
 )
 
 fun ExploreWorld.toUiWorldItem(): WorldItem = WorldItem(
-    id = id.toString(),
+    id = id,
     title = name,
     imageRes = localWorldImageFor(name),
     difficulty = when (difficulty) {
