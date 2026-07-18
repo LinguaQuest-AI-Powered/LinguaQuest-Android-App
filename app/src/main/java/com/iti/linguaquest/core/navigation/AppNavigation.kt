@@ -286,15 +286,15 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Leaderboard> {
-                    LeaderboardScreen(
-                        onBack = { rootBackStack.removeLastOrNull() })
 
-                    entry<RootScreen.AllWorlds> {
-                        AllWorldsScreen(
-                            onNavigateBack = { rootBackStack.removeLastOrNull() },
-                            onNavigateToWorldDetails = { }
-                        )
-                    }
+                    LeaderboardScreen(
+                        onBack = { rootBackStack.removeLastOrNull() })}
+
+                entry<RootScreen.AllWorlds> {
+                    AllWorldsScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onNavigateToWorldDetails = { }
+                    )
 
                 }
 
