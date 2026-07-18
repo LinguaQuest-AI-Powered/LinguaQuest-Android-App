@@ -270,7 +270,8 @@ fun AppNavigation(
 
                 entry<RootScreen.Leaderboard> {
                      LeaderboardScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
+                        onBack = { rootBackStack.removeLastOrNull() })}
+
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
