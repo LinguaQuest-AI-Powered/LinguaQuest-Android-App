@@ -40,6 +40,7 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
@@ -267,18 +268,9 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.AllWorlds> {
-                    com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen(
+                    AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { worldId ->
-                            // Depending on requirements, it could navigate to Map or similar
-                            // Using a placeholder or Map for now if applicable, but actually just map?
-                            // For now we just print or do Map screen if string id can map to int.
-                            // The mockup shows "Unlock at Level 15" Airport World etc.
-                            // Map screen takes a worldId as Int, but our world model id is String.
-                            // Assuming MapScreen is the world detail for now:
-                            // We can just omit or leave it empty if not sure.
-                            // Wait, the Home Screen also has this issue. I'll just map it to an empty action.
-                        }
+                        onNavigateToWorldDetails = { }
                     )
                 }
             })

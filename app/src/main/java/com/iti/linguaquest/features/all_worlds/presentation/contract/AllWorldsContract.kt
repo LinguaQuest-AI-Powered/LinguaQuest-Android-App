@@ -5,7 +5,7 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
 data class AllWorldsState(
     val isLoading: Boolean = false,
-    val selectedFilter: WorldDifficulty? = null, // null means "All"
+    val selectedFilter: WorldDifficulty? = null,
     val worlds: List<WorldItem> = emptyList()
 ) {
     val filteredWorlds: List<WorldItem>
