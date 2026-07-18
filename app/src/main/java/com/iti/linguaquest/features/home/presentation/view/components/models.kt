@@ -17,7 +17,8 @@ data class WorldItem(
     @DrawableRes val imageRes: Int,
     val difficulty: WorldDifficulty,
     val progress: Float,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val unlockLevel: Int? = null
 )
 
 data class LessonPreview(

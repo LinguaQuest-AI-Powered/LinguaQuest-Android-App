@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -42,14 +42,14 @@ fun WorldCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isLocked = world.unlockLevel != null
+
     Column(
         modifier = modifier
-            .width(240.dp)
-            .height(220.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(all = 15.dp)
-            .clickable { onClick() }
+            .clickable(enabled = !isLocked) { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -67,7 +67,8 @@ fun WorldCard(
                             topStart = 20.dp, topEnd = 20.dp, bottomEnd = 20.dp,
                             bottomStart = 20.dp
                         )
-                    ),
+                    )
+                    .alpha(if (isLocked) 0.5f else 1f),
                 contentScale = ContentScale.Crop
             )
 
@@ -78,7 +79,7 @@ fun WorldCard(
                     .padding(8.dp)
             )
 
-            if (world.isCompleted) {
+            if (world.isCompleted && !isLocked) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -96,6 +97,26 @@ fun WorldCard(
                     )
                 }
             }
+
+            if (isLocked) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White.copy(alpha = 0.8f))
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.unlock_at_level_format, world.unlockLevel),
+                        style = AppTextStyles.Caption.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = BrownText
+                        )
+                    )
+                }
+            }
         }
 
         Column(modifier = Modifier.padding(12.dp)) {
@@ -104,13 +125,14 @@ fun WorldCard(
                 color = BrownText,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.alpha(if (isLocked) 0.5f else 1f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().alpha(if (isLocked) 0.5f else 1f),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -121,7 +143,7 @@ fun WorldCard(
                 )
                 Text(
                     text = "${(world.progress * 100).toInt()}%",
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = MaterialTheme.colorScheme.tertiary, // The image shows the color matches difficulty? Or maybe it is tertiary. The image shows green, yellow, etc. Let's make it difficulty badgeColor.
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -132,8 +154,9 @@ fun WorldCard(
             ProgressTrack(
                 progress = world.progress,
                 trackColor = LinguaQuestTheme.colors.progressTrackRemainedColor,
-                fillColor = MaterialTheme.colorScheme.tertiary,
-                height = 6.dp
+                fillColor = world.difficulty.badgeColor,
+                height = 6.dp,
+                modifier = Modifier.alpha(if (isLocked) 0.5f else 1f)
             )
         }
     }

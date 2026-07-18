@@ -40,6 +40,7 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
@@ -263,6 +264,13 @@ fun AppNavigation(
                 entry<RootScreen.Settings> {
                      SettingScreen(
                         onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.AllWorlds> {
+                    AllWorldsScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onNavigateToWorldDetails = { }
                     )
                 }
             })

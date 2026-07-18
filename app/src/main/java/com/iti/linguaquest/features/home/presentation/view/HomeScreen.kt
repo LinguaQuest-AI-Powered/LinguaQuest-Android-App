@@ -30,6 +30,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -43,16 +44,17 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
-    onNavigateToDetails: (Int) -> Unit,
-    onWorldMapClick: () -> Unit = {},
     modifier: Modifier = Modifier,
+    onNavigateToDetails: (Int) -> Unit,
+    onNavigateToAllWorlds: () -> Unit,
+    onWorldMapClick: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showDailyRewardDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = true
+        SharedBackgroundState.showBackground = true
     }
 
     LaunchedEffect(Unit) {
@@ -60,7 +62,7 @@ fun HomeScreen(
             when (effect) {
                 is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
                 is HomeEffect.NavigateToWorld -> { /* go to world detail screen when exists */ }
-                HomeEffect.NavigateToAllWorlds -> { /* go to full worlds list screen when exists */ }
+                HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
             }
         }
     }
