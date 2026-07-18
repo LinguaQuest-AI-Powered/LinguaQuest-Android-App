@@ -41,6 +41,7 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.achivement.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
@@ -298,6 +299,12 @@ fun AppNavigation(
 
                 }
 
+                entry<RootScreen.Achievement> {
+                    AchievementScreen (
+                        onBackClick = { rootBackStack.removeLastOrNull() },
+                     )
+
+                }
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }
