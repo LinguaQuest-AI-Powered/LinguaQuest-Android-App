@@ -1,5 +1,6 @@
-package com.iti.linguaquest.features.setting.components
+package com.iti.linguaquest.core.utils
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +23,8 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 
 @Composable
-fun SettingTopBar(
+fun ShareTopBar(
+    @StringRes  title : Int,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +32,7 @@ fun SettingTopBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 22.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -50,7 +51,7 @@ fun SettingTopBar(
                 )
             }
             Text(
-                text = stringResource(id = R.string.settings_label),
+                text = stringResource(title),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,

@@ -101,6 +101,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             state = mockProfileState,
                             onSettingsClick = {
                                 rootBackStack.navigateSingleTop(RootScreen.Settings)
+                            },
+                            onViewAllLeaderboardClick = {
+                                rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
                             }
                         )
                     }

@@ -51,4 +51,9 @@ object AppColors {
     val progressTrackColor =Color(0xFFF0D9C4)
      val ChipBackground = Color(0xFFFCE9D6)
      val IconBoxBackground = Color(0xFFFCE9D6)
+     
+    // Leaderboard Colors
+    val LeaderboardGold = Color(0xFFFCE17E)
+    val LeaderboardBlue = Color(0xFF85D3DB)
+    val LeaderboardBronze = Color(0xFFC2AA4E)
 }

@@ -186,6 +186,8 @@
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
 
+
+    <string name="xp">XP</string>
     <!-- Settings Screen -->
     <string name="settings_customize_journey">Customize your learning journey</string>
     <string name="settings_category_account">ACCOUNT &amp; JOURNEY</string>
