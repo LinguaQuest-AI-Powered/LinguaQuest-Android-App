@@ -50,11 +50,11 @@ fun AchievementContent(
     val gridState = rememberLazyGridState()
 
     LaunchedEffect(Unit) {
-        delay(80.milliseconds)
+        delay(50.milliseconds)
         headerVisible = true
-        delay(120.milliseconds)
+        delay(50.milliseconds)
         tabsVisible = true
-        delay(80.milliseconds)
+        delay(30.milliseconds)
         gridVisible = true
     }
 
@@ -108,9 +108,9 @@ fun AchievementContent(
                     item(span = { GridItemSpan(2) }) {
                         androidx.compose.animation.AnimatedVisibility(
                             visible = headerVisible,
-                            enter   = fadeIn(tween(400)) + slideInVertically(
-                                initialOffsetY = { -40 },
-                                animationSpec  = tween(400)
+                            enter   = fadeIn(tween(250)) + slideInVertically(
+                                initialOffsetY = { -30 },
+                                animationSpec  = tween(250)
                             )
                         ) {
                             Box(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -122,9 +122,9 @@ fun AchievementContent(
                     item(span = { GridItemSpan(2) }) {
                         androidx.compose.animation.AnimatedVisibility(
                             visible = tabsVisible,
-                            enter   = fadeIn(tween(350)) + slideInVertically(
+                            enter   = fadeIn(tween(220)) + slideInVertically(
                                 initialOffsetY = { -20 },
-                                animationSpec  = tween(350)
+                                animationSpec  = tween(220)
                             )
                         ) {
                             Box(
