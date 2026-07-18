@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -64,7 +65,11 @@ fun ExploreWorldsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(worlds, key = { it.id }) { world ->
-                WorldCard(world = world, onClick = { onWorldClick(world) })
+                WorldCard(
+                    world = world, 
+                    onClick = { onWorldClick(world) },
+                    modifier = Modifier.width(240.dp).height(220.dp)
+                )
             }
         }
     }
