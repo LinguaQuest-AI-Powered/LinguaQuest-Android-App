@@ -5,7 +5,7 @@ import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.profile.data.mapper.toDomain
-import com.iti.linguaquest.features.profile.data.remote.ProfileApiService
+import com.iti.linguaquest.features.profile.datasource.remote.ProfileApiService
 import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 import com.iti.linguaquest.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject

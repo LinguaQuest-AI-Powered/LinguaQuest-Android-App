@@ -1,8 +1,8 @@
 package com.iti.linguaquest.features.profile.di
 
 
-import com.iti.linguaquest.features.profile.data.fake.FakeProfileRepository
-import com.iti.linguaquest.features.profile.data.remote.ProfileApiService
+import com.iti.linguaquest.features.profile.datasource.remote.FakeProfileRemoteDataSource
+import com.iti.linguaquest.features.profile.datasource.remote.ProfileApiService
 import com.iti.linguaquest.features.profile.domain.repository.ProfileRepository
 import dagger.Binds
 import dagger.Module
@@ -18,7 +18,7 @@ abstract class ProfileModule {
 
     @Binds
     @Singleton
-    abstract fun bindProfileRepository(impl: FakeProfileRepository): ProfileRepository
+    abstract fun bindProfileRepository(impl: FakeProfileRemoteDataSource): ProfileRepository
     // Swap to ProfileRepositoryImpl when backend is ready
 
     companion object {

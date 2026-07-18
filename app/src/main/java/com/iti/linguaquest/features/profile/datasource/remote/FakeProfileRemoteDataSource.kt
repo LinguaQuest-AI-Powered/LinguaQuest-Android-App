@@ -1,5 +1,4 @@
-package com.iti.linguaquest.features.profile.data.fake
-
+package com.iti.linguaquest.features.profile.datasource.remote
 
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -18,7 +17,7 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
-class FakeProfileRepository @Inject constructor() : ProfileRepository {
+class FakeProfileRemoteDataSource @Inject constructor() : ProfileRepository {
 
     override suspend fun getProfileSummary(): LinguaQuestResult<ProfileSummary, LinguaQuestDataError> {
         delay(600.milliseconds)

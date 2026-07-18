@@ -1,13 +1,13 @@
 package com.iti.linguaquest.features.profile.data.mapper
 
 
-import com.iti.linguaquest.features.profile.data.remote.dto.AchievementPreviewDto
-import com.iti.linguaquest.features.profile.data.remote.dto.AchievementsSummaryDto
-import com.iti.linguaquest.features.profile.data.remote.dto.LanguageJourneyDto
-import com.iti.linguaquest.features.profile.data.remote.dto.LeaderboardPreviewEntryDto
-import com.iti.linguaquest.features.profile.data.remote.dto.LeaderboardSummaryDto
-import com.iti.linguaquest.features.profile.data.remote.dto.ProfileStatsDto
-import com.iti.linguaquest.features.profile.data.remote.dto.ProfileSummaryDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.AchievementPreviewDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.AchievementsSummaryDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.LanguageJourneyDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.LeaderboardPreviewEntryDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.LeaderboardSummaryDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.ProfileStatsDto
+import com.iti.linguaquest.features.profile.datasource.remote.dto.ProfileSummaryDto
 import com.iti.linguaquest.features.profile.domain.model.AchievementPreview
 import com.iti.linguaquest.features.profile.domain.model.AchievementStatus
 import com.iti.linguaquest.features.profile.domain.model.AchievementsSummary

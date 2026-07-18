@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.profile.data.remote.dto
+package com.iti.linguaquest.features.profile.datasource.remote.dto
 
 
 data class ProfileSummaryDto(
