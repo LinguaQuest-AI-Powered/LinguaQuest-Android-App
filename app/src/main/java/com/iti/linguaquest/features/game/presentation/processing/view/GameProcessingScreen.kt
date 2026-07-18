@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.game.presentation.processing.view
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,16 +43,13 @@ fun GameProcessingScreen(
 
     // Handle initial processing start and collect effects
     LaunchedEffect(Unit) {
-        // Start the AI verification process automatically when the screen loads
         processingViewModel.onIntent(GameProcessingIntent.StartProcessing)
 
         processingViewModel.effect.collect { effect ->
-            // Map the effect to our new Shared VerificationOutcome
             val outcome = when (effect) {
                 is GameProcessingEffect.NavigateToSuccess -> {
                     VerificationOutcome.Success(
                         xpAwarded = effect.xp,
-                        // Combine base API coins with the user's mini-game earnings
                         coinsAwarded = effect.coins + whackState.currentCoins
                     )
                 }
@@ -62,30 +60,37 @@ fun GameProcessingScreen(
                     VerificationOutcome.Error(errorMessage = effect.errorMessage)
                 }
             }
-
-            // 1. Commit the final payload to the data bus
             sharedViewModel.setVerificationOutcome(outcome)
-
-            // 2. Trigger simple navigation to the result screen
             onNavigateToResult()
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        // Base View
-        GameProcessingView(
-            imageUri = sharedState.capturedImageUri,
-            onStartGameClicked = { whackViewModel.onIntent(GameWhackIntent.StartGame) },
-            modifier = Modifier.fillMaxSize()
-        )
+    // The main container acting as the blurred background wrapper
+    // We use a dark color temporarily to represent the static background
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.DarkGray.copy(alpha = 0.5f))
+    ) {
 
-        // Mini-game Overlay
-        if (whackState.isGameActive) {
-            GameWhackView(
-                state = whackState,
-                onLingoWhacked = { whackViewModel.onIntent(GameWhackIntent.LingoWhacked) },
-                modifier = Modifier.fillMaxSize()
-            )
+        // Smoothly crossfade between the initial loading view and the mini-game
+        Crossfade(
+            targetState = whackState.isGameActive,
+            label = "ProcessingToGameCrossfade"
+        ) { isGameActive ->
+            if (isGameActive) {
+                GameWhackView(
+                    state = whackState,
+                    onLingoWhacked = { whackViewModel.onIntent(GameWhackIntent.LingoWhacked) },
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                GameProcessingView(
+                    imageUri = sharedState.capturedImageUri,
+                    onStartGameClicked = { whackViewModel.onIntent(GameWhackIntent.StartGame) },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
 
         // ==========================================
