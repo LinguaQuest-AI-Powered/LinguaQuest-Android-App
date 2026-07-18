@@ -69,24 +69,7 @@ fun SettingContent(
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-            SettingItem(
-                icon = painterResource(id = R.drawable.settings_daily_goal),
-                title = stringResource(id = R.string.settings_daily_goal),
-                value = "20 XP/day",
-                valueColor = LocalLinguaQuestColors.current.BrownText,
-                iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                onClick = { /* TODO */ }
-            )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-            SettingItem(
-                icon = painterResource(id = R.drawable.ic_learning_streak),
-                title = stringResource(id = R.string.settings_learning_streak),
-                value = "12 days",
-                valueColor = LocalLinguaQuestColors.current.BrownText,
-                iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                onClick = { /* TODO */ }
-            )
+
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -120,13 +103,6 @@ fun SettingContent(
             )
             Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
-                icon = painterResource(id = R.drawable.ic_lock_icon),
-                title = stringResource(id = R.string.settings_privacy_security),
-                iconTint = MaterialTheme.colorScheme.tertiary,
-                onClick = { /* TODO */ }
-            )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-            SettingItem(
                 icon = painterResource(id = R.drawable.ic_help_icon),
                 title = stringResource(id = R.string.settings_help_support),
                 iconTint = MaterialTheme.colorScheme.tertiary,
@@ -149,19 +125,7 @@ fun SettingContent(
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(id = R.string.settings_delete_account),
-            color = MaterialTheme.colorScheme.error,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onDeleteAccountClick)
-                .padding(vertical = 8.dp),
-            textAlign = TextAlign.Center
-        )
 
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -176,3 +140,4 @@ fun SettingContentPreview() {
         )
     }
 }
+

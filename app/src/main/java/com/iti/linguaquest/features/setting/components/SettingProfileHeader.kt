@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.ImageWrapper
 
 @Composable
 fun SettingProfileHeader(
@@ -23,8 +24,8 @@ fun SettingProfileHeader(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.lingo_stting),
+        ImageWrapper(
+            model = R.drawable.lingo_stting,
             contentDescription = null,
             modifier = Modifier.size(110.dp),
             contentScale = ContentScale.Fit

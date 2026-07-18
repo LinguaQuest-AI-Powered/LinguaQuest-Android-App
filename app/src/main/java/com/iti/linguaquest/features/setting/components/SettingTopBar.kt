@@ -38,7 +38,7 @@ fun SettingTopBar(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFFDCEFF7))
+                    .background(LocalLinguaQuestColors.current.whiteColor)
                     .clickable(onClick = onBackClick),
                 contentAlignment = Alignment.Center
             ) {
