@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun HomeScreen(
     onNavigateToDetails: (Int) -> Unit,
+    onNavigateToAllWorlds: () -> Unit,
     onWorldMapClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
@@ -60,7 +61,7 @@ fun HomeScreen(
             when (effect) {
                 is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
                 is HomeEffect.NavigateToWorld -> { /* go to world detail screen when exists */ }
-                HomeEffect.NavigateToAllWorlds -> { /* go to full worlds list screen when exists */ }
+                HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
             }
         }
     }
