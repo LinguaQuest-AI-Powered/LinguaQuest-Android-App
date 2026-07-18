@@ -85,6 +85,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                         HomeScreen(
                             onNavigateToDetails = { id ->
                                 rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                            },
+                            onNavigateToAllWorlds = {
+                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             }
                         )
                     }
@@ -98,7 +101,6 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                     }
                     entry<NestedScreen.Profile> {
                         ProfileScreen(
-                            state = mockProfileState,
                             onSettingsClick = {
                                 rootBackStack.navigateSingleTop(RootScreen.Settings)
                             },
