@@ -55,7 +55,7 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
-    val rootBackStack = rememberNavBackStack(RootScreen.Login)
+    val rootBackStack = rememberNavBackStack(RootScreen.VoiceChat)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -305,6 +305,13 @@ fun AppNavigation(
                      )
 
                 }
+
+                entry<RootScreen.VoiceChat> {
+                    com.iti.linguaquest.features.voicechat.presentation.VoiceChatScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+                
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }

@@ -71,6 +71,9 @@ sealed interface RootScreen : NavKey {
     data object AllWorlds : RootScreen
     @Serializable
     data object Achievement : RootScreen
+
+    @Serializable
+    data object VoiceChat : RootScreen
 }
 @Serializable
 sealed interface NestedScreen : NavKey {
