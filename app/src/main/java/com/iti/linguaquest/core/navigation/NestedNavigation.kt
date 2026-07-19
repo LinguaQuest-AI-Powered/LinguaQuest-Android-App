@@ -99,6 +99,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             },
                             onNavigateToWorldMap = { worldId ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                            },
+                            onNavigateToAddLanguages = {
+                                rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
                             }
                         )
                     }

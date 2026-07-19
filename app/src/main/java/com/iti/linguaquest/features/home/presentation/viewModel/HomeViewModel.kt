@@ -55,6 +55,17 @@ class HomeViewModel @Inject constructor(
                 }
             }
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
+
+            HomeIntent.FabClicked -> {
+                _state.update { it.copy(isLanguageBottomSheetVisible = true) }
+            }
+            HomeIntent.DismissLanguageBottomSheet -> {
+                _state.update { it.copy(isLanguageBottomSheetVisible = false) }
+            }
+            HomeIntent.AddNewLanguageClicked -> {
+                _state.update { it.copy(isLanguageBottomSheetVisible = false) }
+                sendEffect(HomeEffect.NavigateToAddLanguages)
+            }
         }
     }
 
