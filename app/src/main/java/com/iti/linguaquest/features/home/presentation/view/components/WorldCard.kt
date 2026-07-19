@@ -143,7 +143,7 @@ fun WorldCard(
                 )
                 Text(
                     text = "${(world.progress * 100).toInt()}%",
-                    color = MaterialTheme.colorScheme.tertiary, // The image shows the color matches difficulty? Or maybe it is tertiary. The image shows green, yellow, etc. Let's make it difficulty badgeColor.
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
                 )
