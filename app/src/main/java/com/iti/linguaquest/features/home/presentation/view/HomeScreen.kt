@@ -31,6 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -54,6 +56,7 @@ fun HomeScreen(
     onNavigateToAddLanguages: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showDailyRewardDialog by remember { mutableStateOf(false) }
 
@@ -82,7 +85,10 @@ fun HomeScreen(
             HomeContent(
                 state = state,
                 onIntent = viewModel::onIntent,
-                onDailyRewardClick = { showDailyRewardDialog = true }
+                onDailyRewardClick = {
+                    soundPlayer.play(AppSound.DAILY_REWARD)
+                    showDailyRewardDialog = true
+                }
             )
         }
 
@@ -118,6 +124,7 @@ fun HomeScreen(
                     rewardAmount = 50,
                     onClaimClick = {
                         // TODO: wire real claim logic once daily-reward endpoint/domain exists
+                        soundPlayer.play(AppSound.COIN)
                         showDailyRewardDialog = false
                     }
                 )

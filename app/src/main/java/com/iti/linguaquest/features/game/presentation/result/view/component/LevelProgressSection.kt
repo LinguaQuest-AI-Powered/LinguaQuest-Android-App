@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -33,13 +35,13 @@ fun LevelProgressSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Level $currentLevel Progress",
+                text = stringResource(R.string.game_result_level_progress, currentLevel),
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 14.sp
             )
             Text(
-                text = "${(progressPercent * 100).toInt()}%",
+                text = stringResource(R.string.game_result_percent_progress, (progressPercent * 100).toInt()),
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 14.sp

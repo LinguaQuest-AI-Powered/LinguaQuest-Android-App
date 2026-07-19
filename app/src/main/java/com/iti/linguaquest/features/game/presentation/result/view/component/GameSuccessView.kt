@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -70,7 +71,7 @@ fun GameSuccessView(
         ) {
 
             Text(
-                text = "Perfect!",
+                text = stringResource(R.string.game_result_success_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 36.sp,
@@ -80,7 +81,7 @@ fun GameSuccessView(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "You found it!",
+                text = stringResource(R.string.game_result_success_subtitle),
                 style = AppTextStyles.DialogMessage,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 18.sp
@@ -94,14 +95,14 @@ fun GameSuccessView(
             ) {
                 RewardPill(
                     iconRes = R.drawable.ic_xp,
-                    amount = "+$xpGained",
-                    label = "XP",
+                    amount = stringResource(R.string.game_result_xp_format, xpGained),
+                    label = stringResource(R.string.xp),
                     modifier = Modifier.weight(1f)
                 )
                 RewardPill(
                     iconRes = R.drawable.ic_coin,
-                    amount = "+$coinsGained",
-                    label = "COINS",
+                    amount = stringResource(R.string.game_result_coins_format, coinsGained),
+                    label = stringResource(R.string.coins_label),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -116,7 +117,7 @@ fun GameSuccessView(
             Spacer(modifier = Modifier.height(40.dp))
 
             AppButton(
-                text = "Next Level",
+                text = stringResource(R.string.game_result_next_level),
                 onClick = onNextLevelClick
             )
         }
