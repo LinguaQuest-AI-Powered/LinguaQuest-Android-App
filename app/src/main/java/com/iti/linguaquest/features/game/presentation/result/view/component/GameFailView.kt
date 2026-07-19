@@ -58,15 +58,16 @@ fun GameFailView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, targetWord)
-            val targetIndex = failMessageFormat.indexOf(targetWord)
+            val wordStr = targetWord.asString()
+            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, wordStr)
+            val targetIndex = failMessageFormat.indexOf(wordStr)
             val annotatedString = buildAnnotatedString {
                 if (targetIndex != -1) {
                     append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(targetWord.asString())
+                        append(wordStr)
                     }
-                    append(failMessageFormat.substring(targetIndex + targetWord.length))
+                    append(failMessageFormat.substring(targetIndex + wordStr.length))
                 } else {
                     append(failMessageFormat)
                 }

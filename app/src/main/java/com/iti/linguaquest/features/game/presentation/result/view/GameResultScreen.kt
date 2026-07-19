@@ -29,6 +29,7 @@ fun GameResultScreen(
 ) {
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
+    val soundPlayer = LocalSoundPlayer.current
 
     LaunchedEffect(sharedState.verificationOutcome) {
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
@@ -38,7 +39,7 @@ fun GameResultScreen(
             )
             is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
             is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
-            VerificationOutcome.Idle -> GameResultUiState.Error("Invalid state. No outcome generated.")
+            is VerificationOutcome.Idle -> GameResultUiState.Error(com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString("Invalid state. No outcome generated."))
         }
         viewModel.setInitialResult(mappedState)
     }
