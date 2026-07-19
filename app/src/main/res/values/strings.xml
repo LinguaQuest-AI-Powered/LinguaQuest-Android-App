@@ -276,4 +276,11 @@
     <string name="my_languages_level_format">Level %1$d</string>
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
+
+
+    <string name="update_profile_photo">Update profile photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+
+
 </resources>
