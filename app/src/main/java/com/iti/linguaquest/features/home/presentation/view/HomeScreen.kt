@@ -153,11 +153,10 @@ fun HomeContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
     ) {
         DailyStreakBonusBanner(
             onClick = onDailyRewardClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -168,7 +167,8 @@ fun HomeContent(
                 level = progress.level,
                 streakDays = progress.streakDays,
                 progress = progress.progress,
-                flagRes = progress.flagRes
+                flagRes = progress.flagRes,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
 
@@ -187,7 +187,9 @@ fun HomeContent(
             ContinueLessonCard(
                 lesson = lesson,
                 onContinueClick = { onIntent(HomeIntent.ContinueLessonClicked) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             )
         }
 
