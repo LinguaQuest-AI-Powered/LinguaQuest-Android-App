@@ -1,0 +1,2886 @@
+openapi: 3.0.3
+info:
+  title: Language Learning App API
+  description: >
+    Public REST API for authentication, registration, account verification,
+    password reset, and social login. This is the Authentication module of a
+    larger API that will be extended with additional resources over time.
+
+
+    ## Conventions
+
+    - All request/response bodies use **camelCase** field names.
+
+    - Every **successful** response is wrapped in the `SuccessResponse` envelope.
+
+    - Every **error** response is wrapped in the `ErrorResponse` envelope and includes
+      a numeric `errorCode` (mirrors the HTTP status) plus a machine-readable
+      `errorKey` that clients can safely branch on (the `errorMessage` is
+      human-readable and may change wording without notice).
+
+    - All endpoints can return `400 Bad Request` (validation) and
+      `500 Internal Server Error` (unexpected failure) in addition to the
+      endpoint-specific errors documented below.
+
+    - Unless explicitly documented otherwise, all endpoints **outside** the
+      `/api/v1/auth/**` path require authentication using a **Bearer JWT** supplied
+      in the `Authorization` request header:
+
+      ```
+      Authorization: Bearer <access_token>
+      ```
+
+    - `/auth/otp/send` is shared by two flows (`purpose: SIGNUP` and
+      `purpose: PASSWORD_RESET`); `/auth/otp/verify` (email verification) and
+      `/auth/forget-password/otp/verify` (password reset) remain two separate
+      endpoints, since they return different data.
+
+
+    ## Open items / assumptions (flagged for confirmation, not yet approved)
+
+    - Registration does **not** auto-login: it creates the account
+      (`isVerified: false`) and does not return tokens. The backend
+      auto-triggers a `purpose: SIGNUP` OTP on successful
+      registration; the client can also call `/auth/otp/send` again to resend.
+    - Google/Apple OAuth login for a **brand-new** user returns
+      `isNewUser: true` and `profileComplete: false`, since `nativeLanguage`
+      and `targetLanguage` (required at normal registration) aren't available
+      from the OAuth provider. A follow-up "complete profile" endpoint to
+      collect those fields isn't built yet - flag if you want it in this
+      batch.
+    - Password reset invalidates all existing refresh tokens for the account
+      as a security best practice (forces re-login on all other devices).
+    - Password policy (assumed, adjust if you have different rules): minimum
+      8 characters, at least one letter and one digit.
+    - Username: 3-30 characters, letters/numbers/underscores only.
+    - GET /worlds/{worldId}/levels (the sequential level path) is built from
+      the user story text only - no screenshot of that screen was provided.
+      Field names (`status`, `word`) are my best guess; confirm against the
+      actual level-path screen before implementing.
+    - Daily reward cycle is assumed to be a 5-day rotating cycle (Day 1-5)
+      based on the popup screenshot; confirm the reset/cycle logic
+      (does day 5 loop back to day 1, or does streak keep counting past 5
+      while the *reward tier* resets every 5 days?).
+    - Assumed there's no cap on how many target languages a user can add
+      (POST /languages). Flag if there's a max.
+    - Explore Worlds preview on /home is capped at 4 items (`limit` not
+      configurable) - full list lives behind GET /worlds ("See more").
+    - All endpoints in this module require authentication (bearerAuth).
+
+    - `/auth/logout` revokes a single refresh token (one device) by default,
+      with an optional `allDevices` flag to revoke every session. Confirm
+      this is the behavior you want vs. always logging out everywhere.
+    - Logout is treated as idempotent (calling it with an already-revoked
+      token still returns 200), to avoid awkward client-side error handling
+      on a "log out" button. Flag if you'd rather it 401 on a dead token.
+    - DELETE /profile (account deletion) asks for the account password as
+      confirmation. Since OAuth-only accounts have no password, `password`
+      is optional there and the flow needs a different confirmation method
+      for those - not designed yet, flag if you want it in this batch.
+    - The achievements screen's "240" stat is assumed to be XP earned via
+      achievements specifically (`xpEarned`), not a count. Confirm against
+      the design.
+    - "Learning Language: English" on the Settings screen is assumed to be
+      the **app's UI/interface language** (per the user story), distinct
+      from the target language(s) being learned (Spanish/French/Japanese).
+      Confirm this reading is correct.
+    - Weekly achievement rewards follow the same GET-status / POST-claim
+     shape as Daily Rewards, for consistency.
+
+  version: 1.1.0
+  contact:
+    name: API Support
+
+servers:
+  - url: https://api.example.com/api/v1
+    description: Production
+  - url: https://staging-api.example.com/api/v1
+    description: Staging
+
+tags:
+  - name: Auth
+    description: Login, registration, token refresh, and email verification.
+  - name: Password Reset
+    description: Forgot-password flow (OTP verification + setting a new password).
+  - name: OAuth
+    description: Social login via Firebase (Google and Apple sign-in handled by Firebase SDK on mobile).
+  - name: Home
+    description: Aggregated dashboard data for the Home screen.
+  - name: Worlds
+    description: Browsing Worlds and their level paths.
+  - name: Daily Rewards
+    description: Daily login reward status and claiming.
+  - name: Languages
+    description: Managing the user's target languages and switching the active one.
+  - name: Profile
+    description: Viewing and managing the user's profile, statistics, and account information.
+  - name: Leaderboard
+    description: Viewing player rankings and comparing progress with other users.
+  - name: Achievements
+    description: Tracking unlocked achievements, milestones, and rewards earned by the user.
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new account
+      description: >
+        Creates a new user account with `isVerified: false`, client needs to send an email-verification OTP (`purpose: SIGNUP`, see
+        `/auth/otp/send` / `/auth/otp/verify`). Does **not** return an access
+        or refresh token - the user must verify their email and then call
+        `/auth/login`.
+      operationId: register
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              default:
+                value:
+                  email: a@b.com
+                  username: adham_a
+                  password: Str0ngPass!
+                  nativeLanguage: Arabic
+                  targetLanguage: Spanish
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/RegisterResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1234
+                      email: a@b.com
+                      username: adham_a
+                      nativeLanguage: Arabic
+                      targetLanguage: Spanish
+                      isVerified: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email or username is already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                email:
+                  summary: Email already registered
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/register
+                      errorCode: 409
+                      errorKey: EMAIL_ALREADY_EXISTS
+                      errorMessage: An account with this email already exists
+                      errorTime: '2026-07-14T10:15:00Z'
+                username:
+                  summary: Username already taken
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/register
+                      errorCode: 409
+                      errorKey: USERNAME_ALREADY_EXISTS
+                      errorMessage: This username is already taken
+                      errorTime: '2026-07-14T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Log in with email and password
+      description: >
+        Authenticates a user and returns an access token / refresh token pair
+        along with the user's profile. Fails with `403` if the account's
+        email has not yet been verified (see `/auth/otp/send` and
+        `/auth/otp/verify`).
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              default:
+                value:
+                  email: a@b.com
+                  password: schiurwhviurh
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LoginResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      refreshToken: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+                      tokenType: Bearer
+                      expiresIn: 3600
+                      user:
+                        id: 1234
+                        username: adham_a
+                        photo: /u1/ahaeaw.jpg
+                        nativeLanguage: Arabic
+                        isVerified: true
+                        targetLanguages: [Spanish, English]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/login
+                      errorCode: 401
+                      errorKey: INVALID_CREDENTIALS
+                      errorMessage: Invalid credentials
+                      errorTime: '2026-07-13T10:15:00Z'
+        '403':
+          description: Email not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/login
+                      errorCode: 403
+                      errorKey: EMAIL_NOT_VERIFIED
+                      errorMessage: Please verify your email before logging in
+                      errorTime: '2026-07-13T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Log out
+      description: >
+        Revokes the given refresh token, ending that session. Pass
+        `allDevices: true` to revoke every refresh token for the account
+        (log out everywhere). This call is idempotent - logging out with an
+        already-revoked or unknown refresh token still returns `200`.
+      operationId: logout
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+            examples:
+              default:
+                value:
+                  refreshToken: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+                  allDevices: false
+      responses:
+        '200':
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+
+  /auth/refresh-token:
+    post:
+      tags: [Auth]
+      summary: Exchange a refresh token for a new access token
+      description: >
+        Issues a new access token (and rotates the refresh token) when the
+        current access token has expired. The old refresh token is invalidated
+        once used (rotation).
+      operationId: refreshToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/RefreshTokenResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      refreshToken: bmV3X3JlZnJlc2hfdG9rZW4...
+                      tokenType: Bearer
+                      expiresIn: 3600
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Refresh token is invalid, expired, or has already been used/revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid:
+                  summary: Invalid or revoked token
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/refresh-token
+                      errorCode: 401
+                      errorKey: INVALID_REFRESH_TOKEN
+                      errorMessage: Refresh token is invalid or has been revoked
+                      errorTime: '2026-07-13T10:15:00Z'
+                expired:
+                  summary: Expired token
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/refresh-token
+                      errorCode: 401
+                      errorKey: REFRESH_TOKEN_EXPIRED
+                      errorMessage: Refresh token has expired, please log in again
+                      errorTime: '2026-07-13T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/otp/send:
+    post:
+      tags: [Auth]
+      summary: Send an OTP (email verification or password reset)
+      description: >
+        Sends a one-time code to the given email address for one of two
+        purposes, selected via the `purpose` field:
+
+        - `SIGNUP` - to be confirmed via `/auth/otp/verify`.
+
+        - `PASSWORD_RESET` - to be confirmed via `/auth/forget-password/otp/verify`,
+          which returns a `resetToken` used to set a new password.
+      operationId: sendOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpSendRequest'
+            examples:
+              emailVerification:
+                summary: Email verification
+                value:
+                  email: john@example.com
+                  purpose: SIGNUP
+              passwordReset:
+                summary: Password reset
+                value:
+                  email: john@example.com
+                  purpose: PASSWORD_RESET
+      responses:
+        '200':
+          description: OTP sent successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: No account exists for the given email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/send
+                      errorCode: 404
+                      errorKey: EMAIL_NOT_FOUND
+                      errorMessage: Email not found
+                      errorTime: '2026-07-13T10:15:00Z'
+        '429':
+          description: OTP request is on cooldown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/send
+                      errorCode: 429
+                      errorKey: OTP_COOLDOWN
+                      errorMessage: Please wait before requesting another OTP
+                      errorTime: "2026-07-16T10:15:45.610396900Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/otp/verify:
+    post:
+      tags: [Auth]
+      summary: Verify an email-verification OTP
+      description: >
+        Confirms the OTP sent via `/auth/otp/send` with
+        `purpose: SIGNUP`. On success the account's email is
+        marked as verified (`isVerified: true`); this endpoint does **not**
+        return an access/refresh token.
+      operationId: verifyOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpVerifyRequest'
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          isVerified:
+                            type: boolean
+                            example: true
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      isVerified: true
+        '400':
+          description: Wrong or malformed OTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                wrongOtp:
+                  summary: Wrong OTP
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/verify
+                      errorCode: 400
+                      errorKey: INVALID_OTP
+                      errorMessage: Wrong OTP
+                      errorTime: '2026-07-13T10:15:00Z'
+                validation:
+                  summary: Missing field
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/verify
+                      errorCode: 400
+                      errorKey: VALIDATION_ERROR
+                      errorMessage: 'otp is required'
+                      errorTime: '2026-07-13T10:15:00Z'
+        '404':
+          description: No account exists for the given email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/verify
+                      errorCode: 404
+                      errorKey: EMAIL_NOT_FOUND
+                      errorMessage: Email not found
+                      errorTime: "2026-07-13T10:15:00Z"
+        '410':
+          description: OTP not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/verify
+                      errorCode: 410
+                      errorKey: OTP_NOT_FOUND
+                      errorMessage: OTP expired or not found
+                      errorTime: '2026-07-14T10:15:00Z'
+
+        '429':
+            description: Maximum OTP verification attempts exceeded
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  default:
+                    value:
+                      success: false
+                      error:
+                        apiPath: /api/v1/auth/otp/verify
+                        errorCode: 429
+                        errorKey: MAX_ATTEMPTS_EXCEEDED
+                        errorMessage: Too many attempts, request a new OTP
+                        errorTime: "2026-07-15T16:03:20.573737100Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/forget-password/otp/verify:
+    post:
+      tags: [Password Reset]
+      summary: Verify a password-reset OTP
+      description: >
+        Confirms the OTP sent via `/auth/otp/send` with
+        `purpose: PASSWORD_RESET`. On success, returns a short-lived, single-use
+        `resetToken` that must be submitted to `PATCH /auth/forget-password`
+        to actually set the new password.
+      operationId: verifyPasswordResetOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpVerifyRequest'
+      responses:
+        '200':
+          description: OTP verified - reset token issued
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          resetToken:
+                            type: string
+                            description: Single-use token, submit to PATCH /auth/forget-password.
+                            example: rst_9f8e7d6c5b4a...
+                          expiresIn:
+                            type: integer
+                            description: Seconds until the reset token expires.
+                            example: 900
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      resetToken: rst_9f8e7d6c5b4a...
+                      expiresIn: 900
+        '400':
+          description: Wrong or malformed OTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                wrongOtp:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password/otp/verify
+                      errorCode: 400
+                      errorKey: INVALID_OTP
+                      errorMessage: Wrong OTP
+                      errorTime: '2026-07-14T10:15:00Z'
+        '404':
+          description: No account exists for the given email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password/otp/verify
+                      errorCode: 404
+                      errorKey: EMAIL_NOT_FOUND
+                      errorMessage: Email not found
+                      errorTime: "2026-07-13T10:15:00Z"
+        '410':
+          description: OTP not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password/otp/verify
+                      errorCode: 410
+                      errorKey: OTP_NOT_FOUND
+                      errorMessage: OTP expired or not found
+                      errorTime: '2026-07-14T10:15:00Z'
+
+        '429':
+            description: Maximum OTP verification attempts exceeded
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  default:
+                    value:
+                      success: false
+                      error:
+                        apiPath: /api/v1/auth/forget-password/otp/verify
+                        errorCode: 429
+                        errorKey: MAX_ATTEMPTS_EXCEEDED
+                        errorMessage: Too many attempts, request a new OTP
+                        errorTime: "2026-07-15T16:03:20.573737100Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/forget-password:
+    patch:
+      tags: [Password Reset]
+      summary: Set a new password
+      description: >
+        Sets a new password using the `resetToken` obtained from
+        `POST /auth/forget-password/otp/verify`. The reset token is
+        single-use and is invalidated after a successful call, as are all
+        existing refresh tokens for the account (the user is signed out
+        everywhere and must log in again with the new password).
+      operationId: setNewPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgetPasswordRequest'
+            examples:
+              default:
+                value:
+                  resetToken: rst_9f8e7d6c5b4a...
+                  newPassword: NewStr0ngPass!
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Reset token is invalid, expired, or already used
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid:
+                  summary: Invalid or already-used token
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password
+                      errorCode: 401
+                      errorKey: INVALID_RESET_TOKEN
+                      errorMessage: Reset token is invalid or has already been used
+                      errorTime: '2026-07-14T10:15:00Z'
+                expired:
+                  summary: Expired token
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password
+                      errorCode: 401
+                      errorKey: RESET_TOKEN_EXPIRED
+                      errorMessage: Reset token has expired, please request a new one
+                      errorTime: '2026-07-14T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/oauth/firebase:
+    post:
+      tags: [OAuth]
+      summary: Log in or register via Firebase (Google or Apple)
+      description: >
+        Client performs Google or Apple sign-in via the Firebase SDK and
+        sends the resulting Firebase `idToken` here. The backend verifies
+        the token with Firebase Admin SDK, then either logs in the matching
+        existing account or creates a new one (email is considered
+        pre-verified by the OAuth provider, so `isVerified` is `true`
+        immediately). New accounts are created with a username derived from
+        the email prefix; `profileComplete` is `false` until
+        `nativeLanguage` and `targetLanguage` are provided through a
+        separate endpoint. If the email already belongs to a local
+        (email/password) account, a `409` error is returned.
+      operationId: oauthFirebase
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirebaseLoginRequest'
+            examples:
+              default:
+                value:
+                  idToken: eyJhbGciOiJSUzI1NiIsImtpZCI6...
+      responses:
+        '200':
+          description: Authenticated successfully (existing or newly-created account)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/OAuthResponseData'
+              examples:
+                existingUser:
+                  summary: Existing user
+                  value:
+                    success: true
+                    data:
+                      accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      refreshToken: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+                      tokenType: Bearer
+                      expiresIn: 86400000
+                      profileComplete: true
+                      user:
+                        id: 1234
+                        username: adham_a
+                        photo: /u1/ahaeaw.jpg
+                        nativeLanguage: Arabic
+                        isVerified: true
+                        targetLanguages:
+                          - id: 1
+                            name: Spanish
+                            code: es
+                          - id: 2
+                            name: English
+                            code: en
+                newUser:
+                  summary: Newly-created user
+                  value:
+                    success: true
+                    data:
+                      accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      refreshToken: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+                      tokenType: Bearer
+                      expiresIn: 86400000
+                      profileComplete: false
+                      user:
+                        id: 5678
+                        username: janedoe
+                        photo: null
+                        nativeLanguage: null
+                        isVerified: true
+                        targetLanguages: []
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Firebase idToken is invalid, expired, or failed verification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/oauth/firebase
+                      errorCode: 401
+                      errorKey: INVALID_FIREBASE_TOKEN
+                      errorMessage: Firebase token is invalid or could not be verified
+                      errorTime: '2026-07-16T10:15:00Z'
+        '409':
+          description: Email already belongs to a local (email/password) account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/oauth/firebase
+                      errorCode: 409
+                      errorKey: EMAIL_ALREADY_EXISTS
+                      errorMessage: An account with this email already exists. Please log in with your email and password.
+                      errorTime: '2026-07-16T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'       
+  /home:
+    get:
+      tags: [Home]
+      summary: Get the Home screen dashboard
+      description: >
+        Returns the composite payload needed to render the Home screen in a
+        single call: XP/coin balance, streak, the active target language card,
+        the "Continue Lesson" card, and a short preview of Explore Worlds
+        (max 4). For the full, filterable World list ("See more"), use
+        `GET /worlds`.
+      operationId: getHome
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Home dashboard retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/HomeResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      xp: 1250
+                      coins: 46
+                      streakDays: 7
+                    activeLanguage:
+                      id: 1
+                      name: Spanish
+                      code: es
+                      imageUrl: /media/languages/spanish.png
+                      level: 12
+                      levelProgressPercent: 65
+                      exploreWorlds:
+                        - id: 10
+                          name: Kitchen World
+                          imageUrl: /media/worlds/kitchen.jpg
+                          difficulty: EASY
+                          status: IN_PROGRESS
+                          progressPercent: 40
+                          totalLevels: 20
+                          completedLevels: 8
+                        - id: 11
+                          name: City World
+                          imageUrl: /media/worlds/city.jpg
+                          difficulty: MEDIUM
+                          status: IN_PROGRESS
+                          progressPercent: 10
+                          totalLevels: 20
+                          completedLevels: 2
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /worlds:
+    get:
+      tags: [Worlds]
+      summary: List Worlds for the active (or specified) language
+      description: >
+        Returns all Worlds for a target language, with per-World progress.
+        Backs the "All Worlds" screen, including its difficulty filter chips
+        and world count.
+      operationId: listWorlds
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: languageId
+          in: query
+          required: false
+          description: Defaults to the user's currently-active target language.
+          schema:
+            type: integer
+            example: 1
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [EASY, MEDIUM, HARD]
+          example: EASY
+      responses:
+        '200':
+          description: Worlds retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          totalCount:
+                            type: integer
+                            example: 6
+                          worlds:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/WorldSummary'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      totalCount: 6
+                      worlds:
+                        - id: 10
+                          name: Kitchen World
+                          imageUrl: /media/worlds/kitchen.jpg
+                          difficulty: EASY
+                          status: IN_PROGRESS
+                          progressPercent: 40
+                          totalLevels: 20
+                          completedLevels: 8
+                        - id: 12
+                          name: Park World
+                          imageUrl: /media/worlds/park.jpg
+                          difficulty: EASY
+                          status: LOCKED
+                          progressPercent: 0
+                          totalLevels: 20
+                          completedLevels: 0
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /worlds/{worldId}/levels:
+    get:
+      tags: [Worlds]
+      summary: Get the sequential level path for a World
+      description: >
+        Returns the ordered list of levels for a World, for rendering the
+        visual level path (roadmap) shown after selecting a World.
+      operationId: getWorldLevels
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 10
+      responses:
+        '200':
+          description: Level path retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/WorldDetail'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 10
+                      name: Kitchen World
+                      difficulty: EASY
+                      levels:
+                        - id: 144
+                          order: 1
+                          status: COMPLETED
+                          word: Spoon
+                        - id: 145
+                          order: 2
+                          status: AVAILABLE
+                          word: Apple
+                        - id: 146
+                          order: 3
+                          status: LOCKED
+                          word: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: World not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/999/levels
+                      errorCode: 404
+                      errorKey: WORLD_NOT_FOUND
+                      errorMessage: World not found
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /daily-reward:
+    get:
+      tags: [Daily Rewards]
+      summary: Get today's daily reward status
+      description: >
+        Returns whether today's reward has already been claimed, which day
+        of the reward cycle the user is on, and the reward amount available
+        - used to render the auto-popup on first app open each day.
+      operationId: getDailyRewardStatus
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daily reward status retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DailyRewardStatus'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      claimedToday: false
+                      currentDay: 3
+                      cycleLength: 5
+                      rewardCoins: 50
+                      rewardXp: null
+                      streakDays: 7
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /daily-reward/claim:
+    post:
+      tags: [Daily Rewards]
+      summary: Claim today's daily reward
+      description: >
+        Grants today's reward (coins, and optionally XP) and advances the
+        streak/cycle counters. Fails with `409` if already claimed today.
+      operationId: claimDailyReward
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reward claimed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DailyRewardClaimResult'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      coinsAwarded: 50
+                      xpAwarded: null
+                      newCoinsBalance: 96
+                      newXpBalance: 1250
+                      newStreakDays: 8
+                      nextDay: 4
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Today's reward has already been claimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/daily-reward/claim
+                      errorCode: 409
+                      errorKey: DAILY_REWARD_ALREADY_CLAIMED
+                      errorMessage: You've already claimed today's reward
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /languages/mine:
+    get:
+      tags: [Languages]
+      summary: List the user's target languages
+      description: >
+        Returns every target language the user has added, each with their
+        level and whether it's the currently-active one. Backs the
+        "My Languages" bottom sheet.
+      operationId: getMyLanguages
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Languages retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/UserLanguage'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 1
+                          name: Spanish
+                          code: es
+                          imageUrl: /media/languages/spanish.png
+                          level: 12
+                          isActive: true
+                          progressPercent: 65
+                        - id: 2
+                          name: French
+                          code: fr
+                          imageUrl: /media/languages/french.png
+                          level: 4
+                          isActive: false
+                          progressPercent: 20
+                        - id: 3
+                          name: Japanese
+                          code: ja
+                          imageUrl: /media/languages/japanese.png
+                          level: 1
+                          isActive: false
+                          progressPercent: 0
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /languages/available:
+    get:
+      tags: [Languages]
+      summary: List languages available to add
+      description: >
+        Returns the full language catalog with an `isAdded` flag per entry,
+        so the client can indicate which ones the user already has. Backs
+        the "Add Languages" screen, including its search box.
+      operationId: getAvailableLanguages
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Available languages retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LanguageOption'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 3
+                          name: Japanese
+                          code: ja
+                          imageUrl: /media/languages/japanese.png
+                          isAdded: true
+                        - id: 4
+                          name: German
+                          code: de
+                          imageUrl: /media/languages/german.png
+                          isAdded: false
+                        - id: 5
+                          name: Korean
+                          code: ko
+                          imageUrl: /media/languages/korean.png
+                          isAdded: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /languages:
+    post:
+      tags: [Languages]
+      summary: Add one or more target languages
+      description: >
+        Adds the given languages to the user's profile (does not change
+        which one is active). Backs the "Add Selected (N)" button.
+      operationId: addLanguages
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddLanguagesRequest'
+            examples:
+              default:
+                value:
+                  languageIds: [4, 3]
+      responses:
+        '200':
+          description: Languages added successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/UserLanguage'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 1
+                          name: Spanish
+                          code: es
+                          imageUrl: /media/languages/spanish.png
+                          level: 12
+                          isActive: true
+                          progressPercent: 65
+                        - id: 3
+                          name: Japanese
+                          code: ja
+                          imageUrl: /media/languages/japanese.png
+                          level: 1
+                          isActive: false
+                          progressPercent: 0
+                        - id: 4
+                          name: German
+                          code: de
+                          imageUrl: /media/languages/german.png
+                          level: 1
+                          isActive: false
+                          progressPercent: 0
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: One or more languages are already added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages
+                      errorCode: 409
+                      errorKey: LANGUAGE_ALREADY_ADDED
+                      errorMessage: One or more selected languages are already in your profile
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /languages/active:
+    patch:
+      tags: [Languages]
+      summary: Switch the active target language
+      description: >
+        Sets which of the user's already-added languages is the active one
+        (drives the flag/name shown in the top app bar and the "Currently
+        Learning" card on Home). Fails with `404` if the language isn't
+        already in the user's list - add it first via `POST /languages`.
+      operationId: setActiveLanguage
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetActiveLanguageRequest'
+            examples:
+              default:
+                value:
+                  languageId: 2
+      responses:
+        '200':
+          description: Active language updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          activeLanguage:
+                            $ref: '#/components/schemas/UserLanguage'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      activeLanguage:
+                        id: 2
+                        name: French
+                        code: fr
+                        imageUrl: /media/languages/french.png
+                        level: 4
+                        isActive: true
+                        progressPercent: 20
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Language not found in the user's profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages/active
+                      errorCode: 404
+                      errorKey: LANGUAGE_NOT_FOUND
+                      errorMessage: This language is not in your profile yet
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /profile:
+    get:
+      tags: [Profile]
+      summary: Get the Profile dashboard
+      description: >
+        Returns the composite payload for the Profile screen: user info,
+        stats (coins, total XP, streak, worlds count), the active language's
+        journey progress, and small previews of Achievements and Leaderboard
+        (for the "View All" rows). Use `GET /achievements` and
+        `GET /leaderboard` for the full lists.
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProfileResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1234
+                      username: adham_a
+                      nativeLanguage: Arabic
+                      photoUrl: /media/avatars/alex.jpg
+                      level: 12
+                      stats:
+                        coins: 1250
+                        totalXp: 4500
+                        streakDays: 7
+                        worldsCount: 2
+                      currentLanguageJourney:
+                        languageId: 2
+                        name: French
+                        code: fr
+                        level: 12
+                        journeyLabel: Intermediate Journey
+                        currentXp: 2460
+                        nextMilestoneXp: 3000
+                      achievementsSummary:
+                        earnedCount: 8
+                        totalCount: 23
+                        preview:
+                          - id: 1
+                            name: Wild Explorer
+                            description: Complete 5 lessons in...
+                            iconUrl: /media/achievements/wild-explorer.png
+                            status: EARNED
+                            progressPercent: 100
+                      leaderboardSummary:
+                        myRank: 100
+                        preview:
+                          - rank: 99
+                            userId: 501
+                            username: Sacagawea
+                            photoUrl: /media/avatars/501.jpg
+                            level: 13
+                            xp: 2750
+                            isCurrentUser: false
+                          - rank: 100
+                            userId: 1234
+                            username: Explorer Sam
+                            photoUrl: /media/avatars/alex.jpg
+                            level: 12
+                            xp: 3150
+                            isCurrentUser: true
+                          - rank: 101
+                            userId: 502
+                            username: Zheng He
+                            photoUrl: /media/avatars/502.jpg
+                            level: 11
+                            xp: 2600
+                            isCurrentUser: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+    patch:
+      tags: [Profile]
+      summary: Edit profile details
+      description: Updates the user's display name and/or username.
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+            examples:
+              default:
+                value:
+                  username: explorer_alex
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1234
+                          username:
+                            type: string
+                            example: explorer_alex
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1234
+                      username: explorer_alex
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Username is already taken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/profile
+                      errorCode: 409
+                      errorKey: USERNAME_ALREADY_EXISTS
+                      errorMessage: This username is already taken
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+    delete:
+      tags: [Profile]
+      summary: Delete account
+      description: >
+        Permanently deletes the user's account and all associated data.
+        Requires the account password as confirmation for local
+        (email/password) accounts; optional for OAuth-only accounts
+        (confirmation method for those not yet finalized - flag if needed).
+      operationId: deleteProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteProfileRequest'
+            examples:
+              default:
+                value:
+                  password: Str0ngPass!
+      responses:
+        '200':
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '401':
+          description: Missing/invalid access token, or incorrect password confirmation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                badPassword:
+                  summary: Incorrect password
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/profile
+                      errorCode: 401
+                      errorKey: INVALID_PASSWORD
+                      errorMessage: Incorrect password
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /profile/photo:
+    post:
+      tags: [Profile]
+      summary: Upload or replace the profile photo
+      description: Uploads a new avatar image, replacing the existing one.
+      operationId: updateProfilePhoto
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [photo]
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Photo updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          photoUrl:
+                            type: string
+                            example: /media/avatars/alex.jpg
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      photoUrl: /media/avatars/alex.jpg
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /profile/languages/progress:
+    get:
+      tags: [Profile]
+      summary: Get per-language progress breakdown
+      description: >
+        Returns levels-completed and words-learned stats for each target
+        language the user is studying, independently tracked per language.
+      operationId: getLanguageProgress
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Progress retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LanguageProgress'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - languageId: 2
+                          name: French
+                          code: fr
+                          level: 12
+                          levelsCompleted: 34
+                          totalLevels: 80
+                          wordsLearned: 210
+                        - languageId: 1
+                          name: Spanish
+                          code: es
+                          level: 4
+                          levelsCompleted: 10
+                          totalLevels: 80
+                          wordsLearned: 65
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  # --- Leaderboard ---
+  /leaderboard:
+    get:
+      tags: [Leaderboard]
+      summary: Get the leaderboard
+      description: >
+        Returns the top 3 (podium) plus a ranked page of players. The
+        current user's own entry is always included and flagged via
+        `isCurrentUser`, even if it falls outside the requested page.
+      operationId: getLeaderboard
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: scope
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [GLOBAL, LANGUAGE]
+            default: GLOBAL
+        - name: languageId
+          in: query
+          required: false
+          description: Required when scope=LANGUAGE.
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Leaderboard retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          myRank:
+                            type: integer
+                            example: 100
+                          topThree:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LeaderboardEntry'
+                          entries:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LeaderboardEntry'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      myRank: 100
+                      topThree:
+                        - rank: 1
+                          userId: 401
+                          username: Marco Polo
+                          photoUrl: /media/avatars/401.jpg
+                          level: 20
+                          xp: 5100
+                          isCurrentUser: false
+                        - rank: 2
+                          userId: 402
+                          username: Amelia
+                          photoUrl: /media/avatars/402.jpg
+                          level: 19
+                          xp: 3910
+                          isCurrentUser: false
+                        - rank: 3
+                          userId: 403
+                          username: Ibr Bartuta
+                          photoUrl: /media/avatars/403.jpg
+                          level: 18
+                          xp: 3810
+                          isCurrentUser: false
+                      entries:
+                        - rank: 98
+                          userId: 503
+                          username: Ferdinand M.
+                          photoUrl: /media/avatars/503.jpg
+                          level: 13
+                          xp: 2900
+                          isCurrentUser: false
+                        - rank: 99
+                          userId: 501
+                          username: Sacagawea
+                          photoUrl: /media/avatars/501.jpg
+                          level: 13
+                          xp: 2750
+                          isCurrentUser: false
+                        - rank: 100
+                          userId: 1234
+                          username: Explorer Sam
+                          photoUrl: /media/avatars/alex.jpg
+                          level: 12
+                          xp: 3150
+                          isCurrentUser: true
+                        - rank: 101
+                          userId: 502
+                          username: Zheng He
+                          photoUrl: /media/avatars/502.jpg
+                          level: 11
+                          xp: 2600
+                          isCurrentUser: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  # --- Achievements ---
+  /achievements:
+    get:
+      tags: [Achievements]
+      summary: List achievements
+      description: >
+        Returns the user's achievements ("Trophies"), filterable by status,
+        plus summary counts for the footer stats bar.
+      operationId: listAchievements
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ALL, EARNED, LOCKED]
+            default: ALL
+      responses:
+        '200':
+          description: Achievements retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AchievementsListData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      earnedCount: 8
+                      inProgressCount: 15
+                      xpEarned: 240
+                      achievements:
+                        - id: 1
+                          name: Wild Explorer
+                          description: Complete 5 lessons in the Kitchen World
+                          iconUrl: /media/achievements/wild-explorer.png
+                          status: EARNED
+                          progressPercent: 100
+                        - id: 2
+                          name: Hidden Oasis
+                          description: Discover a secret World
+                          iconUrl: /media/achievements/hidden-oasis.png
+                          status: LOCKED
+                          progressPercent: 0
+                        - id: 3
+                          name: Streak Master
+                          description: Maintain a 30-day streak
+                          iconUrl: /media/achievements/streak-master.png
+                          status: LOCKED
+                          progressPercent: 23
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /achievements/weekly-reward:
+    get:
+      tags: [Achievements]
+      summary: Get this week's achievement reward status
+      description: Returns whether the weekly reward is available to claim.
+      operationId: getWeeklyRewardStatus
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Weekly reward status retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          claimedThisWeek:
+                            type: boolean
+                            example: false
+                          rewardXp:
+                            type: integer
+                            example: 100
+                          rewardCoins:
+                            type: integer
+                            example: 200
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      claimedThisWeek: false
+                      rewardXp: 100
+                      rewardCoins: 200
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
+  /achievements/weekly-reward/claim:
+    post:
+      tags: [Achievements]
+      summary: Claim this week's achievement reward
+      operationId: claimWeeklyReward
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reward claimed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          xpAwarded:
+                            type: integer
+                            example: 100
+                          coinsAwarded:
+                            type: integer
+                            example: 200
+                          newXpBalance:
+                            type: integer
+                            example: 4600
+                          newCoinsBalance:
+                            type: integer
+                            example: 1450
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      xpAwarded: 100
+                      coinsAwarded: 200
+                      newXpBalance: 4600
+                      newCoinsBalance: 1450
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: This week's reward has already been claimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/achievements/weekly-reward/claim
+                      errorCode: 409
+                      errorKey: ACHIEVEMENT_REWARD_ALREADY_CLAIMED
+                      errorMessage: You've already claimed this week's reward
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: Validation error - one or more fields are missing or malformed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              value:
+                success: false
+                error:
+                  apiPath: /api/v1/auth/login
+                  errorCode: 400
+                  errorKey: VALIDATION_ERROR
+                  errorMessage: 'email is required'
+                  errorTime: '2026-07-13T10:15:00Z'
+
+    Unauthorized:
+      description: Missing, invalid, or expired access token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              value:
+                success: false
+                error:
+                  apiPath: /api/v1/home
+                  errorCode: 401
+                  errorKey: UNAUTHENTICATED
+                  errorMessage: Authentication is required to access this resource
+                  errorTime: '2026-07-17T10:15:00Z'
+
+    InternalServerError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              value:
+                success: false
+                error:
+                  apiPath: /api/v1/auth/login
+                  errorCode: 500
+                  errorKey: INTERNAL_SERVER_ERROR
+                  errorMessage: An unexpected error occurred, please try again later
+                  errorTime: '2026-07-13T10:15:00Z'
+
+  schemas:
+    SuccessResponse:
+      type: object
+      description: Standard envelope wrapping every successful response.
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          description: Endpoint-specific payload (see each operation's response schema).
+
+    ErrorResponse:
+      type: object
+      description: Standard envelope wrapping every error response.
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [apiPath, errorCode, errorKey, errorMessage, errorTime]
+          properties:
+            apiPath:
+              type: string
+              description: The request path that produced the error.
+              example: /api/v1/auth/login
+            errorCode:
+              type: integer
+              description: Mirrors the HTTP status code.
+              example: 401
+            errorKey:
+              type: string
+              description: Stable, machine-readable error identifier for client-side branching.
+              enum:
+                - VALIDATION_ERROR
+                - INVALID_CREDENTIALS
+                - EMAIL_NOT_VERIFIED
+                - EMAIL_NOT_FOUND
+                - EMAIL_ALREADY_EXISTS
+                - USERNAME_ALREADY_EXISTS
+                - INVALID_OTP
+                - OTP_EXPIRED
+                - INVALID_REFRESH_TOKEN
+                - REFRESH_TOKEN_EXPIRED
+                - INVALID_RESET_TOKEN
+                - RESET_TOKEN_EXPIRED
+                - INVALID_FIREBASE_TOKEN
+                - TOO_MANY_REQUESTS
+                - INTERNAL_SERVER_ERROR
+                - UNAUTHENTICATED
+                - WORLD_NOT_FOUND
+                - LANGUAGE_NOT_FOUND
+                - LANGUAGE_ALREADY_ADDED
+                - DAILY_REWARD_ALREADY_CLAIMED
+                - INVALID_PASSWORD
+                - ACHIEVEMENT_REWARD_ALREADY_CLAIMED
+              example: INVALID_CREDENTIALS
+            errorMessage:
+              type: string
+              description: Human-readable message, safe to display to the user.
+              example: Invalid credentials
+            errorTime:
+              type: string
+              format: date-time
+              example: '2026-07-13T10:15:00Z'
+
+    RegisterRequest:
+      type: object
+      required: [email, username, password, nativeLanguage, targetLanguage]
+      properties:
+        email:
+          type: string
+          format: email
+          example: a@b.com
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          example: adham_a
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: Assumed policy - min 8 chars, at least one letter and one digit.
+          example: Str0ngPass!
+        nativeLanguage:
+          type: string
+          example: Arabic
+        targetLanguage:
+          type: string
+          description: Single language for now; may become an array in a future version.
+          example: Spanish
+
+    RegisterResponseData:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1234
+        email:
+          type: string
+          format: email
+          example: a@b.com
+        username:
+          type: string
+          example: adham_a
+        nativeLanguage:
+          type: string
+          example: Arabic
+        targetLanguage:
+          type: string
+          example: Spanish
+        isVerified:
+          type: boolean
+          example: false
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: a@b.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: schiurwhviurh
+
+    LoginResponseData:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Short-lived JWT used to authenticate subsequent requests.
+        refreshToken:
+          type: string
+          description: Long-lived opaque token used to obtain a new access token via /auth/refresh-token.
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          description: Seconds until the access token expires.
+          example: 3600
+        user:
+          $ref: '#/components/schemas/User'
+
+    RefreshTokenRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+          example: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+
+    RefreshTokenResponseData:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+          description: Newly-issued refresh token (rotation) - replace the old one on the client.
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          example: 3600
+
+    OtpSendRequest:
+      type: object
+      required: [email, purpose]
+      properties:
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        purpose:
+          type: string
+          enum: [SIGNUP, PASSWORD_RESET]
+          example: SIGNUP
+
+    OtpVerifyRequest:
+      type: object
+      required: [email, otp]
+      properties:
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        otp:
+          type: string
+          example: '4823'
+          minLength: 6
+          maxLength: 6
+
+    ForgetPasswordRequest:
+      type: object
+      required: [resetToken, newPassword]
+      properties:
+        resetToken:
+          type: string
+          example: rst_9f8e7d6c5b4a...
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          example: NewStr0ngPass!
+
+    FirebaseLoginRequest:
+      type: object
+      required: [idToken]
+      properties:
+        idToken:
+          type: string
+          description: Firebase ID token obtained after Google or Apple sign-in via the Firebase SDK on the client.
+          example: eyJhbGciOiJSUzI1NiIsImtpZCI6...
+
+    OAuthResponseData:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          example: 3600
+        profileComplete:
+          type: boolean
+          description: False when nativeLanguage/targetLanguage/username still need to be collected.
+          example: true
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1234
+        username:
+          type: string
+          nullable: true
+          example: adham_a
+        photo:
+          type: string
+          nullable: true
+          example: /u1/ahaeaw.jpg
+        nativeLanguage:
+          type: string
+          nullable: true
+          example: Arabic
+        isVerified:
+          type: boolean
+          example: true
+        targetLanguages:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetLanguage'
+
+    TargetLanguage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Spanish
+        code:
+          type: string
+          example: es
+
+    HomeResponseData:
+      type: object
+      properties:
+        xp:
+          type: integer
+          example: 1250
+        coins:
+          type: integer
+          example: 46
+        streakDays:
+          type: integer
+          example: 7
+        activeLanguage:
+          $ref: '#/components/schemas/ActiveLanguageSummary'
+        exploreWorlds:
+          type: array
+          description: Preview of up to 4 Worlds; use GET /worlds for the full list.
+          items:
+            $ref: '#/components/schemas/WorldSummary'
+ 
+    ActiveLanguageSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Spanish
+        code:
+          type: string
+          example: es
+        level:
+          type: integer
+          example: 12
+        levelProgressPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 65
+ 
+    WorldSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: Kitchen World
+        imageUrl:
+          type: string
+          example: /media/worlds/kitchen.jpg
+        difficulty:
+          type: string
+          enum: [EASY, MEDIUM, HARD]
+          example: EASY
+        status:
+          type: string
+          enum: [LOCKED, IN_PROGRESS, COMPLETED]
+          example: IN_PROGRESS
+        progressPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 40
+        totalLevels:
+          type: integer
+          example: 20
+        completedLevels:
+          type: integer
+          example: 8
+ 
+    WorldDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: Kitchen World
+        difficulty:
+          type: string
+          enum: [EASY, MEDIUM, HARD]
+          example: EASY
+        levels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LevelSummary'
+ 
+    LevelSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 145
+        order:
+          type: integer
+          example: 2
+        status:
+          type: string
+          enum: [LOCKED, AVAILABLE, COMPLETED]
+          example: AVAILABLE
+        word:
+          type: string
+          nullable: true
+          description: Null while the level is still LOCKED.
+          example: Apple
+        
+ 
+    DailyRewardStatus:
+      type: object
+      properties:
+        claimedToday:
+          type: boolean
+          example: false
+        currentDay:
+          type: integer
+          description: Position within the reward cycle.
+          example: 3
+        cycleLength:
+          type: integer
+          example: 5
+        rewardCoins:
+          type: integer
+          example: 50
+        rewardXp:
+          type: integer
+          nullable: true
+          example: null
+        streakDays:
+          type: integer
+          example: 7
+ 
+    DailyRewardClaimResult:
+      type: object
+      properties:
+        coinsAwarded:
+          type: integer
+          example: 50
+        xpAwarded:
+          type: integer
+          nullable: true
+          example: null
+        newCoinsBalance:
+          type: integer
+          example: 96
+        newXpBalance:
+          type: integer
+          example: 1250
+        newStreakDays:
+          type: integer
+          example: 8
+        nextDay:
+          type: integer
+          example: 4
+ 
+    UserLanguage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Spanish
+        code:
+          type: string
+          example: es
+        imageUrl:
+          type: string
+          format: uri
+          example: /media/languages/spanish.png
+        level:
+          type: integer
+          example: 12
+        isActive:
+          type: boolean
+          example: true
+        progressPercent:
+          type: integer
+          example: 65
+ 
+    LanguageOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: Japanese
+        code:
+          type: string
+          example: ja
+        imageUrl:
+          type: string
+          format: uri
+          example: /media/languages/japanese.png
+        isAdded:
+          type: boolean
+          example: false
+ 
+    AddLanguagesRequest:
+      type: object
+      required: [languageIds]
+      properties:
+        languageIds:
+          type: array
+          items:
+            type: integer
+          minItems: 1
+          example: [4, 3]
+ 
+    SetActiveLanguageRequest:
+      type: object
+      required: [languageId]
+      properties:
+        languageId:
+          type: integer
+          example: 2
+
+    LogoutRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+          example: dGhpc19pc19hX3JlZnJlc2hfdG9rZW4...
+        allDevices:
+          type: boolean
+          default: false
+          description: If true, revokes all refresh tokens for the account (log out everywhere).
+ 
+    ProfileResponseData:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1234
+        username:
+          type: string
+          example: adham_a
+        nativeLanguage:
+          type: string
+          example: Arabic
+        photoUrl:
+          type: string
+          nullable: true
+          example: /media/avatars/alex.jpg
+        level:
+          type: integer
+          example: 12
+        stats:
+          type: object
+          properties:
+            coins:
+              type: integer
+              example: 1250
+            totalXp:
+              type: integer
+              example: 4500
+            streakDays:
+              type: integer
+              example: 7
+            worldsCount:
+              type: integer
+              description: Number of distinct Worlds with at least one completed level.
+              example: 2
+        currentLanguageJourney:
+          type: object
+          properties:
+            languageId:
+              type: integer
+              example: 2
+            name:
+              type: string
+              example: French
+            code:
+              type: string
+              example: fr
+            level:
+              type: integer
+              example: 12
+            journeyLabel:
+              type: string
+              example: Intermediate Journey
+            currentXp:
+              type: integer
+              example: 2460
+            nextMilestoneXp:
+              type: integer
+              example: 3000
+        achievementsSummary:
+          type: object
+          properties:
+            earnedCount:
+              type: integer
+              example: 8
+            totalCount:
+              type: integer
+              example: 23
+            preview:
+              type: array
+              items:
+                $ref: '#/components/schemas/AchievementSummary'
+        leaderboardSummary:
+          type: object
+          properties:
+            myRank:
+              type: integer
+              example: 100
+            preview:
+              type: array
+              items:
+                $ref: '#/components/schemas/LeaderboardEntry'
+ 
+    UpdateProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          example: explorer_alex
+ 
+    DeleteProfileRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          format: password
+          description: Required for local (email/password) accounts; omitted for OAuth-only accounts.
+          example: Str0ngPass!
+ 
+    LanguageProgress:
+      type: object
+      properties:
+        languageId:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: French
+        code:
+          type: string
+          example: fr
+        level:
+          type: integer
+          example: 12
+        levelsCompleted:
+          type: integer
+          example: 34
+        totalLevels:
+          type: integer
+          example: 80
+        wordsLearned:
+          type: integer
+          example: 210
+ 
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+          example: 100
+        userId:
+          type: integer
+          example: 1234
+        username:
+          type: string
+          example: Explorer Sam
+        photoUrl:
+          type: string
+          nullable: true
+          example: /media/avatars/alex.jpg
+        level:
+          type: integer
+          example: 12
+        xp:
+          type: integer
+          example: 3150
+        isCurrentUser:
+          type: boolean
+          example: true
+ 
+    AchievementSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Wild Explorer
+        description:
+          type: string
+          example: Complete 5 lessons in the Kitchen World
+        iconUrl:
+          type: string
+          example: /media/achievements/wild-explorer.png
+        status:
+          type: string
+          enum: [EARNED, LOCKED]
+          example: EARNED
+        progressPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 100
+ 
+    AchievementsListData:
+      type: object
+      properties:
+        earnedCount:
+          type: integer
+          example: 8
+        inProgressCount:
+          type: integer
+          example: 15
+        xpEarned:
+          type: integer
+          description: Total XP earned specifically from achievements.
+          example: 240
+        achievements:
+          type: array
+          items:
+            $ref: '#/components/schemas/AchievementSummary'
+
+ 
