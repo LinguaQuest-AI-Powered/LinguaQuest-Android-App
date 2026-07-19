@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.iti.linguaquest.core.result.onSuccess
+import com.iti.linguaquest.core.result.onFailure
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
@@ -40,28 +42,33 @@ class MapViewModel @Inject constructor(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val domainLevels = getMapLevelsUseCase(worldId)
+            val result = getMapLevelsUseCase(worldId)
             
-            val uiLevels = domainLevels.map { level ->
-                val status = when {
-                    level.isCurrent -> LevelStatus.CURRENT
-                    level.isCompleted -> LevelStatus.COMPLETED
-                    else -> LevelStatus.LOCKED
+            result.onSuccess { detail ->
+                val uiLevels = detail.levels.map { level ->
+                    val status = when (level.status) {
+                        "AVAILABLE" -> LevelStatus.CURRENT
+                        "COMPLETED" -> LevelStatus.COMPLETED
+                        else -> LevelStatus.LOCKED
+                    }
+                    MapLevelUiModel(
+                        levelNumber = level.order,
+                        status = status,
+                        stars = if (status == LevelStatus.COMPLETED) 3 else 0
+                    )
                 }
-                MapLevelUiModel(
-                    levelNumber = level.levelNumber,
-                    status = status,
-                    stars = level.stars
-                )
-            }
 
-            val currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    levels = uiLevels,
-                    currentLevelIndex = currentIndex
-                )
+                val currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        worldTitle = detail.name,
+                        levels = uiLevels,
+                        currentLevelIndex = currentIndex
+                    )
+                }
+            }.onFailure {
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }

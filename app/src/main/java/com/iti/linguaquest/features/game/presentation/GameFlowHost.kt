@@ -80,7 +80,7 @@ fun GameFlowHost(
                         gameBackStack.clear()
                         gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
                     },
-                    onNavigateToNextLevel = { /* Handle logic, perhaps pop back to lobby */ },
+                    onNavigateToNextLevel = { rootBackStack.removeLastOrNull() },
                     onExit = { rootBackStack.removeLastOrNull() }
                 )
             }

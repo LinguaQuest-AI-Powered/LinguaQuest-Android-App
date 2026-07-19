@@ -26,7 +26,6 @@ fun GameResultScreen(
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
 
-    // Initialize the local ViewModel state by reading the outcome from the Shared Data Bus
     LaunchedEffect(sharedState.verificationOutcome) {
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
             is VerificationOutcome.Success -> GameResultUiState.Success(
@@ -40,7 +39,6 @@ fun GameResultScreen(
         viewModel.setInitialResult(mappedState)
     }
 
-    // Handle localized navigation effects triggered by the user
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -55,7 +53,6 @@ fun GameResultScreen(
         }
     }
 
-    // Route the UI layout based on the injected state
     when (val currentState = state) {
         is GameResultUiState.Success -> {
             GameSuccessView(
