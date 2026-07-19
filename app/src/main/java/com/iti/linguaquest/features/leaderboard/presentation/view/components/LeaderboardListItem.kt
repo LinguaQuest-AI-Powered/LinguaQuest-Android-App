@@ -96,7 +96,7 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
                 )
 
                 Text(
-                    text = entry.title,
+                    text = "Lv. ${entry.level}",
                     fontSize = 13.sp,
                     color = subtitleColor
                 )

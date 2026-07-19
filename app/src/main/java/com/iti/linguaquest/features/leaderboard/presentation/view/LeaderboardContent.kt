@@ -82,8 +82,7 @@ fun LeaderboardContentPreview() {
                         level = 20,
                         xp = 4250,
                         isCurrentUser = false,
-                        title =  "sglk"
-                    ),
+                     ),
                     LeaderboardEntry(
                         rank = 2,
                         userId = 2,
@@ -92,8 +91,7 @@ fun LeaderboardContentPreview() {
                         level = 19,
                         xp = 3890,
                         isCurrentUser = false,
-                        title =  "sglk"
-                    ),
+                     ),
                     LeaderboardEntry(
                         rank = 3,
                         userId = 3,
@@ -102,8 +100,7 @@ fun LeaderboardContentPreview() {
                         level = 18,
                         xp = 3420,
                         isCurrentUser = false,
-                        title =  "sglk"
-                    )
+                     )
                 ),
                 entries = listOf(
                     LeaderboardEntry(
@@ -114,8 +111,7 @@ fun LeaderboardContentPreview() {
                         level = 13,
                         xp = 2900,
                         isCurrentUser = false,
-                        title =  "sglk"
-                    ),
+                     ),
                     LeaderboardEntry(
                         rank = 99,
                         userId = 5,
@@ -124,8 +120,7 @@ fun LeaderboardContentPreview() {
                         level = 13,
                         xp = 2750,
                         isCurrentUser = false,
-                        title =  "sglk"
-                    ),
+                     ),
                     LeaderboardEntry(
                         rank = 100,
                         userId = 6,
@@ -134,8 +129,7 @@ fun LeaderboardContentPreview() {
                         level = 12,
                         xp = 3150,
                         isCurrentUser = true,
-                        title =  "sglk"
-                    )
+                     )
                 )
             ),
             onBack = {}

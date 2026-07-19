@@ -13,8 +13,7 @@ fun LeaderboardEntryDto.toDomain(): LeaderboardEntry = LeaderboardEntry(
     level = level,
     xp = xp,
     isCurrentUser = isCurrentUser,
-    title = title
-)
+ )
 
 fun LeaderboardDataDto.toDomain(): Leaderboard = Leaderboard(
     myRank = myRank,

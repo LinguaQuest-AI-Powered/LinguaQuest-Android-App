@@ -15,8 +15,7 @@ data class LeaderboardEntry(
     val level: Int,
     val xp: Int,
     val isCurrentUser: Boolean,
-    val title:String //doing
-)
+ )
 
 enum class LeaderboardScope {
     GLOBAL,
