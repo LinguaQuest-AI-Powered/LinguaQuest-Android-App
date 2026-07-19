@@ -294,7 +294,9 @@ fun AppNavigation(
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { }
+                        onNavigateToWorldDetails = { worldId ->
+                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                        }
                     )
 
                 }
