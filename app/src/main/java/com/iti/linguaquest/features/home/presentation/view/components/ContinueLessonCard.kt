@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
 
-import androidx.compose.foundation.Image
+import com.iti.linguaquest.core.utils.ImageWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -67,13 +66,13 @@ fun ContinueLessonCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = lesson.word,
+                    text = lesson.word.asString(),
                     color = LinguaQuestTheme.colors.blackColor,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "${lesson.partOfSpeech} \u2022 ${lesson.translation}",
+                    text = "${lesson.partOfSpeech.asString()} \u2022 ${lesson.translation.asString()}",
                     color = LinguaQuestTheme.colors.iconsColor,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -90,9 +89,9 @@ fun ContinueLessonCard(
                     .background(LinguaQuestTheme.colors.IconBoxBackground),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = lesson.iconRes),
-                    contentDescription = lesson.word,
+                ImageWrapper(
+                    model = lesson.iconSource,
+                    contentDescription = lesson.word.asString(),
                     modifier = Modifier.size(48.dp)
                 )
             }

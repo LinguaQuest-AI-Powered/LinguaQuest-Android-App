@@ -8,6 +8,7 @@ import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsIn
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsState
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,40 +39,40 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
         val worlds = listOf(
             WorldItem(
                 id = 0,
-                title = "Kitchen World",
-                imageRes = R.drawable.kitchen_icon,
+                title = UiText.DynamicString("Kitchen World"),
+                imageSource = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.EASY,
                 progress = 0.40f,
                 isCompleted = false
             ),
             WorldItem(
                 id = 1,
-                title = "City World",
-                imageRes = R.drawable.kitchen_icon,
+                title = UiText.DynamicString("City World"),
+                imageSource = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.MEDIUM,
                 progress = 0.10f,
                 isCompleted = false
             ),
             WorldItem(
                 id = 2,
-                title = "Park World",
-                imageRes = R.drawable.kitchen_icon, // replace with real image if exists
+                title = UiText.DynamicString("Park World"),
+                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.EASY,
                 progress = 1.0f,
                 isCompleted = true
             ),
             WorldItem(
                 id = 3,
-                title = "Market World",
-                imageRes = R.drawable.kitchen_icon, // replace with real image if exists
+                title = UiText.DynamicString("Market World"),
+                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.MEDIUM,
                 progress = 0.0f,
                 isCompleted = false
             ),
             WorldItem(
                 id = 4,
-                title = "Airport World",
-                imageRes = R.drawable.kitchen_icon, // replace with real image if exists
+                title = UiText.DynamicString("Airport World"),
+                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.HARD,
                 progress = 0.0f,
                 isCompleted = false,
@@ -79,8 +80,8 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
             ),
             WorldItem(
                 id = 5,
-                title = "School World",
-                imageRes = R.drawable.kitchen_icon, // replace with real image if exists
+                title = UiText.DynamicString("School World"),
+                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.MEDIUM,
                 progress = 0.65f,
                 isCompleted = false

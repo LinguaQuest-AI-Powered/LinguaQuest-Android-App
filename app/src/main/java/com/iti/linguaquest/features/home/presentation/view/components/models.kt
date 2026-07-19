@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
 
-import androidx.annotation.DrawableRes
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import androidx.compose.ui.graphics.Color
 
 enum class WorldDifficulty(val label: String, val badgeColor: Color) {
@@ -13,8 +13,8 @@ enum class WorldDifficulty(val label: String, val badgeColor: Color) {
 
 data class WorldItem(
     val id: Int,
-    val title: String,
-    @DrawableRes val imageRes: Int,
+    val title: UiText,
+    val imageSource: Any?,
     val difficulty: WorldDifficulty,
     val progress: Float,
     val isCompleted: Boolean = false,
@@ -23,8 +23,8 @@ data class WorldItem(
 
 data class LessonPreview(
     val lessonId: Int,
-    val word: String,
-    val partOfSpeech: String,
-    val translation: String,
-    @DrawableRes val iconRes: Int
+    val word: UiText,
+    val partOfSpeech: UiText,
+    val translation: UiText,
+    val iconSource: Any?
 )

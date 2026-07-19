@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -34,7 +33,7 @@ import com.iti.linguaquest.features.game.presentation.result.contract.GameResult
 @Composable
 fun GameFailView(
     state: GameResultUiState.Failure,
-    targetWord: String,
+    targetWord: com.iti.linguaquest.core.sharedComponents.text.UiText,
     isHintUsed: Boolean,
     onRetry: () -> Unit,
     onBuyHint: () -> Unit,
@@ -65,7 +64,7 @@ fun GameFailView(
                 if (targetIndex != -1) {
                     append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(targetWord)
+                        append(targetWord.asString())
                     }
                     append(failMessageFormat.substring(targetIndex + targetWord.length))
                 } else {

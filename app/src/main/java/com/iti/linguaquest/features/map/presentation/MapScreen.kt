@@ -67,7 +67,7 @@ fun MapScreenContent(
             modifier = Modifier.fillMaxSize()
         )
         LinguaQuestScreenTopBar(
-            title = state.worldTitle,
+            title = state.worldTitle.asString(),
             onBackClicked = onBackClick,
             isTitleCentered = false,
             titleColor = AppColors.BrownText,
@@ -89,7 +89,7 @@ fun MapScreenPreview(){
     MapScreenContent(
         state = MapState(
             isLoading = false,
-            worldTitle = "Kitchen World",
+            worldTitle = com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString("Kitchen World"),
             levels = mockLevels,
             currentLevelIndex = 1
         ),

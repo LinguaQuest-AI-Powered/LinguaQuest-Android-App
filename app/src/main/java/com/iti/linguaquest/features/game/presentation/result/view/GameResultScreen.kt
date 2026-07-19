@@ -27,7 +27,6 @@ fun GameResultScreen(
     onExit: () -> Unit,
     viewModel: GameResultViewModel = hiltViewModel()
 ) {
-    val soundPlayer = LocalSoundPlayer.current
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
 
@@ -37,9 +36,9 @@ fun GameResultScreen(
                 xpAwarded = outcome.xpAwarded,
                 coinsAwarded = outcome.coinsAwarded
             )
-            is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = UiText.DynamicString(outcome.reason))
-            is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = UiText.DynamicString(outcome.errorMessage))
-            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.StringResource(R.string.game_result_invalid_state))
+            is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
+            is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
+            VerificationOutcome.Idle -> GameResultUiState.Error("Invalid state. No outcome generated.")
         }
         viewModel.setInitialResult(mappedState)
     }
@@ -75,10 +74,7 @@ fun GameResultScreen(
                 coinsGained = currentState.coinsAwarded,
                 currentLevel = currentState.currentLevel,
                 progressPercent = currentState.progressPercent,
-                onNextLevelClick = {
-                    soundPlayer.play(AppSound.COIN)
-                    viewModel.onIntent(GameResultIntent.NextLevelClicked)
-                }
+                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
             )
         }
         is GameResultUiState.Failure -> {

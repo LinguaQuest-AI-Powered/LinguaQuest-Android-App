@@ -41,7 +41,6 @@ fun GameProcessingScreen(
     processingViewModel: GameProcessingViewModel = hiltViewModel(),
     whackViewModel: GameWhackViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val whackState by whackViewModel.state.collectAsState()
     val sharedState by sharedViewModel.sharedState.collectAsState()
 
@@ -57,10 +56,10 @@ fun GameProcessingScreen(
                     )
                 }
                 is GameProcessingEffect.NavigateToFailure -> {
-                    VerificationOutcome.Failure(reason = context.getString(effect.reasonResId))
+                    VerificationOutcome.Failure(reason = com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(effect.reasonResId))
                 }
                 is GameProcessingEffect.NavigateToError -> {
-                    VerificationOutcome.Error(errorMessage = context.getString(effect.errorMessageResId))
+                    VerificationOutcome.Error(errorMessage = com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(effect.errorMessageResId))
                 }
             }
             sharedViewModel.setVerificationOutcome(outcome)
