@@ -34,6 +34,8 @@ import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
+import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
+import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
@@ -49,6 +51,7 @@ fun HomeScreen(
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
+    onNavigateToAddLanguages: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -66,6 +69,7 @@ fun HomeScreen(
                     onNavigateToWorldMap(effect.worldId)
                 }
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
+                is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
             }
         }
     }
@@ -83,7 +87,7 @@ fun HomeScreen(
         }
 
         FloatingActionButton(
-            onClick = onWorldMapClick,
+            onClick = {viewModel.onIntent(HomeIntent.FabClicked)},
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier
@@ -119,6 +123,22 @@ fun HomeScreen(
                 )
             }
         }
+    }
+
+    if (state.isLanguageBottomSheetVisible) {
+        MyLanguagesBottomSheet(
+            languages = listOf(
+                MyLanguageUiModel(1, "Spanish", 12, true, "🇪🇸"),
+                MyLanguageUiModel(2, "French", 4, false, "🇫🇷"),
+                MyLanguageUiModel(3, "Japanese", 3, false, "🇯🇵")
+            ),
+            onDismiss = { viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet) },
+            onAddNewLanguageClick = { viewModel.onIntent(HomeIntent.AddNewLanguageClicked) },
+            onLanguageSelect = { selectedId ->
+                // TODO: Add Intent to switch active language
+                viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+            }
+        )
     }
 }
 

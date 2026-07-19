@@ -265,4 +265,15 @@
     <string name="achievement_claim_rewards">Claim Weekly Rewards</string>
     <string name="achievement_header_trophies_cd">My Trophies</string>
     <string name="achievement_card_icon_cd">Achievement Icon</string>
+
+    <!-- Languages Feature -->
+    <string name="add_languages_title">Add languages</string>
+    <string name="add_languages_select_instruction">Select the languages you\'d like to learn</string>
+    <string name="add_languages_search_placeholder">Search languages…</string>
+    <string name="add_selected_format">Add Selected (%1$d)</string>
+    <string name="my_languages_title">My Languages</string>
+    <string name="add_new_language">+ Add New Language</string>
+    <string name="my_languages_level_format">Level %1$d</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_search">Search</string>
 </resources>
