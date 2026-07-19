@@ -9,11 +9,14 @@ interface UserPreferencesRepository {
     val nativeLanguage: Flow<String?>
     val proficiencyLevel: Flow<String?>
     val appTheme: Flow<String>
+    val soundEnabled: Flow<Boolean>
+
 
     suspend fun saveTargetLanguage(language: String)
     suspend fun saveNativeLanguage(language: String)
     suspend fun saveProficiencyLevel(level: String)
     suspend fun saveAppTheme(theme: String)
+    suspend fun saveSoundEnabled(enabled: Boolean)
 }
 
 class UserPreferencesRepositoryImpl @Inject constructor(
@@ -24,6 +27,8 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override val nativeLanguage: Flow<String?> = localDataSource.nativeLanguage
     override val proficiencyLevel: Flow<String?> = localDataSource.proficiencyLevel
     override val appTheme: Flow<String> = localDataSource.appTheme
+    override val soundEnabled: Flow<Boolean> = localDataSource.soundEnabled
+
 
     override suspend fun saveTargetLanguage(language: String) {
         localDataSource.saveTargetLanguage(language)
@@ -39,5 +44,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun saveAppTheme(theme: String) {
         localDataSource.saveAppTheme(theme)
+    }
+
+    override suspend fun saveSoundEnabled(enabled: Boolean) {
+        localDataSource.saveSoundEnabled(enabled)
     }
 }

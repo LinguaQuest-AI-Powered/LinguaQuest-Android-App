@@ -13,11 +13,13 @@ interface UserPreferencesLocalDataSource {
     val nativeLanguage: Flow<String?>
     val proficiencyLevel: Flow<String?>
     val appTheme: Flow<String>
+    val soundEnabled: Flow<Boolean>
 
     suspend fun saveTargetLanguage(language: String)
     suspend fun saveNativeLanguage(language: String)
     suspend fun saveProficiencyLevel(level: String)
     suspend fun saveAppTheme(theme: String)
+    suspend fun saveSoundEnabled(enabled: Boolean)
 }
 
 class UserPreferencesLocalDataSourceImpl @Inject constructor(
@@ -31,6 +33,8 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override val proficiencyLevel: Flow<String?> = dataStore.data.map { it[PreferencesKeys.PROFICIENCY_LEVEL] }
 
     override val appTheme: Flow<String> = dataStore.data.map { it[PreferencesKeys.APP_THEME] ?: "system" }
+
+    override val soundEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.SOUND_ENABLED] ?: true }
 
     override suspend fun saveTargetLanguage(language: String) {
         dataStore.edit { preferences ->
@@ -53,6 +57,12 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override suspend fun saveAppTheme(theme: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.APP_THEME] = theme
+        }
+    }
+
+    override suspend fun saveSoundEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SOUND_ENABLED] = enabled
         }
     }
 }
