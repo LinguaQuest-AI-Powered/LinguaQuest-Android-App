@@ -2,9 +2,9 @@ package com.iti.linguaquest.features.home.presentation.mapper
 
 import com.iti.linguaquest.R
 import com.iti.linguaquest.features.home.domain.model.ContinueLesson
-import com.iti.linguaquest.features.home.domain.model.ExploreWorld
+import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.home.domain.model.HomeSummary
-import com.iti.linguaquest.features.home.domain.model.WorldDifficulty as DomainDifficulty
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.LessonPreview
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty as UiDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
@@ -46,7 +46,7 @@ fun HomeSummary.toLanguageProgressUi(): LanguageProgressUi = LanguageProgressUi(
     flagRes = localFlagFor(activeLanguage.code)
 )
 
-fun ExploreWorld.toUiWorldItem(): WorldItem = WorldItem(
+fun World.toUiWorldItem(): WorldItem = WorldItem(
     id = id,
     title = name,
     imageRes = localWorldImageFor(name),

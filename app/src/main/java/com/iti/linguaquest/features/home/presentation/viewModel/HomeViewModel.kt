@@ -3,14 +3,13 @@ package com.iti.linguaquest.features.home.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
@@ -26,12 +25,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getHomeSummaryUseCase: GetHomeSummaryUseCase,
+    private val getWorldsUseCase: GetWorldsUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -73,30 +74,39 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, hasError = false) }
 
-            when (val result = getHomeSummaryUseCase()) {
-                is LinguaQuestResult.Success -> {
-                    val summary = result.data
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            hasError = false,
-                            languageProgress = summary.toLanguageProgressUi(),
-                            worlds = summary.exploreWorlds.map { world -> world.toUiWorldItem() },
-                            continueLesson = summary.continueLesson?.toUiLessonPreview()
-                        )
-                    }
-                }
-                is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false, hasError = true) }
-                    snackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = result.error.toUiText(),
-                            type = SnackbarType.ERROR,
-                            actionLabel = UiText.DynamicString("Retry"),
-                            onAction = { loadHome() }
-                        )
+            val homeSummaryDeferred = async { getHomeSummaryUseCase() }
+            val worldsDeferred = async { getWorldsUseCase() }
+            
+            val homeSummaryResult = homeSummaryDeferred.await()
+            val worldsResult = worldsDeferred.await()
+
+            if (homeSummaryResult is LinguaQuestResult.Success && worldsResult is LinguaQuestResult.Success) {
+                val summary = homeSummaryResult.data
+                val worldsData = worldsResult.data
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        hasError = false,
+                        languageProgress = summary.toLanguageProgressUi(),
+                        worlds = worldsData.worlds.map { world -> world.toUiWorldItem() },
+                        continueLesson = summary.continueLesson?.toUiLessonPreview()
                     )
                 }
+            } else {
+                val errorResult = if (homeSummaryResult is LinguaQuestResult.Failure) {
+                    homeSummaryResult
+                } else {
+                    worldsResult as LinguaQuestResult.Failure
+                }
+                _state.update { it.copy(isLoading = false, hasError = true) }
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = errorResult.error.toUiText(),
+                        type = SnackbarType.ERROR,
+                        actionLabel = UiText.DynamicString("Retry"),
+                        onAction = { loadHome() }
+                    )
+                )
             }
         }
     }
