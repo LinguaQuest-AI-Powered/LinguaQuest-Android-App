@@ -31,17 +31,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.layout.statusBarsPadding
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.home.presentation.languages.AddLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.languages.viewmodel.AddLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.languages.component.LanguageSelectionCard
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesState
 import kotlinx.coroutines.flow.collectLatest
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun AddLanguagesScreen(
@@ -69,12 +76,14 @@ fun AddLanguagesContent(
     state: AddLanguagesState,
     onIntent: (AddLanguagesIntent) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LinguaQuestScreenTopBar(
                 title = stringResource(R.string.add_languages_title),
-                onBackClicked = { onIntent(AddLanguagesIntent.BackClicked) }
+                onBackClicked = { onIntent(AddLanguagesIntent.BackClicked) },
+                modifier = Modifier.statusBarsPadding()
             )
         },
         bottomBar = {
@@ -96,6 +105,11 @@ fun AddLanguagesContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -135,6 +149,10 @@ fun AddLanguagesContent(
                     unfocusedBorderColor = LinguaQuestTheme.colors.textFieldBorder
                 ),
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    focusManager.clearFocus()
+                }),
                 textStyle = AppTextStyles.Translation.copy(color = LinguaQuestTheme.colors.titleAndCationsColor)
             )
 

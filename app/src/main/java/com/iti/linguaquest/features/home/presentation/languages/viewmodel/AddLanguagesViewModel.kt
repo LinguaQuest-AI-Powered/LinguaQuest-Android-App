@@ -1,11 +1,19 @@
-package com.iti.linguaquest.features.home.presentation.languages
+package com.iti.linguaquest.features.home.presentation.languages.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.features.home.domain.usecase.GetAvailableLanguagesUseCase
+import com.iti.linguaquest.features.home.domain.usecase.AddLanguagesUseCase
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesState
-import com.iti.linguaquest.features.home.presentation.languages.contract.LanguageUiItem
+import com.iti.linguaquest.features.home.presentation.mapper.toUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +26,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddLanguagesViewModel @Inject constructor() : ViewModel() {
+class AddLanguagesViewModel @Inject constructor(
+    private val getAvailableLanguagesUseCase: GetAvailableLanguagesUseCase,
+    private val addLanguagesUseCase: AddLanguagesUseCase,
+    private val snackbarController: SnackbarController
+) : ViewModel() {
 
     private val _state = MutableStateFlow(AddLanguagesState())
     val state: StateFlow<AddLanguagesState> = _state.asStateFlow()
@@ -27,18 +39,33 @@ class AddLanguagesViewModel @Inject constructor() : ViewModel() {
     val effect: SharedFlow<AddLanguagesEffect> = _effect.asSharedFlow()
 
     init {
-        // TODO: Load real data. Using dummy data for the skeleton.
-        _state.update {
-            it.copy(
-                availableLanguages = listOf(
-                    LanguageUiItem(1, "German", "🇩🇪"),
-                    LanguageUiItem(2, "Italian", "🇮🇹"),
-                    LanguageUiItem(3, "Japanese", "🇯🇵"),
-                    LanguageUiItem(4, "Korean", "🇰🇷"),
-                    LanguageUiItem(5, "Portuguese", "🇵🇹"),
-                    LanguageUiItem(6, "Spanish", "🇪🇸")
-                )
-            )
+        loadAvailableLanguages()
+    }
+
+    private fun loadAvailableLanguages() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = getAvailableLanguagesUseCase()) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            availableLanguages = result.data.map { it.toUiItem() }
+                        )
+                    }
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR,
+                            actionLabel = UiText.DynamicString("Retry"),
+                            onAction = { loadAvailableLanguages() }
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -54,8 +81,31 @@ class AddLanguagesViewModel @Inject constructor() : ViewModel() {
                 toggleLanguageSelection(intent.languageId)
             }
             AddLanguagesIntent.AddSelectedClicked -> {
-                // TODO: Fire network request or DB update to add the selected languages
-                sendEffect(AddLanguagesEffect.NavigateBack)
+                addSelectedLanguages()
+            }
+        }
+    }
+
+    private fun addSelectedLanguages() {
+        val selectedIds = _state.value.selectedLanguageIds.toList()
+        if (selectedIds.isEmpty()) return
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = addLanguagesUseCase(selectedIds)) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(AddLanguagesEffect.NavigateBack)
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
             }
         }
     }
