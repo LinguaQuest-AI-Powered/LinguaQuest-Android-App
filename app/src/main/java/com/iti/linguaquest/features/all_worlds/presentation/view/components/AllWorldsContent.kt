@@ -30,8 +30,10 @@ fun AllWorldsContent(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        AllWorldsTopBar(
-            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) }
+        com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar(
+            title = stringResource(R.string.app_name),
+            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) },
+            isTitleCentered = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))

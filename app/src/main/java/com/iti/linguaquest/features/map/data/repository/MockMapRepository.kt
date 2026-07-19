@@ -29,7 +29,7 @@ class MockMapRepository @Inject constructor() : MapRepository {
 
         val detail = WorldMapDetail(
             id = worldId,
-            name = if (worldId == 1) "Park World" else "World \$worldId",
+            name = if (worldId == 1) "Park World" else "Kitchen World",
             difficulty = "EASY",
             levels = levels
         )
