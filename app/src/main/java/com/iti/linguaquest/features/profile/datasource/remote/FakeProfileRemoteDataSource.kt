@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.profile.datasource.remote
 
+import android.net.Uri
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.profile.domain.model.AchievementPreview
@@ -89,5 +90,10 @@ class FakeProfileRemoteDataSource @Inject constructor() :
                 )
             )
         )
+    }
+
+    override suspend fun uploadAvatar(imageUri: Uri): LinguaQuestResult<String, LinguaQuestDataError> {
+        delay(800.milliseconds)
+        return LinguaQuestResult.Success(imageUri.toString())
     }
 }

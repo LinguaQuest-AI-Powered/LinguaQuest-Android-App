@@ -277,6 +277,13 @@
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
 
+
+    <string name="update_profile_photo">Update profile photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+
+
+
     <!-- Game Result Feature -->
     <string name="game_result_loading">Loading result...</string>
     <string name="game_result_invalid_state">Invalid state. No outcome generated.</string>
