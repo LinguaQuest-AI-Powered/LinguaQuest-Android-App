@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.map.presentation.viewmodel
 
+import com.iti.linguaquest.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.map.domain.usecase.GetMapLevelsUseCase
@@ -16,12 +17,19 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.core.result.onFailure
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val getMapLevelsUseCase: GetMapLevelsUseCase
+    private val getMapLevelsUseCase: GetMapLevelsUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MapState())
@@ -62,13 +70,24 @@ class MapViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        worldTitle = detail.name,
+                        worldTitle = UiText.DynamicString(detail.name),
                         levels = uiLevels,
                         currentLevelIndex = currentIndex
                     )
                 }
-            }.onFailure {
+            }.onFailure { error ->
                 _state.update { it.copy(isLoading = false) }
+                val uiText = (error as? LinguaQuestDataError)?.toUiText()
+                    ?: UiText.StringResource(R.string.general_error)
+                
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = uiText,
+                        type = SnackbarType.ERROR,
+                        actionLabel = UiText.StringResource(R.string.retry),
+                        onAction = { loadLevels(worldId) }
+                    )
+                )
             }
         }
     }

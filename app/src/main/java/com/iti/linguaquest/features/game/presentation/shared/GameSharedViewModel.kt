@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.game.presentation.shared
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ class GameSharedViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setTargetWord(word: String) {
-        _sharedState.update { it.copy(targetWord = word) }
+        _sharedState.update { it.copy(targetWord = UiText.DynamicString(word)) }
     }
 
     fun setCapturedImage(uri: Uri?) {

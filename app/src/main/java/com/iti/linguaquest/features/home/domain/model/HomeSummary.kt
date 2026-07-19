@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.home.domain.model
 
+import com.iti.linguaquest.features.all_worlds.domain.model.World
 
 data class HomeSummary(
     val xp: Int,
@@ -7,7 +8,7 @@ data class HomeSummary(
     val streakDays: Int,
     val activeLanguage: ActiveLanguage,
     val continueLesson: ContinueLesson?,
-    val exploreWorlds: List<ExploreWorld>
+    val exploreWorlds: List<World>
 )
 
 data class ActiveLanguage(
@@ -25,18 +26,4 @@ data class ContinueLesson(
     val word: String,
     val translation: String,
     val imageUrl: String
-)
-
-enum class WorldDifficulty { EASY, MEDIUM, HARD }
-enum class WorldStatus { LOCKED, IN_PROGRESS, COMPLETED }
-
-data class ExploreWorld(
-    val id: Int,
-    val name: String,
-    val imageUrl: String,
-    val difficulty: WorldDifficulty,
-    val status: WorldStatus,
-    val progressPercent: Int,
-    val totalLevels: Int,
-    val completedLevels: Int
 )

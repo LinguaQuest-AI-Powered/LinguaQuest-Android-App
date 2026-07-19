@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
 import com.iti.linguaquest.features.map.presentation.contract.MapLevelUiModel
@@ -67,7 +68,7 @@ fun MapScreenContent(
             modifier = Modifier.fillMaxSize()
         )
         LinguaQuestScreenTopBar(
-            title = state.worldTitle,
+            title = state.worldTitle.asString(),
             onBackClicked = onBackClick,
             isTitleCentered = false,
             titleColor = AppColors.BrownText,
@@ -89,7 +90,7 @@ fun MapScreenPreview(){
     MapScreenContent(
         state = MapState(
             isLoading = false,
-            worldTitle = "Kitchen World",
+            worldTitle = UiText.DynamicString("Kitchen World"),
             levels = mockLevels,
             currentLevelIndex = 1
         ),

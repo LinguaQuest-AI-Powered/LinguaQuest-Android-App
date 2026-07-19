@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.map.presentation.contract
 
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 data class MapLevelUiModel(
     val levelNumber: Int,
@@ -10,7 +11,7 @@ data class MapLevelUiModel(
 
 data class MapState(
     val isLoading: Boolean = false,
-    val worldTitle: String = "Park World",
+    val worldTitle: UiText = UiText.DynamicString("Park World"),
     val levels: List<MapLevelUiModel> = emptyList(),
     val currentLevelIndex: Int = -1
 )

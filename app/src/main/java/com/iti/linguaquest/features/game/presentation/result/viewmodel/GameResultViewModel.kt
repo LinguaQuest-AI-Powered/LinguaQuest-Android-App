@@ -19,11 +19,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class GameResultViewModel @Inject constructor() : ViewModel() {
 
-    // Initialized with a fallback state.
-    // We will populate this with the actual result from the ProcessingScreen via navigation arguments.
-    private val _state = MutableStateFlow<GameResultUiState>(
-        GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading))
-    )
+    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading)))
     val state: StateFlow<GameResultUiState> = _state.asStateFlow()
 
     private val _effect = Channel<GameResultEffect>()
@@ -31,7 +27,6 @@ class GameResultViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: GameResultIntent) {
         when (intent) {
-            // User Action Intents
             GameResultIntent.RetryClicked -> sendEffect(GameResultEffect.NavigateToCamera)
             GameResultIntent.BuyHintClicked -> sendEffect(GameResultEffect.ApplyHintAndRetry)
             GameResultIntent.NextLevelClicked -> sendEffect(GameResultEffect.NavigateToNextLevel)
@@ -39,7 +34,6 @@ class GameResultViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    // Call this from the screen or NavHost to inject the outcome
     fun setInitialResult(resultState: GameResultUiState) {
         _state.value = resultState
     }
