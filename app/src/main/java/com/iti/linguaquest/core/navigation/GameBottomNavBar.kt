@@ -66,12 +66,9 @@ fun GameBottomNavBar(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
+                            .background(ShadowOrange, RoundedCornerShape(16.dp))
+                            .padding(bottom = 4.dp)
                             .background(OrangeActive, RoundedCornerShape(16.dp))
-                            .border(
-                                width = 1.5.dp,
-                                color = ShadowOrange,
-                                shape = RoundedCornerShape(16.dp)
-                            )
                             .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
                     ) {

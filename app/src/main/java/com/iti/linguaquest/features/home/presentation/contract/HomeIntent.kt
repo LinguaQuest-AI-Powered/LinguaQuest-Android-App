@@ -8,4 +8,7 @@ sealed interface HomeIntent {
     data class WorldClicked(val world: WorldItem) : HomeIntent
     data object ContinueLessonClicked : HomeIntent
     data object SeeMoreWorldsClicked : HomeIntent
+    data object FabClicked : HomeIntent
+    data object DismissLanguageBottomSheet : HomeIntent
+    data object AddNewLanguageClicked : HomeIntent
 }

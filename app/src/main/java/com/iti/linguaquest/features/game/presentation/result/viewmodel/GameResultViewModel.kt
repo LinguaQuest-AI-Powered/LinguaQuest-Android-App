@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class GameResultViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Processing)
+    // Initialized with a fallback state.
+    // We will populate this with the actual result from the ProcessingScreen via navigation arguments.
+    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error("Loading result..."))
     val state: StateFlow<GameResultUiState> = _state.asStateFlow()
 
     private val _effect = Channel<GameResultEffect>()
@@ -25,23 +27,17 @@ class GameResultViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: GameResultIntent) {
         when (intent) {
-            // State Transitions (Simulating AI response)
-            GameResultIntent.SimulateAiSuccess -> {
-                _state.value = GameResultUiState.Success(xpAwarded = 50, coinsAwarded = 10)
-            }
-            GameResultIntent.SimulateAiFailure -> {
-                _state.value = GameResultUiState.Failure(reason = "That looks like a shoe, not an apple!")
-            }
-            GameResultIntent.SimulateNetworkError -> {
-                _state.value = GameResultUiState.Error(errorMessage = "Connection timed out.")
-            }
-
-            // Navigation Effects
+            // User Action Intents
             GameResultIntent.RetryClicked -> sendEffect(GameResultEffect.NavigateToCamera)
             GameResultIntent.BuyHintClicked -> sendEffect(GameResultEffect.ApplyHintAndRetry)
             GameResultIntent.NextLevelClicked -> sendEffect(GameResultEffect.NavigateToNextLevel)
             GameResultIntent.ExitClicked -> sendEffect(GameResultEffect.NavigateToExit)
         }
+    }
+
+    // Call this from the screen or NavHost to inject the outcome
+    fun setInitialResult(resultState: GameResultUiState) {
+        _state.value = resultState
     }
 
     private fun sendEffect(effect: GameResultEffect) {

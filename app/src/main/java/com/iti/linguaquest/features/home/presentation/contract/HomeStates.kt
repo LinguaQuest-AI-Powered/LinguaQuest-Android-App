@@ -10,7 +10,8 @@ data class HomeState(
     val languageProgress: LanguageProgressUi? = null,
     val worlds: List<WorldItem> = emptyList(),
     val continueLesson: LessonPreview? = null,
-    val hasError: Boolean = false
+    val hasError: Boolean = false,
+    val isLanguageBottomSheetVisible: Boolean = false
 )
 
 

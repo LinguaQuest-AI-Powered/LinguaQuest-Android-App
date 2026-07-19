@@ -37,7 +37,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
         
         val worlds = listOf(
             WorldItem(
-                id = "kitchen",
+                id = 0,
                 title = "Kitchen World",
                 imageRes = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.EASY,
@@ -45,7 +45,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
                 isCompleted = false
             ),
             WorldItem(
-                id = "city",
+                id = 1,
                 title = "City World",
                 imageRes = R.drawable.kitchen_icon,
                 difficulty = WorldDifficulty.MEDIUM,
@@ -53,7 +53,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
                 isCompleted = false
             ),
             WorldItem(
-                id = "park",
+                id = 2,
                 title = "Park World",
                 imageRes = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.EASY,
@@ -61,7 +61,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
                 isCompleted = true
             ),
             WorldItem(
-                id = "market",
+                id = 3,
                 title = "Market World",
                 imageRes = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.MEDIUM,
@@ -69,7 +69,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
                 isCompleted = false
             ),
             WorldItem(
-                id = "airport",
+                id = 4,
                 title = "Airport World",
                 imageRes = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.HARD,
@@ -78,7 +78,7 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
                 unlockLevel = 15
             ),
             WorldItem(
-                id = "school",
+                id = 5,
                 title = "School World",
                 imageRes = R.drawable.kitchen_icon, // replace with real image if exists
                 difficulty = WorldDifficulty.MEDIUM,

@@ -10,10 +10,10 @@ import com.iti.linguaquest.features.game.presentation.result.contract.GameResult
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
 import com.iti.linguaquest.features.game.presentation.result.view.component.GameErrorView
 import com.iti.linguaquest.features.game.presentation.result.view.component.GameFailView
-import com.iti.linguaquest.features.game.presentation.result.view.component.GameProcessingView
 import com.iti.linguaquest.features.game.presentation.result.view.component.GameSuccessView
 import com.iti.linguaquest.features.game.presentation.result.viewmodel.GameResultViewModel
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
+import com.iti.linguaquest.features.game.presentation.shared.VerificationOutcome
 
 @Composable
 fun GameResultScreen(
@@ -26,7 +26,19 @@ fun GameResultScreen(
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
 
-    // Handle One-Time Effects
+    LaunchedEffect(sharedState.verificationOutcome) {
+        val mappedState = when (val outcome = sharedState.verificationOutcome) {
+            is VerificationOutcome.Success -> GameResultUiState.Success(
+                xpAwarded = outcome.xpAwarded,
+                coinsAwarded = outcome.coinsAwarded
+            )
+            is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
+            is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
+            VerificationOutcome.Idle -> GameResultUiState.Error("Invalid state. No outcome generated.")
+        }
+        viewModel.setInitialResult(mappedState)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -41,22 +53,14 @@ fun GameResultScreen(
         }
     }
 
-    // Route the UI based on the current state
     when (val currentState = state) {
-        is GameResultUiState.Processing -> {
-            GameProcessingView(
-                capturedUri = sharedState.capturedImageUri,
-                onSimulateSuccess = { viewModel.onIntent(GameResultIntent.SimulateAiSuccess) },
-                onSimulateFailure = { viewModel.onIntent(GameResultIntent.SimulateAiFailure) },
-                onSimulateError = { viewModel.onIntent(GameResultIntent.SimulateNetworkError) }
-            )
-        }
         is GameResultUiState.Success -> {
             GameSuccessView(
-                state = currentState,
-                targetWord = sharedState.targetWord,
-                onNextLevel = { viewModel.onIntent(GameResultIntent.NextLevelClicked) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
+                xpGained = currentState.xpAwarded,
+                coinsGained = currentState.coinsAwarded,
+                currentLevel = currentState.currentLevel,
+                progressPercent = currentState.progressPercent,
+                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
             )
         }
         is GameResultUiState.Failure -> {

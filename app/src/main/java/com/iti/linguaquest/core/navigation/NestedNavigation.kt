@@ -96,6 +96,12 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
+                            },
+                            onNavigateToWorldMap = { worldId ->
+                                rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                            },
+                            onNavigateToAddLanguages = {
+                                rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
                             }
                         )
                     }
@@ -114,6 +120,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             },
                             onViewAllLeaderboardClick = {
                                 rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
+                            },
+                            onViewAllAchievementsClick = {
+                                rootBackStack.navigateSingleTop(RootScreen.Achievement)
                             }
                         )
                     }

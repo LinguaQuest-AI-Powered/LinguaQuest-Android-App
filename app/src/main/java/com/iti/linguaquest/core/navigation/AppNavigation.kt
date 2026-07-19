@@ -41,10 +41,12 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.features.achivement.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
+import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.SettingScreen
@@ -293,11 +295,24 @@ fun AppNavigation(
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { }
+                        onNavigateToWorldDetails = { worldId ->
+                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                        }
                     )
-
                 }
 
+                entry<RootScreen.AddLanguages> {
+                    AddLanguagesScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.Achievement> {
+                    AchievementScreen (
+                        onBackClick = { rootBackStack.removeLastOrNull() },
+                     )
+
+                }
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }

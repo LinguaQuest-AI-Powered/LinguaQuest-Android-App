@@ -34,6 +34,8 @@ import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
+import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
+import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
@@ -47,7 +49,9 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToDetails: (Int) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
+    onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
+    onNavigateToAddLanguages: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -61,8 +65,11 @@ fun HomeScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
-                is HomeEffect.NavigateToWorld -> { /* go to world detail screen when exists */ }
+                is HomeEffect.NavigateToWorld -> {
+                    onNavigateToWorldMap(effect.worldId)
+                }
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
+                is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
             }
         }
     }
@@ -80,7 +87,7 @@ fun HomeScreen(
         }
 
         FloatingActionButton(
-            onClick = onWorldMapClick,
+            onClick = {viewModel.onIntent(HomeIntent.FabClicked)},
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier
@@ -117,6 +124,22 @@ fun HomeScreen(
             }
         }
     }
+
+    if (state.isLanguageBottomSheetVisible) {
+        MyLanguagesBottomSheet(
+            languages = listOf(
+                MyLanguageUiModel(1, "Spanish", 12, true, "🇪🇸"),
+                MyLanguageUiModel(2, "French", 4, false, "🇫🇷"),
+                MyLanguageUiModel(3, "Japanese", 3, false, "🇯🇵")
+            ),
+            onDismiss = { viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet) },
+            onAddNewLanguageClick = { viewModel.onIntent(HomeIntent.AddNewLanguageClicked) },
+            onLanguageSelect = { selectedId ->
+                // TODO: Add Intent to switch active language
+                viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+            }
+        )
+    }
 }
 
 @Composable
@@ -130,11 +153,10 @@ fun HomeContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
     ) {
         DailyStreakBonusBanner(
             onClick = onDailyRewardClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -145,7 +167,8 @@ fun HomeContent(
                 level = progress.level,
                 streakDays = progress.streakDays,
                 progress = progress.progress,
-                flagRes = progress.flagRes
+                flagRes = progress.flagRes,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
 
@@ -164,7 +187,9 @@ fun HomeContent(
             ContinueLessonCard(
                 lesson = lesson,
                 onContinueClick = { onIntent(HomeIntent.ContinueLessonClicked) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             )
         }
 
