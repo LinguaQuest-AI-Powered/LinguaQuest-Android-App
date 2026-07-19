@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.data.fake
+package com.iti.linguaquest.features.all_worlds.data.repository
 
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeWorldsRepository @Inject constructor() : WorldsRepository {
+class MockWorldsRepository @Inject constructor() : WorldsRepository {
 
     override suspend fun getWorlds(
         languageId: Int?,
