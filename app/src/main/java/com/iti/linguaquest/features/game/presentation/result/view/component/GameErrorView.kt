@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -39,7 +40,7 @@ fun GameErrorView(
             imageRes = R.drawable.lingo_sad
         ) {
             Text(
-                text = "Connection Error",
+                text = stringResource(R.string.game_result_error_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.BrownText,
@@ -49,7 +50,7 @@ fun GameErrorView(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = state.errorMessage,
+                text = state.errorMessage.asString(),
                 style = AppTextStyles.DialogMessage,
                 color = AppColors.Brown,
                 textAlign = TextAlign.Center,
@@ -60,7 +61,7 @@ fun GameErrorView(
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = "Retry Connection",
+                text = stringResource(R.string.game_result_retry_connection),
                 onClick = onRetry,
                 variant = ButtonVariant.PRIMARY
             )
@@ -68,7 +69,7 @@ fun GameErrorView(
             Spacer(modifier = Modifier.height(16.dp))
 
             AppOutlinedButton(
-                text = "Exit Game",
+                text = stringResource(R.string.game_result_exit_game),
                 onClick = onExit
             )
         }

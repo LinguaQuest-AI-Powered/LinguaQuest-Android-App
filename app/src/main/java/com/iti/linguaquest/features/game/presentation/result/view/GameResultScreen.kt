@@ -5,6 +5,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
@@ -25,6 +28,7 @@ fun GameResultScreen(
 ) {
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
+    val soundPlayer = LocalSoundPlayer.current
 
     LaunchedEffect(sharedState.verificationOutcome) {
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
@@ -34,10 +38,20 @@ fun GameResultScreen(
             )
             is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
             is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
-            VerificationOutcome.Idle -> GameResultUiState.Error("Invalid state. No outcome generated.")
+            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.DynamicString("Invalid state. No outcome generated."))
         }
         viewModel.setInitialResult(mappedState)
     }
+
+    LaunchedEffect(sharedState.verificationOutcome) {
+        when (val outcome = sharedState.verificationOutcome) {
+            is VerificationOutcome.Success -> soundPlayer.play(AppSound.SUCCESS)
+            is VerificationOutcome.Failure -> soundPlayer.play(AppSound.FAIL)
+            is VerificationOutcome.Error -> soundPlayer.play(AppSound.FAIL)
+            else -> Unit
+        }
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -65,7 +79,6 @@ fun GameResultScreen(
         }
         is GameResultUiState.Failure -> {
             GameFailView(
-                state = currentState,
                 targetWord = sharedState.targetWord,
                 isHintUsed = sharedState.isHintUsed,
                 onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },

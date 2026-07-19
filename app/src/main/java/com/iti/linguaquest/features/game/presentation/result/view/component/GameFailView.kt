@@ -11,29 +11,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
-import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
 
 @Composable
 fun GameFailView(
-    state: GameResultUiState.Failure,
-    targetWord: String,
+    targetWord: UiText,
     isHintUsed: Boolean,
     onRetry: () -> Unit,
     onBuyHint: () -> Unit,
@@ -50,7 +47,7 @@ fun GameFailView(
             imageRes = R.drawable.lingo_sad
         ) {
             Text(
-                text = "Not quite!",
+                text = stringResource(R.string.game_result_fail_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.BrownText
@@ -58,26 +55,32 @@ fun GameFailView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = buildAnnotatedString {
-                    append("Lingo didn't see any ")
+            val wordStr = targetWord.asString()
+            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, wordStr)
+            val targetIndex = failMessageFormat.indexOf(wordStr)
+            val annotatedString = buildAnnotatedString {
+                if (targetIndex != -1) {
+                    append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(targetWord)
+                        append(targetWord.asString())
+                        append(wordStr)
                     }
-                    append(" there.\nTry framing it differently!")
-                },
-                style = AppTextStyles.DialogMessage,
-                color = AppColors.Brown,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                lineHeight = 24.sp
+                    append(failMessageFormat.substring(targetIndex + wordStr.length))
+                } else {
+                    append(failMessageFormat)
+                }
+            }
+
+            Text(
+                text = annotatedString,
+
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             if (!isHintUsed) {
                 AppButton(
-                    text = "Make Sure it's well lit!",
+                    text = stringResource(R.string.game_result_hint_button),
                     onClick = onBuyHint,
                     variant = ButtonVariant.SECONDARY,
                     contentColorOverride = AppColors.BrownText,
@@ -88,7 +91,7 @@ fun GameFailView(
             }
 
             AppButton(
-                text = "Retry Camera",
+                text = stringResource(R.string.game_result_retry_camera),
                 onClick = onRetry,
                 variant = ButtonVariant.PRIMARY
             )
@@ -96,7 +99,7 @@ fun GameFailView(
             Spacer(modifier = Modifier.height(16.dp))
 
             AppOutlinedButton(
-                text = "Change Word",
+                text = stringResource(R.string.game_result_change_word),
                 onClick = onExit
             )
         }

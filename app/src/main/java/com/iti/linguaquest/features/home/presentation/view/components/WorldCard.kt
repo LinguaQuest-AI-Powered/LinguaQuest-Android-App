@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
-import androidx.compose.foundation.Image
+import com.iti.linguaquest.core.utils.ImageWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,9 +55,9 @@ fun WorldCard(
                 .fillMaxWidth()
                 .height(110.dp)
         ) {
-            Image(
-                painter = painterResource(id = world.imageRes),
-                contentDescription = world.title,
+            ImageWrapper(
+                model = world.imageSource,
+                contentDescription = world.title.asString(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
@@ -121,7 +120,7 @@ fun WorldCard(
 
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = world.title,
+                text = world.title.asString(),
                 color = BrownText,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
