@@ -20,7 +20,7 @@ class GameSharedViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setTargetWord(word: String) {
-        _sharedState.update { it.copy(targetWord = word) }
+        _sharedState.update { it.copy(targetWord = com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString(word)) }
     }
 
     fun setCapturedImage(uri: Uri?) {

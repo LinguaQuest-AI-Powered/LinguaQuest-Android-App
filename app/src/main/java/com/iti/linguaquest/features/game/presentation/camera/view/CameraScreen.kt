@@ -68,7 +68,7 @@ fun CameraScreen(
     } else if (cameraState.capturedUri == null) {
         CameraContent(
             hasPermission = true,
-            targetWord = sharedState.targetWord,
+            targetWord = sharedState.targetWord.asString(),
             isHintUsed = sharedState.isHintUsed,
             isFlashEnabled = cameraState.isFlashEnabled,
             cameraController = cameraController,
@@ -84,7 +84,7 @@ fun CameraScreen(
     } else {
         CameraPreviewContent(
             imageUri = cameraState.capturedUri!!,
-            targetWord = sharedState.targetWord,
+            targetWord = sharedState.targetWord.asString(),
             onRetryClicked = { viewModel.onIntent(CameraIntent.RetryCapture) },
             onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto) }
         )

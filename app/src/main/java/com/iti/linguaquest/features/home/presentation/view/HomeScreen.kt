@@ -167,7 +167,7 @@ fun HomeContent(
                 level = progress.level,
                 streakDays = progress.streakDays,
                 progress = progress.progress,
-                flagRes = progress.flagRes,
+                flagSource = progress.flagSource,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }

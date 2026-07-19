@@ -49,7 +49,7 @@ fun GameErrorView(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = state.errorMessage,
+                text = state.errorMessage.asString(),
                 style = AppTextStyles.DialogMessage,
                 color = AppColors.Brown,
                 textAlign = TextAlign.Center,

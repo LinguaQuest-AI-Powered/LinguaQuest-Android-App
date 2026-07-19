@@ -19,7 +19,7 @@ class GameResultViewModel @Inject constructor() : ViewModel() {
 
     // Initialized with a fallback state.
     // We will populate this with the actual result from the ProcessingScreen via navigation arguments.
-    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error("Loading result..."))
+    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString("Loading result...")))
     val state: StateFlow<GameResultUiState> = _state.asStateFlow()
 
     private val _effect = Channel<GameResultEffect>()
