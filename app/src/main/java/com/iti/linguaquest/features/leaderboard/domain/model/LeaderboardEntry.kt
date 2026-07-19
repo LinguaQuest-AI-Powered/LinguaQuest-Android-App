@@ -14,7 +14,8 @@ data class LeaderboardEntry(
     val photoUrl: String?,
     val level: Int,
     val xp: Int,
-    val isCurrentUser: Boolean
+    val isCurrentUser: Boolean,
+    val title:String //doing
 )
 
 enum class LeaderboardScope {

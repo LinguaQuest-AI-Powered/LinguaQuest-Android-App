@@ -14,5 +14,7 @@ data class LeaderboardEntryDto(
     @SerializedName("photoUrl") val photoUrl: String?,
     @SerializedName("level") val level: Int,
     @SerializedName("xp") val xp: Int,
-    @SerializedName("isCurrentUser") val isCurrentUser: Boolean
-)
+    @SerializedName("isCurrentUser") val isCurrentUser: Boolean,
+    @SerializedName("title") val title: String,
+
+    )

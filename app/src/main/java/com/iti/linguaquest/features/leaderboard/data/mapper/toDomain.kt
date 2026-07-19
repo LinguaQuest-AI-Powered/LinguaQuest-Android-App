@@ -12,7 +12,8 @@ fun LeaderboardEntryDto.toDomain(): LeaderboardEntry = LeaderboardEntry(
     photoUrl = photoUrl,
     level = level,
     xp = xp,
-    isCurrentUser = isCurrentUser
+    isCurrentUser = isCurrentUser,
+    title = title
 )
 
 fun LeaderboardDataDto.toDomain(): Leaderboard = Leaderboard(

@@ -94,16 +94,16 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
                     fontWeight = FontWeight.Bold,
                     color = textColor
                 )
-/*
-return title
+
                 Text(
-                    text = entry,
+                    text = entry.title,
                     fontSize = 13.sp,
                     color = subtitleColor
                 )
 
- */
             }
+
+
 
             if (isYou) {
                 Box(

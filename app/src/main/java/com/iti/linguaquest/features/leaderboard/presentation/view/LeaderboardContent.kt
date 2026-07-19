@@ -81,7 +81,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 20,
                         xp = 4250,
-                        isCurrentUser = false
+                        isCurrentUser = false,
+                        title =  "sglk"
                     ),
                     LeaderboardEntry(
                         rank = 2,
@@ -90,7 +91,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 19,
                         xp = 3890,
-                        isCurrentUser = false
+                        isCurrentUser = false,
+                        title =  "sglk"
                     ),
                     LeaderboardEntry(
                         rank = 3,
@@ -99,7 +101,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 18,
                         xp = 3420,
-                        isCurrentUser = false
+                        isCurrentUser = false,
+                        title =  "sglk"
                     )
                 ),
                 entries = listOf(
@@ -110,7 +113,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 13,
                         xp = 2900,
-                        isCurrentUser = false
+                        isCurrentUser = false,
+                        title =  "sglk"
                     ),
                     LeaderboardEntry(
                         rank = 99,
@@ -119,7 +123,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 13,
                         xp = 2750,
-                        isCurrentUser = false
+                        isCurrentUser = false,
+                        title =  "sglk"
                     ),
                     LeaderboardEntry(
                         rank = 100,
@@ -128,7 +133,8 @@ fun LeaderboardContentPreview() {
                         photoUrl = null,
                         level = 12,
                         xp = 3150,
-                        isCurrentUser = true
+                        isCurrentUser = true,
+                        title =  "sglk"
                     )
                 )
             ),
