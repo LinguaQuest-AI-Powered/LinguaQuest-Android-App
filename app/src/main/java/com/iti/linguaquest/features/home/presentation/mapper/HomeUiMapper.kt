@@ -2,19 +2,20 @@ package com.iti.linguaquest.features.home.presentation.mapper
 
 import com.iti.linguaquest.R
 import com.iti.linguaquest.features.home.domain.model.ContinueLesson
-import com.iti.linguaquest.features.home.domain.model.ExploreWorld
+import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.home.domain.model.HomeSummary
-import com.iti.linguaquest.features.home.domain.model.WorldDifficulty as DomainDifficulty
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.LessonPreview
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty as UiDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 data class LanguageProgressUi(
-    val languageName: String,
+    val languageName: UiText,
     val level: Int,
     val streakDays: Int,
     val progress: Float,
-    val flagRes: Int
+    val flagSource: Any?
 )
 
 // TODO: temporary until backend images are live — delete this file's drawable lookups
@@ -39,17 +40,17 @@ private fun localLessonImageFor(word: String): Int = when (word) {
 }
 
 fun HomeSummary.toLanguageProgressUi(): LanguageProgressUi = LanguageProgressUi(
-    languageName = activeLanguage.name,
+    languageName = UiText.DynamicString(activeLanguage.name),
     level = activeLanguage.level,
     streakDays = streakDays,
     progress = activeLanguage.levelProgressPercent / 100f,
-    flagRes = localFlagFor(activeLanguage.code)
+    flagSource = localFlagFor(activeLanguage.code)
 )
 
-fun ExploreWorld.toUiWorldItem(): WorldItem = WorldItem(
+fun World.toUiWorldItem(): WorldItem = WorldItem(
     id = id,
-    title = name,
-    imageRes = localWorldImageFor(name),
+    title = UiText.DynamicString(name),
+    imageSource = if (imageUrl.startsWith("http")) imageUrl else localWorldImageFor(name),
     difficulty = when (difficulty) {
         DomainDifficulty.EASY -> UiDifficulty.EASY
         DomainDifficulty.MEDIUM -> UiDifficulty.MEDIUM
@@ -61,8 +62,8 @@ fun ExploreWorld.toUiWorldItem(): WorldItem = WorldItem(
 
 fun ContinueLesson.toUiLessonPreview(): LessonPreview = LessonPreview(
     lessonId = levelId,
-    word = word,
-    partOfSpeech = "",
-    translation = translation,
-    iconRes = localLessonImageFor(word)
+    word = UiText.DynamicString(word),
+    partOfSpeech = UiText.DynamicString(""),
+    translation = UiText.DynamicString(translation),
+    iconSource = if (imageUrl.startsWith("http")) imageUrl else localLessonImageFor(word)
 )

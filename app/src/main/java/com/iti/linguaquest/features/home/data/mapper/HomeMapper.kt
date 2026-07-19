@@ -6,10 +6,10 @@ import com.iti.linguaquest.features.home.data.remote.dto.ExploreWorldDto
 import com.iti.linguaquest.features.home.data.remote.dto.HomeSummaryDto
 import com.iti.linguaquest.features.home.domain.model.ActiveLanguage
 import com.iti.linguaquest.features.home.domain.model.ContinueLesson
-import com.iti.linguaquest.features.home.domain.model.ExploreWorld
+import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.home.domain.model.HomeSummary
-import com.iti.linguaquest.features.home.domain.model.WorldDifficulty
-import com.iti.linguaquest.features.home.domain.model.WorldStatus
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 
 fun HomeSummaryDto.toDomain(): HomeSummary = HomeSummary(
     xp = xp,
@@ -37,7 +37,7 @@ private fun ContinueLessonDto.toDomain() = ContinueLesson(
     imageUrl = imageUrl
 )
 
-private fun ExploreWorldDto.toDomain() = ExploreWorld(
+private fun ExploreWorldDto.toDomain() = World(
     id = id,
     name = name,
     imageUrl = imageUrl,

@@ -9,8 +9,12 @@ import javax.inject.Inject
 
 class MockMapRepository @Inject constructor() : MapRepository {
     override suspend fun getWorldMapDetail(worldId: Int): LinguaQuestResult<WorldMapDetail, AppError> {
-        val totalLevels = if (worldId == 1) 8 else 12
-        val completedLevels = if (worldId == 1) 2 else 0
+        val totalLevels = 20
+        val completedLevels = when (worldId) {
+            10 -> 8 // Kitchen World
+            11 -> 2 // City World
+            else -> 0
+        }
 
         val levels = List(totalLevels) { index ->
             val levelNumber = index + 1
@@ -23,13 +27,23 @@ class MockMapRepository @Inject constructor() : MapRepository {
                 id = levelNumber * 100,
                 order = levelNumber,
                 status = status,
-                word = if (status == "COMPLETED") "Word \$levelNumber" else null
+                word = if (status == "COMPLETED") "Word $levelNumber" else null
             )
+        }
+
+        val worldName = when (worldId) {
+            10 -> "Kitchen World"
+            11 -> "City World"
+            12 -> "Park World"
+            13 -> "School World"
+            14 -> "Office World"
+            15 -> "Gym World"
+            else -> "Unknown World"
         }
 
         val detail = WorldMapDetail(
             id = worldId,
-            name = if (worldId == 1) "Park World" else "Kitchen World",
+            name = worldName,
             difficulty = "EASY",
             levels = levels
         )

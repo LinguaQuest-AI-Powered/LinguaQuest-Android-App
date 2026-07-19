@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
@@ -27,9 +26,9 @@ fun GameResultScreen(
     onExit: () -> Unit,
     viewModel: GameResultViewModel = hiltViewModel()
 ) {
-    val soundPlayer = LocalSoundPlayer.current
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
+    val soundPlayer = LocalSoundPlayer.current
 
     LaunchedEffect(sharedState.verificationOutcome) {
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
@@ -37,9 +36,9 @@ fun GameResultScreen(
                 xpAwarded = outcome.xpAwarded,
                 coinsAwarded = outcome.coinsAwarded
             )
-            is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = UiText.DynamicString(outcome.reason))
-            is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = UiText.DynamicString(outcome.errorMessage))
-            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.StringResource(R.string.game_result_invalid_state))
+            is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
+            is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
+            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.DynamicString("Invalid state. No outcome generated."))
         }
         viewModel.setInitialResult(mappedState)
     }
@@ -75,15 +74,11 @@ fun GameResultScreen(
                 coinsGained = currentState.coinsAwarded,
                 currentLevel = currentState.currentLevel,
                 progressPercent = currentState.progressPercent,
-                onNextLevelClick = {
-                    soundPlayer.play(AppSound.COIN)
-                    viewModel.onIntent(GameResultIntent.NextLevelClicked)
-                }
+                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
             )
         }
         is GameResultUiState.Failure -> {
             GameFailView(
-                state = currentState,
                 targetWord = sharedState.targetWord,
                 isHintUsed = sharedState.isHintUsed,
                 onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },

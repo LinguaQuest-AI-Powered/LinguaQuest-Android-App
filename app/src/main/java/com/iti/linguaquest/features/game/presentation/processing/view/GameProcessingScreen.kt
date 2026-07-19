@@ -18,11 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingEffect
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingIntent
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackIntent
@@ -41,7 +41,6 @@ fun GameProcessingScreen(
     processingViewModel: GameProcessingViewModel = hiltViewModel(),
     whackViewModel: GameWhackViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val whackState by whackViewModel.state.collectAsState()
     val sharedState by sharedViewModel.sharedState.collectAsState()
 
@@ -57,10 +56,10 @@ fun GameProcessingScreen(
                     )
                 }
                 is GameProcessingEffect.NavigateToFailure -> {
-                    VerificationOutcome.Failure(reason = context.getString(effect.reasonResId))
+                    VerificationOutcome.Failure(reason = UiText.StringResource(effect.reasonResId))
                 }
                 is GameProcessingEffect.NavigateToError -> {
-                    VerificationOutcome.Error(errorMessage = context.getString(effect.errorMessageResId))
+                    VerificationOutcome.Error(errorMessage = UiText.StringResource(effect.errorMessageResId))
                 }
             }
             sharedViewModel.setVerificationOutcome(outcome)

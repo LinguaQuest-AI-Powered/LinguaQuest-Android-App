@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
-import androidx.annotation.DrawableRes
+import com.iti.linguaquest.core.utils.ImageWrapper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,11 +34,11 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun LanguageProgressCard(
-    languageName: String,
+    languageName: UiText,
     level: Int,
     streakDays: Int,
     progress: Float,
-    @DrawableRes flagRes: Int,
+    flagSource: Any?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,8 +56,8 @@ fun LanguageProgressCard(
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = flagRes),
+                ImageWrapper(
+                    model = flagSource,
                     contentDescription = null,
                     modifier = Modifier
                         .size(34.dp)
@@ -76,7 +77,7 @@ fun LanguageProgressCard(
                     letterSpacing = 0.5.sp
                 )
                 Text(
-                    text = languageName,
+                    text = languageName.asString(),
                     color = LinguaQuestTheme.colors.blackColor,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold

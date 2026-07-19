@@ -11,15 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
@@ -27,14 +24,13 @@ import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
-import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
 
 @Composable
 fun GameFailView(
-    state: GameResultUiState.Failure,
-    targetWord: String,
+    targetWord: UiText,
     isHintUsed: Boolean,
     onRetry: () -> Unit,
     onBuyHint: () -> Unit,
@@ -59,15 +55,17 @@ fun GameFailView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, targetWord)
-            val targetIndex = failMessageFormat.indexOf(targetWord)
+            val wordStr = targetWord.asString()
+            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, wordStr)
+            val targetIndex = failMessageFormat.indexOf(wordStr)
             val annotatedString = buildAnnotatedString {
                 if (targetIndex != -1) {
                     append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(targetWord)
+                        append(targetWord.asString())
+                        append(wordStr)
                     }
-                    append(failMessageFormat.substring(targetIndex + targetWord.length))
+                    append(failMessageFormat.substring(targetIndex + wordStr.length))
                 } else {
                     append(failMessageFormat)
                 }
@@ -75,11 +73,7 @@ fun GameFailView(
 
             Text(
                 text = annotatedString,
-                style = AppTextStyles.DialogMessage,
-                color = AppColors.Brown,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                lineHeight = 24.sp
+
             )
 
             Spacer(modifier = Modifier.height(32.dp))

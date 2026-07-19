@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.game.presentation.result.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent
@@ -19,11 +18,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class GameResultViewModel @Inject constructor() : ViewModel() {
 
-    // Initialized with a fallback state.
-    // We will populate this with the actual result from the ProcessingScreen via navigation arguments.
-    private val _state = MutableStateFlow<GameResultUiState>(
-        GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading))
-    )
+    private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(UiText.DynamicString("Loading result...")))
     val state: StateFlow<GameResultUiState> = _state.asStateFlow()
 
     private val _effect = Channel<GameResultEffect>()
