@@ -31,28 +31,44 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
 
 @Composable
- fun LeaderboardRow(entry: LeaderboardEntry) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = LinguaQuestTheme.colors.whiteColor,
-        border = if (entry.isCurrentUser) BorderStroke(
-            1.5.dp,
-            MaterialTheme.colorScheme.tertiary
-        ) else BorderStroke(
-            1.dp,
-            Color(0xFFDAC2AE)
-        )
+fun LeaderboardRow(entry: LeaderboardEntry) {
+
+    val borderColor = if (entry.isCurrentUser)
+        MaterialTheme.colorScheme.tertiary
+    else
+        Color(0xFFDAC2AE)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = borderColor,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(bottom = if (entry.isCurrentUser) 6.dp else 4.dp)
+            .background(
+                color = LinguaQuestTheme.colors.whiteColor,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .border(
+                width = if (entry.isCurrentUser) 1.5.dp else 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(16.dp)
+            )
     ) {
         Row(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Text(
-                entry.rank.toString(),
-                color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.iconsColor,
+                text = entry.rank.toString(),
+                color = if (entry.isCurrentUser)
+                    MaterialTheme.colorScheme.tertiary
+                else
+                    LinguaQuestTheme.colors.iconsColor,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.width(28.dp)
             )
@@ -63,34 +79,52 @@ import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
                     .size(36.dp)
                     .clip(CircleShape)
                     .let {
-                        if (entry.isCurrentUser) it.border(
-                            2.dp,
-                            MaterialTheme.colorScheme.tertiary,
-                            CircleShape
-                        )
-                        else it
+                        if (entry.isCurrentUser)
+                            it.border(
+                                2.dp,
+                                MaterialTheme.colorScheme.tertiary,
+                                CircleShape
+                            )
+                        else
+                            it
                     }
             )
-            Spacer(Modifier.width(10.dp))
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
                     Text(
-                        entry.name,
-                        color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
-                        else LinguaQuestTheme.colors.blackColor,
+                        text = entry.name,
+                        color = if (entry.isCurrentUser)
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            LinguaQuestTheme.colors.blackColor,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
+
                     if (entry.isCurrentUser) {
-                        Spacer(Modifier.width(6.dp))
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50))
                                 .background(MaterialTheme.colorScheme.tertiary)
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .padding(
+                                    horizontal = 8.dp,
+                                    vertical = 2.dp
+                                )
                         ) {
                             Text(
-                                stringResource(R.string.you_label),
+                                text = stringResource(R.string.you_label),
                                 color = LinguaQuestTheme.colors.whiteColor,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold
@@ -98,20 +132,126 @@ import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
                         }
                     }
                 }
-                Text(entry.title, color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
-                else LinguaQuestTheme.colors.iconsColor, fontSize = 12.sp,fontWeight = FontWeight.SemiBold)
-            }
-            Column(horizontalAlignment = Alignment.End) {
+
                 Text(
-                    "${entry.xp}",
-                    color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
-                    else LinguaQuestTheme.colors.blackColor,
+                    text = entry.title,
+                    color = if (entry.isCurrentUser)
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        LinguaQuestTheme.colors.iconsColor,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+
+                Text(
+                    text = "${entry.xp}",
+                    color = if (entry.isCurrentUser)
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        LinguaQuestTheme.colors.blackColor,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
-                Text("XP", color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
-                else LinguaQuestTheme.colors.iconsColor, fontSize = 10.sp,fontWeight = FontWeight.Bold)
+
+                Text(
+                    text = "XP",
+                    color = if (entry.isCurrentUser)
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        LinguaQuestTheme.colors.iconsColor,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
 }
+// fun LeaderboardRow(entry: LeaderboardEntry) {
+//    Surface(
+//        modifier = Modifier.fillMaxWidth(),
+//        shape = RoundedCornerShape(16.dp),
+//        color = LinguaQuestTheme.colors.whiteColor,
+//        border = if (entry.isCurrentUser) BorderStroke(
+//            1.5.dp,
+//            MaterialTheme.colorScheme.tertiary
+//        ) else BorderStroke(
+//            1.dp,
+//            Color(0xFFDAC2AE)
+//        )
+//    ) {
+//        Row(
+//            Modifier
+//                .fillMaxWidth()
+//                .padding(12.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Text(
+//                entry.rank.toString(),
+//                color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.iconsColor,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.width(28.dp)
+//            )
+//            AsyncImage(
+//                model = entry.avatarUrl,
+//                contentDescription = entry.name,
+//                modifier = Modifier
+//                    .size(36.dp)
+//                    .clip(CircleShape)
+//                    .let {
+//                        if (entry.isCurrentUser) it.border(
+//                            2.dp,
+//                            MaterialTheme.colorScheme.tertiary,
+//                            CircleShape
+//                        )
+//                        else it
+//                    }
+//            )
+//            Spacer(Modifier.width(10.dp))
+//            Column(Modifier.weight(1f)) {
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Text(
+//                        entry.name,
+//                        color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
+//                        else LinguaQuestTheme.colors.blackColor,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 14.sp
+//                    )
+//                    if (entry.isCurrentUser) {
+//                        Spacer(Modifier.width(6.dp))
+//                        Box(
+//                            modifier = Modifier
+//                                .clip(RoundedCornerShape(50))
+//                                .background(MaterialTheme.colorScheme.tertiary)
+//                                .padding(horizontal = 8.dp, vertical = 2.dp)
+//                        ) {
+//                            Text(
+//                                stringResource(R.string.you_label),
+//                                color = LinguaQuestTheme.colors.whiteColor,
+//                                fontSize = 10.sp,
+//                                fontWeight = FontWeight.Bold
+//                            )
+//                        }
+//                    }
+//                }
+//                Text(entry.title, color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
+//                else LinguaQuestTheme.colors.iconsColor, fontSize = 12.sp,fontWeight = FontWeight.SemiBold)
+//            }
+//            Column(horizontalAlignment = Alignment.End) {
+//                Text(
+//                    "${entry.xp}",
+//                    color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
+//                    else LinguaQuestTheme.colors.blackColor,
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 14.sp
+//                )
+//                Text("XP", color = if (entry.isCurrentUser) MaterialTheme.colorScheme.tertiary
+//                else LinguaQuestTheme.colors.iconsColor, fontSize = 10.sp,fontWeight = FontWeight.Bold)
+//            }
+//        }
+//    }
+//}
