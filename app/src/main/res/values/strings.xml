@@ -283,4 +283,25 @@
     <string name="choose_from_gallery">Choose from gallery</string>
 
 
+
+    <!-- Game Result Feature -->
+    <string name="game_result_loading">Loading result...</string>
+    <string name="game_result_invalid_state">Invalid state. No outcome generated.</string>
+    <string name="game_result_default_failure_reason">Item not recognized.</string>
+    <string name="game_result_default_error_message">Network error occurred.</string>
+    <string name="game_result_error_title">Connection Error</string>
+    <string name="game_result_retry_connection">Retry Connection</string>
+    <string name="game_result_exit_game">Exit Game</string>
+    <string name="game_result_level_progress">Level %1$d Progress</string>
+    <string name="game_result_percent_progress">%1$d%%</string>
+    <string name="game_result_success_title">Perfect!</string>
+    <string name="game_result_success_subtitle">You found it!</string>
+    <string name="game_result_xp_format">+%1$d</string>
+    <string name="game_result_coins_format">+%1$d</string>
+    <string name="game_result_next_level">Next Level</string>
+    <string name="game_result_fail_title">Not quite!</string>
+    <string name="game_result_fail_message_format">Lingo didn\'t see any %1$s there.\nTry framing it differently!</string>
+    <string name="game_result_hint_button">Make Sure it\'s well lit!</string>
+    <string name="game_result_retry_camera">Retry Camera</string>
+    <string name="game_result_change_word">Change Word</string>
 </resources>

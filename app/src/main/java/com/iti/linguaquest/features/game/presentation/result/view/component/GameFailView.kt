@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -50,7 +51,7 @@ fun GameFailView(
             imageRes = R.drawable.lingo_sad
         ) {
             Text(
-                text = "Not quite!",
+                text = stringResource(R.string.game_result_fail_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.BrownText
@@ -58,14 +59,22 @@ fun GameFailView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = buildAnnotatedString {
-                    append("Lingo didn't see any ")
+            val failMessageFormat = stringResource(R.string.game_result_fail_message_format, targetWord)
+            val targetIndex = failMessageFormat.indexOf(targetWord)
+            val annotatedString = buildAnnotatedString {
+                if (targetIndex != -1) {
+                    append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append(targetWord)
                     }
-                    append(" there.\nTry framing it differently!")
-                },
+                    append(failMessageFormat.substring(targetIndex + targetWord.length))
+                } else {
+                    append(failMessageFormat)
+                }
+            }
+
+            Text(
+                text = annotatedString,
                 style = AppTextStyles.DialogMessage,
                 color = AppColors.Brown,
                 textAlign = TextAlign.Center,
@@ -77,7 +86,7 @@ fun GameFailView(
 
             if (!isHintUsed) {
                 AppButton(
-                    text = "Make Sure it's well lit!",
+                    text = stringResource(R.string.game_result_hint_button),
                     onClick = onBuyHint,
                     variant = ButtonVariant.SECONDARY,
                     contentColorOverride = AppColors.BrownText,
@@ -88,7 +97,7 @@ fun GameFailView(
             }
 
             AppButton(
-                text = "Retry Camera",
+                text = stringResource(R.string.game_result_retry_camera),
                 onClick = onRetry,
                 variant = ButtonVariant.PRIMARY
             )
@@ -96,7 +105,7 @@ fun GameFailView(
             Spacer(modifier = Modifier.height(16.dp))
 
             AppOutlinedButton(
-                text = "Change Word",
+                text = stringResource(R.string.game_result_change_word),
                 onClick = onExit
             )
         }

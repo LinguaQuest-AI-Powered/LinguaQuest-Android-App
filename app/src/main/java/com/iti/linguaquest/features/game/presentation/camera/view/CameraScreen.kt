@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.game.presentation.camera.viewmodel.CameraViewModel
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
 import com.iti.linguaquest.features.game.presentation.camera.contract.PermissionStatus
@@ -26,6 +28,7 @@ fun CameraScreen(
     viewModel: CameraViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val soundPlayer = LocalSoundPlayer.current
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val cameraState by viewModel.state.collectAsState()
 
@@ -76,6 +79,7 @@ fun CameraScreen(
             onToggleFlash = { viewModel.onIntent(CameraIntent.ToggleFlash) },
             onFlipCamera = { viewModel.onIntent(CameraIntent.ToggleCameraLens) },
             onCaptureClicked = {
+                soundPlayer.play(AppSound.CAMERA)
                 takePhoto(context, cameraController) { uri ->
                     viewModel.onIntent(CameraIntent.CapturePhoto(uri))
                 }
