@@ -15,5 +15,5 @@ data class GameSharedState(
     val targetWord: UiText = UiText.DynamicString(""),
     val capturedImageUri: Uri? = null,
     val isHintUsed: Boolean = false,
-    val verificationOutcome: VerificationOutcome = VerificationOutcome.Idle // Added outcome
+    val verificationOutcome: VerificationOutcome = VerificationOutcome.Idle
 )

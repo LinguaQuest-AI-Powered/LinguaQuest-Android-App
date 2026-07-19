@@ -2,14 +2,18 @@ package com.iti.linguaquest.features.all_worlds.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.R
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsIntent
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsState
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.all_worlds.domain.model.World
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AllWorldsViewModel @Inject constructor() : ViewModel() {
+class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetWorldsUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(AllWorldsState())
     val state: StateFlow<AllWorldsState> = _state.asStateFlow()
@@ -34,66 +38,41 @@ class AllWorldsViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun loadWorlds() {
-        _state.update { it.copy(isLoading = true) }
-        
-        val worlds = listOf(
-            WorldItem(
-                id = 0,
-                title = UiText.DynamicString("Kitchen World"),
-                imageSource = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.EASY,
-                progress = 0.40f,
-                isCompleted = false
-            ),
-            WorldItem(
-                id = 1,
-                title = UiText.DynamicString("City World"),
-                imageSource = R.drawable.kitchen_icon,
-                difficulty = WorldDifficulty.MEDIUM,
-                progress = 0.10f,
-                isCompleted = false
-            ),
-            WorldItem(
-                id = 2,
-                title = UiText.DynamicString("Park World"),
-                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
-                difficulty = WorldDifficulty.EASY,
-                progress = 1.0f,
-                isCompleted = true
-            ),
-            WorldItem(
-                id = 3,
-                title = UiText.DynamicString("Market World"),
-                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
-                difficulty = WorldDifficulty.MEDIUM,
-                progress = 0.0f,
-                isCompleted = false
-            ),
-            WorldItem(
-                id = 4,
-                title = UiText.DynamicString("Airport World"),
-                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
-                difficulty = WorldDifficulty.HARD,
-                progress = 0.0f,
-                isCompleted = false,
-                unlockLevel = 15
-            ),
-            WorldItem(
-                id = 5,
-                title = UiText.DynamicString("School World"),
-                imageSource = R.drawable.kitchen_icon, // replace with real image if exists
-                difficulty = WorldDifficulty.MEDIUM,
-                progress = 0.65f,
-                isCompleted = false
-            )
-        )
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
 
-        _state.update { 
-            it.copy(
-                isLoading = false,
-                worlds = worlds
-            ) 
+            when (val result = getWorldsUseCase()) {
+                is LinguaQuestResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            worlds = result.data.worlds.map { world -> world.toWorldItem() }
+                        )
+                    }
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                }
+            }
         }
+    }
+
+    private fun World.toWorldItem(): WorldItem {
+        return WorldItem(
+            id = id,
+            title = UiText.DynamicString(name),
+            imageSource = imageUrl,
+            difficulty = when (difficulty) {
+                DomainWorldDifficulty.EASY -> WorldDifficulty.EASY
+                DomainWorldDifficulty.MEDIUM -> WorldDifficulty.MEDIUM
+                DomainWorldDifficulty.HARD -> WorldDifficulty.HARD
+            },
+            progress = progressPercent / 100f,
+            isCompleted = status == WorldStatus.COMPLETED,
+            unlockLevel = if (status == WorldStatus.LOCKED) 1 else null
+        )
     }
 
     fun onIntent(intent: AllWorldsIntent) {

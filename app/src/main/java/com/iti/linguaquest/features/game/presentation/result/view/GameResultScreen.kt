@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
@@ -80,7 +79,6 @@ fun GameResultScreen(
         }
         is GameResultUiState.Failure -> {
             GameFailView(
-                state = currentState,
                 targetWord = sharedState.targetWord,
                 isHintUsed = sharedState.isHintUsed,
                 onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
