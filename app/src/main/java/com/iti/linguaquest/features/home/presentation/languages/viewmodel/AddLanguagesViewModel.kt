@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.home.presentation.languages.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -60,7 +61,7 @@ class AddLanguagesViewModel @Inject constructor(
                         SnackbarEvent(
                             message = result.error.toUiText(),
                             type = SnackbarType.ERROR,
-                            actionLabel = UiText.DynamicString("Retry"),
+                            actionLabel = UiText.StringResource(R.string.retry),
                             onAction = { loadAvailableLanguages() }
                         )
                     )
@@ -102,7 +103,9 @@ class AddLanguagesViewModel @Inject constructor(
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),
-                            type = SnackbarType.ERROR
+                            type = SnackbarType.ERROR,
+                            actionLabel = UiText.StringResource(R.string.retry),
+                            onAction = { addSelectedLanguages() }
                         )
                     )
                 }

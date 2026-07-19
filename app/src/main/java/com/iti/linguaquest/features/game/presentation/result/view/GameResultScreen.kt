@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
@@ -38,7 +39,7 @@ fun GameResultScreen(
             )
             is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
             is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
-            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.DynamicString("Invalid state. No outcome generated."))
+            VerificationOutcome.Idle -> GameResultUiState.Error(UiText.StringResource(R.string.game_result_invalid_state))
         }
         viewModel.setInitialResult(mappedState)
     }

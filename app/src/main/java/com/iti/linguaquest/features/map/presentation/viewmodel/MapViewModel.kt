@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.map.presentation.viewmodel
 
+import com.iti.linguaquest.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.map.domain.usecase.GetMapLevelsUseCase
@@ -77,13 +78,13 @@ class MapViewModel @Inject constructor(
             }.onFailure { error ->
                 _state.update { it.copy(isLoading = false) }
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()
-                    ?: UiText.DynamicString("An unexpected error occurred")
+                    ?: UiText.StringResource(R.string.general_error)
                 
                 snackbarController.sendEvent(
                     SnackbarEvent(
                         message = uiText,
                         type = SnackbarType.ERROR,
-                        actionLabel = UiText.DynamicString("Retry"),
+                        actionLabel = UiText.StringResource(R.string.retry),
                         onAction = { loadLevels(worldId) }
                     )
                 )
