@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.leaderboard.components
+package com.iti.linguaquest.features.leaderboard.presentation.view.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,9 +21,9 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
-import kotlinx.coroutines.delay
+ import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
+import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 
 @Composable
 fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
@@ -77,7 +76,7 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
             )
 
             ImageWrapper(
-                model = entry.avatarUrl ?: R.drawable.lingo_writing,
+                model = entry.photoUrl ?: R.drawable.lingo_writing,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -90,16 +89,20 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = entry.name,
+                    text = entry.username,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = textColor
                 )
+/*
+return title
                 Text(
-                    text = entry.title,
+                    text = entry,
                     fontSize = 13.sp,
                     color = subtitleColor
                 )
+
+ */
             }
 
             if (isYou) {

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.leaderboard.components
+package com.iti.linguaquest.features.leaderboard.presentation.view.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -30,7 +30,7 @@ import androidx.compose.ui.zIndex
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
+import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 

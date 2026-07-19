@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.leaderboard.components
+package com.iti.linguaquest.features.leaderboard.presentation.view.components
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -45,7 +45,7 @@ import androidx.compose.ui.zIndex
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
+import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -114,7 +114,7 @@ fun PodiumItem(
             )
 
             ImageWrapper(
-                model = entry.avatarUrl ?: R.drawable.lingo_writing,
+                model = entry.photoUrl ?: R.drawable.lingo_writing,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -192,7 +192,7 @@ fun PodiumItem(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = entry.name,
+                        text = entry.username,
                         fontSize = if (isFirst) 15.sp else 13.sp,
                         fontWeight = FontWeight.Bold,
                         color = AppColors.BrownText,
