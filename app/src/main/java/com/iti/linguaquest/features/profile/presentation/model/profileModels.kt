@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 data class ProfileState(
     val userName: String = "",
     val level: Int = 0,
-    val avatarUrl: Int = 0,
+    val avatarUrl: Any? = null,
     val coins: Int = 0,
     val totalXp: Int = 0,
     val streakDays: Int = 0,

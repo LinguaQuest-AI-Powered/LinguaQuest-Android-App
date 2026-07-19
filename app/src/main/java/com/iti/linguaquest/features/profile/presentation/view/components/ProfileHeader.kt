@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,19 +34,29 @@ import coil.compose.AsyncImage
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 
 @Composable
 fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(contentAlignment = Alignment.BottomEnd) {
-            AsyncImage(
+//            AsyncImage(
+//                model = state.avatarUrl,
+//                contentDescription = state.userName,
+//                modifier = Modifier
+//                    .size(96.dp)
+//                    .clip(CircleShape)
+//                    .border(3.dp, LinguaQuestTheme.colors.OrangeActive, CircleShape)
+//            )
+            ImageWrapper(
                 model = state.avatarUrl,
                 contentDescription = state.userName,
                 modifier = Modifier
                     .size(96.dp)
                     .clip(CircleShape)
-                    .border(3.dp, LinguaQuestTheme.colors.OrangeActive, CircleShape)
+                    .border(3.dp, LinguaQuestTheme.colors.OrangeActive, CircleShape),
+                contentScale = ContentScale.Crop
             )
             Box(
                 modifier = Modifier
