@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -65,6 +66,7 @@ fun GameFailView(
                 if (targetIndex != -1) {
                     append(failMessageFormat.substring(0, targetIndex))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(targetWord.asString())
                         append(wordStr)
                     }
                     append(failMessageFormat.substring(targetIndex + wordStr.length))
@@ -75,11 +77,7 @@ fun GameFailView(
 
             Text(
                 text = annotatedString,
-                style = AppTextStyles.DialogMessage,
-                color = AppColors.Brown,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                lineHeight = 24.sp
+
             )
 
             Spacer(modifier = Modifier.height(32.dp))

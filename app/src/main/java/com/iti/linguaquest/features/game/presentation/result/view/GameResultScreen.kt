@@ -39,7 +39,7 @@ fun GameResultScreen(
             )
             is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
             is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)
-            is VerificationOutcome.Idle -> GameResultUiState.Error(com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString("Invalid state. No outcome generated."))
+            VerificationOutcome.Idle -> GameResultUiState.Error(com.iti.linguaquest.core.sharedComponents.text.UiText.DynamicString("Invalid state. No outcome generated."))
         }
         viewModel.setInitialResult(mappedState)
     }
