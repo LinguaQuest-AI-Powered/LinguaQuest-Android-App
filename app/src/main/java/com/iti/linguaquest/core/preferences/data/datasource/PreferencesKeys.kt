@@ -9,4 +9,5 @@ object PreferencesKeys {
     val APP_THEME = stringPreferencesKey("app_theme")
     val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")
     val APP_LANGUAGE = stringPreferencesKey("app_language")
+    val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
 }

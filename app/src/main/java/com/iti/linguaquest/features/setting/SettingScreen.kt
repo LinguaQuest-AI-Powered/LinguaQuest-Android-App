@@ -13,6 +13,7 @@ fun SettingScreen(
 ) {
     val appLanguage by viewModel.appLanguage.collectAsState()
     val soundEnabled by viewModel.soundEnabled.collectAsState()
+    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
 
     SettingContent(
         onBackClick = onBack,
@@ -23,6 +24,10 @@ fun SettingScreen(
         soundEnabled = soundEnabled,
         onSoundToggle = { enabled ->
             viewModel.toggleSound(enabled)
+        },
+        notificationsEnabled = notificationsEnabled,
+        onNotificationsToggle = { enabled ->
+            viewModel.toggleNotifications(enabled)
         },
         onLogoutClick = {
          },

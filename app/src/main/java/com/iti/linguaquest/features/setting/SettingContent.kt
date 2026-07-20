@@ -57,10 +57,11 @@ fun SettingContent(
     onChangeAppLanguage: (String) -> Unit,
     soundEnabled: Boolean,
     onSoundToggle: (Boolean) -> Unit,
+    notificationsEnabled: Boolean,
+    onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit
 ) {
-    var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
 
@@ -198,7 +199,7 @@ fun SettingContent(
                 title = stringResource(id = R.string.settings_notifications),
                 hasSwitch = true,
                 switchChecked = notificationsEnabled,
-                onSwitchChange = { notificationsEnabled = it },
+                onSwitchChange = onNotificationsToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
@@ -257,6 +258,8 @@ fun SettingContentPreview() {
             onChangeAppLanguage = {},
             soundEnabled = true,
             onSoundToggle = {},
+            notificationsEnabled = true,
+            onNotificationsToggle = {},
             onLogoutClick = {},
             onDeleteAccountClick = {}
         )

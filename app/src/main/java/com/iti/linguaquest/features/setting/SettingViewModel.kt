@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     userPreferencesRepository: UserPreferencesRepository,
     private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
-    private val toggleSoundUseCase: ToggleSoundUseCase
+    private val toggleSoundUseCase: ToggleSoundUseCase,
+    private val toggleNotificationsUseCase: ToggleNotificationsUseCase
 ) : ViewModel() {
 
     val appLanguage: StateFlow<String> = userPreferencesRepository.appLanguage
@@ -33,9 +35,22 @@ class SettingViewModel @Inject constructor(
             initialValue = true
         )
 
+    val notificationsEnabled: StateFlow<Boolean> = userPreferencesRepository.notificationsEnabled
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
+
     fun toggleSound(enabled: Boolean) {
         viewModelScope.launch {
             toggleSoundUseCase(enabled)
+        }
+    }
+
+    fun toggleNotifications(enabled: Boolean) {
+        viewModelScope.launch {
+            toggleNotificationsUseCase(enabled)
         }
     }
 
