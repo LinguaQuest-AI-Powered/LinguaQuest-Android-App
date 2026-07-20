@@ -3,6 +3,8 @@ package com.iti.linguaquest.core.di
 import com.iti.linguaquest.BuildConfig
 import com.iti.linguaquest.core.network.NetworkConfig
 import com.google.gson.GsonBuilder
+import com.iti.linguaquest.core.network.AuthInterceptor
+import com.iti.linguaquest.core.network.TokenAuthenticator
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthApiService
 import dagger.Module
 import dagger.Provides
@@ -33,9 +35,13 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
             .build()
     }
