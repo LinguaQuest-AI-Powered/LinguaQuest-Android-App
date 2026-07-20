@@ -187,7 +187,7 @@ fun AppNavigation(
                 entry<RootScreen.Login> {
                     LoginScreen(
                         onSignUp = {
-                            rootBackStack.navigateSingleTop(RootScreen.Main)
+                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
                         },
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
@@ -204,11 +204,8 @@ fun AppNavigation(
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
                         onNavigateToLogin = { rootBackStack.removeLastOrNull() },
-                        onSignUpSuccess = {
-                            rootBackStack.apply {
-                                clear()
-                                navigateSingleTop(RootScreen.Main)
-                            }
+                        onSignUpSuccess = {email ->
+                            rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }
                     )
                 }
@@ -216,7 +213,7 @@ fun AppNavigation(
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
                         onBackToLogin = { rootBackStack.removeLastOrNull() },
-                        onSendSucceeded = { rootBackStack.removeLastOrNull() }
+                        onSendSucceeded = { rootBackStack.navigateSingleTop(RootScreen.OTP(it, true)) }
                     )
                 }
                 entry<RootScreen.OTP> { screen ->

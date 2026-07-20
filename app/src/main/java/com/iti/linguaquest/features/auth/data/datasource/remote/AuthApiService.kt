@@ -30,7 +30,7 @@ interface AuthApiService {
     @POST("auth/otp/verify")
     suspend fun verifyEmailOtp(
         @Body body: OtpVerifyRequestDto
-    ): SuccessResponseDto<Unit>
+    ): SuccessResponseDto<VerifyEmailResponseDto>
 
     @POST("auth/forget-password/otp/verify")
     suspend fun verifyPasswordResetOtp(
@@ -41,4 +41,14 @@ interface AuthApiService {
     suspend fun setNewPassword(
         @Body body: ResetPasswordRequestDto
     ): SuccessResponseDto<Unit>
+
+    @POST("auth/logout")
+    suspend fun logout(
+        @Body body: LogoutRequestDto
+    ): SuccessResponseDto<Unit>
+
+    @POST("auth/refresh-token")
+    suspend fun refreshToken(
+        @Body body: RefreshTokenRequestDto
+    ): SuccessResponseDto<RefreshTokenResponseDataDto>
 }

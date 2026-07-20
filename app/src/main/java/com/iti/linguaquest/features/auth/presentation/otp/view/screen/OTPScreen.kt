@@ -83,22 +83,6 @@ fun OTPContent(
             .background(MaterialTheme.colorScheme.background)
             .imePadding()
     ) {
-        Box(
-            modifier = Modifier
-                .padding(top = 48.dp, start = 24.dp)
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.secondary)
-                .clickable { onIntent(OTPIntent.OnBackClicked) },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
-        }
 
         Column(
             modifier = Modifier

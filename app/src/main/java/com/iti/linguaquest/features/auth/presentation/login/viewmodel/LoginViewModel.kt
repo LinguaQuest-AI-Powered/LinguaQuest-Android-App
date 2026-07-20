@@ -111,7 +111,7 @@ class LoginViewModel @Inject constructor(
         _state.update {
             it.copy(
                 isLoading = false,
-                generalErrorRes = null,
+                generalErrorRes = if (!emailHasError && !passwordHasError) error.toMessageRes() else null,
                 emailError = emailHasError,
                 emailErrorRes = if (emailHasError) error.toMessageRes() else null,
                 passwordError = passwordHasError,

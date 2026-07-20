@@ -4,11 +4,16 @@ package com.iti.linguaquest.features.auth.data.datasource.remote
 data class UserDto(
     val id: Int,
     val username: String?,
-    val name: String,
     val photo: String?,
     val nativeLanguage: String?,
     val isVerified: Boolean,
     val targetLanguages: List<String>
+)
+
+data class TargetLanguageDto(
+    val id: Int,
+    val name: String,
+    val code: String
 )
 
 
@@ -77,4 +82,24 @@ data class VerifyResetOtpResponseDto(
 data class ResetPasswordRequestDto(
     val resetToken: String,
     val newPassword: String
-)
+)
+
+data class LogoutRequestDto(
+    val refreshToken: String,
+    val allDevices: Boolean = false
+)
+
+data class RefreshTokenRequestDto(
+    val refreshToken: String
+)
+
+data class RefreshTokenResponseDataDto(
+    val accessToken: String,
+    val refreshToken: String,
+    val tokenType: String,
+    val expiresIn: Int
+)
+
+data class VerifyEmailResponseDto(
+    val isVerified: Boolean
+)
