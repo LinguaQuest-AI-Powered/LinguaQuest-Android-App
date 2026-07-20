@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     userPreferencesRepository: UserPreferencesRepository,
     private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
+    private val changeAppThemeUseCase: ChangeAppThemeUseCase,
     private val toggleSoundUseCase: ToggleSoundUseCase,
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase
 ) : ViewModel() {
@@ -26,6 +28,13 @@ class SettingViewModel @Inject constructor(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = "en"
+        )
+
+    val appTheme: StateFlow<String> = userPreferencesRepository.appTheme
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = "system"
         )
 
     val soundEnabled: StateFlow<Boolean> = userPreferencesRepository.soundEnabled
@@ -57,6 +66,12 @@ class SettingViewModel @Inject constructor(
     fun changeAppLanguage(language: String) {
         viewModelScope.launch {
             changeAppLanguageUseCase(language)
+        }
+    }
+
+    fun changeAppTheme(theme: String) {
+        viewModelScope.launch {
+            changeAppThemeUseCase(theme)
         }
     }
 }

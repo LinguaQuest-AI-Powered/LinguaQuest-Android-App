@@ -46,7 +46,7 @@ fun LanguageProgressCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
+            .background(LinguaQuestTheme.colors.whiteColor)
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -54,7 +54,7 @@ fun LanguageProgressCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(Color.White),
+                    .background(LinguaQuestTheme.colors.whiteColor),
                 contentAlignment = Alignment.Center
             ) {
                 ImageWrapper(

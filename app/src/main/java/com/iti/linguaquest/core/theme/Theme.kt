@@ -6,8 +6,6 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
-import com.iti.linguaquest.core.theme.AppColors
 
 private val LightColorScheme = lightColorScheme(
 
@@ -32,71 +30,38 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
 
-    primary = AppColors.PrimaryColor,
+    primary = AppColors.DarkPrimaryColor,
     onPrimary = AppColors.TextOnPrimaryButton,
 
-    secondary = AppColors.SecondaryColor,
-    onSecondary = AppColors.TextOnSecondaryButton,
+    secondary = AppColors.DarkSecondaryColor,
+    onSecondary = AppColors.DarkTextPrimary,
 
-    tertiary = AppColors.Teal,
+    tertiary = AppColors.DarkTeal,
 
-    background = AppColors.BackGround,
-    surface = AppColors.BackGround,
+    background = AppColors.DarkBackground,
+    surface = AppColors.DarkSurface,
 
-    onBackground = AppColors.Brown,
-    onSurface = AppColors.Brown,
+    onBackground = AppColors.DarkTextPrimary,
+    onSurface = AppColors.DarkTextPrimary,
 
-    outline = AppColors.SocialBorderColor,
+    outline = AppColors.DarkBorderColor,
 
     error = AppColors.Red
 )
 
 private val LightExtraColors = LinguaQuestColors(
 
-    textFieldFill = AppColors.BackGround,
+    textFieldFill = AppColors.Background,
     textFieldBorder = AppColors.TextFieldBorderColor,
     textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
 
-    socialButtonFill = AppColors.BackGround,
+    socialButtonFill = AppColors.Background,
     socialButtonText = AppColors.TextOnSocialButton,
     iconsColor = AppColors.IconsColor,
 
     splashTopLeftColor = AppColors.SplashTopLeftColor,
     splashBottomRightColor = AppColors.SplashBottomRightColor,
 
-    socialButtonBorder = AppColors.SocialBorderColor,
-    titleAndCationsColor = AppColors.TitleAndCaptionColor,
-    blackColor = AppColors.Black,
-    whiteColor = AppColors.White,
-    cardLevelFilledColor = AppColors.cardLevelFilledColor,
-    progressTrackRemainedColor = AppColors.progressTrackColor,
-    IconBoxBackground = AppColors.IconBoxBackground,
-    ChipBackground = AppColors.ChipBackground,
-    OrangeActive = AppColors.OrangeActive,
-    BrownText = AppColors.BrownText,
-    ProfileCardColor = AppColors.ProfileCardColor,
-    ProfileCardBorderColor = AppColors.ProfileCardBorderColor,
-    Charcoal = AppColors.Charcoal,
-    Espresso = AppColors.Espresso,
-    Amber = AppColors.Amber,
-    Linen = AppColors.Linen,
-    Sand = AppColors.Sand,
-    SuccessAccent = AppColors.SuccessAccent,
-    ErrorAccent = AppColors.ErrorAccent,
-    InfoAccent = AppColors.InfoAccent
-)
-
-private val DarkExtraColors = LinguaQuestColors(
-
-    textFieldFill = AppColors.BackGround,
-    textFieldBorder = AppColors.TextFieldBorderColor,
-    textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
-
-    socialButtonFill = AppColors.BackGround,
-    socialButtonText = AppColors.TextOnSocialButton,
-    iconsColor = AppColors.IconsColor,
-    splashTopLeftColor = AppColors.SplashTopLeftColor,
-    splashBottomRightColor = AppColors.SplashBottomRightColor,
     socialButtonBorder = AppColors.SocialBorderColor,
     titleAndCationsColor = AppColors.TitleAndCaptionColor,
     blackColor = AppColors.Black,
@@ -117,6 +82,67 @@ private val DarkExtraColors = LinguaQuestColors(
     SuccessAccent = AppColors.SuccessAccent,
     ErrorAccent = AppColors.ErrorAccent,
     InfoAccent = AppColors.InfoAccent,
+    LeaderboardGold = AppColors.LeaderboardGold,
+    LeaderboardBlue = AppColors.LeaderboardBlue,
+    LeaderboardBronze = AppColors.LeaderboardBronze,
+    AchievementCyanBackground = AppColors.AchievementCyanBackground,
+    AchievementCyanText = AppColors.AchievementCyanText,
+    AchievementCardBorder = AppColors.AchievementCardBorder,
+    AchievementDivider = AppColors.AchievementDivider,
+    AchievementButtonShadow = AppColors.AchievementButtonShadow,
+    AchievementTabInactive = AppColors.AchievementTabInactive,
+    AchievementHeaderGradientTop = AppColors.AchievementHeaderGradientTop,
+    AchievementHeaderGradientBottom = AppColors.AchievementHeaderGradientBottom,
+    DialogGradientTopRight = AppColors.DialogGradientTopRight,
+    DialogGradientBottomLeft = AppColors.DialogGradientBottomLeft,
+    ShadowOrange = AppColors.ShadowOrange
+)
+
+private val DarkExtraColors = LinguaQuestColors(
+
+    textFieldFill = AppColors.DarkBackground,
+    textFieldBorder = AppColors.DarkBorderColor,
+    textFieldPlaceholder = AppColors.DarkTextSecondary.copy(alpha = 0.5f),
+
+    socialButtonFill = AppColors.DarkSurface,
+    socialButtonText = AppColors.DarkTextPrimary,
+    iconsColor = AppColors.DarkTextSecondary,
+    splashTopLeftColor = AppColors.SplashTopLeftColor,
+    splashBottomRightColor = AppColors.SplashBottomRightColor,
+    socialButtonBorder = AppColors.DarkBorderColor,
+    titleAndCationsColor = AppColors.DarkTextPrimary,
+    blackColor = AppColors.DarkTextPrimary,
+    whiteColor = AppColors.DarkSurface,
+    cardLevelFilledColor = AppColors.DarkSecondaryColor,
+    progressTrackRemainedColor = AppColors.DarkBorderColor,
+    IconBoxBackground = AppColors.DarkSecondaryColor,
+    ChipBackground = AppColors.DarkSecondaryColor,
+    OrangeActive = AppColors.OrangeActive,
+    BrownText = AppColors.DarkTextPrimary,
+    ProfileCardColor = AppColors.DarkSurface,
+    ProfileCardBorderColor = AppColors.DarkBorderColor,
+    Charcoal = AppColors.Linen,
+    Espresso = AppColors.Sand,
+    Amber = AppColors.Amber,
+    Linen = AppColors.Charcoal,
+    Sand = AppColors.Espresso,
+    SuccessAccent = AppColors.SuccessAccent,
+    ErrorAccent = AppColors.ErrorAccent,
+    InfoAccent = AppColors.InfoAccent,
+    LeaderboardGold = AppColors.DarkLeaderboardGold,
+    LeaderboardBlue = AppColors.DarkLeaderboardBlue,
+    LeaderboardBronze = AppColors.DarkLeaderboardBronze,
+    AchievementCyanBackground = AppColors.DarkAchievementCyanBackground,
+    AchievementCyanText = AppColors.DarkAchievementCyanText,
+    AchievementCardBorder = AppColors.DarkAchievementCardBorder,
+    AchievementDivider = AppColors.DarkAchievementDivider,
+    AchievementButtonShadow = AppColors.DarkAchievementButtonShadow,
+    AchievementTabInactive = AppColors.DarkAchievementTabInactive,
+    AchievementHeaderGradientTop = AppColors.DarkAchievementHeaderGradientTop,
+    AchievementHeaderGradientBottom = AppColors.DarkAchievementHeaderGradientBottom,
+    DialogGradientTopRight = AppColors.DarkDialogGradientTopRight,
+    DialogGradientBottomLeft = AppColors.DarkDialogGradientBottomLeft,
+    ShadowOrange = AppColors.DarkShadowOrange
 )
 
 @Composable

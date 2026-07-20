@@ -12,6 +12,7 @@ fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val appLanguage by viewModel.appLanguage.collectAsState()
+    val appTheme by viewModel.appTheme.collectAsState()
     val soundEnabled by viewModel.soundEnabled.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
 
@@ -20,6 +21,10 @@ fun SettingScreen(
         appLanguage = appLanguage,
         onChangeAppLanguage = { language ->
             viewModel.changeAppLanguage(language)
+        },
+        appTheme = appTheme,
+        onChangeAppTheme = { theme ->
+            viewModel.changeAppTheme(theme)
         },
         soundEnabled = soundEnabled,
         onSoundToggle = { enabled ->

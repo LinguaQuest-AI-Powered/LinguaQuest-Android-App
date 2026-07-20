@@ -32,13 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 
 @Composable
 fun DailyRewardTimeline(currentDay: Int) {
     val totalNodes = 5
-    val activeColor = AppColors.PrimaryColor
+    val activeColor = MaterialTheme.colorScheme.primary
     val inactiveColor = Color(0xFFE6D6C8)
 
     val startDay = maxOf(1, currentDay - 2)

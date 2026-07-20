@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,7 +21,6 @@ import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
 
@@ -43,7 +44,7 @@ fun GameErrorView(
                 text = stringResource(R.string.game_result_error_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
-                color = AppColors.BrownText,
+                color = LinguaQuestTheme.colors.BrownText,
                 textAlign = TextAlign.Center
             )
 
@@ -52,7 +53,7 @@ fun GameErrorView(
             Text(
                 text = state.errorMessage.asString(),
                 style = AppTextStyles.DialogMessage,
-                color = AppColors.Brown,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 lineHeight = 24.sp

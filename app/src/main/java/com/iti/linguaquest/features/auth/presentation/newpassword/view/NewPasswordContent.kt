@@ -38,7 +38,6 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordState
@@ -158,7 +157,7 @@ fun NewPasswordContent(
                     Text(
                         text = stringResource(id = R.string.new_password_back_to_login),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = AppColors.Teal,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.Bold,
                     )
                 }

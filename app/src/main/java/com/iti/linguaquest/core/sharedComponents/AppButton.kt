@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -61,9 +60,9 @@ fun ButtonVariant.toStyle(): ButtonStyle =
         )
 
         ButtonVariant.SOCIAL -> ButtonStyle(
-            background = MaterialTheme.colorScheme.surface,
-            content = MaterialTheme.colorScheme.onSurface,
-            borderColor = MaterialTheme.colorScheme.outline
+            background = Color.Transparent,
+            content = MaterialTheme.colorScheme.onBackground,
+            borderColor = LinguaQuestTheme.colors.socialButtonBorder
         )
     }
 

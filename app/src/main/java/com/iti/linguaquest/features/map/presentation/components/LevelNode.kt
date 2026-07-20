@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +35,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun LevelNode(
@@ -86,14 +87,14 @@ fun LevelNode(
         ) {
             val circleSize = if (status == LevelStatus.CURRENT) 70.dp else 60.dp
             val backgroundColor = when (status) {
-                LevelStatus.COMPLETED -> AppColors.Teal
-                LevelStatus.CURRENT -> AppColors.PrimaryColor
-                LevelStatus.LOCKED -> Color.White.copy(alpha = 0.4f)
+                LevelStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
+                LevelStatus.CURRENT -> MaterialTheme.colorScheme.primary
+                LevelStatus.LOCKED -> LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.4f)
             }
             val borderModifier = if (status == LevelStatus.CURRENT) {
-                Modifier.border(4.dp, Color.White, CircleShape)
+                Modifier.border(4.dp, LinguaQuestTheme.colors.whiteColor, CircleShape)
             } else if (status == LevelStatus.COMPLETED) {
-                Modifier.border(2.dp, Color(0xFF004D40), CircleShape)
+                Modifier.border(2.dp, LinguaQuestTheme.colors.SuccessAccent, CircleShape)
             } else {
                 Modifier
             }
@@ -109,8 +110,8 @@ fun LevelNode(
                             .background(
                                 brush = Brush.radialGradient(
                                     colors = listOf(
-                                        Color.White.copy(alpha = 0.6f),
-                                        AppColors.PrimaryColor.copy(alpha = 0.5f),
+                                        LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.6f),
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                                         Color.Transparent
                                     )
                                 )
@@ -139,13 +140,13 @@ fun LevelNode(
                             Icon(
                                 painter = painterResource(id = R.drawable.lock),
                                 contentDescription = "Locked",
-                                tint = Color.White,
+                                tint = LinguaQuestTheme.colors.whiteColor,
                                 modifier = Modifier.size(24.dp)
                             )
                         } else {
                             Text(
                                 text = levelNumber.toString(),
-                                color = Color.White,
+                                color = LinguaQuestTheme.colors.whiteColor,
                                 fontSize = if (status == LevelStatus.CURRENT) 32.sp else 28.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -158,7 +159,7 @@ fun LevelNode(
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier
-                        .background(Color.White.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                        .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
                         .padding(horizontal = 8.dp, vertical = 2.dp),
                     horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
@@ -167,7 +168,7 @@ fun LevelNode(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_star),
                             contentDescription = "Star",
-                            tint = if (isFilled) AppColors.PrimaryColor else Color.Gray,
+                            tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
                             modifier = Modifier.size(12.dp)
                         )
                     }

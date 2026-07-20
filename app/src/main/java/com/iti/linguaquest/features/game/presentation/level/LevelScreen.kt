@@ -9,13 +9,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -31,8 +35,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
@@ -85,36 +91,36 @@ fun LevelScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFDF7F2)),
+            .background(LinguaQuestTheme.colors.whiteColor),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            com.iti.linguaquest.core.utils.ShareTopBar(
+            ShareTopBar(
                 titleText = stringResource(id = R.string.level_title, state.levelNumber),
                 onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
                 modifier = Modifier.padding(top = 40.dp),
                 trailingContent = {
                     androidx.compose.foundation.layout.Row(
                         modifier = Modifier
-                            .background(Color(0xFFFDF7F2), androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
                             .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        androidx.compose.material3.Icon(
-                            painter = rememberVectorPainter(androidx.compose.material.icons.Icons.Default.MonetizationOn),
+                        Icon(
+                            painter = rememberVectorPainter(Icons.Default.MonetizationOn),
                             contentDescription = stringResource(id = R.string.coins),
-                            tint = Color(0xFFE5A822),
+                            tint = LinguaQuestTheme.colors.OrangeActive,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        androidx.compose.material3.Text(
+                        Text(
                             text = "%,d".format(state.coinCount),
-                            color = com.iti.linguaquest.core.theme.AppColors.BrownText,
+                            color = LinguaQuestTheme.colors.BrownText,
                             fontSize = 14.sp,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }

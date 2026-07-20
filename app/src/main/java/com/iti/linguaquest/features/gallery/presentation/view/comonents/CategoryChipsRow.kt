@@ -12,13 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun CategoryChipsRow(
@@ -38,9 +38,9 @@ fun CategoryChipsRow(
             val isSelected = category == selectedCategory
             
             val backgroundColor = if (isSelected) {
-                AppColors.PrimaryColor
+                MaterialTheme.colorScheme.primary
             } else {
-                AppColors.SecondaryColor
+                MaterialTheme.colorScheme.secondary
             }
             
             Box(
@@ -53,7 +53,7 @@ fun CategoryChipsRow(
             ) {
                 Text(
                     text = category,
-                    color = AppColors.Brown,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )

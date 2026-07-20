@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.map.presentation.components
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -152,7 +153,7 @@ fun MapContent(
                 .align(Alignment.TopCenter)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.White, Color.Transparent)
+                        colors = listOf(LinguaQuestTheme.colors.whiteColor, Color.Transparent)
                     )
                 )
         )
@@ -164,7 +165,7 @@ fun MapContent(
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.White)
+                        colors = listOf(Color.Transparent, LinguaQuestTheme.colors.whiteColor)
                     )
                 )
         )

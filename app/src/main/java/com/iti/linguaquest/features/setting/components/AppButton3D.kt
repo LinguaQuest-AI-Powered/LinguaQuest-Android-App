@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors
 
 
 @Composable
@@ -27,9 +28,9 @@ fun AppButton3D(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = AppColors.PrimaryColor,
-    ledgeColor: Color = AppColors.ShadowOrange,
-    textColor: Color = AppColors.BrownText,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    ledgeColor: Color = LinguaQuestTheme.colors.ShadowOrange,
+    textColor: Color = LinguaQuestTheme.colors.BrownText,
     ledgeHeight: Dp = 5.dp,
     cornerRadius: Dp = 18.dp,
     buttonHeight: Dp = 56.dp,

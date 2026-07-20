@@ -15,19 +15,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors.BrownText
-import com.iti.linguaquest.core.theme.AppColors.PrimaryColor
+import androidx.compose.ui.text.font.FontWeight
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
 
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun AllWorldsFilterRow(
@@ -73,9 +73,9 @@ fun FilterChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (isSelected) PrimaryColor else com.iti.linguaquest.core.theme.AppColors.White
-    val textColor = if (isSelected) com.iti.linguaquest.core.theme.AppColors.White else BrownText
-    val borderColor = if (isSelected) PrimaryColor else com.iti.linguaquest.core.theme.AppColors.SocialBorderColor
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.whiteColor
+    val textColor = if (isSelected) LinguaQuestTheme.colors.whiteColor else LinguaQuestTheme.colors.BrownText
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.socialButtonBorder
 
     Row(
         modifier = modifier

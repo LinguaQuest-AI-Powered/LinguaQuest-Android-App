@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -25,7 +26,6 @@ import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.text.UiText
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
@@ -50,7 +50,7 @@ fun GameFailView(
                 text = stringResource(R.string.game_result_fail_title),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
-                color = AppColors.BrownText
+                color = LinguaQuestTheme.colors.BrownText
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -82,7 +82,7 @@ fun GameFailView(
                     text = stringResource(R.string.game_result_hint_button),
                     onClick = onBuyHint,
                     variant = ButtonVariant.SECONDARY,
-                    contentColorOverride = AppColors.BrownText,
+                    contentColorOverride = LinguaQuestTheme.colors.BrownText,
                     icon = rememberVectorPainter(Icons.Default.Lightbulb),
                     iconPosition = IconPosition.END
                 )

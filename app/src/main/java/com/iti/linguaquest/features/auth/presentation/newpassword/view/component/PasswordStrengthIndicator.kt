@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordDimens
 
 private const val STRONG_PASSWORD_LENGTH = 12
@@ -31,7 +30,7 @@ fun PasswordStrengthIndicator(
     val strength = computePasswordStrength(password)
     val strengthColor by animateColorAsState(
         targetValue = when (strength) {
-            PasswordStrength.STRONG -> AppColors.Teal
+            PasswordStrength.STRONG -> MaterialTheme.colorScheme.tertiary
             PasswordStrength.MEDIUM -> MaterialTheme.colorScheme.tertiary
             PasswordStrength.WEAK -> MaterialTheme.colorScheme.error
             PasswordStrength.EMPTY -> MaterialTheme.colorScheme.outline

@@ -55,13 +55,20 @@ fun SettingContent(
     onBackClick: () -> Unit,
     appLanguage: String,
     onChangeAppLanguage: (String) -> Unit,
+    appTheme: String,
+    onChangeAppTheme: (String) -> Unit,
     soundEnabled: Boolean,
     onSoundToggle: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    var darkModeEnabled by remember { mutableStateOf(false) }
+    val isDark = when (appTheme) {
+        "light" -> false
+        "dark" -> true
+        else -> androidx.compose.foundation.isSystemInDarkTheme()
+    }
+
     var showLanguageDialog by remember { mutableStateOf(false) }
 
     if (showLanguageDialog) {
@@ -206,8 +213,10 @@ fun SettingContent(
                 icon = painterResource(id = R.drawable.ic_moon_icon),
                 title = stringResource(id = R.string.settings_dark_mode),
                 hasSwitch = true,
-                switchChecked = darkModeEnabled,
-                onSwitchChange = { darkModeEnabled = it },
+                switchChecked = isDark,
+                onSwitchChange = { isChecked ->
+                    onChangeAppTheme(if (isChecked) "dark" else "light")
+                },
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
@@ -240,6 +249,7 @@ fun SettingContent(
         AppButton3D(
             text = stringResource(id = R.string.settings_log_out),
             onClick = onLogoutClick,
+            textColor = androidx.compose.ui.graphics.Color.Black, // Ensure dark text on primary button
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -255,6 +265,8 @@ fun SettingContentPreview() {
             onBackClick = {},
             appLanguage = "en",
             onChangeAppLanguage = {},
+            appTheme = "system",
+            onChangeAppTheme = {},
             soundEnabled = true,
             onSoundToggle = {},
             notificationsEnabled = true,

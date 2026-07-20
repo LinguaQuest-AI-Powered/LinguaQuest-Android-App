@@ -2,13 +2,18 @@ package com.iti.linguaquest.core.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
@@ -41,18 +46,24 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 painter = painterResource(id = R.drawable.lingo_bg),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                colorFilter = if (isSystemInDarkTheme()) {
+                    ColorFilter.tint(
+                        Color.Black.copy(alpha = 0.75f),
+                        BlendMode.SrcOver
+                    )
+                } else null
             )
         } else {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.background)
             )
         }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            containerColor = Color.Transparent,
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = 1250,

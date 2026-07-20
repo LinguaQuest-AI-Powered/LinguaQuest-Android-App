@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.auth.share.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -62,16 +61,7 @@ fun AuthTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = borderWidth,
-                    color =
-                        if (isError)
-                            MaterialTheme.colorScheme.error
-                        else
-                            MaterialTheme.colorScheme.outline,
-                    shape = RoundedCornerShape(50)
-                ),
+                .fillMaxWidth(),
             enabled = enabled,
             isError = isError,
             placeholder = { Text(placeholder, color = LinguaQuestTheme.colors.textFieldPlaceholder) },
@@ -123,14 +113,13 @@ fun AuthTextField(
                 imeAction = imeAction
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = LinguaQuestTheme.colors.textFieldFill,
-                unfocusedContainerColor = LinguaQuestTheme.colors.textFieldFill,
-                disabledContainerColor = MaterialTheme.colorScheme.surface,
-                focusedBorderColor =
-                    MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedTextColor = LinguaQuestTheme.colors.textFieldPlaceholder,
-                unfocusedTextColor = LinguaQuestTheme.colors.textFieldPlaceholder,
+                focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                disabledContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = LinguaQuestTheme.colors.socialButtonBorder,
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
                 cursorColor = MaterialTheme.colorScheme.primary
             )
         )

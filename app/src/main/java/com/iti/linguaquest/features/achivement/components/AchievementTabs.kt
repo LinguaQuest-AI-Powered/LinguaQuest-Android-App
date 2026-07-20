@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun AchievementTabs(
@@ -37,7 +38,7 @@ fun AchievementTabs(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp)
-            .background(AppColors.SecondaryColor, RoundedCornerShape(25.dp))
+            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(25.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -45,11 +46,11 @@ fun AchievementTabs(
         tabs.forEachIndexed { index, title ->
             val isSelected = selectedTab == index
             val animatedBackgroundColor by animateColorAsState(
-                targetValue = if (isSelected) AppColors.Teal else Color.Transparent,
+                targetValue = if (isSelected) MaterialTheme.colorScheme.tertiary else Color.Transparent,
                 animationSpec = tween(300)
             )
             val animatedTextColor by animateColorAsState(
-                targetValue = if (isSelected) AppColors.White else AppColors.BrownText,
+                targetValue = if (isSelected) LinguaQuestTheme.colors.whiteColor else LinguaQuestTheme.colors.BrownText,
                 animationSpec = tween(300)
             )
 

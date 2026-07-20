@@ -1,7 +1,6 @@
 package com.iti.linguaquest.features.gallery.presentation.view
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +54,7 @@ fun GalleryScreen(
     val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorRes == null
 
     LaunchedEffect(isEmpty) {
-         showBackground = !isEmpty
+         showBackground = true
     }
 
     Box(

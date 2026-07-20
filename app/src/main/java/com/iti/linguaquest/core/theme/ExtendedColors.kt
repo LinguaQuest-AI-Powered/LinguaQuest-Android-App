@@ -37,9 +37,21 @@ data class LinguaQuestColors(
     val Sand : Color,
     val SuccessAccent : Color,
     val ErrorAccent : Color,
-    val InfoAccent : Color
-
-
+    val InfoAccent : Color,
+    val LeaderboardGold: Color,
+    val LeaderboardBlue: Color,
+    val LeaderboardBronze: Color,
+    val AchievementCyanBackground: Color,
+    val AchievementCyanText: Color,
+    val AchievementCardBorder: Color,
+    val AchievementDivider: Color,
+    val AchievementButtonShadow: Color,
+    val AchievementTabInactive: Color,
+    val AchievementHeaderGradientTop: Color,
+    val AchievementHeaderGradientBottom: Color,
+    val DialogGradientTopRight: Color,
+    val DialogGradientBottomLeft: Color,
+    val ShadowOrange: Color
 )
 
 internal val LocalLinguaQuestColors =

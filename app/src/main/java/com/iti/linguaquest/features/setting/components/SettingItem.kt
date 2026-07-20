@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.setting.components
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -48,7 +49,7 @@ fun SettingItem(
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = title,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = LocalLinguaQuestColors.current.titleAndCationsColor,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
@@ -71,9 +72,9 @@ fun SettingItem(
                     onSwitchChange?.invoke(checked)
                 },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
+                    checkedThumbColor = LinguaQuestTheme.colors.whiteColor,
                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    uncheckedThumbColor = Color.White,
+                    uncheckedThumbColor = LinguaQuestTheme.colors.whiteColor,
                     uncheckedTrackColor = Color.LightGray,
                     uncheckedBorderColor = Color.Transparent
                 ),

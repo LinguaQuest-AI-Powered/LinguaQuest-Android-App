@@ -22,6 +22,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 import kotlinx.coroutines.delay
@@ -109,7 +110,7 @@ fun PodiumItem(
                         ambientColor = rankColor,
                         spotColor = rankColor
                     )
-                    .background(Color.White, CircleShape)
+                    .background(LinguaQuestTheme.colors.whiteColor, CircleShape)
                     .border(3.dp, rankColor, CircleShape)
             )
 
@@ -128,13 +129,13 @@ fun PodiumItem(
                     .offset(x = 2.dp, y = 2.dp)
                     .size(if (isFirst) 22.dp else 18.dp)
                     .background(rankColor, CircleShape)
-                    .border(2.dp, Color.White, CircleShape),
+                    .border(2.dp, LinguaQuestTheme.colors.whiteColor, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_start),
                     contentDescription = null,
-                    tint = if (isFirst) AppColors.BrownText else Color.White,
+                    tint = if (isFirst) LinguaQuestTheme.colors.BrownText else LinguaQuestTheme.colors.whiteColor,
                     modifier = Modifier.size(if (isFirst) 12.dp else 10.dp)
                 )
             }
@@ -147,7 +148,7 @@ fun PodiumItem(
                 .alpha(if (animatedCardHeight > 5.dp) 1f else 0f)
                 .then(
                     if (isFirst) Modifier.coloredShadow(
-                        color = AppColors.LeaderboardGold,
+                        color = LinguaQuestTheme.colors.LeaderboardGold,
                         borderRadius = 16.dp,
                         blurRadius = 20.dp,
                         offsetY = 0.dp
@@ -155,7 +156,7 @@ fun PodiumItem(
                 )
                 .border(
                     width = if (isFirst) 1.5.dp else 0.dp,
-                    color = if (isFirst) AppColors.LeaderboardGold else Color.Transparent,
+                    color = if (isFirst) LinguaQuestTheme.colors.LeaderboardGold else Color.Transparent,
                     shape = RoundedCornerShape(
                         topStart = 16.dp,
                         topEnd = 16.dp,
@@ -170,7 +171,7 @@ fun PodiumItem(
                 bottomEnd = 0.dp
             ),
             colors = CardDefaults.cardColors(
-                containerColor = if (isFirst) Color.White else AppColors.SecondaryColor
+                containerColor = if (isFirst) LinguaQuestTheme.colors.whiteColor else MaterialTheme.colorScheme.secondary
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
@@ -188,14 +189,14 @@ fun PodiumItem(
                         text = "#${entry.rank}",
                         fontSize = if (isFirst) 20.sp else 15.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = AppColors.BrownText
+                        color = LinguaQuestTheme.colors.BrownText
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = entry.username,
                         fontSize = if (isFirst) 15.sp else 13.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppColors.BrownText,
+                        color = LinguaQuestTheme.colors.BrownText,
                         textAlign = TextAlign.Center,
                         maxLines = 2
                     )
@@ -204,7 +205,7 @@ fun PodiumItem(
                         text = "${entry.xp} XP",
                         fontSize = if (isFirst) 13.sp else 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = AppColors.TitleAndCaptionColor,
+                        color = LinguaQuestTheme.colors.titleAndCationsColor,
                         textAlign = TextAlign.Center
                     )
                 }
