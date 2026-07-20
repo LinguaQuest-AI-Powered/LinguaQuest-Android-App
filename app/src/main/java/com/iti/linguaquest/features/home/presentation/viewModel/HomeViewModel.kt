@@ -9,12 +9,16 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.utils.DailyRewardSessionState
 import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
+import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
+import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
+import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiLessonPreview
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +37,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getHomeSummaryUseCase: GetHomeSummaryUseCase,
     private val getWorldsUseCase: GetWorldsUseCase,
+    private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
+    private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -55,18 +61,44 @@ class HomeViewModel @Inject constructor(
                     sendEffect(HomeEffect.NavigateToLessonDetails(lesson.lessonId))
                 }
             }
+
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
 
             HomeIntent.FabClicked -> {
                 _state.update { it.copy(isLanguageBottomSheetVisible = true) }
             }
+
             HomeIntent.DismissLanguageBottomSheet -> {
                 _state.update { it.copy(isLanguageBottomSheetVisible = false) }
             }
+
             HomeIntent.AddNewLanguageClicked -> {
                 _state.update { it.copy(isLanguageBottomSheetVisible = false) }
                 sendEffect(HomeEffect.NavigateToAddLanguages)
             }
+
+            HomeIntent.DailyRewardBannerClicked -> {
+                _state.update {
+                    it.copy(
+                        isDailyRewardDialogVisible = true,
+                        isDailyRewardBannerVisible = false
+                    )
+                }
+            }
+
+            HomeIntent.DismissDailyRewardBanner -> _state.update {
+                it.copy(
+                    isDailyRewardBannerVisible = false
+                )
+            }
+
+            HomeIntent.DismissDailyRewardDialog -> _state.update {
+                it.copy(
+                    isDailyRewardDialogVisible = false
+                )
+            }
+
+            HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
         }
     }
 
@@ -76,28 +108,36 @@ class HomeViewModel @Inject constructor(
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase() }
             val worldsDeferred = async { getWorldsUseCase() }
-            
+            val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+
             val homeSummaryResult = homeSummaryDeferred.await()
             val worldsResult = worldsDeferred.await()
+            val dailyRewardResult = dailyRewardDeferred.await()
 
             if (homeSummaryResult is LinguaQuestResult.Success && worldsResult is LinguaQuestResult.Success) {
                 val summary = homeSummaryResult.data
                 val worldsData = worldsResult.data
+                val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
+                val shouldShowBanner = dailyRewardUi != null &&
+                        !dailyRewardUi.claimedToday &&
+                        !DailyRewardSessionState.hasAutoShownThisSession
+
+                if (shouldShowBanner) DailyRewardSessionState.hasAutoShownThisSession = true
+
                 _state.update {
                     it.copy(
                         isLoading = false,
                         hasError = false,
                         languageProgress = summary.toLanguageProgressUi(),
                         worlds = worldsData.worlds.map { world -> world.toUiWorldItem() },
-                        continueLesson = summary.continueLesson?.toUiLessonPreview()
+                        continueLesson = summary.continueLesson?.toUiLessonPreview(),
+                        dailyReward = dailyRewardUi,
+                        isDailyRewardBannerVisible = shouldShowBanner
                     )
                 }
             } else {
-                val errorResult = if (homeSummaryResult is LinguaQuestResult.Failure) {
-                    homeSummaryResult
-                } else {
-                    worldsResult as LinguaQuestResult.Failure
-                }
+                val errorResult = homeSummaryResult as? LinguaQuestResult.Failure
+                    ?: worldsResult as LinguaQuestResult.Failure
                 _state.update { it.copy(isLoading = false, hasError = true) }
                 snackbarController.sendEvent(
                     SnackbarEvent(
@@ -110,6 +150,35 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    private fun claimDailyReward() {
+        viewModelScope.launch {
+            when (val result = claimDailyRewardUseCase()) {
+                is LinguaQuestResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            isDailyRewardDialogVisible = false,
+                            dailyReward = it.dailyReward?.copy(claimedToday = true)
+                        )
+                    }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.DynamicString("+${result.data.coinsAwarded} coins claimed!"),
+                            type = SnackbarType.SUCCESS
+                        )
+                    )
+                }
+
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isDailyRewardDialogVisible = false) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(message = result.error.toUiText(), type = SnackbarType.ERROR)
+                    )
+                }
+            }
+        }
+    }
+
 
     private fun sendEffect(effect: HomeEffect) {
         viewModelScope.launch { _effect.emit(effect) }
