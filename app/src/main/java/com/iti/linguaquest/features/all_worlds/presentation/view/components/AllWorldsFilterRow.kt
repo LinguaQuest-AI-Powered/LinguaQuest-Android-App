@@ -50,8 +50,13 @@ fun AllWorldsFilterRow(
         }
         
         items(WorldDifficulty.entries.toTypedArray()) { difficulty ->
+            val stringResId = when (difficulty) {
+                WorldDifficulty.EASY -> R.string.easy
+                WorldDifficulty.MEDIUM -> R.string.medium
+                WorldDifficulty.HARD -> R.string.hard
+            }
             FilterChip(
-                text = difficulty.label.lowercase().replaceFirstChar { it.uppercase() },
+                text = stringResource(stringResId).lowercase().replaceFirstChar { it.uppercase() },
                 isSelected = selectedFilter == difficulty,
                 dotColor = difficulty.badgeColor,
                 onClick = { onFilterSelected(difficulty) }

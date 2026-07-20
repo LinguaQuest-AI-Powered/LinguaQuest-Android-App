@@ -17,10 +17,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -36,11 +42,41 @@ fun LevelNode(
     stars: Int,
     offsetX: Dp,
     offsetY: Dp,
+    isLastLevel: Boolean = false,
     onClick: () -> Unit = {}
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "halo")
+    val floatOffset by if (status == LevelStatus.CURRENT) {
+        infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = -12f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "float"
+        )
+    } else {
+        androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
+    }
+
+    val scale by if (isLastLevel) {
+        infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.15f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "scale"
+        )
+    } else {
+        remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
+    }
+
     Box(
         modifier = Modifier
-            .offset(x = offsetX, y = offsetY)
+            .offset(x = offsetX, y = offsetY + floatOffset.dp)
             .size(100.dp)
             .clickable(enabled = status != LevelStatus.LOCKED) { onClick() },
         contentAlignment = Alignment.Center
@@ -48,7 +84,7 @@ fun LevelNode(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val circleSize = if (status == LevelStatus.CURRENT) 80.dp else 70.dp
+            val circleSize = if (status == LevelStatus.CURRENT) 70.dp else 60.dp
             val backgroundColor = when (status) {
                 LevelStatus.COMPLETED -> AppColors.Teal
                 LevelStatus.CURRENT -> AppColors.PrimaryColor
@@ -62,28 +98,59 @@ fun LevelNode(
                 Modifier
             }
 
-            Box(
-                modifier = Modifier
-                    .size(circleSize)
-                    .clip(CircleShape)
-                    .background(backgroundColor)
-                    .then(borderModifier),
-                contentAlignment = Alignment.Center
-            ) {
-                if (status == LevelStatus.LOCKED) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.lock),
-                        contentDescription = "Locked",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+            Box(contentAlignment = Alignment.Center) {
+                if (status == LevelStatus.CURRENT) {
+                    val haloSize = if (isLastLevel) 220.dp else 120.dp
+                    Box(
+                        modifier = Modifier
+                            .size(haloSize)
+                            .scale(scale)
+                            .clip(CircleShape)
+                            .background(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        Color.White.copy(alpha = 0.6f),
+                                        AppColors.PrimaryColor.copy(alpha = 0.5f),
+                                        Color.Transparent
+                                    )
+                                )
+                            )
+                    )
+                }
+
+                if (isLastLevel) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_treasure_chest),
+                        contentDescription = "Treasure",
+                        modifier = Modifier
+                            .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
+                            .scale(scale)
                     )
                 } else {
-                    Text(
-                        text = levelNumber.toString(),
-                        color = Color.White,
-                        fontSize = if (status == LevelStatus.CURRENT) 32.sp else 28.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(circleSize)
+                            .clip(CircleShape)
+                            .background(backgroundColor)
+                            .then(borderModifier),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (status == LevelStatus.LOCKED) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.lock),
+                                contentDescription = "Locked",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        } else {
+                            Text(
+                                text = levelNumber.toString(),
+                                color = Color.White,
+                                fontSize = if (status == LevelStatus.CURRENT) 32.sp else 28.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
 

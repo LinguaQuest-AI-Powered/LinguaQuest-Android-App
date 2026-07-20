@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.map.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Alignment
+import androidx.compose.animation.core.*
 import com.iti.linguaquest.R
 import com.iti.linguaquest.features.map.presentation.contract.MapState
 
@@ -114,18 +119,54 @@ fun MapContent(
                         stars = level.stars,
                         offsetX = x,
                         offsetY = y,
+                        isLastLevel = index == state.levels.lastIndex,
                         onClick = { onLevelClick(level.levelNumber) }
                     )
                 }
 
                 if (state.currentLevelIndex in nodePositions.indices) {
                     val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
+                    val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
+                    val floatOffset by infiniteTransition.animateFloat(
+                        initialValue = 0f,
+                        targetValue = -12f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(1000, easing = FastOutSlowInEasing),
+                            repeatMode = RepeatMode.Reverse
+                        ),
+                        label = "float"
+                    )
+
                     Mascot(
                         offsetX = nodeX + 60.dp,
-                        offsetY = nodeY - 60.dp
+                        offsetY = nodeY - 60.dp + floatOffset.dp
                     )
                 }
             }
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .align(Alignment.TopCenter)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.White, Color.Transparent)
+                    )
+                )
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .align(Alignment.BottomCenter)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.White)
+                    )
+                )
+        )
     }
 }
