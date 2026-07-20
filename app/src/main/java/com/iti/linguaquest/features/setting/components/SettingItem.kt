@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.sound.AppSound
 
 @Composable
 fun SettingItem(
@@ -28,6 +30,8 @@ fun SettingItem(
     onSwitchChange: ((Boolean) -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
+    val soundPlayer = LocalSoundPlayer.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -62,7 +66,10 @@ fun SettingItem(
         if (hasSwitch) {
             Switch(
                 checked = switchChecked,
-                onCheckedChange = onSwitchChange,
+                onCheckedChange = { checked ->
+                    soundPlayer.play(AppSound.SWITCH)
+                    onSwitchChange?.invoke(checked)
+                },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = MaterialTheme.colorScheme.primary,
