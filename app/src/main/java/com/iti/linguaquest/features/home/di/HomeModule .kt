@@ -1,13 +1,16 @@
 package com.iti.linguaquest.features.home.di
 
+import com.iti.linguaquest.features.home.data.fake.FakeDailyRewardRepository
 import com.iti.linguaquest.features.home.data.fake.FakeHomeRepository
 import com.iti.linguaquest.features.home.data.fake.FakeLanguagesRepo
+import com.iti.linguaquest.features.home.data.remote.DailyRewardApiService
 import com.iti.linguaquest.features.home.data.remote.HomeApiService
 import com.iti.linguaquest.features.home.data.remote.HomeRemoteDataSource
 import com.iti.linguaquest.features.home.data.remote.HomeRemoteDataSourceImpl
 import com.iti.linguaquest.features.home.data.remote.LanguagesApiService
 import com.iti.linguaquest.features.home.data.remote.LanguagesRemoteDataSource
 import com.iti.linguaquest.features.home.data.remote.LanguagesRemoteDataSourceImpl
+import com.iti.linguaquest.features.home.domain.repository.DailyRewardRepository
 import com.iti.linguaquest.features.home.domain.repository.HomeRepository
 import com.iti.linguaquest.features.home.domain.repository.LanguagesRepo
 import dagger.Binds
@@ -40,6 +43,11 @@ abstract class HomeModule {
     @Singleton
     abstract fun bindLanguagesRemoteDataSource(impl: LanguagesRemoteDataSourceImpl): LanguagesRemoteDataSource
 
+    @Binds
+    @Singleton
+    abstract fun bindDailyRewardRepository(impl: FakeDailyRewardRepository): DailyRewardRepository
+    // Swap to DailyRewardRepositoryImpl(remoteDataSource) when backend is ready
+
     companion object {
         @Provides
         @Singleton
@@ -50,5 +58,10 @@ abstract class HomeModule {
         @Singleton
         fun provideLanguagesApiService(retrofit: Retrofit): LanguagesApiService =
             retrofit.create(LanguagesApiService::class.java)
+
+        @Provides
+        @Singleton
+        fun provideDailyRewardApiService(retrofit: Retrofit): DailyRewardApiService =
+            retrofit.create(DailyRewardApiService::class.java)
     }
 }

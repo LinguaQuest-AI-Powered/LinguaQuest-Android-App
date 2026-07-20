@@ -1,5 +1,12 @@
 package com.iti.linguaquest.features.home.presentation.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -41,10 +50,13 @@ import com.iti.linguaquest.features.home.presentation.languages.contract.MyLangu
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun HomeScreen(
@@ -58,7 +70,25 @@ fun HomeScreen(
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var showDailyRewardDialog by remember { mutableStateOf(false) }
+    var showCoinRain by remember { mutableStateOf(false) }
+    val configuration = LocalConfiguration.current
+    val fallZoneHeight = (configuration.screenHeightDp / 2).dp
+    var bannerHeightPx by remember { mutableStateOf(0f) }
+
+    LaunchedEffect(state.isDailyRewardBannerVisible) {
+        if (state.isDailyRewardBannerVisible) {
+            showCoinRain = true
+            delay(3000.milliseconds)
+            showCoinRain = false
+        }
+    }
+
+    LaunchedEffect(state.isDailyRewardBannerVisible) {
+        if (state.isDailyRewardBannerVisible) {
+            delay(6000.milliseconds)
+            viewModel.onIntent(HomeIntent.DismissDailyRewardBanner)
+        }
+    }
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
@@ -68,9 +98,7 @@ fun HomeScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
-                is HomeEffect.NavigateToWorld -> {
-                    onNavigateToWorldMap(effect.worldId)
-                }
+                is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
             }
@@ -84,16 +112,12 @@ fun HomeScreen(
         } else {
             HomeContent(
                 state = state,
-                onIntent = viewModel::onIntent,
-                onDailyRewardClick = {
-                    soundPlayer.play(AppSound.DAILY_REWARD)
-                    showDailyRewardDialog = true
-                }
+                onIntent = viewModel::onIntent
             )
         }
 
         FloatingActionButton(
-            onClick = {viewModel.onIntent(HomeIntent.FabClicked)},
+            onClick = { viewModel.onIntent(HomeIntent.FabClicked) },
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier
@@ -106,11 +130,53 @@ fun HomeScreen(
                 modifier = Modifier.size(28.dp)
             )
         }
+
+        AnimatedVisibility(
+            visible = state.isDailyRewardBannerVisible,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> -fullHeight },
+                animationSpec = tween(400, easing = FastOutSlowInEasing)
+            ) + fadeIn(tween(400)),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> -fullHeight },
+                animationSpec = tween(300, easing = FastOutSlowInEasing)
+            ) + fadeOut(tween(300)),
+            modifier = Modifier.align(Alignment.TopCenter)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(fallZoneHeight)
+            ) {
+                AnimatedVisibility(
+                    visible = showCoinRain,
+                    enter = fadeIn(tween(200)),
+                    exit = fadeOut(tween(800)),
+                    modifier = Modifier.matchParentSize()
+                ) {
+                    CoinRainOverlay(
+                        modifier = Modifier.fillMaxSize(),
+                        coinCount = 30,
+                        startYPx = bannerHeightPx
+                    )
+                }
+
+                DailyStreakBonusBanner(
+                    onClick = {
+                        soundPlayer.play(AppSound.DAILY_REWARD)
+                        viewModel.onIntent(HomeIntent.DailyRewardBannerClicked)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
+        }
     }
 
-    if (showDailyRewardDialog) {
+    if (state.isDailyRewardDialogVisible) {
         Dialog(
-            onDismissRequest = { showDailyRewardDialog = false },
+            onDismissRequest = { viewModel.onIntent(HomeIntent.DismissDailyRewardDialog) },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             Box(
@@ -120,12 +186,11 @@ fun HomeScreen(
                 contentAlignment = Alignment.Center
             ) {
                 DailyRewardCard(
-                    currentDay = 3,
-                    rewardAmount = 50,
+                    currentDay = state.dailyReward?.currentDay ?: 1,
+                    rewardAmount = state.dailyReward?.rewardCoins ?: 0,
                     onClaimClick = {
-                        // TODO: wire real claim logic once daily-reward endpoint/domain exists
                         soundPlayer.play(AppSound.COIN)
-                        showDailyRewardDialog = false
+                        viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked)
                     }
                 )
             }
@@ -153,7 +218,6 @@ fun HomeScreen(
 fun HomeContent(
     state: HomeState,
     onIntent: (HomeIntent) -> Unit,
-    onDailyRewardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -161,11 +225,6 @@ fun HomeContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        DailyStreakBonusBanner(
-            onClick = onDailyRewardClick,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)
-        )
-
         Spacer(modifier = Modifier.height(20.dp))
 
         state.languageProgress?.let { progress ->
