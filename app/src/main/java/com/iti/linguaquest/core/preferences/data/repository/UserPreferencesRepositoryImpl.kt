@@ -1,21 +1,9 @@
-package com.iti.linguaquest.core.preferences
+package com.iti.linguaquest.core.preferences.data.repository
 
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-
-interface UserPreferencesRepository {
-    val targetLanguage: Flow<String?>
-    val proficiencyLevel: Flow<String?>
-    val appTheme: Flow<String>
-    val soundEnabled: Flow<Boolean>
-    val appLanguage: Flow<String>
-
-    suspend fun saveTargetLanguage(language: String)
-    suspend fun saveProficiencyLevel(level: String)
-    suspend fun saveAppTheme(theme: String)
-    suspend fun saveSoundEnabled(enabled: Boolean)
-    suspend fun saveAppLanguage(language: String)
-}
 
 class UserPreferencesRepositoryImpl @Inject constructor(
     private val localDataSource: UserPreferencesLocalDataSource

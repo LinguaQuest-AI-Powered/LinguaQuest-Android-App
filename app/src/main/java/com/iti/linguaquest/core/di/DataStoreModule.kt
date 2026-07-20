@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSource
-import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSourceImpl
-import com.iti.linguaquest.core.preferences.UserPreferencesRepository
-import com.iti.linguaquest.core.preferences.UserPreferencesRepositoryImpl
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSourceImpl
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.preferences.data.repository.UserPreferencesRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

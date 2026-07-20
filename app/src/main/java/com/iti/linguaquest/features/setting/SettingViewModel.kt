@@ -2,7 +2,9 @@ package com.iti.linguaquest.features.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.preferences.UserPreferencesRepository
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -10,15 +12,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-import android.content.Context
-import android.os.Build
-import android.app.LocaleManager
-import android.os.LocaleList
-import java.util.Locale
-
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val userPreferencesRepository: UserPreferencesRepository
+    userPreferencesRepository: UserPreferencesRepository,
+    private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
+    private val toggleSoundUseCase: ToggleSoundUseCase
 ) : ViewModel() {
 
     val appLanguage: StateFlow<String> = userPreferencesRepository.appLanguage
@@ -28,21 +26,22 @@ class SettingViewModel @Inject constructor(
             initialValue = "en"
         )
 
-    fun changeAppLanguage(context: Context, language: String) {
+    val soundEnabled: StateFlow<Boolean> = userPreferencesRepository.soundEnabled
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
+
+    fun toggleSound(enabled: Boolean) {
         viewModelScope.launch {
-            userPreferencesRepository.saveAppLanguage(language)
-            
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.getSystemService(LocaleManager::class.java).applicationLocales = LocaleList.forLanguageTags(language)
-            } else {
-                val locale = Locale(language)
-                Locale.setDefault(locale)
-                val config = context.resources.configuration
-                config.setLocale(locale)
-                context.resources.updateConfiguration(config, context.resources.displayMetrics)
-                
-                // Restart activity if needed (omitted for simplicity, updateConfiguration often handles it in pure Compose if LocalConfiguration is triggered)
-            }
+            toggleSoundUseCase(enabled)
+        }
+    }
+
+    fun changeAppLanguage(language: String) {
+        viewModelScope.launch {
+            changeAppLanguageUseCase(language)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.preferences
+package com.iti.linguaquest.core.preferences.data.datasource
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

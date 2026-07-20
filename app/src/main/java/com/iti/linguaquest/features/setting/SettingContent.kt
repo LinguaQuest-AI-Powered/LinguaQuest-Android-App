@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,12 +55,13 @@ fun SettingContent(
     onBackClick: () -> Unit,
     appLanguage: String,
     onChangeAppLanguage: (String) -> Unit,
+    soundEnabled: Boolean,
+    onSoundToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit
 ) {
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
-    var soundEffectsEnabled by remember { mutableStateOf(true) }
     var showLanguageDialog by remember { mutableStateOf(false) }
 
     if (showLanguageDialog) {
@@ -133,7 +132,7 @@ fun SettingContent(
                             }
                             .padding(vertical = 16.dp)
                     )
-                    Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp)
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -164,7 +163,7 @@ fun SettingContent(
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_learning_language),
@@ -193,7 +192,7 @@ fun SettingContent(
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { showLanguageDialog = true }
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_bell_icon),
                 title = stringResource(id = R.string.settings_notifications),
@@ -202,7 +201,7 @@ fun SettingContent(
                 onSwitchChange = { notificationsEnabled = it },
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_moon_icon),
                 title = stringResource(id = R.string.settings_dark_mode),
@@ -211,23 +210,23 @@ fun SettingContent(
                 onSwitchChange = { darkModeEnabled = it },
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_speaker_icon),
                 title = stringResource(id = R.string.settings_sound_effects),
                 hasSwitch = true,
-                switchChecked = soundEffectsEnabled,
-                onSwitchChange = { soundEffectsEnabled = it },
+                switchChecked = soundEnabled,
+                onSwitchChange = onSoundToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_help_icon),
                 title = stringResource(id = R.string.settings_help_support),
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { /* TODO */ }
             )
-            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_info_icon),
                 title = stringResource(id = R.string.settings_about_app),
@@ -256,6 +255,8 @@ fun SettingContentPreview() {
             onBackClick = {},
             appLanguage = "en",
             onChangeAppLanguage = {},
+            soundEnabled = true,
+            onSoundToggle = {},
             onLogoutClick = {},
             onDeleteAccountClick = {}
         )

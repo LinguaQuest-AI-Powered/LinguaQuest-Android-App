@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.game.presentation.result.view.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,7 +37,6 @@ fun GameFailView(
     onExit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Log.d("GameFailView", "Target word: ${targetWord.asString()}")
     Box(
         modifier = modifier
             .fillMaxSize()

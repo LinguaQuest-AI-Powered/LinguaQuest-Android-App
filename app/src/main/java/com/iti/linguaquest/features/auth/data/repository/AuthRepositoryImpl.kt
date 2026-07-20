@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.auth.data.repository
 
 
-import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult

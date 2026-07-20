@@ -3,8 +3,8 @@ package com.iti.linguaquest.features.setting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun SettingScreen(
@@ -12,13 +12,17 @@ fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val appLanguage by viewModel.appLanguage.collectAsState()
-    val context = LocalContext.current
+    val soundEnabled by viewModel.soundEnabled.collectAsState()
 
     SettingContent(
         onBackClick = onBack,
         appLanguage = appLanguage,
         onChangeAppLanguage = { language ->
-            viewModel.changeAppLanguage(context, language)
+            viewModel.changeAppLanguage(language)
+        },
+        soundEnabled = soundEnabled,
+        onSoundToggle = { enabled ->
+            viewModel.toggleSound(enabled)
         },
         onLogoutClick = {
          },

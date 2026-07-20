@@ -2,7 +2,7 @@ package com.iti.linguaquest.features.onBoarding.viewModel.languageViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.preferences.UserPreferencesRepository
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguageOption
 import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.contract.languageContract.LanguagesIntent
