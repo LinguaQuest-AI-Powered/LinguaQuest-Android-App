@@ -11,6 +11,27 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.Alignment
+import com.iti.linguaquest.core.theme.AppTextStyles
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,15 +51,95 @@ import com.iti.linguaquest.features.setting.components.SettingProfileHeader
 import com.iti.linguaquest.features.setting.components.SettingSectionContainer
 import com.iti.linguaquest.core.utils.ShareTopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingContent(
     onBackClick: () -> Unit,
+    appLanguage: String,
+    onChangeAppLanguage: (String) -> Unit,
     onLogoutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit
 ) {
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
     var soundEffectsEnabled by remember { mutableStateOf(true) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
+
+    if (showLanguageDialog) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val languages = listOf(
+            "en" to "English",
+            "es" to "Spanish",
+            "ja" to "Japanese",
+            "ge" to "German",
+            "ar" to "Arabic (العربية)"
+        )
+
+        ModalBottomSheet(
+            onDismissRequest = { showLanguageDialog = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.background,
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 8.dp)
+                        .width(40.dp)
+                        .height(4.dp)
+                        .clip(CircleShape)
+                        .background(LinguaQuestTheme.colors.textFieldBorder)
+                )
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_app_language),
+                        style = AppTextStyles.ScreenTitle.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = LinguaQuestTheme.colors.titleAndCationsColor
+                        )
+                    )
+                    IconButton(onClick = { showLanguageDialog = false }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.close),
+                            tint = LinguaQuestTheme.colors.titleAndCationsColor
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                languages.forEach { (code, name) ->
+                    Text(
+                        text = name,
+                        style = AppTextStyles.LessonTitle.copy(
+                            fontWeight = if (appLanguage == code) FontWeight.Bold else FontWeight.Normal,
+                            color = if (appLanguage == code) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.titleAndCationsColor
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onChangeAppLanguage(code)
+                                showLanguageDialog = false
+                            }
+                            .padding(vertical = 16.dp)
+                    )
+                    Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp)
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -72,12 +173,27 @@ fun SettingContent(
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-
+            
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         SettingSectionContainer(title = stringResource(id = R.string.settings_category_app_experience)) {
+            SettingItem(
+                icon = painterResource(id = R.drawable.ic_learning_language),
+                title = stringResource(id = R.string.settings_app_language),
+                value = when (appLanguage) {
+                    "es" -> "Spanish"
+                    "ja" -> "Japanese"
+                    "ge" -> "German"
+                    "ar" -> "Arabic"
+                    else -> "English"
+                },
+                valueColor = LocalLinguaQuestColors.current.BrownText,
+                iconTint = MaterialTheme.colorScheme.tertiary,
+                onClick = { showLanguageDialog = true }
+            )
+            Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_bell_icon),
                 title = stringResource(id = R.string.settings_notifications),
@@ -138,9 +254,12 @@ fun SettingContentPreview() {
     LinguaQuestTheme {
         SettingContent(
             onBackClick = {},
+            appLanguage = "en",
+            onChangeAppLanguage = {},
             onLogoutClick = {},
             onDeleteAccountClick = {}
         )
     }
 }
+
 

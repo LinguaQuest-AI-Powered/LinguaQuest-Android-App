@@ -38,7 +38,7 @@ class LanguagesViewModel @Inject constructor(
     private fun loadSavedLanguages() {
         viewModelScope.launch {
             combine(
-                userPreferencesRepository.nativeLanguage,
+                userPreferencesRepository.appLanguage,
                 userPreferencesRepository.targetLanguage
             ) { savedNative, savedTarget -> savedNative to savedTarget }
                 .collectLatest { (savedNative, savedTarget) ->
@@ -68,7 +68,7 @@ class LanguagesViewModel @Inject constructor(
             it.copy(nativeLanguage = language.displayName, isNativeDropdownExpanded = false)
         }
         viewModelScope.launch {
-            userPreferencesRepository.saveNativeLanguage(language.displayName)
+            userPreferencesRepository.saveAppLanguage(language.displayName)
         }
     }
 
@@ -96,7 +96,7 @@ class LanguagesViewModel @Inject constructor(
         val current = _state.value
         val target = current.targetLanguage ?: return
         viewModelScope.launch {
-            userPreferencesRepository.saveNativeLanguage(current.nativeLanguage)
+            userPreferencesRepository.saveAppLanguage(current.nativeLanguage)
             userPreferencesRepository.saveTargetLanguage(target)
             _effect.emit(LanguagesEffect.NavigateToLevelScreen)
         }

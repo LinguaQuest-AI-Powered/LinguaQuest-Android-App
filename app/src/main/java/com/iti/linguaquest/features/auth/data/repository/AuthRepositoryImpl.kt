@@ -34,10 +34,10 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): LinguaQuestResult<Unit, AuthError> {
 
-        val nativeLanguage = userPreferencesLocalDataSource.nativeLanguage.first() ?: ""
+        val appLanguage = userPreferencesLocalDataSource.appLanguage.first() ?: ""
         val targetLanguage = userPreferencesLocalDataSource.targetLanguage.first() ?: ""
 
-        val request = RegisterRequestDto(email, username, password, nativeLanguage, targetLanguage)
+        val request = RegisterRequestDto(email, username, password, appLanguage, targetLanguage)
 
         return remoteDataSource.register(request)
             .map { Unit }

@@ -1,0 +1,301 @@
+<resources>
+    <string name="app_name">LinguaQuest</string>
+    <string name="app_logo_description">شعار LinguaQuest</string>
+    <string name="onboarding_title_p1">تعلم اللغات من خلال استكشاف </string>
+    <string name="onboarding_title_p2">العالم الحقيقي!</string>
+    <string name="get_started">ابدأ الآن</string>
+    <string name="already_have_an_account">لدي حساب بالفعل</string>
+
+    <string name="choose_your_languages">اختر لغاتك</string>
+    <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
+    <string name="i_speak">أنا أتحدث...</string>
+    <string name="i_want_to_learn">أريد أن أتعلم...</string>
+    <string name="popular_choices">خيارات شائعة</string>
+    <string name="continue_button">متابعة</string>
+    <string name="What_is_your_level">ما هو مستواك؟</string>
+    <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
+
+    // Languages displayed name
+    <string name="spanish_language_displayName">الإسبانية</string>
+    <string name="japanese_language_displayName">اليابانية</string>
+    <string name="english_language_displayName">الإنجليزية</string>
+    <string name="germany_language_displayName">الألمانية</string>
+
+    // Languages code
+    <string name="spanish_language_code">es</string>
+    <string name="japanese_language_code">ja</string>
+    <string name="english_language_code">en</string>
+    <string name="germany_language_code">ge</string>
+
+    <string name="select_language">اختر اللغة</string>
+
+    <string name="login_welcome_back">مرحباً بعودتك!</string>
+    <string name="login_ready_to_continue">هل أنت جاهز للمتابعة؟</string>
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="login_subtitle">سجل الدخول إلى حسابك</string>
+    <string name="login_email_address">البريد الإلكتروني</string>
+    <string name="login_password">كلمة المرور</string>
+    <string name="login_forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="login_log_in">تسجيل الدخول</string>
+    <string name="login_or_continue_with">أو المتابعة باستخدام</string>
+    <string name="login_google">جوجل</string>
+    <string name="login_continue_as_guest">المتابعة كضيف</string>
+    <string name="login_new_here">مستخدم جديد؟</string>
+    <string name="login_sign_up">إنشاء حساب</string>
+    <string name="signup_title">إنشاء حسابك</string>
+    <string name="signup_subtitle">أنشئ حساباً لتبدأ رحلتك في تعلم اللغات.</string>
+    <string name="signup_username">اسم المستخدم</string>
+    <string name="signup_confirm_password">تأكيد كلمة المرور</string>
+    <string name="signup_button">إنشاء الحساب</string>
+    <string name="signup_already_have_account">لديك حساب بالفعل؟</string>
+    <string name="hide_password">إخفاء كلمة المرور</string>
+    <string name="show_password">إظهار كلمة المرور</string>
+    <string name="home_label">الرئيسية</string>
+    <string name="profile_label">الملف الشخصي</string>
+
+    <string name="login_error_invalid_email">صيغة البريد الإلكتروني غير صحيحة.</string>
+    <string name="login_error_invalid_credentials">البريد الإلكتروني أو كلمة المرور غير صحيحة.</string>
+    <string name="login_error_email_not_verified">البريد الإلكتروني غير مؤكد.</string>
+    <string name="login_error_weak_password">كلمة المرور ضعيفة جداً.</string>
+    <string name="login_error_user_disabled">تم تعطيل حساب هذا المستخدم.</string>
+    <string name="login_error_token_not_valid">انتهت صلاحية الجلسة.</string>
+    <string name="login_error_operation_not_allowed">العملية غير مسموح بها.</string>
+    <string name="login_error_generic">حدث خطأ ما.</string>
+    <string name="login_error_password_required">كلمة المرور مطلوبة.</string>
+    <string name="login_error_email_required">البريد الإلكتروني مطلوب.</string>
+    <string name="signup_error_name_required">اسم المستخدم مطلوب.</string>
+    <string name="signup_error_name_too_short">يجب أن يتكون اسم المستخدم من حرفين على الأقل.</string>
+    <string name="signup_error_passwords_do_not_match">كلمتا المرور غير متطابقتين.</string>
+
+    <string name="home_screen">الشاشة الرئيسية</string>
+    <string name="profile_screen">شاشة الملف الشخصي</string>
+    <string name="go_to_details_1">الانتقال إلى التفاصيل 1</string>
+    <string name="main_screen">الشاشة الأساسية</string>
+    <string name="sign_up_screen">شاشة إنشاء الحساب</string>
+    <string name="forgot_password_screen">شاشة نسيت كلمة المرور</string>
+    <string name="details_screen_id">شاشة التفاصيل للمعرف: %1$d</string>
+    <string name="pop_screen">رجوع للشاشة السابقة</string>
+
+    <string name="new_password_title">كلمة مرور\nجديدة</string>
+    <string name="new_password_subtitle">دعنا نُعيدك إلى التعلم! اختر كلمة مرور قوية.</string>
+    <string name="new_password_hint">أدخل كلمة المرور الجديدة</string>
+    <string name="confirm_password_hint">تأكيد كلمة المرور الجديدة</string>
+    <string name="new_password_strength_label">قوة كلمة المرور</string>
+    <string name="new_password_reset_button">إعادة تعيين كلمة المرور</string>
+    <string name="new_password_back_to_login">→ العودة لتسجيل الدخول</string>
+    <string name="new_password_error_required">كلمة المرور مطلوبة.</string>
+    <string name="new_password_error_too_short">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</string>
+    <string name="new_password_error_no_uppercase">يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.</string>
+    <string name="new_password_error_no_number">يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.</string>
+    <string name="new_password_error_no_match">كلمتا المرور غير متطابقتين.</string>
+    <string name="new_password_error_confirm_required">يرجى تأكيد كلمة المرور الخاصة بك.</string>
+    <string name="new_password_error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
+
+    <string name="forget_password_title">نسيت\nكلمة المرور؟</string>
+    <string name="forget_password_subtitle">لا تقلق، سوف يساعدك لينجو في العثور عليها! أدخل بريدك الإلكتروني لاستلام رابط إعادة التعيين.</string>
+    <string name="forget_password_email_hint">أدخل بريدك الإلكتروني</string>
+    <string name="forget_password_send_button">إرسال رابط إعادة التعيين</string>
+    <string name="forget_password_error_invalid_email">يرجى أدخال عنوان بريد إلكتروني صحيح.</string>
+    <string name="otp_verify_title">تأكيد بريدك الإلكتروني</string>
+    <string name="otp_verify_subtitle">لقد أرسلنا رمزاً إلى بريدك الوارد. يرجى إدخاله أدناه.</string>
+    <string name="otp_resend_code">إعادة إرسال الرمز</string>
+    <string name="otp_verify_button">تأكيد</string>
+    <string name="otp_back_to_login">العودة لتسجيل الدخول</string>
+    <string name="otp_error_invalid">رمز التفعيل (OTP) غير صحيح.</string>
+    <string name="otp_error_expired">انتهت صلاحية رمز التفعيل (OTP).</string>
+    <string name="camera_permission_required">صلاحية الكاميرا مطلوبة.</string>
+    <string name="go_back">رجوع</string>
+    <string name="captured_preview">معاينة الصورة الملتقطة</string>
+    <string name="find_label">ابحث عن:</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="submit">إرسال</string>
+    <string name="search_icon">أيقونة البحث</string>
+    <string name="toggle_flash">تشغيل/إيقاف الفلاش</string>
+    <string name="flip_camera">قلب الكاميرا</string>
+    <string name="camera_alt">الكاميرا</string>
+    <string name="gallery_label">المعرض</string>
+    <string name="Add_New">إضافة جديد</string>
+
+    <string name="my_captures">التقاطاتي</string>
+    <string name="objects_collected">تم جمع %1$d من العناصر</string>
+    <string name="captures_so_far">0 التقاطات حتى الآن</string>
+    <string name="empty_gallery_title">لا توجد التقاطات بعد</string>
+    <string name="empty_gallery_desc">لم تقم بالتقاط أي كلمات بعد.\nاضغط على الزر أعلاه لإضافة أول التقاط لك.</string>
+    <string name="add_new">إضافة جديد</string>
+    <string name="general_error">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="progress">التقدم</string>
+    <string name="see_more">عرض المزيد</string>
+    <string name="explore_worlds">استكشاف العوالم</string>
+    <string name="currently_language">يتعلم حالياً</string>
+    <string name="level">المستوى</string>
+    <string name="days">أيام</string>
+    <string name="coins_label">العملات</string>
+    <string name="total_xp_label">إجمالي الـ XP</string>
+    <string name="streak_label">الحماس المتواصل</string>
+    <string name="worlds_label">العوالم</string>
+    <string name="continue_lesson">متابعة الدرس</string>
+    <string name="leaderboard_title">قائمة المتصدرين</string>
+    <string name="achievements_title">الإنجازات</string>
+    <string name="learning_label">التعلم</string>
+    <string name="change_label">تغيير</string>
+    <string name="milestone_progress_label">الـ XP المطلوب للمرحلة التالية</string>
+    <string name="settings_label">الإعدادات</string>
+    <string name="view_all_label">عرض الكل</string>
+    <string name="you_label">أنت</string>
+
+    // WorldDifficulty
+    <string name="medium">متوسط</string>
+    <string name="easy">سهل</string>
+    <string name="hard">صعب</string>
+
+    <!-- Review Screen -->
+    <string name="review_screen_title">مراجعة الذكاء الاصطناعي</string>
+    <string name="review_back_content_description">رجوع</string>
+    <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
+    <string name="review_error_emoji">😔</string>
+    <string name="review_retry_button">حاول مرة أخرى</string>
+    <string name="review_ai_badge_label">✦ مراجعة الذكاء الاصطناعي</string>
+    <string name="review_stop_speaking_description">إيقاف التحدث</string>
+    <string name="review_speak_description">تحدث</string>
+    <string name="review_section_sentence_emoji">📖</string>
+    <string name="review_section_sentence_label">الجملة</string>
+    <string name="review_section_translation_emoji">🌍</string>
+    <string name="review_section_translation_label">الترجمة</string>
+    <string name="review_section_memory_emoji">🧠</string>
+    <string name="review_section_memory_label">حيلة للذاكرة</string>
+    <string name="review_section_fun_emoji">💡</string>
+    <string name="review_section_fun_label">هل تعلم؟</string>
+    <string name="review_language_arrow"> ← </string>
+
+    // Level Feature
+    <string name="level_title">المستوى %1$d</string>
+    <string name="back">رجوع</string>
+    <string name="coins">العملات</string>
+    <string name="mascot_help_text">اضغط عليّ إذا كنت\nتريد المساعدة</string>
+    <string name="mascot_content_desc">التميمة</string>
+    <string name="play_sound">تشغيل الصوت</string>
+    <string name="open_camera">فتح الكاميرا</string>
+    <string name="skip">تخطي</string>
+    <string name="close">إغلاق</string>
+    <string name="thinking_mascot_content_desc">التميمة وهي تفكر</string>
+    <string name="need_a_hint">هل تحتاج إلى تلميح؟</string>
+    <string name="reveal_first_letter">كشف الحرف الأول</string>
+    <string name="show_category_clue">إظهار تلميح الفئة</string>
+    <string name="use_hint">استخدام تلميح</string>
+    <string name="scan_hint_format">قم بمسح %1$s في بيئتك الحقيقية باستخدام الكاميرا لإكمال هذا التحدي.</string>
+
+    <string name="xp">XP</string>
+    <!-- Settings Screen -->
+    <string name="settings_customize_journey">خصص رحلتك التعليمية</string>
+    <string name="settings_category_account">الحساب والرحلة التعليمية</string>
+    <string name="settings_edit_profile">تعديل الملف الشخصي</string>
+    <string name="settings_learning_language">اللغة المراد تعلمها</string>
+    <string name="settings_app_language">لغة التطبيق</string>
+    <string name="settings_daily_goal">الهدف اليومي</string>
+    <string name="settings_learning_streak">أيام الحماس المتواصل</string>
+    <string name="settings_category_app_experience">تجربة التطبيق</string>
+    <string name="settings_notifications">الإشعارات</string>
+    <string name="settings_dark_mode">الوضع الداكن</string>
+    <string name="settings_sound_effects">المؤثرات الصوتية</string>
+    <string name="settings_privacy_security">الخصوصية والأمان</string>
+    <string name="settings_help_support">المساعدة والدعم</string>
+    <string name="settings_about_app">حول التطبيق</string>
+    <string name="settings_log_out">تسجيل الخروج</string>
+    <string name="settings_delete_account">حذف الحساب</string>
+
+    <!-- Daily Rewards -->
+    <string name="daily_reward_title">المكافأة\nاليومية!</string>
+    <string name="daily_reward_subtitle">لقد عثرت على كنز في مغامرتك اليوم.</string>
+    <string name="daily_reward_coins_format">+%1$d عملة</string>
+    <string name="claim_reward">اقتناص المكافأة</string>
+    <string name="day_format">اليوم %1$d</string>
+    <string name="daily_streak_bonus">مكافأة الحماس اليومي المتواصل!</string>
+    <string name="claim_your_daily_reward">احصل على مكافأتك اليومية!</string>
+    <string name="cd_daily_reward">المكافأة اليومية</string>
+    <string name="cd_coin">عملة نقدية</string>
+    <string name="cd_gift">هدية</string>
+    <string name="cd_completed">مكتمل</string>
+    <string name="cd_current">الحالي</string>
+    <string name="cd_locked">مغلق</string>
+    <string name="cd_navigate">التنقل</string>
+
+    <string name="error_no_internet">خطأ، لا يوجد اتصال بالإنترنت</string>
+    <string name="error_timeout">خطأ، انتهت مهلة الاتصال</string>
+    <string name="error_server">خطأ في الخادم (Server Error)</string>
+    <string name="error_generic">حدث خطأ عام</string>
+    <string name="error_bad_request">طلب غير صالح (Bad Request)</string>
+    <string name="error_unauthorized">غير مصرح به (Unauthorized)</string>
+    <string name="error_too_many_requests">طلبات كثيرة جداً (Too Many Requests)</string>
+
+    <!-- All Worlds Screen -->
+    <string name="all_worlds_title">جميع العوالم</string>
+    <string name="all_worlds_subtitle">اختر مغامرتك القادمة</string>
+    <string name="worlds_count_format">%1$d من العوالم</string>
+    <string name="all_filter">الكل</string>
+    <string name="unlock_at_level_format">يفتح في المستوى %1$d</string>
+    <string name="cd_back">رجوع</string>
+    <!-- Game Processing Package Strings -->
+    <string name="game_processing_simulate_failure_reason">يبدو هذا كحذاء، وليس تفاحة!</string>
+    <string name="game_processing_simulate_error_message">انتهت مهلة الاتصال.</string>
+    <string name="game_processing_btn_success">نجاح</string>
+    <string name="game_processing_btn_fail">فشل</string>
+    <string name="game_processing_btn_error">خطأ</string>
+    <string name="game_processing_catchable_lingo_desc">لينجو قابل للإمساك</string>
+    <string name="game_processing_catch_lingo_hint">✨ أمسك بلينجو لبدء لعبة! ✨</string>
+    <string name="game_processing_ai_thinking">الذكاء الاصطناعي يفكر...</string>
+    <string name="game_processing_coins_counter">العملات: %1$d</string>
+    <string name="game_processing_btn_whack_lingo">اضرب لينجو!</string>
+    <string name="game_processing_captured_image_desc">الصورة الملتقطة</string>
+    <string name="game_processing_status_inspecting">لينجو يفحص البيكسلات الآن...</string>
+    <string name="game_processing_status_consulting">يتحقق من القاموس...</string>
+    <string name="game_processing_status_squinting">ينظر بدقة شديدة...</string>
+    <string name="game_processing_status_evaluating">يقيم مهارات التصوير الفوتوغرافي لديك...</string>
+    <string name="game_processing_status_almost_there">أوشك على الانتهاء...</string>
+
+    <!-- Achievements Screen -->
+    <string name="achievement_tab_all">الكل</string>
+    <string name="achievement_tab_earned">المكتسبة</string>
+    <string name="achievement_tab_locked">المغلقة</string>
+    <string name="achievement_stat_earned">مُكتسب</string>
+    <string name="achievement_stat_in_progress">قيد التقدم</string>
+    <string name="achievement_stat_xp_gained">الـ XP المكتسب</string>
+    <string name="achievement_claim_rewards">المطالبة بالمكافآت الأسبوعية</string>
+    <string name="achievement_header_trophies_cd">كؤوسي</string>
+    <string name="achievement_card_icon_cd">أيقونة الإنجاز</string>
+
+    <!-- Languages Feature -->
+    <string name="add_languages_title">إضافة لغات</string>
+    <string name="add_languages_select_instruction">اختر اللغات التي ترغب في تعلمها</string>
+    <string name="add_languages_search_placeholder">البحث عن لغات…</string>
+    <string name="add_selected_format">إضافة المحدد (%1$d)</string>
+    <string name="my_languages_title">لغاتي</string>
+    <string name="add_new_language">+ إضافة لغة جديدة</string>
+    <string name="my_languages_level_format">المستوى %1$d</string>
+    <string name="cd_selected">محدد</string>
+    <string name="cd_search">بحث</string>
+
+    <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
+    <string name="take_photo">التقاط صورة</string>
+    <string name="choose_from_gallery">اختيار من المعرض</string>
+
+    <!-- Game Result Feature -->
+    <string name="game_result_loading">جاري تحميل النتيجة...</string>
+    <string name="game_result_invalid_state">حالة غير صالحة. لم يتم إنشاء أي نتيجة.</string>
+    <string name="game_result_default_failure_reason">العنصر غير معروف.</string>
+    <string name="game_result_default_error_message">حدث خطأ في الشبكة.</string>
+    <string name="game_result_error_title">خطأ في الاتصال</string>
+    <string name="game_result_retry_connection">إعادة محاولة الاتصال</string>
+    <string name="game_result_exit_game">خروج من اللعبة</string>
+    <string name="game_result_level_progress">تقدم المستوى %1$d</string>
+    <string name="game_result_percent_progress">%1$d%%</string>
+    <string name="game_result_success_title">ممتاز!</string>
+    <string name="game_result_success_subtitle">لقد وجدتها!</string>
+    <string name="game_result_xp_format">+%1$d</string>
+    <string name="game_result_coins_format">+%1$d</string>
+    <string name="game_result_next_level">المستوى التالي</string>
+    <string name="game_result_fail_title">ليس تماماً!</string>
+    <string name="game_result_fail_message_format">لم يرَ لينجو أي %1$s هناك.\nحاول التقاطها بزاوية أخرى!</string>
+    <string name="game_result_hint_button">تأكد من أن الإضاءة جيدة!</string>
+    <string name="game_result_retry_camera">إعادة محاولة الكاميرا</string>
+    <string name="game_result_change_word">تغيير الكلمة</string>
+</resources>

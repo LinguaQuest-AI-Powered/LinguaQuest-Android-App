@@ -20,10 +20,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
@@ -38,6 +42,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
         border = BorderStroke(1.dp, LinguaQuestTheme.colors.ProfileCardBorderColor),
 
         ) {
+        val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
         Row(
             Modifier
                 .fillMaxWidth()
@@ -64,7 +69,9 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
             Icon(
                 Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = LinguaQuestTheme.colors.iconsColor
+                tint = LinguaQuestTheme.colors.iconsColor ,
+                modifier = Modifier.scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f),
+
             )
         }
     }

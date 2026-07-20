@@ -193,6 +193,7 @@
     <string name="settings_category_account">ACCOUNT &amp; JOURNEY</string>
     <string name="settings_edit_profile">Edit Profile</string>
     <string name="settings_learning_language">Learning Language</string>
+    <string name="settings_app_language">App Language</string>
     <string name="settings_daily_goal">Daily Goal</string>
     <string name="settings_learning_streak">Learning Streak</string>
     <string name="settings_category_app_experience">APP EXPERIENCE</string>

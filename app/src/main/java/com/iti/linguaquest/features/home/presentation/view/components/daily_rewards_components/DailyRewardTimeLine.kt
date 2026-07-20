@@ -62,11 +62,13 @@ fun DailyRewardTimeline(currentDay: Int) {
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
+        val isRtl = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .height(48.dp)
+                .scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f)
         ) {
             val yOffset = size.height / 2
 

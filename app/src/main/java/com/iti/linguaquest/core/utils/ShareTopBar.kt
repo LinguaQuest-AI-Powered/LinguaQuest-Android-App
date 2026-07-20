@@ -24,11 +24,28 @@ import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 
 @Composable
 fun ShareTopBar(
-    @StringRes  title : Int,
+    @StringRes title: Int,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    trailingContent: @Composable RowScope.() -> Unit = { Spacer(modifier = Modifier.size(40.dp)) }
+) {
+    ShareTopBar(
+        titleText = stringResource(id = title),
+        onBackClick = onBackClick,
+        modifier = modifier,
+        trailingContent = trailingContent
+    )
+}
+
+@Composable
+fun ShareTopBar(
+    titleText: String,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    trailingContent: @Composable RowScope.() -> Unit = { Spacer(modifier = Modifier.size(40.dp)) }
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,14 +68,14 @@ fun ShareTopBar(
                 )
             }
             Text(
-                text = stringResource(title),
+                text = titleText,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = LocalLinguaQuestColors.current.BrownText
             )
-            Spacer(modifier = Modifier.size(40.dp))
+            trailingContent()
         }
         Spacer(modifier = Modifier.height(16.dp))
         Divider(
