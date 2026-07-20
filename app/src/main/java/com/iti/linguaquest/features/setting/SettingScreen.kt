@@ -31,7 +31,5 @@ fun SettingScreen(
         },
         onLogoutClick = {
          },
-        onDeleteAccountClick = {
-         }
     )
 }

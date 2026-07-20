@@ -104,6 +104,11 @@
     <string name="otp_error_invalid">رمز التفعيل (OTP) غير صحيح.</string>
     <string name="otp_error_expired">انتهت صلاحية رمز التفعيل (OTP).</string>
     <string name="camera_permission_required">صلاحية الكاميرا مطلوبة.</string>
+    <string name="camera_permission_title">هل كاميرتك جاهزة؟</string>
+    <string name="camera_permission_blocked_desc">نحتاج إلى الوصول للكاميرا للعب، ولكن يبدو أنه محظور. يرجى تمكينه من إعدادات جهازك.</string>
+    <string name="camera_permission_desc">يحتاج LinguaQuest إلى كاميرتك للعثور على الأشياء وكسب النقاط!</string>
+    <string name="open_settings">فتح الإعدادات</string>
+    <string name="grant_permission">منح الصلاحية</string>
     <string name="go_back">رجوع</string>
     <string name="captured_preview">معاينة الصورة الملتقطة</string>
     <string name="find_label">ابحث عن:</string>

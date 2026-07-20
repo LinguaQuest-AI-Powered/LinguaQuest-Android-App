@@ -60,7 +60,6 @@ fun SettingContent(
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
-    onDeleteAccountClick: () -> Unit
 ) {
     var darkModeEnabled by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
@@ -261,7 +260,6 @@ fun SettingContentPreview() {
             notificationsEnabled = true,
             onNotificationsToggle = {},
             onLogoutClick = {},
-            onDeleteAccountClick = {}
         )
     }
 }
