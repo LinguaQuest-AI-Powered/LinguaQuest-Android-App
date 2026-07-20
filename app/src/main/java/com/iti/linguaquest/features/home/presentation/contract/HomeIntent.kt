@@ -11,4 +11,8 @@ sealed interface HomeIntent {
     data object FabClicked : HomeIntent
     data object DismissLanguageBottomSheet : HomeIntent
     data object AddNewLanguageClicked : HomeIntent
+    data object DailyRewardBannerClicked : HomeIntent
+    data object DismissDailyRewardBanner : HomeIntent
+    data object DismissDailyRewardDialog : HomeIntent
+    data object ClaimDailyRewardClicked : HomeIntent
 }
