@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.auth.presentation.otp.view.screen
 
-import android.widget.Toast
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -58,9 +58,6 @@ fun OTPScreen(
                 is OTPEffect.NavigateBack -> onNavigateBack()
                 is OTPEffect.NavigateToLogin -> onNavigateToLogin()
                 is OTPEffect.NavigateToNextScreen -> onNavigateToNext(effect.resetToken)
-                is OTPEffect.ShowError -> {
-                    Toast.makeText(context, effect.messageRes, Toast.LENGTH_LONG).show()
-                }
             }
         }
     }

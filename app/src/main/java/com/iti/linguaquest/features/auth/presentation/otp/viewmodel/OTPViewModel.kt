@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.usecase.SendPasswordResetOtpUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.auth.domain.usecase.SendRegistrationOtpUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.VerifyEmailOtpUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.VerifyPasswordResetOtpUseCase
@@ -28,7 +32,8 @@ class OTPViewModel @Inject constructor(
     private val verifyEmailOtpUseCase: VerifyEmailOtpUseCase,
     private val verifyPasswordResetOtpUseCase: VerifyPasswordResetOtpUseCase,
     private val sendRegistrationOtpUseCase: SendRegistrationOtpUseCase,
-    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase
+    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private var email: String = ""
@@ -80,7 +85,12 @@ class OTPViewModel @Inject constructor(
                         sendEffect(OTPEffect.NavigateToNextScreen(result.data))
                     }
                     is LinguaQuestResult.Failure -> {
-                        sendEffect(OTPEffect.ShowError(result.error.toMessageRes()))
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResource(result.error.toMessageRes()),
+                                type = SnackbarType.ERROR
+                            )
+                        )
                     }
                 }
             } else {
@@ -89,7 +99,12 @@ class OTPViewModel @Inject constructor(
                         sendEffect(OTPEffect.NavigateToNextScreen(null))
                     }
                     is LinguaQuestResult.Failure -> {
-                        sendEffect(OTPEffect.ShowError(result.error.toMessageRes()))
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResource(result.error.toMessageRes()),
+                                type = SnackbarType.ERROR
+                            )
+                        )
                     }
                 }
             }

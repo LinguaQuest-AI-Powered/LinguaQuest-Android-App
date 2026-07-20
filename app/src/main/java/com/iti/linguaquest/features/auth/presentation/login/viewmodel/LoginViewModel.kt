@@ -7,6 +7,10 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.usecase.LoginUserUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.auth.domain.usecase.SignInWithGoogleUseCase
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginEffect
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
@@ -14,6 +18,7 @@ import com.iti.linguaquest.features.auth.presentation.login.contract.LoginState
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,6 +31,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUserUseCase: LoginUserUseCase,
     private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -54,7 +60,8 @@ class LoginViewModel @Inject constructor(
 
     private fun handleLoginClicked(email: String, password: String) {
         val emailValid = ValidationUtils.isValidEmail(email)
-        val passwordValid = ValidationUtils.isValidPassword(password)
+        val passwordValidationError = ValidationUtils.getPasswordValidationErrorRes(password)
+        val passwordValid = passwordValidationError == null
         
         if (!emailValid) {
             _state.update { it.copy(
@@ -66,7 +73,7 @@ class LoginViewModel @Inject constructor(
         if (!passwordValid) {
             _state.update { it.copy(
                 passwordError = true,
-                passwordErrorRes = if (password.isBlank()) R.string.login_error_password_required else R.string.login_error_weak_password
+                passwordErrorRes = passwordValidationError
             ) }
             sendEffect(LoginEffect.ShakePassword)
         }
@@ -120,6 +127,17 @@ class LoginViewModel @Inject constructor(
             )
         }
 
+        if (!emailHasError && !passwordHasError) {
+            viewModelScope.launch {
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = UiText.StringResource(error.toMessageRes()),
+                        type = SnackbarType.ERROR
+                    )
+                )
+            }
+        }
+
         when (error) {
             AuthError.InvalidEmail -> sendEffect(LoginEffect.ShakeEmail)
             AuthError.WeakPassword -> sendEffect(LoginEffect.ShakePassword)
@@ -141,6 +159,14 @@ class LoginViewModel @Inject constructor(
             )
         }
         sendEffect(LoginEffect.ShakeGoogleSignIn)
+        viewModelScope.launch {
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    message = UiText.StringResource(error.toMessageRes()),
+                    type = SnackbarType.ERROR
+                )
+            )
+        }
     }
 
     private fun startGoogleSignIn() {

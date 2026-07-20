@@ -203,7 +203,7 @@ fun AppNavigation(
 
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
-                        onNavigateToLogin = { rootBackStack.removeLastOrNull() },
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
                         onSignUpSuccess = {email ->
                             rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }
@@ -212,7 +212,7 @@ fun AppNavigation(
 
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onBackToLogin = { rootBackStack.popToLogin() },
                         onSendSucceeded = { rootBackStack.navigateSingleTop(RootScreen.OTP(it, true)) }
                     )
                 }
@@ -221,12 +221,12 @@ fun AppNavigation(
                         email = screen.email,
                         isPasswordReset = screen.isPasswordReset,
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLogin = { rootBackStack.navigateSingleTop(RootScreen.Login) },
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
                         onNavigateToNext = { resetToken ->
                             if (screen.isPasswordReset && resetToken != null) {
                                 rootBackStack.navigateSingleTop(RootScreen.NewPassword(resetToken))
                             } else {
-                                rootBackStack.navigateSingleTop(RootScreen.Login)
+                                rootBackStack.popToLogin()
                             }
                         }
                     )
@@ -234,7 +234,7 @@ fun AppNavigation(
 
                 entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onBackToLogin = { rootBackStack.popToLogin() },
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()

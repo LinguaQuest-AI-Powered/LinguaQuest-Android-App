@@ -40,6 +40,13 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor {
+                it.proceed(
+                    it.request().newBuilder()
+//                        .addHeader("Prefer", "code=200")
+                        .build()
+                )
+            }
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
