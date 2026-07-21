@@ -188,7 +188,7 @@ fun AppNavigation(
                 entry<RootScreen.Login> {
                     LoginScreen(
                         onSignUp = {
-                            rootBackStack.navigateSingleTop(RootScreen.Main)
+                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
                         },
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
@@ -204,20 +204,17 @@ fun AppNavigation(
 
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
-                        onNavigateToLogin = { rootBackStack.removeLastOrNull() },
-                        onSignUpSuccess = {
-                            rootBackStack.apply {
-                                clear()
-                                navigateSingleTop(RootScreen.Main)
-                            }
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
+                        onSignUpSuccess = {email ->
+                            rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }
                     )
                 }
 
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
-                        onSendSucceeded = { rootBackStack.removeLastOrNull() }
+                        onBackToLogin = { rootBackStack.popToLogin() },
+                        onSendSucceeded = { rootBackStack.navigateSingleTop(RootScreen.OTP(it, true)) }
                     )
                 }
                 entry<RootScreen.OTP> { screen ->
@@ -225,12 +222,12 @@ fun AppNavigation(
                         email = screen.email,
                         isPasswordReset = screen.isPasswordReset,
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLogin = { rootBackStack.navigateSingleTop(RootScreen.Login) },
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
                         onNavigateToNext = { resetToken ->
                             if (screen.isPasswordReset && resetToken != null) {
                                 rootBackStack.navigateSingleTop(RootScreen.NewPassword(resetToken))
                             } else {
-                                rootBackStack.navigateSingleTop(RootScreen.Login)
+                                rootBackStack.popToLogin()
                             }
                         }
                     )
@@ -238,7 +235,7 @@ fun AppNavigation(
 
                 entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onBackToLogin = { rootBackStack.popToLogin() },
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()
