@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -21,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -50,7 +48,7 @@ fun CameraPermissionView(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Is Your Camera Ready?",
+            text = stringResource(id = R.string.camera_permission_title),
             style = MaterialTheme.typography.headlineMedium,
             color = LinguaQuestTheme.colors.titleAndCationsColor
         )
@@ -59,9 +57,9 @@ fun CameraPermissionView(
 
         Text(
             text = if (status == PermissionStatus.PERMANENTLY_DENIED)
-                "We need camera access to play, but it looks like it's blocked. Please enable it in your device settings."
+                stringResource(id = R.string.camera_permission_blocked_desc)
             else
-                "LinguaQuest needs your camera to find objects and earn points!",
+                stringResource(id = R.string.camera_permission_desc),
             style = MaterialTheme.typography.bodyLarge,
             color = LinguaQuestTheme.colors.titleAndCationsColor,
             textAlign = TextAlign.Center,
@@ -75,7 +73,7 @@ fun CameraPermissionView(
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = if (status == PermissionStatus.PERMANENTLY_DENIED) "Open Settings" else "Grant Permission",
+                text = if (status == PermissionStatus.PERMANENTLY_DENIED) stringResource(id = R.string.open_settings) else stringResource(id = R.string.grant_permission),
                 color = LinguaQuestTheme.colors.whiteColor
             )
         }
@@ -83,7 +81,7 @@ fun CameraPermissionView(
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedButton(onClick = onBackClicked) {
-            Text("Go Back", color = LinguaQuestTheme.colors.titleAndCationsColor)
+            Text(stringResource(id = R.string.go_back), color = LinguaQuestTheme.colors.titleAndCationsColor)
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,10 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun DailyRewardCard(
@@ -22,16 +21,16 @@ fun DailyRewardCard(
 ) {
     val gradientBrush = Brush.verticalGradient(
         colors = listOf(
-            AppColors.DialogGradientTopRight.copy(alpha = 0.3f),
-            Color.White,
-            AppColors.DialogGradientBottomLeft.copy(alpha = 0.4f)
+            LinguaQuestTheme.colors.DialogGradientTopRight.copy(alpha = 0.3f),
+            LinguaQuestTheme.colors.whiteColor,
+            LinguaQuestTheme.colors.DialogGradientBottomLeft.copy(alpha = 0.4f)
         )
     )
 
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(32.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = LinguaQuestTheme.colors.whiteColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(

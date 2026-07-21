@@ -11,9 +11,36 @@ object AppColors {
     val ProfileCardColor = Color(0xff0F9F3EB)
     val ProfileCardBorderColor = Color(0xFFDAC2AE)
 
-    // Primary
+    // Map
+    val MapPathOuter = Color(0xFF6E4322)
+    val MapPathInner = Color(0xFFA06F43)
+    val MapPathDash = Color(0xFFD6AB80)
+
+    val DarkMapPathOuter = Color(0xFF4A2B14)
+    val DarkMapPathInner = Color(0xFF764E2A)
+    val DarkMapPathDash = Color(0xFF9E7C59)
     val PrimaryColor = Color(0xFFFF9F29)
     val TextOnPrimaryButton = Color(0xFFFFFFFF)
+
+    // Daily Rewards
+    val DailyRewardInactiveNodeBg = Color(0xFFF9EFE6)
+    val DailyRewardInactiveNodeIcon = Color(0xFFD4C1B1)
+    val DailyRewardBadgeBg = Color(0xFFFBE6D6)
+    val DailyRewardBadgeText = Color(0xFF332211)
+    val DailyRewardActiveText = Color(0xFF895100)
+    val DailyRewardSubtitleText = Color(0xFF897361)
+    val DailyRewardInactiveLine = Color(0xFFE6D6C8)
+    val DailyRewardInactiveText = Color(0xFFBCAAA4)
+
+    val DarkDailyRewardInactiveNodeBg = Color(0xFF4A3E36)
+    val DarkDailyRewardInactiveNodeIcon = Color(0xFF8C7A6B)
+    val DarkDailyRewardBadgeBg = Color(0xFF6B4D36)
+    val DarkDailyRewardBadgeText = Color(0xFFE6D6C8)
+    val DarkDailyRewardActiveText = Color(0xFFC78A22)
+    val DarkDailyRewardSubtitleText = Color(0xFFBCAAA4)
+    val DarkDailyRewardInactiveLine = Color(0xFF8C7A6B)
+    val DarkDailyRewardInactiveText = Color(0xFF8C7A6B)
+
     val FieldCardBackground = Color(0xFFFCEFEC)
     // Secondary
     val SecondaryColor = Color(0xFFF0DFD3)
@@ -77,4 +104,30 @@ object AppColors {
     val AchievementTabInactive = Color(0xFFDCD0C0)
     val AchievementHeaderGradientTop = Color(0xFFFFF7F0)
     val AchievementHeaderGradientBottom = Color(0xFFFFEBD9)
+
+    val DarkBackground = Color(0xFF0F172A)
+    val DarkSurface = Color(0xFF1E293B)
+    val DarkTextPrimary = Color(0xFFF8FAFC)
+    val DarkTextSecondary = Color(0xFF94A3B8)
+    val DarkSecondaryColor = Color(0xFF334155)
+    val DarkBorderColor = Color(0xFF334155)
+    val DarkTeal = Color(0xFF14B8A6)
+
+    // Dark Mode additions (Leaderboard, Achievement, Dialog)
+    val DarkLeaderboardGold = Color(0xFFC4A836)
+    val DarkLeaderboardBlue = Color(0xFF38858C)
+    val DarkLeaderboardBronze = Color(0xFF8F7A31)
+
+    val DarkAchievementCyanBackground = Color(0xFF00373D)
+    val DarkAchievementCyanText = Color(0xFF85D3DB)
+    val DarkAchievementCardBorder = Color(0xFF5B4636)
+    val DarkAchievementDivider = Color(0xFF4A3828)
+    val DarkAchievementButtonShadow = Color(0xFFA56613)
+    val DarkAchievementTabInactive = Color(0xFF4A3828)
+    val DarkAchievementHeaderGradientTop = Color(0xFF2D2824)
+    val DarkAchievementHeaderGradientBottom = Color(0xFF1E1B18)
+
+    val DarkDialogGradientTopRight = Color(0xFF1B3D34)
+    val DarkDialogGradientBottomLeft = Color(0xFF4C452F)
+    val DarkShadowOrange = Color(0xFF855000)
 }

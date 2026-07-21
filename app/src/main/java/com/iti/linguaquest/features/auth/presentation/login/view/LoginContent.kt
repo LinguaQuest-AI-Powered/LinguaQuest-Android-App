@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginState
 
@@ -135,7 +134,7 @@ fun LoginContent(
                     Text(
                         text = stringResource(id = R.string.login_forgot_password),
                         style = MaterialTheme.typography.labelLarge,
-                        color = AppColors.Teal,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.Bold
                     )
                 }

@@ -12,17 +12,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 
 @Composable
@@ -58,27 +58,27 @@ fun CurrentDayNode() {
                 .size(48.dp)
                 .scale(scale)
                 .clip(CircleShape)
-                .background(AppColors.PrimaryColor.copy(alpha = alpha))
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = alpha))
         )
 
         Box(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color.White),
+                .background(LinguaQuestTheme.colors.whiteColor),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
                     .size(28.dp)
                     .clip(CircleShape)
-                    .background(AppColors.PrimaryColor),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_doller),
                     contentDescription = stringResource(id = R.string.cd_current),
-                    tint = Color.White,
+                    tint = LinguaQuestTheme.colors.whiteColor,
                     modifier = Modifier.size(16.dp)
                 )
             }

@@ -1,4 +1,5 @@
-package com.iti.linguaquest.features.setting.components
+package com.iti.linguaquest.features.setting.presentation.components
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.sound.AppSound
 
 @Composable
 fun SettingItem(
@@ -28,6 +31,8 @@ fun SettingItem(
     onSwitchChange: ((Boolean) -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
+    val soundPlayer = LocalSoundPlayer.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -44,7 +49,7 @@ fun SettingItem(
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = title,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = LocalLinguaQuestColors.current.titleAndCationsColor,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
@@ -62,11 +67,14 @@ fun SettingItem(
         if (hasSwitch) {
             Switch(
                 checked = switchChecked,
-                onCheckedChange = onSwitchChange,
+                onCheckedChange = { checked ->
+                    soundPlayer.play(AppSound.SWITCH)
+                    onSwitchChange?.invoke(checked)
+                },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
+                    checkedThumbColor = LinguaQuestTheme.colors.whiteColor,
                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    uncheckedThumbColor = Color.White,
+                    uncheckedThumbColor = LinguaQuestTheme.colors.whiteColor,
                     uncheckedTrackColor = Color.LightGray,
                     uncheckedBorderColor = Color.Transparent
                 ),

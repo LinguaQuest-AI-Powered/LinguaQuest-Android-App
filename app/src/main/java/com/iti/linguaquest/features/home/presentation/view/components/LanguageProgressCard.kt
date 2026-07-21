@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -45,7 +46,7 @@ fun LanguageProgressCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
+            .background(LinguaQuestTheme.colors.whiteColor)
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -53,7 +54,7 @@ fun LanguageProgressCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(Color.White),
+                    .background(LinguaQuestTheme.colors.whiteColor),
                 contentAlignment = Alignment.Center
             ) {
                 ImageWrapper(
@@ -148,7 +149,14 @@ internal fun ProgressTrack(
                 .fillMaxWidth(fraction = progress.coerceIn(0f, 1f))
                 .height(height)
                 .clip(RoundedCornerShape(50))
-                .background(fillColor)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            fillColor.copy(alpha = 0.4f),
+                            fillColor
+                        )
+                    )
+                )
         )
     }
 }

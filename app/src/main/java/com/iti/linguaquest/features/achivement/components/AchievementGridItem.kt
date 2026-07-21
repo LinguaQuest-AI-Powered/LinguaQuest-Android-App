@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,14 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.achivement.model.AchievementItem
 import kotlinx.coroutines.delay
@@ -69,10 +69,10 @@ fun AchievementGridItem(
             }
             .fillMaxWidth()
             .aspectRatio(0.85f)
-            .background(AppColors.AchievementCardBorder, RoundedCornerShape(16.dp))
+            .background(LinguaQuestTheme.colors.AchievementCardBorder, RoundedCornerShape(16.dp))
             .padding(bottom = 3.dp)
-            .background(AppColors.White, RoundedCornerShape(16.dp))
-            .border(1.dp, AppColors.AchievementCardBorder, RoundedCornerShape(16.dp))
+            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
+            .border(1.dp, LinguaQuestTheme.colors.AchievementCardBorder, RoundedCornerShape(16.dp))
             .padding(12.dp)
     ) {
         Column(
@@ -84,7 +84,7 @@ fun AchievementGridItem(
                 modifier = Modifier
                     .size(56.dp)
                     .background(
-                        if (item.isEarned) AppColors.AchievementCyanBackground else AppColors.SecondaryColor,
+                        if (item.isEarned) LinguaQuestTheme.colors.AchievementCyanBackground else MaterialTheme.colorScheme.secondary,
                         CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -105,7 +105,7 @@ fun AchievementGridItem(
                 text = item.title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (item.isEarned) AppColors.BrownText else AppColors.BrownText.copy(alpha = 0.5f),
+                color = if (item.isEarned) LinguaQuestTheme.colors.BrownText else LinguaQuestTheme.colors.BrownText.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
                 maxLines = 1
             )
@@ -115,13 +115,13 @@ fun AchievementGridItem(
             if (item.isEarned && item.dateEarned != null) {
                 Box(
                     modifier = Modifier
-                        .background(AppColors.AchievementCyanBackground, RoundedCornerShape(12.dp))
+                        .background(LinguaQuestTheme.colors.AchievementCyanBackground, RoundedCornerShape(12.dp))
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = item.dateEarned,
-                        color = AppColors.AchievementCyanText,
+                        color = LinguaQuestTheme.colors.AchievementCyanText,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -129,13 +129,13 @@ fun AchievementGridItem(
             } else {
                  Box(
                     modifier = Modifier
-                        .background(AppColors.SecondaryColor, RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Locked",
-                        color = AppColors.TitleAndCaptionColor.copy(alpha = 0.6f),
+                        color = LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.6f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )

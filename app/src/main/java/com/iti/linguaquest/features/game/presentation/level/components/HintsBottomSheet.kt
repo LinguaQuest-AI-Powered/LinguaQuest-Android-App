@@ -26,6 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +51,7 @@ fun HintsBottomSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
+        containerColor = LinguaQuestTheme.colors.whiteColor,
         dragHandle = {
             Row(
                 modifier = Modifier
@@ -60,20 +61,20 @@ fun HintsBottomSheet(
             ) {
                 Row(
                     modifier = Modifier
-                        .background(Color(0xFFFDF7F2), RoundedCornerShape(16.dp))
+                        .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = rememberVectorPainter(Icons.Default.MonetizationOn),
                         contentDescription = stringResource(id = R.string.coins),
-                        tint = Color(0xFFE5A822),
+                        tint = LinguaQuestTheme.colors.OrangeActive,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "%,d".format(coinCount),
-                        color = AppColors.BrownText,
+                        color = LinguaQuestTheme.colors.BrownText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -91,7 +92,7 @@ fun HintsBottomSheet(
                         Icon(
                             painter = rememberVectorPainter(Icons.Default.Close),
                             contentDescription = stringResource(id = R.string.close),
-                            tint = AppColors.PrimaryColor,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -117,7 +118,7 @@ fun HintsBottomSheet(
 
             Text(
                 text = stringResource(id = R.string.need_a_hint),
-                color = AppColors.BrownText,
+                color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold
             )
@@ -154,7 +155,7 @@ private fun HintItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(16.dp))
-            .background(Color.White, RoundedCornerShape(16.dp))
+            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -170,7 +171,7 @@ private fun HintItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = AppColors.BrownText,
+                color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -178,7 +179,7 @@ private fun HintItem(
                 Icon(
                     painter = rememberVectorPainter(Icons.Default.MonetizationOn),
                     contentDescription = stringResource(id = R.string.coins),
-                    tint = Color(0xFFE5A822),
+                    tint = LinguaQuestTheme.colors.OrangeActive,
                     modifier = Modifier.size(12.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -199,7 +200,7 @@ private fun HintItem(
         ) {
             Text(
                 text = stringResource(id = R.string.use_hint),
-                color = Color.White,
+                color = LinguaQuestTheme.colors.whiteColor,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp
             )

@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,10 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors.BrownText
-import com.iti.linguaquest.core.theme.AppColors.CreamBackground
-import com.iti.linguaquest.core.theme.AppColors.OrangeActive
-import com.iti.linguaquest.core.theme.AppColors.ShadowOrange
 
 @Composable
 fun GameBottomNavBar(
@@ -41,10 +38,10 @@ fun GameBottomNavBar(
         modifier = modifier
             .fillMaxWidth()
             .clip(barShape)
-            .background(CreamBackground)
+            .background(LinguaQuestTheme.colors.whiteColor)
             .border(
                 width = 0.5.dp,
-                color = BrownText.copy(alpha = 0.15f),
+                color = LinguaQuestTheme.colors.BrownText.copy(alpha = 0.15f),
                 shape = barShape
             )
             .padding(horizontal = 8.dp, vertical = 12.dp),
@@ -66,16 +63,16 @@ fun GameBottomNavBar(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
-                            .background(ShadowOrange, RoundedCornerShape(16.dp))
+                            .background(LinguaQuestTheme.colors.ShadowOrange, RoundedCornerShape(16.dp))
                             .padding(bottom = 4.dp)
-                            .background(OrangeActive, RoundedCornerShape(16.dp))
+                            .background(LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp))
                             .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        ItemContent(screen = screen, color = BrownText, isSelected = true)
+                        ItemContent(screen = screen, color = Color.Black, isSelected = true)
                     }
                 } else {
-                    ItemContent(screen = screen, color = BrownText, isSelected = false)
+                    ItemContent(screen = screen, color = LinguaQuestTheme.colors.BrownText, isSelected = false)
                 }
             }
         }

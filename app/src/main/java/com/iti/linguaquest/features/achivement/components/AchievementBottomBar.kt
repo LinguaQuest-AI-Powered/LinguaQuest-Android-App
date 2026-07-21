@@ -11,6 +11,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun AchievementBottomBar(
@@ -29,12 +30,12 @@ fun AchievementBottomBar(
     onClaimClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dividerColor = AppColors.AchievementDivider
+    val dividerColor = LinguaQuestTheme.colors.AchievementDivider
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(AppColors.SecondaryColor)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
          Divider(
             color = dividerColor,
@@ -56,7 +57,7 @@ fun AchievementBottomBar(
                 StatItem(
                     value = earnedCount.toString(),
                     label = stringResource(com.iti.linguaquest.R.string.achievement_stat_earned),
-                    valueColor = AppColors.BrownText,
+                    valueColor = LinguaQuestTheme.colors.BrownText,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -65,7 +66,7 @@ fun AchievementBottomBar(
                 StatItem(
                     value = inProgressCount.toString(),
                     label = stringResource(com.iti.linguaquest.R.string.achievement_stat_in_progress),
-                    valueColor = AppColors.Teal,
+                    valueColor = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -74,7 +75,7 @@ fun AchievementBottomBar(
                 StatItem(
                     value = xpGained.toString(),
                     label = stringResource(com.iti.linguaquest.R.string.achievement_stat_xp_gained),
-                    valueColor = AppColors.BrownText,
+                    valueColor = LinguaQuestTheme.colors.BrownText,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -85,9 +86,9 @@ fun AchievementBottomBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .background(AppColors.AchievementButtonShadow, RoundedCornerShape(16.dp))
+                    .background(LinguaQuestTheme.colors.AchievementButtonShadow, RoundedCornerShape(16.dp))
                     .padding(bottom = 6.dp)
-                    .background(AppColors.OrangeActive, RoundedCornerShape(16.dp))
+                    .background(LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp))
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onClaimClick() },
                 contentAlignment = Alignment.Center
@@ -96,13 +97,13 @@ fun AchievementBottomBar(
                     Box(
                         modifier = Modifier
                             .size(24.dp)
-                            .background(AppColors.White, CircleShape),
+                            .background(LinguaQuestTheme.colors.whiteColor, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = null,
-                            tint = AppColors.OrangeActive,
+                            tint = LinguaQuestTheme.colors.OrangeActive,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -111,7 +112,7 @@ fun AchievementBottomBar(
                         text = stringResource(com.iti.linguaquest.R.string.achievement_claim_rewards),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppColors.White
+                        color = LinguaQuestTheme.colors.whiteColor
                     )
                 }
             }
@@ -136,7 +137,7 @@ private fun StatItem(value: String, label: String, valueColor: Color, modifier: 
             text = label,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
-            color = AppColors.TitleAndCaptionColor.copy(alpha = 0.6f),
+            color = LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.6f),
             letterSpacing = 1.sp
         )
     }

@@ -1,4 +1,5 @@
 package com.iti.linguaquest.core.sharedComponents
+import com.iti.linguaquest.core.theme.AppColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun LinguaQuestScreenTopBar(
@@ -53,7 +53,7 @@ fun LinguaQuestScreenTopBar(
             Icon(
                 painter = painterResource(id = R.drawable.back_arrow),
                 contentDescription = "Back",
-                tint = AppColors.PrimaryColor,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
         }

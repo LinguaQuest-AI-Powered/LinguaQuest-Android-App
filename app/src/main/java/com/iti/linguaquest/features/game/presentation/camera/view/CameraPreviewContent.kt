@@ -68,7 +68,8 @@ fun CameraPreviewContent(
         ) {
             Text(
                 text = buildAnnotatedString {
-                    append(stringResource(R.string.find_label) + "\n")
+                    append(stringResource(R.string.find_label))
+                    append("\n")
                     withStyle(
                         style = SpanStyle(
                             color = MaterialTheme.colorScheme.primary,

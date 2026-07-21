@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,10 +32,10 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xffF9F3EB))
+            .background(LinguaQuestTheme.colors.ProfileCardColor)
             .border(
                 width = 1.dp,
-                color = Color(0xffDAC2AE),
+                color = LinguaQuestTheme.colors.Sand,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(14.dp),
