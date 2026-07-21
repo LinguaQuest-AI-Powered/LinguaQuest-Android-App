@@ -63,6 +63,12 @@
     <string name="login_error_token_not_valid">Session expired.</string>
     <string name="login_error_operation_not_allowed">Operation not allowed.</string>
     <string name="login_error_generic">Something went wrong.</string>
+    <string name="login_error_email_already_in_use">Email is already in use.</string>
+    <string name="login_error_email_not_found">Email not found.</string>
+    <string name="login_error_username_already_exists">Username already exists.</string>
+    <string name="login_error_invalid_reset_token">Invalid reset token.</string>
+    <string name="login_error_reset_token_expired">Reset token has expired.</string>
+    <string name="login_error_validation_error">Validation error occurred.</string>
     <string name="login_error_password_required">Password is required.</string>
     <string name="login_error_email_required">Email is required.</string>
     <string name="signup_error_name_required">Username is required.</string>

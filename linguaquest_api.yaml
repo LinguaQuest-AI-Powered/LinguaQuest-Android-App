@@ -338,7 +338,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
 
   /auth/refresh-token:
     post:
@@ -599,21 +599,21 @@ paths:
                       errorTime: '2026-07-14T10:15:00Z'
 
         '429':
-            description: Maximum OTP verification attempts exceeded
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                examples:
-                  default:
-                    value:
-                      success: false
-                      error:
-                        apiPath: /api/v1/auth/otp/verify
-                        errorCode: 429
-                        errorKey: MAX_ATTEMPTS_EXCEEDED
-                        errorMessage: Too many attempts, request a new OTP
-                        errorTime: "2026-07-15T16:03:20.573737100Z"
+          description: Maximum OTP verification attempts exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/otp/verify
+                      errorCode: 429
+                      errorKey: MAX_ATTEMPTS_EXCEEDED
+                      errorMessage: Too many attempts, request a new OTP
+                      errorTime: "2026-07-15T16:03:20.573737100Z"
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -712,21 +712,21 @@ paths:
                       errorTime: '2026-07-14T10:15:00Z'
 
         '429':
-            description: Maximum OTP verification attempts exceeded
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                examples:
-                  default:
-                    value:
-                      success: false
-                      error:
-                        apiPath: /api/v1/auth/forget-password/otp/verify
-                        errorCode: 429
-                        errorKey: MAX_ATTEMPTS_EXCEEDED
-                        errorMessage: Too many attempts, request a new OTP
-                        errorTime: "2026-07-15T16:03:20.573737100Z"
+          description: Maximum OTP verification attempts exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/forget-password/otp/verify
+                      errorCode: 429
+                      errorKey: MAX_ATTEMPTS_EXCEEDED
+                      errorMessage: Too many attempts, request a new OTP
+                      errorTime: "2026-07-15T16:03:20.573737100Z"
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -922,7 +922,7 @@ paths:
                       errorMessage: An account with this email already exists. Please log in with your email and password.
                       errorTime: '2026-07-16T10:15:00Z'
         '500':
-          $ref: '#/components/responses/InternalServerError'       
+          $ref: '#/components/responses/InternalServerError'
   /home:
     get:
       tags: [Home]
@@ -984,7 +984,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /worlds:
     get:
       tags: [Worlds]
@@ -1060,7 +1060,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /worlds/{worldId}/levels:
     get:
       tags: [Worlds]
@@ -1131,7 +1131,7 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /daily-reward:
     get:
       tags: [Daily Rewards]
@@ -1170,7 +1170,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /daily-reward/claim:
     post:
       tags: [Daily Rewards]
@@ -1224,7 +1224,7 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /languages/mine:
     get:
       tags: [Languages]
@@ -1284,7 +1284,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /languages/available:
     get:
       tags: [Languages]
@@ -1338,7 +1338,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /languages:
     post:
       tags: [Languages]
@@ -1425,7 +1425,7 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /languages/active:
     patch:
       tags: [Languages]
@@ -1530,6 +1530,7 @@ paths:
                     success: true
                     data:
                       id: 1234
+                      email: adham_a@example.com
                       username: adham_a
                       nativeLanguage: Arabic
                       photoUrl: /media/avatars/alex.jpg
@@ -1547,45 +1548,11 @@ paths:
                         journeyLabel: Intermediate Journey
                         currentXp: 2460
                         nextMilestoneXp: 3000
-                      achievementsSummary:
-                        earnedCount: 8
-                        totalCount: 23
-                        preview:
-                          - id: 1
-                            name: Wild Explorer
-                            description: Complete 5 lessons in...
-                            iconUrl: /media/achievements/wild-explorer.png
-                            status: EARNED
-                            progressPercent: 100
-                      leaderboardSummary:
-                        myRank: 100
-                        preview:
-                          - rank: 99
-                            userId: 501
-                            username: Sacagawea
-                            photoUrl: /media/avatars/501.jpg
-                            level: 13
-                            xp: 2750
-                            isCurrentUser: false
-                          - rank: 100
-                            userId: 1234
-                            username: Explorer Sam
-                            photoUrl: /media/avatars/alex.jpg
-                            level: 12
-                            xp: 3150
-                            isCurrentUser: true
-                          - rank: 101
-                            userId: 502
-                            username: Zheng He
-                            photoUrl: /media/avatars/502.jpg
-                            level: 11
-                            xp: 2600
-                            isCurrentUser: false
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
     patch:
       tags: [Profile]
       summary: Edit profile details
@@ -1651,7 +1618,7 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
     delete:
       tags: [Profile]
       summary: Delete account
@@ -1714,7 +1681,7 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /profile/photo:
     post:
       tags: [Profile]
@@ -1762,7 +1729,49 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
+  /profile/password:
+    patch:
+      tags: [Profile]
+      summary: Change account password
+      description: Allows a local account user to change their password.
+      operationId: changePassword
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+            examples:
+              default:
+                value:
+                  oldPassword: myOldPassword123
+                  newPassword: myNewPassword456
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /profile/languages/progress:
     get:
       tags: [Profile]
@@ -1814,7 +1823,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   # --- Leaderboard ---
   /leaderboard:
     get:
@@ -1940,7 +1949,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   # --- Achievements ---
   /achievements:
     get:
@@ -2003,7 +2012,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /achievements/weekly-reward:
     get:
       tags: [Achievements]
@@ -2046,7 +2055,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
- 
+
   /achievements/weekly-reward/claim:
     post:
       tags: [Achievements]
@@ -2367,9 +2376,11 @@ components:
           example: john@example.com
         otp:
           type: string
-          example: '4823'
-          minLength: 6
-          maxLength: 6
+          description: 4-digit one-time password.
+          example: "4823"
+          minLength: 4
+          maxLength: 4
+          pattern: '^\d{4}$'
 
     ForgetPasswordRequest:
       type: object
@@ -2471,7 +2482,7 @@ components:
           description: Preview of up to 4 Worlds; use GET /worlds for the full list.
           items:
             $ref: '#/components/schemas/WorldSummary'
- 
+
     ActiveLanguageSummary:
       type: object
       properties:
@@ -2492,7 +2503,7 @@ components:
           minimum: 0
           maximum: 100
           example: 65
- 
+
     WorldSummary:
       type: object
       properties:
@@ -2524,7 +2535,7 @@ components:
         completedLevels:
           type: integer
           example: 8
- 
+
     WorldDetail:
       type: object
       properties:
@@ -2542,7 +2553,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LevelSummary'
- 
+
     LevelSummary:
       type: object
       properties:
@@ -2561,8 +2572,8 @@ components:
           nullable: true
           description: Null while the level is still LOCKED.
           example: Apple
-        
- 
+
+
     DailyRewardStatus:
       type: object
       properties:
@@ -2586,7 +2597,7 @@ components:
         streakDays:
           type: integer
           example: 7
- 
+
     DailyRewardClaimResult:
       type: object
       properties:
@@ -2609,7 +2620,7 @@ components:
         nextDay:
           type: integer
           example: 4
- 
+
     UserLanguage:
       type: object
       properties:
@@ -2635,7 +2646,7 @@ components:
         progressPercent:
           type: integer
           example: 65
- 
+
     LanguageOption:
       type: object
       properties:
@@ -2655,7 +2666,7 @@ components:
         isAdded:
           type: boolean
           example: false
- 
+
     AddLanguagesRequest:
       type: object
       required: [languageIds]
@@ -2666,7 +2677,7 @@ components:
             type: integer
           minItems: 1
           example: [4, 3]
- 
+
     SetActiveLanguageRequest:
       type: object
       required: [languageId]
@@ -2686,13 +2697,16 @@ components:
           type: boolean
           default: false
           description: If true, revokes all refresh tokens for the account (log out everywhere).
- 
+
     ProfileResponseData:
       type: object
       properties:
         id:
           type: integer
           example: 1234
+        email:
+          type: string
+          example: adham_a@example.com
         username:
           type: string
           example: adham_a
@@ -2746,30 +2760,7 @@ components:
             nextMilestoneXp:
               type: integer
               example: 3000
-        achievementsSummary:
-          type: object
-          properties:
-            earnedCount:
-              type: integer
-              example: 8
-            totalCount:
-              type: integer
-              example: 23
-            preview:
-              type: array
-              items:
-                $ref: '#/components/schemas/AchievementSummary'
-        leaderboardSummary:
-          type: object
-          properties:
-            myRank:
-              type: integer
-              example: 100
-            preview:
-              type: array
-              items:
-                $ref: '#/components/schemas/LeaderboardEntry'
- 
+
     UpdateProfileRequest:
       type: object
       properties:
@@ -2779,7 +2770,7 @@ components:
           maxLength: 30
           pattern: '^[a-zA-Z0-9_]+$'
           example: explorer_alex
- 
+
     DeleteProfileRequest:
       type: object
       properties:
@@ -2788,7 +2779,21 @@ components:
           format: password
           description: Required for local (email/password) accounts; omitted for OAuth-only accounts.
           example: Str0ngPass!
- 
+
+    ChangePasswordRequest:
+      type: object
+      required: [oldPassword, newPassword]
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          example: Str0ngPass!
+        newPassword:
+          type: string
+          format: password
+          minLength: 6
+          example: NewStr0ngPass!
+
     LanguageProgress:
       type: object
       properties:
@@ -2813,7 +2818,7 @@ components:
         wordsLearned:
           type: integer
           example: 210
- 
+
     LeaderboardEntry:
       type: object
       properties:
@@ -2839,7 +2844,7 @@ components:
         isCurrentUser:
           type: boolean
           example: true
- 
+
     AchievementSummary:
       type: object
       properties:
@@ -2864,7 +2869,7 @@ components:
           minimum: 0
           maximum: 100
           example: 100
- 
+
     AchievementsListData:
       type: object
       properties:
@@ -2882,5 +2887,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AchievementSummary'
-
- 
