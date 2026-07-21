@@ -74,6 +74,13 @@ sealed interface RootScreen : NavKey {
     data object AddLanguages : RootScreen
     @Serializable
     data object Achievement : RootScreen
+    @Serializable
+    data class VoiceGame(val lessonId: Int, val sentence: String) : RootScreen
+
+    @Serializable
+    data object VoiceResult : RootScreen
+
+
 }
 @Serializable
 sealed interface NestedScreen : NavKey {

@@ -305,4 +305,25 @@
     <string name="game_result_hint_button">Make Sure it\'s well lit!</string>
     <string name="game_result_retry_camera">Retry Camera</string>
     <string name="game_result_change_word">Change Word</string>
+
+    <!-- Game Voice Feature -->
+    <string name="voice_game_title">Voice Practice</string>
+    <string name="voice_evaluating">Evaluating Voice…</string>
+    <string name="listening_to_your_pronunciation">Listening closely to your pronunciation.</string>
+    <string name="voice_idle_yo_can_do_it">You can do it!</string>
+    <string name="voice_idle_pronounce_this">PRONOUNCE THIS:</string>
+    <string name="voice_idle_listen">Listen</string>
+    <string name="voice_idle_tap_hold_record">Tap and hold to record</string>
+    <string name="voice_idle_skip">Skip</string>
+    <string name="voice_recording_paused">Paused…</string>
+    <string name="voice_recording_listening">Listening…</string>
+    <string name="voice_recording_cancel">Cancel</string>
+    <string name="voice_recording_done">Done</string>
+    <string name="voice_result_great_job">Great Job!</string>
+    <string name="voice_result_not_quite">Not Quite!</string>
+    <string name="voice_result_sentence_review">SENTENCE REVIEW</string>
+    <string name="voice_result_coins_earned">coins earned</string>
+    <string name="voice_result_continue">Continue</string>
+    <string name="voice_result_return_home">Return Home</string>
+    <string name="voice_result_retry">Retry</string>
 </resources>

@@ -52,6 +52,8 @@ import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguage
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.SettingScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 
 @Composable
 fun AppNavigation(
@@ -281,6 +283,42 @@ fun AppNavigation(
                         ReviewScreen(
                             word = word,
                             onBack = { rootBackStack.removeLastOrNull() }
+                        )
+                    } else {
+                        LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                    }
+                }
+                entry<RootScreen.VoiceGame> { screen ->
+                    VoiceGameScreen(
+                        sentence = screen.sentence,
+                        lessonId = screen.lessonId,
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onEvaluationComplete = { result ->
+                            SharedVoiceResultHolder.pendingResult = result
+                            rootBackStack.navigateSingleTop(RootScreen.VoiceResult)
+                        }
+                    )
+                }
+
+                entry<RootScreen.VoiceResult> {
+                    val result = SharedVoiceResultHolder.pendingResult
+                    if (result != null) {
+                        VoiceResultScreen(
+                            result = result,
+                            onContinue = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                            },
+                            onRetry = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                // ViewModel already reset itself to IDLE the instant evaluation finished —
+                                // just pop back to the still-alive VoiceGame entry underneath. No recreation.
+                                rootBackStack.removeLastOrNull()
+                            },
+                            onHome = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                            }
                         )
                     } else {
                         LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
