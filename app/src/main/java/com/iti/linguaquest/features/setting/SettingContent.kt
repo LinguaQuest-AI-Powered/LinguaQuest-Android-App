@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
-import com.iti.linguaquest.features.setting.components.AppButton3D
-import com.iti.linguaquest.features.setting.components.SettingItem
-import com.iti.linguaquest.features.setting.components.SettingProfileHeader
-import com.iti.linguaquest.features.setting.components.SettingSectionContainer
+import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
+import com.iti.linguaquest.features.setting.presentation.components.SettingItem
+import com.iti.linguaquest.features.setting.presentation.components.SettingProfileHeader
+import com.iti.linguaquest.features.setting.presentation.components.SettingSectionContainer
 import com.iti.linguaquest.core.utils.ShareTopBar
 
 @Composable
