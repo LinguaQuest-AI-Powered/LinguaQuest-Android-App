@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.iti.linguaquest.R
 
 @Composable
 fun EditProfileScreen(
@@ -28,7 +29,7 @@ fun EditProfileScreen(
         onDisplayNameChange = { displayName = it },
         tagline = tagline,
         onTaglineChange = { tagline = it },
-        avatarModel = avatarModel,
+        avatarModel =  R.drawable.lingo_app_bar,
         onChangePhotoClick = onChangePhotoClick,
         onBackClick = onBackClick,
         onSaveClick = { onSave(displayName, tagline) },

@@ -132,7 +132,7 @@ private fun EditProfileScreenContentPreview() {
             onDisplayNameChange = {},
             tagline = "Mapping the wild frontiers of the French language, one word at a time!",
             onTaglineChange = {},
-            avatarModel = null,
+            avatarModel = R.drawable.lingo_app_bar,
             onChangePhotoClick = {},
             onBackClick = {},
             onSaveClick = {},
