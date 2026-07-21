@@ -7,10 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.activity.ComponentActivity
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpEffect
+import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpIntent
 import com.iti.linguaquest.features.auth.presentation.signup.viewmodel.SignUpViewModel
+import com.iti.linguaquest.features.auth.share.launchGoogleSignIn
 
 @Composable
 fun SignUpScreen(
@@ -18,6 +22,8 @@ fun SignUpScreen(
     onSignUpSuccess: (String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     var usernameShakeTrigger by remember { mutableIntStateOf(0) }
@@ -32,6 +38,10 @@ fun SignUpScreen(
                 is SignUpEffect.SignUpSucceeded -> onSignUpSuccess(effect.email)
                 is SignUpEffect.NavigateToLogin -> onNavigateToLogin()
                 is SignUpEffect.LaunchGoogleSignIn -> {
+                    activity?.launchGoogleSignIn(
+                        onTokenReceived = { viewModel.onIntent(SignUpIntent.GoogleLoginSubmitted(it)) },
+                        onError = { viewModel.onIntent(SignUpIntent.GoogleSignInFailed) }
+                    )
                 }
                 SignUpEffect.ShakeUsername -> usernameShakeTrigger++
                 SignUpEffect.ShakeEmail -> emailShakeTrigger++

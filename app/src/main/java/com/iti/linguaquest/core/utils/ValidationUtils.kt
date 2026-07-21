@@ -1,6 +1,8 @@
 package com.iti.linguaquest.core.utils
 
 import android.util.Patterns
+import androidx.annotation.StringRes
+import com.iti.linguaquest.R
 import java.util.regex.Pattern
 
 object ValidationUtils {
@@ -10,9 +12,21 @@ object ValidationUtils {
     }
 
     fun isValidPassword(password: String): Boolean {
-        // Password should be at least 8 characters long, contain one uppercase, one lowercase and one number
-        val passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$"
-        return password.isNotBlank() && Pattern.compile(passwordPattern).matcher(password).matches()
+        return getPasswordValidationErrorRes(password) == null
+    }
+
+    @StringRes
+    fun getPasswordValidationErrorRes(
+        password: String,
+        @StringRes blankErrorRes: Int = R.string.login_error_password_required
+    ): Int? {
+        return when {
+            password.isBlank() -> blankErrorRes
+            password.length < 8 -> R.string.new_password_error_too_short
+            !password.any { it.isUpperCase() } -> R.string.new_password_error_no_uppercase
+            !password.any { it.isDigit() } -> R.string.new_password_error_no_number
+            else -> null
+        }
     }
 
     fun isValidName(name: String): Boolean {

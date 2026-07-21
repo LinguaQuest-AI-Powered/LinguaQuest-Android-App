@@ -14,6 +14,10 @@ class TokensLocalDataSourceImpl @Inject constructor(
         MutableStateFlow(encryptedSharedPreferences.getString(TokenKeys.ACCESS_TOKEN, null))
     override val accessToken: Flow<String?> = _accessToken.asStateFlow()
 
+    private val _refreshToken =
+        MutableStateFlow(encryptedSharedPreferences.getString(TokenKeys.REFRESH_TOKEN, null))
+    override val refreshToken: Flow<String?> = _refreshToken.asStateFlow()
+
     private val _isLoggedIn =
         MutableStateFlow(encryptedSharedPreferences.getBoolean(TokenKeys.IS_LOGGED_IN, false))
     override val isLoggedIn: Flow<Boolean> = _isLoggedIn.asStateFlow()
@@ -26,6 +30,7 @@ class TokensLocalDataSourceImpl @Inject constructor(
             apply()
         }
         _accessToken.value = accessToken
+        _refreshToken.value = refreshToken
         _isLoggedIn.value = true
     }
 
@@ -37,6 +42,7 @@ class TokensLocalDataSourceImpl @Inject constructor(
             apply()
         }
         _accessToken.value = null
+        _refreshToken.value = null
         _isLoggedIn.value = false
     }
 

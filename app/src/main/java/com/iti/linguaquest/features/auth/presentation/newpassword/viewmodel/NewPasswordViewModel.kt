@@ -13,15 +13,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.usecase.SetNewPasswordUseCase
+import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val MIN_PASSWORD_LENGTH = 8
+
 
 @HiltViewModel
 class NewPasswordViewModel @Inject constructor(
-    private val setNewPasswordUseCase: SetNewPasswordUseCase
+    private val setNewPasswordUseCase: SetNewPasswordUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewPasswordState())
@@ -39,7 +46,7 @@ class NewPasswordViewModel @Inject constructor(
     }
 
     private fun validateAndReset(resetToken: String, newPassword: String, confirmPassword: String) {
-        val newPasswordValidation = validateNewPassword(newPassword)
+        val newPasswordValidation = ValidationUtils.getPasswordValidationErrorRes(newPassword, R.string.new_password_error_required)
         val confirmPasswordValidation = validateConfirmPassword(newPassword, confirmPassword)
 
         val hasNewPasswordError = newPasswordValidation != null
@@ -63,16 +70,6 @@ class NewPasswordViewModel @Inject constructor(
         }
     }
 
-    private fun validateNewPassword(password: String): Int? {
-        return when {
-            password.isBlank() -> R.string.new_password_error_required
-            password.length < MIN_PASSWORD_LENGTH -> R.string.new_password_error_too_short
-            !password.any { it.isUpperCase() } -> R.string.new_password_error_no_uppercase
-            !password.any { it.isDigit() } -> R.string.new_password_error_no_number
-            else -> null
-        }
-    }
-
     private fun validateConfirmPassword(newPassword: String, confirmPassword: String): Int? {
         return when {
             confirmPassword.isBlank() -> R.string.new_password_error_confirm_required
@@ -86,10 +83,19 @@ class NewPasswordViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             val result = setNewPasswordUseCase(newPassword, resetToken)
             _state.update { it.copy(isLoading = false) }
-            if (result is LinguaQuestResult.Success) {
-                sendEffect(NewPasswordEffect.ResetSucceeded)
-            } else {
-                _state.update { it.copy(generalErrorRes = R.string.new_password_error_generic) }
+            when (result) {
+                is LinguaQuestResult.Success -> {
+                    sendEffect(NewPasswordEffect.ResetSucceeded)
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(generalErrorRes = result.error.toMessageRes()) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(result.error.toMessageRes()),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
             }
         }
     }
