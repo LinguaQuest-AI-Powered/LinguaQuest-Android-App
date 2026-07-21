@@ -197,7 +197,7 @@ class VoiceGameViewModel @Inject constructor(
     private fun generateFakeResult(pcmData: ByteArray): VoiceResultUi {
         val words = _state.value.sentence.split(" ").filter { it.isNotBlank() }
         // val passed = pcmData.size % 2 == 0
-        val passed = false
+        val passed = true
         val wrongCount = when {
             words.size <= 1 -> if (passed) 0 else 1
             passed -> 1

@@ -65,5 +65,6 @@ fun ContinueLesson.toUiLessonPreview(): LessonPreview = LessonPreview(
     word = UiText.DynamicString(word),
     partOfSpeech = UiText.DynamicString(""),
     translation = UiText.DynamicString(translation),
-    iconSource = if (imageUrl.startsWith("http")) imageUrl else localLessonImageFor(word)
+    iconSource = if (imageUrl.startsWith("http")) imageUrl else localLessonImageFor(word),
+    sentence = sentence
 )

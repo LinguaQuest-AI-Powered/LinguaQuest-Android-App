@@ -25,5 +25,6 @@ data class ContinueLesson(
     val levelId: Int,
     val word: String,
     val translation: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val sentence: String
 )

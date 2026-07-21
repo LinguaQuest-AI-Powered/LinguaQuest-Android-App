@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
             HomeIntent.ContinueLessonClicked -> {
                 _state.value.continueLesson?.let { lesson ->
-                    sendEffect(HomeEffect.NavigateToVoiceGame(lesson.lessonId, "Say: \"${lesson.word}\""))
+                    sendEffect(HomeEffect.NavigateToVoiceGame(lesson.lessonId, lesson.sentence))
                 }
             }
 

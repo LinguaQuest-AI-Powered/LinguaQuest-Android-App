@@ -32,7 +32,8 @@ class FakeHomeRepository @Inject constructor() : HomeRepository {
                     levelId = 145,
                     word = "Apple",
                     translation = "La Pomme",
-                    imageUrl = "/media/words/apple.jpg"
+                    imageUrl = "/media/words/apple.jpg",
+                    sentence = "The apple is red"
                 ),
                 exploreWorlds = listOf(
                     World(10, "Kitchen World", "/media/worlds/kitchen.jpg", WorldDifficulty.EASY, WorldStatus.IN_PROGRESS, 40, 20, 8),
