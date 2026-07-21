@@ -51,7 +51,20 @@ data class LinguaQuestColors(
     val AchievementHeaderGradientBottom: Color,
     val DialogGradientTopRight: Color,
     val DialogGradientBottomLeft: Color,
-    val ShadowOrange: Color
+    val ShadowOrange: Color,
+    
+    val MapPathOuter: Color,
+    val MapPathInner: Color,
+    val MapPathDash: Color,
+
+    val DailyRewardInactiveNodeBg: Color,
+    val DailyRewardInactiveNodeIcon: Color,
+    val DailyRewardBadgeBg: Color,
+    val DailyRewardBadgeText: Color,
+    val DailyRewardActiveText: Color,
+    val DailyRewardSubtitleText: Color,
+    val DailyRewardInactiveLine: Color,
+    val DailyRewardInactiveText: Color
 )
 
 internal val LocalLinguaQuestColors =

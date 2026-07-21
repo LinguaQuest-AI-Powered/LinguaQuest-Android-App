@@ -25,20 +25,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
 fun DailyRewardTimeline(currentDay: Int) {
     val totalNodes = 5
     val activeColor = MaterialTheme.colorScheme.primary
-    val inactiveColor = Color(0xFFE6D6C8)
+    val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
     val startDay = maxOf(1, currentDay - 2)
     val endDay = startDay + totalNodes - 1
@@ -130,7 +130,7 @@ fun DailyRewardTimeline(currentDay: Int) {
                     Text(
                         text = stringResource(id = R.string.day_format, day),
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = if (day == currentDay) Color(0xFF895100) else Color(0xFFBCAAA4),
+                            color = if (day == currentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
                             fontWeight = if (day == currentDay) FontWeight.Bold else FontWeight.Medium,
                             fontSize = 11.sp
                         )

@@ -27,6 +27,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,8 +46,6 @@ fun LevelNode(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
 
-    // Pulse (scale) instead of vertical movement, so CURRENT / last-level nodes
-    // stay anchored exactly on the map path while still drawing attention.
     val pulseScale by if (status == LevelStatus.CURRENT || isLastLevel) {
         infiniteTransition.animateFloat(
             initialValue = 1f,
@@ -110,7 +109,7 @@ fun LevelNode(
             if (isLastLevel) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_treasure_chest),
-                    contentDescription = "Treasure",
+                    contentDescription = stringResource(id = R.string.cd_treasure),
                     modifier = Modifier
                         .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
                         .scale(pulseScale)
@@ -127,7 +126,7 @@ fun LevelNode(
                     if (status == LevelStatus.LOCKED) {
                         Icon(
                             painter = painterResource(id = R.drawable.lock),
-                            contentDescription = "Locked",
+                            contentDescription = stringResource(id = R.string.cd_locked),
                             tint = LinguaQuestTheme.colors.whiteColor,
                             modifier = Modifier.size(24.dp)
                         )
@@ -155,8 +154,8 @@ fun LevelNode(
                     val isFilled = i <= stars
                     Icon(
                         painter = painterResource(id = R.drawable.ic_star),
-                        contentDescription = "Star",
-                        tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
+                        contentDescription = stringResource(id = R.string.cd_star),
+                        tint = if (isFilled) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.iconsColor,
                         modifier = Modifier.size(12.dp)
                     )
                 }

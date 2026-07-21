@@ -17,6 +17,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,7 +40,7 @@ fun Mascot(offsetX: Dp, offsetY: Dp) {
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = "Let's Learn!",
+                    text = stringResource(id = R.string.map_lets_learn),
                     color = LinguaQuestTheme.colors.BrownText,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
@@ -48,7 +49,7 @@ fun Mascot(offsetX: Dp, offsetY: Dp) {
             Spacer(modifier = Modifier.height(4.dp))
             Image(
                 painter = painterResource(id = R.drawable.lingo_onboarding_1),
-                contentDescription = "Mascot",
+                contentDescription = stringResource(id = R.string.mascot_content_desc),
                 modifier = Modifier.size(100.dp)
             )
         }

@@ -51,7 +51,7 @@ import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
-import com.iti.linguaquest.features.setting.SettingScreen
+import com.iti.linguaquest.features.setting.presentation.SettingScreen
 
 @Composable
 fun AppNavigation(

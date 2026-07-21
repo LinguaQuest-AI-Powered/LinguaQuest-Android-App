@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.setting.components
+package com.iti.linguaquest.features.setting.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource

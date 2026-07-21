@@ -22,14 +22,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
-fun RewardAmountBadge(rewardAmount: Int) {
+fun RewardAmountBadge(modifier: Modifier = Modifier, rewardAmount: Int) {
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFFFBE6D6))
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
             .padding(horizontal = 32.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -46,9 +47,9 @@ fun RewardAmountBadge(rewardAmount: Int) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount),
-                style = MaterialTheme.typography.titleLarge.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF332211)
+                    color = LinguaQuestTheme.colors.DailyRewardBadgeText
                 )
             )
         }

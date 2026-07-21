@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.setting.components
+package com.iti.linguaquest.features.setting.presentation.components
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.foundation.clickable

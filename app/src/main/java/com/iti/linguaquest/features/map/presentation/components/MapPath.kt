@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
@@ -14,8 +13,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+
 @Composable
 fun MapPath(nodePositions: List<Pair<Dp, Dp>>) {
+    val outerColor = LinguaQuestTheme.colors.MapPathOuter
+    val innerColor = LinguaQuestTheme.colors.MapPathInner
+    val dashColor = LinguaQuestTheme.colors.MapPathDash.copy(alpha = 0.6f)
+
     Canvas(modifier = Modifier.fillMaxSize()) {
         if (nodePositions.size < 2) return@Canvas
 
@@ -46,17 +51,17 @@ fun MapPath(nodePositions: List<Pair<Dp, Dp>>) {
 
         drawPath(
             path = path,
-            color = Color(0xFF6E4322),
+            color = outerColor,
             style = Stroke(width = 36.dp.toPx(), cap = StrokeCap.Round)
         )
         drawPath(
             path = path,
-            color = Color(0xFFA06F43),
+            color = innerColor,
             style = Stroke(width = 28.dp.toPx(), cap = StrokeCap.Round)
         )
         drawPath(
             path = path,
-            color = Color(0xFFD6AB80).copy(alpha = 0.6f),
+            color = dashColor,
             style = Stroke(
                 width = 3.dp.toPx(),
                 cap = StrokeCap.Round,

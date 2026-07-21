@@ -30,7 +30,7 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
 
-    primary = AppColors.DarkPrimaryColor,
+    primary = AppColors.PrimaryColor,
     onPrimary = AppColors.TextOnPrimaryButton,
 
     secondary = AppColors.DarkSecondaryColor,
@@ -95,7 +95,20 @@ private val LightExtraColors = LinguaQuestColors(
     AchievementHeaderGradientBottom = AppColors.AchievementHeaderGradientBottom,
     DialogGradientTopRight = AppColors.DialogGradientTopRight,
     DialogGradientBottomLeft = AppColors.DialogGradientBottomLeft,
-    ShadowOrange = AppColors.ShadowOrange
+    ShadowOrange = AppColors.ShadowOrange,
+    
+    MapPathOuter = AppColors.MapPathOuter,
+    MapPathInner = AppColors.MapPathInner,
+    MapPathDash = AppColors.MapPathDash,
+    
+    DailyRewardInactiveNodeBg = AppColors.DailyRewardInactiveNodeBg,
+    DailyRewardInactiveNodeIcon = AppColors.DailyRewardInactiveNodeIcon,
+    DailyRewardBadgeBg = AppColors.DailyRewardBadgeBg,
+    DailyRewardBadgeText = AppColors.DailyRewardBadgeText,
+    DailyRewardActiveText = AppColors.DailyRewardActiveText,
+    DailyRewardSubtitleText = AppColors.DailyRewardSubtitleText,
+    DailyRewardInactiveLine = AppColors.DailyRewardInactiveLine,
+    DailyRewardInactiveText = AppColors.DailyRewardInactiveText
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -142,7 +155,20 @@ private val DarkExtraColors = LinguaQuestColors(
     AchievementHeaderGradientBottom = AppColors.DarkAchievementHeaderGradientBottom,
     DialogGradientTopRight = AppColors.DarkDialogGradientTopRight,
     DialogGradientBottomLeft = AppColors.DarkDialogGradientBottomLeft,
-    ShadowOrange = AppColors.DarkShadowOrange
+    ShadowOrange = AppColors.DarkShadowOrange,
+    
+    MapPathOuter = AppColors.DarkMapPathOuter,
+    MapPathInner = AppColors.DarkMapPathInner,
+    MapPathDash = AppColors.DarkMapPathDash,
+    
+    DailyRewardInactiveNodeBg = AppColors.DarkDailyRewardInactiveNodeBg,
+    DailyRewardInactiveNodeIcon = AppColors.DarkDailyRewardInactiveNodeIcon,
+    DailyRewardBadgeBg = AppColors.DarkDailyRewardBadgeBg,
+    DailyRewardBadgeText = AppColors.DarkDailyRewardBadgeText,
+    DailyRewardActiveText = AppColors.DarkDailyRewardActiveText,
+    DailyRewardSubtitleText = AppColors.DarkDailyRewardSubtitleText,
+    DailyRewardInactiveLine = AppColors.DarkDailyRewardInactiveLine,
+    DailyRewardInactiveText = AppColors.DarkDailyRewardInactiveText
 )
 
 @Composable

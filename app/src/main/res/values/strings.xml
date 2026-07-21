@@ -235,6 +235,10 @@
     <string name="error_unauthorized">error_unauthorized</string>
     <string name="error_too_many_requests">error_too_many_requests</string>
 
+    <string name="map_lets_learn">Let\'s Learn!</string>
+    <string name="cd_treasure">Treasure</string>
+    <string name="cd_star">Star</string>
+
     <!-- All Worlds Screen -->
     <string name="all_worlds_title">All Worlds</string>
     <string name="all_worlds_subtitle">Choose your next adventure</string>
