@@ -64,6 +64,7 @@ fun SettingContent(
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
+    onEditProfileClick: () -> Unit
 ) {
     val isDark = when (appTheme) {
         "light" -> false
@@ -141,7 +142,10 @@ fun SettingContent(
                             }
                             .padding(vertical = 16.dp)
                     )
-                    HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp)
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.background,
+                        thickness = 1.dp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -157,7 +161,7 @@ fun SettingContent(
             .padding(vertical = 24.dp)
             .statusBarsPadding()
     ) {
-        ShareTopBar(title = R.string.settings_label,onBackClick = onBackClick)
+        ShareTopBar(title = R.string.settings_label, onBackClick = onBackClick)
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -170,18 +174,22 @@ fun SettingContent(
                 icon = painterResource(id = R.drawable.ic_edit_icon),
                 title = stringResource(id = R.string.settings_edit_profile),
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                onClick = { /* TODO */ }
+                onClick = onEditProfileClick
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_learning_language),
                 value = "English",
-                valueColor =LocalLinguaQuestColors.current.BrownText,
+                valueColor = LocalLinguaQuestColors.current.BrownText,
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-            
+
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -201,7 +209,11 @@ fun SettingContent(
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { showLanguageDialog = true }
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_bell_icon),
                 title = stringResource(id = R.string.settings_notifications),
@@ -210,7 +222,11 @@ fun SettingContent(
                 onSwitchChange = onNotificationsToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_moon_icon),
                 title = stringResource(id = R.string.settings_dark_mode),
@@ -221,7 +237,11 @@ fun SettingContent(
                 },
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_speaker_icon),
                 title = stringResource(id = R.string.settings_sound_effects),
@@ -230,14 +250,22 @@ fun SettingContent(
                 onSwitchChange = onSoundToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_help_icon),
                 title = stringResource(id = R.string.settings_help_support),
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { /* TODO */ }
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_info_icon),
                 title = stringResource(id = R.string.settings_about_app),
@@ -274,7 +302,10 @@ fun SettingContentPreview() {
             notificationsEnabled = true,
             onNotificationsToggle = {},
             onLogoutClick = {},
-        )
+            onEditProfileClick = {},
+
+            )
+
     }
 }
 

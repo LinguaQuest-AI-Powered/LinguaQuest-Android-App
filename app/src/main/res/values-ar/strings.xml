@@ -5,7 +5,7 @@
     <string name="onboarding_title_p2">العالم الحقيقي!</string>
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
-
+    <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
     <string name="i_speak">أنا أتحدث...</string>
@@ -303,4 +303,11 @@
     <string name="game_result_hint_button">تأكد من أن الإضاءة جيدة!</string>
     <string name="game_result_retry_camera">إعادة محاولة الكاميرا</string>
     <string name="game_result_change_word">تغيير الكلمة</string>
+    <string name="edit_profile_title">تعديل الملف الشخصي</string>
+    <string name="change_photo">تغيير الصورة</string>
+    <string name="display_name_label">اسم العرض</string>
+    <string name="explorer_tagline_label">نبذة المستكشف</string>
+    <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
+    <string name="save_changes">حفظ التغييرات</string>
+    <string name="cancel">إلغاء</string>
 </resources>

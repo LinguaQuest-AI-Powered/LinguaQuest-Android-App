@@ -9,6 +9,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 @Composable
 fun SettingScreen(
     onBack: () -> Unit,
+    onEdit:() -> Unit,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val appLanguage by viewModel.appLanguage.collectAsState()
@@ -36,5 +37,6 @@ fun SettingScreen(
         },
         onLogoutClick = {
          },
+        onEditProfileClick =   onEdit
     )
 }
