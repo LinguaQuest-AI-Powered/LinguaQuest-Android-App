@@ -315,4 +315,11 @@
     <string name="game_result_hint_button">Make Sure it\'s well lit!</string>
     <string name="game_result_retry_camera">Retry Camera</string>
     <string name="game_result_change_word">Change Word</string>
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="display_name_label">Display Name</string>
+    <string name="explorer_tagline_label">Explorer\'s Tagline</string>
+    <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="cancel">Cancel</string>
 </resources>

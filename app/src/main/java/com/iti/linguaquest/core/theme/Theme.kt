@@ -74,6 +74,7 @@ private val LightExtraColors = LinguaQuestColors(
     BrownText = AppColors.BrownText,
     ProfileCardColor = AppColors.ProfileCardColor,
     ProfileCardBorderColor = AppColors.ProfileCardBorderColor,
+    fieldCardBackground = AppColors.FieldCardBackground,
     Charcoal = AppColors.Charcoal,
     Espresso = AppColors.Espresso,
     Amber = AppColors.Amber,
@@ -96,11 +97,11 @@ private val LightExtraColors = LinguaQuestColors(
     DialogGradientTopRight = AppColors.DialogGradientTopRight,
     DialogGradientBottomLeft = AppColors.DialogGradientBottomLeft,
     ShadowOrange = AppColors.ShadowOrange,
-    
+
     MapPathOuter = AppColors.MapPathOuter,
     MapPathInner = AppColors.MapPathInner,
     MapPathDash = AppColors.MapPathDash,
-    
+
     DailyRewardInactiveNodeBg = AppColors.DailyRewardInactiveNodeBg,
     DailyRewardInactiveNodeIcon = AppColors.DailyRewardInactiveNodeIcon,
     DailyRewardBadgeBg = AppColors.DailyRewardBadgeBg,
@@ -136,7 +137,8 @@ private val DarkExtraColors = LinguaQuestColors(
     ProfileCardBorderColor = AppColors.DarkBorderColor,
     Charcoal = AppColors.Linen,
     Espresso = AppColors.Sand,
-    Amber = AppColors.Amber,
+     fieldCardBackground = AppColors.FieldCardBackground,
+        Amber = AppColors.Amber,
     Linen = AppColors.Charcoal,
     Sand = AppColors.Espresso,
     SuccessAccent = AppColors.SuccessAccent,
@@ -156,11 +158,11 @@ private val DarkExtraColors = LinguaQuestColors(
     DialogGradientTopRight = AppColors.DarkDialogGradientTopRight,
     DialogGradientBottomLeft = AppColors.DarkDialogGradientBottomLeft,
     ShadowOrange = AppColors.DarkShadowOrange,
-    
+
     MapPathOuter = AppColors.DarkMapPathOuter,
     MapPathInner = AppColors.DarkMapPathInner,
     MapPathDash = AppColors.DarkMapPathDash,
-    
+
     DailyRewardInactiveNodeBg = AppColors.DarkDailyRewardInactiveNodeBg,
     DailyRewardInactiveNodeIcon = AppColors.DarkDailyRewardInactiveNodeIcon,
     DailyRewardBadgeBg = AppColors.DarkDailyRewardBadgeBg,

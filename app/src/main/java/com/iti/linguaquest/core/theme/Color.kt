@@ -15,7 +15,7 @@ object AppColors {
     val MapPathOuter = Color(0xFF6E4322)
     val MapPathInner = Color(0xFFA06F43)
     val MapPathDash = Color(0xFFD6AB80)
-    
+
     val DarkMapPathOuter = Color(0xFF4A2B14)
     val DarkMapPathInner = Color(0xFF764E2A)
     val DarkMapPathDash = Color(0xFF9E7C59)
@@ -41,6 +41,7 @@ object AppColors {
     val DarkDailyRewardInactiveLine = Color(0xFF8C7A6B)
     val DarkDailyRewardInactiveText = Color(0xFF8C7A6B)
 
+    val FieldCardBackground = Color(0xFFFCEFEC)
     // Secondary
     val SecondaryColor = Color(0xFFF0DFD3)
     val TextOnSecondaryButton = Color(0xFF544435)
@@ -116,7 +117,7 @@ object AppColors {
     val DarkLeaderboardGold = Color(0xFFC4A836)
     val DarkLeaderboardBlue = Color(0xFF38858C)
     val DarkLeaderboardBronze = Color(0xFF8F7A31)
-    
+
     val DarkAchievementCyanBackground = Color(0xFF00373D)
     val DarkAchievementCyanText = Color(0xFF85D3DB)
     val DarkAchievementCardBorder = Color(0xFF5B4636)

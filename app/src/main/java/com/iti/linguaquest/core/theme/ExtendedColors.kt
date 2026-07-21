@@ -37,6 +37,7 @@ data class LinguaQuestColors(
     val Sand : Color,
     val SuccessAccent : Color,
     val ErrorAccent : Color,
+    val fieldCardBackground: Color,
     val InfoAccent : Color,
     val LeaderboardGold: Color,
     val LeaderboardBlue: Color,
@@ -52,7 +53,7 @@ data class LinguaQuestColors(
     val DialogGradientTopRight: Color,
     val DialogGradientBottomLeft: Color,
     val ShadowOrange: Color,
-    
+
     val MapPathOuter: Color,
     val MapPathInner: Color,
     val MapPathDash: Color,
