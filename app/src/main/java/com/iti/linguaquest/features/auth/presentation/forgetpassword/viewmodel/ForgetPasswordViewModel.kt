@@ -5,10 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.auth.domain.usecase.SendPasswordResetOtpUseCase
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordEffect
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordState
+import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgetPasswordViewModel @Inject constructor(
-    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase
+    private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ForgetPasswordState())
@@ -59,10 +65,19 @@ class ForgetPasswordViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             val result = sendPasswordResetOtpUseCase(email)
             _state.update { it.copy(isLoading = false) }
-            if (result is LinguaQuestResult.Success) {
-                sendEffect(ForgetPasswordEffect.SendSucceeded(email))
-            } else {
-                _state.update { it.copy(generalErrorRes = R.string.login_error_generic) }
+            when (result) {
+                is LinguaQuestResult.Success -> {
+                    sendEffect(ForgetPasswordEffect.SendSucceeded(email))
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(generalErrorRes = result.error.toMessageRes()) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(result.error.toMessageRes()),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
             }
         }
     }

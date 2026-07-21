@@ -8,7 +8,7 @@ import javax.inject.Inject
 class VerifyEmailOtpUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, otpCode: String): LinguaQuestResult<Unit, AuthError> {
+    suspend operator fun invoke(email: String, otpCode: String): LinguaQuestResult<Boolean, AuthError> {
         return authRepository.verifyEmailOtp(email, otpCode)
     }
 }
