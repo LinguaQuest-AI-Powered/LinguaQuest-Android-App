@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,14 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -55,15 +54,15 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            AppColors.AchievementHeaderGradientTop,
-                            AppColors.AchievementHeaderGradientBottom
+                            LinguaQuestTheme.colors.AchievementHeaderGradientTop,
+                            LinguaQuestTheme.colors.AchievementHeaderGradientBottom
                         )
                     ),
                     shape = RoundedCornerShape(16.dp)
                 )
                 .border(
                     width = 1.dp,
-                    color = AppColors.AchievementCardBorder,
+                    color = LinguaQuestTheme.colors.AchievementCardBorder,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(vertical = 24.dp, horizontal = 16.dp),
@@ -75,8 +74,8 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                 Box(
                     modifier = Modifier
                         .size(90.dp)
-                        .background(AppColors.White, CircleShape)
-                        .border(2.dp, AppColors.AchievementCardBorder, CircleShape),
+                        .background(LinguaQuestTheme.colors.whiteColor, CircleShape)
+                        .border(2.dp, LinguaQuestTheme.colors.AchievementCardBorder, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     ImageWrapper(
@@ -94,7 +93,7 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                     text = "My Trophies",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = AppColors.BrownText
+                    color = LinguaQuestTheme.colors.BrownText
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -102,7 +101,7 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                 Text(
                     text = "Every word is a step deeper into the\nquest.",
                     fontSize = 13.sp,
-                    color = AppColors.TitleAndCaptionColor,
+                    color = LinguaQuestTheme.colors.titleAndCationsColor,
                     textAlign = TextAlign.Center,
                     lineHeight = 18.sp
                 )

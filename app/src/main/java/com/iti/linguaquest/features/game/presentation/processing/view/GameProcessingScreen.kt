@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.game.presentation.processing.view
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -20,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingEffect
@@ -70,7 +71,7 @@ fun GameProcessingScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.DarkGray.copy(alpha = 0.5f))
+            .background(LinguaQuestTheme.colors.blackColor.copy(alpha = 0.5f))
     ) {
 
         Crossfade(
@@ -96,7 +97,7 @@ fun GameProcessingScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(LinguaQuestTheme.colors.blackColor.copy(alpha = 0.5f))
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -111,7 +112,7 @@ fun GameProcessingScreen(
                 onClick = { processingViewModel.onIntent(GameProcessingIntent.SimulateAiFailure) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow.copy(alpha = 0.8f))
             ) {
-                Text(stringResource(id = R.string.game_processing_btn_fail), color = Color.Black)
+                Text(stringResource(id = R.string.game_processing_btn_fail), color = LinguaQuestTheme.colors.blackColor)
             }
 
             Button(

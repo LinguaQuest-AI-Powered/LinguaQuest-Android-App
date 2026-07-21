@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.game.presentation.level.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -21,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,12 +35,9 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
-import com.iti.linguaquest.core.theme.AppColors
 
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.graphics.Brush
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -49,11 +46,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
-import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
 fun QuestCard(
@@ -102,15 +95,15 @@ fun QuestCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(80.dp)
-                                .background(Color(0xFFFFF7E6), RoundedCornerShape(16.dp))
-                                .border(1.dp, Color(0xFFFFB347), RoundedCornerShape(16.dp)),
+                                .background(LinguaQuestTheme.colors.ProfileCardColor, RoundedCornerShape(16.dp))
+                                .border(1.dp, LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = wordToGuess,
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = AppColors.BrownText
+                                color = LinguaQuestTheme.colors.BrownText
                             )
                         }
 
@@ -119,14 +112,14 @@ fun QuestCard(
                         Box(
                             modifier = Modifier
                                 .size(50.dp)
-                                .background(Color(0xFFFFF7E6), CircleShape),
+                                .background(LinguaQuestTheme.colors.ProfileCardColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             IconButton(onClick = onSoundClick) {
                                 Icon(
                                     painter = rememberVectorPainter(Icons.Default.VolumeUp),
                                     contentDescription = stringResource(id = R.string.play_sound),
-                                    tint = AppColors.BrownText,
+                                    tint = LinguaQuestTheme.colors.BrownText,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -137,7 +130,7 @@ fun QuestCard(
 
                     Text(
                         text = hintText,
-                        color = Color.Gray,
+                        color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -176,13 +169,13 @@ fun QuestCard(
             Box(
                 modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(16.dp))
-                    .background(Color.White, RoundedCornerShape(16.dp))
-                    .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(16.dp))
+                    .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
+                    .border(1.dp, LinguaQuestTheme.colors.textFieldBorder, RoundedCornerShape(16.dp))
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.mascot_help_text),
-                    color = AppColors.BrownText,
+                    color = LinguaQuestTheme.colors.BrownText,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center

@@ -2,19 +2,17 @@ package com.iti.linguaquest.core.sharedComponents.dialog
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +44,7 @@ fun AppDialog(
     secondaryButtonText: String? = null,
     onSecondaryClick: (() -> Unit)? = null,
     secondaryButtonIcon: Int? = null,
-    gradientColors: List<Color> = listOf(AppColors.DialogGradientTopRight, Color.White, AppColors.DialogGradientBottomLeft),
+    gradientColors: List<Color> = listOf(LinguaQuestTheme.colors.DialogGradientTopRight, Color.White, LinguaQuestTheme.colors.DialogGradientBottomLeft),
     outlineColor: Color = AppColors.DialogOutline,
     secondaryButtonOutlineColor: Color = AppColors.DialogSecondaryButtonOutline,
     customContent: (@Composable () -> Unit)? = null
@@ -88,7 +86,7 @@ fun AppDialogContent(
     secondaryButtonText: String? = null,
     onSecondaryClick: (() -> Unit)? = null,
     secondaryButtonIcon: Int? = null,
-    gradientColors: List<Color> = listOf(AppColors.DialogGradientTopRight, Color.White, AppColors.DialogGradientBottomLeft),
+    gradientColors: List<Color> = listOf(LinguaQuestTheme.colors.DialogGradientTopRight, Color.White, LinguaQuestTheme.colors.DialogGradientBottomLeft),
     outlineColor: Color = AppColors.DialogOutline,
     secondaryButtonOutlineColor: Color = AppColors.DialogSecondaryButtonOutline,
     customContent: (@Composable () -> Unit)? = null
@@ -116,7 +114,7 @@ fun AppDialogContent(
                 Text(
                     text = title,
                     style = AppTextStyles.DialogTitle.copy(
-                        color = AppColors.Brown,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp
                     ),
@@ -128,7 +126,7 @@ fun AppDialogContent(
                 Text(
                     text = message,
                     style = AppTextStyles.DialogMessage.copy(
-                        color = AppColors.Brown.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                         fontSize = 16.sp
                     ),
                     textAlign = TextAlign.Center
@@ -187,7 +185,7 @@ fun AppDialogContent(
                     .clickable { onDismissRequest() },
                 contentAlignment = Alignment.Center
             ) {
-                Text("✕", color = AppColors.Brown, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text("✕", color = MaterialTheme.colorScheme.onBackground, fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -206,7 +204,7 @@ fun LightTipContent() {
         Text("💡 ", fontSize = 16.sp)
         Text(
             text = "MAKE SURE IT'S WELL LIT!",
-            color = AppColors.Brown,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
         )
@@ -225,7 +223,7 @@ fun PriceTagContent(price: Int) {
         Text("🪙 ", fontSize = 18.sp)
         Text(
             text = "$price",
-            color = AppColors.PrimaryColor,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
@@ -276,7 +274,7 @@ fun PreviewStuckOnThisOneDialog() {
             onPrimaryClick = {},
             secondaryButtonText = "Cancel",
             onSecondaryClick = {},
-            secondaryButtonOutlineColor = AppColors.Teal,
+            secondaryButtonOutlineColor = MaterialTheme.colorScheme.tertiary,
             customContent = { PriceTagContent(-200) }
         )
     }

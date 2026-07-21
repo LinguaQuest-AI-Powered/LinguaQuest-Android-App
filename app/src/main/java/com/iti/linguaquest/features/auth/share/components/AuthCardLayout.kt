@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun AuthCardLayout(
@@ -66,7 +65,7 @@ fun AuthCardLayout(
                 Text(
                     text = stringResource(id = titleRes),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = AppColors.Brown,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )

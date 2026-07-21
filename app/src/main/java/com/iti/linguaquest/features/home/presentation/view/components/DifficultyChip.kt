@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 
 @Composable
 fun DifficultyChip(difficulty: WorldDifficulty, modifier: Modifier = Modifier) {
@@ -22,8 +24,13 @@ fun DifficultyChip(difficulty: WorldDifficulty, modifier: Modifier = Modifier) {
             .background(difficulty.badgeColor)
             .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
+        val stringResId = when (difficulty) {
+            WorldDifficulty.EASY -> R.string.easy
+            WorldDifficulty.MEDIUM -> R.string.medium
+            WorldDifficulty.HARD -> R.string.hard
+        }
         Text(
-            text = difficulty.label,
+            text = stringResource(stringResId),
             color = LinguaQuestTheme.colors.whiteColor,
             style = AppTextStyles.Caption.copy(
                 fontSize = 10.sp,

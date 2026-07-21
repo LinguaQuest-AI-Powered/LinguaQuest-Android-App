@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.review.domain.model.AIReviewResponse
 import com.iti.linguaquest.features.review.presentation.contract.ReviewIntent
@@ -85,7 +84,7 @@ fun AIResponseCard(
                         Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.55f)
+                                LinguaQuestTheme.colors.blackColor.copy(alpha = 0.55f)
                             ),
                             startY = 80f
                         )
@@ -115,7 +114,7 @@ fun AIResponseCard(
             ) {
                 Text(
                     text = word.sourceWord,
-                    color = Color.White,
+                    color = LinguaQuestTheme.colors.whiteColor,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.headlineSmall
@@ -123,7 +122,7 @@ fun AIResponseCard(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = word.translatedWord,
-                    color = Color.White.copy(alpha = 0.85f),
+                    color = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.85f),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -133,12 +132,12 @@ fun AIResponseCard(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(14.dp)
-                    .background(Color.White.copy(alpha = 0.18f), RoundedCornerShape(10.dp))
+                    .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.18f), RoundedCornerShape(10.dp))
                     .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Text(
                     text = "${word.sourceLanguage}${stringResource(R.string.review_language_arrow)}${word.targetLanguage}",
-                    color = Color.White,
+                    color = LinguaQuestTheme.colors.whiteColor,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -234,8 +233,8 @@ fun AIResponseCard(
                 emoji = stringResource(R.string.review_section_fun_emoji),
                 label = stringResource(R.string.review_section_fun_label),
                 content = response.funFact,
-                accentColor = AppColors.SplashTopLeftColor,
-                background = AppColors.SplashTopLeftColor.copy(alpha = 0.08f),
+                accentColor = LinguaQuestTheme.colors.splashTopLeftColor,
+                background = LinguaQuestTheme.colors.splashTopLeftColor.copy(alpha = 0.08f),
                 isSpeaking = speakingSectionId == ReviewSectionIds.FUN_FACT,
                 pulseScale = pulseScale,
                 onSpeak = {

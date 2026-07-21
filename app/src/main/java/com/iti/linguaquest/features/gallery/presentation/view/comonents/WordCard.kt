@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.iti.linguaquest.core.database.word.WordEntity
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun WordCard(
@@ -69,7 +68,7 @@ fun WordCard(
                         .align(Alignment.TopEnd)
                         .padding(10.dp)
                         .background(
-                            color = AppColors.Teal,
+                            color = MaterialTheme.colorScheme.tertiary,
                             shape = RoundedCornerShape(50)
                         )
                         .padding(horizontal = 14.dp, vertical = 6.dp)
@@ -118,11 +117,11 @@ fun WordCard(
                         .size(28.dp)
                         .then(
                             if (word.isCorrect) {
-                                Modifier.background(color = AppColors.Teal, shape = CircleShape)
+                                Modifier.background(color = MaterialTheme.colorScheme.tertiary, shape = CircleShape)
                             } else {
                                 Modifier.border(
                                     width = 2.dp,
-                                    color = AppColors.Teal,
+                                    color = MaterialTheme.colorScheme.tertiary,
                                     shape = CircleShape
                                 )
                             }

@@ -24,14 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors.BrownText
+
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -46,7 +45,7 @@ fun WorldCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White)
+            .background(LinguaQuestTheme.colors.whiteColor)
             .padding(all = 15.dp)
             .clickable(enabled = !isLocked) { onClick() }
     ) {
@@ -91,7 +90,7 @@ fun WorldCard(
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = LinguaQuestTheme.colors.whiteColor,
                         modifier = Modifier.size(14.dp)
                     )
                 }
@@ -103,7 +102,7 @@ fun WorldCard(
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 8.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White.copy(alpha = 0.8f))
+                        .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f))
                         .padding(horizontal = 12.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -111,7 +110,7 @@ fun WorldCard(
                         text = stringResource(R.string.unlock_at_level_format, world.unlockLevel),
                         style = AppTextStyles.Caption.copy(
                             fontWeight = FontWeight.Bold,
-                            color = BrownText
+                            color = LinguaQuestTheme.colors.BrownText
                         )
                     )
                 }
@@ -121,7 +120,7 @@ fun WorldCard(
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 text = world.title.asString(),
-                color = BrownText,
+                color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 maxLines = 1,

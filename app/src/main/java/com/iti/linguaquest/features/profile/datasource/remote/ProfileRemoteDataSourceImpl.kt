@@ -35,7 +35,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 class ProfileRemoteDataSourceImpl @Inject constructor(
     private val api: ProfileApiService,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ProfileRemoteDataSource {
 
     override suspend fun getProfileSummary(): LinguaQuestResult<ProfileSummary, LinguaQuestDataError> {

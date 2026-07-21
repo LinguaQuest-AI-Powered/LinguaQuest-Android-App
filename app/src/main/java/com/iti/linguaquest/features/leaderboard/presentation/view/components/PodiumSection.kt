@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 import kotlinx.coroutines.delay
@@ -116,7 +116,7 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                 if (second != null) {
                     PodiumItem(
                         entry = second,
-                        rankColor = AppColors.LeaderboardBlue,
+                        rankColor = LinguaQuestTheme.colors.LeaderboardBlue,
                         cardHeight = 130.dp,
                         delayMillis = 600
                     )
@@ -127,7 +127,7 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                 if (first != null) {
                     PodiumItem(
                         entry = first,
-                        rankColor = AppColors.LeaderboardGold,
+                        rankColor = LinguaQuestTheme.colors.LeaderboardGold,
                         cardHeight = 165.dp,
                         isFirst = true,
                         delayMillis = 1200
@@ -139,7 +139,7 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                 if (third != null) {
                     PodiumItem(
                         entry = third,
-                        rankColor = AppColors.LeaderboardBronze,
+                        rankColor = LinguaQuestTheme.colors.LeaderboardBronze,
                         cardHeight = 130.dp,
                         delayMillis = 0
                     )

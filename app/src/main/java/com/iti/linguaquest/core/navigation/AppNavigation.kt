@@ -34,7 +34,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import kotlinx.coroutines.flow.collectLatest
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
@@ -51,7 +51,7 @@ import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
-import com.iti.linguaquest.features.setting.SettingScreen
+import com.iti.linguaquest.features.setting.presentation.SettingScreen
 
 @Composable
 fun AppNavigation(

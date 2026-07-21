@@ -14,6 +14,7 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
+import com.iti.linguaquest.R
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -63,7 +64,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
         return WorldItem(
             id = id,
             title = UiText.DynamicString(name),
-            imageSource = imageUrl,
+            imageSource = if (imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
             difficulty = when (difficulty) {
                 DomainWorldDifficulty.EASY -> WorldDifficulty.EASY
                 DomainWorldDifficulty.MEDIUM -> WorldDifficulty.MEDIUM
