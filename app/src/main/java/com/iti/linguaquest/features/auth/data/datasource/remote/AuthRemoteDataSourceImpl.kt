@@ -21,7 +21,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun sendOtp(body: OtpSendRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
         safeApiCall { api.sendOtp(body).data }
 
-    override suspend fun verifyEmailOtp(body: OtpVerifyRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
+    override suspend fun verifyEmailOtp(body: OtpVerifyRequestDto): LinguaQuestResult<VerifyEmailResponseDto, LinguaQuestDataError> =
         safeApiCall { api.verifyEmailOtp(body).data }
 
     override suspend fun verifyPasswordResetOtp(body: OtpVerifyRequestDto): LinguaQuestResult<VerifyResetOtpResponseDto, LinguaQuestDataError> =
@@ -29,5 +29,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun setNewPassword(body: ResetPasswordRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
         safeApiCall { api.setNewPassword(body).data }
+
+    override suspend fun logout(body: LogoutRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
+        safeApiCall { api.logout(body).data }
+
+    override suspend fun refreshToken(body: RefreshTokenRequestDto): LinguaQuestResult<RefreshTokenResponseDataDto, LinguaQuestDataError> =
+        safeApiCall { api.refreshToken(body).data }
 
 }

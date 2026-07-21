@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.game.presentation.camera.viewmodel.CameraViewModel

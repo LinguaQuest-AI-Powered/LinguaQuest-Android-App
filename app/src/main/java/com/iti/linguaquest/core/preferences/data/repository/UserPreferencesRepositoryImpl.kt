@@ -1,41 +1,23 @@
-package com.iti.linguaquest.core.preferences
+package com.iti.linguaquest.core.preferences.data.repository
 
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-
-// Interface (DOMAIN LAYER)
-interface UserPreferencesRepository {
-    val targetLanguage: Flow<String?>
-    val nativeLanguage: Flow<String?>
-    val proficiencyLevel: Flow<String?>
-    val appTheme: Flow<String>
-    val soundEnabled: Flow<Boolean>
-
-
-    suspend fun saveTargetLanguage(language: String)
-    suspend fun saveNativeLanguage(language: String)
-    suspend fun saveProficiencyLevel(level: String)
-    suspend fun saveAppTheme(theme: String)
-    suspend fun saveSoundEnabled(enabled: Boolean)
-}
 
 class UserPreferencesRepositoryImpl @Inject constructor(
     private val localDataSource: UserPreferencesLocalDataSource
 ) : UserPreferencesRepository {
 
     override val targetLanguage: Flow<String?> = localDataSource.targetLanguage
-    override val nativeLanguage: Flow<String?> = localDataSource.nativeLanguage
     override val proficiencyLevel: Flow<String?> = localDataSource.proficiencyLevel
     override val appTheme: Flow<String> = localDataSource.appTheme
     override val soundEnabled: Flow<Boolean> = localDataSource.soundEnabled
-
+    override val appLanguage: Flow<String> = localDataSource.appLanguage
+    override val notificationsEnabled: Flow<Boolean> = localDataSource.notificationsEnabled
 
     override suspend fun saveTargetLanguage(language: String) {
         localDataSource.saveTargetLanguage(language)
-    }
-
-    override suspend fun saveNativeLanguage(language: String) {
-        localDataSource.saveNativeLanguage(language)
     }
 
     override suspend fun saveProficiencyLevel(level: String) {
@@ -48,5 +30,13 @@ class UserPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun saveSoundEnabled(enabled: Boolean) {
         localDataSource.saveSoundEnabled(enabled)
+    }
+
+    override suspend fun saveAppLanguage(language: String) {
+        localDataSource.saveAppLanguage(language)
+    }
+
+    override suspend fun saveNotificationsEnabled(enabled: Boolean) {
+        localDataSource.saveNotificationsEnabled(enabled)
     }
 }

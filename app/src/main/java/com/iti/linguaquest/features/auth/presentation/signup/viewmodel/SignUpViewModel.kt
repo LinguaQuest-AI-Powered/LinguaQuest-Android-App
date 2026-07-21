@@ -7,6 +7,10 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.usecase.RegisterUserUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.auth.domain.usecase.SignInWithGoogleUseCase
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpEffect
@@ -25,6 +29,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val signUpWithEmailUseCase: RegisterUserUseCase,
     private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -56,7 +61,8 @@ class SignUpViewModel @Inject constructor(
     ) {
         val usernameValid = ValidationUtils.isValidName(username)
         val emailValid = ValidationUtils.isValidEmail(email)
-        val passwordValid = ValidationUtils.isValidPassword(password)
+        val passwordValidationError = ValidationUtils.getPasswordValidationErrorRes(password)
+        val passwordValid = passwordValidationError == null
         val passwordsMatch = password == confirmPassword && password.isNotEmpty()
 
         if (!usernameValid) {
@@ -76,7 +82,7 @@ class SignUpViewModel @Inject constructor(
         if (!passwordValid) {
             _state.update { it.copy(
                 passwordError = true,
-                passwordErrorRes = if (password.isBlank()) R.string.login_error_password_required else R.string.login_error_weak_password
+                passwordErrorRes = passwordValidationError
             ) }
             sendEffect(SignUpEffect.ShakePassword)
         }
@@ -125,13 +131,24 @@ class SignUpViewModel @Inject constructor(
         _state.update {
             it.copy(
                 isLoading = false,
-                generalErrorRes = null,
+                generalErrorRes = if (!emailHasError && !passwordHasError) error.toMessageRes() else null,
                 emailError = emailHasError,
                 emailErrorRes = if (emailHasError) error.toMessageRes() else null,
                 passwordError = passwordHasError,
                 passwordErrorRes = if (passwordHasError) error.toMessageRes() else null,
                 googleError = false
             )
+        }
+
+        if (!emailHasError && !passwordHasError) {
+            viewModelScope.launch {
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = UiText.StringResource(error.toMessageRes()),
+                        type = SnackbarType.ERROR
+                    )
+                )
+            }
         }
 
         when (error) {
@@ -150,6 +167,14 @@ class SignUpViewModel @Inject constructor(
             )
         }
         sendEffect(SignUpEffect.ShakeGoogleSignIn)
+        viewModelScope.launch {
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    message = UiText.StringResource(error.toMessageRes()),
+                    type = SnackbarType.ERROR
+                )
+            )
+        }
     }
 
     private fun startGoogleSignIn() {

@@ -12,12 +12,13 @@ import com.iti.linguaquest.features.home.domain.repository.HomeRepository
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class FakeHomeRepository @Inject constructor() : HomeRepository {
 
     override suspend fun getHomeSummary(): LinguaQuestResult<HomeSummary, LinguaQuestDataError> {
-        delay(600)
+        delay(600.milliseconds)
 
         return LinguaQuestResult.Success(
             HomeSummary(

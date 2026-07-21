@@ -5,10 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
@@ -21,6 +25,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
@@ -41,18 +46,24 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 painter = painterResource(id = R.drawable.lingo_bg),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                colorFilter = if (SharedBackgroundState.showDarkEffect && LinguaQuestTheme.colors.isDark) {
+                    ColorFilter.tint(
+                        Color.Black.copy(alpha = 0.75f),
+                        BlendMode.SrcOver
+                    )
+                } else null
             )
         } else {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.background)
             )
         }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            containerColor = Color.Transparent,
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = 1250,
@@ -91,9 +102,6 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
-//                            onNavigateToDetails = { id ->
-//                                rootBackStack.navigateSingleTop(RootScreen.Details(id))
-//                            },
                             onNavigateToVoiceGame = { lessonId, sentence ->
                                 rootBackStack.navigateSingleTop(RootScreen.VoiceGame(lessonId, sentence))
                             },

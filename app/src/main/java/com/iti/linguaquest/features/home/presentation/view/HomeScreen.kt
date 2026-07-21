@@ -36,7 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
@@ -61,7 +61,6 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-   // onNavigateToDetails: (Int) -> Unit,
     onNavigateToVoiceGame: (Int, String) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
@@ -98,7 +97,6 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-              //  is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
                 is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame(effect.lessonId, effect.sentence)
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()

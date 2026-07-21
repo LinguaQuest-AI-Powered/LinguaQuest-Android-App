@@ -25,21 +25,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
 fun DailyRewardTimeline(currentDay: Int) {
     val totalNodes = 5
-    val activeColor = AppColors.PrimaryColor
-    val inactiveColor = Color(0xFFE6D6C8)
+    val activeColor = MaterialTheme.colorScheme.primary
+    val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
     val startDay = maxOf(1, currentDay - 2)
     val endDay = startDay + totalNodes - 1
@@ -62,11 +61,13 @@ fun DailyRewardTimeline(currentDay: Int) {
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
+        val isRtl = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .height(48.dp)
+                .scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f)
         ) {
             val yOffset = size.height / 2
 
@@ -129,7 +130,7 @@ fun DailyRewardTimeline(currentDay: Int) {
                     Text(
                         text = stringResource(id = R.string.day_format, day),
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = if (day == currentDay) Color(0xFF895100) else Color(0xFFBCAAA4),
+                            color = if (day == currentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
                             fontWeight = if (day == currentDay) FontWeight.Bold else FontWeight.Medium,
                             fontSize = 11.sp
                         )

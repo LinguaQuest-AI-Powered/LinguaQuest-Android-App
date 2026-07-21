@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardContent
 import com.iti.linguaquest.features.leaderboard.presentation.viewmodel.LeaderboardViewModel

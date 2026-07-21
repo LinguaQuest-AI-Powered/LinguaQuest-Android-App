@@ -16,14 +16,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 
 
 @Composable
@@ -34,7 +33,7 @@ fun ClaimRewardButton(onClaimClick: () -> Unit) {
             .fillMaxWidth()
             .height(56.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AppColors.PrimaryColor
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         shape = RoundedCornerShape(28.dp)
     ) {
@@ -46,14 +45,14 @@ fun ClaimRewardButton(onClaimClick: () -> Unit) {
                 text = stringResource(id = R.string.claim_reward),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = LinguaQuestTheme.colors.whiteColor
                 )
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Outlined.CardGiftcard,
                 contentDescription = stringResource(id = R.string.cd_gift),
-                tint = Color.White,
+                tint = LinguaQuestTheme.colors.whiteColor,
                 modifier = Modifier.size(20.dp)
             )
         }

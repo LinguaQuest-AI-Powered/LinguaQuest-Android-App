@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.presentation.view
+package com.iti.linguaquest.features.voicegame.presentation.view.contents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,6 +35,7 @@ import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
 import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
@@ -50,19 +51,19 @@ fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) 
         mascotOverlapHeight = 70.dp,
         mascotSize = 180.dp
     ) {
-        Text(stringResource(R.string.voice_idle_pronounce_this), style = AppTextStyles.Caption, color = AppColors.DialogSecondaryButtonOutline)
+        Text(stringResource(R.string.voice_idle_pronounce_this), style = AppTextStyles.Caption, color = LinguaQuestTheme.colors.iconsColor)
         Spacer(Modifier.height(8.dp))
         Text(
             state.sentence,
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
+            color = LinguaQuestTheme.colors.blackColor
         )
         Spacer(Modifier.height(12.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = AppColors.PrimaryColor, modifier = Modifier.size(18.dp))
+            Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = LinguaQuestTheme.colors.iconsColor, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(4.dp))
-            Text("Listen", color = AppColors.PrimaryColor, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.voice_idle_listen), color = LinguaQuestTheme.colors.iconsColor, fontWeight = FontWeight.Bold)
         }
     }
 
@@ -70,13 +71,13 @@ fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) 
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color(0xFFFBDCDA))
+            .background(LinguaQuestTheme.colors.ErrorAccent.copy(alpha = 0.2f))
             .padding(horizontal = 14.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color(0xFFC0392B)))
+        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(LinguaQuestTheme.colors.ErrorAccent))
         Spacer(Modifier.width(6.dp))
-        Text(formatElapsed(state.recordingElapsedSeconds), fontWeight = FontWeight.Bold, color = Color(0xFFC0392B))
+        Text(formatElapsed(state.recordingElapsedSeconds), fontWeight = FontWeight.Bold, color = LinguaQuestTheme.colors.ErrorAccent)
     }
 
     Spacer(Modifier.height(20.dp))
@@ -84,7 +85,7 @@ fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) 
         modifier = Modifier
             .size(96.dp)
             .clip(CircleShape)
-            .background(Color(0xFFC0392B))
+            .background(LinguaQuestTheme.colors.ErrorAccent)
             .clickable {
                 viewModel.onIntent(if (state.isPaused) VoiceGameIntent.ResumeClicked else VoiceGameIntent.PauseClicked)
             },

@@ -3,11 +3,15 @@ package com.iti.linguaquest.features.voicegame.presentation.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,12 +21,11 @@ import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.ScoreCircle
 import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
 import com.iti.linguaquest.features.voicegame.presentation.view.components.WordChipsRow
-
-private val SuccessGreen = Color(0xFF3E8E5A)
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -37,7 +40,7 @@ fun VoiceResultScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
@@ -56,7 +59,8 @@ fun VoiceResultScreen(
                         R.string.voice_result_not_quite
                     ),
                     style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (result.isPassed) SuccessGreen else AppColors.PrimaryColor
+                    color = if (result.isPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary
+
                 )
                 Spacer(Modifier.height(16.dp))
 
@@ -66,7 +70,7 @@ fun VoiceResultScreen(
                 Text(
                     stringResource(R.string.voice_result_sentence_review),
                     style = MaterialTheme.typography.labelMedium,
-                    color = AppColors.DialogSecondaryButtonOutline
+                    color = LinguaQuestTheme.colors.blackColor
                 )
                 Spacer(Modifier.height(10.dp))
                 WordChipsRow(result.correctWords, result.wrongWords)
@@ -76,29 +80,37 @@ fun VoiceResultScreen(
                     Text(
                         "+${result.coinsAwarded} ${stringResource(R.string.voice_result_coins_earned)}",
                         fontWeight = FontWeight.Bold,
-                        color = AppColors.PrimaryColor
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
-            }
+                Spacer(Modifier.height(24.dp))
 
-            Spacer(Modifier.height(24.dp))
-
-            if (result.isPassed) {
-                AppButton(text = stringResource(R.string.voice_result_continue), onClick = onContinue, variant = ButtonVariant.PRIMARY)
-                Spacer(Modifier.height(12.dp))
-                AppOutlinedButton(
-                    text = stringResource(R.string.voice_result_return_home),
-                    onClick = onHome,
-                    color = AppColors.DialogSecondaryButtonOutline
-                )
-            } else {
-                AppButton(text = stringResource(R.string.voice_result_retry), onClick = onRetry, variant = ButtonVariant.PRIMARY)
-                Spacer(Modifier.height(12.dp))
-                AppOutlinedButton(
-                    text = stringResource(R.string.voice_result_return_home),
-                    onClick = onHome,
-                    color = AppColors.DialogSecondaryButtonOutline
-                )
+                if (result.isPassed) {
+                    AppButton(
+                        text = stringResource(R.string.voice_result_continue),
+                        onClick = onContinue,
+                        variant = ButtonVariant.PRIMARY
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    AppOutlinedButton(
+                        text = stringResource(R.string.voice_result_return_home),
+                        onClick = onHome,
+                        color = AppColors.DialogSecondaryButtonOutline
+                    )
+                } else {
+                    AppButton(
+                        text = stringResource(R.string.voice_result_retry),
+                        icon = rememberVectorPainter(image = Icons.Default.ArrowBack),
+                        onClick = onRetry,
+                        variant = ButtonVariant.PRIMARY
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    AppOutlinedButton(
+                        text = stringResource(R.string.voice_result_return_home),
+                        onClick = onHome,
+                        color = AppColors.DialogSecondaryButtonOutline
+                    )
+                }
             }
 
             Spacer(Modifier.height(24.dp))

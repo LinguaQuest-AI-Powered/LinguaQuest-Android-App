@@ -24,7 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,7 +34,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
-import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun RecordingConfirmationDialog(
@@ -44,18 +44,26 @@ fun RecordingConfirmationDialog(
     onDiscard: () -> Unit,
     onProcess: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDiscard, properties = DialogProperties(dismissOnClickOutside = false)) {
+    Dialog(
+        onDismissRequest = onDiscard,
+        properties = DialogProperties(dismissOnClickOutside = false)
+    ) {
         AppMascotGradientBox(
-            imageRes = R.drawable.lingo_checking_pronounciation,
+            imageRes = R.drawable.lingo_new_password,
             mascotOverlapHeight = 60.dp,
             mascotSize = 140.dp
         ) {
-            Text("Review Recording", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(R.string.dialog_voice_confirmation_review_recording),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = LinguaQuestTheme.colors.blackColor
+            )
             Spacer(Modifier.height(6.dp))
             Text(
-                "Listen back to your pronunciation before submitting.",
+                stringResource(R.string.dialog_voice_confirmation_sub_title),
                 textAlign = TextAlign.Center,
-                color = AppColors.DialogSecondaryButtonOutline,
+                color = LinguaQuestTheme.colors.iconsColor,
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(Modifier.height(16.dp))
@@ -64,7 +72,7 @@ fun RecordingConfirmationDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .background(AppColors.DialogOutline)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
                     .padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -72,14 +80,14 @@ fun RecordingConfirmationDialog(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(AppColors.PrimaryColor)
+                        .background(MaterialTheme.colorScheme.primary)
                         .clickable { onTogglePlayback() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = "Play preview",
-                        tint = Color.White
+                        tint = LinguaQuestTheme.colors.whiteColor
                     )
                 }
                 Spacer(Modifier.width(10.dp))
@@ -95,25 +103,32 @@ fun RecordingConfirmationDialog(
                                 .width(3.dp)
                                 .height(h.dp)
                                 .clip(RoundedCornerShape(2.dp))
-                                .background(AppColors.PrimaryColor)
+                                .background(MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
                 Spacer(Modifier.width(8.dp))
-                Text(formatElapsed(playbackSeconds), fontWeight = FontWeight.Bold)
+                Text(
+                    formatElapsed(playbackSeconds),
+                    fontWeight = FontWeight.Bold,
+                    color = LinguaQuestTheme.colors.blackColor
+                )
             }
 
             Spacer(Modifier.height(20.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 AppOutlinedButton(
-                    text = "Discard",
+                    text = stringResource(R.string.dialog_voice_confirmation_discard),
                     onClick = onDiscard,
                     modifier = Modifier.weight(1f),
-                    color = AppColors.DialogSecondaryButtonOutline
+                    color = LinguaQuestTheme.colors.iconsColor
                 )
                 AppButton(
-                    text = "Process",
+                    text = stringResource(R.string.dialog_voice_confirmation_process),
                     onClick = onProcess,
                     modifier = Modifier.weight(1f)
                 )

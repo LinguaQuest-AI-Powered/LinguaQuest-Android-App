@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.auth.data.repository
 
 
-import com.iti.linguaquest.core.preferences.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -15,6 +15,8 @@ import com.iti.linguaquest.features.auth.data.datasource.remote.ResetPasswordReq
 import com.iti.linguaquest.features.auth.data.datasource.remote.LoginRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.OAuthGoogleRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.RegisterRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.LogoutRequestDto
+import com.iti.linguaquest.features.auth.data.datasource.remote.RefreshTokenRequestDto
 import com.iti.linguaquest.features.auth.data.mapper.toAuthError
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
@@ -34,10 +36,10 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): LinguaQuestResult<Unit, AuthError> {
 
-        val nativeLanguage = userPreferencesLocalDataSource.nativeLanguage.first() ?: ""
+        val appLanguage = userPreferencesLocalDataSource.appLanguage.first() ?: ""
         val targetLanguage = userPreferencesLocalDataSource.targetLanguage.first() ?: ""
 
-        val request = RegisterRequestDto(email, username, password, nativeLanguage, targetLanguage)
+        val request = RegisterRequestDto(email, username, password, appLanguage, targetLanguage)
 
         return remoteDataSource.register(request)
             .map { Unit }
@@ -81,8 +83,9 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun verifyEmailOtp(
         email: String,
         otpCode: String
-    ): LinguaQuestResult<Unit, AuthError> {
+    ): LinguaQuestResult<Boolean, AuthError> {
         return remoteDataSource.verifyEmailOtp(OtpVerifyRequestDto(email, otpCode))
+            .map { it.isVerified }
             .mapError()
     }
 
@@ -108,8 +111,21 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
+        val refreshToken = tokensLocalDataSource.refreshToken.first() ?: ""
+        if (refreshToken.isNotEmpty()) {
+            remoteDataSource.logout(LogoutRequestDto(refreshToken))
+        }
         tokensLocalDataSource.clearTokens()
         return LinguaQuestResult.Success(Unit)
+    }
+
+    override suspend fun refreshToken(refreshToken: String): LinguaQuestResult<Unit, AuthError> {
+        return remoteDataSource.refreshToken(RefreshTokenRequestDto(refreshToken))
+            .onSuccess { response ->
+                tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+            }
+            .asEmptyDataResult()
+            .mapError()
     }
 
     private fun <T> LinguaQuestResult<T, LinguaQuestDataError>.mapError(): LinguaQuestResult<T, AuthError> {

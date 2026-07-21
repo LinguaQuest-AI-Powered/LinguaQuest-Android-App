@@ -34,7 +34,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import kotlinx.coroutines.flow.collectLatest
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
@@ -46,14 +46,16 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
+import com.iti.linguaquest.features.editprofile.presentation.EditProfileScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
-import com.iti.linguaquest.features.setting.SettingScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
+import com.iti.linguaquest.features.setting.presentation.SettingScreen
+
 
 @Composable
 fun AppNavigation(
@@ -189,7 +191,7 @@ fun AppNavigation(
                 entry<RootScreen.Login> {
                     LoginScreen(
                         onSignUp = {
-                            rootBackStack.navigateSingleTop(RootScreen.Main)
+                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
                         },
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
@@ -205,20 +207,24 @@ fun AppNavigation(
 
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
-                        onNavigateToLogin = { rootBackStack.removeLastOrNull() },
-                        onSignUpSuccess = {
-                            rootBackStack.apply {
-                                clear()
-                                navigateSingleTop(RootScreen.Main)
-                            }
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
+                        onSignUpSuccess = { email ->
+                            rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }
                     )
                 }
 
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
-                        onSendSucceeded = { rootBackStack.removeLastOrNull() }
+                        onBackToLogin = { rootBackStack.popToLogin() },
+                        onSendSucceeded = {
+                            rootBackStack.navigateSingleTop(
+                                RootScreen.OTP(
+                                    it,
+                                    true
+                                )
+                            )
+                        }
                     )
                 }
                 entry<RootScreen.OTP> { screen ->
@@ -226,12 +232,12 @@ fun AppNavigation(
                         email = screen.email,
                         isPasswordReset = screen.isPasswordReset,
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLogin = { rootBackStack.navigateSingleTop(RootScreen.Login) },
+                        onNavigateToLogin = { rootBackStack.popToLogin() },
                         onNavigateToNext = { resetToken ->
                             if (screen.isPasswordReset && resetToken != null) {
                                 rootBackStack.navigateSingleTop(RootScreen.NewPassword(resetToken))
                             } else {
-                                rootBackStack.navigateSingleTop(RootScreen.Login)
+                                rootBackStack.popToLogin()
                             }
                         }
                     )
@@ -239,7 +245,7 @@ fun AppNavigation(
 
                 entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
-                        onBackToLogin = { rootBackStack.removeLastOrNull() },
+                        onBackToLogin = { rootBackStack.popToLogin() },
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()
@@ -311,8 +317,6 @@ fun AppNavigation(
                             },
                             onRetry = {
                                 SharedVoiceResultHolder.pendingResult = null
-                                // ViewModel already reset itself to IDLE the instant evaluation finished —
-                                // just pop back to the still-alive VoiceGame entry underneath. No recreation.
                                 rootBackStack.removeLastOrNull()
                             },
                             onHome = {
@@ -327,14 +331,18 @@ fun AppNavigation(
 
                 entry<RootScreen.Settings> {
                     SettingScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        onEdit = {
+                            rootBackStack.navigateSingleTop(RootScreen.EditProfile)
+                        }
                     )
                 }
 
                 entry<RootScreen.Leaderboard> {
 
                     LeaderboardScreen(
-                        onBack = { rootBackStack.removeLastOrNull() })}
+                        onBack = { rootBackStack.removeLastOrNull() })
+                }
 
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
@@ -352,10 +360,22 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Achievement> {
-                    AchievementScreen (
+                    AchievementScreen(
                         onBackClick = { rootBackStack.removeLastOrNull() },
-                     )
+                    )
 
+                }
+                entry<RootScreen.EditProfile> {
+                    EditProfileScreen(
+                        initialDisplayName = "",
+                        initialTagline = "",
+                        avatarModel = null,
+                        onBackClick = { rootBackStack.removeLastOrNull() },
+                        onChangePhotoClick = { },
+                        onSave = { displayName, tagline ->
+                            rootBackStack.removeLastOrNull()
+                        }
+                    )
                 }
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })

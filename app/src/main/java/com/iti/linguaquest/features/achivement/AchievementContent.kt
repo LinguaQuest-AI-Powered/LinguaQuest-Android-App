@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -24,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.features.achivement.components.AchievementBottomBar
 import com.iti.linguaquest.features.achivement.components.AchievementGridItem
@@ -80,12 +80,12 @@ fun AchievementContent(
                 onClaimClick   = onClaimClick
             )
         },
-        containerColor = AppColors.Background
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(AppColors.Background)
+                .background(MaterialTheme.colorScheme.background)
                 .statusBarsPadding()
         ) {
             ShareTopBar(
@@ -161,7 +161,7 @@ fun AchievementContent(
                     exit     = fadeOut(tween(150)),
                     modifier = Modifier.align(Alignment.TopCenter)
                 ) {
-                    Surface(color = AppColors.Background) {
+                    Surface(color = MaterialTheme.colorScheme.background) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

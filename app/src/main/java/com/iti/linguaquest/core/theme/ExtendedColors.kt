@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class LinguaQuestColors(
-
+    val isDark: Boolean,
     val textFieldFill: Color,
     val textFieldBorder: Color,
     val textFieldPlaceholder: Color,
@@ -37,9 +37,35 @@ data class LinguaQuestColors(
     val Sand : Color,
     val SuccessAccent : Color,
     val ErrorAccent : Color,
-    val InfoAccent : Color
+    val fieldCardBackground: Color,
+    val InfoAccent : Color,
+    val LeaderboardGold: Color,
+    val LeaderboardBlue: Color,
+    val LeaderboardBronze: Color,
+    val AchievementCyanBackground: Color,
+    val AchievementCyanText: Color,
+    val AchievementCardBorder: Color,
+    val AchievementDivider: Color,
+    val AchievementButtonShadow: Color,
+    val AchievementTabInactive: Color,
+    val AchievementHeaderGradientTop: Color,
+    val AchievementHeaderGradientBottom: Color,
+    val DialogGradientTopRight: Color,
+    val DialogGradientBottomLeft: Color,
+    val ShadowOrange: Color,
 
+    val MapPathOuter: Color,
+    val MapPathInner: Color,
+    val MapPathDash: Color,
 
+    val DailyRewardInactiveNodeBg: Color,
+    val DailyRewardInactiveNodeIcon: Color,
+    val DailyRewardBadgeBg: Color,
+    val DailyRewardBadgeText: Color,
+    val DailyRewardActiveText: Color,
+    val DailyRewardSubtitleText: Color,
+    val DailyRewardInactiveLine: Color,
+    val DailyRewardInactiveText: Color
 )
 
 internal val LocalLinguaQuestColors =

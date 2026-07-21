@@ -24,11 +24,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.*
 import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameEffect
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.RecordingConfirmationDialog
+import com.iti.linguaquest.features.voicegame.presentation.view.contents.EvaluatingPhaseContent
+import com.iti.linguaquest.features.voicegame.presentation.view.contents.IdlePhaseContent
+import com.iti.linguaquest.features.voicegame.presentation.view.contents.RecordingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -63,12 +69,13 @@ fun VoiceGameScreen(
                     if (granted) viewModel.onIntent(VoiceGameIntent.MicPermissionGranted)
                     else micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                 }
+
                 is VoiceGameEffect.NavigateToResult -> onEvaluationComplete(effect.result)
             }
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
         Box {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.voice_game_title),
@@ -80,13 +87,22 @@ fun VoiceGameScreen(
                     .align(Alignment.CenterEnd)
                     .padding(end = 16.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(AppColors.DialogOutline)
+                    .background(LocalLinguaQuestColors.current.whiteColor)
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = AppColors.PrimaryColor, modifier = Modifier.size(16.dp))
+                Icon(
+                    Icons.Default.MonetizationOn,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(16.dp)
+                )
                 Spacer(Modifier.width(4.dp))
-                Text("$coins", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    "$coins",
+                    fontWeight = FontWeight.Bold,
+                    color = LinguaQuestTheme.colors.iconsColor
+                )
             }
         }
 

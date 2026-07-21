@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.presentation.view
+package com.iti.linguaquest.features.voicegame.presentation.view.contents
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun EvaluatingPhaseContent() {
@@ -69,13 +70,13 @@ fun EvaluatingPhaseContent() {
                     Text(
                         stringResource(R.string.voice_evaluating),
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                        color = AppColors.PrimaryColor
+                        color = LinguaQuestTheme.colors.iconsColor
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
                         stringResource(R.string.listening_to_your_pronunciation),
                         textAlign = TextAlign.Center,
-                        color = AppColors.DialogSecondaryButtonOutline
+                        color = LinguaQuestTheme.colors.blackColor
                     )
                 }
             }

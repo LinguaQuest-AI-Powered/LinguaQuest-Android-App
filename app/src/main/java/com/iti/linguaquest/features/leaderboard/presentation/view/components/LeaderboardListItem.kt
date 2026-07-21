@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.leaderboard.presentation.view.components
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -12,14 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.utils.ImageWrapper
  import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -29,9 +28,9 @@ import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
 
     val isYou = entry.isCurrentUser
-    val borderColor = if (isYou) AppColors.Teal else AppColors.TextFieldBorderColor
-    val textColor = if (isYou) AppColors.Teal else AppColors.BrownText
-    val subtitleColor = if (isYou) AppColors.Teal.copy(alpha = 0.8f) else AppColors.TitleAndCaptionColor.copy(alpha = 0.7f)
+    val borderColor = if (isYou) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.textFieldBorder
+    val textColor = if (isYou) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.BrownText
+    val subtitleColor = if (isYou) MaterialTheme.colorScheme.tertiary.copy(alpha = 0.8f) else LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.7f)
 
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -58,7 +57,7 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
             .padding(horizontal = 16.dp)
             .background(borderColor, RoundedCornerShape(20.dp))
             .padding(bottom = if (isYou) 6.dp else 4.dp)
-            .background(Color.White, RoundedCornerShape(20.dp))
+            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(20.dp))
             .border(if (isYou) 2.dp else 1.dp, borderColor, RoundedCornerShape(20.dp))
     ) {
         Row(
@@ -108,12 +107,12 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
             if (isYou) {
                 Box(
                     modifier = Modifier
-                        .background(AppColors.Teal, RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(12.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
                         text = "YOU",
-                        color = Color.White,
+                        color = LinguaQuestTheme.colors.whiteColor,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )

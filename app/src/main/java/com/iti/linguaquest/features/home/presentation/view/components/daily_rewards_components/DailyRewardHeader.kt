@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -15,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ImageWrapper
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
@@ -29,9 +29,10 @@ fun DailyRewardHeader() {
 
     Text(
         text = stringResource(id = R.string.daily_reward_title),
-        style = MaterialTheme.typography.displaySmall.copy(
+        style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF895100),
+            color = LinguaQuestTheme.colors.DailyRewardActiveText,
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
             lineHeight = 36.sp
         )
@@ -41,8 +42,9 @@ fun DailyRewardHeader() {
 
     Text(
         text = stringResource(id = R.string.daily_reward_subtitle),
-        style = MaterialTheme.typography.bodyLarge.copy(
-            color = Color(0xFF897361),
+        style = MaterialTheme.typography.bodyMedium.copy(
+            color = LinguaQuestTheme.colors.DailyRewardSubtitleText,
+            lineHeight = 20.sp,
             textAlign = TextAlign.Center
         )
     )

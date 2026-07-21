@@ -5,7 +5,6 @@ import android.Manifest
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,9 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
@@ -31,11 +31,11 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit = {},
     onChangeLanguageClick: () -> Unit = {},
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -55,7 +55,7 @@ fun ProfileScreen(
     ) { uri -> uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) } }
 
     LaunchedEffect(Unit) {
-        com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground = false
+        SharedBackgroundState.showBackground = true
     }
 
     LaunchedEffect(Unit) {
@@ -115,7 +115,7 @@ fun ProfileContent(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {

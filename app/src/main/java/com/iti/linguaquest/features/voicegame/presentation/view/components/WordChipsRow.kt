@@ -22,21 +22,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
-private val SuccessGreen = Color(0xFF3E8E5A)
-private val WrongChipBg = Color(0xFFE8DDC9)
-private val WrongChipText = Color(0xFF8B6F47)
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WordChipsRow(correctWords: List<String>, wrongWords: List<String>) {
-    // correctWords is the prefix and wrongWords the suffix of the original sentence
-    // split (see VoiceGameViewModel.generateFakeResult), so this order reconstructs
-    // the original sentence — matches the mockup's single mixed-order row.
+
     val orderedWords = correctWords.map { it to true } + wrongWords.map { it to false }
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         orderedWords.forEach { (word, isCorrect) ->
-            val bg = if (isCorrect) SuccessGreen.copy(alpha = 0.15f) else WrongChipBg
-            val fg = if (isCorrect) SuccessGreen else WrongChipText
+            val bg =
+                if (isCorrect) LinguaQuestTheme.colors.SuccessAccent.copy(alpha = 0.15f) else LinguaQuestTheme.colors.textFieldBorder.copy(
+                    alpha = 0.2f
+                )
+            val fg =
+                if (isCorrect) LinguaQuestTheme.colors.SuccessAccent else LinguaQuestTheme.colors.iconsColor
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(50))

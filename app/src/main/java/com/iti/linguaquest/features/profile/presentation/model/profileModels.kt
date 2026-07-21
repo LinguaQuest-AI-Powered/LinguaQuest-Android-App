@@ -11,7 +11,7 @@ data class ProfileState(
     val streakDays: Int = 0,
     val worldsCount: Int = 0,
     val learningLanguageName: String = "",
-    @DrawableRes val learningLanguageFlagRes: Int? = null,
+    @param:DrawableRes val learningLanguageFlagRes: Int? = null,
     val proficiencyLabel: String = "",
     val currentMilestoneXp: Int = 0,
     val targetMilestoneXp: Int = 0,

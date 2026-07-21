@@ -18,10 +18,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Path
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
 fun SpeechBubble(text: String) {
+    val bubbleTailColor = MaterialTheme.colorScheme.secondary
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -34,7 +36,7 @@ fun SpeechBubble(text: String) {
                 )
                 .border(
                     width = 2.dp,
-                    color = Color(0xFFE0E0E0),
+                    color = MaterialTheme.colorScheme.background,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clip(RoundedCornerShape(16.dp))
@@ -44,7 +46,7 @@ fun SpeechBubble(text: String) {
             Text(
                 text = text,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = LinguaQuestTheme.colors.iconsColor
             )
         }
 
@@ -60,7 +62,7 @@ fun SpeechBubble(text: String) {
                 close()
             }
 
-            drawPath(path, color = Color.White)
+            drawPath(path, color = bubbleTailColor)
         }
     }
 }
