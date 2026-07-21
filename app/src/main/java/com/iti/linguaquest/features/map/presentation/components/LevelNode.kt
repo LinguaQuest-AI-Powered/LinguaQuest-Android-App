@@ -5,11 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -47,29 +44,21 @@ fun LevelNode(
     onClick: () -> Unit = {}
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
-    val floatOffset by if (status == LevelStatus.CURRENT) {
-        infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = -12f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1000, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Reverse
-            ),
-            label = "float"
-        )
-    } else {
-        androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
-    }
 
-    val scale by if (isLastLevel) {
+    // Pulse (scale) instead of vertical movement, so CURRENT / last-level nodes
+    // stay anchored exactly on the map path while still drawing attention.
+    val pulseScale by if (status == LevelStatus.CURRENT || isLastLevel) {
         infiniteTransition.animateFloat(
             initialValue = 1f,
-            targetValue = 1.15f,
+            targetValue = if (isLastLevel) 1.15f else 1.08f,
             animationSpec = infiniteRepeatable(
-                animation = tween(800, easing = FastOutSlowInEasing),
+                animation = tween(
+                    durationMillis = if (isLastLevel) 800 else 1000,
+                    easing = FastOutSlowInEasing
+                ),
                 repeatMode = RepeatMode.Reverse
             ),
-            label = "scale"
+            label = "pulseScale"
         )
     } else {
         remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
@@ -77,101 +66,99 @@ fun LevelNode(
 
     Box(
         modifier = Modifier
-            .offset(x = offsetX, y = offsetY + floatOffset.dp)
+            .absoluteOffset(x = offsetX, y = offsetY)
             .size(100.dp)
-            .clickable(enabled = status != LevelStatus.LOCKED) { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable(enabled = status != LevelStatus.LOCKED) { onClick() }
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            val circleSize = if (status == LevelStatus.CURRENT) 70.dp else 60.dp
-            val backgroundColor = when (status) {
-                LevelStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
-                LevelStatus.CURRENT -> MaterialTheme.colorScheme.primary
-                LevelStatus.LOCKED -> LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.4f)
-            }
-            val borderModifier = if (status == LevelStatus.CURRENT) {
-                Modifier.border(4.dp, LinguaQuestTheme.colors.whiteColor, CircleShape)
-            } else if (status == LevelStatus.COMPLETED) {
-                Modifier.border(2.dp, LinguaQuestTheme.colors.SuccessAccent, CircleShape)
-            } else {
-                Modifier
-            }
+        val circleSize = if (status == LevelStatus.CURRENT) 70.dp else 60.dp
+        val backgroundColor = when (status) {
+            LevelStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
+            LevelStatus.CURRENT -> MaterialTheme.colorScheme.primary
+            LevelStatus.LOCKED -> LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.4f)
+        }
+        val borderModifier = if (status == LevelStatus.CURRENT) {
+            Modifier.border(4.dp, LinguaQuestTheme.colors.whiteColor, CircleShape)
+        } else if (status == LevelStatus.COMPLETED) {
+            Modifier.border(2.dp, LinguaQuestTheme.colors.SuccessAccent, CircleShape)
+        } else {
+            Modifier
+        }
 
-            Box(contentAlignment = Alignment.Center) {
-                if (status == LevelStatus.CURRENT) {
-                    val haloSize = if (isLastLevel) 220.dp else 120.dp
-                    Box(
-                        modifier = Modifier
-                            .size(haloSize)
-                            .scale(scale)
-                            .clip(CircleShape)
-                            .background(
-                                brush = Brush.radialGradient(
-                                    colors = listOf(
-                                        LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.6f),
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                        Color.Transparent
-                                    )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            if (status == LevelStatus.CURRENT) {
+                val haloSize = if (isLastLevel) 220.dp else 120.dp
+                Box(
+                    modifier = Modifier
+                        .size(haloSize)
+                        .scale(pulseScale)
+                        .clip(CircleShape)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.6f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                    Color.Transparent
                                 )
                             )
-                    )
-                }
+                        )
+                )
+            }
 
-                if (isLastLevel) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_treasure_chest),
-                        contentDescription = "Treasure",
-                        modifier = Modifier
-                            .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
-                            .scale(scale)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(circleSize)
-                            .clip(CircleShape)
-                            .background(backgroundColor)
-                            .then(borderModifier),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (status == LevelStatus.LOCKED) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.lock),
-                                contentDescription = "Locked",
-                                tint = LinguaQuestTheme.colors.whiteColor,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        } else {
-                            Text(
-                                text = levelNumber.toString(),
-                                color = LinguaQuestTheme.colors.whiteColor,
-                                fontSize = if (status == LevelStatus.CURRENT) 32.sp else 28.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+            if (isLastLevel) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_treasure_chest),
+                    contentDescription = "Treasure",
+                    modifier = Modifier
+                        .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
+                        .scale(pulseScale)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(circleSize)
+                        .clip(CircleShape)
+                        .background(backgroundColor)
+                        .then(borderModifier),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (status == LevelStatus.LOCKED) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.lock),
+                            contentDescription = "Locked",
+                            tint = LinguaQuestTheme.colors.whiteColor,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = levelNumber.toString(),
+                            color = LinguaQuestTheme.colors.whiteColor,
+                            fontSize = if (status == LevelStatus.CURRENT) 32.sp else 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
+        }
 
-            if (status == LevelStatus.COMPLETED) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(
-                    modifier = Modifier
-                        .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
-                        .padding(horizontal = 8.dp, vertical = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    for (i in 1..3) {
-                        val isFilled = i <= stars
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_star),
-                            contentDescription = "Star",
-                            tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
-                            modifier = Modifier.size(12.dp)
-                        )
-                    }
+        if (status == LevelStatus.COMPLETED) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                for (i in 1..3) {
+                    val isFilled = i <= stars
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_star),
+                        contentDescription = "Star",
+                        tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
+                        modifier = Modifier.size(12.dp)
+                    )
                 }
             }
         }

@@ -50,7 +50,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightExtraColors = LinguaQuestColors(
-
+    isDark = false,
     textFieldFill = AppColors.Background,
     textFieldBorder = AppColors.TextFieldBorderColor,
     textFieldPlaceholder = AppColors.TextFieldPlaceholderColor,
@@ -99,7 +99,7 @@ private val LightExtraColors = LinguaQuestColors(
 )
 
 private val DarkExtraColors = LinguaQuestColors(
-
+    isDark = true,
     textFieldFill = AppColors.DarkBackground,
     textFieldBorder = AppColors.DarkBorderColor,
     textFieldPlaceholder = AppColors.DarkTextSecondary.copy(alpha = 0.5f),

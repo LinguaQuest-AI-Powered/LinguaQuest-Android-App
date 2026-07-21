@@ -4,6 +4,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,20 +33,18 @@ import com.iti.linguaquest.features.map.presentation.contract.MapState
 private val NODE_VERTICAL_SPACING = 200.dp
 private val TOP_PADDING = 100.dp
 private val BOTTOM_PADDING = 100.dp
-private val LEFT_X = 60.dp
-private val RIGHT_X = 200.dp
+private val NODE_SIZE = 100.dp
+private val HORIZONTAL_MARGIN = 60.dp
 
-
-private fun computeNodePositions(levelCount: Int): List<Pair<Dp, Dp>> {
+private fun computeNodePositions(levelCount: Int, leftX: Dp, rightX: Dp): List<Pair<Dp, Dp>> {
     if (levelCount == 0) return emptyList()
     val totalHeight = TOP_PADDING + BOTTOM_PADDING + (NODE_VERTICAL_SPACING * (levelCount - 1))
     return List(levelCount) { index ->
-        val x = if (index % 2 == 0) RIGHT_X else LEFT_X
+        val x = if (index % 2 == 0) rightX else leftX
         val y = totalHeight - BOTTOM_PADDING - (NODE_VERTICAL_SPACING * index)
         x to y
     }
 }
-
 
 private fun computeMapHeight(levelCount: Int): Dp {
     if (levelCount == 0) return 600.dp
@@ -58,116 +57,126 @@ fun MapContent(
     onLevelClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberScrollState()
-    val density = LocalDensity.current
-
-    var viewportHeightPx by remember { mutableIntStateOf(0) }
-
-    val nodePositions = remember(state.levels.size) {
-        computeNodePositions(state.levels.size)
-    }
-    val mapHeight = remember(state.levels.size) {
-        computeMapHeight(state.levels.size)
-    }
-
-    LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {
-        if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
-            val nodeTopYDp = nodePositions[state.currentLevelIndex].second
-            val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
-            val nodeCenterYPx = nodeTopYPx + with(density) { 50.dp.toPx() }
-
-            val scrollTarget = (nodeCenterYPx - viewportHeightPx / 2f)
-                .coerceAtLeast(0f)
-                .toInt()
-
-            scrollState.animateScrollTo(scrollTarget)
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .onSizeChanged { size ->
-                viewportHeightPx = size.height
-            }
+    BoxWithConstraints(
+        modifier = modifier.fillMaxWidth()
     ) {
+        val scrollState = rememberScrollState()
+        val density = LocalDensity.current
+        val availableWidth = maxWidth
+
+        var viewportHeightPx by remember { mutableIntStateOf(0) }
+
+        // Derive left/right node x-positions from the actual available width,
+        // so nodes never end up off-screen on narrower or wider devices.
+        val leftX = HORIZONTAL_MARGIN
+        val rightX = availableWidth - NODE_SIZE - HORIZONTAL_MARGIN
+
+        val nodePositions = remember(state.levels.size, leftX, rightX) {
+            computeNodePositions(state.levels.size, leftX, rightX)
+        }
+        val mapHeight = remember(state.levels.size) {
+            computeMapHeight(state.levels.size)
+        }
+
+        LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {
+            if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
+                val nodeTopYDp = nodePositions[state.currentLevelIndex].second
+                val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
+                val nodeCenterYPx = nodeTopYPx + with(density) { 50.dp.toPx() }
+
+                val scrollTarget = (nodeCenterYPx - viewportHeightPx / 2f)
+                    .coerceAtLeast(0f)
+                    .toInt()
+
+                scrollState.animateScrollTo(scrollTarget)
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
+                .onSizeChanged { size ->
+                    viewportHeightPx = size.height
+                }
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(mapHeight)
+                    .verticalScroll(scrollState)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.map_bg),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-                if (nodePositions.size >= 2) {
-                    MapPath(nodePositions = nodePositions)
-                }
-
-                state.levels.forEachIndexed { index, level ->
-                    val (x, y) = nodePositions.getOrNull(index) ?: return@forEachIndexed
-                    LevelNode(
-                        levelNumber = level.levelNumber,
-                        status = level.status,
-                        stars = level.stars,
-                        offsetX = x,
-                        offsetY = y,
-                        isLastLevel = index == state.levels.lastIndex,
-                        onClick = { onLevelClick(level.levelNumber) }
-                    )
-                }
-
-                if (state.currentLevelIndex in nodePositions.indices) {
-                    val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
-                    val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
-                    val floatOffset by infiniteTransition.animateFloat(
-                        initialValue = 0f,
-                        targetValue = -12f,
-                        animationSpec = infiniteRepeatable(
-                            animation = tween(1000, easing = FastOutSlowInEasing),
-                            repeatMode = RepeatMode.Reverse
-                        ),
-                        label = "float"
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(mapHeight)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.map_bg),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
 
-                    Mascot(
-                        offsetX = nodeX + 60.dp,
-                        offsetY = nodeY - 60.dp + floatOffset.dp
-                    )
+                    if (nodePositions.size >= 2) {
+                        MapPath(nodePositions = nodePositions)
+                    }
+
+                    state.levels.forEachIndexed { index, level ->
+                        val (x, y) = nodePositions.getOrNull(index) ?: return@forEachIndexed
+                        LevelNode(
+                            levelNumber = level.levelNumber,
+                            status = level.status,
+                            stars = level.stars,
+                            offsetX = x,
+                            offsetY = y,
+                            isLastLevel = index == state.levels.lastIndex,
+                            onClick = { onLevelClick(level.levelNumber) }
+                        )
+                    }
+
+                    if (state.currentLevelIndex in nodePositions.indices) {
+                        val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
+                        val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
+                        val floatOffset by infiniteTransition.animateFloat(
+                            initialValue = 0f,
+                            targetValue = -12f,
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(1000, easing = FastOutSlowInEasing),
+                                repeatMode = RepeatMode.Reverse
+                            ),
+                            label = "float"
+                        )
+
+                        Mascot(
+                            offsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp),
+                            offsetY = nodeY - 60.dp + floatOffset.dp
+                        )
+                    }
                 }
             }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .align(Alignment.TopCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(LinguaQuestTheme.colors.whiteColor, Color.Transparent)
+                        )
+                    )
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, LinguaQuestTheme.colors.whiteColor)
+                        )
+                    )
+            )
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp)
-                .align(Alignment.TopCenter)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(LinguaQuestTheme.colors.whiteColor, Color.Transparent)
-                    )
-                )
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp)
-                .align(Alignment.BottomCenter)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, LinguaQuestTheme.colors.whiteColor)
-                    )
-                )
-        )
     }
 }

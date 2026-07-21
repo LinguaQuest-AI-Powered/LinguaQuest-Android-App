@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +27,7 @@ import com.iti.linguaquest.R
 fun Mascot(offsetX: Dp, offsetY: Dp) {
     Box(
         modifier = Modifier
-            .offset(x = offsetX, y = offsetY)
+            .absoluteOffset(x = offsetX, y = offsetY)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally

@@ -33,7 +33,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val appTheme by userPreferencesRepository.appTheme.collectAsState(initial = "system")
+            val appTheme by userPreferencesRepository.appTheme.collectAsState(initial = null)
+            
+            if (appTheme == null) return@setContent
+            
             val isDarkTheme = when (appTheme) {
                 "dark" -> true
                 "light" -> false

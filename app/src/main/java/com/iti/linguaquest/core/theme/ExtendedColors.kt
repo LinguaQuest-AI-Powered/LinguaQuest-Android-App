@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class LinguaQuestColors(
-
+    val isDark: Boolean,
     val textFieldFill: Color,
     val textFieldBorder: Color,
     val textFieldPlaceholder: Color,
