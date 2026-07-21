@@ -1,8 +1,8 @@
 package com.iti.linguaquest.features.auth.data.repository
 
 
-import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
-import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.cache.token.TokensLocalDataSource
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.asEmptyDataResult
@@ -20,6 +20,7 @@ import com.iti.linguaquest.features.auth.data.datasource.remote.RefreshTokenRequ
 import com.iti.linguaquest.features.auth.data.mapper.toAuthError
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -27,7 +28,8 @@ import kotlinx.coroutines.flow.first
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
     private val tokensLocalDataSource: TokensLocalDataSource,
-    private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource
+    private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource,
+    private val sessionManagerDataSource: SessionManagerDataSource
 ) : AuthRepository {
 
     override suspend fun register(
@@ -55,6 +57,7 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.login(request)
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()
@@ -65,6 +68,7 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.loginWithGoogle(request)
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()
@@ -107,7 +111,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun isLoggedIn(): Flow<Boolean> {
-        return tokensLocalDataSource.isLoggedIn
+        return sessionManagerDataSource.isLoggedIn
     }
 
     override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
@@ -116,6 +120,7 @@ class AuthRepositoryImpl @Inject constructor(
             remoteDataSource.logout(LogoutRequestDto(refreshToken))
         }
         tokensLocalDataSource.clearTokens()
+        sessionManagerDataSource.saveIsLoggedIn(false)
         return LinguaQuestResult.Success(Unit)
     }
 
@@ -123,6 +128,7 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.refreshToken(RefreshTokenRequestDto(refreshToken))
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()

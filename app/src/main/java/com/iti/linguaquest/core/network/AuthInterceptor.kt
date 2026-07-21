@@ -1,6 +1,6 @@
 package com.iti.linguaquest.core.network
 
-import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.cache.token.TokensLocalDataSource
 import okhttp3.Interceptor
 import okhttp3.Response
 import retrofit2.Invocation

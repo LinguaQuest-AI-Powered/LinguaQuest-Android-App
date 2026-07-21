@@ -13,14 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import com.iti.linguaquest.features.onBoarding.view.LanguagesScreen
-import com.iti.linguaquest.features.onBoarding.view.LinguaQuestSplashScreen
-import com.iti.linguaquest.features.onBoarding.view.OnboardingScreen
+import com.iti.linguaquest.features.onBoarding.presentation.view.LanguagesScreen
+import com.iti.linguaquest.features.onBoarding.presentation.view.LinguaQuestSplashScreen
+import com.iti.linguaquest.features.onBoarding.presentation.view.OnboardingScreen
 import kotlinx.coroutines.delay
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
@@ -51,6 +53,7 @@ import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
+import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 
@@ -60,7 +63,7 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Login)
+    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -147,13 +150,18 @@ fun AppNavigation(
             ),
             entryProvider = entryProvider {
                 entry<RootScreen.Splash> {
+                    val splashViewModel: com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel = hiltViewModel()
+                    val destination by splashViewModel.destination.collectAsState()
+
                     LinguaQuestSplashScreen()
 
-                    LaunchedEffect(Unit) {
-                        delay(2000.milliseconds)
-                        rootBackStack.apply {
-                            clear()
-                            navigateSingleTop(RootScreen.Onboarding)
+                    LaunchedEffect(destination) {
+                        destination?.let { dest ->
+                            delay(2000.milliseconds)
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(dest)
+                            }
                         }
                     }
                 }
@@ -178,7 +186,7 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.OnboardingLevel> {
-                    com.iti.linguaquest.features.onBoarding.view.LevelScreen(
+                    LevelScreen(
                         onContinue = {
                             rootBackStack.navigateSingleTop(RootScreen.Login)
                         }
@@ -290,6 +298,12 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onEdit = {
                             rootBackStack.navigateSingleTop(RootScreen.EditProfile)
+                        },
+                        onLogout = {
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(RootScreen.Login)
+                            }
                         }
                     )
                 }
