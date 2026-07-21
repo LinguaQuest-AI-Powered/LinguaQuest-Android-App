@@ -14,7 +14,7 @@ object AppColors {
     // Primary
     val PrimaryColor = Color(0xFFFF9F29)
     val TextOnPrimaryButton = Color(0xFFFFFFFF)
-
+    val FieldCardBackground = Color(0xFFFCEFEC)
     // Secondary
     val SecondaryColor = Color(0xFFF0DFD3)
     val TextOnSecondaryButton = Color(0xFF544435)

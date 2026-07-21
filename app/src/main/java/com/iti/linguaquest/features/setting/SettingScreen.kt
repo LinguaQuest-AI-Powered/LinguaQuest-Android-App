@@ -4,13 +4,14 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun SettingScreen(
-    onBack: () -> Unit
-) {
+    onBack: () -> Unit,
+    onEdit:() -> Unit
+)  {
     SettingContent(
+        onEditProfileClick = onEdit,
         onBackClick = onBack,
         onLogoutClick = {
          },
-        onDeleteAccountClick = {
-         }
+
     )
 }

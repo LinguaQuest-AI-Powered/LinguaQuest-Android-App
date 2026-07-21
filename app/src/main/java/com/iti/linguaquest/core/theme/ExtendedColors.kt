@@ -37,8 +37,8 @@ data class LinguaQuestColors(
     val Sand : Color,
     val SuccessAccent : Color,
     val ErrorAccent : Color,
-    val InfoAccent : Color
-
+    val InfoAccent : Color,
+    val fieldCardBackground: Color,
 
 )
 

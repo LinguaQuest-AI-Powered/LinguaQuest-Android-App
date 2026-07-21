@@ -34,7 +34,7 @@ import com.iti.linguaquest.core.utils.ShareTopBar
 fun SettingContent(
     onBackClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    onDeleteAccountClick: () -> Unit
+    onEditProfileClick : ()-> Unit
 ) {
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
@@ -61,7 +61,7 @@ fun SettingContent(
                 icon = painterResource(id = R.drawable.ic_edit_icon),
                 title = stringResource(id = R.string.settings_edit_profile),
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                onClick = { /* TODO */ }
+                onClick =  onEditProfileClick
             )
             Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             SettingItem(
@@ -139,8 +139,8 @@ fun SettingContentPreview() {
         SettingContent(
             onBackClick = {},
             onLogoutClick = {},
-            onDeleteAccountClick = {}
-        )
+            onEditProfileClick = {}
+         )
     }
 }
 

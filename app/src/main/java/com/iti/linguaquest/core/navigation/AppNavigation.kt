@@ -46,6 +46,7 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
+import com.iti.linguaquest.features.editprofile.presentation.EditProfileScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
@@ -289,7 +290,10 @@ fun AppNavigation(
 
                 entry<RootScreen.Settings> {
                     SettingScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        onEdit = {
+                            rootBackStack.navigateSingleTop(RootScreen.EditProfile)
+                        }
                     )
                 }
 
@@ -318,6 +322,18 @@ fun AppNavigation(
                         onBackClick = { rootBackStack.removeLastOrNull() },
                      )
 
+                }
+                entry<RootScreen.EditProfile> {
+                    EditProfileScreen(
+                         initialDisplayName = "",
+                        initialTagline = "",
+                        avatarModel = null,
+                        onBackClick = { rootBackStack.removeLastOrNull() },
+                        onChangePhotoClick = {    },
+                        onSave = { displayName, tagline ->
+                             rootBackStack.removeLastOrNull()
+                        }
+                    )
                 }
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })

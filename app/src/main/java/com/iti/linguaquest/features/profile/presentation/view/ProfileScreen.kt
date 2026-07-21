@@ -31,11 +31,11 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit = {},
     onChangeLanguageClick: () -> Unit = {},
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
