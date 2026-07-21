@@ -66,8 +66,6 @@ fun MapContent(
 
         var viewportHeightPx by remember { mutableIntStateOf(0) }
 
-        // Derive left/right node x-positions from the actual available width,
-        // so nodes never end up off-screen on narrower or wider devices.
         val leftX = HORIZONTAL_MARGIN
         val rightX = availableWidth - NODE_SIZE - HORIZONTAL_MARGIN
 

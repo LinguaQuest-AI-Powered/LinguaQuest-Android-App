@@ -5,7 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,7 +30,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,8 @@ fun LevelNode(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
 
+    // Pulse (scale) instead of vertical movement, so CURRENT / last-level nodes
+    // stay anchored exactly on the map path while still drawing attention.
     val pulseScale by if (status == LevelStatus.CURRENT || isLastLevel) {
         infiniteTransition.animateFloat(
             initialValue = 1f,
@@ -109,7 +113,7 @@ fun LevelNode(
             if (isLastLevel) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_treasure_chest),
-                    contentDescription = stringResource(id = R.string.cd_treasure),
+                    contentDescription = "Treasure",
                     modifier = Modifier
                         .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
                         .scale(pulseScale)
@@ -126,7 +130,7 @@ fun LevelNode(
                     if (status == LevelStatus.LOCKED) {
                         Icon(
                             painter = painterResource(id = R.drawable.lock),
-                            contentDescription = stringResource(id = R.string.cd_locked),
+                            contentDescription = "Locked",
                             tint = LinguaQuestTheme.colors.whiteColor,
                             modifier = Modifier.size(24.dp)
                         )
@@ -154,8 +158,8 @@ fun LevelNode(
                     val isFilled = i <= stars
                     Icon(
                         painter = painterResource(id = R.drawable.ic_star),
-                        contentDescription = stringResource(id = R.string.cd_star),
-                        tint = if (isFilled) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.iconsColor,
+                        contentDescription = "Star",
+                        tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
                         modifier = Modifier.size(12.dp)
                     )
                 }
