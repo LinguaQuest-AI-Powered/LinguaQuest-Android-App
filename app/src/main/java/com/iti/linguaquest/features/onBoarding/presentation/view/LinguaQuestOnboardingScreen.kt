@@ -145,7 +145,7 @@ fun OnboardingScreen(
         ) { frameRes ->
             Image(
                 painter = painterResource(id = frameRes),
-                contentDescription = "LinguaQuest mascot",
+                contentDescription = stringResource(R.string.cd_linguaquest_mascot),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit
             )

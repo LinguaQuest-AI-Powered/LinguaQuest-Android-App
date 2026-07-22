@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.auth.data.datasource.remote
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.network.safeApiCall
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(
@@ -30,8 +31,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         safeApiCall(mapAuthError) { api.loginWithGoogle(body).data }
 
     override suspend fun completeOAuthProfile(body: CompleteProfileRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> {
-        // Faking the response until the endpoint is implemented
-        kotlinx.coroutines.delay(1000) // Simulate network delay
+        // TODO: Replace with real api call when fixed
+        delay(1000)
         val fakeUser = UserDto(id = 1, username = body.username ?: "User", photo = null, nativeLanguage = null, isVerified = true, targetLanguages = emptyList())
         val fakeResponse = OAuthResponseDataDto("fake_access_token", "fake_refresh_token", "Bearer", 3600, false, true, fakeUser)
         return LinguaQuestResult.Success(fakeResponse)

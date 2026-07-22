@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
@@ -139,7 +140,7 @@ fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
 
                 Image(
                     painter = painterResource(id = frames[currentFrameIndex]),
-                    contentDescription = "LinguaQuest mascot animation",
+                    contentDescription = stringResource(R.string.cd_linguaquest_mascot_animation),
                     modifier = Modifier
                         .fillMaxSize(0.72f)
                         .align(BiasAlignment(horizontalBias = -0.12f, verticalBias = 0f))
@@ -153,7 +154,7 @@ fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
 
             Image(
                 painter = painterResource(id = R.drawable.linguaquest_logo),
-                contentDescription = "LinguaQuest",
+                contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier
                     .fillMaxWidth(0.88f)
                     .wrapContentHeight()

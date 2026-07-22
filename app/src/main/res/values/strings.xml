@@ -111,6 +111,15 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
+    <string name="otp_timer_content_description">Timer</string>
+    <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
+    <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
+    <string name="level_beginner">Beginner</string>
+    <string name="level_beginner_description">I\'m just starting my adventure</string>
+    <string name="level_intermediate">Intermediate</string>
+    <string name="level_intermediate_description">I can navigate basic paths</string>
+    <string name="level_advanced">Advanced</string>
+    <string name="level_advanced_description">Ready for grand challenges</string>
      <string name="camera_permission_required">Camera permission is required.</string>
      <string name="camera_permission_title">Is Your Camera Ready?</string>
      <string name="camera_permission_blocked_desc">We need camera access to play, but it looks like it\'s blocked. Please enable it in your device settings.</string>

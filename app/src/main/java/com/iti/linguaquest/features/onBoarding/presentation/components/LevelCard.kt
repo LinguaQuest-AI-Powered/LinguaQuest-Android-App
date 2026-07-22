@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppTextStyles
@@ -57,10 +58,10 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContra
             }
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(text = level.displayName, style = AppTextStyles.SectionTitle ,
+                Text(text = stringResource(level.displayNameRes), style = AppTextStyles.SectionTitle ,
                     color = LinguaQuestTheme.colors.blackColor
                 )
-                Text(text = level.description,
+                Text(text = stringResource(level.descriptionRes),
                     style = AppTextStyles.Caption ,
                     color = LinguaQuestTheme.colors.titleAndCationsColor)
             }

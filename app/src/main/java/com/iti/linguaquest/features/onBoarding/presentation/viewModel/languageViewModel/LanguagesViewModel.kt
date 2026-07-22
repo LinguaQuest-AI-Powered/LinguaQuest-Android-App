@@ -70,7 +70,7 @@ class LanguagesViewModel @Inject constructor(
                         }
                     }
             } else {
-                _state.update { it.copy(isLoading = false) } // Add error handling if needed
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }

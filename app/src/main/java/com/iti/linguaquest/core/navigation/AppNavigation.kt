@@ -189,8 +189,9 @@ fun AppNavigation(
                     LevelScreen(
                         onContinue = {
                             when (screen.flow) {
-                                "SIGN_UP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp)
+                                "SIGN_UP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp())
                                 "OAUTH" -> rootBackStack.navigateSingleTop(RootScreen.Login(isOAuthLanguageSelectionCompleted = true))
+                                "OAUTH_SIGNUP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp(isOAuthLanguageSelectionCompleted = true))
                                 else -> rootBackStack.navigateSingleTop(RootScreen.Login())
                             }
                         }
@@ -201,7 +202,7 @@ fun AppNavigation(
                     LoginScreen(
                         isOAuthLanguageSelectionCompleted = screen.isOAuthLanguageSelectionCompleted,
                         onSignUp = {
-                            rootBackStack.navigateSingleTop(RootScreen.SignUp)
+                            rootBackStack.navigateSingleTop(RootScreen.SignUp())
                         },
                         onSignUpWithoutLanguages = {
                             rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "SIGN_UP"))
@@ -221,9 +222,19 @@ fun AppNavigation(
                     )
                 }
 
-                entry<RootScreen.SignUp> {
+                entry<RootScreen.SignUp> { screen ->
                     SignUpScreen(
+                        isOAuthLanguageSelectionCompleted = screen.isOAuthLanguageSelectionCompleted,
                         onNavigateToLogin = { rootBackStack.popToLogin() },
+                        onNavigateToMain = {
+                            rootBackStack.apply {
+                                clear()
+                                navigateSingleTop(RootScreen.Main)
+                            }
+                        },
+                        onOAuthLanguageSelection = {
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH_SIGNUP"))
+                        },
                         onSignUpSuccess = { email ->
                             rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }

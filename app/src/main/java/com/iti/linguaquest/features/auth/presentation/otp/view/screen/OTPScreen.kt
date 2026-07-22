@@ -116,7 +116,7 @@ fun OTPContent(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_timer),
-                        contentDescription = "Timer",
+                        contentDescription = stringResource(id = R.string.otp_timer_content_description),
                         tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                         modifier = Modifier.size(16.dp)
                     )
