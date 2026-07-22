@@ -7,9 +7,9 @@ import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 import com.iti.linguaquest.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 
-class GetProfileSummaryUseCase @Inject constructor(
+class RefreshProfileSummaryUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
 ) {
-    suspend operator fun invoke(): LinguaQuestResult<ProfileSummary, LinguaQuestDataError> =
-        profileRepository.getProfileSummary()
+    suspend operator fun invoke(): LinguaQuestResult<Unit, LinguaQuestDataError> =
+        profileRepository.refreshProfileSummary()
 }

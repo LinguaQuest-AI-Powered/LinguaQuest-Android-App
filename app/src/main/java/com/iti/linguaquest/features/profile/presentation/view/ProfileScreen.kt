@@ -21,6 +21,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
@@ -72,6 +73,12 @@ fun ProfileScreen(
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else if (uiState.hasError && !uiState.hasCachedData) {
+            ErrorView(
+                message = stringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(ProfileIntent.Retry) },
+                modifier = Modifier.fillMaxSize()
+            )
         } else {
             ProfileContent(
                 state = uiState.profile,
@@ -98,7 +105,7 @@ fun ProfileScreen(
             onChooseFromGalleryClick = {
                 showAvatarSheet = false
                 galleryLauncher.launch(
-                   PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
             }
         )
@@ -137,6 +144,6 @@ fun ProfileContent(
             item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
             items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
         }
-        }
+    }
 
 }

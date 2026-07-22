@@ -8,7 +8,12 @@ import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
-    suspend fun getProfileSummary(): LinguaQuestResult<ProfileSummary, LinguaQuestDataError>
-    suspend fun uploadAvatar(imageUri: Uri): LinguaQuestResult<String, LinguaQuestDataError>
+
+    val cachedProfile: Flow<ProfileSummary?>
+
     val cachedAvatarUrl: Flow<String?>
+
+    suspend fun refreshProfileSummary(): LinguaQuestResult<Unit, LinguaQuestDataError>
+
+    suspend fun uploadAvatar(imageUri: Uri): LinguaQuestResult<String, LinguaQuestDataError>
 }

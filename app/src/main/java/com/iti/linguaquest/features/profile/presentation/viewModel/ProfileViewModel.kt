@@ -4,14 +4,15 @@ package com.iti.linguaquest.features.profile.presentation.viewModel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
-import com.iti.linguaquest.features.profile.domain.usecase.GetCachedAvatarUrlUseCase
-import com.iti.linguaquest.features.profile.domain.usecase.GetProfileSummaryUseCase
+import com.iti.linguaquest.features.profile.domain.usecase.GetCachedProfileUseCase
+import com.iti.linguaquest.features.profile.domain.usecase.RefreshProfileSummaryUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UploadAvatarUseCase
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
@@ -26,15 +27,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val getProfileSummaryUseCase: GetProfileSummaryUseCase,
+    private val getCachedProfileUseCase: GetCachedProfileUseCase,
+    private val refreshProfileSummaryUseCase: RefreshProfileSummaryUseCase,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
-    private val getCachedAvatarUrlUseCase: GetCachedAvatarUrlUseCase,
     private val snackbarController: SnackbarController,
     private val preloadImageUseCase: PreloadImageUseCase,
 ) : ViewModel() {
@@ -46,21 +49,30 @@ class ProfileViewModel @Inject constructor(
     val effect: SharedFlow<ProfileEffect> = _effect.asSharedFlow()
 
     init {
-        seedCachedAvatar()
-        loadProfile()
+        observeCachedProfile()
+        refreshProfile()
     }
 
-    private fun seedCachedAvatar() {
-        viewModelScope.launch {
-            getCachedAvatarUrlUseCase().firstOrNull()?.let { cachedUrl ->
-                _state.update { it.copy(profile = it.profile.copy(avatarUrl = cachedUrl)) }
+    private fun observeCachedProfile() {
+        getCachedProfileUseCase()
+            .onEach { cached ->
+                if (cached != null) {
+                    _state.update {
+                        it.copy(
+                            profile = cached.toProfileState(),
+                            hasCachedData = true,
+                            isLoading = false,
+                            hasError = false
+                        )
+                    }
+                }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
     fun onIntent(intent: ProfileIntent) {
         when (intent) {
-            ProfileIntent.LoadProfile, ProfileIntent.Retry -> loadProfile()
+            ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
             ProfileIntent.SettingsClicked -> sendEffect(ProfileEffect.NavigateToSettings)
             ProfileIntent.ChangeLanguageClicked -> sendEffect(ProfileEffect.NavigateToChangeLanguage)
             ProfileIntent.ViewAllAchievementsClicked -> sendEffect(ProfileEffect.NavigateToAllAchievements)
@@ -69,31 +81,52 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun loadProfile() {
+    private fun refreshProfile() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, hasError = false) }
+            val hasCache = getCachedProfileUseCase().firstOrNull() != null
+            _state.update {
+                it.copy(
+                    isLoading = !hasCache,
+                    hasError = false,
+                    isOffline = false
+                )
+            }
 
-            when (val result = getProfileSummaryUseCase()) {
+            when (val result = refreshProfileSummaryUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            hasError = false,
-                            profile = result.data.toProfileState()
-                        )
-                    }
+                    _state.update { it.copy(isLoading = false, isOffline = false) }
                 }
 
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false, hasError = true) }
-                    snackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = result.error.toUiText(),
-                            type = SnackbarType.ERROR,
-                            actionLabel = UiText.DynamicString("Retry"),
-                            onAction = { loadProfile() }
+                    val stillHasCache = getCachedProfileUseCase().firstOrNull() != null
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            hasError = !stillHasCache,
+                            isOffline = stillHasCache && result.error.isNoInternet()
                         )
-                    )
+                    }
+
+                    if (stillHasCache && result.error.isNoInternet()) {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                title = UiText.DynamicString("You're offline"),
+                                message = UiText.DynamicString(
+                                    "Showing your saved profile - it'll refresh automatically once you're back online."
+                                ),
+                                type = SnackbarType.INFO
+                            )
+                        )
+                    } else {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = result.error.toUiText(),
+                                type = SnackbarType.ERROR,
+                                actionLabel = UiText.DynamicString("Retry"),
+                                onAction = { refreshProfile() }
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -119,13 +152,7 @@ class ProfileViewModel @Inject constructor(
             when (val result = uploadAvatarUseCase(uri)) {
                 is LinguaQuestResult.Success -> {
                     preloadImageUseCase(result.data)
-
-                    _state.update {
-                        it.copy(
-                            profile = it.profile.copy(avatarUrl = result.data),
-                            isAvatarUploading = false
-                        )
-                    }
+                    _state.update { it.copy(isAvatarUploading = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             title = UiText.DynamicString("Congratulations"),
@@ -154,6 +181,8 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+    private fun LinguaQuestDataError.isNoInternet(): Boolean =
+        this == LinguaQuestDataError.Remote.NO_INTERNET
 
     private fun sendEffect(effect: ProfileEffect) {
         viewModelScope.launch { _effect.emit(effect) }

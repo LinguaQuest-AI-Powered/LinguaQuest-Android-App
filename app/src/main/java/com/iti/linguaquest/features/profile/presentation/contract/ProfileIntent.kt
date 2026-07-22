@@ -10,4 +10,5 @@ sealed interface ProfileIntent {
     data object ChangeLanguageClicked : ProfileIntent
     data object ViewAllAchievementsClicked : ProfileIntent
     data object ViewAllLeaderboardClicked : ProfileIntent
+
 }
