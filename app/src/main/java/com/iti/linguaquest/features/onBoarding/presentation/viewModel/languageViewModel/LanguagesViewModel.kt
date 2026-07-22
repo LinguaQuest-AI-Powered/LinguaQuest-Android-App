@@ -7,7 +7,7 @@ import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageU
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveTargetLanguageUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
-import com.iti.linguaquest.features.home.domain.usecase.GetAvailableLanguagesUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.GetAuthLanguagesUseCase
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
@@ -31,7 +31,7 @@ class LanguagesViewModel @Inject constructor(
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val saveNativeLanguageUseCase: SaveNativeLanguageUseCase,
     private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase,
-    private val getAvailableLanguagesUseCase: GetAvailableLanguagesUseCase
+    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LanguagesState())
@@ -47,7 +47,7 @@ class LanguagesViewModel @Inject constructor(
     private fun loadSavedLanguages() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = getAvailableLanguagesUseCase()
+            val result = getAuthLanguagesUseCase()
             if (result is LinguaQuestResult.Success) {
                 val available = result.data
                 _state.update { it.copy(availableLanguages = available, isLoading = false) }
@@ -113,8 +113,8 @@ class LanguagesViewModel @Inject constructor(
         val target = current.targetLanguage ?: return
         val native = current.nativeLanguage ?: return
         viewModelScope.launch {
-            saveNativeLanguageUseCase(native.id)
-            saveTargetLanguageUseCase(target.id)
+            saveNativeLanguageUseCase(native.id, native.name)
+            saveTargetLanguageUseCase(target.id, target.name)
             _effect.emit(LanguagesEffect.NavigateToLevelScreen)
         }
     }

@@ -4,6 +4,7 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 
 interface AuthRemoteDataSource {
+    suspend fun getAuthLanguages(): LinguaQuestResult<AuthLanguagesResponseDataDto, LinguaQuestDataError>
     suspend fun register(body: RegisterRequestDto): LinguaQuestResult<RegisterResponseDataDto, LinguaQuestDataError>
     suspend fun login(body: LoginRequestDto): LinguaQuestResult<LoginResponseDataDto, LinguaQuestDataError>
     suspend fun loginWithGoogle(body: OAuthGoogleRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError>

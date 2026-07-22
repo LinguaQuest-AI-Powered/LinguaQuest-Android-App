@@ -38,45 +38,12 @@ info:
 
     ## Open items / assumptions (flagged for confirmation, not yet approved)
 
-    - Registration does **not** auto-login: it creates the account
-      (`isVerified: false`) and does not return tokens. The backend
-      auto-triggers a `purpose: SIGNUP` OTP on successful
-      registration; the client can also call `/auth/otp/send` again to resend.
-    - Google/Apple OAuth login for a **brand-new** user returns
-      `isNewUser: true` and `profileComplete: false`, since `nativeLanguage`
-      and `targetLanguage` (required at normal registration) aren't available
-      from the OAuth provider. A follow-up "complete profile" endpoint to
-      collect those fields isn't built yet - flag if you want it in this
-      batch.
     - Password reset invalidates all existing refresh tokens for the account
       as a security best practice (forces re-login on all other devices).
-    - Password policy (assumed, adjust if you have different rules): minimum
-      8 characters, at least one letter and one digit.
-    - Username: 3-30 characters, letters/numbers/underscores only.
-    - GET /worlds/{worldId}/levels (the sequential level path) is built from
-      the user story text only - no screenshot of that screen was provided.
-      Field names (`status`, `word`) are my best guess; confirm against the
-      actual level-path screen before implementing.
     - Daily reward cycle is assumed to be a 5-day rotating cycle (Day 1-5)
       based on the popup screenshot; confirm the reset/cycle logic
       (does day 5 loop back to day 1, or does streak keep counting past 5
       while the *reward tier* resets every 5 days?).
-    - Assumed there's no cap on how many target languages a user can add
-      (POST /languages). Flag if there's a max.
-    - Explore Worlds preview on /home is capped at 2 items (`limit` not
-      configurable) - full list lives behind GET /worlds ("See more").
-    - All endpoints in this module require authentication (bearerAuth).
-
-    - `/auth/logout` revokes a single refresh token (one device) by default,
-      with an optional `allDevices` flag to revoke every session. Confirm
-      this is the behavior you want vs. always logging out everywhere.
-    - Logout is treated as idempotent (calling it with an already-revoked
-      token still returns 200), to avoid awkward client-side error handling
-      on a "log out" button. Flag if you'd rather it 401 on a dead token.
-    - DELETE /profile (account deletion) asks for the account password as
-      confirmation. Since OAuth-only accounts have no password, `password`
-      is optional there and the flow needs a different confirmation method
-      for those - not designed yet, flag if you want it in this batch.
     - The achievements screen's "240" stat is assumed to be XP earned via
       achievements specifically (`xpEarned`), not a count. Confirm against
       the design.
@@ -406,6 +373,56 @@ paths:
                       errorKey: REFRESH_TOKEN_EXPIRED
                       errorMessage: Refresh token has expired, please log in again
                       errorTime: '2026-07-13T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/languages:
+    get:
+      tags: [Languages]
+      summary: List languages available to add
+      description: >
+        Returns the full language catalog with an `isAdded` flag per entry,
+        which will be set with false in all languages because the user is still registering.
+      operationId: getAvailableLanguages
+      security: []
+      responses:
+        '200':
+          description: Available languages retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LanguageOption'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 3
+                          name: Japanese
+                          code: ja
+                          imageUrl: /media/languages/japanese.png
+                          isAdded: false
+                        - id: 4
+                          name: German
+                          code: de
+                          imageUrl: /media/languages/german.png
+                          isAdded: false
+                        - id: 5
+                          name: Korean
+                          code: ko
+                          imageUrl: /media/languages/korean.png
+                          isAdded: false
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1055,13 +1072,6 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: languageId
-          in: query
-          required: false
-          description: Defaults to the user's currently-active target language.
-          schema:
-            type: integer
-            example: 1
         - name: difficulty
           in: query
           required: false
@@ -1126,6 +1136,22 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: World not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/999/levels
+                      errorCode: 404
+                      errorKey: NO_ACTIVE_LANGUAGE
+                      errorMessage: User with id 5 doesn't have an active language
+                      errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1194,8 +1220,8 @@ paths:
                     error:
                       apiPath: /api/v1/worlds/999/levels
                       errorCode: 404
-                      errorKey: WORLD_NOT_FOUND
-                      errorMessage: World not found
+                      errorKey: NO_ACTIVE_LANGUAGE
+                      errorMessage: User with id 5 doesn't have an active language
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'

@@ -16,13 +16,25 @@ data class TargetLanguageDto(
     val code: String
 )
 
+data class AuthLanguageOptionDto(
+    val id: Int,
+    val name: String,
+    val code: String,
+    val imageUrl: String,
+    val isAdded: Boolean
+)
+
+data class AuthLanguagesResponseDataDto(
+    val languages: List<AuthLanguageOptionDto>
+)
+
 
 data class RegisterRequestDto(
     val email: String,
     val username: String,
     val password: String,
-    val nativeLanguageId: Int,
-    val targetLanguageId: Int
+    val nativeLanguage: String,
+    val targetLanguage: String
 )
 
 data class RegisterResponseDataDto(

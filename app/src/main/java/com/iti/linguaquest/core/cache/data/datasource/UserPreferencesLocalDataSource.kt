@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.map
 // Interface
 interface UserPreferencesLocalDataSource {
     val targetLanguage: Flow<Int?>
+    val targetLanguageName: Flow<String?>
     val nativeLanguage: Flow<Int?>
+    val nativeLanguageName: Flow<String?>
     val proficiencyLevel: Flow<String?>
     val appTheme: Flow<String>
     val soundEnabled: Flow<Boolean>
@@ -19,7 +21,9 @@ interface UserPreferencesLocalDataSource {
     val notificationsEnabled: Flow<Boolean>
 
     suspend fun saveTargetLanguage(languageId: Int)
+    suspend fun saveTargetLanguageName(name: String)
     suspend fun saveNativeLanguage(languageId: Int)
+    suspend fun saveNativeLanguageName(name: String)
     suspend fun saveProficiencyLevel(level: String)
     suspend fun saveAppTheme(theme: String)
     suspend fun saveSoundEnabled(enabled: Boolean)
@@ -33,8 +37,10 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
 ) : UserPreferencesLocalDataSource {
 
     override val targetLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE] }
+    override val targetLanguageName: Flow<String?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE_NAME] }
 
     override val nativeLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE] }
+    override val nativeLanguageName: Flow<String?> = dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE_NAME] }
 
     override val proficiencyLevel: Flow<String?> = dataStore.data.map { it[PreferencesKeys.PROFICIENCY_LEVEL] }
 
@@ -52,9 +58,21 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveTargetLanguageName(name: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.TARGET_LANGUAGE_NAME] = name
+        }
+    }
+
     override suspend fun saveNativeLanguage(languageId: Int) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.NATIVE_LANGUAGE] = languageId
+        }
+    }
+
+    override suspend fun saveNativeLanguageName(name: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.NATIVE_LANGUAGE_NAME] = name
         }
     }
 
@@ -92,7 +110,9 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override suspend fun clearOnboardingPreferences() {
         dataStore.edit { preferences ->
             preferences.remove(PreferencesKeys.TARGET_LANGUAGE)
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE_NAME)
             preferences.remove(PreferencesKeys.NATIVE_LANGUAGE)
+            preferences.remove(PreferencesKeys.NATIVE_LANGUAGE_NAME)
             preferences.remove(PreferencesKeys.PROFICIENCY_LEVEL)
         }
     }

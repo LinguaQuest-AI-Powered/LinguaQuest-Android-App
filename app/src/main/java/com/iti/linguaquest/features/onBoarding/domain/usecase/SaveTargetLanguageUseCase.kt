@@ -6,7 +6,7 @@ import jakarta.inject.Inject
 class SaveTargetLanguageUseCase @Inject constructor(
     private val repository: UserPreferencesRepository
 ) {
-    suspend operator fun invoke(languageId: Int) {
-        repository.saveTargetLanguage(languageId)
+    suspend operator fun invoke(languageId: Int, name: String) {
+        repository.saveTargetLanguage(languageId, name)
     }
 }

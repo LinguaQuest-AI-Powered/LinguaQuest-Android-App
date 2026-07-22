@@ -8,6 +8,7 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.asEmptyDataResult
 import com.iti.linguaquest.core.result.map
 import com.iti.linguaquest.core.result.onSuccess
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpVerifyRequestDto
@@ -33,16 +34,32 @@ class AuthRepositoryImpl @Inject constructor(
     private val sessionManagerDataSource: SessionManagerDataSource
 ) : AuthRepository {
 
+    override suspend fun getAuthLanguages(): LinguaQuestResult<List<LanguageOption>, AuthError> {
+        return remoteDataSource.getAuthLanguages()
+            .map { response ->
+                response.languages.map { dto ->
+                    LanguageOption(
+                        id = dto.id,
+                        name = dto.name,
+                        code = dto.code,
+                        imageUrl = dto.imageUrl,
+                        isAdded = dto.isAdded
+                    )
+                }
+            }
+            .mapError()
+    }
+
     override suspend fun register(
         email: String,
         username: String,
         password: String,
     ): LinguaQuestResult<Unit, AuthError> {
 
-        val nativeLanguageId = userPreferencesLocalDataSource.nativeLanguage.first() ?: 1
-        val targetLanguageId = userPreferencesLocalDataSource.targetLanguage.first() ?: 1
+        val nativeLanguageName = userPreferencesLocalDataSource.nativeLanguageName.first() ?: "English"
+        val targetLanguageName = userPreferencesLocalDataSource.targetLanguageName.first() ?: "English"
 
-        val request = RegisterRequestDto(email, username, password, nativeLanguageId, targetLanguageId)
+        val request = RegisterRequestDto(email, username, password, nativeLanguageName, targetLanguageName)
 
         return remoteDataSource.register(request)
             .map { Unit }

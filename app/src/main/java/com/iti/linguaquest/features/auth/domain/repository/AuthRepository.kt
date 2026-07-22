@@ -2,9 +2,12 @@ package com.iti.linguaquest.features.auth.domain.repository
 
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
+    suspend fun getAuthLanguages(): LinguaQuestResult<List<LanguageOption>, AuthError>
+
 
     suspend fun register(
         email: String,

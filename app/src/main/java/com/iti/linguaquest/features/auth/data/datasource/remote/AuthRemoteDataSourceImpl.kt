@@ -17,6 +17,9 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAuthLanguages(): LinguaQuestResult<AuthLanguagesResponseDataDto, LinguaQuestDataError> =
+        safeApiCall(mapAuthError) { api.getAuthLanguages().data }
+
     override suspend fun register(body: RegisterRequestDto): LinguaQuestResult<RegisterResponseDataDto, LinguaQuestDataError> =
         safeApiCall(mapAuthError) { api.register(body).data }
 
