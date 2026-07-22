@@ -70,6 +70,7 @@ fun SettingContent(
     onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
+    onLockScreenVocabularyClick: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit
 ) {
@@ -281,6 +282,17 @@ fun SettingContent(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             SettingItem(
+                icon = painterResource(id = R.drawable.ic_lock_icon),
+                title = "Lock Screen Vocabulary",
+                iconTint = MaterialTheme.colorScheme.tertiary,
+                onClick = onLockScreenVocabularyClick
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.background,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            SettingItem(
                 icon = painterResource(id = R.drawable.ic_info_icon),
                 title = stringResource(id = R.string.settings_about_app),
                 iconTint = MaterialTheme.colorScheme.tertiary,
@@ -325,6 +337,7 @@ fun SettingContentPreview() {
             onNotificationsToggle = {},
             onLogoutClick = {},
             onEditProfileClick = {},
+            onLockScreenVocabularyClick = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {}
         )

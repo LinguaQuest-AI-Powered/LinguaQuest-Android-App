@@ -1,0 +1,57 @@
+package com.iti.linguaquest.features.lockscreen.worker
+
+import android.content.Context
+import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+
+@HiltWorker
+class VocabularyGenerationWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val repository: LockScreenRepository,
+    private val scheduler: VocabularyWorkScheduler
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        return when (val result = repository.generateBatch()) {
+            is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> {
+                scheduler.scheduleNotificationWork()
+                Result.success()
+            }
+            is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> {
+                if (result.error.shouldRetryAutomatically()) {
+                    Result.retry()
+                } else {
+                    Result.success()
+                }
+            }
+        }
+    }
+
+    private fun LinguaQuestDataError.shouldRetryAutomatically(): Boolean {
+        return when (this) {
+            LinguaQuestDataError.Remote.REQUEST_TIMEOUT,
+            LinguaQuestDataError.Remote.NO_INTERNET,
+            LinguaQuestDataError.Remote.TOO_MANY_REQUESTS,
+            LinguaQuestDataError.Remote.SERVER -> true
+
+            LinguaQuestDataError.Remote.BAD_REQUEST,
+            LinguaQuestDataError.Remote.UNAUTHORIZED,
+            LinguaQuestDataError.Remote.SERIALIZATION,
+            LinguaQuestDataError.Remote.EMPTY_RESULT,
+            LinguaQuestDataError.Remote.UNKNOWN,
+            LinguaQuestDataError.Local.NOT_FOUND,
+            LinguaQuestDataError.Local.DISK_FULL,
+            LinguaQuestDataError.Local.CONSTRAINT_VIOLATION,
+            LinguaQuestDataError.Local.UNKNOWN,
+            is LinguaQuestDataError.CustomServerMessage -> false
+
+            else -> false
+        }
+    }
+}

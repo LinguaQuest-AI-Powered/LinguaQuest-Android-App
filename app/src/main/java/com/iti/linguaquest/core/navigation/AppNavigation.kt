@@ -51,6 +51,8 @@ import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 
@@ -58,7 +60,9 @@ import com.iti.linguaquest.features.setting.presentation.SettingScreen
 fun AppNavigation(
     modifier: Modifier = Modifier,
     openHomeRequested: Boolean = false,
+    openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
+    onOpenLockScreenWordHandled: () -> Unit = {},
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
@@ -74,6 +78,15 @@ fun AppNavigation(
             }
             onOpenHomeHandled()
         }
+    }
+
+    LaunchedEffect(openLockScreenWordId) {
+        val wordId = openLockScreenWordId ?: return@LaunchedEffect
+        rootBackStack.apply {
+            clear()
+            navigateSingleTop(RootScreen.LockScreenWordDetail(wordId))
+        }
+        onOpenLockScreenWordHandled()
     }
 
     LaunchedEffect(Unit) {
@@ -302,7 +315,23 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onEdit = {
                             rootBackStack.navigateSingleTop(RootScreen.EditProfile)
+                        },
+                        onLockScreenVocabularyClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.LockScreenVocabulary)
                         }
+                    )
+                }
+
+                entry<RootScreen.LockScreenVocabulary> {
+                    LockScreenSettingsScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.LockScreenWordDetail> { screen ->
+                    LockScreenWordDetailScreen(
+                        wordId = screen.wordId,
+                        onBack = { rootBackStack.removeLastOrNull() }
                     )
                 }
 

@@ -64,6 +64,10 @@ sealed interface RootScreen : NavKey {
 
     @Serializable
     data object Settings : RootScreen
+    @Serializable
+    data object LockScreenVocabulary : RootScreen
+    @Serializable
+    data class LockScreenWordDetail(val wordId: Int) : RootScreen
 
     @Serializable
     data object Leaderboard : RootScreen

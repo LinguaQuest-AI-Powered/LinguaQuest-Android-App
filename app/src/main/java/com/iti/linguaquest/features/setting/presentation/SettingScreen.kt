@@ -9,6 +9,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 fun SettingScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
+    onLockScreenVocabularyClick: () -> Unit,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val appLanguage by viewModel.appLanguage.collectAsStateWithLifecycle()
@@ -29,6 +30,7 @@ fun SettingScreen(
         onNotificationsToggle = viewModel::toggleNotifications,
         onLogoutClick = {},
         onEditProfileClick = onEdit,
+        onLockScreenVocabularyClick = onLockScreenVocabularyClick,
         reminderState = reminderState,
         onReminderIntent = viewModel::onReminderIntent
     )

@@ -19,6 +19,7 @@ import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRep
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
     lateinit var appIconService: AppIconService
 
     private var openHomeRequested by mutableStateOf(false)
+    private var openLockScreenWordId by mutableStateOf<Int?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,6 +46,8 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         openHomeRequested = intent?.getBooleanExtra(NotificationHelper.EXTRA_OPEN_HOME, false) == true
+        openLockScreenWordId = intent?.getIntExtra(VocabularyNotificationManager.EXTRA_LOCKSCREEN_WORD_ID, -1)
+            ?.takeIf { it > 0 }
         enableEdgeToEdge()
         setContent {
             val appTheme by userPreferencesRepository.appTheme.collectAsState(initial = null)
@@ -60,7 +64,9 @@ class MainActivity : ComponentActivity() {
                 LinguaQuestTheme(darkTheme = isDarkTheme) {
                     AppNavigation(
                         openHomeRequested = openHomeRequested,
-                        onOpenHomeHandled = { openHomeRequested = false }
+                        openLockScreenWordId = openLockScreenWordId,
+                        onOpenHomeHandled = { openHomeRequested = false },
+                        onOpenLockScreenWordHandled = { openLockScreenWordId = null }
                     )
                 }
             }
@@ -75,6 +81,8 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         openHomeRequested = intent.getBooleanExtra(NotificationHelper.EXTRA_OPEN_HOME, false)
+        openLockScreenWordId = intent.getIntExtra(VocabularyNotificationManager.EXTRA_LOCKSCREEN_WORD_ID, -1)
+            .takeIf { it > 0 }
         lifecycleScope.launch {
             appIconService.refresh()
         }
