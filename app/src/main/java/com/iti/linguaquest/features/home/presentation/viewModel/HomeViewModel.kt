@@ -160,7 +160,7 @@ class HomeViewModel @Inject constructor(
                             isDailyRewardDialogVisible = false,
                             dailyReward = it.dailyReward?.copy(claimedToday = true)
                         )
-                    }
+                }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = UiText.DynamicString("+${result.data.coinsAwarded} coins claimed!"),

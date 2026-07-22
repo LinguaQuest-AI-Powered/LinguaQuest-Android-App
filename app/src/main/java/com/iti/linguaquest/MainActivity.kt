@@ -9,17 +9,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.lifecycleScope
+import com.iti.linguaquest.core.appicon.domain.AppIconService
 import com.iti.linguaquest.core.navigation.AppNavigation
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -29,6 +32,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    @Inject
+    lateinit var appIconService: AppIconService
 
     private var openHomeRequested by mutableStateOf(false)
 
@@ -59,10 +65,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            appIconService.refresh()
+        }
     }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         openHomeRequested = intent.getBooleanExtra(NotificationHelper.EXTRA_OPEN_HOME, false)
+        lifecycleScope.launch {
+            appIconService.refresh()
+        }
     }
 }
