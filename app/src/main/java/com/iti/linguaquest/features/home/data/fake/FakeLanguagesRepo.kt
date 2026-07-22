@@ -13,22 +13,23 @@ import javax.inject.Singleton
 class FakeLanguagesRepo @Inject constructor() : LanguagesRepo {
 
     private val allLanguages = mutableListOf(
-        LanguageOption(1, "Spanish", "es", "/media/languages/spanish.png", isAdded = true),
-        LanguageOption(2, "French", "fr", "/media/languages/french.png", isAdded = true),
-        LanguageOption(3, "Japanese", "ja", "/media/languages/japanese.png", isAdded = true),
-        LanguageOption(4, "German", "de", "/media/languages/german.png", isAdded = false),
-        LanguageOption(5, "Italian", "it", "/media/languages/italian.png", isAdded = false),
-        LanguageOption(6, "Korean", "ko", "/media/languages/korean.png", isAdded = false),
-        LanguageOption(7, "Portuguese", "pt", "/media/languages/portuguese.png", isAdded = false)
+        LanguageOption(10, "Arabic", "ar", "https://cdn.linguaquest.com/languages/arabic.png", isAdded = false),
+        LanguageOption(8, "Chinese", "zh", "https://cdn.linguaquest.com/languages/chinese.png", isAdded = false),
+        LanguageOption(1, "English", "en", "https://cdn.linguaquest.com/languages/english.png", isAdded = false),
+        LanguageOption(3, "French", "fr", "https://cdn.linguaquest.com/languages/french.png", isAdded = false),
+        LanguageOption(4, "German", "de", "https://cdn.linguaquest.com/languages/german.png", isAdded = true),
+        LanguageOption(5, "Italian", "it", "https://cdn.linguaquest.com/languages/italian.png", isAdded = false),
+        LanguageOption(7, "Japanese", "ja", "https://cdn.linguaquest.com/languages/japanese.png", isAdded = false),
+        LanguageOption(9, "Korean", "ko", "https://cdn.linguaquest.com/languages/korean.png", isAdded = false),
+        LanguageOption(6, "Portuguese", "pt", "https://cdn.linguaquest.com/languages/portuguese.png", isAdded = false),
+        LanguageOption(2, "Spanish", "es", "https://cdn.linguaquest.com/languages/spanish.png", isAdded = false)
     )
 
     private val userLanguagesProgress = mutableMapOf(
-        1 to Pair(12, 65),
-        2 to Pair(4, 20),
-        3 to Pair(1, 0)
+        4 to Pair(12, 65)
     )
 
-    private var activeLanguageId = 1
+    private var activeLanguageId = 4
 
     override suspend fun getMyLanguages(): LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError> {
         delay(600)

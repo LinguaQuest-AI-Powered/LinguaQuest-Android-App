@@ -9,13 +9,15 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 @Composable
 fun SettingScreen(
     onBack: () -> Unit,
-    onEdit:() -> Unit,
+    onEdit: () -> Unit,
+    onLogout: () -> Unit,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val appLanguage by viewModel.appLanguage.collectAsState()
     val appTheme by viewModel.appTheme.collectAsState()
     val soundEnabled by viewModel.soundEnabled.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val isLoggingOut by viewModel.isLoggingOut.collectAsState()
 
     SettingContent(
         onBackClick = onBack,
@@ -35,8 +37,10 @@ fun SettingScreen(
         onNotificationsToggle = { enabled ->
             viewModel.toggleNotifications(enabled)
         },
+        isLoggingOut = isLoggingOut,
         onLogoutClick = {
-         },
-        onEditProfileClick =   onEdit
+            viewModel.logout(onSuccess = onLogout)
+        },
+        onEditProfileClick = onEdit
     )
 }

@@ -1,6 +1,7 @@
 package com.iti.linguaquest.core.network
 
+import com.iti.linguaquest.BuildConfig
+
 object NetworkConfig {
-    // TODO: Mock data, replace with the real server
-    const val BASE_URL = "https://linguaquest-api-docs.onrender.com/"
+    const val BASE_URL = BuildConfig.BASE_URL
 }

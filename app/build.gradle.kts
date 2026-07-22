@@ -28,6 +28,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"\""
+        buildConfigField("String", "BASE_URL", baseUrl)
     }
 
     buildTypes {

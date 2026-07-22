@@ -4,10 +4,14 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
-import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSourceImpl
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
-import com.iti.linguaquest.core.preferences.data.repository.UserPreferencesRepositoryImpl
+import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
+import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSourceImpl
+import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSourceImpl
+import com.iti.linguaquest.core.cache.data.repository.SessionManagerRepositoryImpl
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.data.repository.UserPreferencesRepositoryImpl
+import com.iti.linguaquest.core.cache.domain.repository.SessionManagerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,16 +20,35 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
 
+import javax.inject.Qualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class UserSettingsDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class SessionDataStore
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_settings")
+val Context.sessionDataStore: DataStore<Preferences> by preferencesDataStore(name = "session_manager")
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
 
+    @UserSettingsDataStore
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+    fun provideUserSettingsDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.dataStore
+    }
+
+    @SessionDataStore
+    @Provides
+    @Singleton
+    fun provideSessionDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.sessionDataStore
     }
 }
 
@@ -44,4 +67,16 @@ abstract class RepositoryBindings {
     abstract fun bindUserPreferencesRepository(
         impl: UserPreferencesRepositoryImpl
     ): UserPreferencesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionManagerDataSource(
+        impl: SessionManagerDataSourceImpl
+    ): SessionManagerDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionManagerRepository(
+        impl: SessionManagerRepositoryImpl
+    ): SessionManagerRepository
 }

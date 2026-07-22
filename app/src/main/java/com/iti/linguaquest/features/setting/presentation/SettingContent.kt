@@ -63,6 +63,7 @@ fun SettingContent(
     onSoundToggle: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
+    isLoggingOut: Boolean = false,
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit
 ) {
@@ -280,6 +281,7 @@ fun SettingContent(
             text = stringResource(id = R.string.settings_log_out),
             onClick = onLogoutClick,
             textColor = Color.Black, // Ensure dark text on primary button
+            isLoading = isLoggingOut,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -301,10 +303,10 @@ fun SettingContentPreview() {
             onSoundToggle = {},
             notificationsEnabled = true,
             onNotificationsToggle = {},
+            isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
-
-            )
+        )
 
     }
 }
