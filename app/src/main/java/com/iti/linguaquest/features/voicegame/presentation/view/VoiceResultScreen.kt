@@ -50,7 +50,7 @@ fun VoiceResultScreen(
             Spacer(Modifier.height(8.dp))
 
             AppMascotGradientBox(
-                imageRes = if (result.isPassed) R.drawable.lingo_acheviment else R.drawable.lingo_error,
+                imageRes = if (result.isPassed) R.drawable.lingo_success else R.drawable.lingo_error,
                 mascotOverlapHeight = 80.dp,
                 mascotSize = 190.dp
             ) {

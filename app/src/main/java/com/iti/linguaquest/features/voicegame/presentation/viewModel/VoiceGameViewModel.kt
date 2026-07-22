@@ -16,6 +16,8 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameInt
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
+import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -32,6 +34,8 @@ class VoiceGameViewModel @Inject constructor(
     private val audioPlayer: AudioPlayerController,
     private val textToSpeech: TextToSpeechController,
     private val snackbarController: SnackbarController,
+    private val voiceEvaluationService: VoiceEvaluationService,
+    private val userPreferencesRepository: UserPreferencesRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -46,6 +50,14 @@ class VoiceGameViewModel @Inject constructor(
     private var lessonId: Int = 0
     private var pendingPcmData: ByteArray? = null
     private var previewFile: File? = null
+
+    init {
+        viewModelScope.launch {
+            userPreferencesRepository.targetLanguage.collect { lang ->
+                _state.update { it.copy(targetLanguage = lang ?: "English") }
+            }
+        }
+    }
 
     fun onIntent(intent: VoiceGameIntent) {
         when (intent) {
@@ -185,44 +197,40 @@ class VoiceGameViewModel @Inject constructor(
 
     private fun evaluateRecording() {
         val pcmData = pendingPcmData ?: ByteArray(0)
+        if (pcmData.isEmpty()) {
+            resetToIdle(discardAudio = true)
+            return
+        }
+
         viewModelScope.launch {
-            delay(2500.milliseconds)
+            try {
+                val evaluation = voiceEvaluationService.evaluatePronunciation(_state.value.sentence, _state.value.targetLanguage, pcmData)
+                val passed = evaluation.rating >= 6 // Pass criteria: 6/10 or higher
 
-            val result = generateFakeResult(pcmData)
-            sendEffect(VoiceGameEffect.NavigateToResult(result))
-            resetToIdle(discardAudio = false)
+                val result = VoiceResultUi(
+                    rating = evaluation.rating,
+                    correctWords = evaluation.correctWords,
+                    wrongWords = evaluation.wrongWords,
+                    advice = evaluation.advice,
+                    coinsAwarded = if (passed) 10 else 0,
+                    isPassed = passed,
+                    lessonId = lessonId,
+                    sentence = _state.value.sentence
+                )
+                
+                sendEffect(VoiceGameEffect.NavigateToResult(result))
+                resetToIdle(discardAudio = false)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = UiText.DynamicString("Error: ${e.localizedMessage ?: "Failed to evaluate"}"),
+                        type = SnackbarType.ERROR
+                    )
+                )
+                resetToIdle(discardAudio = true)
+            }
         }
-    }
-
-    private fun generateFakeResult(pcmData: ByteArray): VoiceResultUi {
-        val words = _state.value.sentence.split(" ").filter { it.isNotBlank() }
-        // val passed = pcmData.size % 2 == 0
-        val passed = true
-        val wrongCount = when {
-            words.size <= 1 -> if (passed) 0 else 1
-            passed -> 1
-            else -> (words.size / 2).coerceAtLeast(1)
-        }
-        val wrongWords = words.takeLast(wrongCount)
-        val correctWords = words.dropLast(wrongCount)
-        val focusWord = wrongWords.lastOrNull() ?: words.last()
-
-        val advice = if (passed) {
-            "Great job! Try to emphasize the pronunciation of \"$focusWord\" a bit more."
-        } else {
-            "Almost there, explorer! Let's try \"$focusWord\" one more time together."
-        }
-
-        return VoiceResultUi(
-            rating = if (passed) 8 else 4,
-            correctWords = correctWords,
-            wrongWords = wrongWords,
-            advice = advice,
-            coinsAwarded = if (passed) 10 else 0,
-            isPassed = passed,
-            lessonId = lessonId,
-            sentence = _state.value.sentence
-        )
     }
 
     private fun sendEffect(effect: VoiceGameEffect) {
