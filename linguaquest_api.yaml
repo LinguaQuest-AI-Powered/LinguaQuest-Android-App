@@ -38,12 +38,44 @@ info:
 
     ## Open items / assumptions (flagged for confirmation, not yet approved)
 
+    - Registration does **not** auto-login: it creates the account
+      (`isVerified: false`) and does not return tokens. The backend
+      auto-triggers a `purpose: SIGNUP` OTP on successful
+      registration; the client can also call `/auth/otp/send` again to resend.
+    - Google/Apple OAuth login for a **brand-new** user returns
+      `isNewUser: true` and `profileComplete: false`, since `nativeLanguage`
+      and `targetLanguage` (required at normal registration) aren't available
+      from the OAuth provider. A follow-up "complete profile" endpoint
+      (`POST /profile/complete-profile`) is provided to collect those fields.
     - Password reset invalidates all existing refresh tokens for the account
       as a security best practice (forces re-login on all other devices).
+    - Password policy (assumed, adjust if you have different rules): minimum
+      8 characters, at least one letter and one digit.
+    - Username: 3-30 characters, letters/numbers/underscores only.
+    - GET /worlds/{worldId}/levels (the sequential level path) is built from
+      the user story text only - no screenshot of that screen was provided.
+      Field names (`status`, `word`) are my best guess; confirm against the
+      actual level-path screen before implementing.
     - Daily reward cycle is assumed to be a 5-day rotating cycle (Day 1-5)
       based on the popup screenshot; confirm the reset/cycle logic
       (does day 5 loop back to day 1, or does streak keep counting past 5
       while the *reward tier* resets every 5 days?).
+    - Assumed there's no cap on how many target languages a user can add
+      (POST /languages). Flag if there's a max.
+    - Explore Worlds preview on /home is capped at 4 items (`limit` not
+      configurable) - full list lives behind GET /worlds ("See more").
+    - All endpoints in this module require authentication (bearerAuth).
+
+    - `/auth/logout` revokes a single refresh token (one device) by default,
+      with an optional `allDevices` flag to revoke every session. Confirm
+      this is the behavior you want vs. always logging out everywhere.
+    - Logout is treated as idempotent (calling it with an already-revoked
+      token still returns 200), to avoid awkward client-side error handling
+      on a "log out" button. Flag if you'd rather it 401 on a dead token.
+    - DELETE /profile (account deletion) asks for the account password as
+      confirmation. Since OAuth-only accounts have no password, `password`
+      is optional there and the flow needs a different confirmation method
+      for those - not designed yet, flag if you want it in this batch.
     - The achievements screen's "240" stat is assumed to be XP earned via
       achievements specifically (`xpEarned`), not a count. Confirm against
       the design.
@@ -373,56 +405,6 @@ paths:
                       errorKey: REFRESH_TOKEN_EXPIRED
                       errorMessage: Refresh token has expired, please log in again
                       errorTime: '2026-07-13T10:15:00Z'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-
-  /auth/languages:
-    get:
-      tags: [Languages]
-      summary: List languages available to add
-      description: >
-        Returns the full language catalog with an `isAdded` flag per entry,
-        which will be set with false in all languages because the user is still registering.
-      operationId: getAvailableLanguages
-      security: []
-      responses:
-        '200':
-          description: Available languages retrieved successfully
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          languages:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/LanguageOption'
-              examples:
-                default:
-                  value:
-                    success: true
-                    data:
-                      languages:
-                        - id: 3
-                          name: Japanese
-                          code: ja
-                          imageUrl: /media/languages/japanese.png
-                          isAdded: false
-                        - id: 4
-                          name: German
-                          code: de
-                          imageUrl: /media/languages/german.png
-                          isAdded: false
-                        - id: 5
-                          name: Korean
-                          code: ko
-                          imageUrl: /media/languages/korean.png
-                          isAdded: false
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -836,8 +818,7 @@ paths:
         pre-verified by the OAuth provider, so `isVerified` is `true`
         immediately). New accounts are created with a username derived from
         the email prefix; `profileComplete` is `false` until
-        `nativeLanguage` and `targetLanguage` are provided through a
-        separate endpoint. If the email already belongs to a local
+        `nativeLanguage` and `targetLanguage` are provided through `POST /profile/complete-profile`. If the email already belongs to a local
         (email/password) account, a `409` error is returned.
       operationId: oauthFirebase
       security: []
@@ -940,15 +921,16 @@ paths:
                       errorTime: '2026-07-16T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /auth/oauth/complete-profile:
+  /profile/complete-profile:
     post:
-      tags: [OAuth]
+      tags: [Profile]
       summary: Complete profile onboarding after OAuth sign-up
       description: >
         Called by a newly-registered OAuth user (`profileComplete: false`) to select
         their native language, initial target language, and optionally update their username.
-        Upon success, `profileComplete` becomes `true`.
-      operationId: oauthCompleteProfile
+        Upon success, `profileComplete` becomes `true`. Fails with `409` if the profile is
+        already completed or if called by a normal local user.
+      operationId: completeProfile
       security:
         - bearerAuth: []
       requestBody:
@@ -980,17 +962,28 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '409':
-          description: Username is already taken
+          description: Profile already completed or username already taken
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
-                default:
+                profileAlreadyCompleted:
+                  summary: Profile already completed
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/auth/oauth/complete-profile
+                      apiPath: /api/v1/profile/complete-profile
+                      errorCode: 409
+                      errorKey: PROFILE_ALREADY_COMPLETED
+                      errorMessage: Profile is already completed
+                      errorTime: '2026-07-22T19:29:48Z'
+                usernameTaken:
+                  summary: Username already taken
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/profile/complete-profile
                       errorCode: 409
                       errorKey: USERNAME_ALREADY_EXISTS
                       errorMessage: Username 'custom_user123' is already taken
@@ -1003,8 +996,9 @@ paths:
       summary: Get the Home screen dashboard
       description: >
         Returns the composite payload needed to render the Home screen in a
-        single call: XP/coin balance, streak, the active target language card, and a short preview of Explore Worlds
-        (max 2). For the full, filterable World list ("See more"), use
+        single call: XP/coin balance, streak, the active target language card,
+        the "Continue Lesson" card, and a short preview of Explore Worlds
+        (max 4). For the full, filterable World list ("See more"), use
         `GET /worlds`.
       operationId: getHome
       security:
@@ -1029,32 +1023,30 @@ paths:
                       xp: 1250
                       coins: 46
                       streakDays: 7
-                      activeLanguage:
-                        activeLanguage:
-                          id: 1
-                          name: Spanish
-                          code: es
-                          imageUrl: /media/languages/spanish.png
-                          level: 12
-                          isActive: true
-                          progressPercent: 65
+                    activeLanguage:
+                      id: 1
+                      name: Spanish
+                      code: es
+                      imageUrl: /media/languages/spanish.png
+                      level: 12
+                      levelProgressPercent: 65
                       exploreWorlds:
-                        totalCount: 2
-                        worlds:
-                          - id: 10
-                            name: Kitchen World
-                            imageUrl: /media/worlds/kitchen.jpg
-                            difficulty: EASY
-                            progressPercent: 40
-                            totalLevels: 20
-                            completedLevels: 8
-                          - id: 11
-                            name: City World
-                            imageUrl: /media/worlds/city.jpg
-                            difficulty: MEDIUM
-                            progressPercent: 10
-                            totalLevels: 20
-                            completedLevels: 2
+                        - id: 10
+                          name: Kitchen World
+                          imageUrl: /media/worlds/kitchen.jpg
+                          difficulty: EASY
+                          status: IN_PROGRESS
+                          progressPercent: 40
+                          totalLevels: 20
+                          completedLevels: 8
+                        - id: 11
+                          name: City World
+                          imageUrl: /media/worlds/city.jpg
+                          difficulty: MEDIUM
+                          status: IN_PROGRESS
+                          progressPercent: 10
+                          totalLevels: 20
+                          completedLevels: 2
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -1072,6 +1064,13 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - name: languageId
+          in: query
+          required: false
+          description: Defaults to the user's currently-active target language.
+          schema:
+            type: integer
+            example: 1
         - name: difficulty
           in: query
           required: false
@@ -1104,54 +1103,28 @@ paths:
                   value:
                     success: true
                     data:
-                      xp: 1250
-                      coins: 46
-                      streakDays: 7
-                      activeLanguage:
-                        id: 1
-                        name: Spanish
-                        code: es
-                        imageUrl: /media/languages/spanish.png
-                        level: 12
-                        isActive: true
-                        progressPercent: 65
-                      exploreWorlds:
-                        totalCount: 2
-                        worlds:
-                          - id: 10
-                            name: Kitchen World
-                            imageUrl: /media/worlds/kitchen.jpg
-                            difficulty: EASY
-                            progressPercent: 40
-                            totalLevels: 20
-                            completedLevels: 8
-                          - id: 11
-                            name: City World
-                            imageUrl: /media/worlds/city.jpg
-                            difficulty: MEDIUM
-                            progressPercent: 10
-                            totalLevels: 20
-                            completedLevels: 2
+                      totalCount: 6
+                      worlds:
+                        - id: 10
+                          name: Kitchen World
+                          imageUrl: /media/worlds/kitchen.jpg
+                          difficulty: EASY
+                          status: IN_PROGRESS
+                          progressPercent: 40
+                          totalLevels: 20
+                          completedLevels: 8
+                        - id: 12
+                          name: Park World
+                          imageUrl: /media/worlds/park.jpg
+                          difficulty: EASY
+                          status: LOCKED
+                          progressPercent: 0
+                          totalLevels: 20
+                          completedLevels: 0
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '404':
-          description: World not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                default:
-                  value:
-                    success: false
-                    error:
-                      apiPath: /api/v1/worlds/999/levels
-                      errorCode: 404
-                      errorKey: NO_ACTIVE_LANGUAGE
-                      errorMessage: User with id 5 doesn't have an active language
-                      errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1220,8 +1193,8 @@ paths:
                     error:
                       apiPath: /api/v1/worlds/999/levels
                       errorCode: 404
-                      errorKey: NO_ACTIVE_LANGUAGE
-                      errorMessage: User with id 5 doesn't have an active language
+                      errorKey: WORLD_NOT_FOUND
+                      errorMessage: World not found
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -2098,58 +2071,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /profile/languages/progress:
-    get:
-      tags: [Profile]
-      summary: Get per-language progress breakdown
-      description: >
-        Returns levels-completed and words-learned stats for each target
-        language the user is studying, independently tracked per language.
-      operationId: getLanguageProgress
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Progress retrieved successfully
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          languages:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/LanguageProgress'
-              examples:
-                default:
-                  value:
-                    success: true
-                    data:
-                      languages:
-                        - languageId: 2
-                          name: French
-                          code: fr
-                          level: 12
-                          levelsCompleted: 34
-                          totalLevels: 80
-                          wordsLearned: 210
-                        - languageId: 1
-                          name: Spanish
-                          code: es
-                          level: 4
-                          levelsCompleted: 10
-                          totalLevels: 80
-                          wordsLearned: 65
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-
   # --- Leaderboard ---
   /leaderboard:
     get:
@@ -2562,6 +2483,8 @@ components:
                 - DAILY_REWARD_ALREADY_CLAIMED
                 - INVALID_PASSWORD
                 - ACHIEVEMENT_REWARD_ALREADY_CLAIMED
+                - INVALID_TOKEN
+                - PROFILE_ALREADY_COMPLETED
               example: INVALID_CREDENTIALS
             errorMessage:
               type: string
@@ -2822,9 +2745,12 @@ components:
           type: integer
           example: 7
         activeLanguage:
-          $ref: '#/components/schemas/UserLanguage'
+          $ref: '#/components/schemas/ActiveLanguageSummary'
         exploreWorlds:
-          $ref: '#/components/schemas/WorldSummary'
+          type: array
+          description: Preview of up to 4 Worlds; use GET /worlds for the full list.
+          items:
+            $ref: '#/components/schemas/WorldSummary'
 
     ActiveLanguageSummary:
       type: object
@@ -2863,6 +2789,10 @@ components:
           type: string
           enum: [EASY, MEDIUM, HARD]
           example: EASY
+        status:
+          type: string
+          enum: [LOCKED, IN_PROGRESS, COMPLETED]
+          example: IN_PROGRESS
         progressPercent:
           type: integer
           minimum: 0

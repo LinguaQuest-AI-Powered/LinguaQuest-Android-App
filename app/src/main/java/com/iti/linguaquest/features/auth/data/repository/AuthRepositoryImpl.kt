@@ -85,8 +85,8 @@ class AuthRepositoryImpl @Inject constructor(
         val request = OAuthGoogleRequestDto(idToken)
         return remoteDataSource.loginWithGoogle(request)
             .onSuccess { response ->
+                tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 if (response.profileComplete) {
-                    tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                     sessionManagerDataSource.saveIsLoggedIn(true)
                 }
             }
