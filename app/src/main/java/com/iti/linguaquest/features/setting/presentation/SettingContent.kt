@@ -46,9 +46,14 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
+import com.iti.linguaquest.features.setting.presentation.components.DailyReminderSection
+import com.iti.linguaquest.features.setting.presentation.components.RepeatBottomSheet
 import com.iti.linguaquest.features.setting.presentation.components.SettingItem
 import com.iti.linguaquest.features.setting.presentation.components.SettingProfileHeader
 import com.iti.linguaquest.features.setting.presentation.components.SettingSectionContainer
+import com.iti.linguaquest.features.setting.presentation.components.TimePickerDialog
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.core.utils.ShareTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +69,9 @@ fun SettingContent(
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
     onLogoutClick: () -> Unit,
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    reminderState: ReminderState,
+    onReminderIntent: (ReminderIntent) -> Unit
 ) {
     val isDark = when (appTheme) {
         "light" -> false
@@ -153,6 +160,14 @@ fun SettingContent(
         }
     }
 
+    if (reminderState.showTimePicker) {
+        TimePickerDialog(state = reminderState, onIntent = onReminderIntent)
+    }
+
+    if (reminderState.showRepeatSheet) {
+        RepeatBottomSheet(state = reminderState, onIntent = onReminderIntent)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -189,7 +204,6 @@ fun SettingContent(
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -274,16 +288,24 @@ fun SettingContent(
             )
         }
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        DailyReminderSection(
+            state = reminderState,
+            onIntent = onReminderIntent,
+            enabled = notificationsEnabled,
+            modifier = Modifier.padding(horizontal = 0.dp)
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
 
         AppButton3D(
             text = stringResource(id = R.string.settings_log_out),
             onClick = onLogoutClick,
-            textColor = Color.Black, // Ensure dark text on primary button
+            textColor = Color.Black,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-
     }
 }
 
@@ -303,10 +325,8 @@ fun SettingContentPreview() {
             onNotificationsToggle = {},
             onLogoutClick = {},
             onEditProfileClick = {},
-
-            )
-
+            reminderState = ReminderState(enabled = true),
+            onReminderIntent = {}
+        )
     }
 }
-
-

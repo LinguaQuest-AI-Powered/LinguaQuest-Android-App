@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,13 +31,15 @@ fun SettingItem(
     switchChecked: Boolean = false,
     onSwitchChange: ((Boolean) -> Unit)? = null,
     onClick: () -> Unit = {},
+    enabled: Boolean = true,
 ) {
     val soundPlayer = LocalSoundPlayer.current
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .alpha(if (enabled) 1f else 0.45f)
+            .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -67,6 +70,7 @@ fun SettingItem(
         if (hasSwitch) {
             Switch(
                 checked = switchChecked,
+                enabled = enabled,
                 onCheckedChange = { checked ->
                     soundPlayer.play(AppSound.SWITCH)
                     onSwitchChange?.invoke(checked)

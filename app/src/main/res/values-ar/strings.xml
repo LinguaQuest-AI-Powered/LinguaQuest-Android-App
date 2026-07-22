@@ -14,13 +14,20 @@
     <string name="continue_button">متابعة</string>
     <string name="What_is_your_level">ما هو مستواك؟</string>
     <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
-
+    <string name="daily_reminder">التذكير اليومي</string>
+    <string name="reminder_time">وقت التذكير</string>
+    <string name="notification_channel_name">التذكير اليومي</string>
+    <string name="notification_channel_description">يذكرك بإكمال درس اللغة اليومي</string>
+    <string name="select_reminder_time">اختر وقت التذكير</string>
+    <string name="notification_title">هل أنت مستعد لدرس اليوم؟</string>
+    <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
+    <string name="repeat">التكرار</string>
     // Languages displayed name
     <string name="spanish_language_displayName">الإسبانية</string>
     <string name="japanese_language_displayName">اليابانية</string>
     <string name="english_language_displayName">الإنجليزية</string>
     <string name="germany_language_displayName">الألمانية</string>
-
+    <string name="logout">تسجيل الخروج</string>
     // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>
@@ -28,7 +35,21 @@
     <string name="germany_language_code">ge</string>
 
     <string name="select_language">اختر اللغة</string>
-
+     <string name="every_day">كل يوم</string>
+    <string name="weekdays">أيام الأسبوع</string>
+    <string name="weekends">عطلة نهاية الأسبوع</string>
+    <string name="custom">مخصص</string>
+    <string name="save">حفظ</string>
+    <string name="map_lets_learn">هيا نتعلم!</string>
+    <string name="cd_treasure">كنز</string>
+    <string name="cd_star">نجمة</string>
+    <string name="day_sun_short">ح</string>
+    <string name="day_mon_short">ن</string>
+    <string name="day_tue_short">ث</string>
+    <string name="day_wed_short">ر</string>
+    <string name="day_thu_short">خ</string>
+    <string name="day_fri_short">ج</string>
+    <string name="day_sat_short">س</string>
     <string name="login_welcome_back">مرحباً بعودتك!</string>
     <string name="login_ready_to_continue">هل أنت جاهز للمتابعة؟</string>
     <string name="login_title">تسجيل الدخول</string>

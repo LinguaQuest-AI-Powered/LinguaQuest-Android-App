@@ -293,8 +293,26 @@
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="coins_claimed">coins claimed!</string>
 
-
-
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="reminder_time">Reminder Time</string>
+     <string name="repeat">Repeat</string>
+     <string name="every_day">Every Day</string>
+    <string name="weekdays">Weekdays</string>
+    <string name="weekends">Weekends</string>
+    <string name="custom">Custom</string>
+    <string name="save">Save</string>
+    <string name="select_reminder_time">Select Reminder Time</string>
+    <string name="notification_channel_name">Daily Reminder</string>
+    <string name="notification_channel_description">Reminds you to complete your daily language lesson</string>
+    <string name="notification_title">Ready for today\'s lesson?</string>
+    <string name="notification_message">Open LinguaQuest and keep your streak alive.</string>
+     <string name="day_sun_short">S</string>
+    <string name="day_mon_short">M</string>
+    <string name="day_tue_short">T</string>
+    <string name="day_wed_short">W</string>
+    <string name="day_thu_short">T</string>
+    <string name="day_fri_short">F</string>
+    <string name="day_sat_short">S</string>
     <!-- Game Result Feature -->
     <string name="game_result_loading">Loading result...</string>
     <string name="game_result_invalid_state">Invalid state. No outcome generated.</string>
@@ -322,4 +340,5 @@
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel">Cancel</string>
+    <string name="logout">Log Out</string>
 </resources>

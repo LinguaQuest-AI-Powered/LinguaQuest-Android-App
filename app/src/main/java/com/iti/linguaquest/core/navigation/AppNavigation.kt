@@ -57,12 +57,24 @@ import com.iti.linguaquest.features.setting.presentation.SettingScreen
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
+    openHomeRequested: Boolean = false,
+    onOpenHomeHandled: () -> Unit = {},
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Login)
+    val rootBackStack = rememberNavBackStack(RootScreen.Settings)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+
+    LaunchedEffect(openHomeRequested) {
+        if (openHomeRequested) {
+            rootBackStack.apply {
+                clear()
+                navigateSingleTop(RootScreen.Main)
+            }
+            onOpenHomeHandled()
+        }
+    }
 
     LaunchedEffect(Unit) {
         globalUiHostViewModel.snackbarController.events.collectLatest { event ->

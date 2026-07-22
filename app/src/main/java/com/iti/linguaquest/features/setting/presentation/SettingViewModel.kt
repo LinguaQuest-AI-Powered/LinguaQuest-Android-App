@@ -4,19 +4,42 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
-import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
-import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 import com.iti.linguaquest.features.setting.domain.usecase.GetAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetAppThemeUseCase
-import com.iti.linguaquest.features.setting.domain.usecase.GetSoundEnabledUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetNotificationsEnabledUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.GetReminderDaysUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.GetReminderEnabledUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.GetReminderTimeUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.GetSoundEnabledUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderDaysUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderEnabledUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderTimeUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderEffect
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
+import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
+import com.iti.linguaquest.features.setting.system.AlarmScheduler
+import com.iti.linguaquest.features.setting.system.ReminderSettings
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
@@ -27,58 +50,253 @@ class SettingViewModel @Inject constructor(
     private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
     private val changeAppThemeUseCase: ChangeAppThemeUseCase,
     private val toggleSoundUseCase: ToggleSoundUseCase,
-    private val toggleNotificationsUseCase: ToggleNotificationsUseCase
+    private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
+    private val getReminderEnabledUseCase: GetReminderEnabledUseCase,
+    private val getReminderTimeUseCase: GetReminderTimeUseCase,
+    private val getReminderDaysUseCase: GetReminderDaysUseCase,
+    private val saveReminderEnabledUseCase: SaveReminderEnabledUseCase,
+    private val saveReminderTimeUseCase: SaveReminderTimeUseCase,
+    private val saveReminderDaysUseCase: SaveReminderDaysUseCase,
+    private val alarmScheduler: AlarmScheduler,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
+
     val appLanguage: StateFlow<String> = getAppLanguageUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = "en"
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "en")
 
     val appTheme: StateFlow<String> = getAppThemeUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = "system"
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "system")
 
     val soundEnabled: StateFlow<Boolean> = getSoundEnabledUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = true
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
 
     val notificationsEnabled: StateFlow<Boolean> = getNotificationsEnabledUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = true
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+
+    private val _reminderState = MutableStateFlow(ReminderState())
+    val reminderState: StateFlow<ReminderState> = _reminderState.asStateFlow()
+
+    private val _reminderEffect = MutableSharedFlow<ReminderEffect>()
+    val reminderEffect: SharedFlow<ReminderEffect> = _reminderEffect.asSharedFlow()
+
+    init {
+        loadReminderSettings()
+    }
+
+    private fun loadReminderSettings() {
+        viewModelScope.launch {
+            combine(
+                getReminderEnabledUseCase(),
+                getReminderTimeUseCase(),
+                getReminderDaysUseCase()
+            ) { enabled, timeStr, daysStr ->
+                val (hour, minute) = parseTime(timeStr)
+                val selectedDays = parseDays(daysStr)
+                ReminderState(
+                    enabled = enabled,
+                    hour = hour,
+                    minute = minute,
+                    selectedDays = selectedDays
+                )
+            }.collect { loadedState ->
+                _reminderState.update { current ->
+                     current.copy(
+                        enabled = loadedState.enabled,
+                        hour = loadedState.hour,
+                        minute = loadedState.minute,
+                        selectedDays = loadedState.selectedDays
+                    )
+                }
+                syncReminderSchedule()
+            }
+        }
+    }
+
+    fun onReminderIntent(intent: ReminderIntent) {
+        if (!notificationsEnabled.value) {
+            when (intent) {
+                ReminderIntent.DismissTimePicker,
+                ReminderIntent.DismissRepeatSheet -> Unit
+                else -> return
+            }
+        }
+
+        when (intent) {
+            is ReminderIntent.ToggleReminder -> toggleReminder(intent.enabled)
+            ReminderIntent.ShowTimePicker -> _reminderState.update { it.copy(showTimePicker = true) }
+            ReminderIntent.DismissTimePicker -> _reminderState.update { it.copy(showTimePicker = false) }
+            is ReminderIntent.SelectTime -> selectTime(intent.hour, intent.minute)
+            ReminderIntent.ShowRepeatSheet -> _reminderState.update { it.copy(showRepeatSheet = true) }
+            ReminderIntent.DismissRepeatSheet -> _reminderState.update { it.copy(showRepeatSheet = false) }
+            is ReminderIntent.SelectPreset -> applyPreset(intent.preset)
+            is ReminderIntent.ToggleDay -> toggleDay(intent.day)
+            ReminderIntent.SaveRepeat -> saveRepeat()
+        }
+    }
+
+    private fun toggleReminder(enabled: Boolean) {
+        viewModelScope.launch {
+            saveReminderEnabledUseCase(enabled)
+            _reminderState.update { it.copy(enabled = enabled) }
+            syncReminderSchedule()
+            _reminderEffect.emit(
+                if (enabled) ReminderEffect.ReminderEnabled else ReminderEffect.ReminderDisabled
+            )
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    title = UiText.DynamicString("Daily Reminder"),
+                    message = UiText.DynamicString(
+                        if (enabled) {
+                            "Reminder turned on. We'll keep you on track."
+                        } else {
+                            "Reminder turned off."
+                        }
+                    ),
+                    type = if (enabled) SnackbarType.SUCCESS else SnackbarType.INFO
+                )
+            )
+        }
+    }
+
+    private fun selectTime(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            val timeStr = "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
+            saveReminderTimeUseCase(timeStr)
+            _reminderState.update { it.copy(hour = hour, minute = minute, showTimePicker = false) }
+            syncReminderSchedule()
+            _reminderEffect.emit(ReminderEffect.ReminderUpdated)
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    title = UiText.DynamicString("Daily Reminder"),
+                    message = UiText.DynamicString("Reminder time updated."),
+                    type = SnackbarType.SUCCESS
+                )
+            )
+        }
+    }
+
+    private fun applyPreset(preset: RepeatPreset) {
+        val days = when (preset) {
+            RepeatPreset.EVERY_DAY -> DayOfWeek.entries.toSet()
+            RepeatPreset.WEEKDAYS -> setOf(
+                DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY
+            )
+            RepeatPreset.WEEKENDS -> setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+            RepeatPreset.CUSTOM -> _reminderState.value.selectedDays
+        }
+        _reminderState.update { it.copy(selectedDays = days) }
+    }
+
+    private fun toggleDay(day: DayOfWeek) {
+        _reminderState.update { state ->
+            val updated = if (day in state.selectedDays) {
+                state.selectedDays - day
+            } else {
+                state.selectedDays + day
+            }
+            state.copy(selectedDays = updated)
+        }
+    }
+
+    private fun saveRepeat() {
+        viewModelScope.launch {
+            val daysStr = _reminderState.value.selectedDays
+                .joinToString(",") { it.value.toString() }
+            saveReminderDaysUseCase(daysStr)
+            _reminderState.update { it.copy(showRepeatSheet = false) }
+            syncReminderSchedule()
+            _reminderEffect.emit(ReminderEffect.ReminderUpdated)
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    title = UiText.DynamicString("Daily Reminder"),
+                    message = UiText.DynamicString("Reminder repeat updated."),
+                    type = SnackbarType.SUCCESS
+                )
+            )
+        }
+    }
+
 
     fun toggleSound(enabled: Boolean) {
-        viewModelScope.launch {
-            toggleSoundUseCase(enabled)
-        }
+        viewModelScope.launch { toggleSoundUseCase(enabled) }
     }
 
     fun toggleNotifications(enabled: Boolean) {
         viewModelScope.launch {
             toggleNotificationsUseCase(enabled)
+
+            if (!enabled) {
+                _reminderState.update {
+                    it.copy(showTimePicker = false, showRepeatSheet = false)
+                }
+                alarmScheduler.cancel()
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        title = UiText.DynamicString("Notifications"),
+                        message = UiText.DynamicString("Notifications off. Daily reminder paused."),
+                        type = SnackbarType.INFO
+                    )
+                )
+                return@launch
+            }
+
+            syncReminderSchedule(notificationsAllowed = enabled)
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    title = UiText.DynamicString("Notifications"),
+                    message = UiText.DynamicString("Notifications enabled."),
+                    type = SnackbarType.SUCCESS
+                )
+            )
         }
     }
 
     fun changeAppLanguage(language: String) {
-        viewModelScope.launch {
-            changeAppLanguageUseCase(language)
-        }
+        viewModelScope.launch { changeAppLanguageUseCase(language) }
     }
 
     fun changeAppTheme(theme: String) {
-        viewModelScope.launch {
-            changeAppThemeUseCase(theme)
+        viewModelScope.launch { changeAppThemeUseCase(theme) }
+    }
+
+
+    private fun parseTime(timeStr: String): Pair<Int, Int> {
+        return try {
+            val parts = timeStr.split(":")
+            Pair(parts[0].toInt(), parts[1].toInt())
+        } catch (e: Exception) {
+            Pair(8, 0)
         }
     }
+
+    private fun parseDays(daysStr: String): Set<DayOfWeek> {
+        return try {
+            daysStr.split(",")
+                .mapNotNull { it.trim().toIntOrNull() }
+                .mapNotNull { DayOfWeek.entries.getOrNull(it - 1) }
+                .toSet()
+                .ifEmpty { DayOfWeek.entries.toSet() }
+        } catch (e: Exception) {
+            DayOfWeek.entries.toSet()
+        }
+    }
+
+    private fun syncReminderSchedule(notificationsAllowed: Boolean = notificationsEnabled.value) {
+        val state = _reminderState.value
+        if (notificationsAllowed && state.enabled) {
+            alarmScheduler.schedule(state.toReminderSettings())
+        } else {
+            alarmScheduler.cancel()
+        }
+    }
+
+    private fun ReminderState.toReminderSettings() = ReminderSettings(
+        enabled = enabled,
+        hour = hour,
+        minute = minute,
+        selectedDays = selectedDays
+    )
 }

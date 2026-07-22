@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -39,13 +42,14 @@ fun AppButton3D(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val pressOffset = if (isPressed) ledgeHeight else 0.dp
+    val soundPlayer = LocalSoundPlayer.current
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(buttonHeight + ledgeHeight)
     ) {
-         Box(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(buttonHeight)
@@ -54,7 +58,7 @@ fun AppButton3D(
                 .background(ledgeColor)
         )
 
-         Box(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(buttonHeight)
@@ -65,7 +69,10 @@ fun AppButton3D(
                     interactionSource = interactionSource,
                     indication = null,
                     enabled = enabled,
-                    onClick = onClick
+                    onClick = {
+                        soundPlayer.play(AppSound.POP)
+                        onClick()
+                    }
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -84,8 +91,9 @@ fun AppButton3D(
 private fun AppButton3DPreview() {
     Box(modifier = Modifier.padding(24.dp)) {
         AppButton3D(
-            text = "Log Out",
-            onClick = {},
+            text ="logout",
+
+            onClick = {}
         )
     }
 }
