@@ -2,14 +2,16 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageV
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.features.onBoarding.domain.usecase.GetAppLanguageUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
-import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveAppLanguageUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveTargetLanguageUseCase
-import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguageOption
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.features.home.domain.usecase.GetAvailableLanguagesUseCase
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,10 +27,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LanguagesViewModel @Inject constructor(
-    private val getAppLanguageUseCase: GetAppLanguageUseCase,
+    private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
-    private val saveAppLanguageUseCase: SaveAppLanguageUseCase,
-    private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase
+    private val saveNativeLanguageUseCase: SaveNativeLanguageUseCase,
+    private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase,
+    private val getAvailableLanguagesUseCase: GetAvailableLanguagesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LanguagesState())
@@ -43,19 +46,32 @@ class LanguagesViewModel @Inject constructor(
 
     private fun loadSavedLanguages() {
         viewModelScope.launch {
-            combine(
-                getAppLanguageUseCase(),
-                getTargetLanguageUseCase()
-            ) { savedNative, savedTarget -> savedNative to savedTarget }
-                .collectLatest { (savedNative, savedTarget) ->
-                    _state.update {
-                        it.copy(
-                            nativeLanguage = savedNative ?: it.nativeLanguage,
-                            targetLanguage = savedTarget,
-                            isContinueEnabled = savedTarget != null
-                        )
+            _state.update { it.copy(isLoading = true) }
+            val result = getAvailableLanguagesUseCase()
+            if (result is LinguaQuestResult.Success) {
+                val available = result.data
+                _state.update { it.copy(availableLanguages = available, isLoading = false) }
+
+                combine(
+                    getNativeLanguageUseCase(),
+                    getTargetLanguageUseCase()
+                ) { savedNative, savedTarget -> savedNative to savedTarget }
+                    .collectLatest { (savedNativeId, savedTargetId) ->
+                        val nativeOpt = available.find { it.id == savedNativeId }
+                            ?: available.find { it.name == "English" } ?: available.firstOrNull()
+                        val targetOpt = available.find { it.id == savedTargetId }
+
+                        _state.update {
+                            it.copy(
+                                nativeLanguage = nativeOpt,
+                                targetLanguage = targetOpt,
+                                isContinueEnabled = targetOpt != null
+                            )
+                        }
                     }
-                }
+            } else {
+                _state.update { it.copy(isLoading = false) } // Add error handling if needed
+            }
         }
     }
 
@@ -71,23 +87,17 @@ class LanguagesViewModel @Inject constructor(
 
     private fun selectNativeLanguage(language: LanguageOption) {
         _state.update {
-            it.copy(nativeLanguage = language.displayName, isNativeDropdownExpanded = false)
-        }
-        viewModelScope.launch {
-            saveAppLanguageUseCase(language.displayName)
+            it.copy(nativeLanguage = language, isNativeDropdownExpanded = false)
         }
     }
 
     private fun selectTargetLanguage(language: LanguageOption) {
         _state.update {
             it.copy(
-                targetLanguage = language.displayName,
+                targetLanguage = language,
                 isTargetDropdownExpanded = false,
                 isContinueEnabled = true
             )
-        }
-        viewModelScope.launch {
-            saveTargetLanguageUseCase(language.displayName)
         }
     }
 
@@ -101,9 +111,10 @@ class LanguagesViewModel @Inject constructor(
     private fun onContinueClicked() {
         val current = _state.value
         val target = current.targetLanguage ?: return
+        val native = current.nativeLanguage ?: return
         viewModelScope.launch {
-            saveAppLanguageUseCase(current.nativeLanguage)
-            saveTargetLanguageUseCase(target)
+            saveNativeLanguageUseCase(native.id)
+            saveTargetLanguageUseCase(target.id)
             _effect.emit(LanguagesEffect.NavigateToLevelScreen)
         }
     }

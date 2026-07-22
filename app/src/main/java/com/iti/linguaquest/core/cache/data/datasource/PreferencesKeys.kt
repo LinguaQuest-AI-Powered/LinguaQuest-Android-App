@@ -1,10 +1,12 @@
 package com.iti.linguaquest.core.cache.data.datasource
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object PreferencesKeys {
-    val TARGET_LANGUAGE = stringPreferencesKey("target_language")
+    val TARGET_LANGUAGE = intPreferencesKey("target_language")
+    val NATIVE_LANGUAGE = intPreferencesKey("native_language")
     val PROFICIENCY_LEVEL = stringPreferencesKey("proficiency_level")
     val APP_THEME = stringPreferencesKey("app_theme")
     val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")

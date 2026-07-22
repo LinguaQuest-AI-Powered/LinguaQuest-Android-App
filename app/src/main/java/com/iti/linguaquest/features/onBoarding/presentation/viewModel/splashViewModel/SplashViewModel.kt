@@ -24,7 +24,7 @@ class SplashViewModel @Inject constructor(
     ) { isFirstTime, isLoggedIn ->
         when {
             isFirstTime -> RootScreen.Onboarding
-            !isLoggedIn -> RootScreen.Login
+            !isLoggedIn -> RootScreen.Login()
             else -> RootScreen.Main
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)

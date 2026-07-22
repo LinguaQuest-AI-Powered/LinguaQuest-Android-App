@@ -19,6 +19,12 @@ interface AuthRepository {
 
     suspend fun signInWithGoogle(
         idToken: String
+    ): LinguaQuestResult<Boolean, AuthError>
+
+    suspend fun completeOAuthProfile(
+        nativeLanguageId: Int,
+        targetLanguageId: Int,
+        username: String?
     ): LinguaQuestResult<Unit, AuthError>
 
     suspend fun sendRegistrationOtp(email: String): LinguaQuestResult<Unit, AuthError>

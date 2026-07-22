@@ -9,15 +9,20 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     private val localDataSource: UserPreferencesLocalDataSource
 ) : UserPreferencesRepository {
 
-    override val targetLanguage: Flow<String?> = localDataSource.targetLanguage
+    override val targetLanguage: Flow<Int?> = localDataSource.targetLanguage
+    override val nativeLanguage: Flow<Int?> = localDataSource.nativeLanguage
     override val proficiencyLevel: Flow<String?> = localDataSource.proficiencyLevel
     override val appTheme: Flow<String> = localDataSource.appTheme
     override val soundEnabled: Flow<Boolean> = localDataSource.soundEnabled
     override val appLanguage: Flow<String> = localDataSource.appLanguage
     override val notificationsEnabled: Flow<Boolean> = localDataSource.notificationsEnabled
 
-    override suspend fun saveTargetLanguage(language: String) {
-        localDataSource.saveTargetLanguage(language)
+    override suspend fun saveTargetLanguage(languageId: Int) {
+        localDataSource.saveTargetLanguage(languageId)
+    }
+
+    override suspend fun saveNativeLanguage(languageId: Int) {
+        localDataSource.saveNativeLanguage(languageId)
     }
 
     override suspend fun saveProficiencyLevel(level: String) {

@@ -30,15 +30,15 @@ sealed interface RootScreen : NavKey {
     data object Onboarding : RootScreen
 
     @Serializable
-    data object Languages : RootScreen
+    data class Languages(val flow: String = "ONBOARDING") : RootScreen
 
     @Serializable
-    data object OnboardingLevel : RootScreen
+    data class OnboardingLevel(val flow: String = "ONBOARDING") : RootScreen
 
     // REMOVED: data class Level(val worldId: Int, val levelNumber: Int) : RootScreen
 
     @Serializable
-    data object Login : RootScreen
+    data class Login(val isOAuthLanguageSelectionCompleted: Boolean = false) : RootScreen
     @Serializable
     data object SignUp : RootScreen
     @Serializable

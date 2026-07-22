@@ -169,34 +169,42 @@ fun AppNavigation(
                 entry<RootScreen.Onboarding> {
                     OnboardingScreen(
                         onGetStartedClick = {
-                            rootBackStack.navigateSingleTop(RootScreen.Languages)
+                            rootBackStack.navigateSingleTop(RootScreen.Languages())
                         },
                         onLoginClick = {
-                            rootBackStack.navigateSingleTop(RootScreen.Login)
+                            rootBackStack.navigateSingleTop(RootScreen.Login())
                         }
                     )
                 }
 
-                entry<RootScreen.Languages> {
+                entry<RootScreen.Languages> { screen ->
                     LanguagesScreen(
                         onContinue = {
-                            rootBackStack.navigateSingleTop(RootScreen.OnboardingLevel)
+                            rootBackStack.navigateSingleTop(RootScreen.OnboardingLevel(flow = screen.flow))
                         }
                     )
                 }
 
-                entry<RootScreen.OnboardingLevel> {
+                entry<RootScreen.OnboardingLevel> { screen ->
                     LevelScreen(
                         onContinue = {
-                            rootBackStack.navigateSingleTop(RootScreen.Login)
+                            when (screen.flow) {
+                                "SIGN_UP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp)
+                                "OAUTH" -> rootBackStack.navigateSingleTop(RootScreen.Login(isOAuthLanguageSelectionCompleted = true))
+                                else -> rootBackStack.navigateSingleTop(RootScreen.Login())
+                            }
                         }
                     )
                 }
 
-                entry<RootScreen.Login> {
+                entry<RootScreen.Login> { screen ->
                     LoginScreen(
+                        isOAuthLanguageSelectionCompleted = screen.isOAuthLanguageSelectionCompleted,
                         onSignUp = {
                             rootBackStack.navigateSingleTop(RootScreen.SignUp)
+                        },
+                        onSignUpWithoutLanguages = {
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "SIGN_UP"))
                         },
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
@@ -206,6 +214,9 @@ fun AppNavigation(
                                 clear()
                                 navigateSingleTop(RootScreen.Main)
                             }
+                        },
+                        onOAuthLanguageSelection = {
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH"))
                         }
                     )
                 }
@@ -213,11 +224,13 @@ fun AppNavigation(
                 entry<RootScreen.SignUp> {
                     SignUpScreen(
                         onNavigateToLogin = { rootBackStack.popToLogin() },
-                        onSignUpSuccess = {email ->
+                        onSignUpSuccess = { email ->
                             rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
                         }
                     )
                 }
+
+
 
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
@@ -302,7 +315,7 @@ fun AppNavigation(
                         onLogout = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Login)
+                                navigateSingleTop(RootScreen.Onboarding)
                             }
                         }
                     )

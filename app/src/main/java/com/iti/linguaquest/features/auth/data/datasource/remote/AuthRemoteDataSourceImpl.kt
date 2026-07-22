@@ -26,6 +26,14 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun loginWithGoogle(body: OAuthGoogleRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> =
         safeApiCall(mapAuthError) { api.loginWithGoogle(body).data }
 
+    override suspend fun completeOAuthProfile(body: CompleteProfileRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> {
+        // Faking the response until the endpoint is implemented
+        kotlinx.coroutines.delay(1000) // Simulate network delay
+        val fakeUser = UserDto(id = 1, username = body.username ?: "User", photo = null, nativeLanguage = null, isVerified = true, targetLanguages = emptyList())
+        val fakeResponse = OAuthResponseDataDto("fake_access_token", "fake_refresh_token", "Bearer", 3600, false, true, fakeUser)
+        return LinguaQuestResult.Success(fakeResponse)
+    }
+
     override suspend fun sendOtp(body: OtpSendRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
         safeApiCall(mapAuthError) { api.sendOtp(body).data }
 

@@ -25,7 +25,6 @@ import com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageVi
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
-import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.defaultLanguages
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -53,6 +52,13 @@ private fun LanguagesScreenContent(
     state: LanguagesState,
     onIntent: (LanguagesIntent) -> Unit
 ) {
+    if (state.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
         Spacer(Modifier.height(32.dp))
 
@@ -81,7 +87,7 @@ private fun LanguagesScreenContent(
 
         LanguageDropdown(
             label = stringResource(R.string.i_speak),
-            selectedText = state.nativeLanguage,
+            selectedText = state.nativeLanguage?.name,
             isExpanded = state.isNativeDropdownExpanded,
             onToggle = { onIntent(LanguagesIntent.ToggleNativeDropdown) },
             options = state.availableLanguages,
@@ -93,7 +99,7 @@ private fun LanguagesScreenContent(
 
         LanguageDropdown(
             label = stringResource(R.string.i_want_to_learn),
-            selectedText = state.targetLanguage,
+            selectedText = state.targetLanguage?.name,
             placeholder = stringResource(R.string.select_language),
             isExpanded = state.isTargetDropdownExpanded,
             onToggle = { onIntent(LanguagesIntent.ToggleTargetDropdown) },
@@ -134,16 +140,16 @@ private fun LanguagesScreenContent(
     }
 }
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Composable
 private fun LanguagesScreenPreview_Selected() {
     LinguaQuestTheme {
         LanguagesScreenContent(
             state = LanguagesState(
-                nativeLanguage = "English",
-                targetLanguage = "Spanish",
-                availableLanguages = defaultLanguages,
-                isContinueEnabled = true
+                nativeLanguage = null,
+                targetLanguage = null,
+                availableLanguages = emptyList(),
+                isContinueEnabled = true,
+                isLoading = false
             ),
             onIntent = {}
         )

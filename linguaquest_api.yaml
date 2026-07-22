@@ -63,7 +63,7 @@ info:
       while the *reward tier* resets every 5 days?).
     - Assumed there's no cap on how many target languages a user can add
       (POST /languages). Flag if there's a max.
-    - Explore Worlds preview on /home is capped at 4 items (`limit` not
+    - Explore Worlds preview on /home is capped at 2 items (`limit` not
       configurable) - full list lives behind GET /worlds ("See more").
     - All endpoints in this module require authentication (bearerAuth).
 
@@ -923,15 +923,71 @@ paths:
                       errorTime: '2026-07-16T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /auth/oauth/complete-profile:
+    post:
+      tags: [OAuth]
+      summary: Complete profile onboarding after OAuth sign-up
+      description: >
+        Called by a newly-registered OAuth user (`profileComplete: false`) to select
+        their native language, initial target language, and optionally update their username.
+        Upon success, `profileComplete` becomes `true`.
+      operationId: oauthCompleteProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteProfileRequest'
+            examples:
+              default:
+                value:
+                  nativeLanguageId: 1
+                  targetLanguageId: 2
+                  username: new_username
+      responses:
+        '200':
+          description: Profile completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/OAuthResponseData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Username is already taken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/auth/oauth/complete-profile
+                      errorCode: 409
+                      errorKey: USERNAME_ALREADY_EXISTS
+                      errorMessage: Username 'custom_user123' is already taken
+                      errorTime: '2026-07-22T02:00:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /home:
     get:
       tags: [Home]
       summary: Get the Home screen dashboard
       description: >
         Returns the composite payload needed to render the Home screen in a
-        single call: XP/coin balance, streak, the active target language card,
-        the "Continue Lesson" card, and a short preview of Explore Worlds
-        (max 4). For the full, filterable World list ("See more"), use
+        single call: XP/coin balance, streak, the active target language card, and a short preview of Explore Worlds
+        (max 2). For the full, filterable World list ("See more"), use
         `GET /worlds`.
       operationId: getHome
       security:
@@ -956,30 +1012,32 @@ paths:
                       xp: 1250
                       coins: 46
                       streakDays: 7
-                    activeLanguage:
-                      id: 1
-                      name: Spanish
-                      code: es
-                      imageUrl: /media/languages/spanish.png
-                      level: 12
-                      levelProgressPercent: 65
+                      activeLanguage:
+                        activeLanguage:
+                          id: 1
+                          name: Spanish
+                          code: es
+                          imageUrl: /media/languages/spanish.png
+                          level: 12
+                          isActive: true
+                          progressPercent: 65
                       exploreWorlds:
-                        - id: 10
-                          name: Kitchen World
-                          imageUrl: /media/worlds/kitchen.jpg
-                          difficulty: EASY
-                          status: IN_PROGRESS
-                          progressPercent: 40
-                          totalLevels: 20
-                          completedLevels: 8
-                        - id: 11
-                          name: City World
-                          imageUrl: /media/worlds/city.jpg
-                          difficulty: MEDIUM
-                          status: IN_PROGRESS
-                          progressPercent: 10
-                          totalLevels: 20
-                          completedLevels: 2
+                        totalCount: 2
+                        worlds:
+                          - id: 10
+                            name: Kitchen World
+                            imageUrl: /media/worlds/kitchen.jpg
+                            difficulty: EASY
+                            progressPercent: 40
+                            totalLevels: 20
+                            completedLevels: 8
+                          - id: 11
+                            name: City World
+                            imageUrl: /media/worlds/city.jpg
+                            difficulty: MEDIUM
+                            progressPercent: 10
+                            totalLevels: 20
+                            completedLevels: 2
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -1036,24 +1094,34 @@ paths:
                   value:
                     success: true
                     data:
-                      totalCount: 6
-                      worlds:
-                        - id: 10
-                          name: Kitchen World
-                          imageUrl: /media/worlds/kitchen.jpg
-                          difficulty: EASY
-                          status: IN_PROGRESS
-                          progressPercent: 40
-                          totalLevels: 20
-                          completedLevels: 8
-                        - id: 12
-                          name: Park World
-                          imageUrl: /media/worlds/park.jpg
-                          difficulty: EASY
-                          status: LOCKED
-                          progressPercent: 0
-                          totalLevels: 20
-                          completedLevels: 0
+                      xp: 1250
+                      coins: 46
+                      streakDays: 7
+                      activeLanguage:
+                        id: 1
+                        name: Spanish
+                        code: es
+                        imageUrl: /media/languages/spanish.png
+                        level: 12
+                        isActive: true
+                        progressPercent: 65
+                      exploreWorlds:
+                        totalCount: 2
+                        worlds:
+                          - id: 10
+                            name: Kitchen World
+                            imageUrl: /media/worlds/kitchen.jpg
+                            difficulty: EASY
+                            progressPercent: 40
+                            totalLevels: 20
+                            completedLevels: 8
+                          - id: 11
+                            name: City World
+                            imageUrl: /media/worlds/city.jpg
+                            difficulty: MEDIUM
+                            progressPercent: 10
+                            totalLevels: 20
+                            completedLevels: 2
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1129,6 +1197,238 @@ paths:
                       errorKey: WORLD_NOT_FOUND
                       errorMessage: World not found
                       errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /worlds/{worldId}/level/{levelId}/start:
+    post:
+      tags: [Worlds]
+      summary: Start a level or get a random word
+      description: >
+        Called when a user clicks on an AVAILABLE level for the first time.
+        Assigns a word they have never completed before.
+      operationId: startLevel
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: levelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 145
+      responses:
+        '200':
+          description: Level started successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StartLevelResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      targetWord: Manzana
+        '400':
+          description: World completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                worldCompleted:
+                  summary: World completed
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/level/145/start
+                      errorCode: 400
+                      errorKey: WORLD_COMPLETED
+                      errorMessage: You have learned all words in this world!
+                      errorTime: '2026-07-17T10:15:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: World or level not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/999/level/145/start
+                      errorCode: 404
+                      errorKey: NOT_FOUND
+                      errorMessage: World or level not found
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /worlds/{worldId}/level/{levelId}/change-word:
+    put:
+      tags: [Worlds]
+      summary: Change the current word for a level
+      description: >
+        Allows the user to skip their current word and get a new one for the same level.
+      operationId: changeWord
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: levelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 145
+      responses:
+        '200':
+          description: Word changed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StartLevelResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      targetWord: Platano
+        '400':
+          description: No more words available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                noMoreWords:
+                  summary: No more words
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/level/145/change-word
+                      errorCode: 400
+                      errorKey: NO_MORE_WORDS
+                      errorMessage: There are no other new words available in this world.
+                      errorTime: '2026-07-17T10:15:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Progress not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/999/level/145/change-word
+                      errorCode: 404
+                      errorKey: PROGRESS_NOT_FOUND
+                      errorMessage: You haven't started this level yet
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /worlds/{worldId}/level/{levelId}/verify:
+    post:
+      tags: [Worlds]
+      summary: Verify image for a level
+      description: >
+        Submits the user's photo for verification via AI.
+      operationId: verifyImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: levelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 145
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: The uploaded photo.
+      responses:
+        '200':
+          description: Image verified successfully (AI result)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/VerifyImageResponseData'
+              examples:
+                match:
+                  summary: AI Success - Match
+                  value:
+                    success: true
+                    data:
+                      isMatch: true
+                      xpEarned: 50
+                      coinsEarned: 10
+                      level: 4
+                      levelProgressPercentage: 85
+                noMatch:
+                  summary: AI Failure - No Match
+                  value:
+                    success: true
+                    data:
+                      isMatch: false
+                      xpEarned: 0
+                      coinsEarned: 0
+                      level: 4
+                      levelProgressPercentage: 80
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -2404,6 +2704,26 @@ components:
           description: Firebase ID token obtained after Google or Apple sign-in via the Firebase SDK on the client.
           example: eyJhbGciOiJSUzI1NiIsImtpZCI6...
 
+    CompleteProfileRequest:
+      type: object
+      required: [nativeLanguageId, targetLanguageId]
+      properties:
+        nativeLanguageId:
+          type: integer
+          format: int64
+          example: 1
+        targetLanguageId:
+          type: integer
+          format: int64
+          example: 2
+        username:
+          type: string
+          nullable: true
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          example: custom_user123
+
     OAuthResponseData:
       type: object
       properties:
@@ -2476,12 +2796,9 @@ components:
           type: integer
           example: 7
         activeLanguage:
-          $ref: '#/components/schemas/ActiveLanguageSummary'
+          $ref: '#/components/schemas/UserLanguage'
         exploreWorlds:
-          type: array
-          description: Preview of up to 4 Worlds; use GET /worlds for the full list.
-          items:
-            $ref: '#/components/schemas/WorldSummary'
+          $ref: '#/components/schemas/WorldSummary'
 
     ActiveLanguageSummary:
       type: object
@@ -2520,10 +2837,6 @@ components:
           type: string
           enum: [EASY, MEDIUM, HARD]
           example: EASY
-        status:
-          type: string
-          enum: [LOCKED, IN_PROGRESS, COMPLETED]
-          example: IN_PROGRESS
         progressPercent:
           type: integer
           minimum: 0
@@ -2565,13 +2878,39 @@ components:
           example: 2
         status:
           type: string
-          enum: [LOCKED, AVAILABLE, COMPLETED]
+          enum: [LOCKED, AVAILABLE, IN_PROGRESS, COMPLETED]
           example: AVAILABLE
         word:
           type: string
           nullable: true
           description: Null while the level is still LOCKED.
           example: Apple
+
+    StartLevelResponseData:
+      type: object
+      properties:
+        targetWord:
+          type: string
+          example: Manzana
+
+    VerifyImageResponseData:
+      type: object
+      properties:
+        isMatch:
+          type: boolean
+          example: true
+        xpEarned:
+          type: integer
+          example: 50
+        coinsEarned:
+          type: integer
+          example: 10
+        level:
+          type: integer
+          example: 4
+        levelProgressPercentage:
+          type: integer
+          example: 85
 
 
     DailyRewardStatus:

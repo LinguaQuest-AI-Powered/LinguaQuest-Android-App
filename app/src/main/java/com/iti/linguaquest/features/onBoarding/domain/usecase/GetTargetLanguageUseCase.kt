@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetTargetLanguageUseCase @Inject constructor(
     private val repository: UserPreferencesRepository
 ) {
-    operator fun invoke(): Flow<String?> {
+    operator fun invoke(): Flow<Int?> {
         return repository.targetLanguage
     }
 }

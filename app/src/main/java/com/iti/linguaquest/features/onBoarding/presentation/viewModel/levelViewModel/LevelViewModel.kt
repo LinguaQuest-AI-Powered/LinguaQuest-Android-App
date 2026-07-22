@@ -46,6 +46,8 @@ class LevelViewModel @Inject constructor(
                 }
                 if (savedLevel != null) {
                     _state.update { it.copy(selectedLevel = savedLevel) }
+                } else {
+                    saveProficiencyLevelUseCase(ProficiencyLevel.BEGINNER.name)
                 }
             }
         }

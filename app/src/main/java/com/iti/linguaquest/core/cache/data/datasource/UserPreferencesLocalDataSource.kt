@@ -10,26 +10,31 @@ import kotlinx.coroutines.flow.map
 
 // Interface
 interface UserPreferencesLocalDataSource {
-    val targetLanguage: Flow<String?>
+    val targetLanguage: Flow<Int?>
+    val nativeLanguage: Flow<Int?>
     val proficiencyLevel: Flow<String?>
     val appTheme: Flow<String>
     val soundEnabled: Flow<Boolean>
     val appLanguage: Flow<String>
     val notificationsEnabled: Flow<Boolean>
 
-    suspend fun saveTargetLanguage(language: String)
+    suspend fun saveTargetLanguage(languageId: Int)
+    suspend fun saveNativeLanguage(languageId: Int)
     suspend fun saveProficiencyLevel(level: String)
     suspend fun saveAppTheme(theme: String)
     suspend fun saveSoundEnabled(enabled: Boolean)
     suspend fun saveAppLanguage(language: String)
     suspend fun saveNotificationsEnabled(enabled: Boolean)
+    suspend fun clearOnboardingPreferences()
 }
 
 class UserPreferencesLocalDataSourceImpl @Inject constructor(
     @UserSettingsDataStore private val dataStore: DataStore<Preferences>
 ) : UserPreferencesLocalDataSource {
 
-    override val targetLanguage: Flow<String?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE] }
+    override val targetLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE] }
+
+    override val nativeLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE] }
 
     override val proficiencyLevel: Flow<String?> = dataStore.data.map { it[PreferencesKeys.PROFICIENCY_LEVEL] }
 
@@ -41,9 +46,15 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
 
     override val notificationsEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.NOTIFICATIONS_ENABLED] ?: true }
 
-    override suspend fun saveTargetLanguage(language: String) {
+    override suspend fun saveTargetLanguage(languageId: Int) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.TARGET_LANGUAGE] = language
+            preferences[PreferencesKeys.TARGET_LANGUAGE] = languageId
+        }
+    }
+
+    override suspend fun saveNativeLanguage(languageId: Int) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.NATIVE_LANGUAGE] = languageId
         }
     }
 
@@ -75,6 +86,14 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override suspend fun saveNotificationsEnabled(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    override suspend fun clearOnboardingPreferences() {
+        dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE)
+            preferences.remove(PreferencesKeys.NATIVE_LANGUAGE)
+            preferences.remove(PreferencesKeys.PROFICIENCY_LEVEL)
         }
     }
 }

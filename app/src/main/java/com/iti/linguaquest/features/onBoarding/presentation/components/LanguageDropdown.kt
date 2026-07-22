@@ -44,7 +44,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguageOption
+import coil.compose.AsyncImage
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
 
 @Composable
 fun LanguageDropdown(
@@ -123,18 +124,18 @@ fun LanguageDropdown(
                     .heightIn(max = 260.dp)
             ) {
                 options.forEach { option ->
-                    val isSelected = option.displayName == selectedText
+                    val isSelected = option.name == selectedText
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = option.displayName,
+                                text = option.name,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 color = if (isSelected) accentColor else MaterialTheme.colorScheme.onSurface
                             )
                         },
                         leadingIcon = {
-                            Image(
-                                painter = painterResource(option.flagRes),
+                            AsyncImage(
+                                model = option.imageUrl,
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp).clip(CircleShape)
                             )

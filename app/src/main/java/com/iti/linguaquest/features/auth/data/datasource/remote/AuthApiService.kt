@@ -26,6 +26,11 @@ interface AuthApiService {
         @Body body: OAuthGoogleRequestDto
     ): SuccessResponseDto<OAuthResponseDataDto>
 
+    @POST("auth/oauth/complete-profile")
+    suspend fun completeOAuthProfile(
+        @Body body: CompleteProfileRequestDto
+    ): SuccessResponseDto<OAuthResponseDataDto>
+
     @NoAuth
     @POST("auth/otp/send")
     suspend fun sendOtp(

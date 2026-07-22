@@ -4,10 +4,10 @@ import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepositor
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class GetAppLanguageUseCase @Inject constructor(
+class GetNativeLanguageUseCase @Inject constructor(
     private val repository: UserPreferencesRepository
 ) {
-    operator fun invoke(): Flow<String> {
-        return repository.appLanguage
+    operator fun invoke(): Flow<Int?> {
+        return repository.nativeLanguage
     }
 }

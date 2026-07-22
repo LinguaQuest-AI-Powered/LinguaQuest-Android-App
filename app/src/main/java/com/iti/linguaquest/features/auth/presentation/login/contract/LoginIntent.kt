@@ -7,4 +7,5 @@ sealed interface LoginIntent {
     data object GoogleSignInFailed : LoginIntent
     data object ForgetPasswordClicked : LoginIntent
     data object SignUpClicked : LoginIntent
+    data object OAuthLanguageSelectionCompleted : LoginIntent
 }

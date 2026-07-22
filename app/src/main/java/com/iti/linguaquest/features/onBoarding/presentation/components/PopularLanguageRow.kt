@@ -19,7 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguageOption
+import coil.compose.AsyncImage
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
 
 @Composable
 fun PopularLanguageRow(language: LanguageOption, onClick: () -> Unit) {
@@ -31,12 +32,12 @@ fun PopularLanguageRow(language: LanguageOption, onClick: () -> Unit) {
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(language.flagRes),
+        AsyncImage(
+            model = language.imageUrl,
             contentDescription = null,
             modifier = Modifier.size(28.dp).clip(CircleShape)
         )
         Spacer(Modifier.width(12.dp))
-        Text(text = language.displayName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        Text(text = language.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
     }
 }
