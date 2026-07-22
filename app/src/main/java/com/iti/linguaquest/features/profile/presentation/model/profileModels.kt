@@ -19,7 +19,12 @@ data class ProfileState(
     val nearbyLeaderboard: List<LeaderboardEntry> = emptyList()
 )
 
-data class Achievement(val id: String, val title: String, val iconRes: Int, val progressLabel: String)
+data class Achievement(
+    val id: String,
+    val title: String,
+    val iconRes: Int,
+    val progressLabel: String
+)
 
 data class LeaderboardEntry(
     val rank: Int,

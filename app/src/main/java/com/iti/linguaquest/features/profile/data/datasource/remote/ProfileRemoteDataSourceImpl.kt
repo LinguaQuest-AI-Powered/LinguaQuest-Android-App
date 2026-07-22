@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.profile.datasource.remote
+package com.iti.linguaquest.features.profile.data.datasource.remote
 
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError

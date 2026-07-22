@@ -293,6 +293,9 @@
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="coins_claimed">coins claimed!</string>
 
+    <string name="tap_to_zoom">Pinch to zoom · Double-tap</string>
+
+
 
 
     <!-- Game Result Feature -->
@@ -322,4 +325,8 @@
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel">Cancel</string>
+    <string name="choose_a_source">Choose a source</string>
+    <!-- Snackbars messages -->
+    <string name="congrates">Congratulations</string>
+
 </resources>

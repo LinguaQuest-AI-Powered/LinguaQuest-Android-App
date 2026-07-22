@@ -75,6 +75,7 @@ fun ProfileScreen(
         } else {
             ProfileContent(
                 state = uiState.profile,
+                isAvatarUploading = uiState.isAvatarUploading,
                 onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
                 onEditAvatarClick = { showAvatarSheet = true },
                 onChangeLanguageClick = { viewModel.onIntent(ProfileIntent.ChangeLanguageClicked) },
@@ -107,6 +108,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileContent(
     state: ProfileState,
+    isAvatarUploading: Boolean = false,
     onSettingsClick: () -> Unit,
     onEditAvatarClick: () -> Unit,
     onChangeLanguageClick: () -> Unit,
@@ -119,17 +121,22 @@ fun ProfileContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        item { ProfileHeader(state, onEditAvatarClick) }
+        item { ProfileHeader(state, onEditAvatarClick, isAvatarUploading) }
         item { StatsGrid(state) }
         item { LearningProgressCard(state, onChangeLanguageClick) }
         item { SettingsRow(onClick = onSettingsClick) }
-        item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }
-        item {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.achievements, key = { it.id }) { AchievementCard(it) }
+        if (state.achievements.isNotEmpty()){
+            item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }
+            item {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(state.achievements, key = { it.id }) { AchievementCard(it) }
+                }
             }
         }
-        item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
-        items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
-    }
+        if (state.nearbyLeaderboard.isNotEmpty()){
+            item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
+            items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
+        }
+        }
+
 }

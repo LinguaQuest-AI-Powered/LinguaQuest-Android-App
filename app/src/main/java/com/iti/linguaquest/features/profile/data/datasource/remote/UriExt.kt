@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.profile.datasource.remote
+package com.iti.linguaquest.features.profile.data.datasource.remote
 
 
 import android.content.Context
@@ -11,9 +11,14 @@ import java.io.IOException
 fun Uri.toMultipartBodyPart(context: Context, partName: String): MultipartBody.Part {
     val contentResolver = context.contentResolver
     val mimeType = contentResolver.getType(this) ?: "image/jpeg"
+    val extension = when (mimeType) {
+        "image/png" -> "png"
+        "image/webp" -> "webp"
+        else -> "jpg"
+    }
     val bytes = contentResolver.openInputStream(this)?.use { it.readBytes() }
         ?: throw IOException("Unable to read image data from $this")
     val requestBody = bytes.toRequestBody(mimeType.toMediaTypeOrNull())
-    val fileName = "avatar_${System.currentTimeMillis()}.jpg"
+    val fileName = "avatar_${System.currentTimeMillis()}.$extension"
     return MultipartBody.Part.createFormData(partName, fileName, requestBody)
 }

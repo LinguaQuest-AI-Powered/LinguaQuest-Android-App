@@ -34,16 +34,23 @@ import com.iti.linguaquest.features.home.presentation.view.components.ProgressTr
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 
 @Composable
- fun LearningProgressCard(state: ProfileState, onChangeLanguageClick: () -> Unit) {
+fun LearningProgressCard(state: ProfileState, onChangeLanguageClick: () -> Unit) {
+    val cardShape = RoundedCornerShape(20.dp)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .background(
+                color = LinguaQuestTheme.colors.ProfileCardBorderColor,
+                shape = cardShape
+            )
+            .padding(bottom = 5.dp)
+            .clip(cardShape)
             .background(LinguaQuestTheme.colors.ProfileCardColor)
             .border(
                 width = 1.dp,
                 color = LinguaQuestTheme.colors.ProfileCardBorderColor,
-                shape = RoundedCornerShape(20.dp)
+                shape = cardShape
             )
             .padding(16.dp)
     ) {

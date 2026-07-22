@@ -153,6 +153,7 @@
     <string name="easy">سهل</string>
     <string name="hard">صعب</string>
 
+    <string name="tap_to_zoom">قرب للتكبير .اضغط للتكبير</string>
     <!-- Review Screen -->
     <string name="review_screen_title">مراجعة الذكاء الاصطناعي</string>
     <string name="review_back_content_description">رجوع</string>
@@ -310,4 +311,7 @@
     <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
     <string name="save_changes">حفظ التغييرات</string>
     <string name="cancel">إلغاء</string>
+    <string name="choose_a_source">اختر مصدر</string>
+    <!-- Snackbars messages -->
+    <string name="congrates">تهانينا</string>
 </resources>

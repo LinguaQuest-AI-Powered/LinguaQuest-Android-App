@@ -28,9 +28,9 @@ private fun localAchievementIconFor(name: String): Int = when (name) {
 private fun placeholderTitleFor(level: Int): String = "Level $level Explorer"
 
 fun ProfileSummary.toProfileState(): ProfileState = ProfileState(
-    userName = name,
+    userName = username,
     level = level,
-    avatarUrl = localAvatarPlaceholder(),
+    avatarUrl = photoUrl.ifBlank { null },
     coins = stats.coins,
     totalXp = stats.totalXp,
     streakDays = stats.streakDays,

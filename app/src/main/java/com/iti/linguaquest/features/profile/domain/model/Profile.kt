@@ -4,7 +4,6 @@ package com.iti.linguaquest.features.profile.domain.model
 data class ProfileSummary(
     val id: Int,
     val username: String,
-    val name: String,
     val photoUrl: String,
     val level: Int,
     val stats: ProfileStats,
