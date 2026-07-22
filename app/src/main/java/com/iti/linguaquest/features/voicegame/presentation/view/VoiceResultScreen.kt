@@ -1,34 +1,33 @@
 package com.iti.linguaquest.features.voicegame.presentation.view
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
-import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
-import com.iti.linguaquest.core.sharedComponents.ButtonVariant
-import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
-import com.iti.linguaquest.features.voicegame.presentation.view.components.ScoreCircle
-import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
-import com.iti.linguaquest.features.voicegame.presentation.view.components.WordChipsRow
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultActionButtons
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScoreSection
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.concurrent.TimeUnit
 
-
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VoiceResultScreen(
     result: VoiceResultUi,
@@ -37,81 +36,74 @@ fun VoiceResultScreen(
     onHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
+    val soundPlayer = LocalSoundPlayer.current
+
+    LaunchedEffect(result.isPassed) {
+        if (result.isPassed) {
+            soundPlayer.play(AppSound.SUCCESS)
+        } else {
+            soundPlayer.play(AppSound.FAIL)
+        }
+    }
+
+    val confettiColors = listOf(
+        LinguaQuestTheme.colors.OrangeActive.toArgb(),
+        LinguaQuestTheme.colors.splashTopLeftColor.toArgb(),
+        LinguaQuestTheme.colors.whiteColor.toArgb()
+    )
+
+    val party = remember {
+        Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 360,
+            colors = confettiColors,
+            position = Position.Relative(0.5, 0.25),
+            emitter = Emitter(duration = 200, TimeUnit.MILLISECONDS).max(200)
+        )
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        if (result.isPassed) {
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = listOf(party)
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Spacer(Modifier.height(32.dp))
 
-            SpeechBubble(result.advice)
-            Spacer(Modifier.height(8.dp))
+            VoiceResultHeader(
+                isPassed = result.isPassed,
+                advice = result.advice
+            )
 
-            AppMascotGradientBox(
-                imageRes = if (result.isPassed) R.drawable.lingo_success else R.drawable.lingo_error,
-                mascotOverlapHeight = 80.dp,
-                mascotSize = 190.dp
-            ) {
-                Text(
-                    if (result.isPassed) stringResource(R.string.voice_result_great_job) else stringResource(
-                        R.string.voice_result_not_quite
-                    ),
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (result.isPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary
+            Spacer(Modifier.height(16.dp))
 
-                )
-                Spacer(Modifier.height(16.dp))
+            VoiceResultScoreSection(
+                rating = result.rating,
+                isPassed = result.isPassed,
+                correctWords = result.correctWords,
+                wrongWords = result.wrongWords,
+                coinsAwarded = result.coinsAwarded
+            )
 
-                ScoreCircle(result.rating, result.isPassed)
+            Spacer(Modifier.height(24.dp))
 
-                Spacer(Modifier.height(20.dp))
-                Text(
-                    stringResource(R.string.voice_result_sentence_review),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = LinguaQuestTheme.colors.blackColor
-                )
-                Spacer(Modifier.height(10.dp))
-                WordChipsRow(result.correctWords, result.wrongWords)
-
-                if (result.isPassed && result.coinsAwarded > 0) {
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        "+${result.coinsAwarded} ${stringResource(R.string.voice_result_coins_earned)}",
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Spacer(Modifier.height(24.dp))
-
-                if (result.isPassed) {
-                    AppButton(
-                        text = stringResource(R.string.voice_result_continue),
-                        onClick = onContinue,
-                        variant = ButtonVariant.PRIMARY
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    AppOutlinedButton(
-                        text = stringResource(R.string.voice_result_return_home),
-                        onClick = onHome,
-                        color = AppColors.DialogSecondaryButtonOutline
-                    )
-                } else {
-                    AppButton(
-                        text = stringResource(R.string.voice_result_retry),
-                        icon = rememberVectorPainter(image = Icons.Default.ArrowBack),
-                        onClick = onRetry,
-                        variant = ButtonVariant.PRIMARY
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    AppOutlinedButton(
-                        text = stringResource(R.string.voice_result_return_home),
-                        onClick = onHome,
-                        color = AppColors.DialogSecondaryButtonOutline
-                    )
-                }
-            }
+            VoiceResultActionButtons(
+                isPassed = result.isPassed,
+                onContinue = onContinue,
+                onRetry = onRetry,
+                onHome = onHome
+            )
 
             Spacer(Modifier.height(24.dp))
         }

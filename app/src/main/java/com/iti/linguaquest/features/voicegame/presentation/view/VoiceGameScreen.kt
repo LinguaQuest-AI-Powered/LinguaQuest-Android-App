@@ -4,34 +4,28 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.*
-import com.iti.linguaquest.core.theme.AppColors
-import com.iti.linguaquest.core.theme.LinguaQuestColors
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameEffect
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.RecordingConfirmationDialog
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceGameTopBar
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.EvaluatingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.IdlePhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.RecordingPhaseContent
@@ -76,35 +70,10 @@ fun VoiceGameScreen(
     }
 
     Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
-        Box {
-            LinguaQuestScreenTopBar(
-                title = stringResource(id = R.string.voice_game_title),
-                onBackClicked = onNavigateBack,
-                isTitleCentered = true
-            )
-            Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(LocalLinguaQuestColors.current.whiteColor)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.MonetizationOn,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    "$coins",
-                    fontWeight = FontWeight.Bold,
-                    color = LinguaQuestTheme.colors.iconsColor
-                )
-            }
-        }
+        VoiceGameTopBar(
+            coins = coins,
+            onNavigateBack = onNavigateBack
+        )
 
         Column(
             modifier = Modifier

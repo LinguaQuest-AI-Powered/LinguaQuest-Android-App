@@ -71,10 +71,6 @@ class VoiceEvaluationService @Inject constructor() {
 
             val response = generativeModel.generateContent(inputContent)
             var rawText = response.text ?: throw Exception("Empty or invalid response from model")
-
-            Log.d("VoiceEvaluation", "RAW GEMINI RESPONSE:\n$rawText")
-
-            // Sanitize markdown if the model ignored our instructions
             rawText = rawText.trim()
                 .removePrefix("```json")
                 .removePrefix("```")
@@ -92,7 +88,6 @@ class VoiceEvaluationService @Inject constructor() {
                 throw e
             }
 
-            // Post-process to ensure clean words and that every target word is accounted for
             val cleanTargetWords = targetSentence.split("\\s+".toRegex())
                 .map { it.replace("[^a-zA-Z0-9'-]".toRegex(), "") }
                 .filter { it.isNotBlank() }
@@ -103,12 +98,10 @@ class VoiceEvaluationService @Inject constructor() {
 
             val correctLowerSet = cleanCorrect.map { it.lowercase() }.toSet()
 
-            // Filter wrong words to only include target sentence words that were not spoken correctly
             val finalWrongWords = cleanTargetWords.filter { targetWord ->
                 !correctLowerSet.contains(targetWord.lowercase())
             }
 
-            // Final clean correct words matching original casing from target sentence if possible
             val finalCorrectWords = cleanTargetWords.filter { targetWord ->
                 correctLowerSet.contains(targetWord.lowercase())
             }
