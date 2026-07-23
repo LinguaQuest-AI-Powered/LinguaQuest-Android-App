@@ -40,13 +40,6 @@ fun RoleplayScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RoleplayEffect.NavigateToHome -> onNavigateHome()
-
-                is RoleplayEffect.PlayAiAudio -> {
-                    // TODO: Replace with real audio player when implemented.
-                    //  For now, simulate playback duration then signal completion.
-                    delay(2000L)
-                    viewModel.onIntent(RoleplayIntent.AiAudioFinished)
-                }
             }
         }
     }

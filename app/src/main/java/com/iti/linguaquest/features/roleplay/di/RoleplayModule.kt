@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.roleplay.di
 
-import com.iti.linguaquest.features.roleplay.data.repository.FakeRoleplayRepository
+import com.iti.linguaquest.features.roleplay.data.repository.RoleplayRepositoryImpl
 import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepository
 import dagger.Binds
 import dagger.Module
@@ -15,6 +15,6 @@ abstract class RoleplayModule {
     @Binds
     @Singleton
     abstract fun bindRoleplayRepository(
-        impl: FakeRoleplayRepository
+        impl: RoleplayRepositoryImpl
     ): RoleplayRepository
 }

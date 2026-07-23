@@ -2,7 +2,8 @@ package com.iti.linguaquest.features.roleplay.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
+import com.iti.linguaquest.features.roleplay.data.audio.AudioPlayer
+import com.iti.linguaquest.features.roleplay.data.audio.AudioRecorder
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -35,7 +36,8 @@ class RoleplayViewModel @Inject constructor(
     private val initializeRoleplayUseCase: InitializeRoleplayUseCase,
     private val submitUserAudioUseCase: SubmitUserAudioUseCase,
     private val evaluateRoleplayUseCase: EvaluateRoleplayUseCase,
-    private val recordAudioUseCase: RecordAudioUseCase,
+    private val audioRecorder: AudioRecorder,
+    private val audioPlayer: AudioPlayer,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
@@ -81,7 +83,7 @@ class RoleplayViewModel @Inject constructor(
     }
 
     private fun startRecording() {
-        recordAudioUseCase.start()
+        audioRecorder.start()
         _state.update { it.copy(phase = RoleplayPhase.RECORDING, recordingElapsedSeconds = 0) }
         timerJob = viewModelScope.launch {
             while (true) {
@@ -93,11 +95,11 @@ class RoleplayViewModel @Inject constructor(
 
     private fun stopRecordingAndSubmit() {
         timerJob?.cancel()
-        val pcmData = recordAudioUseCase.stopAndGetPcmData()
         _state.update { it.copy(phase = RoleplayPhase.PROCESSING, isLoading = true) }
 
         viewModelScope.launch {
-            when (val result = submitUserAudioUseCase(pcmData)) {
+            val audioBytes = audioRecorder.stopAndGetAudioBytes()
+            when (val result = submitUserAudioUseCase(audioBytes)) {
                 is LinguaQuestResult.Success -> applyTurnResponse(result.data)
                 is LinguaQuestResult.Failure -> handleError("Failed to process your response", RoleplayPhase.IDLE)
             }
@@ -154,7 +156,16 @@ class RoleplayViewModel @Inject constructor(
                 isObjectiveComplete = response.isObjectiveComplete
             )
         }
-        sendEffect(RoleplayEffect.PlayAiAudio(response.audioBytes))
+        
+        viewModelScope.launch {
+            audioPlayer.playAudio(
+                bytes = response.audioBytes,
+                textToSpeak = response.aiText,
+                targetLanguage = _state.value.targetLanguage
+            ) {
+                onIntent(RoleplayIntent.AiAudioFinished)
+            }
+        }
     }
 
     private fun handleError(message: String, fallbackPhase: RoleplayPhase) {
@@ -176,6 +187,6 @@ class RoleplayViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
-        recordAudioUseCase.discard()
+        viewModelScope.launch { audioRecorder.stopAndGetAudioBytes() }
     }
 }
