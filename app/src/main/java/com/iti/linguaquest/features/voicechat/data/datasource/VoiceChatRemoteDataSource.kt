@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.voicechat.data.datasource
 
-import android.util.Log
 import com.google.firebase.ai.LiveGenerativeModel
 import com.google.firebase.ai.type.InlineData
 import com.google.firebase.ai.type.InlineDataPart
@@ -101,11 +100,9 @@ class VoiceChatRemoteDataSourceImpl @Inject constructor(
                 receiveScope = null
                 session?.close()
                 session = null
-                Log.d(TAG, "Disconnected from Live API session")
                 LinguaQuestResult.Success(Unit)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error disconnecting from Live API", e)
             receiveScope = null
             session = null
             LinguaQuestResult.Failure(
@@ -154,7 +151,6 @@ class VoiceChatRemoteDataSourceImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Receive loop ended", e)
             _chatStream.emit(
                 VoiceChatResponse(
                     text = null,

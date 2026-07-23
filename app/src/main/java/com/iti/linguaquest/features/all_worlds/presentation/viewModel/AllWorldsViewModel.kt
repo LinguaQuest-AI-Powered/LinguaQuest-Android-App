@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.all_worlds.presentation.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
@@ -53,7 +52,6 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
                     }
                 }
                 is LinguaQuestResult.Failure -> {
-                    Log.e("AllWorldsViewModel", "Error loading worlds: ${result.error}")
                     _state.update {
                         it.copy(isLoading = false)
                     }

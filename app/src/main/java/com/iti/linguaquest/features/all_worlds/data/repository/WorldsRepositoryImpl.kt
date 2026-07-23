@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.all_worlds.data.repository
 
-import android.util.Log
 import com.iti.linguaquest.core.network.SuccessResponseDto
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
@@ -40,10 +39,8 @@ class WorldsRepositoryImpl @Inject constructor(
                     val totalCount = successResults.sumOf { it.data.data.totalCount ?: 0 }
                     LinguaQuestResult.Success(WorldsData(totalCount = totalCount, worlds = allWorlds))
                 } else {
-                    val failure = results.filterIsInstance<LinguaQuestResult.Failure<LinguaQuestDataError>>().firstOrNull()
+                    results.filterIsInstance<LinguaQuestResult.Failure<LinguaQuestDataError>>().firstOrNull()
                         ?: LinguaQuestResult.Failure(LinguaQuestDataError.Remote.UNKNOWN)
-                    Log.e("WorldsRepository", "Error fetching all worlds: ${failure.error}")
-                    failure
                 }
             }
         } else {
@@ -51,10 +48,7 @@ class WorldsRepositoryImpl @Inject constructor(
             val result = safeApiCall { api.getWorlds(difficultyString) }
             when (result) {
                 is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data.toDomain())
-                is LinguaQuestResult.Failure -> {
-                    Log.e("WorldsRepository", "Error fetching worlds API for $difficultyString: ${result.error}")
-                    result
-                }
+                is LinguaQuestResult.Failure -> result
             }
         }
     }

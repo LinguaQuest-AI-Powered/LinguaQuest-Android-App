@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
@@ -86,7 +85,6 @@ class PronunciationSentenceGeneratorService @Inject constructor(
                             try {
                                 results.add(gson.fromJson(elem, GeneratedSentence::class.java))
                             } catch (e: Exception) {
-                                Log.e(TAG, "Failed parsing JSON array item", e)
                             }
                         }
                     } else if (obj.has("sentence")) {
@@ -98,7 +96,6 @@ class PronunciationSentenceGeneratorService @Inject constructor(
                         try {
                             results.add(gson.fromJson(elem, GeneratedSentence::class.java))
                         } catch (e: Exception) {
-                            Log.e(TAG, "Failed parsing array item", e)
                         }
                     }
                 }

@@ -90,7 +90,7 @@ fun CameraScreen(
             imageUri = cameraState.capturedUri!!,
             targetWord = sharedState.targetWord.asString(),
             onRetryClicked = { viewModel.onIntent(CameraIntent.RetryCapture) },
-            onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto) }
+            onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto(sharedState.worldId, sharedState.levelId)) }
         )
     }
 }

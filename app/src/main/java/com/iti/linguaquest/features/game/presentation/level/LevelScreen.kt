@@ -75,6 +75,7 @@ fun LevelScreen(
             when (effect) {
                 LevelEffect.NavigateBack -> onBack()
                 LevelEffect.LaunchCamera -> {
+                    sharedViewModel.setWorldAndLevelId(worldId, levelNumber)
                     sharedViewModel.setTargetWord(state.wordToGuess)
                     onStartCamera()
                 }
@@ -82,7 +83,6 @@ fun LevelScreen(
                     speechManager.speak(effect.word, effect.languageCode)
                 }
                 LevelEffect.SkipLevel -> {
-                    onBack()
                 }
             }
         }
