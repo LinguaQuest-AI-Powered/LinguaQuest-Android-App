@@ -352,4 +352,16 @@
     <string name="coins_description">عملات</string>
     <string name="confirm_button">تأكيد</string>
     <string name="cancel_button">إلغاء</string>
+
+    <!-- Level Strings -->
+    <string name="level_beginner">مبتدئ</string>
+    <string name="level_beginner_description">ابدأ من الصفر مع الكلمات والجمل الأساسية.</string>
+    <string name="level_intermediate">متوسط</string>
+    <string name="level_intermediate_description">وسّع مفرداتك وأتقن المحادثات اليومية.</string>
+    <string name="level_advanced">متقدم</string>
+    <string name="level_advanced_description">حقق الطلاقة مع القواعد المعقدة والتحدث السريع.</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
+    <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
 </resources>

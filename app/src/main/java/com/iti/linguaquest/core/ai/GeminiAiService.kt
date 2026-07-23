@@ -11,10 +11,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Single shared entry point for all Gemini calls in the app, built on the
- * official Firebase AI SDK.
- */
 @Singleton
 class GeminiAiService @Inject constructor() {
 
@@ -40,10 +36,6 @@ class GeminiAiService @Inject constructor() {
             )
     }
 
-    /**
-     * Sends a text-only prompt and returns the raw JSON text response, or null on failure.
-     * Caller is responsible for its own fallback behavior (e.g. canned content) on null.
-     */
     suspend fun generateJson(prompt: String): String? = withContext(Dispatchers.IO) {
         try {
             val response = jsonTextModel.generateContent(content { text(prompt) })
@@ -55,10 +47,6 @@ class GeminiAiService @Inject constructor() {
         }
     }
 
-    /**
-     * Sends a text prompt plus inline audio bytes and returns the raw JSON text response,
-     * or null on failure.
-     */
     suspend fun generateJsonFromAudio(
         prompt: String,
         audioBytes: ByteArray,
