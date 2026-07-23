@@ -63,7 +63,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToDetails: (Int) -> Unit,
+    onNavigateToVoiceGame: (Int, String) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
@@ -101,7 +101,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
+                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame(effect.lessonId, effect.sentence)
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()

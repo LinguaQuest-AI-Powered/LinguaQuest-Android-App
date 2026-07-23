@@ -13,5 +13,8 @@ class LinguaQuestApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )
     }
 }

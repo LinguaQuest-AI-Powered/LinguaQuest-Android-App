@@ -26,5 +26,6 @@ data class LessonPreview(
     val word: UiText,
     val partOfSpeech: UiText,
     val translation: UiText,
-    val iconSource: Any?
+    val iconSource: Any?,
+    val sentence: String
 )

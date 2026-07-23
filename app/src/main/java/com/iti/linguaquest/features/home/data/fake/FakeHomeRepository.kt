@@ -12,12 +12,13 @@ import com.iti.linguaquest.features.home.domain.repository.HomeRepository
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class FakeHomeRepository @Inject constructor() : HomeRepository {
 
     override suspend fun getHomeSummary(): LinguaQuestResult<HomeSummary, LinguaQuestDataError> {
-        delay(600)
+        delay(600.milliseconds)
 
         return LinguaQuestResult.Success(
             HomeSummary(
@@ -31,7 +32,8 @@ class FakeHomeRepository @Inject constructor() : HomeRepository {
                     levelId = 145,
                     word = "Apple",
                     translation = "La Pomme",
-                    imageUrl = "/media/words/apple.jpg"
+                    imageUrl = "/media/words/apple.jpg",
+                    sentence = "The apple is red"
                 ),
                 exploreWorlds = listOf(
                     World(10, "Kitchen World", "/media/worlds/kitchen.jpg", WorldDifficulty.EASY, WorldStatus.IN_PROGRESS, 40, 20, 8),

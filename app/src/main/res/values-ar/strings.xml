@@ -317,9 +317,51 @@
     <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
     <string name="save_changes">حفظ التغييرات</string>
     <string name="cancel">إلغاء</string>
-         <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
-        <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
-        <string name="coins_description">عملات</string>
-        <string name="confirm_button">تأكيد</string>
-        <string name="cancel_button">إلغاء</string>
- </resources>
+
+    <!-- Game Voice Feature -->
+    <string name="voice_game_title">تدريب النطق</string>
+    <string name="voice_evaluating">جارٍ تقييم النطق…</string>
+    <string name="listening_to_your_pronunciation">جارٍ الاستماع إلى نطقك بعناية.</string>
+    <string name="voice_idle_yo_can_do_it">يمكنك فعلها!</string>
+    <string name="voice_idle_pronounce_this">انطق هذه العبارة:</string>
+    <string name="voice_idle_listen">استمع</string>
+    <string name="voice_idle_tap_hold_record">اضغط مطولًا للتسجيل</string>
+    <string name="voice_idle_skip">تخطي</string>
+    <string name="voice_recording_paused">متوقف مؤقتًا…</string>
+    <string name="voice_recording_listening">جارٍ الاستماع…</string>
+    <string name="voice_recording_cancel">إلغاء</string>
+    <string name="voice_recording_done">تم</string>
+    <string name="voice_result_great_job">أحسنت!</string>
+    <string name="voice_result_not_quite">ليس بعد!</string>
+    <string name="voice_result_sentence_review">مراجعة الجملة</string>
+    <string name="voice_result_coins_earned">عملات مكتسبة</string>
+    <string name="voice_result_continue">متابعة</string>
+    <string name="voice_result_return_home">العودة للرئيسية</string>
+    <string name="voice_result_retry">إعادة المحاولة</string>
+    <string name="voice_result_score">النتيجة</string>
+    <string name="dialog_voice_confirmation_review_recording">مراجعه التسجيل</string>
+    <string name="dialog_voice_confirmation_sub_title">استمع مجددا الي التسجيل قبل المراجعة</string>
+    <string name="dialog_voice_confirmation_discard">الغاء</string>
+    <string name="dialog_voice_confirmation_process">مراجعة</string>
+
+    <string name="map_lets_learn">هيا نتعلم!</string>
+    <string name="cd_treasure">كنز</string>
+    <string name="cd_star">نجمة</string>
+    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
+    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
+    <string name="coins_description">عملات</string>
+    <string name="confirm_button">تأكيد</string>
+    <string name="cancel_button">إلغاء</string>
+
+    <!-- Level Strings -->
+    <string name="level_beginner">مبتدئ</string>
+    <string name="level_beginner_description">ابدأ من الصفر مع الكلمات والجمل الأساسية.</string>
+    <string name="level_intermediate">متوسط</string>
+    <string name="level_intermediate_description">وسّع مفرداتك وأتقن المحادثات اليومية.</string>
+    <string name="level_advanced">متقدم</string>
+    <string name="level_advanced_description">حقق الطلاقة مع القواعد المعقدة والتحدث السريع.</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
+    <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
+</resources>

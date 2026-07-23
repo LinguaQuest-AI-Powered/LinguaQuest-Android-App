@@ -102,8 +102,8 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
-                            onNavigateToDetails = { id ->
-                                rootBackStack.navigateSingleTop(RootScreen.Details(id))
+                            onNavigateToVoiceGame = { lessonId, sentence ->
+                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame(lessonId, sentence))
                             },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
