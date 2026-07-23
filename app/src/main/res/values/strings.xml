@@ -105,12 +105,6 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
-    <string name="camera_permission_required">Camera permission is required.</string>
-    <string name="camera_permission_title">Is Your Camera Ready?</string>
-    <string name="camera_permission_blocked_desc">We need camera access to play, but it looks like it\'s blocked. Please enable it in your device settings.</string>
-    <string name="camera_permission_desc">LinguaQuest needs your camera to find objects and earn points!</string>
-    <string name="open_settings">Open Settings</string>
-    <string name="grant_permission">Grant Permission</string>
     <string name="go_back">Go Back</string>
     <string name="captured_preview">Captured Preview</string>
     <string name="find_label">Find:</string>
@@ -130,25 +124,25 @@
     <string name="empty_gallery_desc">You haven\'t captured any words yet.\nTap the button above to add your first capture.</string>
     <string name="add_new">Add New</string>
     <string name="general_error">An error occurred. Please try again.</string>
-    <string name="progress">Progress</string>
-    <string name="see_more">See more</string>
-    <string name="explore_worlds">Explore Worlds</string>
-    <string name="currently_language">CURRENTLY LEARNING</string>
-    <string name="level">Level</string>
-    <string name="days">Days</string>
-    <string name="coins_label">COINS</string>
-    <string name="total_xp_label">TOTAL XP</string>
-    <string name="streak_label">STREAK</string>
-    <string name="worlds_label">WORLDS</string>
-    <string name="continue_lesson">CONTINUE LESSON</string>
-    <string name="leaderboard_title">Leaderboard</string>
-    <string name="achievements_title">Achievements</string>
-    <string name="learning_label">Learning</string>
-    <string name="change_label">Change</string>
-    <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
-    <string name="settings_label">Settings</string>
-    <string name="view_all_label">VIEW ALL</string>
-    <string name="you_label">You</string>
+     <string name="progress">Progress</string>
+     <string name="see_more">See more</string>
+     <string name="explore_worlds">Explore Worlds</string>
+     <string name="currently_language">CURRENTLY LEARNING</string>
+     <string name="level">Level</string>
+     <string name="days">Days</string>
+     <string name="coins_label">COINS</string>
+     <string name="total_xp_label">TOTAL XP</string>
+     <string name="streak_label">STREAK</string>
+     <string name="worlds_label">WORLDS</string>
+     <string name="continue_lesson">CONTINUE LESSON</string>
+     <string name="leaderboard_title">Leaderboard</string>
+     <string name="achievements_title">Achievements</string>
+     <string name="learning_label">Learning</string>
+     <string name="change_label">Change</string>
+     <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
+     <string name="settings_label">Settings</string>
+     <string name="view_all_label">VIEW ALL</string>
+     <string name="you_label">You</string>
 
     // WorldDifficulty
     <string name="medium">MEDIUM</string>
@@ -315,35 +309,6 @@
     <string name="game_result_hint_button">Make Sure it\'s well lit!</string>
     <string name="game_result_retry_camera">Retry Camera</string>
     <string name="game_result_change_word">Change Word</string>
-
-
-    <!-- Game Voice Feature -->
-    <string name="voice_game_title">Voice Practice</string>
-    <string name="voice_evaluating">Evaluating Voice…</string>
-    <string name="listening_to_your_pronunciation">Listening closely to your pronunciation.</string>
-    <string name="voice_idle_yo_can_do_it">You can do it!</string>
-    <string name="voice_idle_pronounce_this">PRONOUNCE THIS:</string>
-    <string name="voice_idle_listen">Listen</string>
-    <string name="voice_idle_tap_hold_record">Tap and hold to record</string>
-    <string name="voice_idle_skip">Skip</string>
-    <string name="voice_recording_paused">Paused…</string>
-    <string name="voice_recording_listening">Listening…</string>
-    <string name="voice_recording_cancel">Cancel</string>
-    <string name="voice_recording_done">Done</string>
-    <string name="voice_result_great_job">Great Job!</string>
-    <string name="voice_result_not_quite">Not Quite!</string>
-    <string name="voice_result_sentence_review">SENTENCE REVIEW</string>
-    <string name="voice_result_coins_earned">coins earned</string>
-    <string name="voice_result_continue">Continue</string>
-    <string name="voice_result_return_home">Return Home</string>
-    <string name="voice_result_retry">Retry</string>
-    <string name="voice_result_score">SCORE</string>
-    <string name="dialog_voice_confirmation_review_recording">Review Recording</string>
-    <string name="dialog_voice_confirmation_sub_title">Listen back to your pronunciation before submitting.</string>
-    <string name="dialog_voice_confirmation_discard">Discard</string>
-    <string name="dialog_voice_confirmation_process">Process</string>
-
-
     <string name="edit_profile_title">Edit Profile</string>
     <string name="change_photo">Change Photo</string>
     <string name="display_name_label">Display Name</string>
@@ -351,5 +316,4 @@
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel">Cancel</string>
-
 </resources>

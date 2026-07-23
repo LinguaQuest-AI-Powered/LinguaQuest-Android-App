@@ -61,6 +61,12 @@
     <string name="login_error_token_not_valid">انتهت صلاحية الجلسة.</string>
     <string name="login_error_operation_not_allowed">العملية غير مسموح بها.</string>
     <string name="login_error_generic">حدث خطأ ما.</string>
+    <string name="login_error_email_already_in_use">البريد الإلكتروني مستخدم بالفعل.</string>
+    <string name="login_error_email_not_found">البريد الإلكتروني غير موجود.</string>
+    <string name="login_error_username_already_exists">اسم المستخدم موجود بالفعل.</string>
+    <string name="login_error_invalid_reset_token">رمز إعادة التعيين غير صالح.</string>
+    <string name="login_error_reset_token_expired">انتهت صلاحية رمز إعادة التعيين.</string>
+    <string name="login_error_validation_error">حدث خطأ في التحقق.</string>
     <string name="login_error_password_required">كلمة المرور مطلوبة.</string>
     <string name="login_error_email_required">البريد الإلكتروني مطلوب.</string>
     <string name="signup_error_name_required">اسم المستخدم مطلوب.</string>

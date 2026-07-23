@@ -4,12 +4,12 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
 fun NavBackStack<NavKey>.popToLogin() {
-    if (contains(RootScreen.Login)) {
-        while (lastOrNull() != RootScreen.Login) {
+    if (any { it is RootScreen.Login }) {
+        while (lastOrNull() !is RootScreen.Login) {
             removeLastOrNull()
         }
     } else {
         clear()
-        add(RootScreen.Login)
+        add(RootScreen.Login())
     }
 }

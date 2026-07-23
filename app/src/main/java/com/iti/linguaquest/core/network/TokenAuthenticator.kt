@@ -2,7 +2,7 @@ package com.iti.linguaquest.core.network
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser.parseString
-import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.cache.token.TokensLocalDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.RefreshTokenRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.RefreshTokenResponseDataDto
 import kotlinx.coroutines.flow.firstOrNull

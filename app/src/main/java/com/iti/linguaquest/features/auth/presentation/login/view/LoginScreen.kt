@@ -17,11 +17,13 @@ import com.iti.linguaquest.features.auth.share.launchGoogleSignIn
 
 @Composable
 fun LoginScreen(
-    onSignUp: () -> Unit ,
-    onForgotPassword: () -> Unit ,
+    onSignUp: () -> Unit,
+    onSignUpWithoutLanguages: () -> Unit,
+    onForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit,
+    onOAuthLanguageSelection: () -> Unit,
+    isOAuthLanguageSelectionCompleted: Boolean = false,
     viewModel: LoginViewModel = hiltViewModel(),
-
 ) {
     val context = LocalContext.current
     val activity = context as? ComponentActivity
@@ -29,6 +31,12 @@ fun LoginScreen(
     var emailShakeTrigger by remember { mutableIntStateOf(0) }
     var passwordShakeTrigger by remember { mutableIntStateOf(0) }
     var googleShakeTrigger by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(isOAuthLanguageSelectionCompleted) {
+        if (isOAuthLanguageSelectionCompleted) {
+            viewModel.onIntent(LoginIntent.OAuthLanguageSelectionCompleted)
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
@@ -45,6 +53,8 @@ fun LoginScreen(
                 LoginEffect.LoginSucceeded -> onLoginSuccess()
                 LoginEffect.NavigateToForgotPassword -> onForgotPassword()
                 LoginEffect.NavigateToSignUp -> onSignUp()
+                LoginEffect.NavigateToSignUpWithoutLanguages -> onSignUpWithoutLanguages()
+                LoginEffect.NavigateToOAuthLanguageSelection -> onOAuthLanguageSelection()
             }
         }
     }

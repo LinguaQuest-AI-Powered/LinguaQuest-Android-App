@@ -153,7 +153,7 @@ private fun AuthTextFieldPreview() {
             AuthTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Email address",
+                placeholder = stringResource(R.string.login_email_address),
                 leadingIcon = painterResource(R.drawable.email)
             )
 
@@ -161,7 +161,7 @@ private fun AuthTextFieldPreview() {
             AuthTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Password",
+                placeholder = stringResource(R.string.login_password),
                 isPassword = true,
                 leadingIcon = painterResource(R.drawable.lock),
             )
@@ -169,7 +169,7 @@ private fun AuthTextFieldPreview() {
             AuthTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Password",
+                placeholder = stringResource(R.string.login_password),
                 isPassword = true,
                 leadingIcon = painterResource(R.drawable.lock),
             )

@@ -1,13 +1,14 @@
 package com.iti.linguaquest.features.auth.data.repository
 
 
-import com.iti.linguaquest.core.preferences.data.datasource.UserPreferencesLocalDataSource
-import com.iti.linguaquest.core.preferences.cache.TokensLocalDataSource
+import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
+import com.iti.linguaquest.core.cache.token.TokensLocalDataSource
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.asEmptyDataResult
 import com.iti.linguaquest.core.result.map
 import com.iti.linguaquest.core.result.onSuccess
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpVerifyRequestDto
@@ -20,6 +21,8 @@ import com.iti.linguaquest.features.auth.data.datasource.remote.RefreshTokenRequ
 import com.iti.linguaquest.features.auth.data.mapper.toAuthError
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
+import com.iti.linguaquest.features.auth.data.datasource.remote.CompleteProfileRequestDto
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -27,8 +30,25 @@ import kotlinx.coroutines.flow.first
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
     private val tokensLocalDataSource: TokensLocalDataSource,
-    private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource
+    private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource,
+    private val sessionManagerDataSource: SessionManagerDataSource
 ) : AuthRepository {
+
+    override suspend fun getAuthLanguages(): LinguaQuestResult<List<LanguageOption>, AuthError> {
+        return remoteDataSource.getAuthLanguages()
+            .map { response ->
+                response.languages.map { dto ->
+                    LanguageOption(
+                        id = dto.id,
+                        name = dto.name,
+                        code = dto.code,
+                        imageUrl = dto.imageUrl,
+                        isAdded = dto.isAdded
+                    )
+                }
+            }
+            .mapError()
+    }
 
     override suspend fun register(
         email: String,
@@ -36,10 +56,10 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): LinguaQuestResult<Unit, AuthError> {
 
-        val appLanguage = userPreferencesLocalDataSource.appLanguage.first() ?: ""
-        val targetLanguage = userPreferencesLocalDataSource.targetLanguage.first() ?: ""
+        val nativeLanguageName = userPreferencesLocalDataSource.nativeLanguageName.first() ?: "English"
+        val targetLanguageName = userPreferencesLocalDataSource.targetLanguageName.first() ?: "English"
 
-        val request = RegisterRequestDto(email, username, password, appLanguage, targetLanguage)
+        val request = RegisterRequestDto(email, username, password, nativeLanguageName, targetLanguageName)
 
         return remoteDataSource.register(request)
             .map { Unit }
@@ -55,16 +75,35 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.login(request)
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()
     }
 
-    override suspend fun signInWithGoogle(idToken: String): LinguaQuestResult<Unit, AuthError> {
+    override suspend fun signInWithGoogle(idToken: String): LinguaQuestResult<Boolean, AuthError> {
         val request = OAuthGoogleRequestDto(idToken)
         return remoteDataSource.loginWithGoogle(request)
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                if (response.profileComplete) {
+                    sessionManagerDataSource.saveIsLoggedIn(true)
+                }
+            }
+            .map { it.profileComplete }
+            .mapError()
+    }
+
+    override suspend fun completeOAuthProfile(
+        nativeLanguageId: Int,
+        targetLanguageId: Int,
+        username: String?
+    ): LinguaQuestResult<Unit, AuthError> {
+        val request = CompleteProfileRequestDto(nativeLanguageId, targetLanguageId, username)
+        return remoteDataSource.completeOAuthProfile(request)
+            .onSuccess { response ->
+                tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()
@@ -107,7 +146,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun isLoggedIn(): Flow<Boolean> {
-        return tokensLocalDataSource.isLoggedIn
+        return sessionManagerDataSource.isLoggedIn
     }
 
     override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
@@ -116,6 +155,9 @@ class AuthRepositoryImpl @Inject constructor(
             remoteDataSource.logout(LogoutRequestDto(refreshToken))
         }
         tokensLocalDataSource.clearTokens()
+        userPreferencesLocalDataSource.clearOnboardingPreferences()
+        sessionManagerDataSource.saveFirstTime(true)
+        sessionManagerDataSource.saveIsLoggedIn(false)
         return LinguaQuestResult.Success(Unit)
     }
 
@@ -123,6 +165,7 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.refreshToken(RefreshTokenRequestDto(refreshToken))
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
+                sessionManagerDataSource.saveIsLoggedIn(true)
             }
             .asEmptyDataResult()
             .mapError()

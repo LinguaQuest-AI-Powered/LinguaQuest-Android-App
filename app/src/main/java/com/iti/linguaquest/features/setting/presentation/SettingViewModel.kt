@@ -6,9 +6,12 @@ import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseC
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +30,8 @@ class SettingViewModel @Inject constructor(
     private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
     private val changeAppThemeUseCase: ChangeAppThemeUseCase,
     private val toggleSoundUseCase: ToggleSoundUseCase,
-    private val toggleNotificationsUseCase: ToggleNotificationsUseCase
+    private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase
 ) : ViewModel() {
 
     val appLanguage: StateFlow<String> = getAppLanguageUseCase()
@@ -58,6 +62,9 @@ class SettingViewModel @Inject constructor(
             initialValue = true
         )
 
+    private val _isLoggingOut = MutableStateFlow(false)
+    val isLoggingOut = _isLoggingOut.asStateFlow()
+
     fun toggleSound(enabled: Boolean) {
         viewModelScope.launch {
             toggleSoundUseCase(enabled)
@@ -79,6 +86,16 @@ class SettingViewModel @Inject constructor(
     fun changeAppTheme(theme: String) {
         viewModelScope.launch {
             changeAppThemeUseCase(theme)
+        }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        if (_isLoggingOut.value) return
+        _isLoggingOut.value = true
+        viewModelScope.launch {
+            logoutUserUseCase()
+            onSuccess()
+            _isLoggingOut.value = false
         }
     }
 }

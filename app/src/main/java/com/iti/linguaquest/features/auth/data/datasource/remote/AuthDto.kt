@@ -16,6 +16,18 @@ data class TargetLanguageDto(
     val code: String
 )
 
+data class AuthLanguageOptionDto(
+    val id: Int,
+    val name: String,
+    val code: String,
+    val imageUrl: String,
+    val isAdded: Boolean
+)
+
+data class AuthLanguagesResponseDataDto(
+    val languages: List<AuthLanguageOptionDto>
+)
+
 
 data class RegisterRequestDto(
     val email: String,
@@ -62,6 +74,12 @@ data class OAuthResponseDataDto(
     val isNewUser: Boolean,
     val profileComplete: Boolean,
     val user: UserDto
+)
+
+data class CompleteProfileRequestDto(
+    val nativeLanguageId: Int,
+    val targetLanguageId: Int,
+    val username: String? = null
 )
 
 data class OtpSendRequestDto(

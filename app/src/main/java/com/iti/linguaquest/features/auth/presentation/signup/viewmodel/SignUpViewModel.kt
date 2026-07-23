@@ -12,14 +12,18 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.auth.domain.usecase.SignInWithGoogleUseCase
-import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
+import com.iti.linguaquest.features.auth.domain.usecase.CompleteOAuthProfileUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpEffect
+import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpIntent
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +33,9 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val signUpWithEmailUseCase: RegisterUserUseCase,
     private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
+    private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
+    private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -50,6 +57,7 @@ class SignUpViewModel @Inject constructor(
             SignUpIntent.GoogleSignInClicked -> startGoogleSignIn()
             is SignUpIntent.GoogleLoginSubmitted -> loginWithGoogle(intent.idToken)
             SignUpIntent.GoogleSignInFailed -> handleGoogleFailure(AuthError.Unknown)
+            SignUpIntent.OAuthLanguageSelectionCompleted -> completeOAuthProfile()
         }
     }
 
@@ -118,9 +126,37 @@ class SignUpViewModel @Inject constructor(
             when (val result = loginWithGoogleUseCase(idToken)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false, googleError = false) }
-                    sendEffect(SignUpEffect.SignUpSucceeded(""))
+                    val profileComplete = result.data
+                    if (profileComplete) {
+                        sendEffect(SignUpEffect.NavigateToMain)
+                    } else {
+                        val targetLanguage = getTargetLanguageUseCase().first()
+                        if (targetLanguage != null) {
+                            completeOAuthProfile()
+                        } else {
+                            sendEffect(SignUpEffect.NavigateToOAuthLanguageSelection)
+                        }
+                    }
                 }
                 is LinguaQuestResult.Failure -> handleGoogleFailure(result.error)
+            }
+        }
+    }
+
+    private fun completeOAuthProfile() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, generalErrorRes = null) }
+            val targetLanguage = getTargetLanguageUseCase().first() ?: 1
+            val nativeLanguage = getNativeLanguageUseCase().first() ?: 1
+
+            when (val result = completeOAuthProfileUseCase(nativeLanguage, targetLanguage, null)) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(SignUpEffect.NavigateToMain)
+                }
+                is LinguaQuestResult.Failure -> {
+                    handleAuthFailure(result.error)
+                }
             }
         }
     }
