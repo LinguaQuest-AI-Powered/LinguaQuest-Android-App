@@ -42,15 +42,20 @@ import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyLanguagesBottomSheet(
+    modifier: Modifier = Modifier,
     languages: List<MyLanguageUiModel>,
+    isLoading: Boolean = false,
+    isSettingActive: Boolean = false,
     onDismiss: () -> Unit,
     onAddNewLanguageClick: () -> Unit,
     onLanguageSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier
+
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -98,15 +103,27 @@ fun MyLanguagesBottomSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn(
-                modifier = Modifier.weight(1f, fill = false),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(languages) { language ->
-                    MyLanguageItem(
-                        language = language,
-                        onClick = { onLanguageSelect(language.id) }
-                    )
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f, fill = false),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(languages) { language ->
+                        MyLanguageItem(
+                            language = language,
+                            enabled = !isSettingActive,
+                            onClick = { onLanguageSelect(language.id) }
+                        )
+                    }
                 }
             }
 
@@ -129,6 +146,7 @@ fun MyLanguagesBottomSheet(
 fun MyLanguageItem(
     language: MyLanguageUiModel,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = if (language.isCurrent) LinguaQuestTheme.colors.ChipBackground else Color.Transparent
@@ -144,7 +162,7 @@ fun MyLanguageItem(
                 color = borderColor,
                 shape = RoundedCornerShape(32.dp)
             )
-            .clickable(onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

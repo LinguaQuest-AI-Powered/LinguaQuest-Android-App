@@ -16,6 +16,9 @@ import com.iti.linguaquest.features.auth.presentation.login.contract.LoginEffect
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginState
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
+import com.iti.linguaquest.features.auth.domain.usecase.CompleteOAuthProfileUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +35,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUserUseCase: LoginUserUseCase,
     private val loginWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
+    private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
+    private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -53,7 +60,19 @@ class LoginViewModel @Inject constructor(
             LoginIntent.ForgetPasswordClicked -> sendEffect(LoginEffect.NavigateToForgotPassword)
 
 
-            LoginIntent.SignUpClicked -> sendEffect(LoginEffect.NavigateToSignUp)
+            LoginIntent.SignUpClicked -> {
+                viewModelScope.launch {
+                    val targetLanguage = getTargetLanguageUseCase().first()
+                    if (targetLanguage == null) {
+                        sendEffect(LoginEffect.NavigateToSignUpWithoutLanguages)
+                    } else {
+                        sendEffect(LoginEffect.NavigateToSignUp)
+                    }
+                }
+            }
+            LoginIntent.OAuthLanguageSelectionCompleted -> {
+                completeOAuthProfile()
+            }
 
         }
     }
@@ -104,10 +123,38 @@ class LoginViewModel @Inject constructor(
             when (val result = loginWithGoogleUseCase(idToken)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false, googleError = false) }
-                    sendEffect(LoginEffect.LoginSucceeded)
+                    val profileComplete = result.data
+                    if (profileComplete) {
+                        sendEffect(LoginEffect.LoginSucceeded)
+                    } else {
+                        val targetLanguage = getTargetLanguageUseCase().first()
+                        if (targetLanguage != null) {
+                            completeOAuthProfile()
+                        } else {
+                            sendEffect(LoginEffect.NavigateToOAuthLanguageSelection)
+                        }
+                    }
                 }
 
                 is LinguaQuestResult.Failure -> handleGoogleFailure(result.error)
+            }
+        }
+    }
+
+    private fun completeOAuthProfile() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, generalErrorRes = null) }
+            val targetLanguage = getTargetLanguageUseCase().first() ?: 1
+            val nativeLanguage = getNativeLanguageUseCase().first() ?: 1
+
+            when (val result = completeOAuthProfileUseCase(nativeLanguage, targetLanguage, null)) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(LoginEffect.LoginSucceeded)
+                }
+                is LinguaQuestResult.Failure -> {
+                    handleAuthFailure(result.error)
+                }
             }
         }
     }

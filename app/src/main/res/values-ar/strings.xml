@@ -82,6 +82,12 @@
     <string name="login_error_token_not_valid">انتهت صلاحية الجلسة.</string>
     <string name="login_error_operation_not_allowed">العملية غير مسموح بها.</string>
     <string name="login_error_generic">حدث خطأ ما.</string>
+    <string name="login_error_email_already_in_use">البريد الإلكتروني مستخدم بالفعل.</string>
+    <string name="login_error_email_not_found">البريد الإلكتروني غير موجود.</string>
+    <string name="login_error_username_already_exists">اسم المستخدم موجود بالفعل.</string>
+    <string name="login_error_invalid_reset_token">رمز إعادة التعيين غير صالح.</string>
+    <string name="login_error_reset_token_expired">انتهت صلاحية رمز إعادة التعيين.</string>
+    <string name="login_error_validation_error">حدث خطأ في التحقق.</string>
     <string name="login_error_password_required">كلمة المرور مطلوبة.</string>
     <string name="login_error_email_required">البريد الإلكتروني مطلوب.</string>
     <string name="signup_error_name_required">اسم المستخدم مطلوب.</string>
@@ -333,6 +339,7 @@
     <string name="my_languages_level_format">المستوى %1$d</string>
     <string name="cd_selected">محدد</string>
     <string name="cd_search">بحث</string>
+    <string name="add_languages_no_results">لا توجد لغات مطابقة لبحثك</string>
 
     <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
     <string name="take_photo">التقاط صورة</string>
@@ -381,5 +388,9 @@
     <string name="notifications_title">الإشعارات</string>
     <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
     <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
-
-</resources>
+         <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
+        <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
+        <string name="coins_description">عملات</string>
+        <string name="confirm_button">تأكيد</string>
+        <string name="cancel_button">إلغاء</string>
+ </resources>

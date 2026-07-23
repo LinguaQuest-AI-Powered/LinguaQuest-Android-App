@@ -10,5 +10,6 @@ data class AddLanguagesState(
 data class LanguageUiItem(
     val id: Int,
     val name: String,
-    val flagEmoji: String
+    val flagEmoji: String,
+    val isAdded: Boolean = false
 )

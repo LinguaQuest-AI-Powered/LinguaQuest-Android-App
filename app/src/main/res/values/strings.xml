@@ -62,6 +62,12 @@
     <string name="login_error_token_not_valid">Session expired.</string>
     <string name="login_error_operation_not_allowed">Operation not allowed.</string>
     <string name="login_error_generic">Something went wrong.</string>
+    <string name="login_error_email_already_in_use">Email is already in use.</string>
+    <string name="login_error_email_not_found">Email not found.</string>
+    <string name="login_error_username_already_exists">Username already exists.</string>
+    <string name="login_error_invalid_reset_token">Invalid reset token.</string>
+    <string name="login_error_reset_token_expired">Reset token has expired.</string>
+    <string name="login_error_validation_error">Validation error occurred.</string>
     <string name="login_error_password_required">Password is required.</string>
     <string name="login_error_email_required">Email is required.</string>
     <string name="signup_error_name_required">Username is required.</string>
@@ -110,6 +116,21 @@
     <string name="camera_permission_desc">LinguaQuest needs your camera to find objects and earn points!</string>
     <string name="open_settings">Open Settings</string>
     <string name="grant_permission">Grant Permission</string>
+    <string name="otp_timer_content_description">Timer</string>
+    <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
+    <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
+    <string name="level_beginner">Beginner</string>
+    <string name="level_beginner_description">I\'m just starting my adventure</string>
+    <string name="level_intermediate">Intermediate</string>
+    <string name="level_intermediate_description">I can navigate basic paths</string>
+    <string name="level_advanced">Advanced</string>
+    <string name="level_advanced_description">Ready for grand challenges</string>
+     <string name="camera_permission_required">Camera permission is required.</string>
+     <string name="camera_permission_title">Is Your Camera Ready?</string>
+     <string name="camera_permission_blocked_desc">We need camera access to play, but it looks like it\'s blocked. Please enable it in your device settings.</string>
+     <string name="camera_permission_desc">LinguaQuest needs your camera to find objects and earn points!</string>
+     <string name="open_settings">Open Settings</string>
+     <string name="grant_permission">Grant Permission</string>
     <string name="go_back">Go Back</string>
     <string name="captured_preview">Captured Preview</string>
     <string name="find_label">Find:</string>
@@ -319,6 +340,7 @@
     <string name="my_languages_level_format">Level %1$d</string>
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
+    <string name="add_languages_no_results">No languages matching your search</string>
 
 
     <string name="update_profile_photo">Update profile photo</string>
@@ -389,4 +411,9 @@
     <string name="notifications_off_msg">Notifications off. Daily reminder paused.</string>
     <string name="notifications_on_msg">Notifications enabled.</string>
 
-</resources>
+          <string name="enable_lock_screen_title">Enable Lock Screen\nVocabulary?</string>
+        <string name="enable_lock_screen_subtitle">Spend %1$d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
+        <string name="coins_description">Coins</string>
+        <string name="confirm_button">Confirm</string>
+        <string name="cancel_button">Cancel</string>
+ </resources>

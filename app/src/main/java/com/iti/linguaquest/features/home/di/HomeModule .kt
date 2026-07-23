@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.home.di
 
 import com.iti.linguaquest.features.home.data.fake.FakeDailyRewardRepository
 import com.iti.linguaquest.features.home.data.fake.FakeHomeRepository
-import com.iti.linguaquest.features.home.data.fake.FakeLanguagesRepo
 import com.iti.linguaquest.features.home.data.remote.DailyRewardApiService
 import com.iti.linguaquest.features.home.data.remote.HomeApiService
 import com.iti.linguaquest.features.home.data.remote.HomeRemoteDataSource
@@ -10,6 +9,7 @@ import com.iti.linguaquest.features.home.data.remote.HomeRemoteDataSourceImpl
 import com.iti.linguaquest.features.home.data.remote.LanguagesApiService
 import com.iti.linguaquest.features.home.data.remote.LanguagesRemoteDataSource
 import com.iti.linguaquest.features.home.data.remote.LanguagesRemoteDataSourceImpl
+import com.iti.linguaquest.features.home.data.repository.LanguagesRepoImpl
 import com.iti.linguaquest.features.home.domain.repository.DailyRewardRepository
 import com.iti.linguaquest.features.home.domain.repository.HomeRepository
 import com.iti.linguaquest.features.home.domain.repository.LanguagesRepo
@@ -28,12 +28,10 @@ abstract class HomeModule {
     @Binds
     @Singleton
     abstract fun bindHomeRepository(impl: FakeHomeRepository): HomeRepository
-    // Swap to HomeRepositoryImpl when backend is ready
 
     @Binds
     @Singleton
-    abstract fun bindLanguagesRepo(impl: FakeLanguagesRepo): LanguagesRepo
-    // Swap to LanguagesRepoImpl when backend is ready
+    abstract fun bindLanguagesRepo(impl: LanguagesRepoImpl): LanguagesRepo
 
     @Binds
     @Singleton

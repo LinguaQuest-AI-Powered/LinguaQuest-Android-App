@@ -68,6 +68,7 @@ fun SettingContent(
     onSoundToggle: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
     onNotificationsToggle: (Boolean) -> Unit,
+    isLoggingOut: Boolean = false,
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLockScreenVocabularyClick: () -> Unit,
@@ -314,6 +315,8 @@ fun SettingContent(
         AppButton3D(
             text = stringResource(id = R.string.settings_log_out),
             onClick = onLogoutClick,
+            textColor = Color.Black, // Ensure dark text on primary button
+            isLoading = isLoggingOut,
             textColor = Color.Black,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
@@ -335,11 +338,13 @@ fun SettingContentPreview() {
             onSoundToggle = {},
             notificationsEnabled = true,
             onNotificationsToggle = {},
+            isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
-            onLockScreenVocabularyClick = {},
+
+
+            onLockScreenVocabularyClick =  {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {}
-        )
-    }
+        )}
 }

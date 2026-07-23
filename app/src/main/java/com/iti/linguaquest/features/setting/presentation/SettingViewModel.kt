@@ -28,6 +28,8 @@ import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
 import com.iti.linguaquest.features.setting.system.ReminderSettings
+import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +39,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -52,6 +56,8 @@ class SettingViewModel @Inject constructor(
     private val changeAppLanguageUseCase: ChangeAppLanguageUseCase,
     private val changeAppThemeUseCase: ChangeAppThemeUseCase,
     private val toggleSoundUseCase: ToggleSoundUseCase,
+    private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
     private val getReminderEnabledUseCase: GetReminderEnabledUseCase,
     private val getReminderTimeUseCase: GetReminderTimeUseCase,
@@ -115,6 +121,10 @@ class SettingViewModel @Inject constructor(
         }
     }
 
+    private val _isLoggingOut = MutableStateFlow(false)
+    val isLoggingOut = _isLoggingOut.asStateFlow()
+
+    fun toggleSound(enabled: Boolean) {
     fun onReminderIntent(intent: ReminderIntent) {
         if (!notificationsEnabled.value) {
             when (intent) {
@@ -266,6 +276,17 @@ class SettingViewModel @Inject constructor(
             Pair(8, 0)
         }
     }
+
+    fun logout(onSuccess: () -> Unit) {
+        if (_isLoggingOut.value) return
+        _isLoggingOut.value = true
+        viewModelScope.launch {
+            logoutUserUseCase()
+            onSuccess()
+            _isLoggingOut.value = false
+        }
+    }
+}
 
     private fun parseDays(daysStr: String): Set<DayOfWeek> {
         return try {

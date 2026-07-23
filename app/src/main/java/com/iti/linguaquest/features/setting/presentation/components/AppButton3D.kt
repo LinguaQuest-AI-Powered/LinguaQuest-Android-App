@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
@@ -38,6 +39,7 @@ fun AppButton3D(
     cornerRadius: Dp = 18.dp,
     buttonHeight: Dp = 56.dp,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -68,6 +70,8 @@ fun AppButton3D(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
+                    enabled = enabled && !isLoading,
+                    onClick = onClick
                     enabled = enabled,
                     onClick = {
                         soundPlayer.play(AppSound.POP)
@@ -76,12 +80,20 @@ fun AppButton3D(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = text,
-                color = textColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = textColor,
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = text,
+                    color = textColor,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
