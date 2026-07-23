@@ -1,59 +1,71 @@
 package com.iti.linguaquest.features.roleplay.data.audio
 
-import android.content.Context
+import android.annotation.SuppressLint
+import android.media.AudioFormat
+import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.os.Build
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.File
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AudioRecorder @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
-    private var recorder: MediaRecorder? = null
-    private var tempFile: File? = null
+class AudioRecorder @Inject constructor() {
 
-    fun start() {
-        tempFile = File.createTempFile("roleplay_audio", ".m4a", context.cacheDir)
-        
-        recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            MediaRecorder(context)
-        } else {
-            @Suppress("DEPRECATION")
-            MediaRecorder()
-        }.apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(tempFile?.absolutePath)
-            
-            try {
-                prepare()
-                start()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+    private var audioRecord: AudioRecord? = null
+    @Volatile
+    private var isRecording = false
+
+    @SuppressLint("MissingPermission")
+    fun startRecording(): Flow<ByteArray> = flow {
+        val sampleRate = 16000
+        val minBufferSize = AudioRecord.getMinBufferSize(
+            sampleRate,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        )
+
+        if (minBufferSize <= 0) return@flow
+
+        val record = AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            sampleRate,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            minBufferSize
+        )
+
+        if (record.state != AudioRecord.STATE_INITIALIZED) {
+            record.release()
+            return@flow
         }
-    }
 
-    suspend fun stopAndGetAudioBytes(): ByteArray = withContext(Dispatchers.IO) {
+        audioRecord = record
+        val buffer = ByteArray(minBufferSize)
+
+        record.startRecording()
+        isRecording = true
+
         try {
-            recorder?.stop()
-            recorder?.release()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            while (isRecording) {
+                val read = record.read(buffer, 0, buffer.size)
+                when {
+                    read > 0 -> emit(buffer.copyOf(read))
+                    read == 0 -> if (!isRecording) break
+                    else -> break
+                }
+            }
         } finally {
-            recorder = null
+            record.stop()
+            record.release()
+            audioRecord = null
         }
+    }.flowOn(Dispatchers.IO)
 
-        val bytes = tempFile?.readBytes() ?: ByteArray(0)
-        tempFile?.delete()
-        tempFile = null
-        
-        bytes
+    fun stopRecording() {
+        isRecording = false
+        audioRecord?.stop()
     }
 }

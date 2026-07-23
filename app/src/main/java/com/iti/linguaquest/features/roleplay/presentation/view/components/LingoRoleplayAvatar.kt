@@ -10,23 +10,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayPhase
 
 @Composable
 fun LingoRoleplayAvatar(
-    phase: RoleplayPhase,
-    isPassed: Boolean = true,
+    isAiSpeaking: Boolean,
+    isUserSpeaking: Boolean,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     size: Dp = 180.dp
 ) {
-    val imageRes = when (phase) {
-        RoleplayPhase.LOBBY -> R.drawable.lingo_initial_state_voice
-        RoleplayPhase.IDLE -> R.drawable.lingo_initial_state_voice
-        RoleplayPhase.RECORDING -> R.drawable.lingo_mic
-        RoleplayPhase.PROCESSING -> R.drawable.lingo_checking_pronounciation
-        RoleplayPhase.AI_SPEAKING -> R.drawable.lingo_new_password
-        RoleplayPhase.OUTCOME -> if (isPassed) R.drawable.lingo_success else R.drawable.lingo_error
-    }
+    val imageRes = lingoImageForState(isAiSpeaking, isUserSpeaking, isLoading)
 
     Image(
         painter = painterResource(imageRes),
@@ -37,12 +30,12 @@ fun LingoRoleplayAvatar(
     )
 }
 
-/** Returns the drawable resource for the given phase, for use with [AppMascotGradientBox]. */
-fun lingoImageForPhase(phase: RoleplayPhase, isPassed: Boolean = true): Int = when (phase) {
-    RoleplayPhase.LOBBY -> R.drawable.lingo_initial_state_voice
-    RoleplayPhase.IDLE -> R.drawable.lingo_initial_state_voice
-    RoleplayPhase.RECORDING -> R.drawable.lingo_mic
-    RoleplayPhase.PROCESSING -> R.drawable.lingo_checking_pronounciation
-    RoleplayPhase.AI_SPEAKING -> R.drawable.lingo_new_password
-    RoleplayPhase.OUTCOME -> if (isPassed) R.drawable.lingo_success else R.drawable.lingo_error
+/** Returns the drawable resource for the given live states. */
+fun lingoImageForState(isAiSpeaking: Boolean, isUserSpeaking: Boolean, isLoading: Boolean): Int {
+    return when {
+        isLoading -> R.drawable.lingo_checking_pronounciation
+        isUserSpeaking -> R.drawable.lingo_mic
+        isAiSpeaking -> R.drawable.lingo_new_password
+        else -> R.drawable.lingo_initial_state_voice
+    }
 }
