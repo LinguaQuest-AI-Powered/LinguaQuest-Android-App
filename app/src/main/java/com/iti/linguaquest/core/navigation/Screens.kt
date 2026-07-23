@@ -68,6 +68,8 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data object AllWorlds : RootScreen
     @Serializable
+    data object Roleplay : RootScreen
+    @Serializable
     data object EditProfile : RootScreen
     @Serializable
     data object AddLanguages : RootScreen

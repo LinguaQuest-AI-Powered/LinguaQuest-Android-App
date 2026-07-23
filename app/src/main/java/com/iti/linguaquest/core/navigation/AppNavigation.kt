@@ -391,6 +391,12 @@ fun AppNavigation(
                     )
                 }
 
+                entry<RootScreen.Roleplay> {
+                    com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen(
+                        onNavigateHome = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
                 entry<RootScreen.AddLanguages> {
                     AddLanguagesScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() }

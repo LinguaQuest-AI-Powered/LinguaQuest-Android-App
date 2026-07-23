@@ -106,7 +106,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                                 rootBackStack.navigateSingleTop(RootScreen.VoiceGame(lessonId, sentence))
                             },
                             onNavigateToAllWorlds = {
-                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
+                                // TODO: Remove Roleplay
+//                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
+                                rootBackStack.navigateSingleTop(RootScreen.Roleplay)
                             },
                             onNavigateToWorldMap = { worldId ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
