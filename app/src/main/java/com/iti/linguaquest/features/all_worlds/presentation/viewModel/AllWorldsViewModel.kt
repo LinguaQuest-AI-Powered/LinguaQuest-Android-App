@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.all_worlds.presentation.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
@@ -42,7 +43,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            when (val result = getWorldsUseCase()) {
+            when (val result = getWorldsUseCase(null)) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
@@ -52,6 +53,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
                     }
                 }
                 is LinguaQuestResult.Failure -> {
+                    Log.e("AllWorldsViewModel", "Error loading worlds: ${result.error}")
                     _state.update {
                         it.copy(isLoading = false)
                     }
@@ -64,7 +66,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
         return WorldItem(
             id = id,
             title = UiText.DynamicString(name),
-            imageSource = if (imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
+            imageSource = if (imageUrl.isNotBlank() && imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
             difficulty = when (difficulty) {
                 DomainWorldDifficulty.EASY -> WorldDifficulty.EASY
                 DomainWorldDifficulty.MEDIUM -> WorldDifficulty.MEDIUM

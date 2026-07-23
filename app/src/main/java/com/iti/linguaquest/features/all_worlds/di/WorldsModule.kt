@@ -1,7 +1,6 @@
 package com.iti.linguaquest.features.all_worlds.di
 
 import com.iti.linguaquest.features.all_worlds.data.remote.WorldsApiService
-import com.iti.linguaquest.features.all_worlds.data.repository.MockWorldsRepository
 import com.iti.linguaquest.features.all_worlds.data.repository.WorldsRepositoryImpl
 import com.iti.linguaquest.features.all_worlds.domain.repository.WorldsRepository
 import dagger.Binds
@@ -19,8 +18,7 @@ abstract class WorldsModule {
     @Binds
     @Singleton
     abstract fun bindWorldsRepository(
-        impl: MockWorldsRepository
-        //impl: WorldsRepositoryImpl
+        impl: WorldsRepositoryImpl
     ): WorldsRepository
 
     companion object {
