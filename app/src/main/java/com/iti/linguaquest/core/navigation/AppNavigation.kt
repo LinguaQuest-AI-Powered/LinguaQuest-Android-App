@@ -213,6 +213,9 @@ fun AppNavigation(
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
                         },
+                        onOAuthLanguageSelection = {
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH"))
+                        },
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()

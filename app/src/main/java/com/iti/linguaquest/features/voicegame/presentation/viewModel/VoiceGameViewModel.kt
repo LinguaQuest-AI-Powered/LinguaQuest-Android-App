@@ -16,7 +16,7 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameInt
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -68,7 +68,7 @@ class VoiceGameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userPreferencesRepository.targetLanguage.collect { lang ->
+            userPreferencesRepository.targetLanguageName.collect { lang ->
                 _state.update { it.copy(targetLanguage = lang ?: "English") }
             }
         }
