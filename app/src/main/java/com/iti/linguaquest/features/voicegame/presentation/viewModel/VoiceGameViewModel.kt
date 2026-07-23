@@ -1,13 +1,10 @@
 package com.iti.linguaquest.features.voicegame.presentation.viewModel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.audio.AudioRecorderController
 import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
-import com.iti.linguaquest.core.audio.writePcmAsWavFile
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -22,7 +19,6 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePha
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -39,8 +35,7 @@ class VoiceGameViewModel @Inject constructor(
     private val evaluatePronunciationUseCase: EvaluatePronunciationUseCase,
     private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
-    private val snackbarController: SnackbarController,
-    @ApplicationContext private val context: Context
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(VoiceGameState())
@@ -182,7 +177,7 @@ class VoiceGameViewModel @Inject constructor(
         timerJob?.cancel()
         val pcmData = recordAudioUseCase.stopAndGetPcmData()
         pendingPcmData = pcmData
-        previewFile = writePcmAsWavFile(context, pcmData, AudioRecorderController.SAMPLE_RATE)
+        previewFile = recordAudioUseCase.savePcmAsWav(pcmData)
         _state.update {
             it.copy(
                 showConfirmationDialog = true,
