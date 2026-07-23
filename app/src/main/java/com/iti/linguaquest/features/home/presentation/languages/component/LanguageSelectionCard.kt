@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,25 +39,28 @@ fun LanguageSelectionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.textFieldBorder
-    val checkmarkTint = LinguaQuestTheme.colors.SuccessAccent
+    val isEffectivelySelected = isSelected || language.isAdded
+    val borderColor = if (isEffectivelySelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.textFieldBorder
+    val checkmarkTint = if (language.isAdded) LinguaQuestTheme.colors.textFieldPlaceholder else LinguaQuestTheme.colors.SuccessAccent
+    val cardAlpha = if (language.isAdded) 0.6f else 1f
 
     Box(
         modifier = modifier
+            .alpha(cardAlpha)
             .clip(RoundedCornerShape(24.dp))
             .background(LinguaQuestTheme.colors.whiteColor)
             .border(
-                width = if (isSelected) 2.dp else 1.dp,
+                width = if (isEffectivelySelected) 2.dp else 1.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(24.dp)
             )
-            .clickable(onClick = onClick)
+            .clickable(enabled = !language.isAdded, onClick = onClick)
             .padding(16.dp)
     ) {
         Box(
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            if (isSelected) {
+            if (isEffectivelySelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = stringResource(R.string.cd_selected),

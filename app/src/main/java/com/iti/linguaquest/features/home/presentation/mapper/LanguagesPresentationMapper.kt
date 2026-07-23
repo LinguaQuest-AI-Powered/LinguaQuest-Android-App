@@ -16,7 +16,8 @@ fun UserLanguage.toUiModel(): MyLanguageUiModel = MyLanguageUiModel(
 fun LanguageOption.toUiItem(): LanguageUiItem = LanguageUiItem(
     id = id,
     name = name,
-    flagEmoji = code.toFlagEmoji()
+    flagEmoji = code.toFlagEmoji(),
+    isAdded = isAdded
 )
 
 private fun String.toFlagEmoji(): String {
