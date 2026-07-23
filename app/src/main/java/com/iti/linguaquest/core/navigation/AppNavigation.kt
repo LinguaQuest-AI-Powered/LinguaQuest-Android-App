@@ -313,7 +313,8 @@ fun AppNavigation(
                             result = result,
                             onContinue = {
                                 SharedVoiceResultHolder.pendingResult = null
-                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                                SharedVoiceResultHolder.autoGenerateNextSentence = true
+                                rootBackStack.removeLastOrNull()
                             },
                             onRetry = {
                                 SharedVoiceResultHolder.pendingResult = null

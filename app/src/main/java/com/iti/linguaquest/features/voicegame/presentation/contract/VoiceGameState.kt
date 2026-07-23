@@ -11,5 +11,8 @@ data class VoiceGameState(
     val showConfirmationDialog: Boolean = false,
     val previewDurationSeconds: Int = 0,
     val previewPlaybackSeconds: Int = 0,
-    val isPreviewPlaying: Boolean = false
+    val isPreviewPlaying: Boolean = false,
+    val isLoadingSentence: Boolean = false,
+    val phonetic: String? = null,
+    val translation: String? = null
 )

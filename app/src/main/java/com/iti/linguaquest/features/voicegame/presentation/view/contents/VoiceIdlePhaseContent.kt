@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +34,9 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameSta
 import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.text.font.FontStyle
+
 @Composable
 fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
     SpeechBubble(stringResource(R.string.voice_idle_yo_can_do_it))
@@ -46,15 +48,35 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
     ) {
         Text(stringResource(R.string.voice_idle_pronounce_this), style = AppTextStyles.Caption, color = LinguaQuestTheme.colors.iconsColor)
         Spacer(Modifier.height(8.dp))
-        Text(
-            state.sentence,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            textAlign = TextAlign.Center,
-            color = LinguaQuestTheme.colors.blackColor
-        )
+
+        if (state.isLoadingSentence) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(32.dp),
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else {
+            Text(
+                text = state.sentence,
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Center,
+                color = LinguaQuestTheme.colors.blackColor
+            )
+            state.phonetic?.let { phonetic ->
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = phonetic,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+                    textAlign = TextAlign.Center,
+                    color = LinguaQuestTheme.colors.iconsColor
+                )
+            }
+        }
+
         Spacer(Modifier.height(12.dp))
         Row(
-            modifier = Modifier.clickable { viewModel.onIntent(VoiceGameIntent.ListenClicked) },
+            modifier = Modifier.clickable(enabled = !state.isLoadingSentence && state.sentence.isNotBlank()) {
+                viewModel.onIntent(VoiceGameIntent.ListenClicked)
+            },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = LinguaQuestTheme.colors.iconsColor, modifier = Modifier.size(18.dp))
@@ -71,7 +93,9 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
             .size(88.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)
-            .clickable { viewModel.onIntent(VoiceGameIntent.RecordClicked) },
+            .clickable(enabled = !state.isLoadingSentence && state.sentence.isNotBlank()) {
+                viewModel.onIntent(VoiceGameIntent.RecordClicked)
+            },
         contentAlignment = Alignment.Center
     ) {
         Icon(Icons.Default.Mic, contentDescription = "Record", tint = LinguaQuestTheme.colors.iconsColor, modifier = Modifier.size(36.dp))
@@ -80,7 +104,7 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
     Spacer(Modifier.height(20.dp))
     AppOutlinedButton(
         text = stringResource(R.string.voice_idle_skip),
-        onClick = {  },
+        onClick = { viewModel.onIntent(VoiceGameIntent.SkipClicked) },
         color = AppColors.DialogSecondaryButtonOutline
     )
     Spacer(Modifier.height(16.dp))

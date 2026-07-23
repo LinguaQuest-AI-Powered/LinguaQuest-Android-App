@@ -28,6 +28,9 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.voicegame.domain.usecase.GeneratePronunciationSentenceUseCase
+
 @HiltViewModel
 class VoiceGameViewModel @Inject constructor(
     private val audioRecorder: AudioRecorderController,
@@ -35,6 +38,7 @@ class VoiceGameViewModel @Inject constructor(
     private val textToSpeech: TextToSpeechController,
     private val snackbarController: SnackbarController,
     private val voiceEvaluationService: VoiceEvaluationService,
+    private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
     private val userPreferencesRepository: UserPreferencesRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -51,6 +55,17 @@ class VoiceGameViewModel @Inject constructor(
     private var pendingPcmData: ByteArray? = null
     private var previewFile: File? = null
 
+    private val topics = listOf(
+        "General Conversation",
+        "Daily Life",
+        "Greetings",
+        "Food & Dining",
+        "Weather",
+        "Travel",
+        "Hobbies",
+        "Family & Friends"
+    )
+
     init {
         viewModelScope.launch {
             userPreferencesRepository.targetLanguage.collect { lang ->
@@ -63,8 +78,11 @@ class VoiceGameViewModel @Inject constructor(
         when (intent) {
             is VoiceGameIntent.Init -> {
                 lessonId = intent.lessonId
-                _state.update { it.copy(sentence = intent.sentence) }
+                generateNewSentence()
             }
+
+            VoiceGameIntent.SkipClicked,
+            VoiceGameIntent.GenerateNewSentenceClicked -> generateNewSentence()
 
             VoiceGameIntent.ListenClicked -> textToSpeech.speak(_state.value.sentence)
             VoiceGameIntent.RecordClicked -> sendEffect(VoiceGameEffect.RequestMicPermission)
@@ -102,6 +120,41 @@ class VoiceGameViewModel @Inject constructor(
                     )
                 }
                 evaluateRecording()
+            }
+        }
+    }
+
+    private fun generateNewSentence() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoadingSentence = true) }
+            try {
+                val currentTopic = topics.random()
+                when (val result = generatePronunciationSentenceUseCase(
+                    targetLanguage = _state.value.targetLanguage,
+                    topic = currentTopic
+                )) {
+                    is LinguaQuestResult.Success -> {
+                        _state.update {
+                            it.copy(
+                                sentence = result.data.sentence,
+                                phonetic = result.data.phonetic,
+                                translation = result.data.translation,
+                                isLoadingSentence = false
+                            )
+                        }
+                    }
+                    is LinguaQuestResult.Failure -> {
+                        _state.update { it.copy(isLoadingSentence = false) }
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.DynamicString("Failed to generate sentence"),
+                                type = SnackbarType.ERROR
+                            )
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoadingSentence = false) }
             }
         }
     }

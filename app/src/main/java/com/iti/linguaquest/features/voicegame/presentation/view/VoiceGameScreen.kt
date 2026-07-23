@@ -30,6 +30,7 @@ import com.iti.linguaquest.features.voicegame.presentation.view.contents.Evaluat
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.IdlePhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.RecordingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
+import com.iti.linguaquest.core.navigation.SharedVoiceResultHolder
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -45,7 +46,14 @@ fun VoiceGameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) { viewModel.onIntent(VoiceGameIntent.Init(sentence, lessonId)) }
+    LaunchedEffect(Unit) {
+        if (SharedVoiceResultHolder.autoGenerateNextSentence) {
+            SharedVoiceResultHolder.autoGenerateNextSentence = false
+            viewModel.onIntent(VoiceGameIntent.GenerateNewSentenceClicked)
+        } else {
+            viewModel.onIntent(VoiceGameIntent.Init(sentence, lessonId))
+        }
+    }
 
     val micPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()

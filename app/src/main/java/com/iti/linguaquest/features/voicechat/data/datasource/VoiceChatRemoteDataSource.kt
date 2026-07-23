@@ -46,25 +46,21 @@ class VoiceChatRemoteDataSourceImpl @Inject constructor(
     override suspend fun connect(systemInstructions: String): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return try {
             withContext(Dispatchers.IO) {
-                // Disconnect any existing session first
                 session?.close()
                 receiveScope?.cancel()
 
                 val newSession = liveModel.connect()
                 session = newSession
 
-                // Launch the receive loop in a supervised scope
                 val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
                 receiveScope = scope
                 scope.launch {
                     receiveLoop(newSession)
                 }
 
-                Log.d(TAG, "Connected to Live API session")
                 LinguaQuestResult.Success(Unit)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to connect to Live API", e)
             LinguaQuestResult.Failure(
                 LinguaQuestDataError.CustomServerMessage(
                     e.message ?: "Failed to connect to voice chat"
@@ -86,7 +82,6 @@ class VoiceChatRemoteDataSourceImpl @Inject constructor(
             }
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to send audio chunk", e)
             LinguaQuestResult.Failure(
                 LinguaQuestDataError.CustomServerMessage(
                     e.message ?: "Failed to send audio"
