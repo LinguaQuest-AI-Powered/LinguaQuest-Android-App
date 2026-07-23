@@ -1,9 +1,9 @@
 package com.iti.linguaquest.core.appicon.rules
 
-import com.iti.linguaquest.core.appicon.domain.AppIconClock
 import com.iti.linguaquest.core.appicon.domain.AppIconRule
 import com.iti.linguaquest.core.appicon.domain.AppIconStateRepository
 import com.iti.linguaquest.core.appicon.domain.AppIconType
+import com.iti.linguaquest.core.appicon.util.AppIconClock
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

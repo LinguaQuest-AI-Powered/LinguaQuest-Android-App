@@ -35,7 +35,7 @@
     <string name="germany_language_code">ge</string>
 
     <string name="select_language">اختر اللغة</string>
-     <string name="every_day">كل يوم</string>
+    <string name="every_day">كل يوم</string>
     <string name="weekdays">أيام الأسبوع</string>
     <string name="weekends">عطلة نهاية الأسبوع</string>
     <string name="custom">مخصص</string>
@@ -232,7 +232,7 @@
     <string name="lockscreen_vocabulary_subtitle">حوّل شاشة القفل إلى حلقة تعلم صغيرة تُبقي المفردات حاضرة طوال اليوم.</string>
     <string name="lockscreen_vocabulary_cost_chip">50 عملة</string>
     <string name="lockscreen_vocabulary_schedule_chip">كل ساعتين</string>
-     <string name="lockscreen_vocabulary_state_ready">جاهز</string>
+    <string name="lockscreen_vocabulary_state_ready">جاهز</string>
     <string name="lockscreen_vocabulary_state_generating">جارٍ الإعداد</string>
     <string name="lockscreen_vocabulary_state_active">مفعّل</string>
     <string name="lockscreen_vocabulary_state_disabled">متوقف</string>
@@ -365,4 +365,21 @@
     <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
     <string name="save_changes">حفظ التغييرات</string>
     <string name="cancel">إلغاء</string>
+
+    <string name="days_count"> عدد الايام </string>
+
+    <string name="lang_english">الإنجليزية</string>
+    <string name="lang_spanish">الإسبانية</string>
+    <string name="lang_japanese">اليابانية</string>
+    <string name="lang_german">الألمانية</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="settings_lock_screen_vocabulary">مفردات شاشة القفل</string>
+     <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
+    <string name="reminder_turned_off">تم إيقاف التذكير.</string>
+    <string name="reminder_time_updated">تم تحديث وقت التذكير.</string>
+    <string name="reminder_repeat_updated">تم تحديث تكرار التذكير.</string>
+    <string name="notifications_title">الإشعارات</string>
+    <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
+    <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
+
 </resources>

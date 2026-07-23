@@ -1,16 +1,15 @@
 package com.iti.linguaquest.core.appicon.domain
 
-import com.iti.linguaquest.core.appicon.worker.AppIconRefreshSource
-import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+ @Singleton
 class AppIconService @Inject constructor(
     private val stateRepository: AppIconStateRepository,
     private val ruleEngine: AppIconRuleEngine,
-    private val manager: AppIconManager
+    private val manager:  AppIconController
 ) {
     suspend fun refresh(source: AppIconRefreshSource = AppIconRefreshSource.USER) {
         withContext(Dispatchers.IO) {

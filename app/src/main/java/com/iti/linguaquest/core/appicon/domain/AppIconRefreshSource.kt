@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.appicon.worker
+package com.iti.linguaquest.core.appicon.domain
 
 enum class AppIconRefreshSource {
     USER,

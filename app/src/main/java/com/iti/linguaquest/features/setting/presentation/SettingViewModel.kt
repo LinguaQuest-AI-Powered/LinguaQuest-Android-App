@@ -2,6 +2,12 @@ package com.iti.linguaquest.features.setting.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.features.setting.domain.usecase.CancelReminderUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetAppLanguageUseCase
@@ -14,17 +20,13 @@ import com.iti.linguaquest.features.setting.domain.usecase.GetSoundEnabledUseCas
 import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderDaysUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderEnabledUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.SaveReminderTimeUseCase
+import com.iti.linguaquest.features.setting.domain.usecase.ScheduleReminderUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderEffect
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
-import com.iti.linguaquest.features.setting.system.AlarmScheduler
 import com.iti.linguaquest.features.setting.system.ReminderSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -57,10 +59,10 @@ class SettingViewModel @Inject constructor(
     private val saveReminderEnabledUseCase: SaveReminderEnabledUseCase,
     private val saveReminderTimeUseCase: SaveReminderTimeUseCase,
     private val saveReminderDaysUseCase: SaveReminderDaysUseCase,
-    private val alarmScheduler: AlarmScheduler,
+    private val scheduleReminderUseCase: ScheduleReminderUseCase,
+    private val cancelReminderUseCase: CancelReminderUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
-
 
     val appLanguage: StateFlow<String> = getAppLanguageUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "en")
@@ -73,7 +75,6 @@ class SettingViewModel @Inject constructor(
 
     val notificationsEnabled: StateFlow<Boolean> = getNotificationsEnabledUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
-
 
     private val _reminderState = MutableStateFlow(ReminderState())
     val reminderState: StateFlow<ReminderState> = _reminderState.asStateFlow()
@@ -102,7 +103,7 @@ class SettingViewModel @Inject constructor(
                 )
             }.collect { loadedState ->
                 _reminderState.update { current ->
-                     current.copy(
+                    current.copy(
                         enabled = loadedState.enabled,
                         hour = loadedState.hour,
                         minute = loadedState.minute,
@@ -146,13 +147,9 @@ class SettingViewModel @Inject constructor(
             )
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    title = UiText.DynamicString("Daily Reminder"),
-                    message = UiText.DynamicString(
-                        if (enabled) {
-                            "Reminder turned on. We'll keep you on track."
-                        } else {
-                            "Reminder turned off."
-                        }
+                    title = UiText.StringResource(R.string.daily_reminder),
+                    message = UiText.StringResource(
+                        if (enabled) R.string.reminder_turned_on else R.string.reminder_turned_off
                     ),
                     type = if (enabled) SnackbarType.SUCCESS else SnackbarType.INFO
                 )
@@ -169,8 +166,8 @@ class SettingViewModel @Inject constructor(
             _reminderEffect.emit(ReminderEffect.ReminderUpdated)
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    title = UiText.DynamicString("Daily Reminder"),
-                    message = UiText.DynamicString("Reminder time updated."),
+                    title = UiText.StringResource(R.string.daily_reminder),
+                    message = UiText.StringResource(R.string.reminder_time_updated),
                     type = SnackbarType.SUCCESS
                 )
             )
@@ -211,14 +208,13 @@ class SettingViewModel @Inject constructor(
             _reminderEffect.emit(ReminderEffect.ReminderUpdated)
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    title = UiText.DynamicString("Daily Reminder"),
-                    message = UiText.DynamicString("Reminder repeat updated."),
+                    title = UiText.StringResource(R.string.daily_reminder),
+                    message = UiText.StringResource(R.string.reminder_repeat_updated),
                     type = SnackbarType.SUCCESS
                 )
             )
         }
     }
-
 
     fun toggleSound(enabled: Boolean) {
         viewModelScope.launch { toggleSoundUseCase(enabled) }
@@ -232,11 +228,11 @@ class SettingViewModel @Inject constructor(
                 _reminderState.update {
                     it.copy(showTimePicker = false, showRepeatSheet = false)
                 }
-                alarmScheduler.cancel()
+                cancelReminderUseCase()
                 snackbarController.sendEvent(
                     SnackbarEvent(
-                        title = UiText.DynamicString("Notifications"),
-                        message = UiText.DynamicString("Notifications off. Daily reminder paused."),
+                        title = UiText.StringResource(R.string.notifications_title),
+                        message = UiText.StringResource(R.string.notifications_off_msg),
                         type = SnackbarType.INFO
                     )
                 )
@@ -246,8 +242,8 @@ class SettingViewModel @Inject constructor(
             syncReminderSchedule(notificationsAllowed = enabled)
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    title = UiText.DynamicString("Notifications"),
-                    message = UiText.DynamicString("Notifications enabled."),
+                    title = UiText.StringResource(R.string.notifications_title),
+                    message = UiText.StringResource(R.string.notifications_on_msg),
                     type = SnackbarType.SUCCESS
                 )
             )
@@ -261,7 +257,6 @@ class SettingViewModel @Inject constructor(
     fun changeAppTheme(theme: String) {
         viewModelScope.launch { changeAppThemeUseCase(theme) }
     }
-
 
     private fun parseTime(timeStr: String): Pair<Int, Int> {
         return try {
@@ -287,9 +282,9 @@ class SettingViewModel @Inject constructor(
     private fun syncReminderSchedule(notificationsAllowed: Boolean = notificationsEnabled.value) {
         val state = _reminderState.value
         if (notificationsAllowed && state.enabled) {
-            alarmScheduler.schedule(state.toReminderSettings())
+            scheduleReminderUseCase(state.toReminderSettings())
         } else {
-            alarmScheduler.cancel()
+            cancelReminderUseCase()
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -110,10 +111,12 @@ fun DailyReminderSection(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
+                 val context = LocalContext.current
+
                 SettingItem(
                     icon = painterResource(id = R.drawable.ic_bell_icon),
                     title = stringResource(R.string.repeat),
-                    value = state.repeatLabel,
+                    value = state.getRepeatLabel(context),
                     valueColor = LocalLinguaQuestColors.current.BrownText,
                     iconTint = MaterialTheme.colorScheme.tertiary,
                     onClick = { onIntent(ReminderIntent.ShowRepeatSheet) },

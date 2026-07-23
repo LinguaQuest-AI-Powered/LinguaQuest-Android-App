@@ -1,50 +1,51 @@
 package com.iti.linguaquest.features.setting.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.Alignment
-import com.iti.linguaquest.core.theme.AppTextStyles
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
 import com.iti.linguaquest.features.setting.presentation.components.DailyReminderSection
 import com.iti.linguaquest.features.setting.presentation.components.RepeatBottomSheet
@@ -54,7 +55,6 @@ import com.iti.linguaquest.features.setting.presentation.components.SettingSecti
 import com.iti.linguaquest.features.setting.presentation.components.TimePickerDialog
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
-import com.iti.linguaquest.core.utils.ShareTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,11 +85,11 @@ fun SettingContent(
     if (showLanguageDialog) {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val languages = listOf(
-            "en" to "English",
-            "es" to "Spanish",
-            "ja" to "Japanese",
-            "ge" to "German",
-            "ar" to "Arabic (العربية)"
+            "en" to stringResource(R.string.lang_english),
+            "es" to stringResource(R.string.lang_spanish),
+            "ja" to stringResource(R.string.lang_japanese),
+            "ge" to stringResource(R.string.lang_german),
+            "ar" to stringResource(R.string.lang_arabic)
         )
 
         ModalBottomSheet(
@@ -200,7 +200,7 @@ fun SettingContent(
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_learning_language),
-                value = "English",
+                value = stringResource(id = R.string.lang_english),
                 valueColor = LocalLinguaQuestColors.current.BrownText,
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
@@ -214,11 +214,11 @@ fun SettingContent(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_app_language),
                 value = when (appLanguage) {
-                    "es" -> "Spanish"
-                    "ja" -> "Japanese"
-                    "ge" -> "German"
-                    "ar" -> "Arabic"
-                    else -> "English"
+                    "es" -> stringResource(id = R.string.lang_spanish)
+                    "ja" -> stringResource(id = R.string.lang_japanese)
+                    "ge" -> stringResource(id = R.string.lang_german)
+                    "ar" -> stringResource(id = R.string.lang_arabic)
+                    else -> stringResource(id = R.string.lang_english)
                 },
                 valueColor = LocalLinguaQuestColors.current.BrownText,
                 iconTint = MaterialTheme.colorScheme.tertiary,
@@ -283,7 +283,7 @@ fun SettingContent(
             )
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_lock_icon),
-                title = "Lock Screen Vocabulary",
+                title = stringResource(id = R.string.settings_lock_screen_vocabulary),
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = onLockScreenVocabularyClick
             )

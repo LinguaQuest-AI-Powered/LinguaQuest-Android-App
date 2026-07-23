@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.appicon.domain
+package com.iti.linguaquest.core.appicon.util
 
 import javax.inject.Inject
 
