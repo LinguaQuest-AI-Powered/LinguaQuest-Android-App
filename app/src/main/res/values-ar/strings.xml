@@ -284,6 +284,7 @@
     <string name="my_languages_level_format">المستوى %1$d</string>
     <string name="cd_selected">محدد</string>
     <string name="cd_search">بحث</string>
+    <string name="add_languages_no_results">لا توجد لغات مطابقة لبحثك</string>
 
     <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
     <string name="take_photo">التقاط صورة</string>
@@ -346,4 +347,9 @@
     <string name="map_lets_learn">هيا نتعلم!</string>
     <string name="cd_treasure">كنز</string>
     <string name="cd_star">نجمة</string>
+    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
+    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
+    <string name="coins_description">عملات</string>
+    <string name="confirm_button">تأكيد</string>
+    <string name="cancel_button">إلغاء</string>
 </resources>
