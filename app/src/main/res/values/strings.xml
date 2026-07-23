@@ -301,6 +301,7 @@
     <string name="my_languages_level_format">Level %1$d</string>
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
+    <string name="add_languages_no_results">No languages matching your search</string>
 
 
     <string name="update_profile_photo">Update profile photo</string>
@@ -337,4 +338,9 @@
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel">Cancel</string>
-</resources>
+         <string name="enable_lock_screen_title">Enable Lock Screen\nVocabulary?</string>
+        <string name="enable_lock_screen_subtitle">Spend %1$d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
+        <string name="coins_description">Coins</string>
+        <string name="confirm_button">Confirm</string>
+        <string name="cancel_button">Cancel</string>
+ </resources>
