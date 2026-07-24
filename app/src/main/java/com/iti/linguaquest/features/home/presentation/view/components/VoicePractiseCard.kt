@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
 
+import androidx.compose.foundation.Image
 import com.iti.linguaquest.core.utils.ImageWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,9 +35,8 @@ import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
-fun ContinueLessonCard(
-    lesson: LessonPreview,
-    onContinueClick: () -> Unit,
+fun VoicePractiseCard(
+    onStartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,7 +55,7 @@ fun ContinueLessonCard(
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.continue_lesson),
+                        text = stringResource(R.string.voice_practise),
                         color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -65,16 +66,11 @@ fun ContinueLessonCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = lesson.word.asString(),
+                    text = "Practice your\n" +
+                            "pronunciation",
                     color = LinguaQuestTheme.colors.blackColor,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${lesson.partOfSpeech.asString()} \u2022 ${lesson.translation.asString()}",
-                    color = LinguaQuestTheme.colors.iconsColor,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
                 )
             }
 
@@ -88,10 +84,10 @@ fun ContinueLessonCard(
                     .background(LinguaQuestTheme.colors.IconBoxBackground),
                 contentAlignment = Alignment.Center
             ) {
-                ImageWrapper(
-                    model = lesson.iconSource,
-                    contentDescription = lesson.word.asString(),
-                    modifier = Modifier.size(48.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.lingo_mic),
+                    contentDescription = null,
+                    modifier = Modifier.size(70.dp)
                 )
             }
         }
@@ -99,8 +95,8 @@ fun ContinueLessonCard(
         Spacer(modifier = Modifier.height(14.dp))
 
         AppButton(
-            text = stringResource(R.string.continue_button),
-            onClick = onContinueClick,
+            text = stringResource(R.string.start_button),
+            onClick = onStartClick,
             variant = ButtonVariant.PRIMARY,
             icon = rememberVectorPainter(image = Icons.Default.PlayArrow),
             iconPosition = IconPosition.START,

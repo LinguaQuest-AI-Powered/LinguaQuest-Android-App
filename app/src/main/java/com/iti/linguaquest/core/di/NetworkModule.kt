@@ -2,6 +2,7 @@ package com.iti.linguaquest.core.di
 
 import com.iti.linguaquest.BuildConfig
 import com.iti.linguaquest.core.network.NetworkConfig
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.iti.linguaquest.core.network.AuthInterceptor
 import com.iti.linguaquest.core.network.TokenAuthenticator
@@ -55,13 +56,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideGson(): Gson = GsonBuilder().create()
+
+    @Provides
+    @Singleton
     fun provideRetrofit(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        gson: Gson
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(NetworkConfig.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 

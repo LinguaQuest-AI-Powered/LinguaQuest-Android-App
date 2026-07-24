@@ -9,6 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,8 @@ import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
     val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
     val currentScreen = nestedBackStack.lastOrNull()
+    var userXp by remember { mutableIntStateOf(0) }
+    var userCoins by remember { mutableIntStateOf(0) }
 
     DisposableEffect(Unit) {
         onDispose { SharedBottomBarState.heightPx = 0 }
@@ -66,8 +72,8 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
             containerColor = Color.Transparent,
             topBar = {
                 LinguaQuestTopAppBar(
-                    xp = 1250,
-                    lives = 45
+                    xp = userXp,
+                    lives = userCoins
                 )
             },
             bottomBar = {
@@ -102,8 +108,8 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
-                            onNavigateToVoiceGame = { lessonId, sentence ->
-                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame(lessonId, sentence))
+                            onNavigateToVoiceGame = {
+                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
                             },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
@@ -113,6 +119,10 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             },
                             onNavigateToAddLanguages = {
                                 rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
+                            },
+                            onHeaderDataChanged = { xp, coins ->
+                                userXp = xp
+                                userCoins = coins
                             }
                         )
                     }

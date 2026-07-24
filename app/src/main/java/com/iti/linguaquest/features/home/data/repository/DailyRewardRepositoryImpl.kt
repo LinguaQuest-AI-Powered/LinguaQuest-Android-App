@@ -4,7 +4,7 @@ package com.iti.linguaquest.features.home.data.repository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.home.data.mapper.toDomain
-import com.iti.linguaquest.features.home.data.remote.DailyRewardRemoteDataSource
+import com.iti.linguaquest.features.home.data.dataSource.remote.DailyRewardRemoteDataSource
 import com.iti.linguaquest.features.home.domain.model.DailyRewardClaimResult
 import com.iti.linguaquest.features.home.domain.model.DailyRewardStatus
 import com.iti.linguaquest.features.home.domain.repository.DailyRewardRepository

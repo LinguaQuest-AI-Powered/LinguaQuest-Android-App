@@ -1,11 +1,11 @@
-package com.iti.linguaquest.features.home.data.remote
+package com.iti.linguaquest.features.home.data.dataSource.remote
 
 import com.iti.linguaquest.core.network.SuccessResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.MyLanguagesResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.AvailableLanguagesResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.AddLanguagesRequestDto
-import com.iti.linguaquest.features.home.data.remote.dto.SetActiveLanguageRequestDto
-import com.iti.linguaquest.features.home.data.remote.dto.SetActiveLanguageResponseDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.MyLanguagesResponseDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.AvailableLanguagesResponseDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.AddLanguagesRequestDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetActiveLanguageRequestDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetActiveLanguageResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

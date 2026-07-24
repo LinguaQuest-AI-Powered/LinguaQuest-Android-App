@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.data.remote.dto
+package com.iti.linguaquest.features.home.data.dataSource.remote.dto
 
 
 data class DailyRewardStatusDto(

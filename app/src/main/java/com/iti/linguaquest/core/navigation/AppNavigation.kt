@@ -353,8 +353,6 @@ fun AppNavigation(
                 }
                 entry<RootScreen.VoiceGame> { screen ->
                     VoiceGameScreen(
-                        sentence = screen.sentence,
-                        lessonId = screen.lessonId,
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
                         onEvaluationComplete = { result ->
                             SharedVoiceResultHolder.pendingResult = result

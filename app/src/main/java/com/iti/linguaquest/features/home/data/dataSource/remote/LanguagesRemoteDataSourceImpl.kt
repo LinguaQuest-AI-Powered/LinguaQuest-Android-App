@@ -1,12 +1,12 @@
-package com.iti.linguaquest.features.home.data.remote
+package com.iti.linguaquest.features.home.data.dataSource.remote
 
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.home.data.remote.dto.AddLanguagesRequestDto
-import com.iti.linguaquest.features.home.data.remote.dto.SetActiveLanguageRequestDto
-import com.iti.linguaquest.features.home.data.remote.dto.UserLanguageDto
-import com.iti.linguaquest.features.home.data.remote.dto.LanguageOptionDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.AddLanguagesRequestDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetActiveLanguageRequestDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.UserLanguageDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.LanguageOptionDto
 import javax.inject.Inject
 
 class LanguagesRemoteDataSourceImpl @Inject constructor(

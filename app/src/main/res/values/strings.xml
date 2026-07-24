@@ -12,6 +12,7 @@
     <string name="i_want_to_learn">I WANT TO LEARN...</string>
     <string name="popular_choices">Popular Choices</string>
     <string name="continue_button">Continue</string>
+    <string name="start_button">Start</string>
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
@@ -149,6 +150,7 @@
     <string name="streak_label">STREAK</string>
     <string name="worlds_label">WORLDS</string>
     <string name="continue_lesson">CONTINUE LESSON</string>
+    <string name="voice_practise">Voice Practice</string>
     <string name="leaderboard_title">Leaderboard</string>
     <string name="achievements_title">Achievements</string>
     <string name="learning_label">Learning</string>
