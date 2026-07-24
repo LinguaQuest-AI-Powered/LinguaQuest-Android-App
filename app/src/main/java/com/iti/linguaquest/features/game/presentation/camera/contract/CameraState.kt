@@ -6,7 +6,8 @@ data class CameraState(
     val permissionStatus: PermissionStatus = PermissionStatus.IDLE,
     val isFlashEnabled: Boolean = false,
     val isFrontCamera: Boolean = false,
-    val capturedUri: Uri? = null
+    val capturedUri: Uri? = null,
+    val isSubmitting: Boolean = false
 )
 
 enum class PermissionStatus {

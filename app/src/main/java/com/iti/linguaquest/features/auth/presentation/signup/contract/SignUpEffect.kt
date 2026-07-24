@@ -3,6 +3,8 @@ package com.iti.linguaquest.features.auth.presentation.signup.contract
 sealed interface SignUpEffect {
     data class SignUpSucceeded(val email: String) : SignUpEffect
     data object NavigateToLogin : SignUpEffect
+    data object NavigateToMain : SignUpEffect
+    data object NavigateToOAuthLanguageSelection : SignUpEffect
     data object ShakeGoogleSignIn : SignUpEffect
     data object LaunchGoogleSignIn : SignUpEffect
     data object ShakeUsername : SignUpEffect

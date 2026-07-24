@@ -13,7 +13,7 @@ import com.iti.linguaquest.core.navigation.AppNavigation
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 

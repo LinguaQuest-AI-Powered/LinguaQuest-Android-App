@@ -15,8 +15,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.game.domain.usecase.VerifyLevelUseCase
+import java.io.File
+
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+
 @HiltViewModel
-class GameProcessingViewModel @Inject constructor() : ViewModel() {
+class GameProcessingViewModel @Inject constructor(
+    private val verifyLevelUseCase: VerifyLevelUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(GameProcessingState())
     val state: StateFlow<GameProcessingState> = _state.asStateFlow()
@@ -24,18 +34,43 @@ class GameProcessingViewModel @Inject constructor() : ViewModel() {
     private val _effect = Channel<GameProcessingEffect>()
     val effect = _effect.receiveAsFlow()
 
+    fun verifyImage(worldId: Int, levelId: Int, imageFile: File?) {
+        if (imageFile == null || !imageFile.exists()) {
+            sendEffect(GameProcessingEffect.NavigateToError(UiText.StringResource(R.string.game_processing_simulate_error_message)))
+            return
+        }
+        viewModelScope.launch {
+            when (val result = verifyLevelUseCase(worldId, levelId, imageFile)) {
+                is LinguaQuestResult.Success -> {
+                    val data = result.data
+                    if (data.isMatch) {
+                        sendEffect(
+                            GameProcessingEffect.NavigateToSuccess(
+                                xp = data.xpEarned,
+                                coins = data.coinsEarned,
+                                level = data.level,
+                                progressPercentage = data.levelProgressPercentage
+                            )
+                        )
+                    } else {
+                        sendEffect(
+                            GameProcessingEffect.NavigateToFailure(
+                                reason = UiText.StringResource(R.string.game_processing_simulate_failure_reason)
+                            )
+                        )
+                    }
+                }
+                is LinguaQuestResult.Failure -> {
+                    val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.general_error)
+                    sendEffect(GameProcessingEffect.NavigateToError(errorMessage = uiText))
+                }
+            }
+        }
+    }
     fun onIntent(intent: GameProcessingIntent) {
         when (intent) {
             GameProcessingIntent.StartProcessing -> {}
-            GameProcessingIntent.SimulateAiSuccess -> {
-                sendEffect(GameProcessingEffect.NavigateToSuccess(50, 10))
-            }
-            GameProcessingIntent.SimulateAiFailure -> {
-                sendEffect(GameProcessingEffect.NavigateToFailure(R.string.game_processing_simulate_failure_reason))
-            }
-            GameProcessingIntent.SimulateNetworkError -> {
-                sendEffect(GameProcessingEffect.NavigateToError(R.string.game_processing_simulate_error_message))
-            }
         }
     }
 

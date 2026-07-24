@@ -46,7 +46,9 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
@@ -61,15 +63,17 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToDetails: (Int) -> Unit,
+    onNavigateToVoiceGame: (Int, String) -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
     var showCoinRain by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
@@ -97,11 +101,29 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToLessonDetails -> onNavigateToDetails(effect.lessonId)
+                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame(effect.lessonId, effect.sentence)
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        myLanguagesViewModel.effect.collectLatest { effect ->
+            when (effect) {
+                MyLanguagesEffect.NavigateToAddLanguages -> {
+                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                    onNavigateToAddLanguages()
+                }
+                MyLanguagesEffect.Dismiss -> viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+            }
+        }
+    }
+
+    LaunchedEffect(state.isLanguageBottomSheetVisible) {
+        if (state.isLanguageBottomSheetVisible) {
+            myLanguagesViewModel.onIntent(MyLanguagesIntent.LoadMyLanguages)
         }
     }
 
@@ -199,16 +221,13 @@ fun HomeScreen(
 
     if (state.isLanguageBottomSheetVisible) {
         MyLanguagesBottomSheet(
-            languages = listOf(
-                MyLanguageUiModel(1, "Spanish", 12, true, "🇪🇸"),
-                MyLanguageUiModel(2, "French", 4, false, "🇫🇷"),
-                MyLanguageUiModel(3, "Japanese", 3, false, "🇯🇵")
-            ),
-            onDismiss = { viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet) },
-            onAddNewLanguageClick = { viewModel.onIntent(HomeIntent.AddNewLanguageClicked) },
+            languages = myLanguagesState.languages,
+            isLoading = myLanguagesState.isLoading,
+            isSettingActive = myLanguagesState.isSettingActive,
+            onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
+            onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
             onLanguageSelect = { selectedId ->
-                // TODO: Add Intent to switch active language
-                viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                myLanguagesViewModel.onIntent(MyLanguagesIntent.SetActiveLanguage(selectedId))
             }
         )
     }

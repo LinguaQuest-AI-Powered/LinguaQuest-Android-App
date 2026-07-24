@@ -1,0 +1,45 @@
+package com.iti.linguaquest.core.cache.token
+
+import android.content.SharedPreferences
+import com.iti.linguaquest.core.preferences.cache.TokenKeys
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+
+class TokensLocalDataSourceImpl @Inject constructor(
+    private val encryptedSharedPreferences: SharedPreferences
+) : TokensLocalDataSource {
+
+    private val _accessToken =
+        MutableStateFlow(encryptedSharedPreferences.getString(TokenKeys.ACCESS_TOKEN, null))
+    override val accessToken: Flow<String?> = _accessToken.asStateFlow()
+
+    private val _refreshToken =
+        MutableStateFlow(encryptedSharedPreferences.getString(TokenKeys.REFRESH_TOKEN, null))
+    override val refreshToken: Flow<String?> = _refreshToken.asStateFlow()
+
+    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        encryptedSharedPreferences.edit().apply {
+            putString(TokenKeys.ACCESS_TOKEN, accessToken)
+            putString(TokenKeys.REFRESH_TOKEN, refreshToken)
+            apply()
+        }
+        _accessToken.value = accessToken
+        _refreshToken.value = refreshToken
+    }
+
+    override suspend fun clearTokens() {
+        encryptedSharedPreferences.edit().apply {
+            remove(TokenKeys.ACCESS_TOKEN)
+            remove(TokenKeys.REFRESH_TOKEN)
+            apply()
+        }
+        _accessToken.value = null
+        _refreshToken.value = null
+    }
+
+    override fun getAccessTokenImmediate(): String? {
+        return encryptedSharedPreferences.getString(TokenKeys.ACCESS_TOKEN, null)
+    }
+}

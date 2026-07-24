@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.home.presentation.languages.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -162,23 +167,51 @@ fun AddLanguagesContent(
                 it.name.contains(state.searchQuery, ignoreCase = true)
             }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 16.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    items = filteredLanguages,
-                    key = { it.id }
-                ) { language ->
-                    LanguageSelectionCard(
-                        language = language,
-                        isSelected = state.selectedLanguageIds.contains(language.id),
-                        onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
-                        modifier = Modifier.height(180.dp)
-                    )
+            if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(bottom = 64.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.lingo_empty),
+                            contentDescription = null,
+                            modifier = Modifier.size(350.dp),
+                            contentScale = androidx.compose.ui.layout.ContentScale.Fit
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            text = stringResource(R.string.add_languages_no_results),
+                            style = AppTextStyles.ScreenTitle.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = LinguaQuestTheme.colors.titleAndCationsColor,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                    }
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(
+                        items = filteredLanguages,
+                        key = { it.id }
+                    ) { language ->
+                        LanguageSelectionCard(
+                            language = language,
+                            isSelected = state.selectedLanguageIds.contains(language.id),
+                            onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                            modifier = Modifier.height(180.dp)
+                        )
+                    }
                 }
             }
         }

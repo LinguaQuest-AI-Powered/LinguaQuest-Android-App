@@ -30,17 +30,15 @@ sealed interface RootScreen : NavKey {
     data object Onboarding : RootScreen
 
     @Serializable
-    data object Languages : RootScreen
+    data class Languages(val flow: String = "ONBOARDING") : RootScreen
 
     @Serializable
-    data object OnboardingLevel : RootScreen
-
-    // REMOVED: data class Level(val worldId: Int, val levelNumber: Int) : RootScreen
+    data class OnboardingLevel(val flow: String = "ONBOARDING") : RootScreen
 
     @Serializable
-    data object Login : RootScreen
+    data class Login(val isOAuthLanguageSelectionCompleted: Boolean = false) : RootScreen
     @Serializable
-    data object SignUp : RootScreen
+    data class SignUp(val isOAuthLanguageSelectionCompleted: Boolean = false) : RootScreen
     @Serializable
     data object ForgotPassword : RootScreen
     @Serializable
@@ -75,6 +73,13 @@ sealed interface RootScreen : NavKey {
     data object AddLanguages : RootScreen
     @Serializable
     data object Achievement : RootScreen
+    @Serializable
+    data class VoiceGame(val lessonId: Int, val sentence: String) : RootScreen
+
+    @Serializable
+    data object VoiceResult : RootScreen
+
+
 }
 @Serializable
 sealed interface NestedScreen : NavKey {

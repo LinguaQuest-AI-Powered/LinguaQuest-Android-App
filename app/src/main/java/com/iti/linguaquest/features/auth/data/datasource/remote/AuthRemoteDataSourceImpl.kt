@@ -9,31 +9,45 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val api: AuthApiService
 ) : AuthRemoteDataSource {
 
+    private val mapAuthError: (String, String) -> LinguaQuestDataError = { key, msg ->
+        try {
+            LinguaQuestDataError.Auth.valueOf(key)
+        } catch (e: IllegalArgumentException) {
+            LinguaQuestDataError.CustomServerMessage(msg)
+        }
+    }
+
+    override suspend fun getAuthLanguages(): LinguaQuestResult<AuthLanguagesResponseDataDto, LinguaQuestDataError> =
+        safeApiCall(mapAuthError) { api.getAuthLanguages().data }
+
     override suspend fun register(body: RegisterRequestDto): LinguaQuestResult<RegisterResponseDataDto, LinguaQuestDataError> =
-        safeApiCall { api.register(body).data }
+        safeApiCall(mapAuthError) { api.register(body).data }
 
     override suspend fun login(body: LoginRequestDto): LinguaQuestResult<LoginResponseDataDto, LinguaQuestDataError> =
-        safeApiCall { api.login(body).data }
+        safeApiCall(mapAuthError) { api.login(body).data }
 
     override suspend fun loginWithGoogle(body: OAuthGoogleRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> =
-        safeApiCall { api.loginWithGoogle(body).data }
+        safeApiCall(mapAuthError) { api.loginWithGoogle(body).data }
+
+    override suspend fun completeOAuthProfile(body: CompleteProfileRequestDto): LinguaQuestResult<OAuthResponseDataDto, LinguaQuestDataError> =
+        safeApiCall(mapAuthError) { api.completeOAuthProfile(body).data }
 
     override suspend fun sendOtp(body: OtpSendRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
-        safeApiCall { api.sendOtp(body).data }
+        safeApiCall(mapAuthError) { api.sendOtp(body).data }
 
     override suspend fun verifyEmailOtp(body: OtpVerifyRequestDto): LinguaQuestResult<VerifyEmailResponseDto, LinguaQuestDataError> =
-        safeApiCall { api.verifyEmailOtp(body).data }
+        safeApiCall(mapAuthError) { api.verifyEmailOtp(body).data }
 
     override suspend fun verifyPasswordResetOtp(body: OtpVerifyRequestDto): LinguaQuestResult<VerifyResetOtpResponseDto, LinguaQuestDataError> =
-        safeApiCall { api.verifyPasswordResetOtp(body).data }
+        safeApiCall(mapAuthError) { api.verifyPasswordResetOtp(body).data }
 
     override suspend fun setNewPassword(body: ResetPasswordRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
-        safeApiCall { api.setNewPassword(body).data }
+        safeApiCall(mapAuthError) { api.setNewPassword(body).data }
 
     override suspend fun logout(body: LogoutRequestDto): LinguaQuestResult<Unit, LinguaQuestDataError> =
-        safeApiCall { api.logout(body).data }
+        safeApiCall(mapAuthError) { api.logout(body).data }
 
     override suspend fun refreshToken(body: RefreshTokenRequestDto): LinguaQuestResult<RefreshTokenResponseDataDto, LinguaQuestDataError> =
-        safeApiCall { api.refreshToken(body).data }
+        safeApiCall(mapAuthError) { api.refreshToken(body).data }
 
 }

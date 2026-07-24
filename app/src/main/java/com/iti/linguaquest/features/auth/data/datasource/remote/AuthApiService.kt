@@ -3,10 +3,15 @@ package com.iti.linguaquest.features.auth.data.datasource.remote
 import com.iti.linguaquest.core.network.SuccessResponseDto
 import com.iti.linguaquest.core.network.NoAuth
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface AuthApiService {
+
+    @NoAuth
+    @GET("auth/languages")
+    suspend fun getAuthLanguages(): SuccessResponseDto<AuthLanguagesResponseDataDto>
 
     @NoAuth
     @POST("auth/register")
@@ -24,6 +29,11 @@ interface AuthApiService {
     @POST("auth/oauth/firebase")
     suspend fun loginWithGoogle(
         @Body body: OAuthGoogleRequestDto
+    ): SuccessResponseDto<OAuthResponseDataDto>
+
+    @POST("profile/complete-profile")
+    suspend fun completeOAuthProfile(
+        @Body body: CompleteProfileRequestDto
     ): SuccessResponseDto<OAuthResponseDataDto>
 
     @NoAuth
