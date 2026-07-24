@@ -16,6 +16,10 @@ class GameSharedViewModel @Inject constructor() : ViewModel() {
     private val _sharedState = MutableStateFlow(GameSharedState())
     val sharedState: StateFlow<GameSharedState> = _sharedState.asStateFlow()
 
+    fun setWorldAndLevelId(worldId: Int, levelId: Int) {
+        _sharedState.update { it.copy(worldId = worldId, levelId = levelId) }
+    }
+
     fun setLevelId(id: Int) {
         _sharedState.update { it.copy(levelId = id) }
     }
