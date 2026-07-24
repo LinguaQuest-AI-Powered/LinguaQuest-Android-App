@@ -66,8 +66,7 @@ fun VoicePractiseCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Practice your\n" +
-                            "pronunciation",
+                    text = stringResource(R.string.practice_pronunciation),
                     color = LinguaQuestTheme.colors.blackColor,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold

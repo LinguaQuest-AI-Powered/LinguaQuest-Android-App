@@ -173,7 +173,7 @@
     <string name="settings_label">الإعدادات</string>
     <string name="view_all_label">عرض الكل</string>
     <string name="you_label">أنت</string>
-
+    <string name="practice_pronunciation">تدرّب على\nالنطق</string>
     // WorldDifficulty
     <string name="medium">متوسط</string>
     <string name="easy">سهل</string>

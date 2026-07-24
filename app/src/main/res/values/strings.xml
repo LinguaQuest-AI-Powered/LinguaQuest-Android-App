@@ -160,6 +160,7 @@
     <string name="view_all_label">VIEW ALL</string>
     <string name="you_label">You</string>
 
+    <string name="practice_pronunciation">Practice your\npronunciation</string>
     <!-- WorldDifficulty -->
     <string name="medium">MEDIUM</string>
     <string name="easy">EASY</string>
