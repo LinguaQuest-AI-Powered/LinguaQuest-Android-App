@@ -2,7 +2,7 @@ package com.iti.linguaquest.core.cache.data.repository
 
 import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class UserPreferencesRepositoryImpl @Inject constructor(

@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+
 @HiltViewModel
 class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetWorldsUseCase) : ViewModel() {
 
@@ -61,16 +63,17 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
     }
 
     private fun World.toWorldItem(): WorldItem {
+        val safeUrl = imageUrl.orEmpty()
         return WorldItem(
             id = id,
-            title = UiText.DynamicString(name),
-            imageSource = if (imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
+            title = UiText.DynamicString(name.ifEmpty { "World $id" }),
+            imageSource = if (safeUrl.startsWith("http")) safeUrl else R.drawable.kitchen_icon,
             difficulty = when (difficulty) {
                 DomainWorldDifficulty.EASY -> WorldDifficulty.EASY
                 DomainWorldDifficulty.MEDIUM -> WorldDifficulty.MEDIUM
                 DomainWorldDifficulty.HARD -> WorldDifficulty.HARD
             },
-            progress = progressPercent / 100f,
+            progress = (progressPercent ?: 0) / 100f,
             isCompleted = status == WorldStatus.COMPLETED,
             unlockLevel = if (status == WorldStatus.LOCKED) 1 else null
         )

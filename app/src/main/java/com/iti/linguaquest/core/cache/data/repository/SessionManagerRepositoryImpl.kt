@@ -2,7 +2,7 @@ package com.iti.linguaquest.core.cache.data.repository
 
 import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import com.iti.linguaquest.core.cache.domain.repository.SessionManagerRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class SessionManagerRepositoryImpl @Inject constructor(

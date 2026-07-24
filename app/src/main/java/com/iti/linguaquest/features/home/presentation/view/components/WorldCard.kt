@@ -107,7 +107,7 @@ fun WorldCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.unlock_at_level_format, world.unlockLevel),
+                        text = stringResource(R.string.unlock_at_level_format, world.unlockLevel ?: 1),
                         style = AppTextStyles.Caption.copy(
                             fontWeight = FontWeight.Bold,
                             color = LinguaQuestTheme.colors.BrownText

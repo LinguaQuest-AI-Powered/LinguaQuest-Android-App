@@ -11,10 +11,9 @@ class WorldsRemoteDataSourceImpl @Inject constructor(
 ) : WorldsRemoteDataSource {
 
     override suspend fun getWorlds(
-        languageId: Int?,
         difficulty: String?
     ): LinguaQuestResult<WorldsDataDto, LinguaQuestDataError> {
-        val result = safeApiCall { api.getWorlds(languageId, difficulty) }
+        val result = safeApiCall { api.getWorlds(difficulty) }
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
             is LinguaQuestResult.Failure -> result

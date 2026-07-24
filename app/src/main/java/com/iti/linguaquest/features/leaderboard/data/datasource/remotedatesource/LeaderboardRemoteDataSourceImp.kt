@@ -2,7 +2,7 @@ package com.iti.linguaquest.features.leaderboard.data.datasource.remotedatesourc
 
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import jakarta.inject.Inject
+import javax.inject.Inject
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.map
 

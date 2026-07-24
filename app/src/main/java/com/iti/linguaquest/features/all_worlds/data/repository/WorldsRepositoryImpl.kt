@@ -1,10 +1,9 @@
 package com.iti.linguaquest.features.all_worlds.data.repository
 
-import com.iti.linguaquest.core.network.safeApiCall
+import android.util.Log
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.data.mapper.toDomain
-import com.iti.linguaquest.features.all_worlds.data.remote.WorldsApiService
 import com.iti.linguaquest.features.all_worlds.data.remote.WorldsRemoteDataSource
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldsData
@@ -22,7 +21,10 @@ class WorldsRepositoryImpl @Inject constructor(
         val result = remoteDataSource.getWorlds(difficultyString)
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.toDomain())
-            is LinguaQuestResult.Failure -> result
+            is LinguaQuestResult.Failure -> {
+                Log.e("WorldsRepositoryImpl", "getWorlds: ${result.error}")
+                result
+            }
         }
     }
 }
