@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit = {},
-    onChangeLanguageClick: () -> Unit = {},
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
     viewModel: ProfileViewModel = hiltViewModel()
@@ -63,7 +62,6 @@ fun ProfileScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 ProfileEffect.NavigateToSettings -> onSettingsClick()
-                ProfileEffect.NavigateToChangeLanguage -> onChangeLanguageClick()
                 ProfileEffect.NavigateToAllAchievements -> onViewAllAchievementsClick()
                 ProfileEffect.NavigateToAllLeaderboard -> onViewAllLeaderboardClick()
             }
@@ -85,7 +83,6 @@ fun ProfileScreen(
                 isAvatarUploading = uiState.isAvatarUploading,
                 onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
                 onEditAvatarClick = { showAvatarSheet = true },
-                onChangeLanguageClick = { viewModel.onIntent(ProfileIntent.ChangeLanguageClicked) },
                 onViewAllAchievementsClick = { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) },
                 onViewAllLeaderboardClick = { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) },
                 modifier = Modifier.fillMaxSize()
@@ -118,7 +115,6 @@ fun ProfileContent(
     isAvatarUploading: Boolean = false,
     onSettingsClick: () -> Unit,
     onEditAvatarClick: () -> Unit,
-    onChangeLanguageClick: () -> Unit,
     onViewAllAchievementsClick: () -> Unit,
     onViewAllLeaderboardClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -130,7 +126,7 @@ fun ProfileContent(
     ) {
         item { ProfileHeader(state, onEditAvatarClick, isAvatarUploading) }
         item { StatsGrid(state) }
-        item { LearningProgressCard(state, onChangeLanguageClick) }
+        item { LearningProgressCard(state) }
         item { SettingsRow(onClick = onSettingsClick) }
         if (state.achievements.isNotEmpty()){
             item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }

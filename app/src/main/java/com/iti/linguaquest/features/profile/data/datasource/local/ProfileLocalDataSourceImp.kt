@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import com.iti.linguaquest.core.database.profile.ProfileDao
 import com.iti.linguaquest.core.di.SessionDataStore
-import com.iti.linguaquest.core.preferences.cache.TokenKeys
+import com.iti.linguaquest.core.cache.token.TokenKeys
 import com.iti.linguaquest.features.profile.data.mapper.toDomain
 import com.iti.linguaquest.features.profile.data.mapper.toEntity
 import com.iti.linguaquest.features.profile.domain.model.ProfileSummary

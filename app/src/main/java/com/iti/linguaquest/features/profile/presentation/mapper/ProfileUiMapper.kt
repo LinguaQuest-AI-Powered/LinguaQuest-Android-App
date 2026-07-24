@@ -2,21 +2,13 @@ package com.iti.linguaquest.features.profile.presentation.mapper
 
 
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.utils.toFlagEmoji
 import com.iti.linguaquest.features.profile.domain.model.AchievementPreview
 import com.iti.linguaquest.features.profile.domain.model.LeaderboardPreviewEntry
 import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 import com.iti.linguaquest.features.profile.presentation.model.Achievement
 import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
-
-// TODO: temporary until backend images are live
-private fun localFlagFor(code: String): Int = when (code) {
-    "es" -> R.drawable.flag_spain
-    "fr" -> R.drawable.flag_france
-    "ge" -> R.drawable.flag_germany
-    "ja" -> R.drawable.flag_japan
-    else -> R.drawable.flag_spain
-}
 
 private fun localAvatarPlaceholder(): Int = R.drawable.lingo
 
@@ -36,7 +28,7 @@ fun ProfileSummary.toProfileState(): ProfileState = ProfileState(
     streakDays = stats.streakDays,
     worldsCount = stats.worldsCount,
     learningLanguageName = languageJourney.name,
-    learningLanguageFlagRes = localFlagFor(languageJourney.code),
+    learningLanguageFlag = languageJourney.code.toFlagEmoji(),
     proficiencyLabel = languageJourney.journeyLabel,
     currentMilestoneXp = languageJourney.currentXp,
     targetMilestoneXp = languageJourney.nextMilestoneXp,

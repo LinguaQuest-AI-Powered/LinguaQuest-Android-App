@@ -74,7 +74,6 @@ class ProfileViewModel @Inject constructor(
         when (intent) {
             ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
             ProfileIntent.SettingsClicked -> sendEffect(ProfileEffect.NavigateToSettings)
-            ProfileIntent.ChangeLanguageClicked -> sendEffect(ProfileEffect.NavigateToChangeLanguage)
             ProfileIntent.ViewAllAchievementsClicked -> sendEffect(ProfileEffect.NavigateToAllAchievements)
             ProfileIntent.ViewAllLeaderboardClicked -> sendEffect(ProfileEffect.NavigateToAllLeaderboard)
             is ProfileIntent.AvatarPicked -> uploadAvatar(intent.uri)
