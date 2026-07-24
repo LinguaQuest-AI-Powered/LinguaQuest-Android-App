@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.game.presentation.camera.view.component
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.LifecycleCameraController
@@ -27,7 +26,6 @@ fun takePhoto(
             }
 
             override fun onError(exc: ImageCaptureException) {
-                Log.e("CameraScreen", "Photo capture failed: ${exc.message}", exc)
             }
         }
     )

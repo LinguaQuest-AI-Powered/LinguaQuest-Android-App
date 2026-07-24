@@ -34,7 +34,8 @@ private fun ContinueLessonDto.toDomain() = ContinueLesson(
     levelId = levelId,
     word = word,
     translation = translation,
-    imageUrl = imageUrl
+    imageUrl = imageUrl,
+    sentence = sentence
 )
 
 private fun ExploreWorldDto.toDomain() = World(

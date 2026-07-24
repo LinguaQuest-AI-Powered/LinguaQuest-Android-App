@@ -25,7 +25,6 @@ class ReviewRemoteDataSource @Inject constructor() {
             val parsed = parseResponse(text)
             LinguaQuestResult.Success(parsed)
         } catch (e: Exception) {
-            android.util.Log.e("AI_REVIEW", "Error fetching AI review", e)
             LinguaQuestResult.Failure(LinguaQuestDataError.CustomServerMessage(e.message ?: "Unknown Error: ${e.javaClass.simpleName}"))
         }
     }

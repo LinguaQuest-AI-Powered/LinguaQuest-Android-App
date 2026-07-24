@@ -23,6 +23,9 @@ class LinguaQuestApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )
         appIconWorkScheduler.scheduleDailyRefresh()
     }
 

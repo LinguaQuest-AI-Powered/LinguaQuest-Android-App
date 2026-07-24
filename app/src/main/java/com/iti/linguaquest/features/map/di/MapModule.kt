@@ -1,6 +1,8 @@
 package com.iti.linguaquest.features.map.di
 
 import com.iti.linguaquest.features.map.data.remote.MapApiService
+import com.iti.linguaquest.features.map.data.remote.MapRemoteDataSource
+import com.iti.linguaquest.features.map.data.remote.MapRemoteDataSourceImpl
 import com.iti.linguaquest.features.map.domain.repository.MapRepository
 import dagger.Binds
 import dagger.Module
@@ -19,6 +21,12 @@ abstract class MapModule {
     abstract fun bindMapRepository(
         mapRepositoryImpl: com.iti.linguaquest.features.map.data.repository.MockMapRepository
     ): MapRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMapRemoteDataSource(
+        impl: MapRemoteDataSourceImpl
+    ): MapRemoteDataSource
 
     companion object {
         @Provides

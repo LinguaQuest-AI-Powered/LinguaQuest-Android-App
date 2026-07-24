@@ -57,7 +57,10 @@ import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSetti
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
+
 
 @Composable
 fun AppNavigation(
@@ -235,14 +238,14 @@ fun AppNavigation(
                         onForgotPassword = {
                             rootBackStack.navigateSingleTop(RootScreen.ForgotPassword)
                         },
+                        onOAuthLanguageSelection = {
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH"))
+                        },
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()
                                 navigateSingleTop(RootScreen.Main)
                             }
-                        },
-                        onOAuthLanguageSelection = {
-                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH"))
                         }
                     )
                 }
@@ -271,7 +274,14 @@ fun AppNavigation(
                 entry<RootScreen.ForgotPassword> {
                     ForgetPasswordScreen(
                         onBackToLogin = { rootBackStack.popToLogin() },
-                        onSendSucceeded = { rootBackStack.navigateSingleTop(RootScreen.OTP(it, true)) }
+                        onSendSucceeded = {
+                            rootBackStack.navigateSingleTop(
+                                RootScreen.OTP(
+                                    it,
+                                    true
+                                )
+                            )
+                        }
                     )
                 }
                 entry<RootScreen.OTP> { screen ->
@@ -336,6 +346,41 @@ fun AppNavigation(
                         ReviewScreen(
                             word = word,
                             onBack = { rootBackStack.removeLastOrNull() }
+                        )
+                    } else {
+                        LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
+                    }
+                }
+                entry<RootScreen.VoiceGame> { screen ->
+                    VoiceGameScreen(
+                        sentence = screen.sentence,
+                        lessonId = screen.lessonId,
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onEvaluationComplete = { result ->
+                            SharedVoiceResultHolder.pendingResult = result
+                            rootBackStack.navigateSingleTop(RootScreen.VoiceResult)
+                        }
+                    )
+                }
+
+                entry<RootScreen.VoiceResult> {
+                    val result = SharedVoiceResultHolder.pendingResult
+                    if (result != null) {
+                        VoiceResultScreen(
+                            result = result,
+                            onContinue = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                SharedVoiceResultHolder.autoGenerateNextSentence = true
+                                rootBackStack.removeLastOrNull()
+                            },
+                            onRetry = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                rootBackStack.removeLastOrNull()
+                            },
+                            onHome = {
+                                SharedVoiceResultHolder.pendingResult = null
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                            }
                         )
                     } else {
                         LaunchedEffect(Unit) { rootBackStack.removeLastOrNull() }
