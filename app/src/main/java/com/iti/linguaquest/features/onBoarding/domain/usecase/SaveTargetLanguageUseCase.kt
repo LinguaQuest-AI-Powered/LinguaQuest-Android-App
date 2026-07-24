@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.onBoarding.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class SaveTargetLanguageUseCase @Inject constructor(
     private val repository: UserPreferencesRepository

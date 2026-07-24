@@ -21,6 +21,9 @@ import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressU
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiLessonPreview
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
+import com.iti.linguaquest.features.all_worlds.domain.model.World
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
+import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +35,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private val mockExploreWorlds = listOf(
+    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", DomainWorldDifficulty.EASY, WorldStatus.IN_PROGRESS, 40, 20, 8),
+    World(11, "City World", "/media/worlds/city.jpg", DomainWorldDifficulty.MEDIUM, WorldStatus.IN_PROGRESS, 10, 20, 2),
+    World(12, "Park World", "/media/worlds/park.jpg", DomainWorldDifficulty.EASY, WorldStatus.LOCKED, 0, 20, 0),
+    World(13, "School World", "/media/worlds/school.jpg", DomainWorldDifficulty.HARD, WorldStatus.LOCKED, 0, 20, 0)
+).map { it.toUiWorldItem() }
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -107,16 +117,13 @@ class HomeViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, hasError = false) }
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase() }
-            val worldsDeferred = async { getWorldsUseCase() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
 
             val homeSummaryResult = homeSummaryDeferred.await()
-            val worldsResult = worldsDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
 
-            if (homeSummaryResult is LinguaQuestResult.Success && worldsResult is LinguaQuestResult.Success) {
+            if (homeSummaryResult is LinguaQuestResult.Success) {
                 val summary = homeSummaryResult.data
-                val worldsData = worldsResult.data
                 val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                 val shouldShowBanner = dailyRewardUi != null &&
                         !dailyRewardUi.claimedToday &&
@@ -129,15 +136,14 @@ class HomeViewModel @Inject constructor(
                         isLoading = false,
                         hasError = false,
                         languageProgress = summary.toLanguageProgressUi(),
-                        worlds = worldsData.worlds.map { world -> world.toUiWorldItem() },
+                        worlds = mockExploreWorlds,
                         continueLesson = summary.continueLesson?.toUiLessonPreview(),
                         dailyReward = dailyRewardUi,
                         isDailyRewardBannerVisible = shouldShowBanner
                     )
                 }
             } else {
-                val errorResult = homeSummaryResult as? LinguaQuestResult.Failure
-                    ?: worldsResult as LinguaQuestResult.Failure
+                val errorResult = homeSummaryResult as LinguaQuestResult.Failure
                 _state.update { it.copy(isLoading = false, hasError = true) }
                 snackbarController.sendEvent(
                     SnackbarEvent(

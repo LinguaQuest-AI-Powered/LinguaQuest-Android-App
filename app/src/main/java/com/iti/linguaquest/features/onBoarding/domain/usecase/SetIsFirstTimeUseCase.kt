@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.onBoarding.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.SessionManagerRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class SetIsFirstTimeUseCase @Inject constructor(
     private val sessionManagerRepository: SessionManagerRepository,

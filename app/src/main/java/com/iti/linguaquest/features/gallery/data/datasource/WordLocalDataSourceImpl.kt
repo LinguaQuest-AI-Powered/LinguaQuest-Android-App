@@ -6,7 +6,7 @@ import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.EmptyResult
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class WordLocalDataSourceImpl @Inject constructor(

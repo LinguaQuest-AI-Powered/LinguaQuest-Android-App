@@ -5,7 +5,7 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.profile.data.mapper.toDomain
 import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 //class ProfileRemoteDataSourceImpl @Inject constructor(
 //    private val api: ProfileApiService

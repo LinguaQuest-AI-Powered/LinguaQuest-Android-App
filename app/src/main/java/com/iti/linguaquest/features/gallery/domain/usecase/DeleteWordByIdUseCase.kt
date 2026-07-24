@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.gallery.domain.usecase
 import com.iti.linguaquest.core.result.EmptyResult
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.features.gallery.domain.repository.WordRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 
 class DeleteWordByIdUseCase @Inject constructor(
