@@ -40,12 +40,6 @@ fun Uri.toMultipartBodyPart(
     if (scaledBitmap != bitmap) scaledBitmap.recycle()
     bitmap.recycle()
 
-    Log.d(
-        "AvatarUpload",
-        "Original: ${originalBytes.size / 1024}KB (${bitmap.width}x${bitmap.height}) → " +
-                "Compressed: ${compressedBytes.size / 1024}KB (${scaledBitmap.width}x${scaledBitmap.height})"
-    )
-
     val requestBody = compressedBytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
     val fileName = "avatar_${System.currentTimeMillis()}.jpg"
     return MultipartBody.Part.createFormData(partName, fileName, requestBody)
