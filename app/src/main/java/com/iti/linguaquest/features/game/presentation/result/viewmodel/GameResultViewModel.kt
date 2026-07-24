@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.game.presentation.result.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.appicon.usecase.LessonCompletedUseCase
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent
@@ -17,7 +18,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class GameResultViewModel @Inject constructor() : ViewModel() {
+class GameResultViewModel @Inject constructor(
+    private val lessonCompletedUseCase: LessonCompletedUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading)))
     val state: StateFlow<GameResultUiState> = _state.asStateFlow()
@@ -36,6 +39,11 @@ class GameResultViewModel @Inject constructor() : ViewModel() {
 
     fun setInitialResult(resultState: GameResultUiState) {
         _state.value = resultState
+        if (resultState is GameResultUiState.Success) {
+            viewModelScope.launch {
+                lessonCompletedUseCase()
+            }
+        }
     }
 
     private fun sendEffect(effect: GameResultEffect) {

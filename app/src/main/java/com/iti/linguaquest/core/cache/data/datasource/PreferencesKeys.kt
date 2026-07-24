@@ -14,4 +14,7 @@ object PreferencesKeys {
     val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")
     val APP_LANGUAGE = stringPreferencesKey("app_language")
     val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+    val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
+    val REMINDER_TIME = stringPreferencesKey("reminder_time")
+    val REMINDER_DAYS = stringPreferencesKey("reminder_days")
 }
