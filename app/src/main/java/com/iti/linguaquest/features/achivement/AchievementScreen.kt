@@ -1,18 +1,22 @@
 package com.iti.linguaquest.features.achivement
 
 import androidx.compose.runtime.Composable
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.mockData.achievements
-import com.iti.linguaquest.features.achivement.model.AchievementItem
+
+import com.iti.linguaquest.core.sharedComponents.LoadingView
 
 @Composable
 fun AchievementScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isLoading: Boolean = false
 ) {
-
-    AchievementContent(
-        achievements = achievements,
-        onBackClick = onBackClick,
-        onClaimClick = { /* Handle claim */ }
-    )
+    if (isLoading) {
+        LoadingView()
+    } else {
+        AchievementContent(
+            achievements = achievements,
+            onBackClick = onBackClick,
+            onClaimClick = { /* Handle claim */ }
+        )
+    }
 }

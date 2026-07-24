@@ -5,6 +5,7 @@
     <string name="onboarding_title_p2">العالم الحقيقي!</string>
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
+    <string name="loading">تحميل...</string>
     <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
