@@ -72,7 +72,6 @@ class VoiceGameViewModel @Inject constructor(
     fun onIntent(intent: VoiceGameIntent) {
         when (intent) {
             is VoiceGameIntent.Init -> {
-                lessonId = intent.lessonId
                 generateNewSentence()
             }
 

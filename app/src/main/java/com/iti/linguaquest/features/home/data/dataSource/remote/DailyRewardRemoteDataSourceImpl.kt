@@ -1,10 +1,10 @@
-package com.iti.linguaquest.features.home.data.remote
+package com.iti.linguaquest.features.home.data.dataSource.remote
 
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.home.data.remote.dto.ClaimDailyRewardResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.DailyRewardStatusDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.ClaimDailyRewardResponseDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.DailyRewardStatusDto
 import javax.inject.Inject
 
 class DailyRewardRemoteDataSourceImpl @Inject constructor(

@@ -1,10 +1,10 @@
-package com.iti.linguaquest.features.home.data.remote
+package com.iti.linguaquest.features.home.data.dataSource.remote
 
 
 
 import com.iti.linguaquest.core.network.SuccessResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.ClaimDailyRewardResponseDto
-import com.iti.linguaquest.features.home.data.remote.dto.DailyRewardStatusDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.ClaimDailyRewardResponseDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.DailyRewardStatusDto
 import retrofit2.http.GET
 import retrofit2.http.POST
 
