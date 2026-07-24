@@ -5,8 +5,8 @@ object BossScenarioProvider {
         BossScenario(
             id = "scenario_market_01",
             worldId = "world_cairo_market",
-            bossName = "Hag Mahmoud",
-            roleDescription = "A friendly but firm fruit vendor in a bustling Cairo market.",
+            bossName = "Haga Sherry",
+            roleDescription = "A friendly but firm old fruit vendor in a bustling Cairo market.",
             taskObjective = "Buy two apples and a bunch of bananas for less than 50 pounds."
         ),
         BossScenario(

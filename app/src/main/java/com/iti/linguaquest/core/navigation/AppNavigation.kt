@@ -55,6 +55,8 @@ import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguage
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
+import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
+import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
@@ -392,15 +394,10 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Roleplay> { screen ->
-                    val viewModel: com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel = hiltViewModel()
+                    val viewModel: RoleplayViewModel = hiltViewModel()
                     
-                    LaunchedEffect(screen.scenarioId) {
-                        if (screen.scenarioId != null) {
-                            viewModel.onIntent(com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent.LoadBossLobby(screen.scenarioId))
-                        }
-                    }
-
-                    com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen(
+                    RoleplayScreen(
+                        scenarioId = screen.scenarioId,
                         onNavigateHome = { rootBackStack.removeLastOrNull() },
                         viewModel = viewModel
                     )

@@ -58,8 +58,12 @@ class RoleplayRepositoryImpl @Inject constructor(
     override suspend fun connectToBossStage(scenario: BossScenario) {
         val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
         val systemPrompt = """
-            You are ${scenario.bossName}, ${scenario.roleDescription}. 
-            Speak strictly in $targetLanguage.
+            Persona: You are ${scenario.bossName}, ${scenario.roleDescription}. 
+            The user is a language learner practicing $targetLanguage.
+            Their objective in this interaction is: "${scenario.taskObjective}".
+            Rules: Play along with this scenario. Do not explicitly reveal their objective to them, but interact naturally so they have the opportunity to achieve it. Keep your sentences short and natural for spoken dialogue.
+            Guardrails: RESPOND UNMISTAKABLY IN $targetLanguage.
+            Initiation Command: To begin, greet the user immediately in character.
         """.trimIndent()
         
         liveService.connect(systemPrompt)

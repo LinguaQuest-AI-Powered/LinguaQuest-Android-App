@@ -64,15 +64,25 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
         nativeLanguage: String
     ): String? = withContext(Dispatchers.IO) {
         val transcriptText = transcript.joinToString("\n")
+        android.util.Log.d("RoleplayDebug", "Evaluating transcript. Size: ${transcript.size}, Content:\n$transcriptText")
         val systemPrompt = """
-            You are a language evaluator. 
-            Evaluate the following transcript based on this objective: "$taskObjective"
-            Output a JSON object containing EXACTLY these keys:
-            - "task_completed" (boolean)
-            - "fluency_score" (integer between 0 and 100)
-            - "feedback_message" (string written strictly in $nativeLanguage)
+            You are a roleplay evaluator. 
+            The following transcript contains the AI Boss's internal chain-of-thought logs during a roleplay session with the user.
+            You do NOT have the user's direct speech. You must infer the user's actions and success entirely from reading how the AI reacted in these logs.
             
-            Transcript:
+            Evaluate if the user achieved this objective: "$taskObjective"
+            
+            Because you cannot see the user's exact grammar, estimate a 'fluency_score' (0-100) based on how smoothly the AI's thoughts indicate the conversation went. 
+            Write a 'feedback_message' (in $nativeLanguage) summarizing how they handled the scenario based on the AI's reactions.
+            
+            Return ONLY a valid JSON object matching this schema exactly:
+            {
+              "task_completed": boolean,
+              "fluency_score": integer,
+              "feedback_message": "string"
+            }
+            
+            Transcript Logs:
             $transcriptText
         """.trimIndent()
         

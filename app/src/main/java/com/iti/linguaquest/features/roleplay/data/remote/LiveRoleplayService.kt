@@ -52,8 +52,13 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
         return currentSession.receive().transform { serverMessage ->
             when (serverMessage) {
                 is LiveServerContent -> {
+                    android.util.Log.d("RoleplayDebug", "LiveServerContent received. outputTranscription: ${serverMessage.outputTranscription?.text}")
                     serverMessage.outputTranscription?.text?.let { emit(RoleplayLiveEvent.Transcription(it)) }
                     serverMessage.content?.parts?.forEach { part ->
+                        if (part is com.google.firebase.ai.type.TextPart) {
+                            android.util.Log.d("RoleplayDebug", "TextPart received: ${part.text}")
+                            emit(RoleplayLiveEvent.Transcription(part.text))
+                        }
                         if (part is InlineDataPart) emit(RoleplayLiveEvent.AudioChunk(part.inlineData))
                     }
                     if (serverMessage.turnComplete) emit(RoleplayLiveEvent.TurnComplete)
