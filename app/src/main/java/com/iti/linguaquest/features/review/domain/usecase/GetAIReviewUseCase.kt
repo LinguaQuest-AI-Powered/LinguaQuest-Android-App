@@ -5,7 +5,7 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.review.domain.model.AIReviewResponse
 import com.iti.linguaquest.features.review.domain.repository.ReviewRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class GetAIReviewUseCase @Inject constructor(
     private val repository: ReviewRepository

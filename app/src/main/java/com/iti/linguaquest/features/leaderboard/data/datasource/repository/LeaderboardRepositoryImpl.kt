@@ -6,7 +6,7 @@ import com.iti.linguaquest.core.result.map
 import com.iti.linguaquest.features.leaderboard.data.datasource.remotedatesource.LeaderboardRemoteDataSource
 import com.iti.linguaquest.features.leaderboard.data.mapper.toDomain
 import com.iti.linguaquest.features.leaderboard.domain.repository.LeaderboardRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
 

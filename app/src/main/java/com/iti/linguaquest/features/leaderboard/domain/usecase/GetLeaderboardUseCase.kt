@@ -5,7 +5,7 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 import com.iti.linguaquest.features.leaderboard.domain.repository.LeaderboardRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class GetLeaderboardUseCase @Inject constructor(
     private val repository: LeaderboardRepository

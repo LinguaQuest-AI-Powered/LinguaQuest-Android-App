@@ -3,10 +3,10 @@ package com.iti.linguaquest.features.all_worlds.presentation.view.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,11 +26,12 @@ fun AllWorldsGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(worlds, key = { it.id }) { world ->
+        items(worlds.size, key = { index -> "${worlds[index].id}_$index" }) { index ->
+            val world = worlds[index]
             WorldCard(
                 world = world,
                 onClick = { onWorldClick(world) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.width(240.dp).height(220.dp)
             )
         }
     }

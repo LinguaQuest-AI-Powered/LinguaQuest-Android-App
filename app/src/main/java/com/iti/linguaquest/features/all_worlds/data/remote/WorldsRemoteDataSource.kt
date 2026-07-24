@@ -6,7 +6,6 @@ import com.iti.linguaquest.features.all_worlds.data.remote.dto.WorldsDataDto
 
 interface WorldsRemoteDataSource {
     suspend fun getWorlds(
-        languageId: Int?,
         difficulty: String?
     ): LinguaQuestResult<WorldsDataDto, LinguaQuestDataError>
 }

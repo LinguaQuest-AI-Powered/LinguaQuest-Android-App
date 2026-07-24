@@ -6,7 +6,7 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.gallery.data.datasource.WordLocalDataSource
 import com.iti.linguaquest.features.gallery.domain.repository.WordRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class WordRepositoryImpl @Inject constructor(

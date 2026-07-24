@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.all_worlds.data.repository
 
+import android.util.Log
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.data.mapper.toDomain
@@ -14,14 +15,16 @@ class WorldsRepositoryImpl @Inject constructor(
 ) : WorldsRepository {
 
     override suspend fun getWorlds(
-        languageId: Int?,
         difficulty: WorldDifficulty?
     ): LinguaQuestResult<WorldsData, LinguaQuestDataError> {
-        val difficultyString = difficulty?.name
-        val result = remoteDataSource.getWorlds(languageId, difficultyString)
+        val difficultyString = difficulty?.name ?: "ALL"
+        val result = remoteDataSource.getWorlds(difficultyString)
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.toDomain())
-            is LinguaQuestResult.Failure -> result
+            is LinguaQuestResult.Failure -> {
+                Log.e("WorldsRepositoryImpl", "getWorlds: ${result.error}")
+                result
+            }
         }
     }
 }
