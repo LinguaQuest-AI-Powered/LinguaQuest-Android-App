@@ -23,15 +23,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
+import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 
 @Composable
-fun ActiveLiveChatScreen(
+fun ActiveLiveChatView(
     state: RoleplayState, 
     isBossStage: Boolean,
     onStopRecording: () -> Unit,
@@ -86,34 +90,58 @@ fun ActiveLiveChatScreen(
         }
 
         // Transcript Area
+        val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+        androidx.compose.runtime.LaunchedEffect(state.transcriptionHistory.size, state.transcriptionHistory.lastOrNull()?.text?.length) {
+            if (state.transcriptionHistory.isNotEmpty()) {
+                listState.animateScrollToItem(state.transcriptionHistory.size - 1)
+            }
+        }
+        
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(state.transcriptionHistory) { text ->
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                    Box(
-                        modifier = Modifier
-                            .clip(
-                                RoundedCornerShape(
-                                    topStart = 16.dp,
-                                    topEnd = 16.dp,
-                                    bottomEnd = 16.dp,
-                                    bottomStart = 4.dp
-                                )
+            items(state.transcriptionHistory) { message ->
+                if (!message.isUser) {
+                    val shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 4.dp)
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
+                        Box(
+                            modifier = Modifier
+                                .shadow(2.dp, shape)
+                                .clip(shape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(16.dp)
+                                .widthIn(max = 280.dp)
+                        ) {
+                            Text(
+                                text = message.text,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(16.dp)
-                            .widthIn(max = 280.dp)
-                    ) {
-                        Text(
-                            text = text,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                        }
+                    }
+                } else {
+                    val shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 4.dp, bottomStart = 16.dp)
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                        Box(
+                            modifier = Modifier
+                                .shadow(2.dp, shape)
+                                .clip(shape)
+                                .background(LinguaQuestTheme.colors.OrangeActive)
+                                .padding(16.dp)
+                                .widthIn(max = 280.dp)
+                        ) {
+                            Text(
+                                text = message.text,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = LinguaQuestTheme.colors.whiteColor
+                            )
+                        }
                     }
                 }
             }
@@ -161,5 +189,35 @@ fun ActiveLiveChatScreen(
                 Spacer(Modifier.height(16.dp))
             }
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFF8F4)
+@Composable
+fun ActiveLiveChatViewPreview() {
+    LinguaQuestTheme {
+        ActiveLiveChatView(
+            state = RoleplayState(
+                isConnected = true,
+                isUserSpeaking = false,
+                isAiSpeaking = false,
+                currentBossScenario = BossScenario(
+                    id = "1",
+                    bossName = "Sherry",
+                    roleDescription = "Fruit Vendor",
+                    taskObjective = "Buy some fresh mangoes.",
+                    worldId = "2"
+                ),
+                transcriptionHistory = listOf(
+                    ChatMessage("[SPOKEN] Hello! I am Sherry, what would you like? [/SPOKEN]", isUser = false),
+                    ChatMessage("I'd like to buy some mangoes please.", isUser = true),
+                    ChatMessage("Hmm, let me see... [SPOKEN] Sure! We have fresh mangoes today. [/SPOKEN]", isUser = false)
+                )
+            ),
+            isBossStage = true,
+            onStopRecording = {},
+            onRecord = {},
+            onFinishStage = {}
+        )
     }
 }

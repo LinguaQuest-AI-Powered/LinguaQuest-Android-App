@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BossEvaluatingScreen() {
+fun BossEvaluatingView() {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

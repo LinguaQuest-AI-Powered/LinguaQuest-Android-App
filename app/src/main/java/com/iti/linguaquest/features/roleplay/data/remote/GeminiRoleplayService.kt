@@ -67,13 +67,12 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
         android.util.Log.d("RoleplayDebug", "Evaluating transcript. Size: ${transcript.size}, Content:\n$transcriptText")
         val systemPrompt = """
             You are a roleplay evaluator. 
-            The following transcript contains the AI Boss's internal chain-of-thought logs during a roleplay session with the user.
-            You do NOT have the user's direct speech. You must infer the user's actions and success entirely from reading how the AI reacted in these logs.
+            The following transcript contains the dialogue of a roleplay session between the User and the AI Boss.
             
             Evaluate if the user achieved this objective: "$taskObjective"
             
-            Because you cannot see the user's exact grammar, estimate a 'fluency_score' (0-100) based on how smoothly the AI's thoughts indicate the conversation went. 
-            Write a 'feedback_message' (in $nativeLanguage) summarizing how they handled the scenario based on the AI's reactions.
+            Evaluate the user's 'fluency_score' (0-100) based on their grammar, vocabulary, and conversational flow as shown in the transcript.
+            Write a 'feedback_message' (in $nativeLanguage) summarizing how they handled the scenario.
             
             Return ONLY a valid JSON object matching this schema exactly:
             {

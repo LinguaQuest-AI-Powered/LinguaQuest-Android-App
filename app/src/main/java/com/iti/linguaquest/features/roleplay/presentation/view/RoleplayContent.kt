@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
-import com.iti.linguaquest.features.roleplay.presentation.view.components.ActiveLiveChatScreen
-import com.iti.linguaquest.features.roleplay.presentation.view.components.BossEvaluatingScreen
-import com.iti.linguaquest.features.roleplay.presentation.view.components.BossLobbyScreen
-import com.iti.linguaquest.features.roleplay.presentation.view.components.BossResultScreen
+import com.iti.linguaquest.features.roleplay.presentation.view.components.ActiveLiveChatView
+import com.iti.linguaquest.features.roleplay.presentation.view.components.BossEvaluatingView
+import com.iti.linguaquest.features.roleplay.presentation.view.components.BossLobbyView
+import com.iti.linguaquest.features.roleplay.presentation.view.components.BossResultView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.RoleplayTopBar
 
 @Composable
@@ -31,21 +31,24 @@ fun RoleplayContent(
             }
         )
 
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+        Box(
+            modifier = Modifier.weight(1f).fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
             if (state.currentBossScenario != null) {
                 when {
                     state.assessmentResult != null -> {
-                        BossResultScreen(
+                        BossResultView(
                             result = state.assessmentResult,
                             onAdvanceToNextWorld = { onIntent(RoleplayIntent.AdvanceToNextWorldClicked) },
                             onRetryStage = { onIntent(RoleplayIntent.RetryStageClicked) }
                         )
                     }
                     state.isEvaluating -> {
-                        BossEvaluatingScreen()
+                        BossEvaluatingView()
                     }
                     state.isConnected || state.isLoading -> {
-                        ActiveLiveChatScreen(
+                        ActiveLiveChatView(
                             state = state, 
                             isBossStage = true,
                             onStopRecording = { onIntent(RoleplayIntent.StopRecordingClicked) },
@@ -54,14 +57,14 @@ fun RoleplayContent(
                         )
                     }
                     else -> {
-                        BossLobbyScreen(
+                        BossLobbyView(
                             scenario = state.currentBossScenario,
                             onStartClicked = onStartBossStage
                         )
                     }
                 }
             } else {
-                ActiveLiveChatScreen(
+                ActiveLiveChatView(
                     state = state, 
                     isBossStage = false,
                     onStopRecording = { onIntent(RoleplayIntent.StopRecordingClicked) },

@@ -25,7 +25,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult
 
 @Composable
-fun BossResultScreen(
+fun BossResultView(
     result: RoleplayAssessmentResult, 
     onAdvanceToNextWorld: () -> Unit,
     onRetryStage: () -> Unit

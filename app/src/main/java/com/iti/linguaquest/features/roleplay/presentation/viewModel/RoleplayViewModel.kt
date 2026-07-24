@@ -89,8 +89,7 @@ class RoleplayViewModel @Inject constructor(
             
             try {
                 connectToFreePlayUseCase(state.value.targetLanguage)
-                startMicrophoneUseCase()
-                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = true) }
+                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = false) }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.update { it.copy(isLoading = false, error = e.message) }
@@ -118,8 +117,7 @@ class RoleplayViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, error = null) }
             try {
                 connectToBossStageUseCase(scenario)
-                startMicrophoneUseCase()
-                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = true) }
+                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = false) }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.update { it.copy(isLoading = false, error = e.message) }
@@ -130,7 +128,9 @@ class RoleplayViewModel @Inject constructor(
 
     private fun finishBossStage() {
         val scenario = _state.value.currentBossScenario ?: return
-        val transcript = _state.value.transcriptionHistory
+        val transcript = _state.value.transcriptionHistory.map { msg ->
+            if (msg.isUser) "User: ${msg.text}" else "AI: ${msg.text}"
+        }
         
         viewModelScope.launch {
             stopMicrophoneUseCase()
@@ -177,11 +177,18 @@ class RoleplayViewModel @Inject constructor(
     private fun handleLiveEvent(event: RoleplayLiveEvent) {
         when (event) {
             is RoleplayLiveEvent.Transcription -> {
-                val newHistory = _state.value.transcriptionHistory + event.text
+                val history = _state.value.transcriptionHistory.toMutableList()
+                if (history.isNotEmpty() && history.last().isUser == event.isUser) {
+                    val lastMsg = history.removeLast()
+                    history.add(lastMsg.copy(text = lastMsg.text + event.text))
+                } else {
+                    history.add(com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage(event.text, event.isUser))
+                }
+                
                 _state.update { 
                     it.copy(
-                        transcriptionHistory = newHistory,
-                        isAiSpeaking = true
+                        transcriptionHistory = history,
+                        isAiSpeaking = if (!event.isUser) true else it.isAiSpeaking
                     ) 
                 }
             }

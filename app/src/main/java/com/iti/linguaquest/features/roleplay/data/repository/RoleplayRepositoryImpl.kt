@@ -45,7 +45,7 @@ class RoleplayRepositoryImpl @Inject constructor(
     override suspend fun connectToFreePlay(targetLanguage: String) {
         val systemPrompt = """
             Persona: You are Lingo, a friendly native $targetLanguage language tutor. The user is an English speaker practicing conversational $targetLanguage at a A2 level. The scenario is ordering coffee in a cafe in Cairo.
-            Rules: Keep sentences short and natural for spoken dialogue. Gently correct major grammatical mistakes, then continue the roleplay. 
+            Rules: Keep sentences short and natural for spoken dialogue. Gently correct major grammatical mistakes, then continue the roleplay.
             Guardrails: RESPOND UNMISTAKABLY IN $targetLanguage. 
             Initiation Command: To begin, greet the user immediately and ask what they would like to order.
         """.trimIndent()

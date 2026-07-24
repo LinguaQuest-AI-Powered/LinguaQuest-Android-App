@@ -35,6 +35,8 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
             systemInstruction = com.google.firebase.ai.type.content { text(systemPrompt) },
             generationConfig = com.google.firebase.ai.type.liveGenerationConfig {
                 responseModality = com.google.firebase.ai.type.ResponseModality.AUDIO
+                inputAudioTranscription = com.google.firebase.ai.type.AudioTranscriptionConfig()
+                outputAudioTranscription = com.google.firebase.ai.type.AudioTranscriptionConfig()
             }
         )
         session = liveModel.connect()
@@ -52,13 +54,9 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
         return currentSession.receive().transform { serverMessage ->
             when (serverMessage) {
                 is LiveServerContent -> {
-                    android.util.Log.d("RoleplayDebug", "LiveServerContent received. outputTranscription: ${serverMessage.outputTranscription?.text}")
-                    serverMessage.outputTranscription?.text?.let { emit(RoleplayLiveEvent.Transcription(it)) }
+                    serverMessage.inputTranscription?.text?.let { emit(RoleplayLiveEvent.Transcription(it, isUser = true)) }
+                    serverMessage.outputTranscription?.text?.let { emit(RoleplayLiveEvent.Transcription(it, isUser = false)) }
                     serverMessage.content?.parts?.forEach { part ->
-                        if (part is com.google.firebase.ai.type.TextPart) {
-                            android.util.Log.d("RoleplayDebug", "TextPart received: ${part.text}")
-                            emit(RoleplayLiveEvent.Transcription(part.text))
-                        }
                         if (part is InlineDataPart) emit(RoleplayLiveEvent.AudioChunk(part.inlineData))
                     }
                     if (serverMessage.turnComplete) emit(RoleplayLiveEvent.TurnComplete)

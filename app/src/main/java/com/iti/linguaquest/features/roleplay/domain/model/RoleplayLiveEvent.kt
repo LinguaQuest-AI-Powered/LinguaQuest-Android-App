@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.roleplay.domain.model
 
 sealed interface RoleplayLiveEvent {
-    data class Transcription(val text: String) : RoleplayLiveEvent
+    data class Transcription(val text: String, val isUser: Boolean) : RoleplayLiveEvent
     
     data class AudioChunk(val bytes: ByteArray) : RoleplayLiveEvent {
         override fun equals(other: Any?): Boolean {
