@@ -8,8 +8,15 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
-import com.iti.linguaquest.features.roleplay.data.repository.RoleplayRepositoryImpl
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
+import com.iti.linguaquest.features.roleplay.domain.model.BossScenarioProvider
+import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToBossStageUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToFreePlayUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.DisconnectRoleplayUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.EvaluateBossStageUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.ObserveLiveEventsUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.StartMicrophoneUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.StopMicrophoneUseCase
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
@@ -26,8 +33,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RoleplayViewModel @Inject constructor(
-    private val repository: RoleplayRepositoryImpl,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
+    private val connectToFreePlayUseCase: ConnectToFreePlayUseCase,
+    private val connectToBossStageUseCase: ConnectToBossStageUseCase,
+    private val evaluateBossStageUseCase: EvaluateBossStageUseCase,
+    private val startMicrophoneUseCase: StartMicrophoneUseCase,
+    private val stopMicrophoneUseCase: StopMicrophoneUseCase,
+    private val disconnectRoleplayUseCase: DisconnectRoleplayUseCase,
+    private val observeLiveEventsUseCase: ObserveLiveEventsUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -46,7 +59,7 @@ class RoleplayViewModel @Inject constructor(
 
         // Observe continuous server events from the live session
         viewModelScope.launch {
-            repository.events.collect { event ->
+            observeLiveEventsUseCase().collect { event ->
                 handleLiveEvent(event)
             }
         }
@@ -61,6 +74,11 @@ class RoleplayViewModel @Inject constructor(
                 endRoleplay()
                 sendEffect(RoleplayEffect.NavigateToHome)
             }
+            is RoleplayIntent.LoadBossLobby -> loadBossLobby(intent.scenarioId)
+            RoleplayIntent.StartBossStageClicked -> startBossStage()
+            RoleplayIntent.FinishStageClicked -> finishBossStage()
+            RoleplayIntent.RetryStageClicked -> retryBossStage()
+            RoleplayIntent.AdvanceToNextWorldClicked -> sendEffect(RoleplayEffect.NavigateToHome)
             else -> Unit // RetryClicked and AiAudioFinished handled differently in live mode
         }
     }
@@ -69,16 +87,9 @@ class RoleplayViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             
-            val systemPrompt = """
-                Persona: You are Lingo, a friendly native Arabic language tutor. The user is an English speaker practicing conversational Arabic at a A2 level. The scenario is ordering coffee in a cafe in Cairo.
-                Rules: Keep sentences short and natural for spoken dialogue. Gently correct major grammatical mistakes, then continue the roleplay. 
-                Guardrails: RESPOND UNMISTAKABLY IN Arabic. 
-                Initiation Command: To begin, greet the user immediately and ask what they would like to order.
-            """.trimIndent()
-            
             try {
-                repository.connect(systemPrompt)
-                repository.startMicrophone()
+                connectToFreePlayUseCase(state.value.targetLanguage)
+                startMicrophoneUseCase()
                 _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = true) }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -90,18 +101,76 @@ class RoleplayViewModel @Inject constructor(
 
     fun endRoleplay() {
         viewModelScope.launch {
-            repository.stopMicrophone()
-            repository.disconnect()
+            stopMicrophoneUseCase()
+            disconnectRoleplayUseCase()
             _state.update { it.copy(isConnected = false, isUserSpeaking = false) }
         }
+    }
+
+    private fun loadBossLobby(scenarioId: String) {
+        val scenario = BossScenarioProvider.scenarios.find { it.id == scenarioId }
+        _state.update { it.copy(currentBossScenario = scenario) }
+    }
+
+    private fun startBossStage() {
+        val scenario = _state.value.currentBossScenario ?: return
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                connectToBossStageUseCase(scenario)
+                startMicrophoneUseCase()
+                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = true) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _state.update { it.copy(isLoading = false, error = e.message) }
+                handleError("Failed to connect: ${e.message}")
+            }
+        }
+    }
+
+    private fun finishBossStage() {
+        val scenario = _state.value.currentBossScenario ?: return
+        val transcript = _state.value.transcriptionHistory
+        
+        viewModelScope.launch {
+            stopMicrophoneUseCase()
+            disconnectRoleplayUseCase()
+            _state.update { 
+                it.copy(isConnected = false, isUserSpeaking = false, isEvaluating = true)
+            }
+            
+            val result = evaluateBossStageUseCase(transcript, scenario)
+            result.onSuccess { assessmentResult ->
+                _state.update { 
+                    it.copy(isEvaluating = false, assessmentResult = assessmentResult) 
+                }
+            }.onFailure { e ->
+                _state.update { it.copy(isEvaluating = false) }
+                handleError("Connection Lost: ${e.message}")
+                sendEffect(RoleplayEffect.NavigateToHome)
+            }
+        }
+    }
+
+    private fun retryBossStage() {
+        _state.update { 
+            it.copy(
+                transcriptionHistory = emptyList(),
+                assessmentResult = null,
+                isEvaluating = false,
+                isAiSpeaking = false,
+                isUserSpeaking = false
+            ) 
+        }
+        startBossStage()
     }
 
     private fun toggleMicrophone(active: Boolean) {
         _state.update { it.copy(isUserSpeaking = active) }
         if (active) {
-            repository.startMicrophone()
+            startMicrophoneUseCase()
         } else {
-            repository.stopMicrophone()
+            stopMicrophoneUseCase()
         }
     }
 
@@ -145,6 +214,6 @@ class RoleplayViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        viewModelScope.launch { repository.disconnect() }
+        viewModelScope.launch { disconnectRoleplayUseCase() }
     }
 }

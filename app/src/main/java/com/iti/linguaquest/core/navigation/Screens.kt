@@ -68,7 +68,7 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data object AllWorlds : RootScreen
     @Serializable
-    data object Roleplay : RootScreen
+    data class Roleplay(val scenarioId: String? = null) : RootScreen
     @Serializable
     data object EditProfile : RootScreen
     @Serializable

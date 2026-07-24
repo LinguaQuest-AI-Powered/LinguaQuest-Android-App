@@ -391,9 +391,18 @@ fun AppNavigation(
                     )
                 }
 
-                entry<RootScreen.Roleplay> {
+                entry<RootScreen.Roleplay> { screen ->
+                    val viewModel: com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel = hiltViewModel()
+                    
+                    LaunchedEffect(screen.scenarioId) {
+                        if (screen.scenarioId != null) {
+                            viewModel.onIntent(com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent.LoadBossLobby(screen.scenarioId))
+                        }
+                    }
+
                     com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen(
-                        onNavigateHome = { rootBackStack.removeLastOrNull() }
+                        onNavigateHome = { rootBackStack.removeLastOrNull() },
+                        viewModel = viewModel
                     )
                 }
 

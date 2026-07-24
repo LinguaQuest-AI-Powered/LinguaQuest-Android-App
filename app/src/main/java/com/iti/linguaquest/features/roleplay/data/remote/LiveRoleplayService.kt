@@ -22,11 +22,11 @@ import javax.inject.Singleton
 
 @OptIn(PublicPreviewAPI::class)
 @Singleton
-class LiveRoleplayService @Inject constructor() {
+class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
 
     private var session: LiveSession? = null
 
-    suspend fun connect(systemPrompt: String) {
+    override suspend fun connect(systemPrompt: String) {
         val auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) auth.signInAnonymously().await()
         
@@ -40,13 +40,13 @@ class LiveRoleplayService @Inject constructor() {
         session = liveModel.connect()
     }
 
-    suspend fun sendAudioChunk(chunk: ByteArray) {
+    override suspend fun sendAudioChunk(chunk: ByteArray) {
         session?.sendAudioRealtime(
             InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
         )
     }
 
-    fun observeServerEvents(): Flow<RoleplayLiveEvent> {
+    override fun observeServerEvents(): Flow<RoleplayLiveEvent> {
         val currentSession = session ?: return emptyFlow()
 
         return currentSession.receive().transform { serverMessage ->
@@ -66,7 +66,7 @@ class LiveRoleplayService @Inject constructor() {
         }
     }
 
-    suspend fun close() {
+    override suspend fun close() {
         session?.close()
         session = null
     }

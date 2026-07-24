@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GeminiRoleplayService @Inject constructor() {
+class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSource {
 
     private val generativeModel by lazy {
         Firebase.ai(backend = GenerativeBackend.googleAI())
@@ -25,7 +25,7 @@ class GeminiRoleplayService @Inject constructor() {
             )
     }
 
-    suspend fun generateRoleplayTurn(
+    override suspend fun generateRoleplayTurn(
         systemPrompt: String,
         audioBytes: ByteArray?
     ): String? = withContext(Dispatchers.IO) {
@@ -56,5 +56,36 @@ class GeminiRoleplayService @Inject constructor() {
             ?.removeSuffix("```")
             ?.trim()
         return cleaned?.takeIf { it.isNotEmpty() }
+    }
+
+    override suspend fun evaluateBossStage(
+        transcript: List<String>,
+        taskObjective: String,
+        nativeLanguage: String
+    ): String? = withContext(Dispatchers.IO) {
+        val transcriptText = transcript.joinToString("\n")
+        val systemPrompt = """
+            You are a language evaluator. 
+            Evaluate the following transcript based on this objective: "$taskObjective"
+            Output a JSON object containing EXACTLY these keys:
+            - "task_completed" (boolean)
+            - "fluency_score" (integer between 0 and 100)
+            - "feedback_message" (string written strictly in $nativeLanguage)
+            
+            Transcript:
+            $transcriptText
+        """.trimIndent()
+        
+        try {
+            val response = generativeModel.generateContent(
+                content {
+                    text(systemPrompt)
+                }
+            )
+            cleanJson(response.text)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

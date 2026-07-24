@@ -108,7 +108,7 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             onNavigateToAllWorlds = {
                                 // TODO: Remove Roleplay
 //                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
-                                rootBackStack.navigateSingleTop(RootScreen.Roleplay)
+                                rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId = "scenario_market_01"))
                             },
                             onNavigateToWorldMap = { worldId ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))

@@ -1,14 +1,13 @@
 package com.iti.linguaquest.features.roleplay.di
 
+import com.iti.linguaquest.features.roleplay.data.remote.GeminiRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.remote.GeminiRoleplayService
+import com.iti.linguaquest.features.roleplay.data.remote.LiveRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.remote.LiveRoleplayService
 import com.iti.linguaquest.features.roleplay.data.repository.RoleplayRepositoryImpl
 import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepository
-import com.google.firebase.Firebase
-import com.google.firebase.ai.LiveGenerativeModel
-import com.google.firebase.ai.ai
-import com.google.firebase.ai.type.PublicPreviewAPI
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -23,4 +22,15 @@ abstract class RoleplayModule {
         impl: RoleplayRepositoryImpl
     ): RoleplayRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindLiveRoleplayRemoteDataSource(
+        impl: LiveRoleplayService
+    ): LiveRoleplayRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindGeminiRoleplayRemoteDataSource(
+        impl: GeminiRoleplayService
+    ): GeminiRoleplayRemoteDataSource
 }
