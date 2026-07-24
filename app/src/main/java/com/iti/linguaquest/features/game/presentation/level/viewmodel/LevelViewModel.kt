@@ -15,8 +15,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.R
+import com.iti.linguaquest.features.game.domain.usecase.ChangeWordUseCase
+import com.iti.linguaquest.features.game.domain.usecase.StartLevelUseCase
+
 @HiltViewModel
 class LevelViewModel @Inject constructor(
+    private val startLevelUseCase: StartLevelUseCase,
+    private val changeWordUseCase: ChangeWordUseCase,
+    private val snackbarController: SnackbarController,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -27,17 +41,38 @@ class LevelViewModel @Inject constructor(
     val effects = _effects.receiveAsFlow()
 
     fun loadLevelDetails(worldId: Int, levelNumber: Int) {
-        val word = if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE"
-        val coinCount = 1250
-        val languageCode = if (worldId == 1) "es" else "en"
-        
-        _state.update { 
-            it.copy(
-                levelNumber = levelNumber,
-                wordToGuess = word,
-                coinCount = coinCount,
-                languageCode = languageCode
-            ) 
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, worldId = worldId, levelNumber = levelNumber) }
+            when (val result = startLevelUseCase(worldId, levelNumber)) {
+                is LinguaQuestResult.Success -> {
+                    val targetWord = result.data.ifEmpty { if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE" }
+                    val coinCount = 1250
+                    val languageCode = if (worldId == 1) "es" else "en"
+
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            worldId = worldId,
+                            levelNumber = levelNumber,
+                            wordToGuess = targetWord,
+                            coinCount = coinCount,
+                            languageCode = languageCode
+                        )
+                    }
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.general_error)
+
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = uiText,
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -47,7 +82,7 @@ class LevelViewModel @Inject constructor(
             LevelIntent.DismissBottomSheet -> _state.update { it.copy(isBottomSheetVisible = false) }
             LevelIntent.MascotTapped -> _state.update { it.copy(isBottomSheetVisible = true) }
             LevelIntent.OpenCameraClicked -> sendEffect(LevelEffect.LaunchCamera)
-            LevelIntent.SkipClicked -> sendEffect(LevelEffect.SkipLevel)
+            LevelIntent.SkipClicked -> skipCurrentWord()
             LevelIntent.RevealFirstLetterClicked -> deductCoinsAndHideSheet(25)
             LevelIntent.ShowCategoryClueClicked -> deductCoinsAndHideSheet(50)
             LevelIntent.SoundClicked -> sendEffect(
@@ -56,6 +91,38 @@ class LevelViewModel @Inject constructor(
                     languageCode = _state.value.languageCode
                 )
             )
+        }
+    }
+
+    private fun skipCurrentWord() {
+        val worldId = _state.value.worldId
+        val levelNumber = _state.value.levelNumber
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = changeWordUseCase(worldId, levelNumber)) {
+                is LinguaQuestResult.Success -> {
+                    val newWord = result.data.ifEmpty { "Platano" }
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            wordToGuess = newWord
+                        )
+                    }
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.general_error)
+
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = uiText,
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 

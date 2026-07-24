@@ -42,7 +42,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            when (val result = getWorldsUseCase(null)) {
+            when (val result = getWorldsUseCase()) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
@@ -64,7 +64,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
         return WorldItem(
             id = id,
             title = UiText.DynamicString(name),
-            imageSource = if (imageUrl.isNotBlank() && imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
+            imageSource = if (imageUrl.startsWith("http")) imageUrl else R.drawable.kitchen_icon,
             difficulty = when (difficulty) {
                 DomainWorldDifficulty.EASY -> WorldDifficulty.EASY
                 DomainWorldDifficulty.MEDIUM -> WorldDifficulty.MEDIUM

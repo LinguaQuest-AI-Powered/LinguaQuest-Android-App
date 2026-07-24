@@ -44,7 +44,7 @@ class CameraViewModel @Inject constructor() : ViewModel() {
             CameraIntent.RetryCapture -> {
                 retryCapture()
             }
-            CameraIntent.SubmitPhoto -> {
+            is CameraIntent.SubmitPhoto -> {
                 _state.value.capturedUri?.let { uri ->
                     sendEffect(CameraEffect.NavigateToProcessing(uri))
                 }
