@@ -4,7 +4,7 @@ package com.iti.linguaquest.features.profile.data.datasource.remote.dto
 data class ProfileSummaryDto(
     val id: Int,
     val username: String,
-    val photoUrl: String,
+    val photoUrl: String?,
     val level: Int,
     val stats: ProfileStatsDto,
     val currentLanguageJourney: LanguageJourneyDto,
@@ -48,7 +48,7 @@ data class LeaderboardPreviewEntryDto(
     val rank: Int,
     val userId: Int,
     val username: String,
-    val photoUrl: String,
+    val photoUrl: String?,
     val level: Int,
     val xp: Int,
     val isCurrentUser: Boolean

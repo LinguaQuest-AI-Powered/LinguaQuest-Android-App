@@ -29,7 +29,7 @@ class ProfileLocalDataSourceImpl @Inject constructor(
             profileDao.upsertProfile(profile.toEntity())
         }
 
-        if (profile.photoUrl.isNotBlank()) {
+        if (profile.photoUrl != null) {
             runCatching {
                 dataStore.edit { it[TokenKeys.AVATAR_URL] = profile.photoUrl }
             }

@@ -18,7 +18,7 @@ import com.iti.linguaquest.core.database.word.WordEntity
         LockScreenWordEntity::class,
         HomeEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
