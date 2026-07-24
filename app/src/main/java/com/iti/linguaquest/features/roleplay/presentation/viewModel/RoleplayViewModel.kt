@@ -54,31 +54,45 @@ class RoleplayViewModel @Inject constructor(
 
     fun onIntent(intent: RoleplayIntent) {
         when (intent) {
-            RoleplayIntent.StartLevelClicked -> initializeLiveSession()
+            RoleplayIntent.StartLevelClicked -> startRoleplay()
             RoleplayIntent.RecordClicked -> toggleMicrophone(true)
             RoleplayIntent.StopRecordingClicked -> toggleMicrophone(false)
             RoleplayIntent.ReturnHomeClicked -> {
-                viewModelScope.launch { repository.disconnect() }
+                endRoleplay()
                 sendEffect(RoleplayEffect.NavigateToHome)
             }
             else -> Unit // RetryClicked and AiAudioFinished handled differently in live mode
         }
     }
 
-    private fun initializeLiveSession() {
+    fun startRoleplay() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             
-            val systemPrompt = "You are Lingo. Setting: ${_state.value.setting}. Objective: ${_state.value.objectiveText}."
+            val systemPrompt = """
+                Persona: You are Lingo, a friendly native Arabic language tutor. The user is an English speaker practicing conversational Arabic at a A2 level. The scenario is ordering coffee in a cafe in Cairo.
+                Rules: Keep sentences short and natural for spoken dialogue. Gently correct major grammatical mistakes, then continue the roleplay. 
+                Guardrails: RESPOND UNMISTAKABLY IN Arabic. 
+                Initiation Command: To begin, greet the user immediately and ask what they would like to order.
+            """.trimIndent()
             
             try {
                 repository.connect(systemPrompt)
-                _state.update { it.copy(isConnected = true, isLoading = false) }
+                repository.startMicrophone()
+                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = true) }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.update { it.copy(isLoading = false, error = e.message) }
                 handleError("Failed to connect: ${e.message}")
             }
+        }
+    }
+
+    fun endRoleplay() {
+        viewModelScope.launch {
+            repository.stopMicrophone()
+            repository.disconnect()
+            _state.update { it.copy(isConnected = false, isUserSpeaking = false) }
         }
     }
 

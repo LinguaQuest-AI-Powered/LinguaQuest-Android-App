@@ -38,6 +38,8 @@ import com.iti.linguaquest.features.roleplay.presentation.view.components.Rolepl
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import kotlinx.coroutines.flow.collectLatest
 
+import androidx.compose.runtime.DisposableEffect
+
 @Composable
 fun RoleplayScreen(
     onNavigateHome: () -> Unit,
@@ -57,14 +59,24 @@ fun RoleplayScreen(
     // Auto-connect when landing on the screen
     LaunchedEffect(Unit) {
         if (!state.isConnected && !state.isLoading) {
-            viewModel.onIntent(RoleplayIntent.StartLevelClicked)
+            viewModel.startRoleplay()
+        }
+    }
+
+    // Clean up when screen is disposed
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.endRoleplay()
         }
     }
 
     Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
         RoleplayTopBar(
             targetLanguage = state.targetLanguage,
-            onExitClicked = { viewModel.onIntent(RoleplayIntent.ReturnHomeClicked) }
+            onExitClicked = { 
+                viewModel.endRoleplay()
+                viewModel.onIntent(RoleplayIntent.ReturnHomeClicked) 
+            }
         )
 
         Column(
