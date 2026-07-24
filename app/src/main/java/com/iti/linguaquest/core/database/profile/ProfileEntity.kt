@@ -8,7 +8,7 @@ data class ProfileEntity(
     @PrimaryKey
     val id: Int,
     val username: String,
-    val photoUrl: String,
+    val photoUrl: String?,
     val level: Int,
     val coins: Int,
     val totalXp: Int,
