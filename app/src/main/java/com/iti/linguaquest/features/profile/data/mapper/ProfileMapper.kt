@@ -1,13 +1,13 @@
 package com.iti.linguaquest.features.profile.data.mapper
 
 
-import com.iti.linguaquest.features.profile.datasource.remote.dto.AchievementPreviewDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.AchievementsSummaryDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.LanguageJourneyDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.LeaderboardPreviewEntryDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.LeaderboardSummaryDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.ProfileStatsDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.ProfileSummaryDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.AchievementPreviewDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.AchievementsSummaryDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.LanguageJourneyDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.LeaderboardPreviewEntryDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.LeaderboardSummaryDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.ProfileStatsDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.ProfileSummaryDto
 import com.iti.linguaquest.features.profile.domain.model.AchievementPreview
 import com.iti.linguaquest.features.profile.domain.model.AchievementStatus
 import com.iti.linguaquest.features.profile.domain.model.AchievementsSummary
@@ -20,13 +20,23 @@ import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 fun ProfileSummaryDto.toDomain(): ProfileSummary = ProfileSummary(
     id = id,
     username = username,
-    name = name,
     photoUrl = photoUrl,
     level = level,
     stats = stats.toDomain(),
     languageJourney = currentLanguageJourney.toDomain(),
-    achievementsSummary = achievementsSummary.toDomain(),
-    leaderboardSummary = leaderboardSummary.toDomain()
+    achievementsSummary = achievementsSummary?.toDomain()
+        ?: AchievementsSummary(
+            earnedCount = 0,
+            totalCount = 0,
+            preview = emptyList()
+        ),
+
+    leaderboardSummary = leaderboardSummary?.toDomain()
+        ?: LeaderboardSummary(
+            myRank = 0,
+            preview = emptyList()
+        )
+
 )
 
 private fun ProfileStatsDto.toDomain() = ProfileStats(coins, totalXp, streakDays, worldsCount)

@@ -1,9 +1,7 @@
 package com.iti.linguaquest.features.profile.presentation.view.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,27 +30,32 @@ import com.iti.linguaquest.features.home.presentation.view.components.ProgressTr
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 
 @Composable
- fun LearningProgressCard(state: ProfileState, onChangeLanguageClick: () -> Unit) {
+fun LearningProgressCard(state: ProfileState) {
+    val cardShape = RoundedCornerShape(20.dp)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .background(
+                color = LinguaQuestTheme.colors.ProfileCardBorderColor,
+                shape = cardShape
+            )
+            .padding(bottom = 5.dp)
+            .clip(cardShape)
             .background(LinguaQuestTheme.colors.ProfileCardColor)
             .border(
                 width = 1.dp,
                 color = LinguaQuestTheme.colors.ProfileCardBorderColor,
-                shape = RoundedCornerShape(20.dp)
+                shape = cardShape
             )
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            state.learningLanguageFlagRes?.let { flag ->
-                Image(
-                    painter = painterResource(flag),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
+            state.learningLanguageFlag.let { _ ->
+
+                Text(
+                    text = state.learningLanguageFlag,
+                    fontSize = 18.sp
                 )
                 Spacer(Modifier.width(10.dp))
             }
@@ -70,20 +71,6 @@ import com.iti.linguaquest.features.profile.presentation.model.ProfileState
                     color = LinguaQuestTheme.colors.iconsColor,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(30))
-                    .background(MaterialTheme.colorScheme.tertiary)
-                    .clickable { onChangeLanguageClick() }
-                    .padding(horizontal = 14.dp, vertical = 6.dp)
-            ) {
-                Text(
-                    stringResource(R.string.change_label),
-                    color = LinguaQuestTheme.colors.whiteColor,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
                 )
             }
         }

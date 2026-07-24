@@ -1,9 +1,9 @@
-package com.iti.linguaquest.features.profile.datasource.remote
+package com.iti.linguaquest.features.profile.data.datasource.remote
 
 
 import com.iti.linguaquest.core.network.SuccessResponseDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.ProfileSummaryDto
-import com.iti.linguaquest.features.profile.datasource.remote.dto.UploadAvatarResponseDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.ProfileSummaryDto
+import com.iti.linguaquest.features.profile.data.datasource.remote.dto.UploadAvatarResponseDto
 import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.Multipart

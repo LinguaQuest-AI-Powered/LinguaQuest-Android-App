@@ -347,7 +347,6 @@
     <string name="my_languages_level_format">المستوى %1$d</string>
     <string name="cd_selected">محدد</string>
     <string name="cd_search">بحث</string>
-    <string name="add_languages_no_results">لا توجد لغات مطابقة لبحثك</string>
 
     <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
     <string name="take_photo">التقاط صورة</string>
@@ -481,4 +480,10 @@
     <!-- Content Descriptions -->
     <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
     <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
+    <string name="choose_a_source">اختر مصدر</string>
+    <!-- Snackbars messages -->
+    <string name="congrates">تهانينا</string>
+
+    <string name="add_languages_no_results">add_languages_no_results</string>
+    <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
 </resources>

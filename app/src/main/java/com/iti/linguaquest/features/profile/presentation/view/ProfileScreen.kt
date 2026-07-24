@@ -21,6 +21,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
@@ -33,7 +34,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit = {},
-    onChangeLanguageClick: () -> Unit = {},
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
     viewModel: ProfileViewModel = hiltViewModel()
@@ -62,7 +62,6 @@ fun ProfileScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 ProfileEffect.NavigateToSettings -> onSettingsClick()
-                ProfileEffect.NavigateToChangeLanguage -> onChangeLanguageClick()
                 ProfileEffect.NavigateToAllAchievements -> onViewAllAchievementsClick()
                 ProfileEffect.NavigateToAllLeaderboard -> onViewAllLeaderboardClick()
             }
@@ -72,12 +71,18 @@ fun ProfileScreen(
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else if (uiState.hasError && !uiState.hasCachedData) {
+            ErrorView(
+                message = stringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(ProfileIntent.Retry) },
+                modifier = Modifier.fillMaxSize()
+            )
         } else {
             ProfileContent(
                 state = uiState.profile,
+                isAvatarUploading = uiState.isAvatarUploading,
                 onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
                 onEditAvatarClick = { showAvatarSheet = true },
-                onChangeLanguageClick = { viewModel.onIntent(ProfileIntent.ChangeLanguageClicked) },
                 onViewAllAchievementsClick = { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) },
                 onViewAllLeaderboardClick = { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) },
                 modifier = Modifier.fillMaxSize()
@@ -97,7 +102,7 @@ fun ProfileScreen(
             onChooseFromGalleryClick = {
                 showAvatarSheet = false
                 galleryLauncher.launch(
-                   PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
             }
         )
@@ -107,9 +112,9 @@ fun ProfileScreen(
 @Composable
 fun ProfileContent(
     state: ProfileState,
+    isAvatarUploading: Boolean = false,
     onSettingsClick: () -> Unit,
     onEditAvatarClick: () -> Unit,
-    onChangeLanguageClick: () -> Unit,
     onViewAllAchievementsClick: () -> Unit,
     onViewAllLeaderboardClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -119,17 +124,22 @@ fun ProfileContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        item { ProfileHeader(state, onEditAvatarClick) }
+        item { ProfileHeader(state, onEditAvatarClick, isAvatarUploading) }
         item { StatsGrid(state) }
-        item { LearningProgressCard(state, onChangeLanguageClick) }
+        item { LearningProgressCard(state) }
         item { SettingsRow(onClick = onSettingsClick) }
-        item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }
-        item {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.achievements, key = { it.id }) { AchievementCard(it) }
+        if (state.achievements.isNotEmpty()){
+            item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }
+            item {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(state.achievements, key = { it.id }) { AchievementCard(it) }
+                }
             }
         }
-        item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
-        items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
+        if (state.nearbyLeaderboard.isNotEmpty()){
+            item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
+            items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
+        }
     }
+
 }

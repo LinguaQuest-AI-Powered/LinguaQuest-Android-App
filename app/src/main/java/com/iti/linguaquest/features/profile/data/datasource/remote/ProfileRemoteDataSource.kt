@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.profile.datasource.remote
+package com.iti.linguaquest.features.profile.data.datasource.remote
 
 import android.net.Uri
 import com.iti.linguaquest.core.result.LinguaQuestDataError

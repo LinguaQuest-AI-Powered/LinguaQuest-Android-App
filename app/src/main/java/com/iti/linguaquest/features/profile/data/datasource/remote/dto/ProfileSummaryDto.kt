@@ -1,16 +1,15 @@
-package com.iti.linguaquest.features.profile.datasource.remote.dto
+package com.iti.linguaquest.features.profile.data.datasource.remote.dto
 
 
 data class ProfileSummaryDto(
     val id: Int,
     val username: String,
-    val name: String,
     val photoUrl: String,
     val level: Int,
     val stats: ProfileStatsDto,
     val currentLanguageJourney: LanguageJourneyDto,
-    val achievementsSummary: AchievementsSummaryDto,
-    val leaderboardSummary: LeaderboardSummaryDto
+    val achievementsSummary: AchievementsSummaryDto?,
+    val leaderboardSummary: LeaderboardSummaryDto?
 )
 
 data class ProfileStatsDto(

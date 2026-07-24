@@ -15,11 +15,13 @@
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
+    // Languages displayed name
     <string name="spanish_language_displayName">Spanish</string>
     <string name="japanese_language_displayName">Japanese</string>
     <string name="english_language_displayName">English</string>
     <string name="germany_language_displayName">Germany</string>
 
+    // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>
     <string name="english_language_code">en</string>
@@ -180,7 +182,7 @@
     <string name="review_section_fun_label">DID YOU KNOW?</string>
     <string name="review_language_arrow"> → </string>
 
-    <!-- Level Feature -->
+    // Level Feature
     <string name="level_title">Level %1$d</string>
     <string name="back">Back</string>
     <string name="coins">Coins</string>
@@ -196,6 +198,7 @@
     <string name="show_category_clue">Show category clue</string>
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+
 
     <string name="xp">XP</string>
     <!-- Settings Screen -->
@@ -314,6 +317,7 @@
     <string name="game_processing_status_evaluating">Evaluating your photography skills...</string>
     <string name="game_processing_status_almost_there">Almost there...</string>
 
+
     <!-- Achievements Screen -->
     <string name="achievement_tab_all">All</string>
     <string name="achievement_tab_earned">Earned</string>
@@ -335,12 +339,16 @@
     <string name="my_languages_level_format">Level %1$d</string>
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
-    <string name="add_languages_no_results">No languages matching your search</string>
+
 
     <string name="update_profile_photo">Update profile photo</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="coins_claimed">coins claimed!</string>
+
+
+    <string name="tap_to_zoom">Pinch to zoom · Double-tap</string>
+
 
     <string name="daily_reminder">Daily Reminder</string>
     <string name="reminder_time">Reminder Time</string>
@@ -362,6 +370,7 @@
     <string name="day_thu_short">T</string>
     <string name="day_fri_short">F</string>
     <string name="day_sat_short">S</string>
+
     <!-- Game Result Feature -->
     <string name="game_result_loading">Loading result...</string>
     <string name="game_result_invalid_state">Invalid state. No outcome generated.</string>
@@ -476,4 +485,13 @@
     <string name="login_error_validation_error">Validation error occurred.</string>
 
     <!-- Camera Strings -->
+
+    <string name="choose_a_source">Choose a source</string>
+    <!-- Snackbars messages -->
+    <string name="congrates">Congratulations</string>
+
+
+    <string name="add_languages_no_results">add_languages_no_results</string>
+
+
 </resources>

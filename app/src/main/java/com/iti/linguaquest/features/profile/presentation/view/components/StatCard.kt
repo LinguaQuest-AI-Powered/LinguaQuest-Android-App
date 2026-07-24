@@ -16,27 +16,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
- fun StatCard(
-    icon: Int,
+fun StatCard(
+    painter: Painter,
     value: String,
     label: String,
     modifier: Modifier = Modifier
 ) {
+    val cardShape = RoundedCornerShape(16.dp)
+
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(LinguaQuestTheme.colors.ProfileCardColor)
+            .background(
+                color = LinguaQuestTheme.colors.Sand,
+                shape = cardShape
+            )
+            .padding(bottom = 5.dp)
+            .clip(cardShape)
+            .background(
+                color = LinguaQuestTheme.colors.ProfileCardColor,
+                shape = cardShape
+            )
             .border(
                 width = 1.dp,
                 color = LinguaQuestTheme.colors.Sand,
-                shape = RoundedCornerShape(16.dp)
+                shape = cardShape
             )
             .padding(14.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -48,7 +58,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(icon),
+                painter = painter,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
