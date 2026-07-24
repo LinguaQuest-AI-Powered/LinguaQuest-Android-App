@@ -40,9 +40,6 @@
     <string name="weekends">عطلة نهاية الأسبوع</string>
     <string name="custom">مخصص</string>
     <string name="save">حفظ</string>
-    <string name="map_lets_learn">هيا نتعلم!</string>
-    <string name="cd_treasure">كنز</string>
-    <string name="cd_star">نجمة</string>
     <string name="day_sun_short">ح</string>
     <string name="day_mon_short">ن</string>
     <string name="day_tue_short">ث</string>
@@ -399,20 +396,7 @@
     <string name="notifications_title">الإشعارات</string>
     <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
     <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
-    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
-    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
-    <string name="coins_description">عملات</string>
-    <string name="confirm_button">تأكيد</string>
-    <string name="cancel_button">إلغاء</string>
     <string name="otp_timer_content_description">المؤقت</string>
-    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
-    <string name="cd_linguaquest_mascot_animation">رسوم متحركة لتميمة LinguaQuest</string>
-    <string name="level_beginner">مبتدئ</string>
-    <string name="level_beginner_description">أنا في بداية رحلتي</string>
-    <string name="level_intermediate">متوسط</string>
-    <string name="level_intermediate_description">أستطيع اجتياز التحديات الأساسية</string>
-    <string name="level_advanced">متقدم</string>
-    <string name="level_advanced_description">مستعد لخوض التحديات الكبرى</string>
     <string name="enable_lock_screen_desc">أنفق %d من العملات للحصول على مفردات مُنشأة بالذكاء الاصطناعي تصل إلى شاشة قفلك على مدار اليوم.</string>
     <string name="cd_coins">العملات</string>
     <string name="btn_confirm">تأكيد</string>
@@ -446,8 +430,11 @@
     <string name="lockscreen_error_no_internet">تعذر توليد الكلمات الآن. حاول مرة أخرى لاحقاً.</string>
     <string name="lockscreen_error_bad_format">استجابة الذكاء الاصطناعي لم تكن بالتنسيق المتوقع. حاول مرة أخرى لاحقاً.</string>
     <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
-</resources>
-
+    <string name="lockscreen_notification_permission_required">إذن الإشعارات مطلوب لتفعيل الميزة.</string>
+    <string name="lockscreen_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
+    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن! سيظهر الإشعار خلال 5 ثوانٍ.</string>
+    <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
     <!-- Game Voice Feature -->
     <string name="voice_game_title">تدريب النطق</string>
     <string name="voice_evaluating">جارٍ تقييم النطق…</string>

@@ -1,16 +1,15 @@
 package com.iti.linguaquest
 
 import android.app.Application
-import android.util.Log
-import androidx.work.Configuration
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.initialize
 import com.iti.linguaquest.core.appicon.worker.AppIconWorkScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
-
 @HiltAndroidApp
 class LinguaQuestApplication : Application(), Configuration.Provider {
 

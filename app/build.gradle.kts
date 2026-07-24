@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
     implementation(libs.googleid)
+    implementation(libs.hilt.work)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.hilt.work)
