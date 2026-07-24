@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 
+import com.iti.linguaquest.core.di.UserSettingsDataStore
+
 class LockScreenPreferencesLocalDataSourceImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    @UserSettingsDataStore private val dataStore: DataStore<Preferences>
 ) : LockScreenPreferencesLocalDataSource {
 
     private object Keys {

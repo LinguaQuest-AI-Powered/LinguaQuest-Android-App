@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -19,11 +20,12 @@ class VocabularyGenerationWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return when (val result = repository.generateBatch()) {
-            is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> {
+            is  LinguaQuestResult.Success -> {
+                scheduler.scheduleImmediateNotification()
                 scheduler.scheduleNotificationWork()
                 Result.success()
             }
-            is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> {
+            is  LinguaQuestResult.Failure -> {
                 if (result.error.shouldRetryAutomatically()) {
                     Result.retry()
                 } else {
@@ -39,7 +41,6 @@ class VocabularyGenerationWorker @AssistedInject constructor(
             LinguaQuestDataError.Remote.NO_INTERNET,
             LinguaQuestDataError.Remote.TOO_MANY_REQUESTS,
             LinguaQuestDataError.Remote.SERVER -> true
-
             LinguaQuestDataError.Remote.BAD_REQUEST,
             LinguaQuestDataError.Remote.UNAUTHORIZED,
             LinguaQuestDataError.Remote.SERIALIZATION,

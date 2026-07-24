@@ -22,6 +22,9 @@ interface LockScreenWordDao {
     @Query("SELECT * FROM lock_screen_words WHERE status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
     suspend fun getPendingWordOnce(): LockScreenWordEntity?
 
+    @Query("SELECT * FROM lock_screen_words WHERE status = 'PENDING' ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomPendingWordOnce(): LockScreenWordEntity?
+
     @Query("SELECT COUNT(*) FROM lock_screen_words WHERE status = 'PENDING'")
     fun pendingCount(): Flow<Int>
 
@@ -43,8 +46,14 @@ interface LockScreenWordDao {
     @Query("SELECT word FROM lock_screen_words ORDER BY createdAt DESC LIMIT :limit")
     suspend fun getRecentWords(limit: Int): List<String>
 
+    @Query("SELECT * FROM lock_screen_words WHERE status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
+    fun getPostedOrOpenedWords(): Flow<List<LockScreenWordEntity>>
+
+    @Query("SELECT * FROM lock_screen_words WHERE status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
+    suspend fun getPostedOrOpenedWordsOnce(): List<LockScreenWordEntity>
+
     @Query(
-        "UPDATE lock_screen_words SET status = :status, postedAt = :postedAt, openedAt = :openedAt WHERE id = :wordId"
+        "UPDATE lock_screen_words SET status = :status, postedAt = COALESCE(:postedAt, postedAt), openedAt = COALESCE(:openedAt, openedAt) WHERE id = :wordId"
     )
     suspend fun updateStatus(
         wordId: Int,

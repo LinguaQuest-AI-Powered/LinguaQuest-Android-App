@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.setting.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -27,9 +27,9 @@ import com.iti.linguaquest.features.setting.presentation.contract.ReminderEffect
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
-import com.iti.linguaquest.features.setting.system.ReminderSettings
-import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
+import com.iti.linguaquest.features.setting.presentation.utils.parseDays
+import com.iti.linguaquest.features.setting.presentation.utils.toReminderSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,14 +39,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import javax.inject.Inject
-
+import com.iti.linguaquest.features.setting.presentation.utils.parseTime
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getAppLanguageUseCase: GetAppLanguageUseCase,
@@ -57,8 +55,7 @@ class SettingViewModel @Inject constructor(
     private val changeAppThemeUseCase: ChangeAppThemeUseCase,
     private val toggleSoundUseCase: ToggleSoundUseCase,
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
-    private val logoutUserUseCase: LogoutUserUseCase
-    private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase,
     private val getReminderEnabledUseCase: GetReminderEnabledUseCase,
     private val getReminderTimeUseCase: GetReminderTimeUseCase,
     private val getReminderDaysUseCase: GetReminderDaysUseCase,
@@ -124,7 +121,6 @@ class SettingViewModel @Inject constructor(
     private val _isLoggingOut = MutableStateFlow(false)
     val isLoggingOut = _isLoggingOut.asStateFlow()
 
-    fun toggleSound(enabled: Boolean) {
     fun onReminderIntent(intent: ReminderIntent) {
         if (!notificationsEnabled.value) {
             when (intent) {
@@ -267,15 +263,16 @@ class SettingViewModel @Inject constructor(
     fun changeAppTheme(theme: String) {
         viewModelScope.launch { changeAppThemeUseCase(theme) }
     }
-
-    private fun parseTime(timeStr: String): Pair<Int, Int> {
-        return try {
-            val parts = timeStr.split(":")
-            Pair(parts[0].toInt(), parts[1].toInt())
-        } catch (e: Exception) {
-            Pair(8, 0)
+    fun syncReminderSchedule(notificationsAllowed: Boolean = notificationsEnabled.value) {
+        val state = _reminderState.value
+        if (notificationsAllowed && state.enabled) {
+            scheduleReminderUseCase(state.toReminderSettings())
+        } else {
+            cancelReminderUseCase()
         }
     }
+
+
 
     fun logout(onSuccess: () -> Unit) {
         if (_isLoggingOut.value) return
@@ -286,33 +283,5 @@ class SettingViewModel @Inject constructor(
             _isLoggingOut.value = false
         }
     }
-}
 
-    private fun parseDays(daysStr: String): Set<DayOfWeek> {
-        return try {
-            daysStr.split(",")
-                .mapNotNull { it.trim().toIntOrNull() }
-                .mapNotNull { DayOfWeek.entries.getOrNull(it - 1) }
-                .toSet()
-                .ifEmpty { DayOfWeek.entries.toSet() }
-        } catch (e: Exception) {
-            DayOfWeek.entries.toSet()
-        }
-    }
-
-    private fun syncReminderSchedule(notificationsAllowed: Boolean = notificationsEnabled.value) {
-        val state = _reminderState.value
-        if (notificationsAllowed && state.enabled) {
-            scheduleReminderUseCase(state.toReminderSettings())
-        } else {
-            cancelReminderUseCase()
-        }
-    }
-
-    private fun ReminderState.toReminderSettings() = ReminderSettings(
-        enabled = enabled,
-        hour = hour,
-        minute = minute,
-        selectedDays = selectedDays
-    )
 }

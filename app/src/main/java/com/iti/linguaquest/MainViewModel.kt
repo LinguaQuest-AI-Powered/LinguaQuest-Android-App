@@ -3,7 +3,7 @@ package com.iti.linguaquest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.appicon.domain.AppIconService
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

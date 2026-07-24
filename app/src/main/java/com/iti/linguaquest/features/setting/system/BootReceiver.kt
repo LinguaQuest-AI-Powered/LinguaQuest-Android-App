@@ -3,7 +3,9 @@ package com.iti.linguaquest.features.setting.system
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +24,12 @@ class BootReceiver : BroadcastReceiver() {
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
+    @Inject
+    lateinit var lockScreenRepository: LockScreenRepository
+
+    @Inject
+    lateinit var vocabularyWorkScheduler: VocabularyWorkScheduler
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -31,9 +39,17 @@ class BootReceiver : BroadcastReceiver() {
         scope.launch {
             try {
                 scheduleReminderFromPreferences()
+                scheduleLockScreenVocabulary()
             } finally {
                 pendingResult.finish()
             }
+        }
+    }
+
+    private suspend fun scheduleLockScreenVocabulary() {
+        val isLockScreenEnabled = lockScreenRepository.featureEnabled.first()
+        if (isLockScreenEnabled) {
+            vocabularyWorkScheduler.scheduleNotificationWork()
         }
     }
 

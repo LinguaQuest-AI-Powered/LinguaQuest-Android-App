@@ -28,6 +28,8 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
 
     override fun observeWord(wordId: Int): Flow<LockScreenWordEntity?> = wordDao.observeById(wordId)
 
+    override fun postedOrOpenedWords(): Flow<List<LockScreenWordEntity>> = wordDao.getPostedOrOpenedWords()
+
     override suspend fun insertBatch(words: List<LockScreenWordEntity>) {
         wordDao.insertBatch(words)
     }
@@ -35,6 +37,8 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
     override suspend fun getWord(wordId: Int): LockScreenWordEntity? = wordDao.getById(wordId)
 
     override suspend fun getPendingWordOnce(): LockScreenWordEntity? = wordDao.getPendingWordOnce()
+
+    override suspend fun getRandomPendingWordOnce(): LockScreenWordEntity? = wordDao.getRandomPendingWordOnce()
 
     override suspend fun pendingCountOnce(): Int = wordDao.pendingCountOnce()
 

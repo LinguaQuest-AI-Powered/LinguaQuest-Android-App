@@ -269,6 +269,17 @@
     <string name="lockscreen_vocabulary_word_status">حالة الكلمة</string>
     <string name="lockscreen_vocabulary_back">رجوع</string>
 
+    <!-- Vocabulary Vault (lock screen word list) -->
+    <string name="lockscreen_vocabulary_vault_title">خزينة المفردات</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d كلمة تم جمعها</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">لا كلمات بعد!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">ستظهر هنا الكلمات من إشعارات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_new_badge">جديد</string>
+
+    <!-- Notification -->
+    <string name="lockscreen_notification_channel_description">تذكيرات دورية بالمفردات على شاشة القفل</string>
+    <string name="lockscreen_notification_action_go">فتح</string>
+
     <!-- Daily Rewards -->
     <string name="daily_reward_title">المكافأة\nاليومية!</string>
     <string name="daily_reward_subtitle">لقد عثرت على كنز في مغامرتك اليوم.</string>
@@ -381,16 +392,58 @@
     <string name="lang_german">الألمانية</string>
     <string name="lang_arabic">العربية</string>
     <string name="settings_lock_screen_vocabulary">مفردات شاشة القفل</string>
-     <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
+    <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
     <string name="reminder_turned_off">تم إيقاف التذكير.</string>
     <string name="reminder_time_updated">تم تحديث وقت التذكير.</string>
     <string name="reminder_repeat_updated">تم تحديث تكرار التذكير.</string>
     <string name="notifications_title">الإشعارات</string>
     <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
     <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
-         <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
-        <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
-        <string name="coins_description">عملات</string>
-        <string name="confirm_button">تأكيد</string>
-        <string name="cancel_button">إلغاء</string>
- </resources>
+    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
+    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
+    <string name="coins_description">عملات</string>
+    <string name="confirm_button">تأكيد</string>
+    <string name="cancel_button">إلغاء</string>
+    <string name="otp_timer_content_description">المؤقت</string>
+    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
+    <string name="cd_linguaquest_mascot_animation">رسوم متحركة لتميمة LinguaQuest</string>
+    <string name="level_beginner">مبتدئ</string>
+    <string name="level_beginner_description">أنا في بداية رحلتي</string>
+    <string name="level_intermediate">متوسط</string>
+    <string name="level_intermediate_description">أستطيع اجتياز التحديات الأساسية</string>
+    <string name="level_advanced">متقدم</string>
+    <string name="level_advanced_description">مستعد لخوض التحديات الكبرى</string>
+    <string name="enable_lock_screen_desc">أنفق %d من العملات للحصول على مفردات مُنشأة بالذكاء الاصطناعي تصل إلى شاشة قفلك على مدار اليوم.</string>
+    <string name="cd_coins">العملات</string>
+    <string name="btn_confirm">تأكيد</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="lock_screen_vocabulary_title">مفردات شاشة القفل</string>
+    <string name="lock_screen_vocabulary_desc">تعلم كلمات جديدة مباشرةً\nمن شاشة قفلك</string>
+    <string name="error_fetch_generated_word">تعذر جلب الكلمة المُنشأة حديثاً.</string>
+    <string name="error_generate_words">تعذر إنشاء كلمات جديدة. يرجى المحاولة مرة أخرى.</string>
+    <string name="lockscreen_vocabulary_test_notification">اختبار الإشعار الآن</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+
+    <!-- وصف المكونات / إمكانية الوصول -->
+    <string name="cd_add">إضافة</string>
+    <string name="cd_pronounce">نطق</string>
+    <string name="cd_details">تفاصيل</string>
+
+    <!-- شاشة تفاصيل خزينة المفردات -->
+    <string name="lockscreen_vocabulary_words_collected">تم جمع %1$d كلمة</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 تم تحقيق إنجاز!</string>
+    <string name="lockscreen_milestone_dialog_message">لقد تعلمت %1$d كلمة!\nحصلت على +%2$d عملة. واصل التقدم!</string>
+    <string name="lockscreen_milestone_dialog_button">رائع! 🚀</string>
+    <string name="lockscreen_example_usage_label">مثال للاستخدام</string>
+    <string name="lockscreen_got_it">فهمت ذلك</string>
+    <string name="lockscreen_search_placeholder">ابحث في خزينتك…</string>
+    <string name="lockscreen_no_words_found_title">لم يتم العثور على كلمات</string>
+    <string name="lockscreen_no_words_found_subtitle">جرّب البحث عن كلمة أخرى أو ترجمة مختلفة.</string>
+    <string name="lockscreen_badge_new">جديد</string>
+    <string name="lockscreen_sample_coins">١٬٢٥٠</string>
+    <!-- Accessibility / Content Descriptions -->
+    <string name="lockscreen_error_no_internet_retry">تعذر توليد الكلمات الآن. ستتم إعادة المحاولة تلقائياً.</string>
+    <string name="lockscreen_error_no_internet">تعذر توليد الكلمات الآن. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_bad_format">استجابة الذكاء الاصطناعي لم تكن بالتنسيق المتوقع. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
+</resources>

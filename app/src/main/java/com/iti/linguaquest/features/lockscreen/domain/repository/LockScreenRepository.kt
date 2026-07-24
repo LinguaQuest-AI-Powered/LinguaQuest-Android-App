@@ -18,6 +18,7 @@ interface LockScreenRepository {
     val pendingCount: Flow<Int>
     val allWords: Flow<List<LockScreenWord>>
     val pendingWord: Flow<LockScreenWord?>
+    val postedOrOpenedWords: Flow<List<LockScreenWord>>
 
     suspend fun enable()
     suspend fun disable()

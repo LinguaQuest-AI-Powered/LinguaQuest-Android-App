@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.setting.system
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

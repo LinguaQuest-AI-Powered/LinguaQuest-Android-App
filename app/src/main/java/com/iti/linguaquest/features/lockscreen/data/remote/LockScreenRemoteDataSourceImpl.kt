@@ -21,7 +21,7 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
     private val model: GenerativeModel by lazy {
         Firebase.ai(backend = GenerativeBackend.googleAI())
             .generativeModel(
-                modelName = "gemini-1.5-pro",
+                modelName ="gemini-3.1-flash-lite",
                 generationConfig = generationConfig {
                     responseMimeType = "application/json"
                 }
@@ -52,16 +52,19 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
                 batchSize = batchSize,
                 excludeWords = excludeWords
             )
-            val response = model.generateContent(prompt)
-            val text = response.text ?: return LinguaQuestResult.Failure(LinguaQuestDataError.Remote.EMPTY_RESULT)
+             val response = model.generateContent(prompt)
+            val text = response.text
+             if (text == null) {
+                 return LinguaQuestResult.Failure(LinguaQuestDataError.Remote.EMPTY_RESULT)
+            }
             val parsed = parseResponse(text)
-            if (parsed.isEmpty()) {
-                LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)
+             if (parsed.isEmpty()) {
+                 LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)
             } else {
                 LinguaQuestResult.Success(parsed)
             }
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(e.toRemoteError())
+             LinguaQuestResult.Failure(e.toRemoteError())
         }
     }
 
@@ -139,7 +142,6 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun Throwable.toRemoteError(): LinguaQuestDataError {
-          Log.e("GeminiError", "API Error: ${this.message}", this)
 
         val message = message.orEmpty().lowercase()
         return when {
@@ -152,4 +154,6 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
             else -> LinguaQuestDataError.CustomServerMessage(message.ifBlank { javaClass.simpleName })
         }
     }
+
+
 }

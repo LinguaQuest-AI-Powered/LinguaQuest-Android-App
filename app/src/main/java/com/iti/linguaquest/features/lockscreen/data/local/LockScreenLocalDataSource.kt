@@ -16,10 +16,12 @@ interface LockScreenLocalDataSource {
     fun allWords(): Flow<List<LockScreenWordEntity>>
     fun pendingWord(): Flow<LockScreenWordEntity?>
     fun observeWord(wordId: Int): Flow<LockScreenWordEntity?>
+    fun postedOrOpenedWords(): Flow<List<LockScreenWordEntity>>
 
     suspend fun insertBatch(words: List<LockScreenWordEntity>)
     suspend fun getWord(wordId: Int): LockScreenWordEntity?
     suspend fun getPendingWordOnce(): LockScreenWordEntity?
+    suspend fun getRandomPendingWordOnce(): LockScreenWordEntity?
     suspend fun pendingCountOnce(): Int
     suspend fun getRecentWords(limit: Int): List<String>
     suspend fun updateStatus(wordId: Int, status: String, postedAt: Long? = null, openedAt: Long? = null)

@@ -10,8 +10,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
 
 
+import com.iti.linguaquest.core.di.UserSettingsDataStore
+
 class AppIconPreferencesDataSource @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    @UserSettingsDataStore private val dataStore: DataStore<Preferences>
 ) {
     object Keys {
         val LAST_USER_INTERACTION_AT = longPreferencesKey("last_user_interaction_at")

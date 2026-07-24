@@ -64,8 +64,7 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
 
     override val reminderDays: Flow<String> = dataStore.data.map { it[PreferencesKeys.REMINDER_DAYS] ?: "1,2,3,4,5,6,7" }
 
-    override suspend fun saveTargetLanguage(language: String) {
-    override suspend fun saveTargetLanguage(languageId: Int) {
+     override suspend fun saveTargetLanguage(languageId: Int) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.TARGET_LANGUAGE] = languageId
         }

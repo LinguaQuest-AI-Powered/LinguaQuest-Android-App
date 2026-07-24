@@ -1,8 +1,13 @@
 package com.iti.linguaquest
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.media.AudioManager
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O_MR1
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+import android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -74,6 +79,27 @@ class MainActivity : ComponentActivity() {
         openHomeRequested = intent?.getBooleanExtra(NotificationHelper.EXTRA_OPEN_HOME, false) ?: false
         openLockScreenWordId = intent?.getIntExtra(VocabularyNotificationManager.EXTRA_LOCKSCREEN_WORD_ID, -1)
             ?.takeIf { it > 0 }
+
+        if (openLockScreenWordId != null) {
+            val notificationManager = getSystemService( NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(VocabularyNotificationManager.NOTIFICATION_ID_BASE)
+            
+            if ( SDK_INT >=  O_MR1) {
+                setShowWhenLocked(true)
+                setTurnScreenOn(true)
+            } else {
+                window.addFlags(
+                     FLAG_SHOW_WHEN_LOCKED or
+                     FLAG_TURN_SCREEN_ON
+                )
+            }
+        } else {
+            if ( SDK_INT >= O_MR1) {
+                setShowWhenLocked(false)
+            } else {
+                window.clearFlags( FLAG_SHOW_WHEN_LOCKED)
+            }
+        }
 
          viewModel.refreshAppIcon()
     }

@@ -71,8 +71,6 @@ fun AppButton3D(
                     interactionSource = interactionSource,
                     indication = null,
                     enabled = enabled && !isLoading,
-                    onClick = onClick
-                    enabled = enabled,
                     onClick = {
                         soundPlayer.play(AppSound.POP)
                         onClick()

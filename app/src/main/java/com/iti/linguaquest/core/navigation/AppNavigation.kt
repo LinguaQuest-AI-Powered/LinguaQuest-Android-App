@@ -53,6 +53,8 @@ import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
@@ -67,7 +69,6 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
     val rootBackStack = rememberNavBackStack(RootScreen.Settings)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -368,7 +369,19 @@ fun AppNavigation(
                 entry<RootScreen.LockScreenWordDetail> { screen ->
                     LockScreenWordDetailScreen(
                         wordId = screen.wordId,
-                        onBack = { rootBackStack.removeLastOrNull() }
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        onNavigateToReview = { lockScreenWord ->
+                            SharedWordHolder.pendingWord = com.iti.linguaquest.core.database.word.WordEntity(
+                                id = lockScreenWord.id,
+                                sourceWord = lockScreenWord.word,
+                                translatedWord = lockScreenWord.translation,
+                                sourceLanguage = lockScreenWord.targetLanguage,
+                                targetLanguage = lockScreenWord.nativeLanguage,
+                                category = lockScreenWord.proficiencyLevel,
+                                imagePath = "android.resource://com.iti.linguaquest/${com.iti.linguaquest.R.drawable.lingo_searching}"
+                            )
+                            rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
+                        }
                     )
                 }
 

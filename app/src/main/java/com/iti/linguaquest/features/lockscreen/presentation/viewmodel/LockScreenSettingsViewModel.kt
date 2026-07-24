@@ -2,14 +2,18 @@ package com.iti.linguaquest.features.lockscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
-import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ClearLockScreenWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.DisableLockScreenVocabularyUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.EnableLockScreenVocabularyUseCase
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenSettingsMetadataUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenUserPreferencesUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenPendingOnceUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.UpdateLockScreenMetadataUseCase
 import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
@@ -30,8 +34,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LockScreenSettingsViewModel @Inject constructor(
-    private val repository: LockScreenRepository,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val observeSettingsMetadataUseCase: ObserveLockScreenSettingsMetadataUseCase,
+    private val clearWordsUseCase: ClearLockScreenWordsUseCase,
+    private val updateMetadataUseCase: UpdateLockScreenMetadataUseCase,
+    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+    private val observeUserPreferencesUseCase: ObserveLockScreenUserPreferencesUseCase,
     private val enableUseCase: EnableLockScreenVocabularyUseCase,
     private val disableUseCase: DisableLockScreenVocabularyUseCase,
     private val generateUseCase: GenerateVocabularyBatchUseCase,
@@ -47,10 +54,6 @@ class LockScreenSettingsViewModel @Inject constructor(
 
     private var isHandlingInvalidation = false
 
-    private companion object {
-        const val REQUIRED_INPUTS_ERROR_MESSAGE =
-            "Select a target language and proficiency level before enabling lock screen vocabulary."
-    }
 
     init {
         observeState()
@@ -69,42 +72,36 @@ class LockScreenSettingsViewModel @Inject constructor(
             LockScreenIntent.RetryClicked -> retry()
             LockScreenIntent.DismissErrorClicked -> _state.update { it.copy(errorMessage = null) }
             LockScreenIntent.RefreshClicked -> refreshNow()
+            LockScreenIntent.TestNotificationClicked -> testNotification()
         }
     }
 
     private fun observeState() {
         viewModelScope.launch {
             combine(
-                repository.featureEnabled,
-                repository.pendingGeneration,
-                repository.batchSize,
-                repository.lastGenerationTime,
-                repository.lastNativeLanguage,
-                repository.lastTargetLanguage,
-                repository.lastProficiencyLevel,
-                repository.pendingCount,
-                repository.pendingOperationId,
-                userPreferencesRepository.appLanguage,
-                userPreferencesRepository.targetLanguage,
-                userPreferencesRepository.proficiencyLevel
+                observeSettingsMetadataUseCase(),
+                observeUserPreferencesUseCase()
             ) { values: Array<Any?> ->
-                val enabled = values[0] as Boolean
-                val pendingGeneration = values[1] as Boolean
-                val batchSize = values[2] as Int
-                val lastGenerationTime = values[3] as Long?
-                val lastNativeLanguage = values[4] as String?
-                val lastTargetLanguage = values[5] as String?
-                val lastProficiencyLevel = values[6] as String?
-                val pendingCount = values[7] as Int
-                val pendingOperationId = values[8] as String?
-                val currentNativeLanguage = values[9] as String?
-                val currentTargetLanguage = values[10] as String?
-                val currentProficiencyLevel = values[11] as String?
+                val metadata = values[0] as com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenMetadata
+                val enabled = metadata.featureEnabled
+                val pendingGeneration = metadata.pendingGeneration
+                val batchSize = metadata.batchSize
+                val lastGenerationTime = metadata.lastGenerationTime
+                val lastNativeLanguage = metadata.lastNativeLanguage
+                val lastTargetLanguage = metadata.lastTargetLanguage
+                val lastProficiencyLevel = metadata.lastProficiencyLevel
+                val pendingCount = metadata.pendingCount
+                val pendingOperationId = metadata.pendingOperationId
+                
+                val userPrefs = values[1] as com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenUserPreferences
+                val appLanguage = userPrefs.appLanguage
+                val currentTargetLanguage = userPrefs.targetLanguageName
+                val currentProficiencyLevel = userPrefs.proficiencyLevel
 
                 _state.update { current ->
                     val resolvedErrorMessage =
                         current.errorMessage?.takeUnless {
-                            it == REQUIRED_INPUTS_ERROR_MESSAGE &&
+                            it == com.iti.linguaquest.R.string.lockscreen_required_inputs_error.toString() &&
                                 !currentTargetLanguage.isNullOrBlank() &&
                                 !currentProficiencyLevel.isNullOrBlank()
                         }
@@ -126,7 +123,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                         lastTargetLanguage = lastTargetLanguage,
                         lastProficiencyLevel = lastProficiencyLevel,
                         pendingOperationId = pendingOperationId,
-                        currentNativeLanguage = currentNativeLanguage,
+                        currentNativeLanguage = appLanguage,
                         currentTargetLanguage = currentTargetLanguage,
                         currentProficiencyLevel = currentProficiencyLevel,
                         errorMessage = resolvedErrorMessage
@@ -136,7 +133,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                 maybeInvalidateForPreferenceChange(
                     enabled = enabled,
                     pendingGeneration = pendingGeneration,
-                    currentNativeLanguage = currentNativeLanguage,
+                    currentNativeLanguage = appLanguage,
                     currentTargetLanguage = currentTargetLanguage,
                     currentProficiencyLevel = currentProficiencyLevel,
                     lastNativeLanguage = lastNativeLanguage,
@@ -176,21 +173,23 @@ class LockScreenSettingsViewModel @Inject constructor(
             viewModelScope.launch {
                 isHandlingInvalidation = true
                 try {
-                    repository.clearWords()
-                    repository.updateFeatureMetadata(
-                        enabled = true,
-                        pendingGeneration = true,
-                        lastGenerationTime = null,
-                        lastNativeLanguage = currentNativeLanguage,
-                        lastTargetLanguage = currentTargetLanguage,
-                        lastProficiencyLevel = currentProficiencyLevel
-                    )
-                    scheduler.enqueueGenerationWork()
-                    _state.update {
-                        it.copy(
-                            featureState = LockScreenFeatureState.ENABLING,
-                            errorMessage = null
+                    if (currentNativeLanguage != null && currentTargetLanguage != null && currentProficiencyLevel != null) {
+                        clearWordsUseCase()
+                        updateMetadataUseCase(
+                            enabled = true,
+                            pendingGeneration = true,
+                            batchSize = 30, // Default or from user preference
+                            lastNativeLanguage = currentNativeLanguage,
+                            lastTargetLanguage = currentTargetLanguage,
+                            lastProficiencyLevel = currentProficiencyLevel
                         )
+                        scheduler.enqueueGenerationWork()
+                        _state.update {
+                            it.copy(
+                                featureState = LockScreenFeatureState.ENABLING,
+                                errorMessage = null
+                            )
+                        }
                     }
                 } finally {
                     isHandlingInvalidation = false
@@ -210,7 +209,7 @@ class LockScreenSettingsViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     featureState = LockScreenFeatureState.ERROR,
-                    errorMessage = REQUIRED_INPUTS_ERROR_MESSAGE
+                    errorMessage = com.iti.linguaquest.R.string.lockscreen_required_inputs_error.toString()
                 )
             }
             return
@@ -229,14 +228,14 @@ class LockScreenSettingsViewModel @Inject constructor(
         if (granted) {
             _state.update { it.copy(isConfirmDialogVisible = true) }
         } else {
-            sendEffect(LockScreenEffect.ShowMessage("Notification permission is required to enable the feature."))
+            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notification_permission_required)))
         }
     }
 
     private fun confirmEnable() {
         val current = _state.value
-        if (current.featureState == LockScreenFeatureState.ACTIVE || current.featureState == LockScreenFeatureState.ENABLING) {
-            _state.update { it.copy(isConfirmDialogVisible = false) }
+         if (current.featureState == LockScreenFeatureState.ACTIVE || current.featureState == LockScreenFeatureState.ENABLING) {
+             _state.update { it.copy(isConfirmDialogVisible = false) }
             return
         }
 
@@ -246,7 +245,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                     isConfirmDialogVisible = false,
                     isLoading = false,
                     featureState = LockScreenFeatureState.ERROR,
-                    errorMessage = REQUIRED_INPUTS_ERROR_MESSAGE
+                    errorMessage = com.iti.linguaquest.R.string.lockscreen_required_inputs_error.toString()
                 )
             }
             return
@@ -254,7 +253,7 @@ class LockScreenSettingsViewModel @Inject constructor(
 
         viewModelScope.launch {
             val operationId = current.pendingOperationId ?: UUID.randomUUID().toString()
-            _state.update {
+             _state.update {
                 it.copy(
                     isConfirmDialogVisible = false,
                     isLoading = true,
@@ -264,16 +263,18 @@ class LockScreenSettingsViewModel @Inject constructor(
                 )
             }
 
-            when (val enableResult = enableUseCase(operationId)) {
-                is LinguaQuestResult.Success -> when (val generationResult = generateUseCase()) {
+             when (val enableResult = enableUseCase(operationId)) {
+                is LinguaQuestResult.Success -> {
+                     when (val generationResult = generateUseCase()) {
                     is LinguaQuestResult.Success -> {
-                        repository.updateFeatureMetadata(
+                         updateMetadataUseCase(
                             enabled = true,
                             pendingGeneration = false,
                             operationId = null
                         )
+                         scheduler.scheduleImmediateNotification()
                         scheduler.scheduleNotificationWork()
-                        _state.update {
+                         _state.update {
                             it.copy(
                                 isLoading = false,
                                 featureState = LockScreenFeatureState.ACTIVE,
@@ -281,12 +282,12 @@ class LockScreenSettingsViewModel @Inject constructor(
                                 errorMessage = null
                             )
                         }
-                        sendEffect(LockScreenEffect.ShowMessage("Lock screen vocabulary enabled."))
+                        sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_enabled)))
                     }
 
                     is LinguaQuestResult.Failure -> {
-                        val shouldRetry = generationResult.error.shouldRetryAutomatically()
-                        repository.updateFeatureMetadata(
+                         val shouldRetry = generationResult.error.shouldRetryAutomatically()
+                        updateMetadataUseCase(
                             enabled = true,
                             pendingGeneration = true,
                             operationId = operationId
@@ -302,15 +303,16 @@ class LockScreenSettingsViewModel @Inject constructor(
                             )
                         }
                     }
+                    }
                 }
 
                 is LinguaQuestResult.Failure -> {
-                    _state.update {
+                     _state.update {
                         it.copy(
                             isLoading = false,
                             featureState = LockScreenFeatureState.DISABLED,
                             pendingOperationId = null,
-                            errorMessage = "Could not enable lock screen vocabulary."
+                            errorMessage = com.iti.linguaquest.R.string.lockscreen_enable_error.toString()
                         )
                     }
                 }
@@ -339,7 +341,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                     pendingOperationId = null
                 )
             }
-            sendEffect(LockScreenEffect.ShowMessage("Lock screen vocabulary disabled."))
+            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_disabled)))
         }
     }
 
@@ -354,11 +356,12 @@ class LockScreenSettingsViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, errorMessage = null) }
             when (val result = generateUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    repository.updateFeatureMetadata(
+                    updateMetadataUseCase(
                         enabled = true,
                         pendingGeneration = false,
                         operationId = null
                     )
+                     scheduler.scheduleImmediateNotification()
                     scheduler.scheduleNotificationWork()
                     _state.update {
                         it.copy(
@@ -370,7 +373,7 @@ class LockScreenSettingsViewModel @Inject constructor(
 
                 is LinguaQuestResult.Failure -> {
                     val shouldRetry = result.error.shouldRetryAutomatically()
-                    repository.updateFeatureMetadata(
+                    updateMetadataUseCase(
                         enabled = true,
                         pendingGeneration = true
                     )
@@ -392,7 +395,35 @@ class LockScreenSettingsViewModel @Inject constructor(
     private fun refreshNow() {
         viewModelScope.launch {
             scheduler.scheduleNotificationWork()
-            sendEffect(LockScreenEffect.ShowMessage("Vocabulary notifications scheduled."))
+            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notifications_scheduled)))
+        }
+    }
+
+    private fun testNotification() {
+        viewModelScope.launch {
+            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_test_notification_scheduled)))
+            kotlinx.coroutines.delay(5000)
+
+            val pendingWord = observePendingOnceUseCase()
+            if (pendingWord != null) {
+                notificationManager.show(pendingWord)
+            } else {
+                // Create a dummy word if none exist
+                val testWord = com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord(
+                    id = 9999,
+                    word = "Test Word",
+                    translation = "كلمة اختبار",
+                    exampleSentence = "This is a test sentence.",
+                    status = com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.PENDING,
+                    createdAt = System.currentTimeMillis(),
+                    postedAt = null,
+                    openedAt = null,
+                    nativeLanguage = "Arabic",
+                    targetLanguage = "English",
+                    proficiencyLevel = "Beginner"
+                )
+                notificationManager.show(testWord)
+            }
         }
     }
 
@@ -400,12 +431,10 @@ class LockScreenSettingsViewModel @Inject constructor(
         viewModelScope.launch { _effect.emit(effect) }
     }
 
-    private fun hasRequiredGenerationInputs(state: LockScreenState): Boolean {
-        return !state.currentTargetLanguage.isNullOrBlank() &&
-            !state.currentProficiencyLevel.isNullOrBlank()
-    }
 
-    private fun LinguaQuestDataError.shouldRetryAutomatically(): Boolean {
+      fun hasRequiredGenerationInputs(state: LockScreenState): Boolean = true
+
+      fun LinguaQuestDataError.shouldRetryAutomatically(): Boolean {
         return when (this) {
             LinguaQuestDataError.Remote.REQUEST_TIMEOUT,
             LinguaQuestDataError.Remote.NO_INTERNET,
@@ -427,24 +456,24 @@ class LockScreenSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun LinguaQuestDataError.toUserMessage(shouldRetry: Boolean): String {
+      fun LinguaQuestDataError.toUserMessage(shouldRetry: Boolean): String {
         return when (this) {
             LinguaQuestDataError.Local.NOT_FOUND ->
-                "Select a target language and proficiency level before enabling lock screen vocabulary."
+                com.iti.linguaquest.R.string.lockscreen_required_inputs_error.toString()
 
             LinguaQuestDataError.Remote.NO_INTERNET,
             LinguaQuestDataError.Remote.REQUEST_TIMEOUT,
             LinguaQuestDataError.Remote.TOO_MANY_REQUESTS,
             LinguaQuestDataError.Remote.SERVER ->
                 if (shouldRetry) {
-                    "We could not generate words right now. We'll retry automatically."
+                    com.iti.linguaquest.R.string.lockscreen_error_no_internet_retry.toString()
                 } else {
-                    "We could not generate words right now. Please try again later."
+                    com.iti.linguaquest.R.string.lockscreen_error_no_internet.toString()
                 }
 
             LinguaQuestDataError.Remote.SERIALIZATION,
             LinguaQuestDataError.Remote.EMPTY_RESULT ->
-                "The AI response was not in the expected format. Please try again later."
+                com.iti.linguaquest.R.string.lockscreen_error_bad_format.toString()
 
             LinguaQuestDataError.Remote.BAD_REQUEST,
             LinguaQuestDataError.Remote.UNAUTHORIZED,
@@ -452,12 +481,13 @@ class LockScreenSettingsViewModel @Inject constructor(
             LinguaQuestDataError.Local.DISK_FULL,
             LinguaQuestDataError.Local.CONSTRAINT_VIOLATION,
             LinguaQuestDataError.Local.UNKNOWN ->
-                "Could not enable lock screen vocabulary."
+                com.iti.linguaquest.R.string.lockscreen_enable_error.toString()
 
             is LinguaQuestDataError.CustomServerMessage ->
-                if (message.isNotBlank()) message else "Could not enable lock screen vocabulary."
+                if (message.isNotBlank()) message else com.iti.linguaquest.R.string.lockscreen_enable_error.toString()
 
-            else -> "Could not enable lock screen vocabulary."
+            else -> com.iti.linguaquest.R.string.lockscreen_enable_error.toString()
         }
     }
+
 }

@@ -2,8 +2,11 @@ package com.iti.linguaquest.features.lockscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenWordByIdUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.MarkLockScreenWordOpenedUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenPendingOnceUseCase
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,52 +16,80 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+ @HiltViewModel
 
-@HiltViewModel
 class LockScreenWordDetailViewModel @Inject constructor(
-    private val getWordByIdUseCase: GetLockScreenWordByIdUseCase,
-    private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase
+    private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase,
+    private val generateBatchUseCase: GenerateVocabularyBatchUseCase,
+    private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
+    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LockScreenWordDetailState())
     val state: StateFlow<LockScreenWordDetailState> = _state.asStateFlow()
 
-    private var currentWordId: Int? = null
+    init {
+        observeWords()
+    }
 
-    fun setWordId(wordId: Int) {
-        if (currentWordId == wordId) return
-        currentWordId = wordId
-        loadWord(wordId)
+    fun setHighlightedWordId(wordId: Int?) {
+        _state.update { it.copy(highlightedWordId = wordId) }
+        if (wordId != null) {
+            viewModelScope.launch {
+                markOpenedUseCase(wordId)
+            }
+        }
     }
 
     fun onIntent(intent: LockScreenWordDetailIntent) {
         when (intent) {
-            LockScreenWordDetailIntent.Load -> currentWordId?.let { loadWord(it) }
-            LockScreenWordDetailIntent.Retry -> currentWordId?.let { loadWord(it) }
+            LockScreenWordDetailIntent.Load -> observeWords()
+            LockScreenWordDetailIntent.Retry -> observeWords()
         }
     }
 
-    private fun loadWord(wordId: Int) {
+    private fun observeWords() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null) }
-            val word = getWordByIdUseCase(wordId)
-            if (word == null) {
+            getPostedOrOpenedWordsUseCase().collect { words ->
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "Could not load this word."
+                        words = words,
+                        errorMessage = null
                     )
                 }
-                return@launch
             }
+        }
+    }
 
-            markOpenedUseCase(wordId)
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    word = word,
-                    errorMessage = null
-                )
+    fun requestNewWord() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val pendingWord = observePendingOnceUseCase()
+            if (pendingWord != null) {
+                markOpenedUseCase(pendingWord.id)
+                setHighlightedWordId(pendingWord.id)
+            } else {
+                 val generateResult = generateBatchUseCase()
+                if (generateResult is LinguaQuestResult.Success) {
+                    val newlyGeneratedWord = observePendingOnceUseCase()
+                    if (newlyGeneratedWord != null) {
+                        markOpenedUseCase(newlyGeneratedWord.id)
+                        setHighlightedWordId(newlyGeneratedWord.id)
+                    } else {
+                        _state.update {
+                            it.copy(isLoading = false, errorMessage = com.iti.linguaquest.R.string.lockscreen_error_generate_failed.toString())
+                        }
+                    }
+                } else {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = com.iti.linguaquest.R.string.lockscreen_error_generate_failed.toString()
+                        )
+                    }
+                }
             }
         }
     }

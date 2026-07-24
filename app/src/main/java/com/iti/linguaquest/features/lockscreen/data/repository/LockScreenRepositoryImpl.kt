@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.lockscreen.data.repository
 
 import android.util.Log
-import com.iti.linguaquest.core.preferences.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenLocalDataSource
@@ -33,6 +33,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     override val pendingCount: Flow<Int> = localDataSource.pendingCount
     override val allWords: Flow<List<LockScreenWord>> = localDataSource.allWords().map { list -> list.map { it.toDomain() } }
     override val pendingWord: Flow<LockScreenWord?> = localDataSource.pendingWord().map { it?.toDomain() }
+    override val postedOrOpenedWords: Flow<List<LockScreenWord>> = localDataSource.postedOrOpenedWords().map { list -> list.map { it.toDomain() } }
 
     override suspend fun enable() {
         localDataSource.saveFeatureEnabled(true)
@@ -50,8 +51,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return try {
             // Backend is intentionally disabled for now.
-            // Keep the flow local so the UI can proceed without network errors.
-            localDataSource.savePendingOperationId(operationId)
+             localDataSource.savePendingOperationId(operationId)
             enable()
             LinguaQuestResult.Success(Unit)
         } catch (_: Exception) {
@@ -60,18 +60,16 @@ class LockScreenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun generateBatch(): LinguaQuestResult<Int, LinguaQuestDataError> {
-        val nativeLanguage = userPreferencesRepository.appLanguage.first()
-            .ifBlankOrDefault("en")
-        val targetLanguage = userPreferencesRepository.targetLanguage.first()
-            .orEmpty()
+         val nativeLanguage = userPreferencesRepository.appLanguage.first()
+            .ifBlankOrDefault("Arabic")
+        val targetLanguage = userPreferencesRepository.targetLanguageName.first()
+            .orEmpty().ifBlank { "English" }
         val proficiencyLevel = userPreferencesRepository.proficiencyLevel.first()
-            .orEmpty()
-        val batchSizeValue = localDataSource.batchSize.first()
+            .orEmpty().ifBlank { "Beginner" }
+        val batchSizeValue = localDataSource.batchSize.first().takeIf { it > 0 } ?: 10
         val excludeWords = localDataSource.getRecentWords(100)
 
-        if (targetLanguage.isBlank() || proficiencyLevel.isBlank()) {
-            return LinguaQuestResult.Failure(LinguaQuestDataError.Local.NOT_FOUND)
-        }
+        Log.d(TAG, "generateBatch → native=$nativeLanguage, target=$targetLanguage, level=$proficiencyLevel, batch=$batchSizeValue")
 
         return when (
             val result = generateBatch(
@@ -82,13 +80,17 @@ class LockScreenRepositoryImpl @Inject constructor(
                 proficiencyLevel = proficiencyLevel
             )
         ) {
-            is LinguaQuestResult.Success -> saveGeneratedBatch(
-                words = result.data,
-                nativeLanguage = nativeLanguage,
-                targetLanguage = targetLanguage,
-                proficiencyLevel = proficiencyLevel
-            )
+            is LinguaQuestResult.Success -> {
+                Log.d(TAG, "generateBatch remote SUCCESS: ${result.data.size} words")
+                saveGeneratedBatch(
+                    words = result.data,
+                    nativeLanguage = nativeLanguage,
+                    targetLanguage = targetLanguage,
+                    proficiencyLevel = proficiencyLevel
+                )
+            }
             is LinguaQuestResult.Failure -> {
+                Log.w(TAG, "generateBatch remote FAILED: ${result.error} — trying fallback")
                 val fallbackWords = buildFallbackVocabulary(
                     targetLanguage = targetLanguage,
                     batchSize = batchSizeValue
@@ -96,7 +98,7 @@ class LockScreenRepositoryImpl @Inject constructor(
 
                 if (fallbackWords.isNotEmpty()) {
                     Log.w(
-                        "LockScreenFallback",
+                        TAG,
                         "Using local fallback vocabulary for $targetLanguage because remote generation failed: ${result.error}"
                     )
                     saveGeneratedBatch(
@@ -106,6 +108,7 @@ class LockScreenRepositoryImpl @Inject constructor(
                         proficiencyLevel = proficiencyLevel
                     )
                 } else {
+                    Log.e(TAG, "No fallback available for $targetLanguage — returning failure")
                     result
                 }
             }
@@ -251,7 +254,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun observePendingOnce(): LockScreenWord? {
-        return localDataSource.getPendingWordOnce()?.toDomain()
+        return localDataSource.getRandomPendingWordOnce()?.toDomain()
     }
 
     private fun buildFallbackVocabulary(
@@ -323,5 +326,9 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     private fun String?.ifBlankOrDefault(default: String): String {
         return if (this.isNullOrBlank()) default else this
+    }
+
+    companion object {
+        private const val TAG = "LockScreenRepo"
     }
 }

@@ -10,4 +10,5 @@ sealed interface LockScreenIntent {
     data object RetryClicked : LockScreenIntent
     data object DismissErrorClicked : LockScreenIntent
     data object RefreshClicked : LockScreenIntent
+    data object TestNotificationClicked : LockScreenIntent
 }

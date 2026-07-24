@@ -4,6 +4,7 @@ import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 
 data class LockScreenWordDetailState(
     val isLoading: Boolean = true,
-    val word: LockScreenWord? = null,
+    val words: List<LockScreenWord> = emptyList(),
+    val highlightedWordId: Int? = null,
     val errorMessage: String? = null
 )
