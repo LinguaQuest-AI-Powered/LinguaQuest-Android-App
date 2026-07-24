@@ -22,7 +22,6 @@ import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiLessonPreview
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
 import com.iti.linguaquest.features.all_worlds.domain.model.World
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,10 +36,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val mockExploreWorlds = listOf(
-    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", DomainWorldDifficulty.EASY, WorldStatus.IN_PROGRESS, 40, 20, 8),
-    World(11, "City World", "/media/worlds/city.jpg", DomainWorldDifficulty.MEDIUM, WorldStatus.IN_PROGRESS, 10, 20, 2),
-    World(12, "Park World", "/media/worlds/park.jpg", DomainWorldDifficulty.EASY, WorldStatus.LOCKED, 0, 20, 0),
-    World(13, "School World", "/media/worlds/school.jpg", DomainWorldDifficulty.HARD, WorldStatus.LOCKED, 0, 20, 0)
+    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", DomainWorldDifficulty.EASY, 40, 20, 8),
+    World(11, "City World", "/media/worlds/city.jpg", DomainWorldDifficulty.MEDIUM, 10, 20, 2),
+    World(12, "Park World", "/media/worlds/park.jpg", DomainWorldDifficulty.EASY, 0, 20, 0),
+    World(13, "School World", "/media/worlds/school.jpg", DomainWorldDifficulty.HARD, 0, 20, 0)
 ).map { it.toUiWorldItem() }
 
 @HiltViewModel

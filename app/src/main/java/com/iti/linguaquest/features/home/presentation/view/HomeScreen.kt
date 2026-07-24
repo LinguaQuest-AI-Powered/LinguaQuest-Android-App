@@ -16,11 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -59,6 +57,10 @@ import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
+
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun HomeScreen(
@@ -130,7 +132,12 @@ fun HomeScreen(
     Box(modifier = modifier.fillMaxSize()) {
 
         if (state.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            LoadingView()
+        } else if (state.hasError) {
+            ErrorView(
+                message = stringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(HomeIntent.Retry) }
+            )
         } else {
             HomeContent(
                 state = state,

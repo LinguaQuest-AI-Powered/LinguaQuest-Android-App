@@ -2,16 +2,12 @@ package com.iti.linguaquest.features.leaderboard.presentation
 
 import androidx.compose.runtime.Composable
 
-
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardContent
 import com.iti.linguaquest.features.leaderboard.presentation.viewmodel.LeaderboardViewModel
 
@@ -30,12 +26,10 @@ fun LeaderboardScreen(
         }
 
         state.errorMessage != null -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(state.errorMessage!!)
-            }
+            ErrorView(
+                message = state.errorMessage!!,
+                onRetry = { viewModel.onIntent(LeaderboardIntent.LoadLeaderboard) }
+            )
         }
 
         state.leaderboard != null -> {

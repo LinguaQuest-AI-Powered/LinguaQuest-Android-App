@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -40,14 +39,12 @@ fun WorldCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isLocked = world.unlockLevel != null
-
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(LinguaQuestTheme.colors.whiteColor)
             .padding(all = 15.dp)
-            .clickable(enabled = !isLocked) { onClick() }
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -65,8 +62,7 @@ fun WorldCard(
                             topStart = 20.dp, topEnd = 20.dp, bottomEnd = 20.dp,
                             bottomStart = 20.dp
                         )
-                    )
-                    .alpha(if (isLocked) 0.5f else 1f),
+                    ),
                 contentScale = ContentScale.Crop
             )
 
@@ -77,7 +73,7 @@ fun WorldCard(
                     .padding(8.dp)
             )
 
-            if (world.isCompleted && !isLocked) {
+            if (world.isCompleted ) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -96,25 +92,6 @@ fun WorldCard(
                 }
             }
 
-            if (isLocked) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 8.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f))
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.unlock_at_level_format, world.unlockLevel ?: 1),
-                        style = AppTextStyles.Caption.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.BrownText
-                        )
-                    )
-                }
-            }
         }
 
         Column(modifier = Modifier.padding(12.dp)) {
@@ -123,14 +100,13 @@ fun WorldCard(
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 1,
-                modifier = Modifier.alpha(if (isLocked) 0.5f else 1f)
+                maxLines = 1
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().alpha(if (isLocked) 0.5f else 1f),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -153,8 +129,7 @@ fun WorldCard(
                 progress = world.progress,
                 trackColor = LinguaQuestTheme.colors.progressTrackRemainedColor,
                 fillColor = world.difficulty.badgeColor,
-                height = 6.dp,
-                modifier = Modifier.alpha(if (isLocked) 0.5f else 1f)
+                height = 6.dp
             )
         }
     }

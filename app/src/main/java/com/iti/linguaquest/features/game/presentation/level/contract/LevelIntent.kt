@@ -9,4 +9,5 @@ sealed interface LevelIntent {
     data object RevealFirstLetterClicked : LevelIntent
     data object ShowCategoryClueClicked : LevelIntent
     data object SoundClicked : LevelIntent
+    data object RetryClicked : LevelIntent
 }

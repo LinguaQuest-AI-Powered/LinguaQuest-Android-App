@@ -12,7 +12,6 @@ import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.domain.model.World
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import com.iti.linguaquest.R
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,20 +41,25 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
 
     private fun loadWorlds() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, hasError = false, errorMessage = null) }
 
             when (val result = getWorldsUseCase()) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            hasError = false,
                             worlds = result.data.worlds.map { world -> world.toWorldItem() }
                         )
                     }
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update {
-                        it.copy(isLoading = false)
+                        it.copy(
+                            isLoading = false,
+                            hasError = true,
+                            errorMessage = result.error.toString()
+                        )
                     }
                 }
             }
@@ -74,8 +78,8 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
                 DomainWorldDifficulty.HARD -> WorldDifficulty.HARD
             },
             progress = (progressPercent ?: 0) / 100f,
-            isCompleted = status == WorldStatus.COMPLETED,
-            unlockLevel = if (status == WorldStatus.LOCKED) 1 else null
+            isCompleted = (completedLevels > 0 && completedLevels >= totalLevels) || (progressPercent ?: 0) >= 100,
+            unlockLevel = null
         )
     }
 
@@ -85,12 +89,13 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
                 _state.update { it.copy(selectedFilter = intent.filter) }
             }
             is AllWorldsIntent.OnWorldClicked -> {
-                if (intent.world.unlockLevel == null) {
-                    emitEffect(AllWorldsEffect.NavigateToWorldDetails(intent.world.id))
-                }
+                emitEffect(AllWorldsEffect.NavigateToWorldDetails(intent.world.id))
             }
             AllWorldsIntent.OnBackClicked -> {
                 emitEffect(AllWorldsEffect.NavigateBack)
+            }
+            AllWorldsIntent.OnRetry -> {
+                loadWorlds()
             }
         }
     }

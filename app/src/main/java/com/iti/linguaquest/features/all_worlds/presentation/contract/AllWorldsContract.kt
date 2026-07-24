@@ -6,7 +6,9 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 data class AllWorldsState(
     val isLoading: Boolean = false,
     val selectedFilter: WorldDifficulty? = null,
-    val worlds: List<WorldItem> = emptyList()
+    val worlds: List<WorldItem> = emptyList(),
+    val hasError: Boolean = false,
+    val errorMessage: String? = null
 ) {
     val filteredWorlds: List<WorldItem>
         get() = if (selectedFilter == null) {
@@ -20,6 +22,7 @@ sealed interface AllWorldsIntent {
     data class OnFilterSelected(val filter: WorldDifficulty?) : AllWorldsIntent
     data class OnWorldClicked(val world: WorldItem) : AllWorldsIntent
     data object OnBackClicked : AllWorldsIntent
+    data object OnRetry : AllWorldsIntent
 }
 
 sealed interface AllWorldsEffect {

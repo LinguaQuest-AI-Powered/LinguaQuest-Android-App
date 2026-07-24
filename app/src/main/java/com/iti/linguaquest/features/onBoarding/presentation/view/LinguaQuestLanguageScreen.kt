@@ -25,6 +25,8 @@ import com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageVi
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -53,9 +55,14 @@ private fun LanguagesScreenContent(
     onIntent: (LanguagesIntent) -> Unit
 ) {
     if (state.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        LoadingView()
+        return
+    }
+
+    if (state.errorRes != null) {
+        ErrorView(
+            message = stringResource(state.errorRes)
+        )
         return
     }
 
@@ -140,6 +147,7 @@ private fun LanguagesScreenContent(
     }
 }
 
+@Preview
 @Composable
 private fun LanguagesScreenPreview_Selected() {
     LinguaQuestTheme {

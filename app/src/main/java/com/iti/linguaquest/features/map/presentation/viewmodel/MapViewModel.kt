@@ -42,14 +42,15 @@ class MapViewModel @Inject constructor(
         when (intent) {
             is MapIntent.LevelClicked -> handleLevelClicked(intent.levelNumber)
             MapIntent.BackClicked -> sendEffect(MapEffect.NavigateBack)
+            MapIntent.Retry -> loadLevels(_state.value.worldId, force = true)
         }
     }
 
-    fun loadLevels(worldId: Int) {
-        if (_state.value.levels.isNotEmpty() && _state.value.worldId == worldId) return
+    fun loadLevels(worldId: Int, force: Boolean = false) {
+        if (!force && _state.value.levels.isNotEmpty() && _state.value.worldId == worldId && !_state.value.hasError) return
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, worldId = worldId) }
+            _state.update { it.copy(isLoading = true, worldId = worldId, hasError = false, errorMessage = null) }
             val result = getMapLevelsUseCase(worldId)
             
             result.onSuccess { detail ->
@@ -73,20 +74,29 @@ class MapViewModel @Inject constructor(
                         isLoading = false,
                         worldTitle = UiText.DynamicString(detail.name),
                         levels = uiLevels,
-                        currentLevelIndex = currentIndex
+                        currentLevelIndex = currentIndex,
+                        hasError = false,
+                        errorMessage = null
                     )
                 }
             }.onFailure { error ->
-                _state.update { it.copy(isLoading = false) }
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()
                     ?: UiText.StringResource(R.string.general_error)
-                
+
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        hasError = true,
+                        errorMessage = uiText.toString()
+                    )
+                }
+
                 snackbarController.sendEvent(
                     SnackbarEvent(
                         message = uiText,
                         type = SnackbarType.ERROR,
                         actionLabel = UiText.StringResource(R.string.retry),
-                        onAction = { loadLevels(worldId) }
+                        onAction = { loadLevels(worldId, force = true) }
                     )
                 )
             }

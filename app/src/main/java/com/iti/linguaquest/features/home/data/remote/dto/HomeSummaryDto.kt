@@ -33,7 +33,7 @@ data class ExploreWorldDto(
     val name: String,
     val imageUrl: String,
     val difficulty: String,
-    val status: String,
+    val status: String? = null,
     val progressPercent: Int,
     val totalLevels: Int,
     val completedLevels: Int

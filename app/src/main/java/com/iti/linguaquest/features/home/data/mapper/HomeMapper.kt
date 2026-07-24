@@ -9,7 +9,6 @@ import com.iti.linguaquest.features.home.domain.model.ContinueLesson
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.home.domain.model.HomeSummary
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 
 fun HomeSummaryDto.toDomain(): HomeSummary = HomeSummary(
     xp = xp,
@@ -44,8 +43,6 @@ private fun ExploreWorldDto.toDomain() = World(
     imageUrl = imageUrl,
     difficulty = runCatching { WorldDifficulty.valueOf(difficulty) }
         .getOrDefault(WorldDifficulty.EASY),
-    status = runCatching { WorldStatus.valueOf(status) }
-        .getOrDefault(WorldStatus.LOCKED),
     progressPercent = progressPercent,
     totalLevels = totalLevels,
     completedLevels = completedLevels

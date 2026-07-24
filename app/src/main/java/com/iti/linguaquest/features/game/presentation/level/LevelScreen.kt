@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
 @Composable
@@ -94,58 +96,71 @@ fun LevelScreen(
             .background(LinguaQuestTheme.colors.whiteColor),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ShareTopBar(
-                titleText = stringResource(id = R.string.level_title, state.levelNumber),
-                onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
-                modifier = Modifier.padding(top = 40.dp),
-                trailingContent = {
-                    androidx.compose.foundation.layout.Row(
-                        modifier = Modifier
-                            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(Icons.Default.MonetizationOn),
-                            contentDescription = stringResource(id = R.string.coins),
-                            tint = LinguaQuestTheme.colors.OrangeActive,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "%,d".format(state.coinCount),
-                            color = LinguaQuestTheme.colors.BrownText,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+        when {
+            state.isLoading -> {
+                LoadingView()
+            }
+            state.hasError -> {
+                ErrorView(
+                    message = state.errorMessage ?: stringResource(R.string.error_generic),
+                    onRetry = { viewModel.onIntent(LevelIntent.RetryClicked) }
+                )
+            }
+            else -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ShareTopBar(
+                        titleText = stringResource(id = R.string.level_title, state.levelNumber),
+                        onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
+                        modifier = Modifier.padding(top = 40.dp),
+                        trailingContent = {
+                            androidx.compose.foundation.layout.Row(
+                                modifier = Modifier
+                                    .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
+                                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                                    contentDescription = stringResource(id = R.string.coins),
+                                    tint = LinguaQuestTheme.colors.OrangeActive,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "%,d".format(state.coinCount),
+                                    color = LinguaQuestTheme.colors.BrownText,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    QuestCard(
+                        wordToGuess = state.wordToGuess,
+                        hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                        onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
+                        onSkipClick = { viewModel.onIntent(LevelIntent.SkipClicked) },
+                        onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
+                        onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
                 }
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            QuestCard(
-                wordToGuess = state.wordToGuess,
-                hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
-                onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
-                onSkipClick = { viewModel.onIntent(LevelIntent.SkipClicked) },
-                onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
-                onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-        }
-
-        if (state.isBottomSheetVisible) {
-            HintsBottomSheet(
-                coinCount = state.coinCount,
-                onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
-                onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
-                onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
-            )
+                if (state.isBottomSheetVisible) {
+                    HintsBottomSheet(
+                        coinCount = state.coinCount,
+                        onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
+                        onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
+                        onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
+                    )
+                }
+            }
         }
     }
 }

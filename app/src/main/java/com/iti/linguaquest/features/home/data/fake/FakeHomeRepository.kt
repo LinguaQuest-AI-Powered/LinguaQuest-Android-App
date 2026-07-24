@@ -7,7 +7,6 @@ import com.iti.linguaquest.features.home.domain.model.ContinueLesson
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.home.domain.model.HomeSummary
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.home.domain.repository.HomeRepository
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -36,8 +35,8 @@ class FakeHomeRepository @Inject constructor() : HomeRepository {
                     sentence = "The apple is red"
                 ),
                 exploreWorlds = listOf(
-                    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", WorldDifficulty.EASY, WorldStatus.IN_PROGRESS, 40, 20, 8),
-                    World(11, "City World", "/media/worlds/city.jpg", WorldDifficulty.MEDIUM, WorldStatus.IN_PROGRESS, 10, 20, 2)
+                    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", WorldDifficulty.EASY, 40, 20, 8),
+                    World(11, "City World", "/media/worlds/city.jpg", WorldDifficulty.MEDIUM, 10, 20, 2)
                 )
             )
         )

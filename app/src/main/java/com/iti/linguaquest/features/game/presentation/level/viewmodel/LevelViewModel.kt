@@ -42,7 +42,7 @@ class LevelViewModel @Inject constructor(
 
     fun loadLevelDetails(worldId: Int, levelNumber: Int) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, worldId = worldId, levelNumber = levelNumber) }
+            _state.update { it.copy(isLoading = true, worldId = worldId, levelNumber = levelNumber, hasError = false, errorMessage = null) }
             when (val result = startLevelUseCase(worldId, levelNumber)) {
                 is LinguaQuestResult.Success -> {
                     val targetWord = result.data.ifEmpty { if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE" }
@@ -56,14 +56,23 @@ class LevelViewModel @Inject constructor(
                             levelNumber = levelNumber,
                             wordToGuess = targetWord,
                             coinCount = coinCount,
-                            languageCode = languageCode
+                            languageCode = languageCode,
+                            hasError = false,
+                            errorMessage = null
                         )
                     }
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
+
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            hasError = true,
+                            errorMessage = uiText.toString()
+                        )
+                    }
 
                     snackbarController.sendEvent(
                         SnackbarEvent(
@@ -91,6 +100,7 @@ class LevelViewModel @Inject constructor(
                     languageCode = _state.value.languageCode
                 )
             )
+            LevelIntent.RetryClicked -> loadLevelDetails(_state.value.worldId, _state.value.levelNumber)
         }
     }
 
