@@ -10,6 +10,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.utils.DailyRewardSessionState
+import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
@@ -35,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getHomeSummaryUseCase: GetHomeSummaryUseCase,
+    private val getWorldsUseCase: GetWorldsUseCase,
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController
@@ -105,13 +107,16 @@ class HomeViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, hasError = false) }
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase() }
+            val worldsDeferred = async { getWorldsUseCase() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
 
             val homeSummaryResult = homeSummaryDeferred.await()
+            val worldsResult = worldsDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
 
-            if (homeSummaryResult is LinguaQuestResult.Success) {
+            if (homeSummaryResult is LinguaQuestResult.Success && worldsResult is LinguaQuestResult.Success) {
                 val summary = homeSummaryResult.data
+                val worldsData = worldsResult.data
                 val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                 val shouldShowBanner = dailyRewardUi != null &&
                         !dailyRewardUi.claimedToday &&
@@ -124,14 +129,15 @@ class HomeViewModel @Inject constructor(
                         isLoading = false,
                         hasError = false,
                         languageProgress = summary.toLanguageProgressUi(),
-                        worlds = summary.exploreWorlds.map { world -> world.toUiWorldItem() },
+                        worlds = worldsData.worlds.map { world -> world.toUiWorldItem() },
                         continueLesson = summary.continueLesson?.toUiLessonPreview(),
                         dailyReward = dailyRewardUi,
                         isDailyRewardBannerVisible = shouldShowBanner
                     )
                 }
             } else {
-                val errorResult = homeSummaryResult as LinguaQuestResult.Failure
+                val errorResult = homeSummaryResult as? LinguaQuestResult.Failure
+                    ?: worldsResult as LinguaQuestResult.Failure
                 _state.update { it.copy(isLoading = false, hasError = true) }
                 snackbarController.sendEvent(
                     SnackbarEvent(

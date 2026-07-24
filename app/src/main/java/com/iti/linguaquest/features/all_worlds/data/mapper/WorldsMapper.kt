@@ -8,21 +8,17 @@ import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldsData
 
 fun WorldsDataDto.toDomain(): WorldsData = WorldsData(
-    totalCount = totalCount ?: 0,
-    worlds = worlds?.map { it.toDomain() }.orEmpty()
+    totalCount = totalCount,
+    worlds = worlds.map { it.toDomain() }
 )
 
 fun WorldDto.toDomain(): World = World(
-    id = id ?: 0,
-    name = name.orEmpty(),
-    imageUrl = imageUrl.orEmpty(),
-    difficulty = difficulty?.uppercase()?.let { diff ->
-        runCatching { WorldDifficulty.valueOf(diff) }.getOrNull()
-    } ?: WorldDifficulty.EASY,
-    status = status?.uppercase()?.let { st ->
-        runCatching { WorldStatus.valueOf(st) }.getOrNull()
-    } ?: WorldStatus.IN_PROGRESS,
-    progressPercent = progressPercent ?: 0,
-    totalLevels = totalLevels ?: 0,
-    completedLevels = completedLevels ?: 0
+    id = id,
+    name = name,
+    imageUrl = imageUrl,
+    difficulty = WorldDifficulty.valueOf(difficulty),
+    status = WorldStatus.valueOf(status),
+    progressPercent = progressPercent,
+    totalLevels = totalLevels,
+    completedLevels = completedLevels
 )

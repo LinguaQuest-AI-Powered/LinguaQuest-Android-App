@@ -11,8 +11,9 @@ class GetWorldsUseCase @Inject constructor(
     private val repository: WorldsRepository
 ) {
     suspend operator fun invoke(
+        languageId: Int? = null,
         difficulty: WorldDifficulty? = null
     ): LinguaQuestResult<WorldsData, LinguaQuestDataError> {
-        return repository.getWorlds(difficulty)
+        return repository.getWorlds(languageId, difficulty)
     }
 }

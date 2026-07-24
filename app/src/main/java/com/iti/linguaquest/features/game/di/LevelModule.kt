@@ -1,6 +1,8 @@
 package com.iti.linguaquest.features.game.di
 
 import com.iti.linguaquest.features.game.data.remote.LevelApiService
+import com.iti.linguaquest.features.game.data.remote.LevelRemoteDataSource
+import com.iti.linguaquest.features.game.data.remote.LevelRemoteDataSourceImpl
 import com.iti.linguaquest.features.game.data.repository.LevelRepositoryImpl
 import com.iti.linguaquest.features.game.domain.repository.LevelRepository
 import dagger.Binds
@@ -18,6 +20,10 @@ abstract class LevelModule {
     @Binds
     @Singleton
     abstract fun bindLevelRepository(impl: LevelRepositoryImpl): LevelRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLevelRemoteDataSource(impl: LevelRemoteDataSourceImpl): LevelRemoteDataSource
 
     companion object {
         @Provides

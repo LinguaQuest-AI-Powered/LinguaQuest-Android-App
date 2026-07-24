@@ -8,6 +8,7 @@ import retrofit2.http.Query
 interface WorldsApiService {
     @GET("worlds")
     suspend fun getWorlds(
+        @Query("languageId") languageId: Int? = null,
         @Query("difficulty") difficulty: String? = null
     ): SuccessResponseDto<WorldsDataDto>
 }
