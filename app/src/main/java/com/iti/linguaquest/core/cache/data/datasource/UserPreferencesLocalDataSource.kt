@@ -19,6 +19,9 @@ interface UserPreferencesLocalDataSource {
     val soundEnabled: Flow<Boolean>
     val appLanguage: Flow<String>
     val notificationsEnabled: Flow<Boolean>
+    val reminderEnabled: Flow<Boolean>
+    val reminderTime: Flow<String>
+    val reminderDays: Flow<String>
 
     suspend fun saveTargetLanguage(languageId: Int)
     suspend fun saveTargetLanguageName(name: String)
@@ -29,6 +32,9 @@ interface UserPreferencesLocalDataSource {
     suspend fun saveSoundEnabled(enabled: Boolean)
     suspend fun saveAppLanguage(language: String)
     suspend fun saveNotificationsEnabled(enabled: Boolean)
+    suspend fun saveReminderEnabled(enabled: Boolean)
+    suspend fun saveReminderTime(time: String)
+    suspend fun saveReminderDays(days: String)
     suspend fun clearOnboardingPreferences()
 }
 
@@ -52,7 +58,13 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
 
     override val notificationsEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.NOTIFICATIONS_ENABLED] ?: true }
 
-    override suspend fun saveTargetLanguage(languageId: Int) {
+    override val reminderEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.REMINDER_ENABLED] ?: false }
+
+    override val reminderTime: Flow<String> = dataStore.data.map { it[PreferencesKeys.REMINDER_TIME] ?: "08:00" }
+
+    override val reminderDays: Flow<String> = dataStore.data.map { it[PreferencesKeys.REMINDER_DAYS] ?: "1,2,3,4,5,6,7" }
+
+     override suspend fun saveTargetLanguage(languageId: Int) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.TARGET_LANGUAGE] = languageId
         }
@@ -104,6 +116,24 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override suspend fun saveNotificationsEnabled(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    override suspend fun saveReminderEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.REMINDER_ENABLED] = enabled
+        }
+    }
+
+    override suspend fun saveReminderTime(time: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.REMINDER_TIME] = time
+        }
+    }
+
+    override suspend fun saveReminderDays(days: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.REMINDER_DAYS] = days
         }
     }
 

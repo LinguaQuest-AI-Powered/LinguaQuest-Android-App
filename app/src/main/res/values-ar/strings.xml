@@ -14,13 +14,20 @@
     <string name="continue_button">متابعة</string>
     <string name="What_is_your_level">ما هو مستواك؟</string>
     <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
-
+    <string name="daily_reminder">التذكير اليومي</string>
+    <string name="reminder_time">وقت التذكير</string>
+    <string name="notification_channel_name">التذكير اليومي</string>
+    <string name="notification_channel_description">يذكرك بإكمال درس اللغة اليومي</string>
+    <string name="select_reminder_time">اختر وقت التذكير</string>
+    <string name="notification_title">هل أنت مستعد لدرس اليوم؟</string>
+    <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
+    <string name="repeat">التكرار</string>
     // Languages displayed name
     <string name="spanish_language_displayName">الإسبانية</string>
     <string name="japanese_language_displayName">اليابانية</string>
     <string name="english_language_displayName">الإنجليزية</string>
     <string name="germany_language_displayName">الألمانية</string>
-
+    <string name="logout">تسجيل الخروج</string>
     // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>
@@ -28,7 +35,18 @@
     <string name="germany_language_code">ge</string>
 
     <string name="select_language">اختر اللغة</string>
-
+    <string name="every_day">كل يوم</string>
+    <string name="weekdays">أيام الأسبوع</string>
+    <string name="weekends">عطلة نهاية الأسبوع</string>
+    <string name="custom">مخصص</string>
+    <string name="save">حفظ</string>
+    <string name="day_sun_short">ح</string>
+    <string name="day_mon_short">ن</string>
+    <string name="day_tue_short">ث</string>
+    <string name="day_wed_short">ر</string>
+    <string name="day_thu_short">خ</string>
+    <string name="day_fri_short">ج</string>
+    <string name="day_sat_short">س</string>
     <string name="login_welcome_back">مرحباً بعودتك!</string>
     <string name="login_ready_to_continue">هل أنت جاهز للمتابعة؟</string>
     <string name="login_title">تسجيل الدخول</string>
@@ -213,6 +231,51 @@
     <string name="settings_about_app">حول التطبيق</string>
     <string name="settings_log_out">تسجيل الخروج</string>
     <string name="settings_delete_account">حذف الحساب</string>
+    <string name="lockscreen_vocabulary_title">مفردات شاشة القفل</string>
+    <string name="lockscreen_vocabulary_subtitle">حوّل شاشة القفل إلى حلقة تعلم صغيرة تُبقي المفردات حاضرة طوال اليوم.</string>
+    <string name="lockscreen_vocabulary_cost_chip">50 عملة</string>
+    <string name="lockscreen_vocabulary_schedule_chip">كل ساعتين</string>
+    <string name="lockscreen_vocabulary_state_ready">جاهز</string>
+    <string name="lockscreen_vocabulary_state_generating">جارٍ الإعداد</string>
+    <string name="lockscreen_vocabulary_state_active">مفعّل</string>
+    <string name="lockscreen_vocabulary_state_disabled">متوقف</string>
+    <string name="lockscreen_vocabulary_state_error">يحتاج تدخل</string>
+    <string name="lockscreen_vocabulary_pending_words">الكلمات المتبقية</string>
+    <string name="lockscreen_vocabulary_batch_size">حجم الدفعة</string>
+    <string name="lockscreen_vocabulary_last_generated">آخر توليد</string>
+    <string name="lockscreen_vocabulary_target_language">اللغة الهدف</string>
+    <string name="lockscreen_vocabulary_level">المستوى</string>
+    <string name="lockscreen_vocabulary_enable_title">تفعيل مفردات شاشة القفل؟</string>
+    <string name="lockscreen_vocabulary_enable_message">سيتم خصم 50 عملة مرة واحدة، ثم ستظهر مفردات على شاشة القفل بشكل دوري.</string>
+    <string name="lockscreen_vocabulary_enable_action">تفعيل</string>
+    <string name="lockscreen_vocabulary_cancel_action">إلغاء</string>
+    <string name="lockscreen_vocabulary_retry">إعادة المحاولة</string>
+    <string name="lockscreen_vocabulary_disable">تعطيل الميزة</string>
+    <string name="lockscreen_vocabulary_loading">جارٍ تحميل المفردات...</string>
+    <string name="lockscreen_vocabulary_status_label">الحالة</string>
+    <string name="lockscreen_vocabulary_error_permission">صلاحية الإشعارات مطلوبة لتفعيل هذه الميزة.</string>
+    <string name="lockscreen_vocabulary_error_enable">تعذر تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_error_retry">ستتم إعادة محاولة التوليد لاحقًا.</string>
+    <string name="lockscreen_vocabulary_enabled">تم تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_disabled">تم تعطيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
+    <string name="lockscreen_vocabulary_word_detail_title">تفاصيل الكلمة</string>
+    <string name="lockscreen_vocabulary_example_label">مثال</string>
+    <string name="lockscreen_vocabulary_translation_label">الترجمة</string>
+    <string name="lockscreen_vocabulary_word_label">الكلمة</string>
+    <string name="lockscreen_vocabulary_word_status">حالة الكلمة</string>
+    <string name="lockscreen_vocabulary_back">رجوع</string>
+
+    <!-- Vocabulary Vault (lock screen word list) -->
+    <string name="lockscreen_vocabulary_vault_title">خزينة المفردات</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d كلمة تم جمعها</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">لا كلمات بعد!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">ستظهر هنا الكلمات من إشعارات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_new_badge">جديد</string>
+
+    <!-- Notification -->
+    <string name="lockscreen_notification_channel_description">تذكيرات دورية بالمفردات على شاشة القفل</string>
+    <string name="lockscreen_notification_action_go">فتح</string>
 
     <!-- Daily Rewards -->
     <string name="daily_reward_title">المكافأة\nاليومية!</string>
@@ -317,6 +380,60 @@
     <string name="save_changes">حفظ التغييرات</string>
     <string name="cancel">إلغاء</string>
 
+    <string name="days_count"> عدد الايام </string>
+
+    <string name="lang_english">الإنجليزية</string>
+    <string name="lang_spanish">الإسبانية</string>
+    <string name="lang_japanese">اليابانية</string>
+    <string name="lang_german">الألمانية</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="settings_lock_screen_vocabulary">مفردات شاشة القفل</string>
+    <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
+    <string name="reminder_turned_off">تم إيقاف التذكير.</string>
+    <string name="reminder_time_updated">تم تحديث وقت التذكير.</string>
+    <string name="reminder_repeat_updated">تم تحديث تكرار التذكير.</string>
+    <string name="notifications_title">الإشعارات</string>
+    <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
+    <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
+    <string name="otp_timer_content_description">المؤقت</string>
+    <string name="enable_lock_screen_desc">أنفق %d من العملات للحصول على مفردات مُنشأة بالذكاء الاصطناعي تصل إلى شاشة قفلك على مدار اليوم.</string>
+    <string name="cd_coins">العملات</string>
+    <string name="btn_confirm">تأكيد</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="lock_screen_vocabulary_title">مفردات شاشة القفل</string>
+    <string name="lock_screen_vocabulary_desc">تعلم كلمات جديدة مباشرةً\nمن شاشة قفلك</string>
+    <string name="error_fetch_generated_word">تعذر جلب الكلمة المُنشأة حديثاً.</string>
+    <string name="error_generate_words">تعذر إنشاء كلمات جديدة. يرجى المحاولة مرة أخرى.</string>
+    <string name="lockscreen_vocabulary_test_notification">اختبار الإشعار الآن</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+
+    <!-- وصف المكونات / إمكانية الوصول -->
+    <string name="cd_add">إضافة</string>
+    <string name="cd_pronounce">نطق</string>
+    <string name="cd_details">تفاصيل</string>
+
+    <!-- شاشة تفاصيل خزينة المفردات -->
+    <string name="lockscreen_vocabulary_words_collected">تم جمع %1$d كلمة</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 تم تحقيق إنجاز!</string>
+    <string name="lockscreen_milestone_dialog_message">لقد تعلمت %1$d كلمة!\nحصلت على +%2$d عملة. واصل التقدم!</string>
+    <string name="lockscreen_milestone_dialog_button">رائع! 🚀</string>
+    <string name="lockscreen_example_usage_label">مثال للاستخدام</string>
+    <string name="lockscreen_got_it">فهمت ذلك</string>
+    <string name="lockscreen_search_placeholder">ابحث في خزينتك…</string>
+    <string name="lockscreen_no_words_found_title">لم يتم العثور على كلمات</string>
+    <string name="lockscreen_no_words_found_subtitle">جرّب البحث عن كلمة أخرى أو ترجمة مختلفة.</string>
+    <string name="lockscreen_badge_new">جديد</string>
+    <string name="lockscreen_sample_coins">١٬٢٥٠</string>
+    <!-- Accessibility / Content Descriptions -->
+    <string name="lockscreen_error_no_internet_retry">تعذر توليد الكلمات الآن. ستتم إعادة المحاولة تلقائياً.</string>
+    <string name="lockscreen_error_no_internet">تعذر توليد الكلمات الآن. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_bad_format">استجابة الذكاء الاصطناعي لم تكن بالتنسيق المتوقع. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
+    <string name="lockscreen_notification_permission_required">إذن الإشعارات مطلوب لتفعيل الميزة.</string>
+    <string name="lockscreen_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
+    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن! سيظهر الإشعار خلال 5 ثوانٍ.</string>
+    <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
     <!-- Game Voice Feature -->
     <string name="voice_game_title">تدريب النطق</string>
     <string name="voice_evaluating">جارٍ تقييم النطق…</string>
@@ -368,6 +485,5 @@
     <string name="congrates">تهانينا</string>
 
     <string name="add_languages_no_results">add_languages_no_results</string>
-    <string name="otp_timer_content_description">OTP resend timer</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
 </resources>

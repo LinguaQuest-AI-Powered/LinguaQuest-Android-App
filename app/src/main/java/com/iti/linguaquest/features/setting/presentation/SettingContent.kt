@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.setting.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,28 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.Alignment
-import com.iti.linguaquest.core.theme.AppTextStyles
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,13 +25,25 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
+import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
+import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
 import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
+import com.iti.linguaquest.features.setting.presentation.components.DailyReminderSection
+import com.iti.linguaquest.features.setting.presentation.components.EnableLockScreenDialog
+import com.iti.linguaquest.features.setting.presentation.components.LanguageSelectionBottomSheet
+import com.iti.linguaquest.features.setting.presentation.components.LockScreenSettingItem
+import com.iti.linguaquest.features.setting.presentation.components.RepeatBottomSheet
+import com.iti.linguaquest.features.setting.presentation.components.SectionDivider
 import com.iti.linguaquest.features.setting.presentation.components.SettingItem
 import com.iti.linguaquest.features.setting.presentation.components.SettingProfileHeader
 import com.iti.linguaquest.features.setting.presentation.components.SettingSectionContainer
-import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.features.setting.presentation.components.TimePickerDialog
+import com.iti.linguaquest.features.setting.presentation.components.getLanguageName
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
+import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingContent(
     onBackClick: () -> Unit,
@@ -65,7 +57,12 @@ fun SettingContent(
     onNotificationsToggle: (Boolean) -> Unit,
     isLoggingOut: Boolean = false,
     onLogoutClick: () -> Unit,
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onLockScreenVocabularyClick: () -> Unit,
+    reminderState: ReminderState,
+    onReminderIntent: (ReminderIntent) -> Unit,
+    lockScreenState: LockScreenState,
+    onLockScreenIntent: (LockScreenIntent) -> Unit
 ) {
     val isDark = when (appTheme) {
         "light" -> false
@@ -75,83 +72,28 @@ fun SettingContent(
 
     var showLanguageDialog by remember { mutableStateOf(false) }
 
-    if (showLanguageDialog) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        val languages = listOf(
-            "en" to "English",
-            "es" to "Spanish",
-            "ja" to "Japanese",
-            "ge" to "German",
-            "ar" to "Arabic (العربية)"
+     if (lockScreenState.isConfirmDialogVisible) {
+        EnableLockScreenDialog(
+            coinCost = 50,
+            onConfirm = { onLockScreenIntent(LockScreenIntent.ConfirmEnableClicked) },
+            onCancel = { onLockScreenIntent(LockScreenIntent.CancelEnableClicked) }
         )
+    }
 
-        ModalBottomSheet(
-            onDismissRequest = { showLanguageDialog = false },
-            sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.background,
-            dragHandle = {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 12.dp, bottom = 8.dp)
-                        .width(40.dp)
-                        .height(4.dp)
-                        .clip(CircleShape)
-                        .background(LinguaQuestTheme.colors.textFieldBorder)
-                )
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_app_language),
-                        style = AppTextStyles.ScreenTitle.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.titleAndCationsColor
-                        )
-                    )
-                    IconButton(onClick = { showLanguageDialog = false }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.close),
-                            tint = LinguaQuestTheme.colors.titleAndCationsColor
-                        )
-                    }
-                }
+     if (showLanguageDialog) {
+        LanguageSelectionBottomSheet(
+            currentLanguage = appLanguage,
+            onLanguageSelected = onChangeAppLanguage,
+            onDismissRequest = { showLanguageDialog = false }
+        )
+    }
 
-                Spacer(modifier = Modifier.height(16.dp))
+     if (reminderState.showTimePicker) {
+        TimePickerDialog(state = reminderState, onIntent = onReminderIntent)
+    }
 
-                languages.forEach { (code, name) ->
-                    Text(
-                        text = name,
-                        style = AppTextStyles.LessonTitle.copy(
-                            fontWeight = if (appLanguage == code) FontWeight.Bold else FontWeight.Normal,
-                            color = if (appLanguage == code) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.titleAndCationsColor
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onChangeAppLanguage(code)
-                                showLanguageDialog = false
-                            }
-                            .padding(vertical = 16.dp)
-                    )
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.background,
-                        thickness = 1.dp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-        }
+    if (reminderState.showRepeatSheet) {
+        RepeatBottomSheet(state = reminderState, onIntent = onReminderIntent)
     }
 
     Column(
@@ -170,51 +112,36 @@ fun SettingContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SettingSectionContainer(title = stringResource(id = R.string.settings_category_account)) {
+         SettingSectionContainer(title = stringResource(id = R.string.settings_category_account)) {
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_edit_icon),
                 title = stringResource(id = R.string.settings_edit_profile),
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = onEditProfileClick
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_learning_language),
-                value = "English",
+                value = stringResource(id = R.string.lang_english),
                 valueColor = LocalLinguaQuestColors.current.BrownText,
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = { /* TODO */ }
             )
-
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SettingSectionContainer(title = stringResource(id = R.string.settings_category_app_experience)) {
+         SettingSectionContainer(title = stringResource(id = R.string.settings_category_app_experience)) {
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_learning_language),
                 title = stringResource(id = R.string.settings_app_language),
-                value = when (appLanguage) {
-                    "es" -> "Spanish"
-                    "ja" -> "Japanese"
-                    "ge" -> "German"
-                    "ar" -> "Arabic"
-                    else -> "English"
-                },
+                value = getLanguageName(appLanguage),
                 valueColor = LocalLinguaQuestColors.current.BrownText,
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { showLanguageDialog = true }
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_bell_icon),
                 title = stringResource(id = R.string.settings_notifications),
@@ -223,11 +150,7 @@ fun SettingContent(
                 onSwitchChange = onNotificationsToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_moon_icon),
                 title = stringResource(id = R.string.settings_dark_mode),
@@ -238,11 +161,7 @@ fun SettingContent(
                 },
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_speaker_icon),
                 title = stringResource(id = R.string.settings_sound_effects),
@@ -251,22 +170,23 @@ fun SettingContent(
                 onSwitchChange = onSoundToggle,
                 iconTint = MaterialTheme.colorScheme.tertiary
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_help_icon),
                 title = stringResource(id = R.string.settings_help_support),
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 onClick = { /* TODO */ }
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.background,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
+            SectionDivider()
+
+            LockScreenSettingItem(
+                isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE || lockScreenState.featureState == LockScreenFeatureState.ENABLING,
+                onCheckedChange = { isChecked ->
+                    onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
+                }
             )
+
+            SectionDivider()
             SettingItem(
                 icon = painterResource(id = R.drawable.ic_info_icon),
                 title = stringResource(id = R.string.settings_about_app),
@@ -275,19 +195,33 @@ fun SettingContent(
             )
         }
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+         DailyReminderSection(
+            state = reminderState,
+            onIntent = onReminderIntent,
+            enabled = notificationsEnabled,
+            modifier = Modifier.padding(horizontal = 0.dp)
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
 
-        AppButton3D(
+         AppButton3D(
             text = stringResource(id = R.string.settings_log_out),
             onClick = onLogoutClick,
-            textColor = Color.Black, // Ensure dark text on primary button
+            textColor = Color.Black,
             isLoading = isLoggingOut,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-
     }
 }
+
+
+
+
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -306,9 +240,11 @@ fun SettingContentPreview() {
             isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
+            onLockScreenVocabularyClick = {},
+            reminderState = ReminderState(enabled = true),
+            onReminderIntent = {},
+            lockScreenState = LockScreenState(),
+            onLockScreenIntent = {}
         )
-
     }
 }
-
-

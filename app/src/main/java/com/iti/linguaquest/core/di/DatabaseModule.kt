@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room3.Room
 import com.iti.linguaquest.core.database.AppDatabase
 import com.iti.linguaquest.core.database.profile.ProfileDao
+import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
 import com.iti.linguaquest.core.database.word.WordDao
 import dagger.Module
 import dagger.Provides
@@ -33,9 +34,17 @@ object DatabaseModule {
     fun provideWordDao(appDatabase: AppDatabase): WordDao {
         return appDatabase.wordDao()
     }
+
     @Provides
     @Singleton
     fun provideProfileDao(appDatabase: AppDatabase): ProfileDao {
         return appDatabase.profileDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideLockScreenWordDao(appDatabase: AppDatabase): LockScreenWordDao {
+        return appDatabase.lockScreenWordDao()
+    }
 }
+

@@ -12,6 +12,9 @@ interface UserPreferencesRepository {
     val soundEnabled: Flow<Boolean>
     val appLanguage: Flow<String>
     val notificationsEnabled: Flow<Boolean>
+    val reminderEnabled: Flow<Boolean>
+    val reminderTime: Flow<String>
+    val reminderDays: Flow<String>
 
     suspend fun saveTargetLanguage(languageId: Int, name: String)
     suspend fun saveNativeLanguage(languageId: Int, name: String)
@@ -20,4 +23,7 @@ interface UserPreferencesRepository {
     suspend fun saveSoundEnabled(enabled: Boolean)
     suspend fun saveAppLanguage(language: String)
     suspend fun saveNotificationsEnabled(enabled: Boolean)
+    suspend fun saveReminderEnabled(enabled: Boolean)
+    suspend fun saveReminderTime(time: String)
+    suspend fun saveReminderDays(days: String)
 }
