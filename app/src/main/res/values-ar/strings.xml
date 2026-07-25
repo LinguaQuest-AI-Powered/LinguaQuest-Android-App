@@ -523,4 +523,7 @@
     <string name="roleplay_no_roleplays_available">لا توجد سيناريوهات تبادل أدوار متاحة.</string>
     <string name="roleplay_objective">الهدف</string>
     <string name="roleplay_label">تبادل الأدوار</string>
+    <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
+    <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
+    <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
 </resources>

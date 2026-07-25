@@ -533,4 +533,7 @@
     <string name="roleplay_no_roleplays_available">No roleplays available.</string>
     <string name="roleplay_objective">Objective</string>
     <string name="roleplay_label">Roleplay</string>
+    <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
+    <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
 </resources>

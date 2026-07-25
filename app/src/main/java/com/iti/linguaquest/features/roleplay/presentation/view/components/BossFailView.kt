@@ -66,8 +66,13 @@ fun BossFailView(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
+                val feedbackText = if (result.feedback_message == "ERROR_NO_SPEECH") {
+                    stringResource(R.string.roleplay_no_speech)
+                } else {
+                    result.feedback_message
+                }
                 Text(
-                    text = result.feedback_message,
+                    text = feedbackText,
                     style = AppTextStyles.DialogMessage,
                     color = LinguaQuestTheme.colors.BrownText,
                     fontSize = 16.sp

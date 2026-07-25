@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +43,8 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
     AppMascotGradientBox(
         imageRes = R.drawable.lingo_initial_state_voice,
         mascotOverlapHeight = 70.dp,
-        mascotSize = 180.dp
+        mascotSize = 180.dp,
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         Text(
             text = stringResource(R.string.roleplay_boss_stage),

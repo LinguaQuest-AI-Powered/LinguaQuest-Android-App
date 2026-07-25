@@ -22,9 +22,11 @@ import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+
 @Composable
 fun BossErrorView(
-    errorMessage: String,
+    errorMessage: UiText,
     onRetry: () -> Unit,
     onExit: () -> Unit,
     modifier: Modifier = Modifier
@@ -51,7 +53,7 @@ fun BossErrorView(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = errorMessage,
+                text = errorMessage.asString(),
                 style = AppTextStyles.DialogMessage,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 16.sp,

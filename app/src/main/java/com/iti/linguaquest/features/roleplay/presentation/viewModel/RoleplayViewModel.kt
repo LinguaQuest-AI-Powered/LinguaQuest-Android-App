@@ -22,6 +22,7 @@ import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
+import com.iti.linguaquest.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -132,8 +133,8 @@ class RoleplayViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _state.update { it.copy(isLoading = false, error = e.message) }
-                handleError("Failed to connect: ${e.message}")
+                _state.update { it.copy(isLoading = false, error = UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: ""))) }
+                handleError(UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: "")))
             }
         }
     }
@@ -154,7 +155,7 @@ class RoleplayViewModel @Inject constructor(
                         assessmentResult = BossEvaluationResult(
                             task_completed = false,
                             fluency_score = 0,
-                            feedback_message = "You didn't say anything! Please try again and speak to the character."
+                            feedback_message = "ERROR_NO_SPEECH"
                         )
                     )
                 }
@@ -181,7 +182,7 @@ class RoleplayViewModel @Inject constructor(
                 }
             }.onFailure { e ->
                 _state.update { it.copy(isEvaluating = false) }
-                handleError("Connection Lost: ${e.message}")
+                handleError(UiText.StringResource(R.string.roleplay_connection_lost, listOf(e.message ?: "")))
                 sendEffect(RoleplayEffect.NavigateToHome)
             }
         }
@@ -215,7 +216,7 @@ class RoleplayViewModel @Inject constructor(
             is RoleplayLiveEvent.Transcription -> {
                 val history = _state.value.transcriptionHistory.toMutableList()
                 if (history.isNotEmpty() && history.last().isUser == event.isUser) {
-                    val lastMsg = history.removeLast()
+                    val lastMsg = history.removeAt(history.size - 1)
                     history.add(lastMsg.copy(text = lastMsg.text + event.text))
                 } else {
                     history.add(ChatMessage(event.text, event.isUser))
@@ -232,7 +233,7 @@ class RoleplayViewModel @Inject constructor(
                 _state.update { it.copy(isAiSpeaking = false) }
             }
             is RoleplayLiveEvent.Error -> {
-                handleError(event.message)
+                handleError(UiText.DynamicString(event.message))
             }
             is RoleplayLiveEvent.AudioChunk -> {
 
@@ -240,12 +241,12 @@ class RoleplayViewModel @Inject constructor(
         }
     }
 
-    private fun handleError(message: String) {
+    private fun handleError(message: UiText) {
         _state.update { it.copy(error = message) }
         viewModelScope.launch {
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    message = UiText.DynamicString(message),
+                    message = message,
                     type = SnackbarType.ERROR
                 )
             )

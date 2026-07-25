@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.roleplay.presentation.contract
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
@@ -17,7 +18,7 @@ data class RoleplayState(
     val remainingTimeSeconds: Int = 120,
     val isTimerRunning: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val error: UiText? = null,
     val currentBossScenario: BossScenario? = null,
     val assessmentResult: BossEvaluationResult? = null
 )
