@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 interface WalletRepository {
     val wallet: Flow<Wallet>
 
-    suspend fun refreshWallet(): LinguaQuestResult<Wallet, LinguaQuestDataError>
+    suspend fun refreshWallet(): LinguaQuestResult<Unit, LinguaQuestDataError>
     
     suspend fun adjustWallet(
         xpDelta: Int,
         coinsDelta: Int
-    ): LinguaQuestResult<Wallet, LinguaQuestDataError>
+    ): LinguaQuestResult<Unit, LinguaQuestDataError>
 }

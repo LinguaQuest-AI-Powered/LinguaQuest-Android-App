@@ -12,7 +12,7 @@ class AdjustWalletUseCase @Inject constructor(
     suspend operator fun invoke(
         xpDelta: Int, 
         coinsDelta: Int
-    ): LinguaQuestResult<Wallet, LinguaQuestDataError> {
+    ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return repository.adjustWallet(xpDelta, coinsDelta)
     }
 }

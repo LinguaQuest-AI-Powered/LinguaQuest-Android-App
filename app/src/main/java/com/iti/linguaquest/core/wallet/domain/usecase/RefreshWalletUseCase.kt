@@ -9,7 +9,7 @@ import javax.inject.Inject
 class RefreshWalletUseCase @Inject constructor(
     private val repository: WalletRepository
 ) {
-    suspend operator fun invoke(): LinguaQuestResult<Wallet, LinguaQuestDataError> {
+    suspend operator fun invoke(): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return repository.refreshWallet()
     }
 }

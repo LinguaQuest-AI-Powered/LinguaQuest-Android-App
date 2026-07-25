@@ -16,11 +16,11 @@ class WalletRepositoryImpl @Inject constructor(
 
     override val wallet: Flow<Wallet> = localDataSource.wallet
 
-    override suspend fun refreshWallet(): LinguaQuestResult<Wallet, LinguaQuestDataError> {
+    override suspend fun refreshWallet(): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return when (val result = remoteDataSource.getWallet()) {
             is LinguaQuestResult.Success -> {
                 localDataSource.saveWallet(result.data)
-                LinguaQuestResult.Success(result.data)
+                LinguaQuestResult.Success(Unit)
             }
             is LinguaQuestResult.Failure -> result
         }
@@ -29,11 +29,11 @@ class WalletRepositoryImpl @Inject constructor(
     override suspend fun adjustWallet(
         xpDelta: Int,
         coinsDelta: Int
-    ): LinguaQuestResult<Wallet, LinguaQuestDataError> {
+    ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return when (val result = remoteDataSource.adjustWallet(xpDelta, coinsDelta)) {
             is LinguaQuestResult.Success -> {
                 localDataSource.saveWallet(result.data)
-                LinguaQuestResult.Success(result.data)
+                LinguaQuestResult.Success(Unit)
             }
             is LinguaQuestResult.Failure -> result
         }
