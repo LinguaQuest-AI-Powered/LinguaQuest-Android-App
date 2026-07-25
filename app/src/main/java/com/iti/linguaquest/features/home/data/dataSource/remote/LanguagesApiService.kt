@@ -10,6 +10,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PATCH
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetNativeLanguageRequestDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.UserLanguageDto
 
 interface LanguagesApiService {
     @GET("languages/mine")
@@ -27,4 +29,9 @@ interface LanguagesApiService {
     suspend fun setActiveLanguage(
         @Body request: SetActiveLanguageRequestDto
     ): SuccessResponseDto<SetActiveLanguageResponseDto>
+
+    @PATCH("languages/native")
+    suspend fun setNativeLanguage(
+        @Body request: SetNativeLanguageRequestDto
+    ): SuccessResponseDto<UserLanguageDto>
 }

@@ -43,12 +43,17 @@ import com.iti.linguaquest.features.setting.presentation.components.TimePickerDi
 import com.iti.linguaquest.features.setting.presentation.components.getLanguageName
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.features.setting.presentation.LanguagesUiState
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 
 @Composable
 fun SettingContent(
     onBackClick: () -> Unit,
     appLanguage: String,
-    onChangeAppLanguage: (String) -> Unit,
+    availableLanguagesState: LanguagesUiState,
+    onRetryLanguages: () -> Unit,
+    onChangeAppLanguage: (LanguageOption) -> Unit,
     appTheme: String,
     onChangeAppTheme: (String) -> Unit,
     soundEnabled: Boolean,
@@ -71,6 +76,7 @@ fun SettingContent(
     }
 
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
      if (lockScreenState.isConfirmDialogVisible) {
         EnableLockScreenDialog(
@@ -80,10 +86,12 @@ fun SettingContent(
         )
     }
 
-     if (showLanguageDialog) {
+    if (showLanguageDialog) {
         LanguageSelectionBottomSheet(
             currentLanguage = appLanguage,
+            languagesState = availableLanguagesState,
             onLanguageSelected = onChangeAppLanguage,
+            onRetry = onRetryLanguages,
             onDismissRequest = { showLanguageDialog = false }
         )
     }
@@ -94,6 +102,23 @@ fun SettingContent(
 
     if (reminderState.showRepeatSheet) {
         RepeatBottomSheet(state = reminderState, onIntent = onReminderIntent)
+    }
+
+    if (showLogoutDialog) {
+        AppDialog(
+            title = stringResource(id = R.string.settings_log_out),
+            imageRes = R.drawable.lingo_logout,
+            message = stringResource(id = R.string.logout_dialog_message),
+            primaryButtonText = stringResource(id = R.string.settings_log_out),
+            onPrimaryClick = {
+                showLogoutDialog = false
+                onLogoutClick()
+            },
+            secondaryButtonText = stringResource(id = R.string.cancel_button),
+            onSecondaryClick = { showLogoutDialog = false },
+            onDismissRequest = { showLogoutDialog = false },
+            showCloseIcon = true
+        )
     }
 
     Column(
@@ -196,7 +221,7 @@ fun SettingContent(
 
          AppButton3D(
             text = stringResource(id = R.string.settings_log_out),
-            onClick = onLogoutClick,
+            onClick = { showLogoutDialog = true },
             textColor = Color.Black,
             isLoading = isLoggingOut,
             modifier = Modifier.padding(horizontal = 24.dp)
@@ -218,6 +243,8 @@ fun SettingContentPreview() {
         SettingContent(
             onBackClick = {},
             appLanguage = "en",
+            availableLanguagesState = LanguagesUiState(),
+            onRetryLanguages = {},
             onChangeAppLanguage = {},
             appTheme = "system",
             onChangeAppTheme = {},

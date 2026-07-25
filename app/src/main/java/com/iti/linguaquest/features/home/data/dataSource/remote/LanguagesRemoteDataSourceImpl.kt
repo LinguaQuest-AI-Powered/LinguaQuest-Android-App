@@ -58,4 +58,17 @@ class LanguagesRemoteDataSourceImpl @Inject constructor(
             }
         }
 
+    override suspend fun setNativeLanguage(languageId: Int): LinguaQuestResult<UserLanguageDto, LinguaQuestDataError> {
+        val result = safeApiCall {
+            api.setNativeLanguage(com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetNativeLanguageRequestDto(languageId))
+        }
+        return when (result) {
+            is LinguaQuestResult.Success -> {
+                val activeLanguage = result.data.data
+
+                LinguaQuestResult.Success(activeLanguage)
+            }
+            is LinguaQuestResult.Failure -> result
+        }
+    }
 }

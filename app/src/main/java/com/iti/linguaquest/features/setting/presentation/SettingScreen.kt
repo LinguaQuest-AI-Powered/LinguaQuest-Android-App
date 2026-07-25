@@ -37,6 +37,8 @@ fun SettingScreen(
     val isLoggingOut by viewModel.isLoggingOut.collectAsStateWithLifecycle()
     val reminderState by viewModel.reminderState.collectAsStateWithLifecycle()
     
+    val availableLanguages by viewModel.availableLanguages.collectAsStateWithLifecycle()
+    
     val lockScreenState by lockScreenViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -79,6 +81,8 @@ fun SettingScreen(
     SettingContent(
         onBackClick = onBack,
         appLanguage = appLanguage,
+        availableLanguagesState = availableLanguages,
+        onRetryLanguages = viewModel::retryLoadLanguages,
         onChangeAppLanguage = viewModel::changeAppLanguage,
         appTheme = appTheme,
         onChangeAppTheme = viewModel::changeAppTheme,
