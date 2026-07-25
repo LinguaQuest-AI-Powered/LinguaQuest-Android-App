@@ -11,7 +11,6 @@ import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageN
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
 import com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
 import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToBossStageUseCase
-import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToFreePlayUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.DisconnectRoleplayUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.EvaluateBossStageUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.ObserveLiveEventsUseCase
@@ -20,6 +19,9 @@ import com.iti.linguaquest.features.roleplay.domain.usecase.StopMicrophoneUseCas
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
+import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
+import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +38,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RoleplayViewModel @Inject constructor(
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
-    private val connectToFreePlayUseCase: ConnectToFreePlayUseCase,
     private val connectToBossStageUseCase: ConnectToBossStageUseCase,
     private val evaluateBossStageUseCase: EvaluateBossStageUseCase,
     private val startMicrophoneUseCase: StartMicrophoneUseCase,
@@ -62,7 +63,7 @@ class RoleplayViewModel @Inject constructor(
             }
         }
 
-        // Observe continuous server events from the live session
+
         viewModelScope.launch {
             observeLiveEventsUseCase().collect { event ->
                 handleLiveEvent(event)
@@ -72,7 +73,7 @@ class RoleplayViewModel @Inject constructor(
 
     fun onIntent(intent: RoleplayIntent) {
         when (intent) {
-            RoleplayIntent.StartLevelClicked -> startRoleplay()
+
             RoleplayIntent.RecordClicked -> toggleMicrophone(true)
             RoleplayIntent.StopRecordingClicked -> toggleMicrophone(false)
             RoleplayIntent.ReturnHomeClicked -> {
@@ -84,22 +85,7 @@ class RoleplayViewModel @Inject constructor(
             RoleplayIntent.FinishStageClicked -> finishBossStage()
             RoleplayIntent.RetryStageClicked -> retryBossStage()
             RoleplayIntent.AdvanceToNextWorldClicked -> sendEffect(RoleplayEffect.NavigateToHome)
-            else -> Unit // RetryClicked and AiAudioFinished handled differently in live mode
-        }
-    }
-
-    fun startRoleplay() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-            
-            try {
-                connectToFreePlayUseCase(state.value.targetLanguage)
-                _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = false) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _state.update { it.copy(isLoading = false, error = e.message) }
-                handleError("Failed to connect: ${e.message}")
-            }
+            else -> Unit
         }
     }
 
@@ -112,7 +98,7 @@ class RoleplayViewModel @Inject constructor(
         }
     }
 
-    private fun loadBossLobby(scenarioId: com.iti.linguaquest.features.roleplay.domain.model.ScenarioId) {
+    private fun loadBossLobby(scenarioId: ScenarioId) {
         viewModelScope.launch {
             try {
                 val lang = java.util.Locale.getDefault().language
@@ -165,12 +151,10 @@ class RoleplayViewModel @Inject constructor(
                 _state.update { 
                     it.copy(
                         isConnected = false, 
-                        isUserSpeaking = false, 
-                        isEvaluating = false,
-                        assessmentResult = com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult(
-                            isTaskCompleted = false,
-                            fluencyScore = 0,
-                            feedbackMessage = "You didn't say anything! Please try again and speak to the character."
+                        assessmentResult = BossEvaluationResult(
+                            task_completed = false,
+                            fluency_score = 0,
+                            feedback_message = "You didn't say anything! Please try again and speak to the character."
                         )
                     )
                 }
@@ -234,7 +218,7 @@ class RoleplayViewModel @Inject constructor(
                     val lastMsg = history.removeLast()
                     history.add(lastMsg.copy(text = lastMsg.text + event.text))
                 } else {
-                    history.add(com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage(event.text, event.isUser))
+                    history.add(ChatMessage(event.text, event.isUser))
                 }
                 
                 _state.update { 
@@ -251,7 +235,7 @@ class RoleplayViewModel @Inject constructor(
                 handleError(event.message)
             }
             is RoleplayLiveEvent.AudioChunk -> {
-                // Instantly handled by Repository -> AudioPlayer
+
             }
         }
     }

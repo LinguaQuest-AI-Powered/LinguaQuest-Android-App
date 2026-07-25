@@ -17,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
@@ -30,7 +32,7 @@ fun RoleplayTopBar(
 ) {
     Box {
         LinguaQuestScreenTopBar(
-            title = "Boss Level",
+            title = stringResource(R.string.roleplay_boss_level),
             onBackClicked = onExitClicked,
             isTitleCentered = true
         )

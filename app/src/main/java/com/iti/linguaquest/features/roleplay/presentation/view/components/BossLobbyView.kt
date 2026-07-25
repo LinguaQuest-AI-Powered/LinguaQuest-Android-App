@@ -16,17 +16,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.iti.linguaquest.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.R
+
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
@@ -41,13 +44,13 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
         mascotSize = 180.dp
     ) {
         Text(
-            text = "Boss Stage",
+            text = stringResource(R.string.roleplay_boss_stage),
             style = AppTextStyles.AppTitle,
             color = LinguaQuestTheme.colors.OrangeActive
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Meet ${scenario.bossName}",
+            text = stringResource(R.string.roleplay_meet_boss, scenario.bossName),
             style = AppTextStyles.SectionTitle,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -87,7 +90,7 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Your Objective",
+                    text = stringResource(R.string.roleplay_your_objective),
                     style = AppTextStyles.SectionTitle,
                     color = LinguaQuestTheme.colors.OrangeActive
                 )
@@ -100,7 +103,7 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "(Read carefully in your native language before starting)",
+                    text = stringResource(R.string.roleplay_read_carefully),
                     style = AppTextStyles.Caption,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center
@@ -111,7 +114,7 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
         Spacer(modifier = Modifier.height(48.dp))
         
         AppButton(
-            text = "Start Roleplay",
+            text = stringResource(R.string.roleplay_start_roleplay),
             onClick = onStartClicked,
             modifier = Modifier.fillMaxWidth()
         )
@@ -125,7 +128,7 @@ fun BossLobbyViewPreview() {
         Surface {
             BossLobbyView(
                 scenario = BossScenario(
-                    id = com.iti.linguaquest.features.roleplay.domain.model.ScenarioId.SCENARIO_MARKET_01,
+                    id = ScenarioId.SCENARIO_MARKET_01,
                     worldId = "world_1",
                     bossName = "Haga Sherry",
                     roleDescription = "A friendly but firm old fruit vendor in a bustling Cairo market.",

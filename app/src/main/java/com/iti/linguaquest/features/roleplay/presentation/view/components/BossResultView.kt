@@ -6,24 +6,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult
+import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 
 @Composable
 fun BossResultView(
-    result: RoleplayAssessmentResult, 
+    result: BossEvaluationResult, 
     onAdvanceToNextWorld: () -> Unit,
     onRetryStage: () -> Unit
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    LaunchedEffect(result.isTaskCompleted) {
-        if (result.isTaskCompleted) {
+    LaunchedEffect(result.task_completed) {
+        if (result.task_completed) {
             soundPlayer.play(AppSound.SUCCESS)
         } else {
             soundPlayer.play(AppSound.FAIL)
         }
     }
 
-    if (result.isTaskCompleted) {
+    if (result.task_completed) {
         BossSuccessView(
             result = result,
             onAdvanceToNextWorld = onAdvanceToNextWorld
@@ -41,10 +41,10 @@ fun BossResultView(
 fun BossResultSuccessPreview() {
     LinguaQuestTheme {
         BossResultView(
-            result = RoleplayAssessmentResult(
-                isTaskCompleted = true,
-                fluencyScore = 85,
-                feedbackMessage = "Great job! You spoke very clearly and naturally."
+            result = BossEvaluationResult(
+                task_completed = true,
+                fluency_score = 85,
+                feedback_message = "Great job! You used excellent vocabulary."
             ),
             onAdvanceToNextWorld = {},
             onRetryStage = {}
@@ -57,10 +57,10 @@ fun BossResultSuccessPreview() {
 fun BossResultFailPreview() {
     LinguaQuestTheme {
         BossResultView(
-            result = RoleplayAssessmentResult(
-                isTaskCompleted = false,
-                fluencyScore = 45,
-                feedbackMessage = "You were a bit hard to understand. Try speaking a bit slower."
+            result = BossEvaluationResult(
+                task_completed = false,
+                fluency_score = 45,
+                feedback_message = "You need to be more clear."
             ),
             onAdvanceToNextWorld = {},
             onRetryStage = {}

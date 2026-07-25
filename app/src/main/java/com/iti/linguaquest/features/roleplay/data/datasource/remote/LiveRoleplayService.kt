@@ -52,7 +52,6 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
                 InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
             )
         } catch (e: Exception) {
-            Log.e("LiveRoleplayService", "Failed to send audio chunk: ${e.message}")
         }
     }
 

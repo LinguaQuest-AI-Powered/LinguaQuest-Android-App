@@ -11,11 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.iti.linguaquest.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.R
+
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -33,7 +35,7 @@ fun BossEvaluatingView() {
             mascotSize = 180.dp
         ) {
             Text(
-                text = "Evaluating...",
+                text = stringResource(R.string.roleplay_evaluating),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
@@ -51,7 +53,7 @@ fun BossEvaluatingView() {
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
-                text = "AI is analyzing your conversation to calculate your score.",
+                text = stringResource(R.string.roleplay_ai_analyzing),
                 style = AppTextStyles.DialogMessage,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 16.sp,

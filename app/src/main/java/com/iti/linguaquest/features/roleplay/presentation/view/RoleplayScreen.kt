@@ -22,7 +22,7 @@ import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 
 @Composable
 fun RoleplayScreen(
-    scenarioId: ScenarioId? = null,
+    scenarioId: ScenarioId,
     onNavigateHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RoleplayViewModel = hiltViewModel()
@@ -34,10 +34,8 @@ fun RoleplayScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            if (scenarioId != null || state.currentBossScenario != null) {
+            if (state.currentBossScenario != null) {
                 viewModel.onIntent(RoleplayIntent.StartBossStageClicked)
-            } else {
-                viewModel.onIntent(RoleplayIntent.StartLevelClicked)
             }
         }
     }
@@ -50,23 +48,12 @@ fun RoleplayScreen(
         }
     }
 
-    // Single source of truth for initialization
+
     LaunchedEffect(scenarioId) {
-        if (scenarioId != null) {
-            viewModel.onIntent(RoleplayIntent.LoadBossLobby(scenarioId))
-        } else {
-            // Auto-connect when landing on the screen ONLY if not a boss stage (scenarioId == null)
-            if (!state.isConnected && !state.isLoading && !state.isEvaluating) {
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    viewModel.onIntent(RoleplayIntent.StartLevelClicked)
-                } else {
-                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                }
-            }
-        }
+        viewModel.onIntent(RoleplayIntent.LoadBossLobby(scenarioId))
     }
 
-    // Clean up when screen is disposed
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.endRoleplay()
@@ -75,7 +62,6 @@ fun RoleplayScreen(
 
     RoleplayContent(
         state = state,
-        isBossStage = scenarioId != null,
         onIntent = viewModel::onIntent,
         onStartBossStage = {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {

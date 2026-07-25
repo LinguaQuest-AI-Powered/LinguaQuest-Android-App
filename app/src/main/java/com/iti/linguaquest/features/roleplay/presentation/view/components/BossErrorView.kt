@@ -9,11 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.iti.linguaquest.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.R
+
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
@@ -38,7 +40,7 @@ fun BossErrorView(
             mascotSize = 180.dp
         ) {
             Text(
-                text = "Oops!",
+                text = stringResource(R.string.roleplay_oops),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
@@ -59,14 +61,14 @@ fun BossErrorView(
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = "Try Again",
+                text = stringResource(R.string.roleplay_try_again),
                 onClick = onRetry
             )
             
             Spacer(modifier = Modifier.height(16.dp))
 
             AppButton(
-                text = "Exit",
+                text = stringResource(R.string.roleplay_exit),
                 onClick = onExit,
                 variant = ButtonVariant.SECONDARY
             )

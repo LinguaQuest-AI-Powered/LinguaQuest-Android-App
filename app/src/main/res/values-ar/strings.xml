@@ -364,4 +364,33 @@
     <!-- Content Descriptions -->
     <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
     <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
+    <!-- Roleplay Feature Strings -->
+    <string name="roleplay_boss_level">مستوى الزعيم</string>
+    <string name="roleplay_boss_stage">مرحلة الزعيم</string>
+    <string name="roleplay_stop_recording">إيقاف التسجيل</string>
+    <string name="roleplay_start_recording">بدء التسجيل</string>
+    <string name="roleplay_victory">انتصار!</string>
+    <string name="roleplay_next_world">العالم التالي</string>
+    <string name="roleplay_stage_failed">فشلت المرحلة</string>
+    <string name="roleplay_try_again">حاول مرة أخرى</string>
+    <string name="roleplay_evaluating">جاري التقييم...</string>
+    <string name="roleplay_ai_analyzing">يقوم الذكاء الاصطناعي بتحليل محادثتك لحساب نتيجتك.</string>
+    <string name="roleplay_oops">عذراً!</string>
+    <string name="roleplay_exit">خروج</string>
+    <string name="roleplay_finish_stage_question">إنهاء المرحلة؟</string>
+    <string name="roleplay_finish_stage_message">هل أنت مستعد لإنهاء المحادثة والحصول على تقييمك؟</string>
+    <string name="roleplay_yes_evaluate">نعم، قيم أدائي!</string>
+    <string name="roleplay_keep_talking">الاستمرار في التحدث</string>
+    <string name="roleplay_objective_format">الهدف: %1$s</string>
+    <string name="roleplay_connecting">جاري الاتصال...</string>
+    <string name="roleplay_not_connected">غير متصل.</string>
+    <string name="roleplay_tap_to_stop">انقر للإيقاف</string>
+    <string name="roleplay_tap_to_speak">انقر للتحدث</string>
+    <string name="roleplay_finish_stage">إنهاء المرحلة</string>
+    <string name="roleplay_meet_boss">قابل %1$s</string>
+    <string name="roleplay_your_objective">هدفك</string>
+    <string name="roleplay_read_carefully">(اقرأ بعناية بلغتك الأم قبل البدء)</string>
+    <string name="roleplay_start_roleplay">بدء تبادل الأدوار</string>
+    <string name="roleplay_xp">XP</string>
+    <string name="roleplay_coins">العملات</string>
 </resources>

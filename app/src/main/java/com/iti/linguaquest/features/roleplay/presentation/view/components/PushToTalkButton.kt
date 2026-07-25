@@ -23,8 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -37,7 +40,7 @@ fun PushToTalkButton(
     else MaterialTheme.colorScheme.primary
 
     val icon = if (isRecording) Icons.Default.Stop else Icons.Default.Mic
-    val contentDescription = if (isRecording) "Stop recording" else "Start recording"
+    val contentDescription = if (isRecording) stringResource(R.string.roleplay_stop_recording) else stringResource(R.string.roleplay_start_recording)
 
     if (isRecording) {
         val infiniteTransition = rememberInfiniteTransition(label = "recording_pulse")
@@ -60,7 +63,7 @@ fun PushToTalkButton(
                 .clickable { onClick() },
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = contentDescription, tint = Color.White, modifier = Modifier.size(40.dp))
+            Icon(icon, contentDescription = contentDescription, tint = LinguaQuestTheme.colors.whiteColor, modifier = Modifier.size(40.dp))
         }
     } else {
         Box(

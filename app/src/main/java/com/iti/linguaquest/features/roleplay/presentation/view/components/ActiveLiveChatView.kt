@@ -29,18 +29,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 
@@ -58,14 +61,14 @@ fun ActiveLiveChatView(
 
     if (showFinishDialog) {
         AppDialog(
-            title = "Finish Stage?",
-            message = "Are you ready to end the conversation and receive your evaluation?",
-            primaryButtonText = "Yes, Evaluate!",
+            title = stringResource(R.string.roleplay_finish_stage_question),
+            message = stringResource(R.string.roleplay_finish_stage_message),
+            primaryButtonText = stringResource(R.string.roleplay_yes_evaluate),
             onPrimaryClick = {
                 showFinishDialog = false
                 onFinishStage()
             },
-            secondaryButtonText = "Keep Talking",
+            secondaryButtonText = stringResource(R.string.roleplay_keep_talking),
             onSecondaryClick = { showFinishDialog = false }
         )
     }
@@ -77,7 +80,7 @@ fun ActiveLiveChatView(
     ) {
         Spacer(Modifier.height(16.dp))
 
-        // Boss Objective Banner
+
         if (isBossStage && state.currentBossScenario != null) {
             Box(
                 modifier = Modifier
@@ -89,7 +92,7 @@ fun ActiveLiveChatView(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Objective: ${state.currentBossScenario.objective}",
+                        text = stringResource(R.string.roleplay_objective_format, state.currentBossScenario.objective),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -115,7 +118,7 @@ fun ActiveLiveChatView(
             Spacer(Modifier.height(16.dp))
         }
 
-        // Avatar Area
+
         LingoRoleplayAvatar(
             isAiSpeaking = state.isAiSpeaking,
             isUserSpeaking = state.isUserSpeaking,
@@ -124,22 +127,25 @@ fun ActiveLiveChatView(
         )
         Spacer(Modifier.height(24.dp))
 
-        // Loading state
+
         if (state.isLoading) {
             CircularProgressIndicator(color = LinguaQuestTheme.colors.OrangeActive)
             Spacer(Modifier.height(16.dp))
-            Text("Connecting...", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.roleplay_connecting), style = MaterialTheme.typography.bodyMedium)
         } else if (!state.isConnected) {
-            Text("Not connected.", style = MaterialTheme.typography.bodyMedium, color = LinguaQuestTheme.colors.ErrorAccent)
+            Text(stringResource(R.string.roleplay_not_connected), style = MaterialTheme.typography.bodyMedium, color = LinguaQuestTheme.colors.ErrorAccent)
         }
 
-        // Transcript Area
+
         val listState = androidx.compose.foundation.lazy.rememberLazyListState()
         androidx.compose.runtime.LaunchedEffect(state.transcriptionHistory.size, state.transcriptionHistory.lastOrNull()?.text?.length) {
             if (state.transcriptionHistory.isNotEmpty()) {
                 listState.animateScrollToItem(state.transcriptionHistory.size - 1)
             }
         }
+
+        val gradientTransparent = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0f)
+        val gradientBlack = LinguaQuestTheme.colors.blackColor
         
         LazyColumn(
             state = listState,
@@ -151,10 +157,10 @@ fun ActiveLiveChatView(
                     drawContent()
                     drawRect(
                         brush = Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            0.05f to Color.Black,
-                            0.95f to Color.Black,
-                            1f to Color.Transparent
+                            0f to gradientTransparent,
+                            0.05f to gradientBlack,
+                            0.95f to gradientBlack,
+                            1f to gradientTransparent
                         ),
                         blendMode = BlendMode.DstIn
                     )
@@ -207,7 +213,7 @@ fun ActiveLiveChatView(
 
         Spacer(Modifier.height(16.dp))
 
-        // Push to talk & Finish Button
+
         if (state.isConnected) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -227,7 +233,7 @@ fun ActiveLiveChatView(
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = if (state.isUserSpeaking) "Tap to Stop" else "Tap to Speak",
+                        text = if (state.isUserSpeaking) stringResource(R.string.roleplay_tap_to_stop) else stringResource(R.string.roleplay_tap_to_speak),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -241,7 +247,7 @@ fun ActiveLiveChatView(
                     colors = ButtonDefaults.buttonColors(containerColor = LinguaQuestTheme.colors.ErrorAccent),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
                 ) {
-                    Text("Finish Stage", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.roleplay_finish_stage), fontWeight = FontWeight.Bold)
                 }
             } else {
                 Spacer(Modifier.height(16.dp))
@@ -260,7 +266,7 @@ fun ActiveLiveChatViewPreview() {
                 isUserSpeaking = false,
                 isAiSpeaking = false,
                 currentBossScenario = BossScenario(
-                    id = com.iti.linguaquest.features.roleplay.domain.model.ScenarioId.SCENARIO_MARKET_01,
+                    id = ScenarioId.SCENARIO_MARKET_01,
                     bossName = "Sherry",
                     roleDescription = "Fruit Vendor",
                     objective = "Buy some fresh mangoes.",

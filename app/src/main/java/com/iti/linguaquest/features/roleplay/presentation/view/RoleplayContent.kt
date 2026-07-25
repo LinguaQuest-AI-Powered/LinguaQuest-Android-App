@@ -20,7 +20,7 @@ import com.iti.linguaquest.features.roleplay.presentation.view.components.Rolepl
 @Composable
 fun RoleplayContent(
     state: RoleplayState,
-    isBossStage: Boolean,
+
     onIntent: (RoleplayIntent) -> Unit,
     onStartBossStage: () -> Unit,
     modifier: Modifier = Modifier
@@ -41,15 +41,11 @@ fun RoleplayContent(
                 BossErrorView(
                     errorMessage = state.error,
                     onRetry = {
-                        if (isBossStage) {
-                            onIntent(RoleplayIntent.RetryStageClicked)
-                        } else {
-                            onIntent(RoleplayIntent.StartLevelClicked)
-                        }
+                        onIntent(RoleplayIntent.RetryStageClicked)
                     },
                     onExit = { onIntent(RoleplayIntent.ReturnHomeClicked) }
                 )
-            } else if (isBossStage) {
+            } else {
                 if (state.currentBossScenario != null) {
                     when {
                         state.assessmentResult != null -> {
@@ -83,14 +79,6 @@ fun RoleplayContent(
                         androidx.compose.material3.CircularProgressIndicator(color = com.iti.linguaquest.core.theme.LinguaQuestTheme.colors.OrangeActive)
                     }
                 }
-            } else {
-                ActiveLiveChatView(
-                    state = state, 
-                    isBossStage = false,
-                    onStopRecording = { onIntent(RoleplayIntent.StopRecordingClicked) },
-                    onRecord = { onIntent(RoleplayIntent.RecordClicked) },
-                    onFinishStage = { }
-                )
             }
         }
     }

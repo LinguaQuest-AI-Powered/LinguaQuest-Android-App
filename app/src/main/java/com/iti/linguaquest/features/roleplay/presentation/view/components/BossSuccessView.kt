@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,7 +24,7 @@ import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.game.presentation.result.view.component.RewardPill
-import com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult
+import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun BossSuccessView(
-    result: RoleplayAssessmentResult,
+    result: BossEvaluationResult,
     onAdvanceToNextWorld: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -70,7 +71,7 @@ fun BossSuccessView(
         ) {
 
             Text(
-                text = "Victory!",
+                text = stringResource(R.string.roleplay_victory),
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 36.sp,
@@ -80,7 +81,7 @@ fun BossSuccessView(
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
-                text = "Fluency Score: ${result.fluencyScore}/100",
+                text = "${result.fluency_score}%",
                 style = AppTextStyles.DialogMessage,
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
@@ -100,7 +101,7 @@ fun BossSuccessView(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = result.feedbackMessage,
+                    text = result.feedback_message,
                     style = AppTextStyles.DialogMessage,
                     color = LinguaQuestTheme.colors.BrownText,
                     fontSize = 16.sp
@@ -116,13 +117,13 @@ fun BossSuccessView(
                 RewardPill(
                     iconRes = R.drawable.ic_xp,
                     amount = "+150",
-                    label = "XP",
+                    label = stringResource(R.string.roleplay_xp),
                     modifier = Modifier.weight(1f)
                 )
                 RewardPill(
                     iconRes = R.drawable.ic_coin,
                     amount = "+50",
-                    label = "Coins",
+                    label = stringResource(R.string.roleplay_coins),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -130,7 +131,7 @@ fun BossSuccessView(
             Spacer(modifier = Modifier.height(40.dp))
 
             AppButton(
-                text = "Next World",
+                text = stringResource(R.string.roleplay_next_world),
                 onClick = onAdvanceToNextWorld
             )
         }
