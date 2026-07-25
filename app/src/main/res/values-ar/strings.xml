@@ -478,14 +478,27 @@
     <string name="level_intermediate_description">وسّع مفرداتك وأتقن المحادثات اليومية.</string>
     <string name="level_advanced">متقدم</string>
     <string name="level_advanced_description">حقق الطلاقة مع القواعد المعقدة والتحدث السريع.</string>
-
+    <string name="change_password_label">تغيير كلمة المرور</string>
+    <string name="old_password_placeholder">كلمة المرور الحالية</string>
+    <string name="new_password_placeholder">كلمة المرور الجديدة</string>
     <!-- Content Descriptions -->
     <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
     <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
     <string name="choose_a_source">اختر مصدر</string>
     <!-- Snackbars messages -->
     <string name="congrates">تهانينا</string>
+    <string name="display_name_empty">الاسم لا يمكن أن يكون فارغًا</string>
+    <string name="enter_current_password">أدخل كلمة المرور الحالية</string>
+    <string name="new_password_min_length">يجب أن تكون كلمة المرور الجديدة 6 أحرف على الأقل</string>
+    <string name="incorrect_old_password">كلمة المرور الحالية غير صحيحة</string>
 
+    <string name="profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
+    <string name="failed_update_profile">فشل تحديث الملف الشخصي</string>
+    <string name="failed_upload_photo">فشل رفع الصورة</string>
+    <string name="password_updated_successfully">تم تحديث كلمة المرور بنجاح</string>
+    <string name="failed_update_password">فشل تحديث كلمة المرور</string>
+    <string name="profile_photo_updated_successfully">تم تحديث صورة الملف الشخصي بنجاح</string>
+    <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
     <!-- Roleplay Feature Strings -->
