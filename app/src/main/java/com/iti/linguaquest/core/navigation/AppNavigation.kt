@@ -48,14 +48,14 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
-import com.iti.linguaquest.features.editprofile.presentation.EditProfileScreen
-import com.iti.linguaquest.features.map.presentation.MapScreen
+ import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
+import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditProfileScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
@@ -455,17 +455,11 @@ fun AppNavigation(
 
                 }
                 entry<RootScreen.EditProfile> {
-                    EditProfileScreen(
-                         initialDisplayName = "",
-                        initialTagline = "",
-                        avatarModel = null,
-                        onBackClick = { rootBackStack.removeLastOrNull() },
-                        onChangePhotoClick = {    },
-                        onSave = { displayName, tagline ->
-                             rootBackStack.removeLastOrNull()
-                        }
-                    )
-                }
+                         EditProfileScreen(
+                            onBackClick = { rootBackStack.removeLastOrNull() }
+                        )
+                    }
+
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
     }
