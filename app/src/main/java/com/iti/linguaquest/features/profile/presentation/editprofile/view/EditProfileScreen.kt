@@ -21,6 +21,7 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.viewmodel.E
 fun EditProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: EditProfileViewModel = hiltViewModel(),
+
     onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()

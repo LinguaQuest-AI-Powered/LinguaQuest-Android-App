@@ -25,6 +25,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
+import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileState
 
 @Composable
 fun EditableAvatar(

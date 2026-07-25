@@ -26,6 +26,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileState
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.FieldError
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.ChangePasswordCard
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.ChangePhotoButton
@@ -84,6 +85,7 @@ fun EditProfileScreenContent(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     EditableAvatar(
+                       // state = state,
                         avatarModel = avatarModel,
                         onEditClick = { showAvatarSheet = true }
                     )

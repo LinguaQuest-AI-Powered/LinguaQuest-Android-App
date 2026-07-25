@@ -10,11 +10,13 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.profile.domain.usecase.ChangePasswordUseCase
+import com.iti.linguaquest.features.profile.domain.usecase.GetCachedProfileUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UploadAvatarUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UpdateProfileUseCase
 import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileIntent
 import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileState
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.FieldError
+import kotlinx.coroutines.flow.firstOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,11 +30,30 @@ class EditProfileViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val getCachedProfileUseCase: GetCachedProfileUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EditProfileState())
     val state: StateFlow<EditProfileState> = _state.asStateFlow()
+
+    init {
+        loadCachedProfile()
+    }
+
+    private fun loadCachedProfile() {
+        viewModelScope.launch {
+            val cached = getCachedProfileUseCase().firstOrNull()
+            if (cached != null) {
+                _state.update {
+                    it.copy(
+                        displayName = cached.username,
+                        avatarModel = cached.photoUrl
+                    )
+                }
+            }
+        }
+    }
 
     fun onIntent(intent: EditProfileIntent) {
         when (intent) {
