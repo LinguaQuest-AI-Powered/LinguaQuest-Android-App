@@ -214,6 +214,10 @@
     <string name="show_category_clue">إظهار تلميح الفئة</string>
     <string name="use_hint">استخدام تلميح</string>
     <string name="scan_hint_format">قم بمسح %1$s في بيئتك الحقيقية باستخدام الكاميرا لإكمال هذا التحدي.</string>
+    <string name="change_word_confirm_title">تغيير الكلمة؟</string>
+    <string name="change_word_confirm_message">سيتم خصم 50 عملة مرة واحدة.</string>
+    <string name="change_word_confirm_action">تغيير الكلمة</string>
+    <string name="change_word_cancel_action">إلغاء</string>
 
     <string name="xp">XP</string>
     <!-- Settings Screen -->
@@ -485,7 +489,7 @@
     <string name="choose_a_source">اختر مصدر</string>
     <!-- Snackbars messages -->
     <string name="congrates">تهانينا</string>
-
+    <string name="change_word">تغيير الكلمة</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
 </resources>

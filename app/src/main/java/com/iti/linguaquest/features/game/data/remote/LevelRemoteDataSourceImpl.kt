@@ -5,6 +5,9 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.game.data.remote.dto.StartLevelDto
 import com.iti.linguaquest.features.game.data.remote.dto.VerifyLevelDto
+import com.iti.linguaquest.features.game.data.remote.util.ImageCompressor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -37,10 +40,13 @@ class LevelRemoteDataSourceImpl @Inject constructor(
         levelId: Int,
         imageFile: File
     ): LinguaQuestResult<VerifyLevelDto, LinguaQuestDataError> {
-        val requestBody = imageFile.asRequestBody("image/*".toMediaType())
+        val compressedFile = withContext(Dispatchers.IO) {
+            ImageCompressor.compress(imageFile)
+        }
+        val requestBody = compressedFile.asRequestBody("image/jpeg".toMediaType())
         val imagePart = MultipartBody.Part.createFormData(
             name = "image",
-            filename = imageFile.name,
+            filename = compressedFile.name,
             body = requestBody
         )
         val result = safeApiCall {

@@ -5,6 +5,9 @@ sealed interface LevelIntent {
     data object MascotTapped : LevelIntent
     data object DismissBottomSheet : LevelIntent
     data object OpenCameraClicked : LevelIntent
+    data object ChangeWordClicked : LevelIntent
+    data object ConfirmChangeWordClicked : LevelIntent
+    data object CancelChangeWordClicked : LevelIntent
     data object SkipClicked : LevelIntent
     data object RevealFirstLetterClicked : LevelIntent
     data object ShowCategoryClueClicked : LevelIntent

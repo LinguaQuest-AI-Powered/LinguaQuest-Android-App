@@ -201,6 +201,10 @@
     <string name="show_category_clue">Show category clue</string>
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+    <string name="change_word_confirm_title">Change the word?</string>
+    <string name="change_word_confirm_message">This will deduct 50 coins.</string>
+    <string name="change_word_confirm_action">Change Word</string>
+    <string name="change_word_cancel_action">Cancel</string>
 
 
     <string name="xp">XP</string>
@@ -492,7 +496,7 @@
     <string name="choose_a_source">Choose a source</string>
     <!-- Snackbars messages -->
     <string name="congrates">Congratulations</string>
-
+    <string name="change_word">Change Word</string>
 
     <string name="add_languages_no_results">add_languages_no_results</string>
 
