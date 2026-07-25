@@ -527,4 +527,10 @@
     <string name="roleplay_start_roleplay">Start Roleplay</string>
     <string name="roleplay_xp">XP</string>
     <string name="roleplay_coins">Coins</string>
+    <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
+    <string name="roleplay_browse_roleplays">Browse Roleplays</string>
+    <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
+    <string name="roleplay_no_roleplays_available">No roleplays available.</string>
+    <string name="roleplay_objective">Objective</string>
+    <string name="roleplay_label">Roleplay</string>
 </resources>

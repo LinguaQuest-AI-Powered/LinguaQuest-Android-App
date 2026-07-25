@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -93,10 +95,12 @@ fun BossSuccessView(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f, fill = false)
                     .background(
                         color = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.5f),
                         shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
                     )
+                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {

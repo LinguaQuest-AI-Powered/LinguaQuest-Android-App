@@ -444,6 +444,15 @@ fun AppNavigation(
                     )
                 }
 
+                entry<RootScreen.RoleplayList> {
+                    com.iti.linguaquest.features.roleplay.presentation.view.RoleplayListScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onRoleplaySelected = { scenarioId ->
+                            rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId))
+                        }
+                    )
+                }
+
                 entry<RootScreen.Roleplay> { screen ->
                     val viewModel: RoleplayViewModel = hiltViewModel()
                     

@@ -517,4 +517,10 @@
     <string name="roleplay_start_roleplay">بدء تبادل الأدوار</string>
     <string name="roleplay_xp">XP</string>
     <string name="roleplay_coins">العملات</string>
+    <string name="roleplay_interactive_scenarios">سيناريوهات تفاعلية</string>
+    <string name="roleplay_browse_roleplays">تصفح تبادل الأدوار</string>
+    <string name="roleplay_interactive_roleplays">تبادل أدوار تفاعلي</string>
+    <string name="roleplay_no_roleplays_available">لا توجد سيناريوهات تبادل أدوار متاحة.</string>
+    <string name="roleplay_objective">الهدف</string>
+    <string name="roleplay_label">تبادل الأدوار</string>
 </resources>

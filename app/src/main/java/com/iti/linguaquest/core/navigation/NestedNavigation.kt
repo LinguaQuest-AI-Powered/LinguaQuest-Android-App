@@ -112,10 +112,11 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             onNavigateToVoiceGame = {
                                 rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
                             },
+                            onNavigateToRoleplayList = {
+                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                            },
                             onNavigateToAllWorlds = {
-                                // TODO: Remove Roleplay
-//                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
-                                rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId = ScenarioId.SCENARIO_MARKET_01))
+                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
                             onNavigateToWorldMap = { worldId ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))

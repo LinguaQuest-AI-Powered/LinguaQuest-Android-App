@@ -15,4 +15,5 @@ sealed interface HomeIntent {
     data object DismissDailyRewardBanner : HomeIntent
     data object DismissDailyRewardDialog : HomeIntent
     data object ClaimDailyRewardClicked : HomeIntent
+    data object RoleplayCardClicked : HomeIntent
 }
