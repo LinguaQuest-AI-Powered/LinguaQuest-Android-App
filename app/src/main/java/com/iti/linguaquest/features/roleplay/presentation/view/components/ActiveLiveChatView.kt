@@ -20,9 +20,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
@@ -42,6 +52,21 @@ fun ActiveLiveChatView(
     onRecord: () -> Unit,
     onFinishStage: () -> Unit
 ) {
+    var showFinishDialog by remember { mutableStateOf(false) }
+
+    if (showFinishDialog) {
+        AppDialog(
+            title = "Finish Stage?",
+            message = "Are you ready to end the conversation and receive your evaluation?",
+            primaryButtonText = "Yes, Evaluate!",
+            onPrimaryClick = {
+                showFinishDialog = false
+                onFinishStage()
+            },
+            secondaryButtonText = "Keep Talking",
+            onSecondaryClick = { showFinishDialog = false }
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,13 +85,30 @@ fun ActiveLiveChatView(
                     .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Objective: ${state.currentBossScenario.taskObjective}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    textAlign = TextAlign.Center
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Objective: ${state.currentBossScenario.taskObjective}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    if (state.isTimerRunning) {
+                        Spacer(Modifier.height(8.dp))
+                        val minutes = state.remainingTimeSeconds / 60
+                        val seconds = state.remainingTimeSeconds % 60
+                        val timeString = String.format("%02d:%02d", minutes, seconds)
+                        val timerColor = if (state.remainingTimeSeconds <= 30) LinguaQuestTheme.colors.ErrorAccent else MaterialTheme.colorScheme.onPrimaryContainer
+                        
+                        Text(
+                            text = timeString,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = timerColor
+                        )
+                    }
+                }
             }
             Spacer(Modifier.height(16.dp))
         }
@@ -101,7 +143,21 @@ fun ActiveLiveChatView(
             state = listState,
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .graphicsLayer { alpha = 0.99f }
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            0.05f to Color.Black,
+                            0.95f to Color.Black,
+                            1f to Color.Transparent
+                        ),
+                        blendMode = BlendMode.DstIn
+                    )
+                },
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(state.transcriptionHistory) { message ->
@@ -179,7 +235,7 @@ fun ActiveLiveChatView(
             if (isBossStage) {
                 Spacer(Modifier.height(24.dp))
                 Button(
-                    onClick = onFinishStage,
+                    onClick = { showFinishDialog = true },
                     colors = ButtonDefaults.buttonColors(containerColor = LinguaQuestTheme.colors.ErrorAccent),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
                 ) {

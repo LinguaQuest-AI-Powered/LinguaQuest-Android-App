@@ -14,6 +14,7 @@ import com.iti.linguaquest.features.roleplay.presentation.view.components.Active
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossEvaluatingView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossLobbyView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossResultView
+import com.iti.linguaquest.features.roleplay.presentation.view.components.BossErrorView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.RoleplayTopBar
 
 @Composable
@@ -35,7 +36,19 @@ fun RoleplayContent(
             modifier = Modifier.weight(1f).fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            if (state.currentBossScenario != null) {
+            if (state.error != null) {
+                BossErrorView(
+                    errorMessage = state.error,
+                    onRetry = {
+                        if (state.currentBossScenario != null) {
+                            onIntent(RoleplayIntent.RetryStageClicked)
+                        } else {
+                            onIntent(RoleplayIntent.StartLevelClicked)
+                        }
+                    },
+                    onExit = { onIntent(RoleplayIntent.ReturnHomeClicked) }
+                )
+            } else if (state.currentBossScenario != null) {
                 when {
                     state.assessmentResult != null -> {
                         BossResultView(

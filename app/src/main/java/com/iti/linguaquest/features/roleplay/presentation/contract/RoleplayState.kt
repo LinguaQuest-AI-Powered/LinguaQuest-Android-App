@@ -13,9 +13,11 @@ data class RoleplayState(
     val isAiSpeaking: Boolean = false,
     val transcriptionHistory: List<ChatMessage> = emptyList(),
     val isObjectiveComplete: Boolean = false,
+    val isEvaluating: Boolean = false,
+    val remainingTimeSeconds: Int = 120,
+    val isTimerRunning: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null,
     val currentBossScenario: BossScenario? = null,
-    val isEvaluating: Boolean = false,
     val assessmentResult: RoleplayAssessmentResult? = null
 )

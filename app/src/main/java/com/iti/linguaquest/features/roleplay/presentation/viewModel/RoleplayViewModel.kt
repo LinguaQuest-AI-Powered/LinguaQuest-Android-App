@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +51,8 @@ class RoleplayViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<RoleplayEffect>()
     val effect: SharedFlow<RoleplayEffect> = _effect.asSharedFlow()
+
+    private var timerJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -100,6 +104,7 @@ class RoleplayViewModel @Inject constructor(
 
     fun endRoleplay() {
         viewModelScope.launch {
+            timerJob?.cancel()
             stopMicrophoneUseCase()
             disconnectRoleplayUseCase()
             _state.update { it.copy(isConnected = false, isUserSpeaking = false) }
@@ -118,6 +123,18 @@ class RoleplayViewModel @Inject constructor(
             try {
                 connectToBossStageUseCase(scenario)
                 _state.update { it.copy(isConnected = true, isLoading = false, isUserSpeaking = false) }
+                
+                timerJob?.cancel()
+                timerJob = viewModelScope.launch {
+                    _state.update { it.copy(isTimerRunning = true, remainingTimeSeconds = 120) }
+                    while (_state.value.remainingTimeSeconds > 0) {
+                        delay(1000)
+                        _state.update { it.copy(remainingTimeSeconds = it.remainingTimeSeconds - 1) }
+                    }
+                    if (_state.value.isConnected) {
+                        finishBossStage()
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.update { it.copy(isLoading = false, error = e.message) }
@@ -128,11 +145,36 @@ class RoleplayViewModel @Inject constructor(
 
     private fun finishBossStage() {
         val scenario = _state.value.currentBossScenario ?: return
+        
+        val userHasSpoken = _state.value.transcriptionHistory.any { it.isUser }
+        
+        if (!userHasSpoken) {
+            viewModelScope.launch {
+                timerJob?.cancel()
+                stopMicrophoneUseCase()
+                disconnectRoleplayUseCase()
+                _state.update { 
+                    it.copy(
+                        isConnected = false, 
+                        isUserSpeaking = false, 
+                        isEvaluating = false,
+                        assessmentResult = com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult(
+                            isTaskCompleted = false,
+                            fluencyScore = 0,
+                            feedbackMessage = "You didn't say anything! Please try again and speak to the character."
+                        )
+                    )
+                }
+            }
+            return
+        }
+        
         val transcript = _state.value.transcriptionHistory.map { msg ->
             if (msg.isUser) "User: ${msg.text}" else "AI: ${msg.text}"
         }
         
         viewModelScope.launch {
+            timerJob?.cancel()
             stopMicrophoneUseCase()
             disconnectRoleplayUseCase()
             _state.update { 
@@ -159,7 +201,8 @@ class RoleplayViewModel @Inject constructor(
                 assessmentResult = null,
                 isEvaluating = false,
                 isAiSpeaking = false,
-                isUserSpeaking = false
+                isUserSpeaking = false,
+                error = null
             ) 
         }
         startBossStage()
@@ -205,6 +248,7 @@ class RoleplayViewModel @Inject constructor(
     }
 
     private fun handleError(message: String) {
+        _state.update { it.copy(error = message) }
         viewModelScope.launch {
             snackbarController.sendEvent(
                 SnackbarEvent(
@@ -221,6 +265,7 @@ class RoleplayViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        timerJob?.cancel()
         viewModelScope.launch { disconnectRoleplayUseCase() }
     }
 }

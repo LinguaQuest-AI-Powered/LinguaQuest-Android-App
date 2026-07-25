@@ -17,10 +17,9 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
     private val generativeModel by lazy {
         Firebase.ai(backend = GenerativeBackend.googleAI())
             .generativeModel(
-                modelName = "gemini-3.6-flash",
+                modelName = "gemini-3.5-flash-lite",
                 generationConfig = generationConfig {
                     temperature = 0.5f
-                    responseMimeType = "application/json"
                 }
             )
     }
@@ -49,13 +48,13 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
     }
 
     private fun cleanJson(rawText: String?): String? {
-        val cleaned = rawText
-            ?.trim()
-            ?.removePrefix("```json")
-            ?.removePrefix("```")
-            ?.removeSuffix("```")
-            ?.trim()
-        return cleaned?.takeIf { it.isNotEmpty() }
+        if (rawText.isNullOrBlank()) return null
+        val startIndex = rawText.indexOf('{')
+        val endIndex = rawText.lastIndexOf('}')
+        if (startIndex != -1 && endIndex != -1 && startIndex <= endIndex) {
+            return rawText.substring(startIndex, endIndex + 1)
+        }
+        return null
     }
 
     override suspend fun evaluateBossStage(

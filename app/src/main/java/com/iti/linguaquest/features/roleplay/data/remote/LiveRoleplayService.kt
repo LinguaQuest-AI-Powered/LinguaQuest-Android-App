@@ -43,9 +43,13 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
     }
 
     override suspend fun sendAudioChunk(chunk: ByteArray) {
-        session?.sendAudioRealtime(
-            InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
-        )
+        try {
+            session?.sendAudioRealtime(
+                InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("LiveRoleplayService", "Failed to send audio chunk: ${e.message}")
+        }
     }
 
     override fun observeServerEvents(): Flow<RoleplayLiveEvent> {

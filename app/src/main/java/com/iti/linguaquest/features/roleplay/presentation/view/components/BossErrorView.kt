@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,24 +14,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
+import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
-fun BossEvaluatingView() {
+fun BossErrorView(
+    errorMessage: String,
+    onRetry: () -> Unit,
+    onExit: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         AppMascotGradientBox(
-            imageRes = R.drawable.lingo,
+            imageRes = R.drawable.lingo_error,
             mascotSize = 180.dp
         ) {
             Text(
-                text = "Evaluating...",
+                text = "Oops!",
                 style = AppTextStyles.ScreenTitle,
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText,
@@ -41,21 +46,29 @@ fun BossEvaluatingView() {
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            CircularProgressIndicator(
-                modifier = Modifier.padding(16.dp),
-                color = LinguaQuestTheme.colors.OrangeActive
-            )
-            
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
-                text = "AI is analyzing your conversation to calculate your score.",
+                text = errorMessage,
                 style = AppTextStyles.DialogMessage,
                 color = LinguaQuestTheme.colors.BrownText,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            AppButton(
+                text = "Try Again",
+                onClick = onRetry
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AppButton(
+                text = "Exit",
+                onClick = onExit,
+                variant = ButtonVariant.SECONDARY
             )
         }
     }
