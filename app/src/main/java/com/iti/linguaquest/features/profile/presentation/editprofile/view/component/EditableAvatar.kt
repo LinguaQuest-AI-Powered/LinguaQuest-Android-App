@@ -1,5 +1,4 @@
-package com.iti.linguaquest.features.editprofile.presentation.component
-
+package com.iti.linguaquest.features.profile.presentation.editprofile.view.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -22,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
@@ -42,7 +42,7 @@ fun EditableAvatar(
             contentAlignment = Alignment.BottomEnd
         ) {
             ImageWrapper(
-                model = avatarModel,
+                model = avatarModel ?: R.drawable.lingo_app_bar,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

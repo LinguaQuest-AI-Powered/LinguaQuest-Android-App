@@ -475,7 +475,7 @@
     <string name="dialog_voice_confirmation_sub_title">Listen to your audio before evaluating</string>
     <string name="dialog_voice_confirmation_discard">Discard</string>
     <string name="dialog_voice_confirmation_process">Evaluate</string>
-
+    <string name="failed_upload_photo">Failed to upload photo</string>
     <!-- Auth & Error Strings -->
     <string name="login_error_email_already_in_use">Email is already in use.</string>
     <string name="login_error_email_not_found">Email address not found.</string>
@@ -485,13 +485,26 @@
     <string name="login_error_validation_error">Validation error occurred.</string>
 
     <!-- Camera Strings -->
-
+    <string name="change_password_label">Change password</string>
+    <string name="old_password_placeholder">old password</string>
+    <string name="new_password_placeholder">new password</string>
     <string name="choose_a_source">Choose a source</string>
     <!-- Snackbars messages -->
     <string name="congrates">Congratulations</string>
 
+    <string name="display_name_empty">Display name can\'t be empty</string>
+    <string name="enter_current_password">Enter your current password</string>
+    <string name="new_password_min_length">New password must be at least 6 characters</string>
+    <string name="incorrect_old_password">Incorrect current password</string>
 
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="failed_update_profile">Failed to update profile</string>
+
+    <string name="password_updated_successfully">Password updated successfully</string>
+    <string name="failed_update_password">Failed to update password</string>
+
+    <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
-
+    <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
 
 </resources>

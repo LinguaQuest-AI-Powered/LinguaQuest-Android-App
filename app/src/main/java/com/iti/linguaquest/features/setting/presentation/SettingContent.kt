@@ -119,15 +119,12 @@ fun SettingContent(
                 iconTint = LocalLinguaQuestColors.current.OrangeActive,
                 onClick = onEditProfileClick
             )
-            SectionDivider()
-            SettingItem(
-                icon = painterResource(id = R.drawable.ic_learning_language),
-                title = stringResource(id = R.string.settings_learning_language),
-                value = stringResource(id = R.string.lang_english),
-                valueColor = LocalLinguaQuestColors.current.BrownText,
-                iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                onClick = { /* TODO */ }
-            )
+             LockScreenSettingItem(
+                 isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE || lockScreenState.featureState == LockScreenFeatureState.ENABLING,
+                 onCheckedChange = { isChecked ->
+                     onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
+                 }
+             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -178,16 +175,7 @@ fun SettingContent(
                 onClick = { /* TODO */ }
             )
             SectionDivider()
-
-            LockScreenSettingItem(
-                isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE || lockScreenState.featureState == LockScreenFeatureState.ENABLING,
-                onCheckedChange = { isChecked ->
-                    onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
-                }
-            )
-
-            SectionDivider()
-            SettingItem(
+             SettingItem(
                 icon = painterResource(id = R.drawable.ic_info_icon),
                 title = stringResource(id = R.string.settings_about_app),
                 iconTint = MaterialTheme.colorScheme.tertiary,
