@@ -270,7 +270,8 @@ fun ActiveLiveChatViewPreview() {
                     bossName = "Sherry",
                     roleDescription = "Fruit Vendor",
                     objective = "Buy some fresh mangoes.",
-                    worldId = "2"
+                    worldId = "2",
+                    voiceName = "KORE"
                 ),
                 transcriptionHistory = listOf(
                     ChatMessage("[SPOKEN] Hello! I am Sherry, what would you like? [/SPOKEN]", isUser = false),

@@ -132,7 +132,8 @@ fun BossLobbyViewPreview() {
                     worldId = "world_1",
                     bossName = "Haga Sherry",
                     roleDescription = "A friendly but firm old fruit vendor in a bustling Cairo market.",
-                    objective = "Buy two apples and a bunch of bananas for less than 50 pounds."
+                    objective = "Buy two apples and a bunch of bananas for less than 50 pounds.",
+                    voiceName = "KORE"
                 ),
                 onStartClicked = {}
             )

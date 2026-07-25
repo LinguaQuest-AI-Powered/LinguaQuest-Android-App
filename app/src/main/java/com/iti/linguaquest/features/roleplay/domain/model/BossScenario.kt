@@ -5,5 +5,6 @@ data class BossScenario(
     val worldId: String,
     val bossName: String,
     val roleDescription: String,
-    val objective: String
+    val objective: String,
+    val voiceName: String
 )

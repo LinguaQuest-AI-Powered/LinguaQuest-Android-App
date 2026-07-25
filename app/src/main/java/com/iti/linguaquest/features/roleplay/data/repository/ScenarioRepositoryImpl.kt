@@ -27,7 +27,8 @@ class ScenarioRepositoryImpl @Inject constructor(
                 worldId = dto.worldId,
                 bossName = dto.bossName,
                 roleDescription = dto.roleDescription,
-                objective = dto.objective
+                objective = dto.objective,
+                voiceName = dto.voiceName
             )
         }
     }

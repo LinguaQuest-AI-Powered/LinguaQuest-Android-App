@@ -36,8 +36,8 @@ class RoleplayRepositoryImpl @Inject constructor(
     private val _events = MutableSharedFlow<RoleplayLiveEvent>()
     override val events: Flow<RoleplayLiveEvent> = _events
 
-    override suspend fun connect(systemPrompt: String) {
-        liveService.connect(systemPrompt)
+    override suspend fun connect(systemPrompt: String, voiceName: String) {
+        liveService.connect(systemPrompt, voiceName)
         audioPlayer.start()
         listenForServerEvents()
     }
@@ -52,7 +52,7 @@ class RoleplayRepositoryImpl @Inject constructor(
             targetLanguage = targetLanguage
         )
         
-        liveService.connect(systemPrompt)
+        liveService.connect(systemPrompt, scenario.voiceName)
         audioPlayer.start()
         listenForServerEvents()
     }

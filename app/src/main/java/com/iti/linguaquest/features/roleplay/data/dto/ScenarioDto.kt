@@ -9,5 +9,6 @@ data class ScenarioDto(
     @SerializedName("worldId") val worldId: String,
     @SerializedName("bossName") val bossName: String,
     @SerializedName("roleDescription") val roleDescription: String,
-    @SerializedName("objective") val objective: String
+    @SerializedName("objective") val objective: String,
+    @SerializedName("voiceName") val voiceName: String
 )

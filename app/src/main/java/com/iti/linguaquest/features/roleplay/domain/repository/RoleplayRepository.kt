@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface RoleplayRepository {
     val events: Flow<RoleplayLiveEvent>
 
-    suspend fun connect(systemPrompt: String)
+    suspend fun connect(systemPrompt: String, voiceName: String)
     suspend fun connectToBossStage(scenario: BossScenario)
     suspend fun evaluateBossStage(transcript: List<String>, scenario: BossScenario): Result<BossEvaluationResult>
     suspend fun disconnect()

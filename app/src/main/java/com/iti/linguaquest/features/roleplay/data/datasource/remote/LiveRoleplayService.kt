@@ -12,6 +12,8 @@ import com.google.firebase.ai.type.LiveServerGoAway
 import com.google.firebase.ai.type.LiveSession
 import com.google.firebase.ai.type.PublicPreviewAPI
 import com.google.firebase.ai.type.ResponseModality
+import com.google.firebase.ai.type.SpeechConfig
+import com.google.firebase.ai.type.Voice
 import com.google.firebase.ai.type.content
 import com.google.firebase.ai.type.liveGenerationConfig
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +32,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
 
     private var session: LiveSession? = null
 
-    override suspend fun connect(systemPrompt: String) {
+    override suspend fun connect(systemPrompt: String, voiceName: String) {
         val auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) auth.signInAnonymously().await()
         
@@ -41,6 +43,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
                 responseModality = ResponseModality.AUDIO
                 inputAudioTranscription = AudioTranscriptionConfig()
                 outputAudioTranscription = AudioTranscriptionConfig()
+                speechConfig = SpeechConfig(voice = Voice(voiceName))
             }
         )
         session = liveModel.connect()

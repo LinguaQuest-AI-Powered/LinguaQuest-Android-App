@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.media.audiofx.AcousticEchoCanceler
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,7 +32,7 @@ class AudioRecorder @Inject constructor() {
         if (minBufferSize <= 0) return@flow
 
         val record = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
+            MediaRecorder.AudioSource.VOICE_COMMUNICATION,
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
@@ -44,6 +46,18 @@ class AudioRecorder @Inject constructor() {
 
         audioRecord = record
         val buffer = ByteArray(minBufferSize)
+
+        if (AcousticEchoCanceler.isAvailable()) {
+            val echoCanceler = AcousticEchoCanceler.create(record.audioSessionId)
+            if (echoCanceler != null) {
+                echoCanceler.enabled = true
+                Log.d("AudioSetup", "Acoustic Echo Canceler enabled successfully.")
+            } else {
+                Log.w("AudioSetup", "Failed to create Acoustic Echo Canceler.")
+            }
+        } else {
+            Log.w("AudioSetup", "Acoustic Echo Canceler is not available on this device.")
+        }
 
         record.startRecording()
         isRecording = true
