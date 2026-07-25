@@ -42,8 +42,8 @@ fun LockScreenSettingItem(
     ) {
         Box(
             modifier = Modifier
-                .size(44.dp)
-                .background(AppColors.OrangeActive, RoundedCornerShape(12.dp)),
+                .size(40.dp)
+                .background( MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             Icon(

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.editprofile.presentation.component
+package com.iti.linguaquest.features.profile.presentation.editprofile.view.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -17,8 +16,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun InfoNote(
@@ -42,25 +43,24 @@ fun InfoNote(
         Icon(
             imageVector = Icons.Filled.Info,
             contentDescription = null,
-            tint = AppColors.IconsColor,
+            tint = LinguaQuestTheme.colors.iconsColor,
             modifier = Modifier.size(16.dp)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
-            color = AppColors.IconsColor
+            color = LinguaQuestTheme.colors.iconsColor
         )
     }
 }
-
-
 
 @Composable
 fun PrimaryActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     buttonHeight: Dp = 52.dp,
     shadowHeight: Dp = 6.dp
 ) {
@@ -78,34 +78,43 @@ fun PrimaryActionButton(
             .fillMaxWidth()
             .height(buttonHeight + shadowHeight)
     ) {
-         Box(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(buttonHeight)
                 .align(Alignment.BottomCenter)
                 .clip(shape)
-                .background(AppColors.ShadowOrange)
+                .background(LinguaQuestTheme.colors.ShadowOrange)
         )
 
-         Box(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(buttonHeight)
-                .offset(y = pressOffset)
+                .offset(y = if (isLoading) 0.dp else pressOffset)
                 .clip(shape)
-                .background(AppColors.PrimaryColor)
+                .background(MaterialTheme.colorScheme.primary)
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
+                    enabled = !isLoading,
                     onClick = onClick
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelLarge,
-                color = AppColors.TextOnPrimaryButton
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(22.dp),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
 }
