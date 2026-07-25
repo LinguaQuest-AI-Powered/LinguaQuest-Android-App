@@ -9,6 +9,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.utils.DailyRewardSessionState
+import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
@@ -37,7 +38,8 @@ class HomeViewModel @Inject constructor(
     private val getWorldsUseCase: GetWorldsUseCase,
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val refreshWalletUseCase: RefreshWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -102,9 +104,11 @@ class HomeViewModel @Inject constructor(
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+            val walletDeferred = async { refreshWalletUseCase() }
 
             val homeSummaryResult = homeSummaryDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
+            walletDeferred.await()
 
             _state.update { it.copy(isLoading = false) }
 
