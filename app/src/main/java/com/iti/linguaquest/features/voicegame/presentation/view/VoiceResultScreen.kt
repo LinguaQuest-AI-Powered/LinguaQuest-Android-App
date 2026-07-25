@@ -19,9 +19,7 @@ import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
-import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultActionButtons
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
-import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScoreSection
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -83,23 +81,11 @@ fun VoiceResultScreen(
 
             VoiceResultHeader(
                 isPassed = result.isPassed,
-                advice = result.advice
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            VoiceResultScoreSection(
+                advice = result.advice,
                 rating = result.rating,
-                isPassed = result.isPassed,
                 correctWords = result.correctWords,
                 wrongWords = result.wrongWords,
-                coinsAwarded = result.coinsAwarded
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            VoiceResultActionButtons(
-                isPassed = result.isPassed,
+                coinsAwarded = result.coinsAwarded,
                 onContinue = onContinue,
                 onRetry = onRetry,
                 onHome = onHome
