@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.roleplay.data.remote
+package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
 interface GeminiRoleplayRemoteDataSource {
     suspend fun generateRoleplayTurn(systemPrompt: String, audioBytes: ByteArray?): String?

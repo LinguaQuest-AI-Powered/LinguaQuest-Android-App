@@ -9,7 +9,7 @@ sealed interface RoleplayIntent {
     data object ReturnHomeClicked : RoleplayIntent
     
     // Boss Stage Intents
-    data class LoadBossLobby(val scenarioId: String) : RoleplayIntent
+    data class LoadBossLobby(val scenarioId: com.iti.linguaquest.features.roleplay.domain.model.ScenarioId) : RoleplayIntent
     data object StartBossStageClicked : RoleplayIntent
     data object FinishStageClicked : RoleplayIntent
     data object RetryStageClicked : RoleplayIntent

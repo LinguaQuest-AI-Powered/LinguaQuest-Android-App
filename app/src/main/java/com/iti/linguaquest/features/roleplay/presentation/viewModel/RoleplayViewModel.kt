@@ -9,7 +9,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
-import com.iti.linguaquest.features.roleplay.domain.model.BossScenarioProvider
+import com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
 import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToBossStageUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToFreePlayUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.DisconnectRoleplayUseCase
@@ -43,6 +43,7 @@ class RoleplayViewModel @Inject constructor(
     private val stopMicrophoneUseCase: StopMicrophoneUseCase,
     private val disconnectRoleplayUseCase: DisconnectRoleplayUseCase,
     private val observeLiveEventsUseCase: ObserveLiveEventsUseCase,
+    private val scenarioRepository: ScenarioRepository,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -111,9 +112,17 @@ class RoleplayViewModel @Inject constructor(
         }
     }
 
-    private fun loadBossLobby(scenarioId: String) {
-        val scenario = BossScenarioProvider.scenarios.find { it.id == scenarioId }
-        _state.update { it.copy(currentBossScenario = scenario) }
+    private fun loadBossLobby(scenarioId: com.iti.linguaquest.features.roleplay.domain.model.ScenarioId) {
+        viewModelScope.launch {
+            try {
+                val lang = java.util.Locale.getDefault().language
+                val scenarios = scenarioRepository.getBossScenarios(lang)
+                val scenario = scenarios.find { it.id == scenarioId }
+                _state.update { it.copy(currentBossScenario = scenario) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun startBossStage() {

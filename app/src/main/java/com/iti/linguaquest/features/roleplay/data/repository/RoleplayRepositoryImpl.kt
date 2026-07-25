@@ -3,8 +3,8 @@ package com.iti.linguaquest.features.roleplay.data.repository
 import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.features.roleplay.data.audio.AudioPlayer
 import com.iti.linguaquest.features.roleplay.data.audio.AudioRecorder
-import com.iti.linguaquest.features.roleplay.data.remote.GeminiRoleplayRemoteDataSource
-import com.iti.linguaquest.features.roleplay.data.remote.LiveRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayAssessmentResult
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
@@ -59,8 +59,9 @@ class RoleplayRepositoryImpl @Inject constructor(
         val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
         val systemPrompt = """
             Persona: You are ${scenario.bossName}, ${scenario.roleDescription}. 
-            The user is a language learner practicing $targetLanguage.
-            Their objective in this interaction is: "${scenario.taskObjective}".
+            Context: The user is learning a new language. You must only speak in the target language.
+            Objective for User: ${scenario.objective}. 
+            Current State: Assess whether the user has met the objective based on the ongoing conversation.
             Rules: Play along with this scenario. Do not explicitly reveal their objective to them, but interact naturally so they have the opportunity to achieve it. Keep your sentences short and natural for spoken dialogue.
             Guardrails: RESPOND UNMISTAKABLY IN $targetLanguage.
             Initiation Command: To begin, greet the user immediately in character.
@@ -76,7 +77,7 @@ class RoleplayRepositoryImpl @Inject constructor(
             val nativeLanguage = userPreferences.nativeLanguageName.firstOrNull() ?: "English"
             val jsonResponse = geminiService.evaluateBossStage(
                 transcript = transcript,
-                taskObjective = scenario.taskObjective,
+                taskObjective = scenario.objective,
                 nativeLanguage = nativeLanguage
             )
             

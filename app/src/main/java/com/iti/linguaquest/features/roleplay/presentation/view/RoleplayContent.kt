@@ -20,6 +20,7 @@ import com.iti.linguaquest.features.roleplay.presentation.view.components.Rolepl
 @Composable
 fun RoleplayContent(
     state: RoleplayState,
+    isBossStage: Boolean,
     onIntent: (RoleplayIntent) -> Unit,
     onStartBossStage: () -> Unit,
     modifier: Modifier = Modifier
@@ -40,7 +41,7 @@ fun RoleplayContent(
                 BossErrorView(
                     errorMessage = state.error,
                     onRetry = {
-                        if (state.currentBossScenario != null) {
+                        if (isBossStage) {
                             onIntent(RoleplayIntent.RetryStageClicked)
                         } else {
                             onIntent(RoleplayIntent.StartLevelClicked)
@@ -48,32 +49,38 @@ fun RoleplayContent(
                     },
                     onExit = { onIntent(RoleplayIntent.ReturnHomeClicked) }
                 )
-            } else if (state.currentBossScenario != null) {
-                when {
-                    state.assessmentResult != null -> {
-                        BossResultView(
-                            result = state.assessmentResult,
-                            onAdvanceToNextWorld = { onIntent(RoleplayIntent.AdvanceToNextWorldClicked) },
-                            onRetryStage = { onIntent(RoleplayIntent.RetryStageClicked) }
-                        )
+            } else if (isBossStage) {
+                if (state.currentBossScenario != null) {
+                    when {
+                        state.assessmentResult != null -> {
+                            BossResultView(
+                                result = state.assessmentResult,
+                                onAdvanceToNextWorld = { onIntent(RoleplayIntent.AdvanceToNextWorldClicked) },
+                                onRetryStage = { onIntent(RoleplayIntent.RetryStageClicked) }
+                            )
+                        }
+                        state.isEvaluating -> {
+                            BossEvaluatingView()
+                        }
+                        state.isConnected || state.isLoading -> {
+                            ActiveLiveChatView(
+                                state = state, 
+                                isBossStage = true,
+                                onStopRecording = { onIntent(RoleplayIntent.StopRecordingClicked) },
+                                onRecord = { onIntent(RoleplayIntent.RecordClicked) },
+                                onFinishStage = { onIntent(RoleplayIntent.FinishStageClicked) }
+                            )
+                        }
+                        else -> {
+                            BossLobbyView(
+                                scenario = state.currentBossScenario,
+                                onStartClicked = onStartBossStage
+                            )
+                        }
                     }
-                    state.isEvaluating -> {
-                        BossEvaluatingView()
-                    }
-                    state.isConnected || state.isLoading -> {
-                        ActiveLiveChatView(
-                            state = state, 
-                            isBossStage = true,
-                            onStopRecording = { onIntent(RoleplayIntent.StopRecordingClicked) },
-                            onRecord = { onIntent(RoleplayIntent.RecordClicked) },
-                            onFinishStage = { onIntent(RoleplayIntent.FinishStageClicked) }
-                        )
-                    }
-                    else -> {
-                        BossLobbyView(
-                            scenario = state.currentBossScenario,
-                            onStartClicked = onStartBossStage
-                        )
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                        androidx.compose.material3.CircularProgressIndicator(color = com.iti.linguaquest.core.theme.LinguaQuestTheme.colors.OrangeActive)
                     }
                 }
             } else {

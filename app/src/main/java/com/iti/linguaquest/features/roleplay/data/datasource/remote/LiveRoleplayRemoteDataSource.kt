@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.roleplay.data.remote
+package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
 import kotlinx.coroutines.flow.Flow

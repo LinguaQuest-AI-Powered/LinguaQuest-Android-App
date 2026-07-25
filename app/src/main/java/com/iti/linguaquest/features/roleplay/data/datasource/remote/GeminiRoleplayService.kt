@@ -1,5 +1,6 @@
-package com.iti.linguaquest.features.roleplay.data.remote
+package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
@@ -63,7 +64,7 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
         nativeLanguage: String
     ): String? = withContext(Dispatchers.IO) {
         val transcriptText = transcript.joinToString("\n")
-        android.util.Log.d("RoleplayDebug", "Evaluating transcript. Size: ${transcript.size}, Content:\n$transcriptText")
+        Log.d("RoleplayDebug", "Evaluating transcript. Size: ${transcript.size}, Content:\n$transcriptText")
         val systemPrompt = """
             You are a roleplay evaluator. 
             The following transcript contains the dialogue of a roleplay session between the User and the AI Boss.
@@ -72,6 +73,10 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
             
             Evaluate the user's 'fluency_score' (0-100) based on their grammar, vocabulary, and conversational flow as shown in the transcript.
             Write a 'feedback_message' (in $nativeLanguage) summarizing how they handled the scenario.
+            
+            IMPORTANT: The user's input transcript is generated via an automated speech-to-text system. Because the user is utilizing an open microphone, background noise or moments of silence are occasionally hallucinated by the STT engine into unrelated foreign languages (e.g., Hindi, Chinese, Welsh) or random character strings. 
+
+            You must strictly ignore any sudden, out-of-context language shifts or bizarre character artifacts in the transcript. Do NOT treat these as the user speaking the wrong language, do NOT mention them in your feedback, and absolutely do NOT let them negatively impact the user's `fluency_score`, `accuracy_score`, or overall task evaluation. Grade the user solely on the coherent portions of their intended target language.
             
             Return ONLY a valid JSON object matching this schema exactly:
             {

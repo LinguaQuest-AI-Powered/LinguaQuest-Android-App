@@ -18,9 +18,11 @@ import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayInten
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import kotlinx.coroutines.flow.collectLatest
 
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
+
 @Composable
 fun RoleplayScreen(
-    scenarioId: String? = null,
+    scenarioId: ScenarioId? = null,
     onNavigateHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RoleplayViewModel = hiltViewModel()
@@ -73,6 +75,7 @@ fun RoleplayScreen(
 
     RoleplayContent(
         state = state,
+        isBossStage = scenarioId != null,
         onIntent = viewModel::onIntent,
         onStartBossStage = {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {

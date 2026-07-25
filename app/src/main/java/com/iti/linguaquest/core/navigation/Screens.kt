@@ -68,7 +68,7 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data object AllWorlds : RootScreen
     @Serializable
-    data class Roleplay(val scenarioId: String? = null) : RootScreen
+    data class Roleplay(val scenarioId: com.iti.linguaquest.features.roleplay.domain.model.ScenarioId? = null) : RootScreen
     @Serializable
     data object EditProfile : RootScreen
     @Serializable

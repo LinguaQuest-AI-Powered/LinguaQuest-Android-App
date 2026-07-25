@@ -1,8 +1,9 @@
-package com.iti.linguaquest.features.roleplay.data.remote
+package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
+import android.util.Log
 import com.google.firebase.Firebase
-import com.google.firebase.ai.LiveGenerativeModel
 import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.AudioTranscriptionConfig
 import com.google.firebase.ai.type.GenerativeBackend
 import com.google.firebase.ai.type.InlineData
 import com.google.firebase.ai.type.InlineDataPart
@@ -10,6 +11,9 @@ import com.google.firebase.ai.type.LiveServerContent
 import com.google.firebase.ai.type.LiveServerGoAway
 import com.google.firebase.ai.type.LiveSession
 import com.google.firebase.ai.type.PublicPreviewAPI
+import com.google.firebase.ai.type.ResponseModality
+import com.google.firebase.ai.type.content
+import com.google.firebase.ai.type.liveGenerationConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
 import kotlinx.coroutines.flow.Flow
@@ -32,11 +36,11 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
         
         val liveModel = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
             modelName = "gemini-2.5-flash-native-audio-preview-12-2025",
-            systemInstruction = com.google.firebase.ai.type.content { text(systemPrompt) },
-            generationConfig = com.google.firebase.ai.type.liveGenerationConfig {
-                responseModality = com.google.firebase.ai.type.ResponseModality.AUDIO
-                inputAudioTranscription = com.google.firebase.ai.type.AudioTranscriptionConfig()
-                outputAudioTranscription = com.google.firebase.ai.type.AudioTranscriptionConfig()
+            systemInstruction = content { text(systemPrompt) },
+            generationConfig = liveGenerationConfig {
+                responseModality = ResponseModality.AUDIO
+                inputAudioTranscription = AudioTranscriptionConfig()
+                outputAudioTranscription = AudioTranscriptionConfig()
             }
         )
         session = liveModel.connect()
@@ -48,7 +52,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
                 InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
             )
         } catch (e: Exception) {
-            android.util.Log.e("LiveRoleplayService", "Failed to send audio chunk: ${e.message}")
+            Log.e("LiveRoleplayService", "Failed to send audio chunk: ${e.message}")
         }
     }
 

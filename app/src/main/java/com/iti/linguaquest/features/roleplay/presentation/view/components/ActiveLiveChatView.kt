@@ -44,6 +44,8 @@ import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 
+
+
 @Composable
 fun ActiveLiveChatView(
     state: RoleplayState, 
@@ -87,7 +89,7 @@ fun ActiveLiveChatView(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Objective: ${state.currentBossScenario.taskObjective}",
+                        text = "Objective: ${state.currentBossScenario.objective}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -258,10 +260,10 @@ fun ActiveLiveChatViewPreview() {
                 isUserSpeaking = false,
                 isAiSpeaking = false,
                 currentBossScenario = BossScenario(
-                    id = "1",
+                    id = com.iti.linguaquest.features.roleplay.domain.model.ScenarioId.SCENARIO_MARKET_01,
                     bossName = "Sherry",
                     roleDescription = "Fruit Vendor",
-                    taskObjective = "Buy some fresh mangoes.",
+                    objective = "Buy some fresh mangoes.",
                     worldId = "2"
                 ),
                 transcriptionHistory = listOf(

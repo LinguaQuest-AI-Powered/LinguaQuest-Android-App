@@ -93,7 +93,7 @@ fun BossLobbyView(scenario: BossScenario, onStartClicked: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = scenario.taskObjective,
+                    text = scenario.objective,
                     style = AppTextStyles.SectionTitle,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurface
@@ -125,11 +125,11 @@ fun BossLobbyViewPreview() {
         Surface {
             BossLobbyView(
                 scenario = BossScenario(
-                    id = "boss_1",
+                    id = com.iti.linguaquest.features.roleplay.domain.model.ScenarioId.SCENARIO_MARKET_01,
                     worldId = "world_1",
-                    bossName = "Sherry",
-                    roleDescription = "A friendly Cairo fruit vendor.",
-                    taskObjective = "Negotiate to buy 3 apples and 2 bananas for under 50 pounds."
+                    bossName = "Haga Sherry",
+                    roleDescription = "A friendly but firm old fruit vendor in a bustling Cairo market.",
+                    objective = "Buy two apples and a bunch of bananas for less than 50 pounds."
                 ),
                 onStartClicked = {}
             )

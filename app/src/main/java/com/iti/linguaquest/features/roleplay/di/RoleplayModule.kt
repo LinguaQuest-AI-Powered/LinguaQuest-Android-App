@@ -1,9 +1,11 @@
 package com.iti.linguaquest.features.roleplay.di
 
-import com.iti.linguaquest.features.roleplay.data.remote.GeminiRoleplayRemoteDataSource
-import com.iti.linguaquest.features.roleplay.data.remote.GeminiRoleplayService
-import com.iti.linguaquest.features.roleplay.data.remote.LiveRoleplayRemoteDataSource
-import com.iti.linguaquest.features.roleplay.data.remote.LiveRoleplayService
+import com.iti.linguaquest.features.roleplay.data.datasource.local.ScenarioLocalDataSource
+import com.iti.linguaquest.features.roleplay.data.datasource.local.ScenarioLocalDataSourceImpl
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayService
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayRemoteDataSource
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayService
 import com.iti.linguaquest.features.roleplay.data.repository.RoleplayRepositoryImpl
 import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepository
 import dagger.Binds
@@ -33,4 +35,16 @@ abstract class RoleplayModule {
     abstract fun bindGeminiRoleplayRemoteDataSource(
         impl: GeminiRoleplayService
     ): GeminiRoleplayRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindScenarioLocalDataSource(
+        impl: ScenarioLocalDataSourceImpl
+    ): ScenarioLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindScenarioRepository(
+        impl: com.iti.linguaquest.features.roleplay.data.repository.ScenarioRepositoryImpl
+    ): com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
 }
