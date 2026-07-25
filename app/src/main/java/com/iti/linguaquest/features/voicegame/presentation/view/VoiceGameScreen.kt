@@ -35,8 +35,6 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun VoiceGameScreen(
-    sentence: String,
-    lessonId: Int,
     onNavigateBack: () -> Unit,
     onEvaluationComplete: (VoiceResultUi) -> Unit,
     modifier: Modifier = Modifier,
@@ -51,7 +49,7 @@ fun VoiceGameScreen(
             SharedVoiceResultHolder.autoGenerateNextSentence = false
             viewModel.onIntent(VoiceGameIntent.GenerateNewSentenceClicked)
         } else {
-            viewModel.onIntent(VoiceGameIntent.Init(sentence, lessonId))
+            viewModel.onIntent(VoiceGameIntent.Init)
         }
     }
 

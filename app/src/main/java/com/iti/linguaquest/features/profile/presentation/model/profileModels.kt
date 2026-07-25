@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.profile.presentation.model
 
-import androidx.annotation.DrawableRes
 
 data class ProfileState(
     val userName: String = "",
@@ -11,7 +10,7 @@ data class ProfileState(
     val streakDays: Int = 0,
     val worldsCount: Int = 0,
     val learningLanguageName: String = "",
-    @param:DrawableRes val learningLanguageFlagRes: Int? = null,
+    val learningLanguageFlag: String = "",
     val proficiencyLabel: String = "",
     val currentMilestoneXp: Int = 0,
     val targetMilestoneXp: Int = 0,
@@ -19,7 +18,12 @@ data class ProfileState(
     val nearbyLeaderboard: List<LeaderboardEntry> = emptyList()
 )
 
-data class Achievement(val id: String, val title: String, val iconRes: Int, val progressLabel: String)
+data class Achievement(
+    val id: String,
+    val title: String,
+    val iconRes: Int,
+    val progressLabel: String
+)
 
 data class LeaderboardEntry(
     val rank: Int,

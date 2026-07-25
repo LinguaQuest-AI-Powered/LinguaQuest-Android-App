@@ -12,20 +12,24 @@
     <string name="i_want_to_learn">I WANT TO LEARN...</string>
     <string name="popular_choices">Popular Choices</string>
     <string name="continue_button">Continue</string>
+    <string name="start_button">Start</string>
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
+    // Languages displayed name
     <string name="spanish_language_displayName">Spanish</string>
     <string name="japanese_language_displayName">Japanese</string>
     <string name="english_language_displayName">English</string>
     <string name="germany_language_displayName">Germany</string>
 
+    // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>
     <string name="english_language_code">en</string>
     <string name="germany_language_code">ge</string>
 
     <string name="select_language">Select language</string>
+
 
     <string name="login_welcome_back">Welcome back!</string>
     <string name="login_ready_to_continue">Ready to continue?</string>
@@ -101,6 +105,14 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
+    <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
+    <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
+    <string name="level_beginner">Beginner</string>
+    <string name="level_beginner_description">I\'m just starting my adventure</string>
+    <string name="level_intermediate">Intermediate</string>
+    <string name="level_intermediate_description">I can navigate basic paths</string>
+    <string name="level_advanced">Advanced</string>
+    <string name="level_advanced_description">Ready for grand challenges</string>
     <string name="go_back">Go Back</string>
     <string name="captured_preview">Captured Preview</string>
     <string name="find_label">Find:</string>
@@ -131,6 +143,7 @@
     <string name="streak_label">STREAK</string>
     <string name="worlds_label">WORLDS</string>
     <string name="continue_lesson">CONTINUE LESSON</string>
+    <string name="voice_practise">Voice Practice</string>
     <string name="leaderboard_title">Leaderboard</string>
     <string name="achievements_title">Achievements</string>
     <string name="learning_label">Learning</string>
@@ -140,6 +153,7 @@
     <string name="view_all_label">VIEW ALL</string>
     <string name="you_label">You</string>
 
+    <string name="practice_pronunciation">Practice your\npronunciation</string>
     <!-- WorldDifficulty -->
     <string name="medium">MEDIUM</string>
     <string name="easy">EASY</string>
@@ -164,7 +178,7 @@
     <string name="review_section_fun_label">DID YOU KNOW?</string>
     <string name="review_language_arrow"> → </string>
 
-    <!-- Level Feature -->
+    // Level Feature
     <string name="level_title">Level %1$d</string>
     <string name="back">Back</string>
     <string name="coins">Coins</string>
@@ -180,6 +194,7 @@
     <string name="show_category_clue">Show category clue</string>
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+
 
     <string name="xp">XP</string>
     <!-- Settings Screen -->
@@ -199,6 +214,51 @@
     <string name="settings_about_app">About App</string>
     <string name="settings_log_out">Log Out</string>
     <string name="settings_delete_account">Delete Account</string>
+    <string name="lockscreen_vocabulary_title">Lock Screen Vocabulary</string>
+    <string name="lockscreen_vocabulary_subtitle">Turn your lock screen into a tiny learning loop that keeps vocabulary moving all day.</string>
+    <string name="lockscreen_vocabulary_cost_chip">50 coins</string>
+    <string name="lockscreen_vocabulary_schedule_chip">Every 2 hours</string>
+    <string name="lockscreen_vocabulary_state_ready">Ready</string>
+    <string name="lockscreen_vocabulary_state_generating">Preparing</string>
+    <string name="lockscreen_vocabulary_state_active">Active</string>
+    <string name="lockscreen_vocabulary_state_disabled">Disabled</string>
+    <string name="lockscreen_vocabulary_state_error">Needs attention</string>
+    <string name="lockscreen_vocabulary_pending_words">Pending words</string>
+    <string name="lockscreen_vocabulary_batch_size">Batch size</string>
+    <string name="lockscreen_vocabulary_last_generated">Last generated</string>
+    <string name="lockscreen_vocabulary_target_language">Target language</string>
+    <string name="lockscreen_vocabulary_level">Level</string>
+    <string name="lockscreen_vocabulary_enable_title">Enable lock screen vocabulary?</string>
+    <string name="lockscreen_vocabulary_enable_message">This uses 50 coins once, then keeps showing vocabulary notifications on your lock screen.</string>
+    <string name="lockscreen_vocabulary_enable_action">Enable</string>
+    <string name="lockscreen_vocabulary_cancel_action">Cancel</string>
+    <string name="lockscreen_vocabulary_retry">Retry generation</string>
+    <string name="lockscreen_vocabulary_disable">Disable feature</string>
+    <string name="lockscreen_vocabulary_loading">Loading vocabulary...</string>
+    <string name="lockscreen_vocabulary_status_label">Status</string>
+    <string name="lockscreen_vocabulary_error_permission">Notification permission is required to enable this feature.</string>
+    <string name="lockscreen_vocabulary_error_enable">Could not enable lock screen vocabulary.</string>
+    <string name="lockscreen_vocabulary_error_retry">Retrying generation later.</string>
+    <string name="lockscreen_vocabulary_enabled">Lock screen vocabulary enabled.</string>
+    <string name="lockscreen_vocabulary_disabled">Lock screen vocabulary disabled.</string>
+    <string name="lockscreen_vocabulary_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_vocabulary_word_detail_title">Word detail</string>
+    <string name="lockscreen_vocabulary_example_label">Example sentence</string>
+    <string name="lockscreen_vocabulary_translation_label">Translation</string>
+    <string name="lockscreen_vocabulary_word_label">Word</string>
+    <string name="lockscreen_vocabulary_word_status">Word status</string>
+    <string name="lockscreen_vocabulary_back">Back</string>
+
+    <!-- Vocabulary Vault (lock screen word list) -->
+    <string name="lockscreen_vocabulary_vault_title">Vocabulary Vault</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d words collected</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">No words yet!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">Words from your lock screen notifications will appear here.</string>
+    <string name="lockscreen_vocabulary_new_badge">NEW</string>
+
+    <!-- Notification -->
+    <string name="lockscreen_notification_channel_description">Periodic lock screen vocabulary reminders</string>
+    <string name="lockscreen_notification_action_go">Go</string>
 
     <!-- Daily Rewards -->
     <string name="daily_reward_title">Daily\nReward!</string>
@@ -253,6 +313,7 @@
     <string name="game_processing_status_evaluating">Evaluating your photography skills...</string>
     <string name="game_processing_status_almost_there">Almost there...</string>
 
+
     <!-- Achievements Screen -->
     <string name="achievement_tab_all">All</string>
     <string name="achievement_tab_earned">Earned</string>
@@ -274,12 +335,37 @@
     <string name="my_languages_level_format">Level %1$d</string>
     <string name="cd_selected">Selected</string>
     <string name="cd_search">Search</string>
-    <string name="add_languages_no_results">No languages matching your search</string>
+
 
     <string name="update_profile_photo">Update profile photo</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="coins_claimed">coins claimed!</string>
+
+
+    <string name="tap_to_zoom">Pinch to zoom · Double-tap</string>
+
+
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="repeat">Repeat</string>
+    <string name="every_day">Every Day</string>
+    <string name="weekdays">Weekdays</string>
+    <string name="weekends">Weekends</string>
+    <string name="custom">Custom</string>
+    <string name="save">Save</string>
+    <string name="select_reminder_time">Select Reminder Time</string>
+    <string name="notification_channel_name">Daily Reminder</string>
+    <string name="notification_channel_description">Reminds you to complete your daily language lesson</string>
+    <string name="notification_title">Ready for today\'s lesson?</string>
+    <string name="notification_message">Open LinguaQuest and keep your streak alive.</string>
+    <string name="day_sun_short">S</string>
+    <string name="day_mon_short">M</string>
+    <string name="day_tue_short">T</string>
+    <string name="day_wed_short">W</string>
+    <string name="day_thu_short">T</string>
+    <string name="day_fri_short">F</string>
+    <string name="day_sat_short">S</string>
 
     <!-- Game Result Feature -->
     <string name="game_result_loading">Loading result...</string>
@@ -308,22 +394,59 @@
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel">Cancel</string>
+    <string name="logout">Log Out</string>
+    <string name="days_count">days count</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Spanish</string>
+    <string name="lang_japanese">Japanese</string>
+    <string name="lang_german">German</string>
+    <string name="lang_arabic">Arabic</string>
+    <string name="settings_lock_screen_vocabulary">Lock Screen Vocabulary</string>
+    <string name="reminder_turned_on">Reminder turned on. We\'ll keep you on track.</string>
+    <string name="reminder_turned_off">Reminder turned off.</string>
+    <string name="reminder_time_updated">Reminder time updated.</string>
+    <string name="reminder_repeat_updated">Reminder repeat updated.</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_off_msg">Notifications off. Daily reminder paused.</string>
+    <string name="notifications_on_msg">Notifications enabled.</string>
+    <string name="enable_lock_screen_desc">Spend %d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
+    <string name="cd_coins">Coins</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="enable_lock_screen_title">Enable Lock Screen\nVocabulary?</string>
     <string name="enable_lock_screen_subtitle">Spend %1$d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
     <string name="coins_description">Coins</string>
     <string name="confirm_button">Confirm</string>
     <string name="cancel_button">Cancel</string>
-
-    <string name="level_beginner">Beginner</string>
-    <string name="level_beginner_description">Start from scratch with basic words and sentences.</string>
-    <string name="level_intermediate">Intermediate</string>
-    <string name="level_intermediate_description">Expand your vocabulary and master daily conversations.</string>
-    <string name="level_advanced">Advanced</string>
-    <string name="level_advanced_description">Achieve fluency with complex grammar and rapid speech.</string>
-
-    <string name="cd_linguaquest_mascot">LinguaQuest Mascot</string>
-    <string name="cd_linguaquest_mascot_animation">LinguaQuest Mascot Animation</string>
-
+    <string name="lock_screen_vocabulary_title">Lock Screen Vocabulary</string>
+    <string name="lock_screen_vocabulary_desc">Learn new words right\nfrom your lock screen</string>
+    <string name="error_fetch_generated_word">Failed to fetch newly generated word.</string>
+    <string name="error_generate_words">Failed to generate new words. Please try again.</string>
+    <string name="lockscreen_vocabulary_test_notification">Test Notification Now</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+    <string name="cd_add">Add</string>
+    <string name="cd_pronounce">Pronounce</string>
+    <string name="cd_details">Details</string>
+    <string name="lockscreen_vocabulary_words_collected">%1$d words collected</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 Milestone Reached!</string>
+    <string name="lockscreen_milestone_dialog_message">You\'ve learned %1$d words!\nYou earned +%2$d coins. Keep it up!</string>
+    <string name="lockscreen_milestone_dialog_button">Awesome! 🚀</string>
+    <string name="lockscreen_example_usage_label">EXAMPLE USAGE</string>
+    <string name="lockscreen_got_it">Got it</string>
+    <string name="lockscreen_search_placeholder">Search your vault…</string>
+    <string name="lockscreen_no_words_found_title">No words found</string>
+    <string name="lockscreen_no_words_found_subtitle">Try searching for a different word or translation.</string>
+    <string name="lockscreen_badge_new">NEW</string>
+    <string name="lockscreen_sample_coins">1,250</string>
+    <string name="lockscreen_notification_permission_required">Notification permission is required to enable the feature.</string>
+    <string name="lockscreen_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_test_notification_scheduled">Lock the screen now! The notification will appear in 5 seconds..</string>
+    <string name="lockscreen_required_inputs_error">Select a target language and proficiency level before enabling lock screen vocabulary.</string>
+    <string name="lockscreen_enable_error">Could not enable lock screen vocabulary.</string>
+    <string name="lockscreen_error_no_internet_retry">We could not generate words right now. We will retry automatically.</string>
+    <string name="lockscreen_error_no_internet">We could not generate words right now. Please try again later.</string>
+    <string name="lockscreen_error_bad_format">The AI response was not in the expected format. Please try again later.</string>
+    <string name="lockscreen_error_generate_failed">Failed to generate new words. Please try again.</string>
     <string name="voice_game_title">Pronunciation Practice</string>
     <string name="voice_evaluating">Evaluating Pronunciation…</string>
     <string name="listening_to_your_pronunciation">Listening carefully to your speech.</string>
@@ -359,6 +482,15 @@
     <string name="otp_timer_content_description">OTP resend timer</string>
 
     <!-- Camera Strings -->
+
+    <string name="choose_a_source">Choose a source</string>
+    <!-- Snackbars messages -->
+    <string name="congrates">Congratulations</string>
+
+
+    <string name="add_languages_no_results">add_languages_no_results</string>
+
+
     <string name="camera_permission_required">Camera permission is required.</string>
     <string name="camera_permission_title">Camera Permission Required</string>
     <string name="camera_permission_blocked_desc">Camera permission is blocked. Please enable it in Settings.</string>

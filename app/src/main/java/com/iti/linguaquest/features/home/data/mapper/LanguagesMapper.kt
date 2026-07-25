@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.home.data.mapper
 
-import com.iti.linguaquest.features.home.data.remote.dto.UserLanguageDto
-import com.iti.linguaquest.features.home.data.remote.dto.LanguageOptionDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.UserLanguageDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.LanguageOptionDto
 import com.iti.linguaquest.features.home.domain.model.UserLanguage
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 

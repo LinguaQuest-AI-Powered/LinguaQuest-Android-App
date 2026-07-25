@@ -6,7 +6,7 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.review.data.datasource.ReviewRemoteDataSource
 import com.iti.linguaquest.features.review.domain.repository.ReviewRepository
 import com.iti.linguaquest.features.review.domain.model.AIReviewResponse
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class ReviewRepositoryImpl @Inject constructor(
     private val remoteDataSource: ReviewRemoteDataSource

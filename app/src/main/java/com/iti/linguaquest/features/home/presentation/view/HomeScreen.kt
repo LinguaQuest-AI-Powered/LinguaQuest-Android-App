@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,7 +49,7 @@ import com.iti.linguaquest.features.home.presentation.languages.component.MyLang
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
-import com.iti.linguaquest.features.home.presentation.view.components.ContinueLessonCard
+import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
@@ -63,11 +63,12 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToVoiceGame: (Int, String) -> Unit,
+    onNavigateToVoiceGame: () -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit,
+    onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel(),
     myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
 ) {
@@ -77,7 +78,11 @@ fun HomeScreen(
     var showCoinRain by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
-    var bannerHeightPx by remember { mutableStateOf(0f) }
+    var bannerHeightPx by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(state.xp, state.coins) {
+        onHeaderDataChanged(state.xp, state.coins)
+    }
 
     LaunchedEffect(state.isDailyRewardBannerVisible) {
         if (state.isDailyRewardBannerVisible) {
@@ -101,7 +106,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame(effect.lessonId, effect.sentence)
+                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame()
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
@@ -116,7 +121,10 @@ fun HomeScreen(
                     viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
                     onNavigateToAddLanguages()
                 }
-                MyLanguagesEffect.Dismiss -> viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                MyLanguagesEffect.Dismiss -> {
+                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                    viewModel.onIntent(HomeIntent.Retry)
+                }
             }
         }
     }
@@ -255,28 +263,25 @@ fun HomeContent(
                 flagSource = progress.flagSource,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        ExploreWorldsSection(
-            worlds = state.worlds,
-            onSeeMoreClick = { onIntent(HomeIntent.SeeMoreWorldsClicked) },
-            onWorldClick = { world -> onIntent(HomeIntent.WorldClicked(world)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        state.continueLesson?.let { lesson ->
-            ContinueLessonCard(
-                lesson = lesson,
-                onContinueClick = { onIntent(HomeIntent.ContinueLessonClicked) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+        if (state.worlds.isNotEmpty()) {
+            ExploreWorldsSection(
+                worlds = state.worlds,
+                onSeeMoreClick = { onIntent(HomeIntent.SeeMoreWorldsClicked) },
+                onWorldClick = { world -> onIntent(HomeIntent.WorldClicked(world)) },
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
+
+        VoicePractiseCard(
+            onStartClick = { onIntent(HomeIntent.StartVoicePractiseClicked) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
     }

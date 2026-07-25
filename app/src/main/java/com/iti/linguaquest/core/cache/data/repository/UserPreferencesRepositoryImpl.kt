@@ -2,7 +2,7 @@ package com.iti.linguaquest.core.cache.data.repository
 
 import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class UserPreferencesRepositoryImpl @Inject constructor(
@@ -20,6 +20,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override val soundEnabled: Flow<Boolean> = localDataSource.soundEnabled
     override val appLanguage: Flow<String> = localDataSource.appLanguage
     override val notificationsEnabled: Flow<Boolean> = localDataSource.notificationsEnabled
+    override val reminderEnabled: Flow<Boolean> = localDataSource.reminderEnabled
+    override val reminderTime: Flow<String> = localDataSource.reminderTime
+    override val reminderDays: Flow<String> = localDataSource.reminderDays
 
     override suspend fun saveTargetLanguage(languageId: Int, name: String) {
         localDataSource.saveTargetLanguage(languageId)
@@ -49,5 +52,17 @@ class UserPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun saveNotificationsEnabled(enabled: Boolean) {
         localDataSource.saveNotificationsEnabled(enabled)
+    }
+
+    override suspend fun saveReminderEnabled(enabled: Boolean) {
+        localDataSource.saveReminderEnabled(enabled)
+    }
+
+    override suspend fun saveReminderTime(time: String) {
+        localDataSource.saveReminderTime(time)
+    }
+
+    override suspend fun saveReminderDays(days: String) {
+        localDataSource.saveReminderDays(days)
     }
 }

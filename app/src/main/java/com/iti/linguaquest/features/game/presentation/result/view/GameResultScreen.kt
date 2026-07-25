@@ -35,7 +35,9 @@ fun GameResultScreen(
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
             is VerificationOutcome.Success -> GameResultUiState.Success(
                 xpAwarded = outcome.xpAwarded,
-                coinsAwarded = outcome.coinsAwarded
+                coinsAwarded = outcome.coinsAwarded,
+                currentLevel = outcome.level,
+                progressPercent = outcome.levelProgressPercentage / 100f
             )
             is VerificationOutcome.Failure -> GameResultUiState.Failure(reason = outcome.reason)
             is VerificationOutcome.Error -> GameResultUiState.Error(errorMessage = outcome.errorMessage)

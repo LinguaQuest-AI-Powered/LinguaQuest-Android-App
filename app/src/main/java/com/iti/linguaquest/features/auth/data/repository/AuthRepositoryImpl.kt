@@ -23,7 +23,7 @@ import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.CompleteProfileRequestDto
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
