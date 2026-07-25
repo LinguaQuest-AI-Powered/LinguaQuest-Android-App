@@ -84,7 +84,7 @@ class MyLanguagesViewModel @Inject constructor(
             _state.update { it.copy(isSettingActive = true) }
             when (val result = setActiveLanguageUseCase(languageId)) {
                 is LinguaQuestResult.Success -> {
-                     _state.update { currentState ->
+                    _state.update { currentState ->
                         currentState.copy(
                             isSettingActive = false,
                             languages = currentState.languages.map { lang ->
@@ -92,6 +92,7 @@ class MyLanguagesViewModel @Inject constructor(
                             }
                         )
                     }
+                    sendEffect(MyLanguagesEffect.Dismiss)
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSettingActive = false) }

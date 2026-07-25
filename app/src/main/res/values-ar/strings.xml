@@ -12,6 +12,7 @@
     <string name="i_want_to_learn">أريد أن أتعلم...</string>
     <string name="popular_choices">خيارات شائعة</string>
     <string name="continue_button">متابعة</string>
+    <string name="start_button">ابدأ</string>
     <string name="What_is_your_level">ما هو مستواك؟</string>
     <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
     <string name="daily_reminder">التذكير اليومي</string>
@@ -163,6 +164,7 @@
     <string name="streak_label">الحماس المتواصل</string>
     <string name="worlds_label">العوالم</string>
     <string name="continue_lesson">متابعة الدرس</string>
+    <string name="voice_practise">تمرين الصوت</string>
     <string name="leaderboard_title">قائمة المتصدرين</string>
     <string name="achievements_title">الإنجازات</string>
     <string name="learning_label">التعلم</string>
@@ -171,7 +173,7 @@
     <string name="settings_label">الإعدادات</string>
     <string name="view_all_label">عرض الكل</string>
     <string name="you_label">أنت</string>
-
+    <string name="practice_pronunciation">تدرّب على\nالنطق</string>
     // WorldDifficulty
     <string name="medium">متوسط</string>
     <string name="easy">سهل</string>

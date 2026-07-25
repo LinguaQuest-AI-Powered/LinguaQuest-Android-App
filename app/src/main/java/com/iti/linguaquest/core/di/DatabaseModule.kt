@@ -3,6 +3,7 @@ package com.iti.linguaquest.core.di
 import android.content.Context
 import androidx.room3.Room
 import com.iti.linguaquest.core.database.AppDatabase
+import com.iti.linguaquest.core.database.home.HomeDao
 import com.iti.linguaquest.core.database.profile.ProfileDao
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
 import com.iti.linguaquest.core.database.word.WordDao
@@ -45,6 +46,12 @@ object DatabaseModule {
     @Singleton
     fun provideLockScreenWordDao(appDatabase: AppDatabase): LockScreenWordDao {
         return appDatabase.lockScreenWordDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeDao(appDatabase: AppDatabase): HomeDao {
+        return appDatabase.homeDao()
     }
 }
 

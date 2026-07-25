@@ -4,7 +4,7 @@ package com.iti.linguaquest.features.profile.domain.model
 data class ProfileSummary(
     val id: Int,
     val username: String,
-    val photoUrl: String,
+    val photoUrl: String?,
     val level: Int,
     val stats: ProfileStats,
     val languageJourney: LanguageJourney,
@@ -50,7 +50,7 @@ data class LeaderboardPreviewEntry(
     val rank: Int,
     val userId: Int,
     val username: String,
-    val photoUrl: String,
+    val photoUrl: String?,
     val level: Int,
     val xp: Int,
     val isCurrentUser: Boolean
