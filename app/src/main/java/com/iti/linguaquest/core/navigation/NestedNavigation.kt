@@ -33,6 +33,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 
 
 @Composable
@@ -117,6 +118,9 @@ fun MainScreen(
                         HomeScreen(
                             onNavigateToVoiceGame = {
                                 rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
+                            },
+                            onNavigateToRoleplayList = {
+                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
                             },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)

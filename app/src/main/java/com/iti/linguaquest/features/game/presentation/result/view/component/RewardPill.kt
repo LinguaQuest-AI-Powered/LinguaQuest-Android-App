@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -57,12 +58,16 @@ fun RewardPill(
                 text = amount,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = LinguaQuestTheme.colors.BrownText
             )
             Text(
                 text = label,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = LinguaQuestTheme.colors.iconsColor
             )
         }

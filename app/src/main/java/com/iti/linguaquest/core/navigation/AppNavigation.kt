@@ -57,6 +57,8 @@ import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordD
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditProfileScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
+import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
+import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
@@ -439,6 +441,25 @@ fun AppNavigation(
                         onNavigateToWorldDetails = { worldId ->
                             rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
                         }
+                    )
+                }
+
+                entry<RootScreen.RoleplayList> {
+                    com.iti.linguaquest.features.roleplay.presentation.view.RoleplayListScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() },
+                        onRoleplaySelected = { scenarioId ->
+                            rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId))
+                        }
+                    )
+                }
+
+                entry<RootScreen.Roleplay> { screen ->
+                    val viewModel: RoleplayViewModel = hiltViewModel()
+                    
+                    RoleplayScreen(
+                        scenarioId = screen.scenarioId,
+                        onNavigateHome = { rootBackStack.removeLastOrNull() },
+                        viewModel = viewModel
                     )
                 }
 
