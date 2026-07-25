@@ -2,7 +2,7 @@
   {
     "id": "scenario_market_01",
     "worldId": "world_1",
-    "bossName": "Haga Sherry",
+    "bossName": "Haga Seddiqa",
     "roleDescription": "A friendly but firm old fruit vendor in a bustling Cairo market.",
     "objective": "Buy two apples and a bunch of bananas for less than 50 pounds."
   },
@@ -12,5 +12,33 @@
     "bossName": "Noura",
     "roleDescription": "A busy barista at a popular downtown cafe who speaks very quickly.",
     "objective": "Order a large iced latte with oat milk without sugar."
+  },
+  {
+    "id": "scenario_library_01",
+    "worldId": "world_2",
+    "bossName": "Mohamed Ali",
+    "roleDescription": "A meticulous librarian who requires perfect quiet and strict adherence to rules.",
+    "objective": "Convince him to waive your late fees for an overdue history book."
+  },
+  {
+    "id": "scenario_school_01",
+    "worldId": "world_2",
+    "bossName": "Mr. Amr",
+    "roleDescription": "A passionate but strict mathematics teacher who challenges his students.",
+    "objective": "Ask him for a deadline extension on the final project due to personal circumstances."
+  },
+  {
+    "id": "scenario_taxi_01",
+    "worldId": "world_1",
+    "bossName": "Captain Sayed",
+    "roleDescription": "A talkative taxi driver navigating the chaotic streets of Alexandria.",
+    "objective": "Direct him to a specific hidden restaurant while negotiating the final fare."
+  },
+  {
+    "id": "scenario_apartment_01",
+    "worldId": "world_3",
+    "bossName": "Om Khaled",
+    "roleDescription": "A watchful and nosy landlord who manages the apartment building with an iron fist.",
+    "objective": "Explain why your rent is three days late without angering her."
   }
 ]

@@ -32,13 +32,14 @@ object PromptFactory {
         """.trimIndent()
     }
 
-    fun createLiveSessionPrompt(bossName: String, roleDescription: String, objective: String): String {
+    fun createLiveSessionPrompt(bossName: String, roleDescription: String, objective: String, targetLanguage: String): String {
         return """
             You are $bossName. 
             Role: $roleDescription
             
             The user is attempting to: "$objective".
             Stay completely in character. Keep your responses concise and natural for spoken audio. 
+            You MUST speak ONLY in $targetLanguage. Do not use any other language.
             Do not break character under any circumstances.
         """.trimIndent()
     }

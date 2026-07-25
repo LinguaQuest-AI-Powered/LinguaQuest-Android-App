@@ -58,7 +58,11 @@ class AudioRecorder @Inject constructor() {
                 }
             }
         } finally {
-            record.stop()
+            try {
+                record.stop()
+            } catch (e: IllegalStateException) {
+                // Ignore exception if already stopped or uninitialized
+            }
             record.release()
             audioRecord = null
         }
@@ -66,6 +70,10 @@ class AudioRecorder @Inject constructor() {
 
     fun stopRecording() {
         isRecording = false
-        audioRecord?.stop()
+        try {
+            audioRecord?.stop()
+        } catch (e: IllegalStateException) {
+            // Ignore
+        }
     }
 }

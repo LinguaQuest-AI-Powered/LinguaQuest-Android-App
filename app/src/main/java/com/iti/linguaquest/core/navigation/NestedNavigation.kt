@@ -29,6 +29,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 
 
 @Composable
@@ -108,7 +109,7 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             onNavigateToAllWorlds = {
                                 // TODO: Remove Roleplay
 //                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
-                                rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId = com.iti.linguaquest.features.roleplay.domain.model.ScenarioId.SCENARIO_MARKET_01))
+                                rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId = ScenarioId.SCENARIO_LIBRARY_01))
                             },
                             onNavigateToWorldMap = { worldId ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))

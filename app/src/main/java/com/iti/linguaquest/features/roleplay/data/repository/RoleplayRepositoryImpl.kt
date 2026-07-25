@@ -9,6 +9,7 @@ import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
 import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepository
+import com.iti.linguaquest.features.roleplay.domain.prompt.PromptFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,10 +45,11 @@ class RoleplayRepositoryImpl @Inject constructor(
 
     override suspend fun connectToBossStage(scenario: BossScenario) {
         val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
-        val systemPrompt = com.iti.linguaquest.features.roleplay.domain.prompt.PromptFactory.createLiveSessionPrompt(
+        val systemPrompt = PromptFactory.createLiveSessionPrompt(
             bossName = scenario.bossName,
             roleDescription = scenario.roleDescription,
-            objective = scenario.objective
+            objective = scenario.objective,
+            targetLanguage = targetLanguage
         )
         
         liveService.connect(systemPrompt)
