@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement.model
+package com.iti.linguaquest.features.achivement.presentation.view.model
 
 data class AchievementItem(
     val id: Int,

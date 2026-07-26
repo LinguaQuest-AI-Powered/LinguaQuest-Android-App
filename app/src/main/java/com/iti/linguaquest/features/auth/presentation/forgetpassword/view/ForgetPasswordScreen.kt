@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.contract.ForgetPasswordEffect
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.viewmodel.ForgetPasswordViewModel
 
@@ -19,6 +20,7 @@ fun ForgetPasswordScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var emailShakeTrigger by remember { mutableIntStateOf(0) }
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
@@ -29,10 +31,11 @@ fun ForgetPasswordScreen(
             }
         }
     }
-
-    ForgetPasswordContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        emailShakeTrigger = emailShakeTrigger,
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        ForgetPasswordContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            emailShakeTrigger = emailShakeTrigger,
+        )
+    }
 }

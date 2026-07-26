@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.newpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordEffect
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordState
@@ -20,6 +21,9 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.usecase.SetNewPasswordUseCase
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +32,9 @@ import javax.inject.Inject
 @HiltViewModel
 class NewPasswordViewModel @Inject constructor(
     private val setNewPasswordUseCase: SetNewPasswordUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val networkMonitor: NetworkMonitor
+
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewPasswordState())
@@ -36,7 +42,12 @@ class NewPasswordViewModel @Inject constructor(
 
     private val _effects = Channel<NewPasswordEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
-
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     fun onIntent(intent: NewPasswordIntent) {
         when (intent) {
             is NewPasswordIntent.ResetPasswordClicked -> validateAndReset(intent.resetToken, intent.newPassword, intent.confirmPassword)

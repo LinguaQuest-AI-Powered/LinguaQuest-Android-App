@@ -13,6 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileIntent
 import com.iti.linguaquest.features.profile.presentation.editprofile.viewmodel.EditProfileViewModel
@@ -26,6 +28,7 @@ fun EditProfileScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -50,31 +53,32 @@ fun EditProfileScreen(
             cameraImageUri?.let { cameraLauncher.launch(it) }
         }
     }
-
-    EditProfileScreenContent(
-        modifier = modifier,
-        displayName = state.displayName,
-        onDisplayNameChange = { viewModel.onIntent(EditProfileIntent.OnDisplayNameChanged(it)) },
-        oldPassword = state.oldPassword,
-        onOldPasswordChange = { viewModel.onIntent(EditProfileIntent.OnOldPasswordChanged(it)) },
-        newPassword = state.newPassword,
-        onNewPasswordChange = { viewModel.onIntent(EditProfileIntent.OnNewPasswordChanged(it)) },
-        avatarModel = state.avatarModel,
-        isLoading = state.isLoading,
-         isSavingName = state.isSavingName,
-        isSavingPassword = state.isSavingPassword,
-        onGalleryClick = { galleryLauncher.launch("image/*") },
-        onCameraClick = {
-            val uri = createImageCaptureUri(context)
-            cameraImageUri = uri
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-        },
-        onBackClick = onBackClick,
-         onSaveNameClick = { viewModel.onIntent(EditProfileIntent.SaveNameChanges) },
-        onSavePasswordClick = { viewModel.onIntent(EditProfileIntent.SavePasswordChanges) },
-        onCancelClick = onBackClick,
-        displayNameError = state.displayNameError,
-        oldPasswordError = state.oldPasswordError,
-        newPasswordError = state.newPasswordError
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        EditProfileScreenContent(
+            modifier = modifier,
+            displayName = state.displayName,
+            onDisplayNameChange = { viewModel.onIntent(EditProfileIntent.OnDisplayNameChanged(it)) },
+            oldPassword = state.oldPassword,
+            onOldPasswordChange = { viewModel.onIntent(EditProfileIntent.OnOldPasswordChanged(it)) },
+            newPassword = state.newPassword,
+            onNewPasswordChange = { viewModel.onIntent(EditProfileIntent.OnNewPasswordChanged(it)) },
+            avatarModel = state.avatarModel,
+            isLoading = state.isLoading,
+            isSavingName = state.isSavingName,
+            isSavingPassword = state.isSavingPassword,
+            onGalleryClick = { galleryLauncher.launch("image/*") },
+            onCameraClick = {
+                val uri = createImageCaptureUri(context)
+                cameraImageUri = uri
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            },
+            onBackClick = onBackClick,
+            onSaveNameClick = { viewModel.onIntent(EditProfileIntent.SaveNameChanges) },
+            onSavePasswordClick = { viewModel.onIntent(EditProfileIntent.SavePasswordChanges) },
+            onCancelClick = onBackClick,
+            displayNameError = state.displayNameError,
+            oldPasswordError = state.oldPasswordError,
+            newPasswordError = state.newPasswordError
+        )
+    }
 }

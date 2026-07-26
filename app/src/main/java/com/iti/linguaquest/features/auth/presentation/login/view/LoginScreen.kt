@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginEffect
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.viewmodel.LoginViewModel
@@ -28,6 +29,7 @@ fun LoginScreen(
     val context = LocalContext.current
     val activity = context as? ComponentActivity
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     var emailShakeTrigger by remember { mutableIntStateOf(0) }
     var passwordShakeTrigger by remember { mutableIntStateOf(0) }
     var googleShakeTrigger by remember { mutableIntStateOf(0) }
@@ -59,11 +61,13 @@ fun LoginScreen(
         }
     }
 
-    LoginContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        emailShakeTrigger = emailShakeTrigger,
-        passwordShakeTrigger = passwordShakeTrigger,
-        googleShakeTrigger = googleShakeTrigger
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        LoginContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            emailShakeTrigger = emailShakeTrigger,
+            passwordShakeTrigger = passwordShakeTrigger,
+            googleShakeTrigger = googleShakeTrigger
+        )
+    }
 }

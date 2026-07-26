@@ -545,6 +545,11 @@
     <string name="roleplay_start_roleplay">Start Roleplay</string>
     <string name="roleplay_xp">XP</string>
     <string name="roleplay_coins">Coins</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_subtitle">Check your network and try again</string>
+    <string name="retry_label">Retry</string>
+    <string name="no_internet_image_desc">No internet connection illustration</string>
+    <string name="login_error_no_internet">No internet connection. Please check your network and try again.</string>
     <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
     <string name="roleplay_browse_roleplays">Browse Roleplays</string>
     <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
@@ -553,5 +558,6 @@
     <string name="roleplay_label">Roleplay</string>
     <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
 </resources>

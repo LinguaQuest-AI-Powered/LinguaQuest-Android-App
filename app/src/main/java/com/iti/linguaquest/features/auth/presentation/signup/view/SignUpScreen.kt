@@ -12,6 +12,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpEffect
 import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpIntent
 import com.iti.linguaquest.features.auth.presentation.signup.viewmodel.SignUpViewModel
@@ -27,10 +28,11 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     BackHandler(onBack = onNavigateToLogin)
-    
+
     val context = LocalContext.current
     val activity = context as? ComponentActivity
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     var usernameShakeTrigger by remember { mutableIntStateOf(0) }
     var emailShakeTrigger by remember { mutableIntStateOf(0) }
@@ -57,6 +59,7 @@ fun SignUpScreen(
                         onError = { viewModel.onIntent(SignUpIntent.GoogleSignInFailed) }
                     )
                 }
+
                 SignUpEffect.ShakeUsername -> usernameShakeTrigger++
                 SignUpEffect.ShakeEmail -> emailShakeTrigger++
                 SignUpEffect.ShakePassword -> passwordShakeTrigger++
@@ -65,14 +68,16 @@ fun SignUpScreen(
             }
         }
     }
+    OfflineAwareContent(isOnline = isOnline) {
 
-    SignUpContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        usernameShakeTrigger = usernameShakeTrigger,
-        emailShakeTrigger = emailShakeTrigger,
-        passwordShakeTrigger = passwordShakeTrigger,
-        confirmPasswordShakeTrigger = confirmPasswordShakeTrigger,
-        googleShakeTrigger = googleShakeTrigger
-    )
+        SignUpContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            usernameShakeTrigger = usernameShakeTrigger,
+            emailShakeTrigger = emailShakeTrigger,
+            passwordShakeTrigger = passwordShakeTrigger,
+            confirmPasswordShakeTrigger = confirmPasswordShakeTrigger,
+            googleShakeTrigger = googleShakeTrigger
+        )
+    }
 }

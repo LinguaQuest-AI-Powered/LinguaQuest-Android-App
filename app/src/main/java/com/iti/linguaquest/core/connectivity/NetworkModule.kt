@@ -1,6 +1,5 @@
 package com.iti.linguaquest.core.connectivity
 
-import com.iti.pocketshop.core.connectivity.ConnectivityNetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

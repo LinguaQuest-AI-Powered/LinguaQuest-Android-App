@@ -36,7 +36,7 @@ fun SettingScreen(
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsStateWithLifecycle()
     val isLoggingOut by viewModel.isLoggingOut.collectAsStateWithLifecycle()
     val reminderState by viewModel.reminderState.collectAsStateWithLifecycle()
-    
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val lockScreenState by lockScreenViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -77,6 +77,7 @@ fun SettingScreen(
     }
 
     SettingContent(
+        isOnline = isOnline,
         onBackClick = onBack,
         appLanguage = appLanguage,
         onChangeAppLanguage = viewModel::changeAppLanguage,

@@ -142,6 +142,7 @@ fun HomeScreen(
         if (state.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
+
             HomeContent(
                 state = state,
                 onIntent = viewModel::onIntent

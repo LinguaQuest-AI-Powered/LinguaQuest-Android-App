@@ -24,6 +24,7 @@
     <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
     <string name="repeat">التكرار</string>
     // Languages displayed name
+    <string name="login_error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة والمحاولة مرة أخرى.</string>
     <string name="spanish_language_displayName">الإسبانية</string>
     <string name="japanese_language_displayName">اليابانية</string>
     <string name="english_language_displayName">الإنجليزية</string>
@@ -545,4 +546,10 @@
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
     <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
+    <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
+    <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
+    <string name="retry_label">إعادة المحاولة</string>
+    <string name="no_internet_short">مفيش نت</string>
+
+    <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
 </resources>

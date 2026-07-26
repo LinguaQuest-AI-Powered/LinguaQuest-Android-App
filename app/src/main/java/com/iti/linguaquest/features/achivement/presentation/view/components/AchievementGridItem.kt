@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement.components
+package com.iti.linguaquest.features.achivement.presentation.view.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.features.achivement.model.AchievementItem
+import com.iti.linguaquest.features.achivement.presentation.view.model.AchievementItem
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 

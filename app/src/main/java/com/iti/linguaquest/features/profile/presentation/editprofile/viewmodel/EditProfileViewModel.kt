@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -19,8 +20,10 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.utils.Field
 import kotlinx.coroutines.flow.firstOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,9 +34,16 @@ class EditProfileViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val snackbarController: SnackbarController,
-    private val getCachedProfileUseCase: GetCachedProfileUseCase
-) : ViewModel() {
+    private val getCachedProfileUseCase: GetCachedProfileUseCase,
+    private val networkMonitor: NetworkMonitor
 
+) : ViewModel() {
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     private val _state = MutableStateFlow(EditProfileState())
     val state: StateFlow<EditProfileState> = _state.asStateFlow()
 

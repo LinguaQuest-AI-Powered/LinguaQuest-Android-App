@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageDropdown
 import com.iti.linguaquest.features.onBoarding.presentation.components.PopularLanguageRow
@@ -34,17 +34,20 @@ fun LanguagesScreen(
     viewModel: LanguagesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             if (effect is LanguagesEffect.NavigateToLevelScreen) onContinue()
         }
     }
+    OfflineAwareContent(isOnline = isOnline) {
 
-    LanguagesScreenContent(
-        state = state,
-        onIntent = viewModel::onIntent
-    )
+        LanguagesScreenContent(
+            state = state,
+            onIntent = viewModel::onIntent
+        )
+    }
 }
 
 @Composable

@@ -1,7 +1,7 @@
 package com.iti.linguaquest.core.mockData
 
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.achivement.model.AchievementItem
+import com.iti.linguaquest.features.achivement.presentation.view.model.AchievementItem
 
 val achievements = listOf(
         AchievementItem(1, "Wild Explorer", "Oct 12", R.drawable.lingo_writing, true),

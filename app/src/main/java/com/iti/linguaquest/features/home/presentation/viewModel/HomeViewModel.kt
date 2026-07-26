@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.home.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -29,6 +30,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +42,9 @@ class HomeViewModel @Inject constructor(
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController,
-    private val refreshWalletUseCase: RefreshWalletUseCase
+    private val refreshWalletUseCase: RefreshWalletUseCase,
+    private val networkMonitor: NetworkMonitor
+
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -47,7 +52,12 @@ class HomeViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<HomeEffect>()
     val effect: SharedFlow<HomeEffect> = _effect.asSharedFlow()
-
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     init {
         observeLocalCache()
         refreshFromRemote()

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement.components
+package com.iti.linguaquest.features.achivement.presentation.view.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.R
 
 @Composable
 fun AchievementBottomBar(
@@ -56,7 +57,7 @@ fun AchievementBottomBar(
             ) {
                 StatItem(
                     value = earnedCount.toString(),
-                    label = stringResource(com.iti.linguaquest.R.string.achievement_stat_earned),
+                    label = stringResource(R.string.achievement_stat_earned),
                     valueColor = LinguaQuestTheme.colors.BrownText,
                     modifier = Modifier.weight(1f)
                 )
@@ -65,7 +66,7 @@ fun AchievementBottomBar(
 
                 StatItem(
                     value = inProgressCount.toString(),
-                    label = stringResource(com.iti.linguaquest.R.string.achievement_stat_in_progress),
+                    label = stringResource(R.string.achievement_stat_in_progress),
                     valueColor = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.weight(1f)
                 )
@@ -74,7 +75,7 @@ fun AchievementBottomBar(
 
                 StatItem(
                     value = xpGained.toString(),
-                    label = stringResource(com.iti.linguaquest.R.string.achievement_stat_xp_gained),
+                    label = stringResource(R.string.achievement_stat_xp_gained),
                     valueColor = LinguaQuestTheme.colors.BrownText,
                     modifier = Modifier.weight(1f)
                 )
@@ -109,7 +110,7 @@ fun AchievementBottomBar(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(com.iti.linguaquest.R.string.achievement_claim_rewards),
+                        text = stringResource(R.string.achievement_claim_rewards),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = LinguaQuestTheme.colors.whiteColor
