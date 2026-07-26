@@ -78,6 +78,9 @@ fun LevelScreen(
                 is LevelEffect.PlaySound -> {
                     speechManager.speak(effect.word, effect.languageCode)
                 }
+                is LevelEffect.HintRetrieved -> {
+                    sharedViewModel.setHintText(effect.hint)
+                }
                 LevelEffect.SkipLevel -> {
                 }
             }
@@ -140,7 +143,7 @@ fun LevelScreen(
 
             QuestCard(
                 wordToGuess = state.wordToGuess,
-                hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                hintText = state.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                 onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                 onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                 onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
@@ -155,8 +158,7 @@ fun LevelScreen(
             HintsBottomSheet(
                 coinCount = state.coinCount,
                 onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
-                onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
-                onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
+                onBuyHint = { viewModel.onIntent(LevelIntent.GetHintClicked) }
             )
         }
     }
