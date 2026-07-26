@@ -105,7 +105,6 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
-    <string name="otp_timer_content_description">Timer</string>
     <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
     <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
     <string name="level_beginner">Beginner</string>
@@ -114,12 +113,6 @@
     <string name="level_intermediate_description">I can navigate basic paths</string>
     <string name="level_advanced">Advanced</string>
     <string name="level_advanced_description">Ready for grand challenges</string>
-    <string name="camera_permission_required">Camera permission is required.</string>
-    <string name="camera_permission_title">Is Your Camera Ready?</string>
-    <string name="camera_permission_blocked_desc">We need camera access to play, but it looks like it\'s blocked. Please enable it in your device settings.</string>
-    <string name="camera_permission_desc">LinguaQuest needs your camera to find objects and earn points!</string>
-    <string name="open_settings">Open Settings</string>
-    <string name="grant_permission">Grant Permission</string>
     <string name="go_back">Go Back</string>
     <string name="captured_preview">Captured Preview</string>
     <string name="find_label">Find:</string>
@@ -490,6 +483,7 @@
     <string name="login_error_invalid_reset_token">Invalid password reset token.</string>
     <string name="login_error_reset_token_expired">Password reset token has expired.</string>
     <string name="login_error_validation_error">Validation error occurred.</string>
+    <string name="otp_timer_content_description">OTP resend timer</string>
 
     <!-- Camera Strings -->
     <string name="change_password_label">Change password</string>
@@ -515,4 +509,49 @@
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
 
+    <string name="camera_permission_required">Camera permission is required.</string>
+    <string name="camera_permission_title">Camera Permission Required</string>
+    <string name="camera_permission_blocked_desc">Camera permission is blocked. Please enable it in Settings.</string>
+    <string name="camera_permission_desc">LinguaQuest needs camera access to capture objects for language learning.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="grant_permission">Grant Permission</string>
+
+    <!-- Roleplay Feature Strings -->
+    <string name="roleplay_boss_level">Boss Level</string>
+    <string name="roleplay_boss_stage">Boss Stage</string>
+    <string name="roleplay_stop_recording">Stop recording</string>
+    <string name="roleplay_start_recording">Start recording</string>
+    <string name="roleplay_victory">Victory!</string>
+    <string name="roleplay_next_world">Next World</string>
+    <string name="roleplay_stage_failed">Stage Failed</string>
+    <string name="roleplay_try_again">Try Again</string>
+    <string name="roleplay_evaluating">Evaluating...</string>
+    <string name="roleplay_ai_analyzing">AI is analyzing your conversation to calculate your score.</string>
+    <string name="roleplay_oops">Oops!</string>
+    <string name="roleplay_exit">Exit</string>
+    <string name="roleplay_finish_stage_question">Finish Stage?</string>
+    <string name="roleplay_finish_stage_message">Are you ready to end the conversation and receive your evaluation?</string>
+    <string name="roleplay_yes_evaluate">Yes, Evaluate!</string>
+    <string name="roleplay_keep_talking">Keep Talking</string>
+    <string name="roleplay_objective_format">Objective: %1$s</string>
+    <string name="roleplay_connecting">Connecting...</string>
+    <string name="roleplay_not_connected">Not connected.</string>
+    <string name="roleplay_tap_to_stop">Tap to Stop</string>
+    <string name="roleplay_tap_to_speak">Tap to Speak</string>
+    <string name="roleplay_finish_stage">Finish Stage</string>
+    <string name="roleplay_meet_boss">Meet %1$s</string>
+    <string name="roleplay_your_objective">Your Objective</string>
+    <string name="roleplay_read_carefully">(Read carefully in your native language before starting)</string>
+    <string name="roleplay_start_roleplay">Start Roleplay</string>
+    <string name="roleplay_xp">XP</string>
+    <string name="roleplay_coins">Coins</string>
+    <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
+    <string name="roleplay_browse_roleplays">Browse Roleplays</string>
+    <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
+    <string name="roleplay_no_roleplays_available">No roleplays available.</string>
+    <string name="roleplay_objective">Objective</string>
+    <string name="roleplay_label">Roleplay</string>
+    <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
+    <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
 </resources>

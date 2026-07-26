@@ -9,10 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -27,20 +25,30 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 
 
 @Composable
-fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
+fun MainScreen(
+    rootBackStack: NavBackStack<NavKey>,
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = hiltViewModel()
+) {
     val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
     val currentScreen = nestedBackStack.lastOrNull()
-    var userXp by remember { mutableIntStateOf(0) }
-    var userCoins by remember { mutableIntStateOf(0) }
+    val wallet by viewModel.wallet.collectAsStateWithLifecycle()
+
+    LaunchedEffect(currentScreen) {
+        viewModel.refreshWallet()
+    }
 
     DisposableEffect(Unit) {
         onDispose { SharedBottomBarState.heightPx = 0 }
@@ -72,8 +80,8 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
             containerColor = Color.Transparent,
             topBar = {
                 LinguaQuestTopAppBar(
-                    xp = userXp,
-                    lives = userCoins
+                    xp = wallet.xp,
+                    lives = wallet.coins
                 )
             },
             bottomBar = {
@@ -111,6 +119,9 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             onNavigateToVoiceGame = {
                                 rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
                             },
+                            onNavigateToRoleplayList = {
+                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                            },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
@@ -119,10 +130,6 @@ fun MainScreen(rootBackStack: NavBackStack<NavKey>, modifier: Modifier = Modifie
                             },
                             onNavigateToAddLanguages = {
                                 rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
-                            },
-                            onHeaderDataChanged = { xp, coins ->
-                                userXp = xp
-                                userCoins = coins
                             }
                         )
                     }

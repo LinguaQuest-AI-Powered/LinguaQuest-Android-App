@@ -64,6 +64,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToVoiceGame: () -> Unit,
+    onNavigateToRoleplayList: () -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
@@ -107,6 +108,7 @@ fun HomeScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame()
+                is HomeEffect.NavigateToRoleplayList -> onNavigateToRoleplayList()
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
@@ -278,6 +280,15 @@ fun HomeContent(
 
         VoicePractiseCard(
             onStartClick = { onIntent(HomeIntent.StartVoicePractiseClicked) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        com.iti.linguaquest.features.home.presentation.view.components.RoleplayCard(
+            onStartClick = { onIntent(HomeIntent.RoleplayCardClicked) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
