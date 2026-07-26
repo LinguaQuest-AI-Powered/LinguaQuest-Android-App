@@ -243,6 +243,9 @@ fun AppNavigation(
                         onOAuthLanguageSelection = {
                             rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "OAUTH"))
                         },
+                        onNavigateToOTP = { email ->
+                            rootBackStack.navigateSingleTop(RootScreen.OTP(email, false))
+                        },
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()

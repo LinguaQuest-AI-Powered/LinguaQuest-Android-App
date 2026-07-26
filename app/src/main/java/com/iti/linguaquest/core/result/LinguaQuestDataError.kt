@@ -29,6 +29,7 @@ sealed interface LinguaQuestDataError : AppError {
         USERNAME_ALREADY_EXISTS,
         INVALID_OTP,
         OTP_EXPIRED,
+        OTP_NOT_FOUND,
         INVALID_REFRESH_TOKEN,
         REFRESH_TOKEN_EXPIRED,
         INVALID_RESET_TOKEN,

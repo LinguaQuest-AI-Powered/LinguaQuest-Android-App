@@ -15,6 +15,7 @@ sealed interface AuthError : AppError {
     data object UsernameAlreadyExists : AuthError
     data object InvalidOtp : AuthError
     data object OtpExpired : AuthError
+    data object OtpNotFound : AuthError
     data object InvalidRefreshToken : AuthError
     data object RefreshTokenExpired : AuthError
     data object InvalidResetToken : AuthError

@@ -47,15 +47,12 @@ class OTPViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    init {
-        startTimer()
-    }
-
     fun onIntent(intent: OTPIntent) {
         when (intent) {
             is OTPIntent.Initialize -> {
                 this.email = intent.email
                 this.isPasswordReset = intent.isPasswordReset
+                startTimer()
             }
             is OTPIntent.OnOtpCodeChanged -> {
                 if (intent.code.length <= 4) {
@@ -79,12 +76,15 @@ class OTPViewModel @Inject constructor(
     private fun verifyOtp() {
         val otpCode = _state.value.otpCode
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
             if (isPasswordReset) {
                 when (val result = verifyPasswordResetOtpUseCase(email, otpCode)) {
                     is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(isLoading = false) }
                         sendEffect(OTPEffect.NavigateToNextScreen(result.data))
                     }
                     is LinguaQuestResult.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         snackbarController.sendEvent(
                             SnackbarEvent(
                                 message = UiText.StringResource(result.error.toMessageRes()),
@@ -96,9 +96,11 @@ class OTPViewModel @Inject constructor(
             } else {
                 when (val result = verifyEmailOtpUseCase(email, otpCode)) {
                     is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(isLoading = false) }
                         sendEffect(OTPEffect.NavigateToNextScreen(null))
                     }
                     is LinguaQuestResult.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         snackbarController.sendEvent(
                             SnackbarEvent(
                                 message = UiText.StringResource(result.error.toMessageRes()),

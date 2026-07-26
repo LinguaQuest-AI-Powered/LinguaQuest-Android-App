@@ -22,6 +22,7 @@ fun LoginScreen(
     onForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit,
     onOAuthLanguageSelection: () -> Unit,
+    onNavigateToOTP: (String) -> Unit,
     isOAuthLanguageSelectionCompleted: Boolean = false,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -55,6 +56,7 @@ fun LoginScreen(
                 LoginEffect.NavigateToSignUp -> onSignUp()
                 LoginEffect.NavigateToSignUpWithoutLanguages -> onSignUpWithoutLanguages()
                 LoginEffect.NavigateToOAuthLanguageSelection -> onOAuthLanguageSelection()
+                is LoginEffect.NavigateToOTP -> onNavigateToOTP(effect.email)
             }
         }
     }

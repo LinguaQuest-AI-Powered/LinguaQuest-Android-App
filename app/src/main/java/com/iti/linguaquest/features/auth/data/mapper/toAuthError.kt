@@ -18,6 +18,7 @@ fun LinguaQuestDataError.Auth.toAuthError(): AuthError = when (this) {
     LinguaQuestDataError.Auth.USERNAME_ALREADY_EXISTS -> AuthError.UsernameAlreadyExists
     LinguaQuestDataError.Auth.INVALID_OTP -> AuthError.InvalidOtp
     LinguaQuestDataError.Auth.OTP_EXPIRED -> AuthError.OtpExpired
+    LinguaQuestDataError.Auth.OTP_NOT_FOUND -> AuthError.OtpNotFound
     LinguaQuestDataError.Auth.INVALID_REFRESH_TOKEN -> AuthError.InvalidRefreshToken
     LinguaQuestDataError.Auth.REFRESH_TOKEN_EXPIRED -> AuthError.RefreshTokenExpired
     LinguaQuestDataError.Auth.INVALID_RESET_TOKEN -> AuthError.InvalidResetToken
