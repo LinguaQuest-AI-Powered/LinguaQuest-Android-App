@@ -10,6 +10,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -119,18 +121,22 @@ fun VoiceResultScreen(
         }
 
         if (showFlyingCoin && sourceOffset != null && targetOffset != null && containerOrigin != null) {
-            FlyingCoinBadge(
-                coinsAwarded = result.coinsAwarded,
-                sourceOffset = sourceOffset!!,
-                targetOffset = targetOffset!!,
-                containerOrigin = containerOrigin!!,
-                onLanded = {
-                    soundPlayer.play(AppSound.AddedMoney)
-                    displayedCoins = wallet.coins
-                    showFlyingCoin = false
-                }
 
-            )
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    FlyingCoinBadge(
+                        coinsAwarded = result.coinsAwarded,
+                        sourceOffset = sourceOffset!!,
+                        targetOffset = targetOffset!!,
+                        containerOrigin = containerOrigin!!,
+                        onLanded = {
+                            soundPlayer.play(AppSound.AddedMoney)
+                            displayedCoins = wallet.coins
+                            showFlyingCoin = false
+                        }
+                    )
+                }
+            }
         }
     }
 }

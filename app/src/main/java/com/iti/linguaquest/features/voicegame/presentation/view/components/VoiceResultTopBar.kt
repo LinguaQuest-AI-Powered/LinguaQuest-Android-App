@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.voicegame.presentation.view.components
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,8 +28,8 @@ fun VoiceResultTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 20.dp),
-        horizontalArrangement = Arrangement.End
+            .statusBarsPadding().padding(top = 16.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+       , horizontalArrangement = Arrangement.End
     ) {
         Row(
             modifier = Modifier
@@ -57,7 +56,9 @@ fun VoiceResultTopBar(
                 Text(
                     "$coins",
                     fontWeight = FontWeight.Bold,
-                    color = LinguaQuestTheme.colors.iconsColor
+                    color = LinguaQuestTheme.colors.iconsColor,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
         }
