@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
@@ -32,7 +35,8 @@ fun EditableAvatar(
     avatarModel: Any?,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
-    size: Dp = 110.dp
+    size: Dp = 110.dp,
+    isAvatarUploading: Boolean = false
 ) {
     Column(
         modifier = modifier,
@@ -42,14 +46,34 @@ fun EditableAvatar(
             modifier = Modifier.size(size),
             contentAlignment = Alignment.BottomEnd
         ) {
-            ImageWrapper(
-                model = avatarModel ?: R.drawable.lingo_app_bar,
-                contentDescription = null,
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(CircleShape)
                     .border(BorderStroke(3.dp, AppColors.OrangeActive), CircleShape)
-            )
+            ) {
+                ImageWrapper(
+                    model = avatarModel ?: R.drawable.lingo_app_bar,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize().clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                
+                if (isAvatarUploading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.35f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(28.dp),
+                            color = LinguaQuestTheme.colors.whiteColor,
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
+            }
 
             Box(
                 modifier = Modifier
@@ -71,7 +95,5 @@ fun EditableAvatar(
                 )
             }
         }
-
-
     }
 }

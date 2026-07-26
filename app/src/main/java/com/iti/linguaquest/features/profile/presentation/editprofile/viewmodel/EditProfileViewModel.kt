@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -31,7 +33,8 @@ class EditProfileViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val snackbarController: SnackbarController,
-    private val getCachedProfileUseCase: GetCachedProfileUseCase
+    private val getCachedProfileUseCase: GetCachedProfileUseCase,
+    private val preloadImageUseCase: PreloadImageUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EditProfileState())
@@ -212,8 +215,16 @@ class EditProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    message = UiText.StringResource(com.iti.linguaquest.R.string.uploading_photo_msg),
+                    type = SnackbarType.INFO
+                )
+            )
+
             when (val result = uploadAvatarUseCase(uri)) {
                 is LinguaQuestResult.Success -> {
+                    preloadImageUseCase(result.data)
                     _state.update {
                         it.copy(
                             isLoading = false,
@@ -222,7 +233,8 @@ class EditProfileViewModel @Inject constructor(
                     }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            message = UiText.StringResource(R.string.profile_photo_updated_successfully),
+                            title = UiText.StringResource(com.iti.linguaquest.R.string.congrates),
+                            message = UiText.StringResource(com.iti.linguaquest.R.string.profile_photo_updated_successfully),
                             type = SnackbarType.SUCCESS
                         )
                     )
@@ -236,8 +248,10 @@ class EditProfileViewModel @Inject constructor(
                     }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            message = UiText.StringResource(R.string.failed_upload_photo),
-                            type = SnackbarType.ERROR
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR,
+                            actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
+                            onAction = { uploadPhoto(uri) }
                         )
                     )
                 }

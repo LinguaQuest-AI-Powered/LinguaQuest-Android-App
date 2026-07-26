@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.AppError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -42,7 +43,17 @@ class LevelViewModel @Inject constructor(
 
     fun loadLevelDetails(worldId: Int, levelNumber: Int) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, worldId = worldId, levelNumber = levelNumber) }
+            _state.update {
+                it.copy(
+                    isLoading = true,
+                    worldId = worldId,
+                    levelNumber = levelNumber,
+                    isLevelReady = false,
+                    isChangeWordAvailable = false,
+                    isChangeWordDialogVisible = false,
+                    isChangeWordUsed = false
+                )
+            }
             when (val result = startLevelUseCase(worldId, levelNumber)) {
                 is LinguaQuestResult.Success -> {
                     val targetWord = result.data.ifEmpty { if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE" }
@@ -56,12 +67,21 @@ class LevelViewModel @Inject constructor(
                             levelNumber = levelNumber,
                             wordToGuess = targetWord,
                             coinCount = coinCount,
-                            languageCode = languageCode
+                            languageCode = languageCode,
+                            isLevelReady = true,
+                            isChangeWordAvailable = true,
+                            isChangeWordDialogVisible = false
                         )
                     }
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isLevelReady = false,
+                            isChangeWordAvailable = false
+                        )
+                    }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
 
@@ -81,7 +101,14 @@ class LevelViewModel @Inject constructor(
             LevelIntent.BackClicked -> sendEffect(LevelEffect.NavigateBack)
             LevelIntent.DismissBottomSheet -> _state.update { it.copy(isBottomSheetVisible = false) }
             LevelIntent.MascotTapped -> _state.update { it.copy(isBottomSheetVisible = true) }
-            LevelIntent.OpenCameraClicked -> sendEffect(LevelEffect.LaunchCamera)
+            LevelIntent.OpenCameraClicked -> {
+                if (_state.value.isLevelReady && !_state.value.isLoading) {
+                    sendEffect(LevelEffect.LaunchCamera)
+                }
+            }
+            LevelIntent.ChangeWordClicked -> openChangeWordDialog()
+            LevelIntent.ConfirmChangeWordClicked -> confirmChangeWord()
+            LevelIntent.CancelChangeWordClicked -> _state.update { it.copy(isChangeWordDialogVisible = false) }
             LevelIntent.SkipClicked -> skipCurrentWord()
             LevelIntent.RevealFirstLetterClicked -> deductCoinsAndHideSheet(25)
             LevelIntent.ShowCategoryClueClicked -> deductCoinsAndHideSheet(50)
@@ -95,6 +122,10 @@ class LevelViewModel @Inject constructor(
     }
 
     private fun skipCurrentWord() {
+        changeCurrentWord(cost = 0, markAsUsed = false)
+    }
+
+    private fun changeCurrentWord(cost: Int, markAsUsed: Boolean) {
         val worldId = _state.value.worldId
         val levelNumber = _state.value.levelNumber
 
@@ -106,12 +137,21 @@ class LevelViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            wordToGuess = newWord
+                            wordToGuess = newWord,
+                            coinCount = if (cost > 0 && it.coinCount >= cost) it.coinCount - cost else it.coinCount,
+                            isChangeWordUsed = markAsUsed,
+                            isChangeWordAvailable = if (markAsUsed) false else it.isChangeWordAvailable
                         )
                     }
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
+                    val shouldDisableChangeWord = isInsufficientCoinsError(result.error)
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isChangeWordAvailable = if (shouldDisableChangeWord) false else it.isChangeWordAvailable
+                        )
+                    }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
 
@@ -124,6 +164,25 @@ class LevelViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun openChangeWordDialog() {
+        val current = _state.value
+        if (current.isLoading || !current.isLevelReady || current.isChangeWordUsed || current.coinCount < 50) {
+            return
+        }
+        _state.update { it.copy(isChangeWordDialogVisible = true) }
+    }
+
+    private fun confirmChangeWord() {
+        val current = _state.value
+        if (current.isLoading || !current.isLevelReady || current.isChangeWordUsed || current.coinCount < 50) {
+            _state.update { it.copy(isChangeWordDialogVisible = false) }
+            return
+        }
+
+        _state.update { it.copy(isChangeWordDialogVisible = false) }
+        changeCurrentWord(cost = 50, markAsUsed = true)
     }
 
     private fun deductCoinsAndHideSheet(cost: Int) {
@@ -140,5 +199,11 @@ class LevelViewModel @Inject constructor(
         viewModelScope.launch {
             _effects.send(effect)
         }
+    }
+
+    private fun isInsufficientCoinsError(error: AppError): Boolean {
+        val message = (error as? LinguaQuestDataError.CustomServerMessage)?.message.orEmpty()
+        val normalized = message.lowercase()
+        return normalized.contains("insufficient") && normalized.contains("coin")
     }
 }

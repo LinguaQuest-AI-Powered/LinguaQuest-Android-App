@@ -41,10 +41,13 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .addInterceptor {
                 it.proceed(
                     it.request().newBuilder()
-//                        .addHeader("Prefer", "code=200")
+//                      .addHeader("Prefer", "code=200")
                         .build()
                 )
             }

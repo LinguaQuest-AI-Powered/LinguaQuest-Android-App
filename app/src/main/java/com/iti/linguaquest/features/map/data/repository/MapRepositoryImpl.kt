@@ -13,8 +13,7 @@ class MapRepositoryImpl @Inject constructor(
 ) : MapRepository {
 
     override suspend fun getWorldMapDetail(worldId: Int): LinguaQuestResult<WorldMapDetail, AppError> {
-        val result = remoteDataSource.getWorldMapDetail(worldId)
-        return when (result) {
+        return when (val result = remoteDataSource.getWorldMapDetail(worldId)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.toDomain())
             is LinguaQuestResult.Failure -> result
         }

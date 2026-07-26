@@ -214,6 +214,10 @@
     <string name="show_category_clue">إظهار تلميح الفئة</string>
     <string name="use_hint">استخدام تلميح</string>
     <string name="scan_hint_format">قم بمسح %1$s في بيئتك الحقيقية باستخدام الكاميرا لإكمال هذا التحدي.</string>
+    <string name="change_word_confirm_title">تغيير الكلمة؟</string>
+    <string name="change_word_confirm_message">سيتم خصم 50 عملة مرة واحدة.</string>
+    <string name="change_word_confirm_action">تغيير الكلمة</string>
+    <string name="change_word_cancel_action">إلغاء</string>
 
     <string name="xp">XP</string>
     <!-- Settings Screen -->
@@ -487,6 +491,7 @@
     <string name="choose_a_source">اختر مصدر</string>
     <!-- Snackbars messages -->
     <string name="congrates">تهانينا</string>
+    <string name="change_word">تغيير الكلمة</string>
     <string name="display_name_empty">الاسم لا يمكن أن يكون فارغًا</string>
     <string name="enter_current_password">أدخل كلمة المرور الحالية</string>
     <string name="new_password_min_length">يجب أن تكون كلمة المرور الجديدة 6 أحرف على الأقل</string>
@@ -501,6 +506,7 @@
     <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
+
     <!-- Roleplay Feature Strings -->
     <string name="roleplay_boss_level">مستوى الزعيم</string>
     <string name="roleplay_boss_stage">مرحلة الزعيم</string>
@@ -539,4 +545,12 @@
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
     <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
+    <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
+    <string name="no_languages_available">لا توجد لغات متاحة</string>
+    <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
+
+    <!-- New profile strings -->
+    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت...</string>
+    <string name="offline_title">أنت غير متصل بالإنترنت</string>
+    <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
 </resources>

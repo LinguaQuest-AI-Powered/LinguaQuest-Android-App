@@ -135,6 +135,7 @@ fun AppDialogContent(
                 if (customContent != null) {
                     Spacer(modifier = Modifier.height(20.dp))
                     customContent()
+                    Spacer(modifier = Modifier.height(24.dp))
                 } else {
                     Spacer(modifier = Modifier.height(24.dp))
                 }

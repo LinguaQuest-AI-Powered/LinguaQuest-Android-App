@@ -15,29 +15,29 @@ import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.iti.linguaquest.features.game.presentation.level.components.HintsBottomSheet
-
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.sharedComponents.dialog.PriceTagContent
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.game.presentation.level.components.QuestCard
+import com.iti.linguaquest.features.game.presentation.level.components.HintsBottomSheet
 import com.iti.linguaquest.features.game.presentation.level.contract.LevelEffect
 import com.iti.linguaquest.features.game.presentation.level.contract.LevelIntent
 import com.iti.linguaquest.features.game.presentation.level.viewmodel.LevelViewModel
-
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
@@ -66,10 +66,6 @@ fun LevelScreen(
         viewModel.loadLevelDetails(worldId, levelNumber)
     }
 
-    LaunchedEffect(worldId, levelNumber) {
-        viewModel.loadLevelDetails(worldId, levelNumber)
-    }
-
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
@@ -86,6 +82,20 @@ fun LevelScreen(
                 }
             }
         }
+    }
+
+    if (state.isChangeWordDialogVisible) {
+        AppDialog(
+            title = stringResource(R.string.change_word_confirm_title),
+            message = stringResource(R.string.change_word_confirm_message),
+            imageRes = R.drawable.lingo,
+            onDismissRequest = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
+            primaryButtonText = stringResource(R.string.change_word_confirm_action),
+            onPrimaryClick = { viewModel.onIntent(LevelIntent.ConfirmChangeWordClicked) },
+            secondaryButtonText = stringResource(R.string.change_word_cancel_action),
+            onSecondaryClick = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
+            customContent = { PriceTagContent(-50) }
+        )
     }
 
     Box(
@@ -132,9 +142,11 @@ fun LevelScreen(
                 wordToGuess = state.wordToGuess,
                 hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                 onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
-                onSkipClick = { viewModel.onIntent(LevelIntent.SkipClicked) },
+                onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                 onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
                 onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
+                isCameraEnabled = state.isLevelReady && !state.isLoading,
+                isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         }

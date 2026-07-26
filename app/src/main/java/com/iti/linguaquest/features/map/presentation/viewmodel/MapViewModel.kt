@@ -40,7 +40,7 @@ class MapViewModel @Inject constructor(
 
     fun onIntent(intent: MapIntent) {
         when (intent) {
-            is MapIntent.LevelClicked -> handleLevelClicked(intent.levelNumber)
+            is MapIntent.LevelClicked -> handleLevelClicked(intent.levelId)
             MapIntent.BackClicked -> sendEffect(MapEffect.NavigateBack)
         }
     }
@@ -55,7 +55,7 @@ class MapViewModel @Inject constructor(
             result.onSuccess { detail ->
                 val uiLevels = detail.levels.map { level ->
                     val status = when (level.status) {
-                        "AVAILABLE" -> LevelStatus.CURRENT
+                        "AVAILABLE", "INPROGRESS" -> LevelStatus.CURRENT
                         "COMPLETED" -> LevelStatus.COMPLETED
                         else -> LevelStatus.LOCKED
                     }
@@ -93,10 +93,10 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun handleLevelClicked(levelNumber: Int) {
-        val level = _state.value.levels.find { it.levelNumber == levelNumber } ?: return
+    private fun handleLevelClicked(levelId: Int) {
+        val level = _state.value.levels.find { it.levelId == levelId } ?: return
         if (level.status == LevelStatus.LOCKED) return
-        sendEffect(MapEffect.NavigateToLevel(levelNumber))
+        sendEffect(MapEffect.NavigateToLevel(levelId))
     }
 
     private fun sendEffect(effect: MapEffect) {
