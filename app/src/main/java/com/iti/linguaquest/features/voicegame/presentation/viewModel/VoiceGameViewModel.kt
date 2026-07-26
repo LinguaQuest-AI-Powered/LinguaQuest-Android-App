@@ -310,7 +310,7 @@ class VoiceGameViewModel @Inject constructor(
     private fun sendEffect(effect: VoiceGameEffect) {
         viewModelScope.launch { _effect.emit(effect) }
     }
-    fun onGameWon(xpDelta: Int = 5, coinsDelta: Int = 50) {
+    fun onGameWon(xpDelta: Int = 0, coinsDelta: Int = 5) {
         viewModelScope.launch {
             adjustWalletUseCase(xpDelta = xpDelta, coinsDelta = coinsDelta)
         }
