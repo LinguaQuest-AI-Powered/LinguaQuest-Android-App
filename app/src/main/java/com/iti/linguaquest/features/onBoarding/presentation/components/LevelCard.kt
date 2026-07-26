@@ -28,17 +28,18 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContract.ProficiencyLevel
 
 @Composable
- fun LevelCard(level: ProficiencyLevel, isSelected: Boolean, onClick: () -> Unit) {
+fun LevelCard(level: ProficiencyLevel, isSelected: Boolean, onClick: () -> Unit) {
     val iconRes = when (level) {
         ProficiencyLevel.BEGINNER -> R.drawable.ic_leaf
         ProficiencyLevel.INTERMEDIATE -> R.drawable.ic_star
         ProficiencyLevel.ADVANCED -> R.drawable.ic_medal
     }
-    val iconBg = if (level == ProficiencyLevel.BEGINNER)
+    val iconBg = if (isSelected)
         MaterialTheme.colorScheme.tertiary
     else
         LinguaQuestTheme.colors.cardLevelFilledColor
-    val iconTint = if (level == ProficiencyLevel.BEGINNER) LinguaQuestTheme.colors.whiteColor else  MaterialTheme.colorScheme.primary
+    val iconTint =
+        if (isSelected) LinguaQuestTheme.colors.whiteColor else MaterialTheme.colorScheme.primary
 
     Surface(
         onClick = onClick,
@@ -53,17 +54,25 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContra
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Surface(shape = CircleShape, color = iconBg, modifier = Modifier.size(44.dp)) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(painter = painterResource(iconRes), contentDescription = null, tint = iconTint,modifier = Modifier.size(18.dp))
+                    Icon(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(text = stringResource(level.displayNameRes), style = AppTextStyles.SectionTitle ,
+                Text(
+                    text = stringResource(level.displayNameRes), style = AppTextStyles.SectionTitle,
                     color = LinguaQuestTheme.colors.blackColor
                 )
-                Text(text = stringResource(level.descriptionRes),
-                    style = AppTextStyles.Caption ,
-                    color = LinguaQuestTheme.colors.titleAndCationsColor)
+                Text(
+                    text = stringResource(level.descriptionRes),
+                    style = AppTextStyles.Caption,
+                    color = LinguaQuestTheme.colors.titleAndCationsColor
+                )
             }
         }
     }
