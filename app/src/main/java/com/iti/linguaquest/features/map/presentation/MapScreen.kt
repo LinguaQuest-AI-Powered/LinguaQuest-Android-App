@@ -40,7 +40,7 @@ fun MapScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 MapEffect.NavigateBack -> onBack()
-                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelNumber)
+                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelId)
             }
         }
     }
