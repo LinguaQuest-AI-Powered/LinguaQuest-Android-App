@@ -190,16 +190,6 @@ fun OnboardingScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .animatedChasingBorder(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Transparent,
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.tertiary,
-                            MaterialTheme.colorScheme.primary,
-                            Color.Transparent
-                        )
-                    )
                     .padding(3.dp)
             ) {
                 AppButton(
@@ -214,16 +204,6 @@ fun OnboardingScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .animatedChasingBorder(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Transparent,
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.tertiary,
-                            Color.Transparent
-                        )
-                    )
                     .padding(3.dp)
             ) {
                 AppButton(
@@ -238,55 +218,6 @@ fun OnboardingScreen(
     }
 }
 
-private fun Modifier.animatedChasingBorder(
-    colors: List<Color>,
-    shape: Shape = RoundedCornerShape(percent = 50),
-    strokeWidth: Dp = 3.dp,
-    durationMillis: Int = 2200
-): Modifier = composed {
-    val infiniteTransition = rememberInfiniteTransition(label = "border_rotation")
-    val angle by infiniteTransition.animateFloat(
-        initialValue = -90f,
-        targetValue = 270f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "angle"
-    )
-
-    this
-        .clip(shape)
-        .drawWithContent {
-            drawContent()
-            val strokeWidthPx = strokeWidth.toPx()
-
-            val canvas = drawContext.canvas
-            val paint = Paint()
-            canvas.saveLayer(Rect(Offset.Zero, size), paint)
-
-            drawRoundRect(
-                color = Color.White,
-                style = Stroke(width = strokeWidthPx),
-                cornerRadius = CornerRadius(size.minDimension / 2)
-            )
-
-            rotate(angle) {
-                val maxDimension = maxOf(size.width, size.height) * 2f
-                drawRect(
-                    brush = Brush.sweepGradient(colors),
-                    topLeft = Offset(
-                        (size.width - maxDimension) / 2f,
-                        (size.height - maxDimension) / 2f
-                    ),
-                    size = Size(maxDimension, maxDimension),
-                    blendMode = BlendMode.SrcIn
-                )
-            }
-
-            canvas.restore()
-        }
-}
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Composable

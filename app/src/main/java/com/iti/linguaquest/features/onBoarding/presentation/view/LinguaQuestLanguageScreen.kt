@@ -1,9 +1,6 @@
 package com.iti.linguaquest.features.onBoarding.presentation.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,12 +16,12 @@ import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageDropdown
-import com.iti.linguaquest.features.onBoarding.presentation.components.PopularLanguageRow
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageViewModel.LanguagesViewModel
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageMascotVideo
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -62,13 +58,13 @@ private fun LanguagesScreenContent(
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
         Spacer(Modifier.height(32.dp))
 
-        Image(
-            painter = painterResource(R.drawable.lingo_level_language),
-            contentDescription = null,
-            modifier = Modifier.size(130.dp).align(Alignment.CenterHorizontally)
+        LanguageMascotVideo(
+            modifier = Modifier
+                .size(320.dp)
+                .align(Alignment.CenterHorizontally)
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(2.dp))
 
         Text(
             text = stringResource(R.string.choose_your_languages),
@@ -107,27 +103,7 @@ private fun LanguagesScreenContent(
             onSelect = { onIntent(LanguagesIntent.SelectTargetLanguage(it)) },
             accentColor = MaterialTheme.colorScheme.tertiary
         )
-
         Spacer(Modifier.height(24.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.popular_choices),
-            style = AppTextStyles.LessonTitle,
-            color = LinguaQuestTheme.colors.titleAndCationsColor,
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(state.availableLanguages, key = { it.code }) { language ->
-                PopularLanguageRow(
-                    language = language,
-                    onClick = { onIntent(LanguagesIntent.SelectTargetLanguage(language)) }
-                )
-            }
-        }
 
         AppButton(
             text = stringResource(R.string.continue_button),
@@ -140,18 +116,3 @@ private fun LanguagesScreenContent(
     }
 }
 
-@Composable
-private fun LanguagesScreenPreview_Selected() {
-    LinguaQuestTheme {
-        LanguagesScreenContent(
-            state = LanguagesState(
-                nativeLanguage = null,
-                targetLanguage = null,
-                availableLanguages = emptyList(),
-                isContinueEnabled = true,
-                isLoading = false
-            ),
-            onIntent = {}
-        )
-    }
-}
