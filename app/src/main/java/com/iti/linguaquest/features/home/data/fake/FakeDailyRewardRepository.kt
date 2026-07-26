@@ -24,8 +24,7 @@ class FakeDailyRewardRepository @Inject constructor() : DailyRewardRepository {
                 currentDay = 3,
                 cycleLength = 5,
                 rewardCoins = 50,
-                rewardXp = null,
-                streakDays = 7
+                rewardXp = null
             )
         )
     }
@@ -44,7 +43,6 @@ class FakeDailyRewardRepository @Inject constructor() : DailyRewardRepository {
                 xpAwarded = null,
                 newCoinsBalance = 96,
                 newXpBalance = 1250,
-                newStreakDays = 8,
                 nextDay = 4
             )
         )
