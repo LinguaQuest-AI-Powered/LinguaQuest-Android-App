@@ -38,10 +38,10 @@ fun VoiceGameScreen(
     onNavigateBack: () -> Unit,
     onEvaluationComplete: (VoiceResultUi) -> Unit,
     modifier: Modifier = Modifier,
-    coins: Int = 1200,
     viewModel: VoiceGameViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -77,7 +77,7 @@ fun VoiceGameScreen(
 
     Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
         VoiceGameTopBar(
-            coins = coins,
+            coins = wallet.coins,
             onNavigateBack = onNavigateBack
         )
 

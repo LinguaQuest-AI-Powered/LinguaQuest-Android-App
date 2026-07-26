@@ -10,6 +10,9 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
 import com.iti.linguaquest.features.voicegame.domain.usecase.EvaluatePronunciationUseCase
 import com.iti.linguaquest.features.voicegame.domain.usecase.GeneratePronunciationSentenceUseCase
@@ -35,6 +38,8 @@ class VoiceGameViewModel @Inject constructor(
     private val evaluatePronunciationUseCase: EvaluatePronunciationUseCase,
     private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
+    private val getWalletUseCase: GetWalletUseCase,
+    private val adjustWalletUseCase: AdjustWalletUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -43,7 +48,11 @@ class VoiceGameViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<VoiceGameEffect>()
     val effect: SharedFlow<VoiceGameEffect> = _effect.asSharedFlow()
-
+    val wallet = getWalletUseCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = Wallet(xp = 0, coins = 0)
+    )
     private var timerJob: Job? = null
     private var previewTickJob: Job? = null
     private var lessonId: Int = 0
@@ -272,6 +281,7 @@ class VoiceGameViewModel @Inject constructor(
                         )
 
                         sendEffect(VoiceGameEffect.NavigateToResult(voiceResult))
+                        onGameWon(coinsDelta = voiceResult.coinsAwarded)
                         resetToIdle(discardAudio = false)
                     }
                     is LinguaQuestResult.Failure -> {
@@ -300,7 +310,11 @@ class VoiceGameViewModel @Inject constructor(
     private fun sendEffect(effect: VoiceGameEffect) {
         viewModelScope.launch { _effect.emit(effect) }
     }
-
+    fun onGameWon(xpDelta: Int = 5, coinsDelta: Int = 50) {
+        viewModelScope.launch {
+            adjustWalletUseCase(xpDelta = xpDelta, coinsDelta = coinsDelta)
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
