@@ -508,6 +508,9 @@
     <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
+    <string name="error_loading_languages">Could not load languages. Please try again.</string>
+    <string name="no_languages_available">No languages available</string>
+    <string name="logout_dialog_message">Are you sure you want to log out? You will need to sign in again to access your progress.</string>
 
     <string name="camera_permission_required">Camera permission is required.</string>
     <string name="camera_permission_title">Camera Permission Required</string>
@@ -560,4 +563,8 @@
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
     <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
+    <!-- New profile strings -->
+    <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
 </resources>

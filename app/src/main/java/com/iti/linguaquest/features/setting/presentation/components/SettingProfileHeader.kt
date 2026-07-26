@@ -30,12 +30,6 @@ fun SettingProfileHeader(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Explorer Alex",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = LocalLinguaQuestColors.current.BrownText
-        )
-        Text(
             text = stringResource(id = R.string.settings_customize_journey),
             fontSize = 14.sp,
             color = LocalLinguaQuestColors.current.BrownText.copy(alpha = 0.7f)

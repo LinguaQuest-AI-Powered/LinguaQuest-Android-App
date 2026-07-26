@@ -80,6 +80,9 @@ fun LevelScreen(
                 is LevelEffect.PlaySound -> {
                     speechManager.speak(effect.word, effect.languageCode)
                 }
+                is LevelEffect.HintRetrieved -> {
+                    sharedViewModel.setHintText(effect.hint)
+                }
                 LevelEffect.SkipLevel -> {
                 }
             }
@@ -153,6 +156,18 @@ fun LevelScreen(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
+            QuestCard(
+                wordToGuess = state.wordToGuess,
+                hintText = state.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
+                onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
+                onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
+                onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
+                isCameraEnabled = state.isLevelReady && !state.isLoading,
+                isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
 
             if (state.isBottomSheetVisible) {
                 HintsBottomSheet(
@@ -162,6 +177,12 @@ fun LevelScreen(
                     onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
                 )
             }
+        if (state.isBottomSheetVisible) {
+            HintsBottomSheet(
+                coinCount = state.coinCount,
+                onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
+                onBuyHint = { viewModel.onIntent(LevelIntent.GetHintClicked) }
+            )
         }
     }
 }

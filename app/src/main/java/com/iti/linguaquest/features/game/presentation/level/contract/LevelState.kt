@@ -11,5 +11,6 @@ data class LevelState(
     val isChangeWordAvailable: Boolean = true,
     val isBottomSheetVisible: Boolean = false,
     val isChangeWordDialogVisible: Boolean = false,
-    val isChangeWordUsed: Boolean = false
+    val isChangeWordUsed: Boolean = false,
+    val hintText: String? = null
 )

@@ -160,7 +160,9 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isDailyRewardDialogVisible = false,
-                            dailyReward = it.dailyReward?.copy(claimedToday = true)
+                            dailyReward = it.dailyReward?.copy(claimedToday = true),
+                            coins = result.data.newCoinsBalance,
+                            xp = result.data.newXpBalance
                         )
                     }
                     snackbarController.sendEvent(
@@ -169,6 +171,7 @@ class HomeViewModel @Inject constructor(
                             type = SnackbarType.SUCCESS
                         )
                     )
+                    refreshWalletUseCase()
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isDailyRewardDialogVisible = false) }

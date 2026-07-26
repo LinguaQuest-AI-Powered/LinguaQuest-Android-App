@@ -6,8 +6,7 @@ data class DailyRewardStatus(
     val currentDay: Int,
     val cycleLength: Int,
     val rewardCoins: Int,
-    val rewardXp: Int?,
-    val streakDays: Int
+    val rewardXp: Int?
 )
 
 data class DailyRewardClaimResult(
@@ -15,6 +14,5 @@ data class DailyRewardClaimResult(
     val xpAwarded: Int?,
     val newCoinsBalance: Int,
     val newXpBalance: Int,
-    val newStreakDays: Int,
     val nextDay: Int
 )

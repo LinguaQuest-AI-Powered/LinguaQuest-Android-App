@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.game.di
 
+import com.iti.linguaquest.features.game.data.fake.FakeLevelRepository
 import com.iti.linguaquest.features.game.data.remote.LevelApiService
 import com.iti.linguaquest.features.game.data.remote.LevelRemoteDataSource
 import com.iti.linguaquest.features.game.data.remote.LevelRemoteDataSourceImpl

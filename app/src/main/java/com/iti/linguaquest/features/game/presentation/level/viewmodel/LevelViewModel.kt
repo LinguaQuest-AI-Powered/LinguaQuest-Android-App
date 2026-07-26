@@ -24,13 +24,17 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.game.domain.usecase.ChangeWordUseCase
+import com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase
 import com.iti.linguaquest.features.game.domain.usecase.StartLevelUseCase
 
 @HiltViewModel
 class LevelViewModel @Inject constructor(
     private val startLevelUseCase: StartLevelUseCase,
     private val changeWordUseCase: ChangeWordUseCase,
+    private val getHintUseCase: GetHintUseCase,
+    private val refreshWalletUseCase: RefreshWalletUseCase,
     private val snackbarController: SnackbarController,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -110,8 +114,7 @@ class LevelViewModel @Inject constructor(
             LevelIntent.ConfirmChangeWordClicked -> confirmChangeWord()
             LevelIntent.CancelChangeWordClicked -> _state.update { it.copy(isChangeWordDialogVisible = false) }
             LevelIntent.SkipClicked -> skipCurrentWord()
-            LevelIntent.RevealFirstLetterClicked -> deductCoinsAndHideSheet(25)
-            LevelIntent.ShowCategoryClueClicked -> deductCoinsAndHideSheet(50)
+            LevelIntent.GetHintClicked -> buyHint()
             LevelIntent.SoundClicked -> sendEffect(
                 LevelEffect.PlaySound(
                     word = _state.value.wordToGuess,
@@ -185,13 +188,38 @@ class LevelViewModel @Inject constructor(
         changeCurrentWord(cost = 50, markAsUsed = true)
     }
 
-    private fun deductCoinsAndHideSheet(cost: Int) {
-        _state.update {
-            val newCoins = if (it.coinCount >= cost) it.coinCount - cost else it.coinCount
-            it.copy(
-                coinCount = newCoins,
-                isBottomSheetVisible = false
-            )
+    private fun buyHint() {
+        val worldId = _state.value.worldId
+        val levelNumber = _state.value.levelNumber
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = getHintUseCase(worldId, levelNumber)) {
+                is LinguaQuestResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isBottomSheetVisible = false,
+                            hintText = result.data.hint,
+                            coinCount = result.data.remainingCoins
+                        )
+                    }
+                    sendEffect(LevelEffect.HintRetrieved(result.data.hint))
+                    refreshWalletUseCase()
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isLoading = false, isBottomSheetVisible = false) }
+                    val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.general_error)
+
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = uiText,
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 

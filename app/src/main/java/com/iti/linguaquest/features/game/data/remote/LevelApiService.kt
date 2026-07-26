@@ -7,6 +7,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.GET
 import retrofit2.http.Part
 import retrofit2.http.Path
 
@@ -22,6 +23,12 @@ interface LevelApiService {
         @Path("worldId") worldId: Int,
         @Path("levelId") levelId: Int
     ): SuccessResponseDto<StartLevelDto>
+
+    @GET("worlds/{worldId}/levels/{levelId}/hint")
+    suspend fun getHint(
+        @Path("worldId") worldId: Int,
+        @Path("levelId") levelId: Int
+    ): SuccessResponseDto<com.iti.linguaquest.features.game.data.remote.dto.HintDto>
 
     @Multipart
     @POST("worlds/{worldId}/levels/{levelId}/verify")

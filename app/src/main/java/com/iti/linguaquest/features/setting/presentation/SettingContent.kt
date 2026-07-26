@@ -51,13 +51,18 @@ import com.iti.linguaquest.features.setting.presentation.components.TimePickerDi
 import com.iti.linguaquest.features.setting.presentation.components.getLanguageName
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.features.setting.presentation.LanguagesUiState
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 
 @Composable
 fun SettingContent(
     isOnline: Boolean = true,
     onBackClick: () -> Unit,
     appLanguage: String,
-    onChangeAppLanguage: (String) -> Unit,
+    availableLanguagesState: LanguagesUiState,
+    onRetryLanguages: () -> Unit,
+    onChangeAppLanguage: (LanguageOption) -> Unit,
     appTheme: String,
     onChangeAppTheme: (String) -> Unit,
     soundEnabled: Boolean,
@@ -93,6 +98,7 @@ fun SettingContent(
             showOfflinePopup = true
         }
     }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     if (lockScreenState.isConfirmDialogVisible) {
         EnableLockScreenDialog(
@@ -105,7 +111,9 @@ fun SettingContent(
     if (showLanguageDialog) {
         LanguageSelectionBottomSheet(
             currentLanguage = appLanguage,
+            languagesState = availableLanguagesState,
             onLanguageSelected = onChangeAppLanguage,
+            onRetry = onRetryLanguages,
             onDismissRequest = { showLanguageDialog = false }
         )
     }
@@ -129,6 +137,32 @@ fun SettingContent(
                 .statusBarsPadding()
         ) {
             ShareTopBar(title = R.string.settings_label, onBackClick = onBackClick)
+    if (showLogoutDialog) {
+        AppDialog(
+            title = stringResource(id = R.string.settings_log_out),
+            imageRes = R.drawable.lingo_logout,
+            message = stringResource(id = R.string.logout_dialog_message),
+            primaryButtonText = stringResource(id = R.string.settings_log_out),
+            onPrimaryClick = {
+                showLogoutDialog = false
+                onLogoutClick()
+            },
+            secondaryButtonText = stringResource(id = R.string.cancel_button),
+            onSecondaryClick = { showLogoutDialog = false },
+            onDismissRequest = { showLogoutDialog = false },
+            showCloseIcon = true
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 24.dp)
+            .statusBarsPadding()
+    ) {
+        ShareTopBar(title = R.string.settings_label, onBackClick = onBackClick)
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -259,6 +293,14 @@ fun SettingContent(
                 onDismiss = { showOfflinePopup = false }
             )
         }
+         AppButton3D(
+            text = stringResource(id = R.string.settings_log_out),
+            onClick = { showLogoutDialog = true },
+            textColor = Color.Black,
+            isLoading = isLoggingOut,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -297,6 +339,8 @@ fun SettingContentOfflinePreview() {
             isOnline = false,
             onBackClick = {},
             appLanguage = "en",
+            availableLanguagesState = LanguagesUiState(),
+            onRetryLanguages = {},
             onChangeAppLanguage = {},
             appTheme = "system",
             onChangeAppTheme = {},

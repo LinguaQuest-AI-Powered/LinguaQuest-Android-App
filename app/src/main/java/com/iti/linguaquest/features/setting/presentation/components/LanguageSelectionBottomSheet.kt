@@ -14,26 +14,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.core.utils.toFlagEmoji
+import com.iti.linguaquest.features.setting.presentation.LanguagesUiState
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.ErrorView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-  fun LanguageSelectionBottomSheet(
+fun LanguageSelectionBottomSheet(
     currentLanguage: String,
-    onLanguageSelected: (String) -> Unit,
+    languagesState: LanguagesUiState,
+    onLanguageSelected: (LanguageOption) -> Unit,
+    onRetry: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val languages = remember {
-        listOf(
-            "en" to R.string.lang_english,
-            "es" to R.string.lang_spanish,
-            "ja" to R.string.lang_japanese,
-            "ge" to R.string.lang_german,
-            "ar" to R.string.lang_arabic
-        )
-    }
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -78,23 +76,53 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            languages.forEach { (code, nameRes) ->
-                val isSelected = currentLanguage == code
-                Text(
-                    text = stringResource(id = nameRes),
-                    style = AppTextStyles.LessonTitle.copy(
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.titleAndCationsColor
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onLanguageSelected(code)
-                            onDismissRequest()
+            when {
+                languagesState.isLoading -> {
+                    LoadingView(modifier = Modifier.height(200.dp))
+                }
+                languagesState.isError -> {
+                    ErrorView(
+                        message = stringResource(R.string.error_loading_languages),
+                        onRetry = onRetry,
+                        modifier = Modifier.height(200.dp)
+                    )
+                }
+                languagesState.languages.isEmpty() -> {
+                    ErrorView(
+                        message = stringResource(R.string.no_languages_available),
+                        onRetry = onRetry,
+                        modifier = Modifier.height(200.dp)
+                    )
+                }
+                else -> {
+                    languagesState.languages.forEach { language ->
+                        val isSelected = currentLanguage == language.code
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onLanguageSelected(language)
+                                    onDismissRequest()
+                                }
+                                .padding(vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = language.code.toFlagEmoji(),
+                                style = AppTextStyles.LessonTitle,
+                                modifier = Modifier.padding(end = 12.dp)
+                            )
+                            Text(
+                                text = language.name,
+                                style = AppTextStyles.LessonTitle.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.titleAndCationsColor
+                                )
+                            )
                         }
-                        .padding(vertical = 16.dp)
-                )
-                SectionDivider(paddingHorizontal = 0.dp)
+                        SectionDivider(paddingHorizontal = 0.dp)
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))

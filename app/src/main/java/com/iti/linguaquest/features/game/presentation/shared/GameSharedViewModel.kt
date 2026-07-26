@@ -49,6 +49,10 @@ class GameSharedViewModel @Inject constructor(
         _sharedState.update { it.copy(isHintUsed = true) }
     }
 
+    fun setHintText(text: String) {
+        _sharedState.update { it.copy(hintText = text, isHintUsed = true) }
+    }
+
     fun setVerificationOutcome(outcome: VerificationOutcome) {
         _sharedState.update { it.copy(verificationOutcome = outcome) }
     }

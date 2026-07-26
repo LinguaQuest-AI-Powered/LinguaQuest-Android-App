@@ -38,44 +38,10 @@ info:
 
     ## Open items / assumptions (flagged for confirmation, not yet approved)
 
-    - Registration does **not** auto-login: it creates the account
-      (`isVerified: false`) and does not return tokens. The backend
-      auto-triggers a `purpose: SIGNUP` OTP on successful
-      registration; the client can also call `/auth/otp/send` again to resend.
-    - Google/Apple OAuth login for a **brand-new** user returns
-      `isNewUser: true` and `profileComplete: false`, since `nativeLanguage`
-      and `targetLanguage` (required at normal registration) aren't available
-      from the OAuth provider. A follow-up "complete profile" endpoint
-      (`POST /profile/complete-profile`) is provided to collect those fields.
-    - Password reset invalidates all existing refresh tokens for the account
-      as a security best practice (forces re-login on all other devices).
-    - Password policy (assumed, adjust if you have different rules): minimum
-      8 characters, at least one letter and one digit.
-    - Username: 3-30 characters, letters/numbers/underscores only.
-    - GET /worlds/{worldId}/levels (the sequential level path) is built from
-      the user story text only - no screenshot of that screen was provided.
-      Field names (`status`, `word`) are my best guess; confirm against the
-      actual level-path screen before implementing.
     - Daily reward cycle is assumed to be a 5-day rotating cycle (Day 1-5)
       based on the popup screenshot; confirm the reset/cycle logic
       (does day 5 loop back to day 1, or does streak keep counting past 5
       while the *reward tier* resets every 5 days?).
-    - Assumed there's no cap on how many target languages a user can add
-      (POST /languages). Flag if there's a max.
-    - Explore Worlds preview on /home is capped at 4 items (`limit` not
-      configurable) - full list lives behind GET /worlds ("See more").
-    - All endpoints in this module require authentication (bearerAuth).
-
-    - `/auth/logout` revokes a single refresh token (one device) by default,
-      with an optional `allDevices` flag to revoke every session. Confirm
-      this is the behavior you want vs. always logging out everywhere.
-    - Logout is treated as idempotent (calling it with an already-revoked
-      token still returns 200), to avoid awkward client-side error handling
-      on a "log out" button. Flag if you'd rather it 401 on a dead token.
-    - DELETE /profile (account deletion) asks for the account password as
-      confirmation. Since OAuth-only accounts have no password, `password`
-      is optional there and the flow needs a different confirmation method
-      for those - not designed yet, flag if you want it in this batch.
     - The achievements screen's "240" stat is assumed to be XP earned via
       achievements specifically (`xpEarned`), not a count. Confirm against
       the design.
@@ -117,6 +83,11 @@ tags:
     description: Viewing player rankings and comparing progress with other users.
   - name: Achievements
     description: Tracking unlocked achievements, milestones, and rewards earned by the user.
+  - name: Wallet
+    description: Reading and adjusting the user's XP and coin balances.
+  - name: Gallery
+    description: Getting the words history of the user
+
 
 paths:
   /auth/register:
@@ -407,6 +378,56 @@ paths:
                       errorTime: '2026-07-13T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /auth/languages:
+    get:
+      tags: [Auth]
+      summary: List languages available to add
+      description: >
+        Returns the full language catalog with an `isAdded` flag per entry,
+        which will be set with false in all languages because the user is still registering.
+      operationId: getAvailableLanguages
+      security: []
+      responses:
+        '200':
+          description: Available languages retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LanguageOption'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 3
+                          name: Japanese
+                          code: ja
+                          imageUrl: /media/languages/japanese.png
+                          isAdded: false
+                        - id: 4
+                          name: German
+                          code: de
+                          imageUrl: /media/languages/german.png
+                          isAdded: false
+                        - id: 5
+                          name: Korean
+                          code: ko
+                          imageUrl: /media/languages/korean.png
+                          isAdded: false
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 
   /auth/otp/send:
     post:
@@ -996,10 +1017,8 @@ paths:
       summary: Get the Home screen dashboard
       description: >
         Returns the composite payload needed to render the Home screen in a
-        single call: XP/coin balance, streak, the active target language card,
-        the "Continue Lesson" card, and a short preview of Explore Worlds
-        (max 4). For the full, filterable World list ("See more"), use
-        `GET /worlds`.
+        single call: XP/coin balance, streak, the active target language card, and a short preview of Explore Worlds
+        (max 2). For the full, filterable World list ("See more"), use
       operationId: getHome
       security:
         - bearerAuth: []
@@ -1023,30 +1042,31 @@ paths:
                       xp: 1250
                       coins: 46
                       streakDays: 7
-                    activeLanguage:
-                      id: 1
-                      name: Spanish
-                      code: es
-                      imageUrl: /media/languages/spanish.png
-                      level: 12
-                      levelProgressPercent: 65
+                      activeLanguage:
+                        id: 1
+                        name: Spanish
+                        code: es
+                        imageUrl: /media/languages/spanish.png
+                        level: 12
+                        isActive: true
+                        progressPercent: 65
                       exploreWorlds:
-                        - id: 10
-                          name: Kitchen World
-                          imageUrl: /media/worlds/kitchen.jpg
-                          difficulty: EASY
-                          status: IN_PROGRESS
-                          progressPercent: 40
-                          totalLevels: 20
-                          completedLevels: 8
-                        - id: 11
-                          name: City World
-                          imageUrl: /media/worlds/city.jpg
-                          difficulty: MEDIUM
-                          status: IN_PROGRESS
-                          progressPercent: 10
-                          totalLevels: 20
-                          completedLevels: 2
+                        totalCount: 2
+                        worlds:
+                          - id: 10
+                            name: Kitchen World
+                            imageUrl: /media/worlds/kitchen.jpg
+                            difficulty: EASY
+                            progressPercent: 40
+                            totalLevels: 20
+                            completedLevels: 8
+                          - id: 11
+                            name: City World
+                            imageUrl: /media/worlds/city.jpg
+                            difficulty: MEDIUM
+                            progressPercent: 10
+                            totalLevels: 20
+                            completedLevels: 2
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -1064,19 +1084,12 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: languageId
-          in: query
-          required: false
-          description: Defaults to the user's currently-active target language.
-          schema:
-            type: integer
-            example: 1
         - name: difficulty
           in: query
-          required: false
+          required: true
           schema:
             type: string
-            enum: [EASY, MEDIUM, HARD]
+            enum: [EASY, MEDIUM, HARD, ALL]
           example: EASY
       responses:
         '200':
@@ -1109,7 +1122,7 @@ paths:
                           name: Kitchen World
                           imageUrl: /media/worlds/kitchen.jpg
                           difficulty: EASY
-                          status: IN_PROGRESS
+                          status: INPROGRESS
                           progressPercent: 40
                           totalLevels: 20
                           completedLevels: 8
@@ -1135,6 +1148,11 @@ paths:
       description: >
         Returns the ordered list of levels for a World, for rendering the
         visual level path (roadmap) shown after selecting a World.
+
+        Level Status Rules:
+        - At any given time, a world path contains at most ONE playable level (either INPROGRESS or AVAILABLE).
+        - AVAILABLE levels have word: null until the user calls /start, which assigns a word and transitions status to INPROGRESS.
+        - LOCKED levels cannot be played until previous levels are COMPLETED.
       operationId: getWorldLevels
       security:
         - bearerAuth: []
@@ -1172,7 +1190,7 @@ paths:
                           word: Spoon
                         - id: 145
                           order: 2
-                          status: AVAILABLE
+                          status: INPROGRESS
                           word: Apple
                         - id: 146
                           order: 3
@@ -1199,7 +1217,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /worlds/{worldId}/level/{levelId}/start:
+  /worlds/{worldId}/levels/{levelId}/start:
     post:
       tags: [Worlds]
       summary: Start a level or get a random word
@@ -1241,7 +1259,7 @@ paths:
                     data:
                       targetWord: Manzana
         '400':
-          description: World completed
+          description: World completed or level locked
           content:
             application/json:
               schema:
@@ -1252,33 +1270,54 @@ paths:
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/worlds/10/level/145/start
+                      apiPath: /api/v1/worlds/10/levels/145/start
                       errorCode: 400
                       errorKey: WORLD_COMPLETED
                       errorMessage: You have learned all words in this world!
                       errorTime: '2026-07-17T10:15:00Z'
+                levelLocked:
+                  summary: Level locked
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/levels/145/start
+                      errorCode: 400
+                      errorKey: LEVEL_LOCKED
+                      errorMessage: This level is locked. Complete previous levels first.
+                      errorTime: '2026-07-17T10:15:00Z'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          description: World or level not found
+          description: World, level, or active language not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
-                default:
+                worldNotFound:
+                  summary: World not found
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/worlds/999/level/145/start
+                      apiPath: /api/v1/worlds/999/levels/145/start
+                      errorCode: 404
+                      errorKey: WORLD_NOT_FOUND
+                      errorMessage: World with id 999 does not exist
+                      errorTime: '2026-07-17T10:15:00Z'
+                levelNotFound:
+                  summary: Level not found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/levels/999/start
                       errorCode: 404
                       errorKey: NOT_FOUND
-                      errorMessage: World or level not found
+                      errorMessage: Level with id 999 does not exist in world 10
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /worlds/{worldId}/level/{levelId}/change-word:
+  /worlds/{worldId}/levels/{levelId}/change-word:
     put:
       tags: [Worlds]
       summary: Change the current word for a level
@@ -1318,8 +1357,9 @@ paths:
                     success: true
                     data:
                       targetWord: Platano
+                      coins: 90
         '400':
-          description: No more words available
+          description: No more words available, level already completed, or insufficient coins
           content:
             application/json:
               schema:
@@ -1330,33 +1370,74 @@ paths:
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/worlds/10/level/145/change-word
+                      apiPath: /api/v1/worlds/10/levels/145/change-word
                       errorCode: 400
                       errorKey: NO_MORE_WORDS
                       errorMessage: There are no other new words available in this world.
                       errorTime: '2026-07-17T10:15:00Z'
+                levelAlreadyCompleted:
+                  summary: Level already completed
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/levels/145/change-word
+                      errorCode: 400
+                      errorKey: LEVEL_ALREADY_COMPLETED
+                      errorMessage: Level is already completed
+                      errorTime: '2026-07-17T10:15:00Z'
+                insufficientCoins:
+                  summary: Insufficient coins
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/levels/145/change-word
+                      errorCode: 400
+                      errorKey: INSUFFICIENT_COINS
+                      errorMessage: Insufficient coins to change the word
+                      errorTime: '2026-07-17T10:15:00Z'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          description: Progress not found
+          description: Progress, world, or level not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
-                default:
+                progressNotFound:
+                  summary: Progress not found
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/worlds/999/level/145/change-word
+                      apiPath: /api/v1/worlds/10/levels/145/change-word
                       errorCode: 404
                       errorKey: PROGRESS_NOT_FOUND
                       errorMessage: You haven't started this level yet
                       errorTime: '2026-07-17T10:15:00Z'
+                worldNotFound:
+                  summary: World not found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/999/levels/145/change-word
+                      errorCode: 404
+                      errorKey: WORLD_NOT_FOUND
+                      errorMessage: World with id 999 does not exist
+                      errorTime: '2026-07-17T10:15:00Z'
+                levelNotFound:
+                  summary: Level not found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/10/levels/999/change-word
+                      errorCode: 404
+                      errorKey: NOT_FOUND
+                      errorMessage: Level with id 999 does not exist in world 10
+                      errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /worlds/{worldId}/level/{levelId}/verify:
+  /worlds/{worldId}/levels/{levelId}/verify:
     post:
       tags: [Worlds]
       summary: Verify image for a level
@@ -1424,10 +1505,130 @@ paths:
                       coinsEarned: 0
                       level: 4
                       levelProgressPercentage: 80
+        '404':
+          description: >
+            The requested world/level does not have an in-progress attempt for this user,
+            or the user has not added the language associated with this level.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                activeLevelNotFound:
+                  summary: No in-progress level found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/1/levels/17/verify
+                      errorCode: 404
+                      errorKey: ACTIVE_LEVEL_NOT_FOUND
+                      errorMessage: No in-progress level found for user 1 in world 1, level 17
+                      errorTime: '2026-07-17T10:15:00Z'
+                userLanguageNotFound:
+                  summary: Language not found in user's profile
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/1/levels/17/verify
+                      errorCode: 404
+                      errorKey: USER_LANGUAGE_NOT_FOUND
+                      errorMessage: User 1 has not added language 3
+                      errorTime: '2026-07-17T10:15:00Z'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /worlds/{worldId}/levels/{levelId}/hint:
+    get:
+      summary: Get a hint for the current word in the user's native language (costs coins, one-time per level)
+      operationId: getWordHint
+      tags:
+        - Worlds
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 3
+        - name: levelId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 12
+      responses:
+        '200':
+          description: Hint retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/HintResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      hint: Ø´ÙŠØ¡ ØªØ£ÙƒÙ„Ù‡ ÙˆÙ„Ù‡ Ù„ÙˆÙ† Ø£Ø­Ù…Ø± Ø£Ùˆ Ø£Ø®Ø¶Ø±
+                      coinsSpent: 10
+                      remainingCoins: 140
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: World or level not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/levels/12/hint
+                      errorCode: 404
+                      errorKey: LEVEL_NOT_FOUND
+                      errorMessage: The specified level does not exist
+                      errorTime: '2026-07-17T10:15:00Z'
+        '409':
+          description: Hint already used for this level, or insufficient coins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                hintAlreadyUsed:
+                  summary: Hint already used
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/levels/12/hint
+                      errorCode: 409
+                      errorKey: HINT_ALREADY_USED
+                      errorMessage: You have already used your hint for this level
+                      errorTime: '2026-07-17T10:15:00Z'
+                insufficientCoins:
+                  summary: Not enough coins
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/levels/12/hint
+                      errorCode: 409
+                      errorKey: INSUFFICIENT_COINS
+                      errorMessage: You do not have enough coins to buy a hint
+                      errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1463,8 +1664,7 @@ paths:
                       currentDay: 3
                       cycleLength: 5
                       rewardCoins: 50
-                      rewardXp: null
-                      streakDays: 7
+                      rewardXp: 20
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -1498,10 +1698,9 @@ paths:
                     success: true
                     data:
                       coinsAwarded: 50
-                      xpAwarded: null
+                      xpAwarded: 20
                       newCoinsBalance: 96
                       newXpBalance: 1250
-                      newStreakDays: 8
                       nextDay: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -1798,6 +1997,76 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /languages/native:
+    patch:
+      summary: Change the user's native language
+      operationId: changeNativeLanguage
+      tags:
+        - Languages
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - languageId
+              properties:
+                languageId:
+                  type: integer
+                  format: int64
+                  example: 2
+      responses:
+        '200':
+          description: Native language updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TargetLanguage'
+        '400':
+          description: Invalid language ID or same as current native language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages/native
+                      errorCode: 400
+                      errorKey: SAME_NATIVE_LANGUAGE
+                      errorMessage: This language is already set as your native language
+                      errorTime: '2026-07-17T10:15:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Language not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages/native
+                      errorCode: 404
+                      errorKey: LANGUAGE_NOT_FOUND
+                      errorMessage: The specified language does not exist
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /profile:
     get:
       tags: [Profile]
@@ -2084,19 +2353,6 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: scope
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [GLOBAL, LANGUAGE]
-            default: GLOBAL
-        - name: languageId
-          in: query
-          required: false
-          description: Required when scope=LANGUAGE.
-          schema:
-            type: integer
         - name: page
           in: query
           required: false
@@ -2364,6 +2620,163 @@ paths:
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /wallet:
+    get:
+      tags: [Wallet]
+      summary: Get the user's XP and coin balance
+      description: >
+        Returns the user's current XP and coin totals. This is the same
+        balance surfaced on Home (`xp`, `coins`) and Profile (`stats.coins`,
+        `stats.totalXp`), exposed here as its own lightweight endpoint.
+      operationId: getWallet
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Wallet retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/WalletResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      xp: 1250
+                      coins: 46
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /wallet/adjust:
+    post:
+      tags: [Wallet]
+      summary: Add or subtract XP and/or coins
+      description: >
+        Applies a signed delta to the user's XP and/or coin balance in a
+        single atomic operation. Use a positive value to add and a negative
+        value to subtract; omit a field (or send `0`) to leave that balance
+        unchanged. Intended for internal/admin or system-triggered
+        adjustments (e.g. purchases, corrections) rather than the standard
+        gameplay reward flows, which have their own dedicated endpoints
+        (`/worlds/{worldId}/levels/{levelId}/verify`, `/daily-reward/claim`,
+        `/achievements/weekly-reward/claim`).
+        Fails with `409` if the adjustment would bring either balance below zero.
+      operationId: adjustWallet
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustWalletRequest'
+            examples:
+              addBoth:
+                summary: Add XP and coins
+                value:
+                  xpDelta: 50
+                  coinsDelta: 10
+              subtractCoins:
+                summary: Spend coins only
+                value:
+                  xpDelta: 0
+                  coinsDelta: -20
+      responses:
+        '200':
+          description: Wallet adjusted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AdjustWalletResponseData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      xpDelta: 50
+                      coinsDelta: 10
+                      xp: 1300
+                      coins: 56
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Adjustment would result in a negative XP or coin balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/wallet/adjust
+                      errorCode: 409
+                      errorKey: INSUFFICIENT_BALANCE
+                      errorMessage: This adjustment would result in a negative balance
+                      errorTime: '2026-07-24T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gallery:
+    get:
+      summary: Get the user's word gallery (all previously solved words in the current active language)
+      operationId: getGallery
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Gallery retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GalleryResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      totalCount: 2
+                      words:
+                        - word: Apple
+                          nativeWord: ØªÙØ§Ø­Ø©
+                          world:
+                            id: 3
+                            name: Market
+                            imageUrl: /media/worlds/market.jpg
+                        - word: Bench
+                          nativeWord: Ù…Ù‚Ø¹Ø¯
+                          world:
+                            id: 1
+                            name: Park
+                            imageUrl: /media/worlds/park.jpg
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 
 components:
   securitySchemes:
@@ -2731,6 +3144,9 @@ components:
         code:
           type: string
           example: es
+        imageUrl:
+          type: string
+          example: /media/languages/spanish.png
 
     HomeResponseData:
       type: object
@@ -2745,12 +3161,9 @@ components:
           type: integer
           example: 7
         activeLanguage:
-          $ref: '#/components/schemas/ActiveLanguageSummary'
+          $ref: '#/components/schemas/UserLanguage'
         exploreWorlds:
-          type: array
-          description: Preview of up to 4 Worlds; use GET /worlds for the full list.
-          items:
-            $ref: '#/components/schemas/WorldSummary'
+          $ref: '#/components/schemas/WorldSummary'
 
     ActiveLanguageSummary:
       type: object
@@ -2773,37 +3186,6 @@ components:
           maximum: 100
           example: 65
 
-    WorldSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 10
-        name:
-          type: string
-          example: Kitchen World
-        imageUrl:
-          type: string
-          example: /media/worlds/kitchen.jpg
-        difficulty:
-          type: string
-          enum: [EASY, MEDIUM, HARD]
-          example: EASY
-        status:
-          type: string
-          enum: [LOCKED, IN_PROGRESS, COMPLETED]
-          example: IN_PROGRESS
-        progressPercent:
-          type: integer
-          minimum: 0
-          maximum: 100
-          example: 40
-        totalLevels:
-          type: integer
-          example: 20
-        completedLevels:
-          type: integer
-          example: 8
 
     WorldDetail:
       type: object
@@ -2834,12 +3216,12 @@ components:
           example: 2
         status:
           type: string
-          enum: [LOCKED, AVAILABLE, IN_PROGRESS, COMPLETED]
-          example: AVAILABLE
+          enum: [LOCKED, AVAILABLE, INPROGRESS, COMPLETED]
+          example: INPROGRESS
         word:
           type: string
           nullable: true
-          description: Null while the level is still LOCKED.
+          description: Null while status is LOCKED or AVAILABLE. Assigned when status becomes INPROGRESS (via /start) or COMPLETED.
           example: Apple
 
     StartLevelResponseData:
@@ -2848,6 +3230,9 @@ components:
         targetWord:
           type: string
           example: Manzana
+        coins:
+          type: integer
+          example: 90
 
     VerifyImageResponseData:
       type: object
@@ -2888,10 +3273,7 @@ components:
         rewardXp:
           type: integer
           nullable: true
-          example: null
-        streakDays:
-          type: integer
-          example: 7
+          example: 20
 
     DailyRewardClaimResult:
       type: object
@@ -2902,16 +3284,13 @@ components:
         xpAwarded:
           type: integer
           nullable: true
-          example: null
+          example: 20
         newCoinsBalance:
           type: integer
           example: 96
         newXpBalance:
           type: integer
           example: 1250
-        newStreakDays:
-          type: integer
-          example: 8
         nextDay:
           type: integer
           example: 4
@@ -3182,3 +3561,96 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AchievementSummary'
+    WalletResponseData:
+      type: object
+      properties:
+        xp:
+          type: integer
+          example: 1250
+        coins:
+          type: integer
+          example: 46
+
+    AdjustWalletRequest:
+      type: object
+      description: >
+        At least one of `xpDelta` / `coinsDelta` must be non-zero.
+      properties:
+        xpDelta:
+          type: integer
+          default: 0
+          description: Signed amount to add (positive) or subtract (negative) from XP.
+          example: 50
+        coinsDelta:
+          type: integer
+          default: 0
+          description: Signed amount to add (positive) or subtract (negative) from coins.
+          example: 10
+
+    AdjustWalletResponseData:
+      type: object
+      properties:
+        xpDelta:
+          type: integer
+          example: 50
+        coinsDelta:
+          type: integer
+          example: 10
+        xp:
+          type: integer
+          description: New XP balance after applying the delta.
+          example: 1300
+        coins:
+          type: integer
+          description: New coin balance after applying the delta.
+          example: 56
+
+    WorldRef:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: Kitchen World
+        imageUrl:
+          type: string
+          example: /media/worlds/kitchen.jpg
+
+    GalleryResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 2
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/GalleryWord'
+
+    GalleryWord:
+      type: object
+      properties:
+        word:
+          type: string
+          example: Apple
+        translation:
+          type: string
+          example: ØªÙØ§Ø­Ø©
+        world:
+          $ref: '#/components/schemas/WorldRef'
+
+    HintResponseDto:
+      type: object
+      properties:
+        hint:
+          type: string
+          example: Ø´ÙŠØ¡ ØªØ£ÙƒÙ„Ù‡ ÙˆÙ„Ù‡ Ù„ÙˆÙ† Ø£Ø­Ù…Ø± Ø£Ùˆ Ø£Ø®Ø¶Ø±
+        coinsSpent:
+          type: integer
+          example: 10
+        remainingCoins:
+          type: integer
+          example: 140

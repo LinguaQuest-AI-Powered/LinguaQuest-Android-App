@@ -46,8 +46,7 @@ import com.iti.linguaquest.R
 fun HintsBottomSheet(
     coinCount: Int,
     onDismiss: () -> Unit,
-    onRevealFirstLetter: () -> Unit,
-    onShowCategoryClue: () -> Unit
+    onBuyHint: () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -126,19 +125,10 @@ fun HintsBottomSheet(
             Spacer(modifier = Modifier.height(24.dp))
 
             HintItem(
-                icon = Icons.Default.TextFields,
-                title = stringResource(id = R.string.reveal_first_letter),
-                cost = 25,
-                onClick = onRevealFirstLetter
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            HintItem(
                 icon = Icons.Default.Info,
-                title = stringResource(id = R.string.show_category_clue),
-                cost = 50,
-                onClick = onShowCategoryClue
+                title = stringResource(id = R.string.game_result_hint_button),
+                cost = 25,
+                onClick = onBuyHint
             )
         }
     }

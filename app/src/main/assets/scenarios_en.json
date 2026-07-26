@@ -2,7 +2,7 @@
   {
     "id": "scenario_market_01",
     "worldId": "world_1",
-    "bossName": "Haga Seddiqa",
+    "bossName": "Haga Asmaa",
     "roleDescription": "A friendly but firm old fruit vendor in a bustling Cairo market.",
     "objective": "Buy two apples and a bunch of bananas for less than 50 pounds.",
     "voiceName": "KORE"

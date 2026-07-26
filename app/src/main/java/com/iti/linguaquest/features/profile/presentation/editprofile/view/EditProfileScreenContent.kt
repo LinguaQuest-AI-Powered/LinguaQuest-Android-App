@@ -87,15 +87,9 @@ fun EditProfileScreenContent(
                     EditableAvatar(
                        // state = state,
                         avatarModel = avatarModel,
-                        onEditClick = { showAvatarSheet = true }
+                        onEditClick = { showAvatarSheet = true },
+                        isAvatarUploading = isLoading
                     )
-
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(36.dp),
-                            color = LinguaQuestTheme.colors.OrangeActive
-                        )
-                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))

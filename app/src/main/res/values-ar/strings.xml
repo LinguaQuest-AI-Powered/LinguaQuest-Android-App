@@ -507,7 +507,7 @@
     <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
-  
+
     <!-- Roleplay Feature Strings -->
     <string name="roleplay_boss_level">مستوى الزعيم</string>
     <string name="roleplay_boss_stage">مرحلة الزعيم</string>
@@ -546,6 +546,14 @@
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
     <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
+    <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
+    <string name="no_languages_available">لا توجد لغات متاحة</string>
+    <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
+
+    <!-- New profile strings -->
+    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت...</string>
+    <string name="offline_title">أنت غير متصل بالإنترنت</string>
+    <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
     <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
     <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
     <string name="retry_label">إعادة المحاولة</string>

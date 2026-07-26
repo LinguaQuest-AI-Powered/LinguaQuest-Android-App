@@ -2,7 +2,7 @@
   {
     "id": "scenario_market_01",
     "worldId": "world_1",
-    "bossName": "الحاجة صديقة",
+    "bossName": "الحاجة أسماء",
     "roleDescription": "بائعة فاكهة ودودة ولكنها حازمة في سوق صاخب بالقاهرة.",
     "objective": "شراء تفاحتين وموز بأقل من 50 جنيها.",
     "voiceName": "KORE"
