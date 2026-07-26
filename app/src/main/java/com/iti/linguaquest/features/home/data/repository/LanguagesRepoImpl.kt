@@ -52,4 +52,14 @@ class LanguagesRepoImpl @Inject constructor(
             is LinguaQuestResult.Failure -> result
         }
     }
+
+    override suspend fun setNativeLanguage(languageId: Int): LinguaQuestResult<UserLanguage, LinguaQuestDataError> {
+        val result = remoteDataSource.setNativeLanguage(languageId)
+        return when (result) {
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(
+                result.data.toDomain()
+            )
+            is LinguaQuestResult.Failure -> result
+        }
+    }
 }

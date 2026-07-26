@@ -26,6 +26,7 @@ class ProfileLocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveProfile(profile: ProfileSummary) {
         runCatching {
+            profileDao.clearProfile()
             profileDao.upsertProfile(profile.toEntity())
         }
 
