@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.dialog.PriceTagContent
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.game.presentation.level.components.QuestCard
 import com.iti.linguaquest.features.game.presentation.level.components.HintsBottomSheet
@@ -52,6 +53,7 @@ fun LevelScreen(
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     
     val speechManager = remember { SpeechManager(context) }
@@ -98,66 +100,68 @@ fun LevelScreen(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LinguaQuestTheme.colors.whiteColor),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    OfflineAwareContent(isOnline = isOnline, modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LinguaQuestTheme.colors.whiteColor),
+            contentAlignment = Alignment.Center
         ) {
-            ShareTopBar(
-                titleText = stringResource(id = R.string.level_title, state.levelNumber),
-                onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
-                modifier = Modifier.padding(top = 40.dp),
-                trailingContent = {
-                    androidx.compose.foundation.layout.Row(
-                        modifier = Modifier
-                            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(Icons.Default.MonetizationOn),
-                            contentDescription = stringResource(id = R.string.coins),
-                            tint = LinguaQuestTheme.colors.OrangeActive,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "%,d".format(state.coinCount),
-                            color = LinguaQuestTheme.colors.BrownText,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ShareTopBar(
+                    titleText = stringResource(id = R.string.level_title, state.levelNumber),
+                    onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
+                    modifier = Modifier.padding(top = 40.dp),
+                    trailingContent = {
+                        androidx.compose.foundation.layout.Row(
+                            modifier = Modifier
+                                .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                                contentDescription = stringResource(id = R.string.coins),
+                                tint = LinguaQuestTheme.colors.OrangeActive,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "%,d".format(state.coinCount),
+                                color = LinguaQuestTheme.colors.BrownText,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
-                }
-            )
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            QuestCard(
-                wordToGuess = state.wordToGuess,
-                hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
-                onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
-                onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
-                onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
-                onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
-                isCameraEnabled = state.isLevelReady && !state.isLoading,
-                isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-        }
+                QuestCard(
+                    wordToGuess = state.wordToGuess,
+                    hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                    onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
+                    onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
+                    onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
+                    onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
+                    isCameraEnabled = state.isLevelReady && !state.isLoading,
+                    isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+            }
 
-        if (state.isBottomSheetVisible) {
-            HintsBottomSheet(
-                coinCount = state.coinCount,
-                onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
-                onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
-                onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
-            )
+            if (state.isBottomSheetVisible) {
+                HintsBottomSheet(
+                    coinCount = state.coinCount,
+                    onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
+                    onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
+                    onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
+                )
+            }
         }
     }
 }

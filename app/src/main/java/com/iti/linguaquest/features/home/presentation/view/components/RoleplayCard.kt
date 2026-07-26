@@ -18,10 +18,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,14 +42,19 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun RoleplayCard(
-    onStartClick: () -> Unit,
+    onStartClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var cardBounds by remember { mutableStateOf(Rect.Zero) }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(LinguaQuestTheme.colors.whiteColor)
+            .onGloballyPositioned { coordinates ->
+                cardBounds = coordinates.boundsInRoot()
+            }
             .padding(20.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -94,7 +106,7 @@ fun RoleplayCard(
 
         AppButton(
             text = stringResource(id = R.string.roleplay_browse_roleplays),
-            onClick = onStartClick,
+            onClick = { onStartClick(cardBounds) },
             variant = ButtonVariant.PRIMARY,
             icon = rememberVectorPainter(image = Icons.Default.PlayArrow),
             iconPosition = IconPosition.START,

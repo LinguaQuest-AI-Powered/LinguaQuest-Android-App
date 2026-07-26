@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -172,9 +173,9 @@ fun MessageBubble(
         label = "border_shift"
     )
 
-    val borderColorA = MaterialTheme.colorScheme.tertiary
-    val borderColorB = MaterialTheme.colorScheme.secondary
-    val borderColorC = MaterialTheme.colorScheme.primaryContainer
+    val borderColorA = LinguaQuestTheme.colors.splashTopLeftColor
+    val borderColorB = LinguaQuestTheme.colors.OrangeActive
+    val borderColorC = LinguaQuestTheme.colors.ShadowOrange
 
     Box(
         modifier = Modifier
@@ -187,7 +188,7 @@ fun MessageBubble(
                     tailPosition = BUBBLE_TAIL_POSITION
                 )
             )
-            .background(MaterialTheme.colorScheme.primary)
+            .background(LinguaQuestTheme.colors.OrangeActive)
             .drawWithContent {
                 drawContent()
 
@@ -227,21 +228,21 @@ fun MessageBubble(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onPrimary
             )
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = subtitle?:" ",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
+                Text(
+                    text = subtitle?:" ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
             )
         }
     }

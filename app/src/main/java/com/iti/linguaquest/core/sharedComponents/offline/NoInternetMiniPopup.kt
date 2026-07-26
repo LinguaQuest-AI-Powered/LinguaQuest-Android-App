@@ -18,6 +18,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -92,9 +94,9 @@ fun NoInternetMiniPopup(
         label = "border_shift"
     )
 
-    val borderColorA = MaterialTheme.colorScheme.tertiary
-    val borderColorB = MaterialTheme.colorScheme.secondary
-    val borderColorC = MaterialTheme.colorScheme.primaryContainer
+    val borderColorA = LinguaQuestTheme.colors.splashTopLeftColor
+    val borderColorB = LinguaQuestTheme.colors.OrangeActive
+    val borderColorC = LinguaQuestTheme.colors.ShadowOrange
 
     val bubbleShape = LeftTailBubbleShape(
         cornerRadius = 16.dp,
@@ -109,80 +111,87 @@ fun NoInternetMiniPopup(
                 scaleIn(initialScale = 0.85f, animationSpec = tween(250)),
         exit = fadeOut(animationSpec = tween(200)) +
                 scaleOut(targetScale = 0.85f, animationSpec = tween(200)),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    visible = false
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy((-12).dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.lingo_parrot_pointing),
-                contentDescription = null,
-                modifier = Modifier.size(118.dp),
-                contentScale = ContentScale.Fit
-            )
-
-            Box(
+            Row(
                 modifier = Modifier
-                    .offset(x = (-52).dp, y = 0.dp)
-                    .widthIn(max = 204.dp)
-                    .clip(bubbleShape)
-                    .background(Color(0xFFFDEFD6))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        visible = false
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy((-22).dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.lingo_parrot_pointing),
+                    contentDescription = null,
+                    modifier = Modifier.size(112.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Box(
+                    modifier = Modifier
+                        .offset(x = (-18).dp)
+                        .widthIn(max = 204.dp)
+                        .clip(bubbleShape)
+                        .background(LinguaQuestTheme.colors.whiteColor)
                     .drawWithContent {
                         drawContent()
 
-                        val cornerPx = 16.dp.toPx()
-                        val tailWPx = 8.dp.toPx()
-                        val tailHPx = 10.dp.toPx()
-                        val strokePx = 2.5.dp.toPx()
+                            val cornerPx = 16.dp.toPx()
+                            val tailWPx = 8.dp.toPx()
+                            val tailHPx = 10.dp.toPx()
+                            val strokePx = 2.5.dp.toPx()
 
-                        val bubblePath = buildLeftTailBubblePath(
-                            size = size,
-                            cornerRadiusPx = cornerPx,
-                            tailWidthPx = tailWPx,
-                            tailHeightPx = tailHPx,
-                            tailPositionY = 0.3f
-                        )
-
-                        val span = size.width + size.height
-                        val travel = borderShift * span
-                        val start = Offset(travel - span, 0f)
-                        val end = Offset(travel, size.height)
-
-                        drawPath(
-                            path = bubblePath,
-                            brush = Brush.linearGradient(
-                                colors = listOf(borderColorA, borderColorB, borderColorC, borderColorB, borderColorA),
-                                start = start,
-                                end = end
-                            ),
-                            style = Stroke(
-                                width = strokePx,
-                                cap = StrokeCap.Round,
-                                join = StrokeJoin.Round
+                            val bubblePath = buildLeftTailBubblePath(
+                                size = size,
+                                cornerRadiusPx = cornerPx,
+                                tailWidthPx = tailWPx,
+                                tailHeightPx = tailHPx,
+                                tailPositionY = 0.3f
                             )
+
+                            val span = size.width + size.height
+                            val travel = borderShift * span
+                            val start = Offset(travel - span, 0f)
+                            val end = Offset(travel, size.height)
+
+                            drawPath(
+                                path = bubblePath,
+                                brush = Brush.linearGradient(
+                                    colors = listOf(borderColorA, borderColorB, borderColorC, borderColorB, borderColorA),
+                                    start = start,
+                                    end = end
+                                ),
+                                style = Stroke(
+                                    width = strokePx,
+                                    cap = StrokeCap.Round,
+                                    join = StrokeJoin.Round
+                                )
+                            )
+                        }
+                        .padding(
+                            start = 14.dp,
+                            end = 14.dp,
+                            top = 10.dp,
+                            bottom = 12.dp
                         )
-                    }
-                    .padding(
-                        start = 10.dp,
-                        end = 10.dp,
-                        top = 2.dp,
-                        bottom = 12.dp
+                ) {
+                    Text(
+                        text = resolvedMessage,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
                     )
-            ) {
-                Text(
-                    text = resolvedMessage,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Start
-                )
+                }
             }
         }
     }

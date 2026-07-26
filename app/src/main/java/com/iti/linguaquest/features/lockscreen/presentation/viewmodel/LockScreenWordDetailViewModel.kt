@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.lockscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.MarkLockScreenWordOpenedUseCase
@@ -11,8 +12,10 @@ import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenW
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +25,18 @@ class LockScreenWordDetailViewModel @Inject constructor(
     private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase,
     private val generateBatchUseCase: GenerateVocabularyBatchUseCase,
     private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
-    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase
-) : ViewModel() {
+    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+    private val networkMonitor: NetworkMonitor
+
+ ) : ViewModel() {
+
+     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+         .stateIn(
+             scope = viewModelScope,
+             started = SharingStarted.WhileSubscribed(5_000),
+             initialValue = true
+         )
+
 
     private val _state = MutableStateFlow(LockScreenWordDetailState())
     val state: StateFlow<LockScreenWordDetailState> = _state.asStateFlow()

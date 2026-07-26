@@ -11,15 +11,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
+import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceResultViewModel
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -32,9 +37,11 @@ fun VoiceResultScreen(
     onContinue: () -> Unit,
     onRetry: () -> Unit,
     onHome: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: VoiceResultViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(result.isPassed) {
         if (result.isPassed) {
@@ -62,36 +69,41 @@ fun VoiceResultScreen(
         )
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (result.isPassed) {
-            KonfettiView(
-                modifier = Modifier.fillMaxSize(),
-                parties = listOf(party)
-            )
-        }
+    OfflineAwareContent(
+        isOnline = isOnline,
+        modifier = modifier.fillMaxSize()
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (result.isPassed) {
+                KonfettiView(
+                    modifier = Modifier.fillMaxSize(),
+                    parties = listOf(party)
+                )
+            }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(Modifier.height(32.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(Modifier.height(32.dp))
 
-            VoiceResultHeader(
-                isPassed = result.isPassed,
-                advice = result.advice,
-                rating = result.rating,
-                correctWords = result.correctWords,
-                wrongWords = result.wrongWords,
-                coinsAwarded = result.coinsAwarded,
-                onContinue = onContinue,
-                onRetry = onRetry,
-                onHome = onHome
-            )
+                VoiceResultHeader(
+                    isPassed = result.isPassed,
+                    advice = result.advice,
+                    rating = result.rating,
+                    correctWords = result.correctWords,
+                    wrongWords = result.wrongWords,
+                    coinsAwarded = result.coinsAwarded,
+                    onContinue = onContinue,
+                    onRetry = onRetry,
+                    onHome = onHome
+                )
 
-            Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(24.dp))
+            }
         }
     }
 }

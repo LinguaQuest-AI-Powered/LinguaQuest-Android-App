@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -35,8 +36,18 @@ class VoiceGameViewModel @Inject constructor(
     private val evaluatePronunciationUseCase: EvaluatePronunciationUseCase,
     private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val networkMonitor: NetworkMonitor
+
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
+
 
     private val _state = MutableStateFlow(VoiceGameState())
     val state: StateFlow<VoiceGameState> = _state.asStateFlow()

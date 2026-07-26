@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -31,8 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -42,6 +50,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -49,6 +58,7 @@ import com.iti.linguaquest.features.home.presentation.languages.component.MyLang
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
@@ -58,6 +68,7 @@ import com.iti.linguaquest.features.home.presentation.view.components.daily_rewa
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -75,11 +86,26 @@ fun HomeScreen(
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
     var showCoinRain by remember { mutableStateOf(false) }
+    var showOfflinePopup by remember { mutableStateOf(false) }
+    var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
+    var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
+    var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
     var bannerHeightPx by remember { mutableFloatStateOf(0f) }
+
+    fun guardOnline(anchor: Rect? = null, action: () -> Unit) {
+        if (isOnline) {
+            action()
+        } else {
+            offlinePopupAnchor = anchor
+            showOfflinePopup = true
+        }
+    }
 
     LaunchedEffect(state.xp, state.coins) {
         onHeaderDataChanged(state.xp, state.coins)
@@ -120,8 +146,10 @@ fun HomeScreen(
         myLanguagesViewModel.effect.collectLatest { effect ->
             when (effect) {
                 MyLanguagesEffect.NavigateToAddLanguages -> {
-                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
-                    onNavigateToAddLanguages()
+                    guardOnline {
+                        viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                        onNavigateToAddLanguages()
+                    }
                 }
                 MyLanguagesEffect.Dismiss -> {
                     viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
@@ -145,17 +173,31 @@ fun HomeScreen(
 
             HomeContent(
                 state = state,
-                onIntent = viewModel::onIntent
+                onSeeMoreClick = { anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
+                },
+                onWorldClick = { world, anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                },
+                onStartVoiceClick = { anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.StartVoicePractiseClicked) }
+                },
+                onRoleplayClick = { anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.RoleplayCardClicked) }
+                }
             )
         }
 
         FloatingActionButton(
-            onClick = { viewModel.onIntent(HomeIntent.FabClicked) },
+            onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.FabClicked) } },
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(20.dp)
+                .onGloballyPositioned { coordinates ->
+                    fabBounds = coordinates.boundsInRoot()
+                }
         ) {
             Image(
                 painter = painterResource(R.drawable.world_home_icon),
@@ -205,6 +247,56 @@ fun HomeScreen(
                 )
             }
         }
+
+        if (showOfflinePopup) {
+            val popupWidthPx = if (offlinePopupSize.width > 0) {
+                offlinePopupSize.width.toFloat()
+            } else {
+                with(density) { 280.dp.toPx() }
+            }
+            val popupHeightPx = if (offlinePopupSize.height > 0) {
+                offlinePopupSize.height.toFloat()
+            } else {
+                with(density) { 120.dp.toPx() }
+            }
+            val marginPx = with(density) { 8.dp.toPx() }
+            val fallbackTopPx = with(density) { 16.dp.toPx() }
+            val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
+            val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
+            val target = offlinePopupAnchor
+
+            val popupX = if (target != null) {
+                (target.left + target.width / 2f - popupWidthPx / 2f)
+                    .coerceIn(
+                        marginPx,
+                        (screenWidthPx - popupWidthPx - marginPx).coerceAtLeast(marginPx)
+                    )
+            } else {
+                ((screenWidthPx - popupWidthPx) / 2f).coerceAtLeast(marginPx)
+            }
+
+            val popupY = if (target != null) {
+                val aboveY = target.top - popupHeightPx - marginPx
+                if (aboveY >= marginPx) {
+                    aboveY
+                } else {
+                    (target.bottom + marginPx)
+                        .coerceAtMost(screenHeightPx - popupHeightPx - marginPx)
+                }
+            } else {
+                fallbackTopPx
+            }
+
+            NoInternetMiniPopup(
+                modifier = Modifier
+                    .offset { IntOffset(popupX.roundToInt(), popupY.roundToInt()) }
+                    .onSizeChanged { offlinePopupSize = it },
+                onDismiss = {
+                    showOfflinePopup = false
+                    offlinePopupAnchor = null
+                }
+            )
+        }
     }
 
     if (state.isDailyRewardDialogVisible) {
@@ -247,7 +339,10 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     state: HomeState,
-    onIntent: (HomeIntent) -> Unit,
+    onSeeMoreClick: (Rect) -> Unit,
+    onWorldClick: (WorldItem, Rect) -> Unit,
+    onStartVoiceClick: (Rect) -> Unit,
+    onRoleplayClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -272,15 +367,15 @@ fun HomeContent(
         if (state.worlds.isNotEmpty()) {
             ExploreWorldsSection(
                 worlds = state.worlds,
-                onSeeMoreClick = { onIntent(HomeIntent.SeeMoreWorldsClicked) },
-                onWorldClick = { world -> onIntent(HomeIntent.WorldClicked(world)) },
+                onSeeMoreClick = onSeeMoreClick,
+                onWorldClick = onWorldClick,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
 
         VoicePractiseCard(
-            onStartClick = { onIntent(HomeIntent.StartVoicePractiseClicked) },
+            onStartClick = onStartVoiceClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -289,7 +384,7 @@ fun HomeContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         com.iti.linguaquest.features.home.presentation.view.components.RoleplayCard(
-            onStartClick = { onIntent(HomeIntent.RoleplayCardClicked) },
+            onStartClick = onRoleplayClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

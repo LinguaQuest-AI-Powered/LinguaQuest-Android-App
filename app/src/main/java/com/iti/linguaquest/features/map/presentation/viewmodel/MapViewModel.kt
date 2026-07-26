@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.map.presentation.viewmodel
 import com.iti.linguaquest.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.features.map.domain.usecase.GetMapLevelsUseCase
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
 import com.iti.linguaquest.features.map.presentation.contract.MapEffect
@@ -25,12 +26,25 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.core.result.onFailure
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val getMapLevelsUseCase: GetMapLevelsUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val networkMonitor: NetworkMonitor
+
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
+
 
     private val _state = MutableStateFlow(MapState())
     val state = _state.asStateFlow()

@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.roleplay.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -30,6 +31,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
@@ -46,11 +49,19 @@ class RoleplayViewModel @Inject constructor(
     private val disconnectRoleplayUseCase: DisconnectRoleplayUseCase,
     private val observeLiveEventsUseCase: ObserveLiveEventsUseCase,
     private val scenarioRepository: ScenarioRepository,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RoleplayState())
     val state: StateFlow<RoleplayState> = _state.asStateFlow()
+
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     private val _effect = MutableSharedFlow<RoleplayEffect>()
     val effect: SharedFlow<RoleplayEffect> = _effect.asSharedFlow()

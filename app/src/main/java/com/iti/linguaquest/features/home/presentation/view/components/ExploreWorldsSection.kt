@@ -15,8 +15,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,11 +36,15 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 @Composable
 fun ExploreWorldsSection(
     worlds: List<WorldItem>,
-    onSeeMoreClick: () -> Unit,
-    onWorldClick: (WorldItem) -> Unit,
+    onSeeMoreClick: (Rect) -> Unit,
+    onWorldClick: (WorldItem, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    var seeMoreBounds by remember { mutableStateOf(Rect.Zero) }
+
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -54,10 +65,12 @@ fun ExploreWorldsSection(
                     fontWeight = FontWeight.SemiBold,
                 ),
                 color = LinguaQuestTheme.colors.iconsColor,
-
                 modifier = Modifier
                     .wrapContentSize()
-                    .clickable { onSeeMoreClick() }
+                    .onGloballyPositioned { coordinates ->
+                        seeMoreBounds = coordinates.boundsInRoot()
+                    }
+                    .clickable { onSeeMoreClick(seeMoreBounds) }
             )
         }
 
@@ -68,10 +81,16 @@ fun ExploreWorldsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(worlds, key = { it.id }) { world ->
+                var worldCardBounds by remember(world.id) { mutableStateOf(Rect.Zero) }
                 WorldCard(
-                    world = world, 
-                    onClick = { onWorldClick(world) },
-                    modifier = Modifier.width(240.dp).height(220.dp)
+                    world = world,
+                    onClick = { onWorldClick(world, worldCardBounds) },
+                    modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                            worldCardBounds = coordinates.boundsInRoot()
+                        }
+                        .width(240.dp)
+                        .height(220.dp)
                 )
             }
         }
