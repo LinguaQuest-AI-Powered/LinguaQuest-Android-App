@@ -37,10 +37,8 @@ class EditProfileViewModel @Inject constructor(
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val snackbarController: SnackbarController,
     private val getCachedProfileUseCase: GetCachedProfileUseCase,
-    private val networkMonitor: NetworkMonitor
-
-    private val getCachedProfileUseCase: GetCachedProfileUseCase,
-    private val preloadImageUseCase: PreloadImageUseCase
+    private val networkMonitor: NetworkMonitor,
+     private val preloadImageUseCase: PreloadImageUseCase
 ) : ViewModel() {
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
         .stateIn(

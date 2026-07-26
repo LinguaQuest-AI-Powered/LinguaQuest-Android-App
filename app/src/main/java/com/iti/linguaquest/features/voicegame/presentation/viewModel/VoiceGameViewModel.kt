@@ -12,7 +12,6 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
-import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
@@ -40,9 +39,7 @@ class VoiceGameViewModel @Inject constructor(
     private val evaluatePronunciationUseCase: EvaluatePronunciationUseCase,
     private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
-    private val snackbarController: SnackbarController,
-    private val networkMonitor: NetworkMonitor
-
+    private val networkMonitor: NetworkMonitor,
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
     private val snackbarController: SnackbarController
@@ -159,6 +156,7 @@ class VoiceGameViewModel @Inject constructor(
                             )
                         }
                     }
+
                     is LinguaQuestResult.Failure -> {
                         _state.update { it.copy(isLoadingSentence = false) }
                         snackbarController.sendEvent(
@@ -297,6 +295,7 @@ class VoiceGameViewModel @Inject constructor(
                         onGameWon(coinsDelta = voiceResult.coinsAwarded)
                         resetToIdle(discardAudio = false)
                     }
+
                     is LinguaQuestResult.Failure -> {
                         snackbarController.sendEvent(
                             SnackbarEvent(
@@ -323,11 +322,13 @@ class VoiceGameViewModel @Inject constructor(
     private fun sendEffect(effect: VoiceGameEffect) {
         viewModelScope.launch { _effect.emit(effect) }
     }
+
     fun onGameWon(xpDelta: Int = 0, coinsDelta: Int = 5) {
         viewModelScope.launch {
             adjustWalletUseCase(xpDelta = xpDelta, coinsDelta = coinsDelta)
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()

@@ -168,15 +168,6 @@ fun LevelScreen(
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
-
-            if (state.isBottomSheetVisible) {
-                HintsBottomSheet(
-                    coinCount = state.coinCount,
-                    onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
-                    onRevealFirstLetter = { viewModel.onIntent(LevelIntent.RevealFirstLetterClicked) },
-                    onShowCategoryClue = { viewModel.onIntent(LevelIntent.ShowCategoryClueClicked) }
-                )
-            }
         if (state.isBottomSheetVisible) {
             HintsBottomSheet(
                 coinCount = state.coinCount,

@@ -84,15 +84,24 @@ fun GameResultScreen(
                     onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
                 )
             }
+
             is GameResultUiState.Failure -> {
                 GameFailView(
                     targetWord = sharedState.targetWord,
                     isHintUsed = sharedState.isHintUsed,
                     onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                    onBuyHint = { viewModel.onIntent(GameResultIntent.BuyHintClicked) },
+                    onBuyHint = {
+                        viewModel.onIntent(
+                            GameResultIntent.BuyHintClicked(
+                                sharedState.worldId,
+                                sharedState.levelId
+                            )
+                        )
+                    },
                     onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
                 )
             }
+
             is GameResultUiState.Error -> {
                 GameErrorView(
                     state = currentState,
@@ -100,31 +109,6 @@ fun GameResultScreen(
                     onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
                 )
             }
-    when (val currentState = state) {
-        is GameResultUiState.Success -> {
-            GameSuccessView(
-                xpGained = currentState.xpAwarded,
-                coinsGained = currentState.coinsAwarded,
-                currentLevel = currentState.currentLevel,
-                progressPercent = currentState.progressPercent,
-                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
-            )
-        }
-        is GameResultUiState.Failure -> {
-            GameFailView(
-                targetWord = sharedState.targetWord,
-                isHintUsed = sharedState.isHintUsed,
-                onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                onBuyHint = { viewModel.onIntent(GameResultIntent.BuyHintClicked(sharedState.worldId, sharedState.levelId)) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
-            )
-        }
-        is GameResultUiState.Error -> {
-            GameErrorView(
-                state = currentState,
-                onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
-            )
         }
     }
 }

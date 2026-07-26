@@ -83,11 +83,6 @@ fun VoiceGameScreen(
         isOnline = isOnline,
         modifier = modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(vertical = 25.dp)) {
-            VoiceGameTopBar(
-                coins = coins,
-                onNavigateBack = onNavigateBack
-            )
     Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
         VoiceGameTopBar(
             coins = wallet.coins,
