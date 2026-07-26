@@ -76,6 +76,7 @@ class AuthRepositoryImpl @Inject constructor(
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 sessionManagerDataSource.saveIsLoggedIn(true)
+                sessionManagerDataSource.saveFirstTime(false)
             }
             .asEmptyDataResult()
             .mapError()
@@ -88,6 +89,7 @@ class AuthRepositoryImpl @Inject constructor(
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 if (response.profileComplete) {
                     sessionManagerDataSource.saveIsLoggedIn(true)
+                    sessionManagerDataSource.saveFirstTime(false)
                 }
             }
             .map { it.profileComplete }
@@ -104,6 +106,7 @@ class AuthRepositoryImpl @Inject constructor(
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 sessionManagerDataSource.saveIsLoggedIn(true)
+                sessionManagerDataSource.saveFirstTime(false)
             }
             .asEmptyDataResult()
             .mapError()
@@ -166,6 +169,7 @@ class AuthRepositoryImpl @Inject constructor(
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 sessionManagerDataSource.saveIsLoggedIn(true)
+                sessionManagerDataSource.saveFirstTime(false)
             }
             .asEmptyDataResult()
             .mapError()

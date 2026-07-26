@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.lockscreen.presentation.view
 
 import android.Manifest
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -85,10 +84,6 @@ fun LockScreenSettingsScreen(
                     } else {
                         viewModel.onIntent(LockScreenIntent.NotificationPermissionResult(true))
                     }
-                }
-
-                is LockScreenEffect.ShowMessage -> {
-                    Toast.makeText(context, effect.message.asString(context), Toast.LENGTH_SHORT).show()
                 }
             }
         }

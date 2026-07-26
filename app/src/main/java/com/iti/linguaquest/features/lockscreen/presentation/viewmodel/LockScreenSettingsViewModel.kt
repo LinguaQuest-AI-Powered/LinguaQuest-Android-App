@@ -19,6 +19,9 @@ import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificati
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +46,8 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val disableUseCase: DisableLockScreenVocabularyUseCase,
     private val generateUseCase: GenerateVocabularyBatchUseCase,
     private val scheduler: VocabularyWorkScheduler,
-    private val notificationManager: VocabularyNotificationManager
+    private val notificationManager: VocabularyNotificationManager,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LockScreenState())
@@ -228,7 +232,7 @@ class LockScreenSettingsViewModel @Inject constructor(
         if (granted) {
             _state.update { it.copy(isConfirmDialogVisible = true) }
         } else {
-            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notification_permission_required)))
+            showMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notification_permission_required))
         }
     }
 
@@ -282,7 +286,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                                 errorMessage = null
                             )
                         }
-                        sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_enabled)))
+                        showMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_enabled))
                     }
 
                     is LinguaQuestResult.Failure -> {
@@ -341,7 +345,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                     pendingOperationId = null
                 )
             }
-            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_disabled)))
+            showMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_vocabulary_disabled))
         }
     }
 
@@ -395,13 +399,13 @@ class LockScreenSettingsViewModel @Inject constructor(
     private fun refreshNow() {
         viewModelScope.launch {
             scheduler.scheduleNotificationWork()
-            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notifications_scheduled)))
+            showMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_notifications_scheduled))
         }
     }
 
     private fun testNotification() {
         viewModelScope.launch {
-            sendEffect(LockScreenEffect.ShowMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_test_notification_scheduled)))
+            showMessage(UiText.StringResource(com.iti.linguaquest.R.string.lockscreen_test_notification_scheduled))
             kotlinx.coroutines.delay(5000)
 
             val pendingWord = observePendingOnceUseCase()
@@ -429,6 +433,12 @@ class LockScreenSettingsViewModel @Inject constructor(
 
     private fun sendEffect(effect: LockScreenEffect) {
         viewModelScope.launch { _effect.emit(effect) }
+    }
+
+    private fun showMessage(text: UiText) {
+        viewModelScope.launch {
+            snackbarController.sendEvent(SnackbarEvent(message = text, type = SnackbarType.INFO))
+        }
     }
 
 

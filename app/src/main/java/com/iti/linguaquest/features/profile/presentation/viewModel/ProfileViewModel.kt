@@ -109,10 +109,8 @@ class ProfileViewModel @Inject constructor(
                     if (stillHasCache && result.error.isNoInternet()) {
                         snackbarController.sendEvent(
                             SnackbarEvent(
-                                title = UiText.DynamicString("You're offline"),
-                                message = UiText.DynamicString(
-                                    "Showing your saved profile - it'll refresh automatically once you're back online."
-                                ),
+                                title = UiText.StringResource(com.iti.linguaquest.R.string.offline_title),
+                                message = UiText.StringResource(com.iti.linguaquest.R.string.offline_msg),
                                 type = SnackbarType.INFO
                             )
                         )
@@ -121,7 +119,7 @@ class ProfileViewModel @Inject constructor(
                             SnackbarEvent(
                                 message = result.error.toUiText(),
                                 type = SnackbarType.ERROR,
-                                actionLabel = UiText.DynamicString("Retry"),
+                                actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
                                 onAction = { refreshProfile() }
                             )
                         )
@@ -143,7 +141,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    message = UiText.DynamicString("Uploading your photo, this may take a moment..."),
+                    message = UiText.StringResource(com.iti.linguaquest.R.string.uploading_photo_msg),
                     type = SnackbarType.INFO
                 )
             )
@@ -154,8 +152,8 @@ class ProfileViewModel @Inject constructor(
                     _state.update { it.copy(isAvatarUploading = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            title = UiText.DynamicString("Congratulations"),
-                            message = UiText.DynamicString("Profile photo updated"),
+                            title = UiText.StringResource(com.iti.linguaquest.R.string.congrates),
+                            message = UiText.StringResource(com.iti.linguaquest.R.string.profile_photo_updated_successfully),
                             type = SnackbarType.SUCCESS
                         )
                     )
@@ -172,7 +170,7 @@ class ProfileViewModel @Inject constructor(
                         SnackbarEvent(
                             message = result.error.toUiText(),
                             type = SnackbarType.ERROR,
-                            actionLabel = UiText.DynamicString("Retry"),
+                            actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
                             onAction = { uploadAvatar(uri) }
                         )
                     )

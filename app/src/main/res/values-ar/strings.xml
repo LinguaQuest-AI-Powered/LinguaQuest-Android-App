@@ -504,4 +504,9 @@
     <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
     <string name="no_languages_available">لا توجد لغات متاحة</string>
     <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
+
+    <!-- New profile strings -->
+    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت...</string>
+    <string name="offline_title">أنت غير متصل بالإنترنت</string>
+    <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
 </resources>
