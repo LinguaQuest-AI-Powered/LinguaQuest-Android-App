@@ -64,6 +64,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun NoInternetMiniPopup(
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
     message: String? = null,
     onDismiss: () -> Unit
@@ -74,6 +75,12 @@ fun NoInternetMiniPopup(
 
     LaunchedEffect(Unit) {
         visible = true
+    }
+
+    LaunchedEffect(isOnline) {
+        if (isOnline && visible) {
+            visible = false
+        }
     }
 
     LaunchedEffect(visible) {

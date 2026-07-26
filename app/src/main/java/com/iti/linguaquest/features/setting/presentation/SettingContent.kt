@@ -287,6 +287,7 @@ fun SettingContent(
 
         if (showOfflinePopup) {
             NoInternetMiniPopup(
+                isOnline = isOnline,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .offset(y = popupYOffset - 18.dp)

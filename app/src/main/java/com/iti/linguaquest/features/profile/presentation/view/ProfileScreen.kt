@@ -102,6 +102,7 @@ fun ProfileScreen(
 
         if (showOfflinePopup) {
             NoInternetMiniPopup(
+                isOnline = isOnline,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(start = 16.dp, top = 16.dp),

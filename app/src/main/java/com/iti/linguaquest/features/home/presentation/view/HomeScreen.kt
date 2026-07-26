@@ -264,6 +264,7 @@ fun HomeScreen(
             }
 
             NoInternetMiniPopup(
+                isOnline = isOnline,
                 modifier = Modifier
                     .offset { popupOffset }
                     .onSizeChanged { offlinePopupSize = it },
