@@ -9,7 +9,6 @@ sealed interface LevelIntent {
     data object ConfirmChangeWordClicked : LevelIntent
     data object CancelChangeWordClicked : LevelIntent
     data object SkipClicked : LevelIntent
-    data object RevealFirstLetterClicked : LevelIntent
-    data object ShowCategoryClueClicked : LevelIntent
+    data object GetHintClicked : LevelIntent
     data object SoundClicked : LevelIntent
 }

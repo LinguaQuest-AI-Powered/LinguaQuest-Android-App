@@ -19,7 +19,9 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class GameResultViewModel @Inject constructor(
-    private val lessonCompletedUseCase: LessonCompletedUseCase
+    private val lessonCompletedUseCase: LessonCompletedUseCase,
+    private val getHintUseCase: com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase,
+    private val refreshWalletUseCase: com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading)))
@@ -31,7 +33,7 @@ class GameResultViewModel @Inject constructor(
     fun onIntent(intent: GameResultIntent) {
         when (intent) {
             GameResultIntent.RetryClicked -> sendEffect(GameResultEffect.NavigateToCamera)
-            GameResultIntent.BuyHintClicked -> sendEffect(GameResultEffect.ApplyHintAndRetry)
+            is GameResultIntent.BuyHintClicked -> buyHint(intent.worldId, intent.levelId)
             GameResultIntent.NextLevelClicked -> sendEffect(GameResultEffect.NavigateToNextLevel)
             GameResultIntent.ExitClicked -> sendEffect(GameResultEffect.NavigateToExit)
         }
@@ -48,5 +50,19 @@ class GameResultViewModel @Inject constructor(
 
     private fun sendEffect(effect: GameResultEffect) {
         viewModelScope.launch { _effect.send(effect) }
+    }
+
+    private fun buyHint(worldId: Int, levelId: Int) {
+        viewModelScope.launch {
+            when (val result = getHintUseCase(worldId, levelId)) {
+                is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> {
+                    sendEffect(GameResultEffect.ApplyHintAndRetry(result.data.hint))
+                    refreshWalletUseCase()
+                }
+                is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> {
+                    // Optionally handle failure (e.g. show snackbar). For now, do nothing if it fails on result screen.
+                }
+            }
+        }
     }
 }
