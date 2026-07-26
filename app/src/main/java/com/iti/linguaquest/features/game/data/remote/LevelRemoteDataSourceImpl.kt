@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.game.data.remote
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.game.data.remote.dto.HintDto
 import com.iti.linguaquest.features.game.data.remote.dto.StartLevelDto
 import com.iti.linguaquest.features.game.data.remote.dto.VerifyLevelDto
 import com.iti.linguaquest.features.game.data.remote.util.ImageCompressor
@@ -56,6 +57,17 @@ class LevelRemoteDataSourceImpl @Inject constructor(
                 image = imagePart
             )
         }
+        return when (result) {
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
+            is LinguaQuestResult.Failure -> result
+        }
+    }
+
+    override suspend fun getHint(
+        worldId: Int,
+        levelId: Int
+    ): LinguaQuestResult<HintDto, LinguaQuestDataError> {
+        val result = safeApiCall { api.getHint(worldId, levelId) }
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
             is LinguaQuestResult.Failure -> result

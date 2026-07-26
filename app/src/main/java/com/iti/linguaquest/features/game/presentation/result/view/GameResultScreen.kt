@@ -60,8 +60,8 @@ fun GameResultScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 GameResultEffect.NavigateToCamera -> onNavigateToCamera()
-                GameResultEffect.ApplyHintAndRetry -> {
-                    sharedViewModel.useHint()
+                is GameResultEffect.ApplyHintAndRetry -> {
+                    sharedViewModel.setHintText(effect.hint)
                     onNavigateToCamera()
                 }
                 GameResultEffect.NavigateToNextLevel -> onNavigateToNextLevel()
@@ -85,7 +85,7 @@ fun GameResultScreen(
                 targetWord = sharedState.targetWord,
                 isHintUsed = sharedState.isHintUsed,
                 onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                onBuyHint = { viewModel.onIntent(GameResultIntent.BuyHintClicked) },
+                onBuyHint = { viewModel.onIntent(GameResultIntent.BuyHintClicked(sharedState.worldId, sharedState.levelId)) },
                 onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
             )
         }
