@@ -93,7 +93,7 @@ fun ProfileScreen(
                 state = uiState.profile,
                 isAvatarUploading = uiState.isAvatarUploading,
                 onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                onEditAvatarClick = { showAvatarSheet = true },
+                onEditAvatarClick = { guardOnline { showAvatarSheet = true }},
                 onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
                 onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
                 modifier = Modifier.fillMaxSize()

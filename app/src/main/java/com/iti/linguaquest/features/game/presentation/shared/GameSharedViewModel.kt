@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.game.presentation.shared
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
+ import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,13 +16,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameSharedViewModel @Inject constructor(
-    networkMonitor: NetworkMonitor
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
 ) : ViewModel() {
 
     private val _sharedState = MutableStateFlow(GameSharedState())
     val sharedState: StateFlow<GameSharedState> = _sharedState.asStateFlow()
 
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

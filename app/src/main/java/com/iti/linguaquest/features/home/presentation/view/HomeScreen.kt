@@ -36,10 +36,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -48,9 +47,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
-import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -58,17 +57,17 @@ import com.iti.linguaquest.features.home.presentation.languages.component.MyLang
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
-import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
-import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
+import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
+import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
+import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -249,47 +248,24 @@ fun HomeScreen(
         }
 
         if (showOfflinePopup) {
-            val popupWidthPx = if (offlinePopupSize.width > 0) {
-                offlinePopupSize.width.toFloat()
-            } else {
-                with(density) { 280.dp.toPx() }
-            }
-            val popupHeightPx = if (offlinePopupSize.height > 0) {
-                offlinePopupSize.height.toFloat()
-            } else {
-                with(density) { 120.dp.toPx() }
-            }
-            val marginPx = with(density) { 8.dp.toPx() }
-            val fallbackTopPx = with(density) { 16.dp.toPx() }
-            val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
-            val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
-            val target = offlinePopupAnchor
-
-            val popupX = if (target != null) {
-                (target.left + target.width / 2f - popupWidthPx / 2f)
-                    .coerceIn(
-                        marginPx,
-                        (screenWidthPx - popupWidthPx - marginPx).coerceAtLeast(marginPx)
-                    )
-            } else {
-                ((screenWidthPx - popupWidthPx) / 2f).coerceAtLeast(marginPx)
-            }
-
-            val popupY = if (target != null) {
-                val aboveY = target.top - popupHeightPx - marginPx
-                if (aboveY >= marginPx) {
-                    aboveY
-                } else {
-                    (target.bottom + marginPx)
-                        .coerceAtMost(screenHeightPx - popupHeightPx - marginPx)
-                }
-            } else {
-                fallbackTopPx
+            val popupOffset = remember(
+                offlinePopupAnchor,
+                offlinePopupSize,
+                configuration.screenWidthDp,
+                configuration.screenHeightDp
+            ) {
+                calculatePopupOffset(
+                    anchor = offlinePopupAnchor,
+                    popupSize = offlinePopupSize,
+                    screenWidthDp = configuration.screenWidthDp,
+                    screenHeightDp = configuration.screenHeightDp,
+                    density = density
+                )
             }
 
             NoInternetMiniPopup(
                 modifier = Modifier
-                    .offset { IntOffset(popupX.roundToInt(), popupY.roundToInt()) }
+                    .offset { popupOffset }
                     .onSizeChanged { offlinePopupSize = it },
                 onDismiss = {
                     showOfflinePopup = false
@@ -335,6 +311,8 @@ fun HomeScreen(
         )
     }
 }
+
+
 
 @Composable
 fun HomeContent(

@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.leaderboard.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.onFailure
 import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
@@ -22,13 +23,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LeaderboardViewModel @Inject constructor(
     private val getLeaderboardUseCase: GetLeaderboardUseCase,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LeaderboardState())
     val state: StateFlow<LeaderboardState> = _state.asStateFlow()
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

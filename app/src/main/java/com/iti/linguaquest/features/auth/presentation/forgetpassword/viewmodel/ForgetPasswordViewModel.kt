@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.forgetpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -31,8 +31,15 @@ import javax.inject.Inject
 class ForgetPasswordViewModel @Inject constructor(
     private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
     private val snackbarController: SnackbarController,
-    private val networkMonitor: NetworkMonitor
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     private val _state = MutableStateFlow(ForgetPasswordState())
     val state = _state.asStateFlow()
@@ -40,12 +47,7 @@ class ForgetPasswordViewModel @Inject constructor(
     private val _effects = Channel<ForgetPasswordEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
 
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = true
-        )
+
     fun onIntent(intent: ForgetPasswordIntent) {
         when (intent) {
             is ForgetPasswordIntent.SendClicked -> validateAndSend(intent.email)

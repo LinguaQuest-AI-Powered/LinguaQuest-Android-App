@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.newpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordEffect
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordIntent
 import com.iti.linguaquest.features.auth.presentation.newpassword.contract.NewPasswordState
@@ -33,8 +33,7 @@ import javax.inject.Inject
 class NewPasswordViewModel @Inject constructor(
     private val setNewPasswordUseCase: SetNewPasswordUseCase,
     private val snackbarController: SnackbarController,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewPasswordState())
@@ -42,7 +41,8 @@ class NewPasswordViewModel @Inject constructor(
 
     private val _effects = Channel<NewPasswordEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

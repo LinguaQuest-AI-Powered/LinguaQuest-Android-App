@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.signup.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
@@ -41,8 +41,7 @@ class SignUpViewModel @Inject constructor(
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
     private val snackbarController: SnackbarController,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -50,7 +49,8 @@ class SignUpViewModel @Inject constructor(
 
     private val _effects = Channel<SignUpEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageV
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveNativeLanguageUseCase
@@ -35,8 +36,7 @@ class LanguagesViewModel @Inject constructor(
     private val saveNativeLanguageUseCase: SaveNativeLanguageUseCase,
     private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase,
     private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LanguagesState())
@@ -44,7 +44,8 @@ class LanguagesViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<LanguagesEffect>()
     val effect: SharedFlow<LanguagesEffect> = _effect.asSharedFlow()
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

@@ -15,9 +15,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
@@ -84,6 +86,7 @@ fun SettingContent(
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showOfflinePopup by remember { mutableStateOf(false) }
     var popupYOffset by remember { mutableStateOf(0.dp) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     val density = LocalDensity.current
 
@@ -95,8 +98,6 @@ fun SettingContent(
             showOfflinePopup = true
         }
     }
-
-    var showLogoutDialog by remember { mutableStateOf(false) }
 
     if (lockScreenState.isConfirmDialogVisible) {
         EnableLockScreenDialog(
@@ -125,7 +126,6 @@ fun SettingContent(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -135,173 +135,166 @@ fun SettingContent(
                 .statusBarsPadding()
         ) {
             ShareTopBar(title = R.string.settings_label, onBackClick = onBackClick)
-            if (showLogoutDialog) {
-                AppDialog(
-                    title = stringResource(id = R.string.settings_log_out),
-                    imageRes = R.drawable.lingo_logout,
-                    message = stringResource(id = R.string.logout_dialog_message),
-                    primaryButtonText = stringResource(id = R.string.settings_log_out),
-                    onPrimaryClick = {
-                        showLogoutDialog = false
-                        onLogoutClick()
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            SettingProfileHeader()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            SettingSectionContainer(title = stringResource(id = R.string.settings_category_account)) {
+                var editProfileY by remember { mutableFloatStateOf(0f) }
+                SettingItem(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        editProfileY = coordinates.boundsInWindow().top
                     },
-                    secondaryButtonText = stringResource(id = R.string.cancel_button),
-                    onSecondaryClick = { showLogoutDialog = false },
-                    onDismissRequest = { showLogoutDialog = false },
-                    showCloseIcon = true
+                    icon = painterResource(id = R.drawable.ic_edit_icon),
+                    title = stringResource(id = R.string.settings_edit_profile),
+                    iconTint = LocalLinguaQuestColors.current.OrangeActive,
+                    onClick = { guardOnline(editProfileY) { onEditProfileClick() } }
                 )
-            }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .verticalScroll(rememberScrollState())
-                    .padding(vertical = 24.dp)
-                    .statusBarsPadding()
-            ) {
-                ShareTopBar(title = R.string.settings_label, onBackClick = onBackClick)
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                SettingProfileHeader()
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                SettingSectionContainer(title = stringResource(id = R.string.settings_category_account)) {
-                    var itemYPosition by remember { mutableStateOf(0f) }
-                    SettingItem(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            itemYPosition = coordinates.boundsInWindow().top
-                        },
-                        icon = painterResource(id = R.drawable.ic_edit_icon),
-                        title = stringResource(id = R.string.settings_edit_profile),
-                        iconTint = LocalLinguaQuestColors.current.OrangeActive,
-                        onClick = { guardOnline(itemYPosition) { onEditProfileClick() } }
-                    )
-                    var lockScreenYPosition by remember { mutableStateOf(0f) }
-                    LockScreenSettingItem(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            lockScreenYPosition = coordinates.boundsInWindow().top
-                        },
-                        isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE || lockScreenState.featureState == LockScreenFeatureState.ENABLING,
-                        onCheckedChange = { isChecked ->
-                            guardOnline(lockScreenYPosition) {
-                                onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
-                            }
+                var lockScreenY by remember { mutableFloatStateOf(0f) }
+                LockScreenSettingItem(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        lockScreenY = coordinates.boundsInWindow().top
+                    },
+                    isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE ||
+                        lockScreenState.featureState == LockScreenFeatureState.ENABLING,
+                    onCheckedChange = { isChecked ->
+                        guardOnline(lockScreenY) {
+                            onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
                         }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                SettingSectionContainer(title = stringResource(id = R.string.settings_category_app_experience)) {
-                    SettingItem(
-                        icon = painterResource(id = R.drawable.ic_learning_language),
-                        title = stringResource(id = R.string.settings_app_language),
-                        value = getLanguageName(appLanguage),
-                        valueColor = LocalLinguaQuestColors.current.BrownText,
-                        iconTint = MaterialTheme.colorScheme.tertiary,
-                        onClick = { showLanguageDialog = true }
-                    )
-                    SectionDivider()
-                    SettingItem(
-                        icon = painterResource(id = R.drawable.ic_bell_icon),
-                        title = stringResource(id = R.string.settings_notifications),
-                        hasSwitch = true,
-                        switchChecked = notificationsEnabled,
-                        onSwitchChange = onNotificationsToggle,
-                        iconTint = MaterialTheme.colorScheme.tertiary
-                    )
-                    SectionDivider()
-                    SettingItem(
-                        icon = painterResource(id = R.drawable.ic_moon_icon),
-                        title = stringResource(id = R.string.settings_dark_mode),
-                        hasSwitch = true,
-                        switchChecked = isDark,
-                        onSwitchChange = { isChecked ->
-                            onChangeAppTheme(if (isChecked) "dark" else "light")
-                        },
-                        iconTint = MaterialTheme.colorScheme.tertiary
-                    )
-                    SectionDivider()
-                    SettingItem(
-                        icon = painterResource(id = R.drawable.ic_speaker_icon),
-                        title = stringResource(id = R.string.settings_sound_effects),
-                        hasSwitch = true,
-                        switchChecked = soundEnabled,
-                        onSwitchChange = onSoundToggle,
-                        iconTint = MaterialTheme.colorScheme.tertiary
-                    )
-                    SectionDivider()
-                    var helpYPosition by remember { mutableStateOf(0f) }
-                    SettingItem(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            helpYPosition = coordinates.boundsInWindow().top
-                        },
-                        icon = painterResource(id = R.drawable.ic_help_icon),
-                        title = stringResource(id = R.string.settings_help_support),
-                        iconTint = MaterialTheme.colorScheme.tertiary,
-                        onClick = { guardOnline(helpYPosition) { /* TODO */ } }
-                    )
-                    SectionDivider()
-                    var aboutYPosition by remember { mutableStateOf(0f) }
-                    SettingItem(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            aboutYPosition = coordinates.boundsInWindow().top
-                        },
-                        icon = painterResource(id = R.drawable.ic_info_icon),
-                        title = stringResource(id = R.string.settings_about_app),
-                        iconTint = MaterialTheme.colorScheme.tertiary,
-                        onClick = { guardOnline(aboutYPosition) { /* TODO */ } }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                DailyReminderSection(
-                    state = reminderState,
-                    onIntent = onReminderIntent,
-                    enabled = notificationsEnabled,
-                    modifier = Modifier.padding(horizontal = 0.dp)
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                var logoutYPosition by remember { mutableStateOf(0f) }
-                AppButton3D(
-                    text = stringResource(id = R.string.settings_log_out),
-                    onClick = { guardOnline(logoutYPosition) { onLogoutClick() } },
-                    textColor = Color.Black,
-                    isLoading = isLoggingOut,
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .onGloballyPositioned { coordinates ->
-                            logoutYPosition = coordinates.boundsInWindow().top
-                        }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            if (showOfflinePopup) {
-                NoInternetMiniPopup(
-                    modifier = Modifier
-                        .offset(y = popupYOffset - 18.dp)
-                        .padding(start = 16.dp),
-                    onDismiss = { showOfflinePopup = false }
+                    }
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            SettingSectionContainer(title = stringResource(id = R.string.settings_category_app_experience)) {
+                var appY by remember { mutableFloatStateOf(0f) }
+
+                SettingItem(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        appY = coordinates.boundsInWindow().top
+                    },
+                    icon = painterResource(id = R.drawable.ic_learning_language),
+                    title = stringResource(id = R.string.settings_app_language),
+                    value = getLanguageName(appLanguage),
+                    valueColor = LocalLinguaQuestColors.current.BrownText,
+                    iconTint = MaterialTheme.colorScheme.tertiary,
+                     onClick = { guardOnline(appY) {showLanguageDialog = true  } }
+
+                )
+                SectionDivider()
+
+                SettingItem(
+                    icon = painterResource(id = R.drawable.ic_bell_icon),
+                    title = stringResource(id = R.string.settings_notifications),
+                    hasSwitch = true,
+                    switchChecked = notificationsEnabled,
+                    onSwitchChange = onNotificationsToggle,
+                    iconTint = MaterialTheme.colorScheme.tertiary
+                )
+                SectionDivider()
+
+                SettingItem(
+                    icon = painterResource(id = R.drawable.ic_moon_icon),
+                    title = stringResource(id = R.string.settings_dark_mode),
+                    hasSwitch = true,
+                    switchChecked = isDark,
+                    onSwitchChange = { isChecked ->
+                        onChangeAppTheme(if (isChecked) "dark" else "light")
+                    },
+                    iconTint = MaterialTheme.colorScheme.tertiary
+                )
+                SectionDivider()
+
+                SettingItem(
+                    icon = painterResource(id = R.drawable.ic_speaker_icon),
+                    title = stringResource(id = R.string.settings_sound_effects),
+                    hasSwitch = true,
+                    switchChecked = soundEnabled,
+                    onSwitchChange = onSoundToggle,
+                    iconTint = MaterialTheme.colorScheme.tertiary
+                )
+                SectionDivider()
+
+                var helpY by remember { mutableFloatStateOf(0f) }
+                SettingItem(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        helpY = coordinates.boundsInWindow().top
+                    },
+                    icon = painterResource(id = R.drawable.ic_help_icon),
+                    title = stringResource(id = R.string.settings_help_support),
+                    iconTint = MaterialTheme.colorScheme.tertiary,
+                    onClick = { guardOnline(helpY) { } }
+                )
+                SectionDivider()
+
+                var aboutY by remember { mutableFloatStateOf(0f) }
+                SettingItem(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        aboutY = coordinates.boundsInWindow().top
+                    },
+                    icon = painterResource(id = R.drawable.ic_info_icon),
+                    title = stringResource(id = R.string.settings_about_app),
+                    iconTint = MaterialTheme.colorScheme.tertiary,
+                    onClick = { guardOnline(aboutY) { } }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            DailyReminderSection(
+                state = reminderState,
+                onIntent = onReminderIntent,
+                enabled = notificationsEnabled,
+                modifier = Modifier.padding(horizontal = 0.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            var logoutY by remember { mutableFloatStateOf(0f) }
             AppButton3D(
+                modifier = Modifier.padding(16.dp).onGloballyPositioned { coordinates ->
+                    logoutY = coordinates.boundsInWindow().top
+                },
                 text = stringResource(id = R.string.settings_log_out),
-                onClick = { showLogoutDialog = true },
+                onClick = { guardOnline(logoutY) { } },
                 textColor = Color.Black,
                 isLoading = isLoggingOut,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
+             )
+
             Spacer(modifier = Modifier.height(16.dp))
         }
-    }
 
+        if (showLogoutDialog) {
+            AppDialog(
+                title = stringResource(id = R.string.settings_log_out),
+                imageRes = R.drawable.lingo_logout,
+                message = stringResource(id = R.string.logout_dialog_message),
+                primaryButtonText = stringResource(id = R.string.settings_log_out),
+                onPrimaryClick = {
+                    showLogoutDialog = false
+                    onLogoutClick()
+                },
+                secondaryButtonText = stringResource(id = R.string.cancel_button),
+                onSecondaryClick = { showLogoutDialog = false },
+                onDismissRequest = { showLogoutDialog = false },
+                showCloseIcon = true
+            )
+        }
+
+        if (showOfflinePopup) {
+            NoInternetMiniPopup(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(y = popupYOffset - 18.dp)
+                    .padding(start = 16.dp),
+                onDismiss = { showOfflinePopup = false }
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -309,7 +302,7 @@ fun SettingContent(
 fun SettingContentPreview() {
     LinguaQuestTheme {
         SettingContent(
-            isOnline = false,
+            isOnline = true,
             onBackClick = {},
             appLanguage = "en",
             availableLanguagesState = LanguagesUiState(),
@@ -332,7 +325,6 @@ fun SettingContentPreview() {
         )
     }
 }
-
 
 @Preview(showBackground = true, name = "Offline - popup visible")
 @Composable

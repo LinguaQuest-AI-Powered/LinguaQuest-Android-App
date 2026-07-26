@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.lockscreen.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.MarkLockScreenWordOpenedUseCase
@@ -22,15 +23,15 @@ import javax.inject.Inject
  @HiltViewModel
 
 class LockScreenWordDetailViewModel @Inject constructor(
-    private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase,
-    private val generateBatchUseCase: GenerateVocabularyBatchUseCase,
-    private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
-    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
-    private val networkMonitor: NetworkMonitor
-
+     private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase,
+     private val generateBatchUseCase: GenerateVocabularyBatchUseCase,
+     private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
+     private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
  ) : ViewModel() {
 
-     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
          .stateIn(
              scope = viewModelScope,
              started = SharingStarted.WhileSubscribed(5_000),

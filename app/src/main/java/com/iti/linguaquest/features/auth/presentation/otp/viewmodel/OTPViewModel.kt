@@ -2,7 +2,7 @@ package com.iti.linguaquest.features.auth.presentation.otp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
@@ -37,13 +37,13 @@ class OTPViewModel @Inject constructor(
     private val sendRegistrationOtpUseCase: SendRegistrationOtpUseCase,
     private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
     private val snackbarController: SnackbarController,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private var email: String = ""
     private var isPasswordReset: Boolean = false
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

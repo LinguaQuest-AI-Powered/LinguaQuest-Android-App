@@ -3,7 +3,6 @@ package com.iti.linguaquest.features.auth.presentation.login.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
@@ -22,7 +21,7 @@ import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageU
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,8 +42,9 @@ class LoginViewModel @Inject constructor(
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
-    private val networkMonitor: NetworkMonitor
-) : ViewModel() {
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+
+    ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -52,7 +52,8 @@ class LoginViewModel @Inject constructor(
     private val _effects = Channel<LoginEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
 
-     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

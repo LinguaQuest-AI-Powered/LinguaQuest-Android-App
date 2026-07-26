@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.levelView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetProficiencyLevelUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveProficiencyLevelUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SetIsFirstTimeUseCase
@@ -29,8 +30,7 @@ class LevelViewModel @Inject constructor(
     private val getProficiencyLevelUseCase: GetProficiencyLevelUseCase,
     private val saveProficiencyLevelUseCase: SaveProficiencyLevelUseCase,
     private val setIsFirstTimeUseCase: SetIsFirstTimeUseCase,
-    private val networkMonitor: NetworkMonitor
-
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LevelState())
@@ -38,7 +38,8 @@ class LevelViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<LevelEffect>()
     val effect: SharedFlow<LevelEffect> = _effect.asSharedFlow()
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

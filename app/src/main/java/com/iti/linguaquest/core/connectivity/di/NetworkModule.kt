@@ -1,5 +1,7 @@
-package com.iti.linguaquest.core.connectivity
+package com.iti.linguaquest.core.connectivity.di
 
+import com.iti.linguaquest.core.connectivity.ConnectivityNetworkMonitor
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
