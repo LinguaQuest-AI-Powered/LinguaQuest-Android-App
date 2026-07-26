@@ -6,8 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MapApiService {
-    @GET("world/{worldId}/map")
+    @GET("worlds/{worldId}/levels")
     suspend fun getWorldMapDetail(
         @Path("worldId") worldId: Int
     ): SuccessResponseDto<WorldMapDetailDto>
+
 }

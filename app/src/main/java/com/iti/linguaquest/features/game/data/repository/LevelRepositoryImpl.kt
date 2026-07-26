@@ -13,16 +13,14 @@ class LevelRepositoryImpl @Inject constructor(
 ) : LevelRepository {
 
     override suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
-        val result = remoteDataSource.startLevel(worldId, levelId)
-        return when (result) {
+        return when (val result = remoteDataSource.startLevel(worldId, levelId)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.targetWord.orEmpty())
             is LinguaQuestResult.Failure -> result
         }
     }
 
     override suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
-        val result = remoteDataSource.changeWord(worldId, levelId)
-        return when (result) {
+        return when (val result = remoteDataSource.changeWord(worldId, levelId)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.targetWord.orEmpty())
             is LinguaQuestResult.Failure -> result
         }

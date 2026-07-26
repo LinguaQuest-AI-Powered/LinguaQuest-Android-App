@@ -161,6 +161,8 @@ class AuthRepositoryImpl @Inject constructor(
         userPreferencesLocalDataSource.clearOnboardingPreferences()
         sessionManagerDataSource.saveFirstTime(true)
         sessionManagerDataSource.saveIsLoggedIn(false)
+        sessionManagerDataSource.clearSessionData()
+        
         return LinguaQuestResult.Success(Unit)
     }
 

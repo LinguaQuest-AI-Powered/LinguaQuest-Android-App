@@ -5,7 +5,6 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.data.remote.dto.WorldsDataDto
 import javax.inject.Inject
-
 class WorldsRemoteDataSourceImpl @Inject constructor(
     private val api: WorldsApiService
 ) : WorldsRemoteDataSource {

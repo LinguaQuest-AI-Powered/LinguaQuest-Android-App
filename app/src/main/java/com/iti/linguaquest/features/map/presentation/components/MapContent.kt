@@ -127,7 +127,7 @@ fun MapContent(
                             offsetX = x,
                             offsetY = y,
                             isLastLevel = index == state.levels.lastIndex,
-                            onClick = { onLevelClick(level.levelNumber) }
+                            onClick = { onLevelClick(level.levelId) }
                         )
                     }
 
