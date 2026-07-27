@@ -160,7 +160,7 @@
     <string name="hard">HARD</string>
 
     <!-- Review Screen -->
-    <string name="review_screen_title">AI Review</string>
+    <string name="review_screen_title">Lingo Review</string>
     <string name="review_back_content_description">Back</string>
     <string name="review_loading_message">AI is reviewing your word…</string>
     <string name="review_error_emoji">😔</string>
@@ -177,8 +177,10 @@
     <string name="review_section_fun_emoji">💡</string>
     <string name="review_section_fun_label">DID YOU KNOW?</string>
     <string name="review_language_arrow"> → </string>
-
+    <string name="review_section_welcome_label">WELCOME</string>
+    <string name="review_section_welcome_message">Hey there! Let\'s review %1$s together, scene by scene.</string>
     // Level Feature
+    <string name="review_captured_word">Captured word</string>
     <string name="level_title">Level %1$d</string>
     <string name="back">Back</string>
     <string name="coins">Coins</string>
