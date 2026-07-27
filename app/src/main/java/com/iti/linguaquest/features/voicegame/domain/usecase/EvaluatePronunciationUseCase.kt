@@ -12,8 +12,9 @@ class EvaluatePronunciationUseCase @Inject constructor(
     suspend operator fun invoke(
         targetSentence: String,
         targetLanguage: String,
-        audioBytes: ByteArray
+        audioBytes: ByteArray,
+        appLanguage: String? = null
     ): LinguaQuestResult<VoiceEvaluation, LinguaQuestDataError> {
-        return repository.evaluatePronunciation(targetSentence, targetLanguage, audioBytes)
+        return repository.evaluatePronunciation(targetSentence, targetLanguage, audioBytes, appLanguage)
     }
 }

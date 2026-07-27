@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -144,9 +143,16 @@ class VoiceGameViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoadingSentence = true) }
             try {
+                val targetLang = getTargetLanguageNameUseCase().firstOrNull()
+                    ?.takeIf { it.isNotBlank() }
+                    ?: _state.value.targetLanguage.takeIf { it.isNotBlank() }
+                    ?: "English"
+
+                _state.update { it.copy(targetLanguage = targetLang) }
+
                 val currentTopic = topics.random()
                 when (val result = generatePronunciationSentenceUseCase(
-                    targetLanguage = _state.value.targetLanguage,
+                    targetLanguage = targetLang,
                     topic = currentTopic
                 )) {
                     is LinguaQuestResult.Success -> {

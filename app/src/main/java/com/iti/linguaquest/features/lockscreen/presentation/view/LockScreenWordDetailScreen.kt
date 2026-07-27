@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -43,6 +42,9 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.ErrorCard
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailIntent
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.CustomTopBar
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.EmptyVaultState
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.LargeWordCard
@@ -124,12 +126,14 @@ fun LockScreenWordDetailScreen(
         ) {
             when {
                 state.isLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = AppColors.OrangeActive)
-                    }
+                    LoadingView()
+                }
+
+                state.errorMessage != null -> {
+                    ErrorView(
+                        message = state.errorMessage!!,
+                        onRetry = { viewModel.onIntent(LockScreenWordDetailIntent.Retry) }
+                    )
                 }
 
                 state.words.isEmpty() -> {

@@ -5,11 +5,9 @@ data class World(
     val name: String,
     val imageUrl: String,
     val difficulty: WorldDifficulty,
-    val status: WorldStatus,
     val progressPercent: Int,
     val totalLevels: Int,
     val completedLevels: Int
 )
 
 enum class WorldDifficulty { EASY, MEDIUM, HARD }
-enum class WorldStatus { LOCKED, IN_PROGRESS, COMPLETED }

@@ -5,6 +5,7 @@
     <string name="onboarding_title_p2">real world!</string>
     <string name="get_started">Get Started</string>
     <string name="already_have_an_account">I already have an account</string>
+    <string name="loading">Loading...</string>
 
     <string name="choose_your_languages">Choose your languages</string>
     <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>

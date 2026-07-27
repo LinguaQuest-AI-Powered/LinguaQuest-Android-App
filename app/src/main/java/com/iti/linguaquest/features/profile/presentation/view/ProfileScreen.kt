@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -22,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
@@ -81,7 +81,7 @@ fun ProfileScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            LoadingView()
         } else if (uiState.hasError && !uiState.hasCachedData) {
             ErrorView(
                 message = stringResource(R.string.error_generic),
