@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.gallery.presentation.view.comonents
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.database.word.WordEntity
 
 @Composable
@@ -57,8 +59,9 @@ fun WordCard(
             }
             .clickable { onWordClick(word.id, cardBounds) },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = LinguaQuestTheme.colors.ProfileCardColor),
+        border = BorderStroke(1.dp, LinguaQuestTheme.colors.ProfileCardBorderColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -111,7 +114,7 @@ fun WordCard(
                 ) {
                     Text(
                         text = word.sourceWord,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = LinguaQuestTheme.colors.blackColor,
                         fontSize = 13.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -140,7 +143,7 @@ fun WordCard(
                 ) {
                     Text(
                         text = compactLanguageLabel(word.sourceLanguage),
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 9.sp,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
@@ -149,12 +152,12 @@ fun WordCard(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary,
+                        tint = LinguaQuestTheme.colors.iconsColor,
                         modifier = Modifier.height(10.dp)
                     )
                     Text(
                         text = compactLanguageLabel(word.targetLanguage),
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 9.sp,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
