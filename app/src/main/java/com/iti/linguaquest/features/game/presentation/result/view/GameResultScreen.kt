@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.activity.compose.BackHandler
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -59,6 +60,13 @@ fun GameResultScreen(
     }
 
 
+    BackHandler(true) {
+        if (state is GameResultUiState.Success) {
+            onNavigateToNextLevel()
+        } else {
+            onExit()
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {

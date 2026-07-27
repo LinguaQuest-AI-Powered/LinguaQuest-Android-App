@@ -40,7 +40,6 @@ class MyLanguagesViewModel @Inject constructor(
     val effect: SharedFlow<MyLanguagesEffect> = _effect.asSharedFlow()
 
     init {
-        loadMyLanguages()
     }
 
     fun onIntent(intent: MyLanguagesIntent) {

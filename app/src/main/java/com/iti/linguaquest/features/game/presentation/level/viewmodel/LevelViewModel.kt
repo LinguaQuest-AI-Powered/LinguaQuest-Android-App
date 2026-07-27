@@ -56,6 +56,10 @@ class LevelViewModel @Inject constructor(
     }
 
     fun loadLevelDetails(worldId: Int, levelNumber: Int) {
+        if (_state.value.worldId == worldId && _state.value.levelNumber == levelNumber && _state.value.isLevelReady) {
+            return
+        }
+        
         viewModelScope.launch {
             refreshWalletUseCase()
             _state.update {
@@ -164,6 +168,7 @@ class LevelViewModel @Inject constructor(
                     val shouldDisableChangeWord = isInsufficientCoinsError(result.error)
                     _state.update {
                         it.copy(
+                            coinCount = if (cost > 0) it.coinCount + cost else it.coinCount,
                             isLoading = false,
                             isChangeWordAvailable = if (shouldDisableChangeWord) false else it.isChangeWordAvailable
                         )
@@ -222,7 +227,7 @@ class LevelViewModel @Inject constructor(
                 }
                 is LinguaQuestResult.Failure -> {
                     refreshWalletUseCase()
-                    _state.update { it.copy(isLoading = false, isBottomSheetVisible = false) }
+                    _state.update { it.copy(coinCount = it.coinCount + 20, isLoading = false, isBottomSheetVisible = false) }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
 

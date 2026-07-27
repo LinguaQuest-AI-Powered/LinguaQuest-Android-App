@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.game.presentation.processing.view
 
 import android.content.Context
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,10 @@ fun GameProcessingScreen(
     val whackState by whackViewModel.state.collectAsState()
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
+
+    BackHandler(true) {
+        // Block hardware back button during processing
+    }
 
     LaunchedEffect(sharedState.capturedImageUri, isOnline) {
         val uri = sharedState.capturedImageUri
