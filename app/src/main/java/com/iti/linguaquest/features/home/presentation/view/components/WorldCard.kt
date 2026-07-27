@@ -33,11 +33,14 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
+import androidx.compose.ui.graphics.Shape
+
 @Composable
 fun WorldCard(
     world: WorldItem,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageShape: Shape = RoundedCornerShape(20.dp)
 ) {
     Column(
         modifier = modifier
@@ -56,13 +59,8 @@ fun WorldCard(
                 contentDescription = world.title.asString(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 20.dp, topEnd = 20.dp, bottomEnd = 20.dp,
-                            bottomStart = 20.dp
-                        )
-                    ),
+                    .height(110.dp)
+                    .clip(imageShape),
                 contentScale = ContentScale.Crop
             )
 
