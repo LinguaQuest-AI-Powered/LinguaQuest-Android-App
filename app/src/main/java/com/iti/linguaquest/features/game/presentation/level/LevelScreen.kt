@@ -156,17 +156,6 @@ fun LevelScreen(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
-            QuestCard(
-                wordToGuess = state.wordToGuess,
-                hintText = state.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
-                onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
-                onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
-                onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
-                onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
-                isCameraEnabled = state.isLevelReady && !state.isLoading,
-                isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
         }
         if (state.isBottomSheetVisible) {
             HintsBottomSheet(

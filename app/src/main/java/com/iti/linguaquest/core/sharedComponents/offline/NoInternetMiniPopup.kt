@@ -35,13 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,6 +74,9 @@ fun NoInternetMiniPopup(
 
     var visible by remember { mutableStateOf(false) }
 
+    val layoutDirection = LocalLayoutDirection.current
+    val isRtl = layoutDirection == LayoutDirection.Rtl
+
     LaunchedEffect(Unit) {
         visible = true
     }
@@ -90,7 +94,7 @@ fun NoInternetMiniPopup(
         }
     }
 
-     val borderTransition = rememberInfiniteTransition(label = "mini_bubble_border")
+    val borderTransition = rememberInfiniteTransition(label = "mini_bubble_border")
     val borderShift by borderTransition.animateFloat(
         initialValue = -1f,
         targetValue = 2f,
@@ -105,7 +109,7 @@ fun NoInternetMiniPopup(
     val borderColorB = LinguaQuestTheme.colors.OrangeActive
     val borderColorC = LinguaQuestTheme.colors.ShadowOrange
 
-    val bubbleShape = LeftTailBubbleShape(
+    val bubbleShape = TailBubbleShape(
         cornerRadius = 16.dp,
         tailWidth = 8.dp,
         tailHeight = 10.dp,
@@ -140,7 +144,9 @@ fun NoInternetMiniPopup(
                 Image(
                     painter = painterResource(id = R.drawable.lingo_parrot_pointing),
                     contentDescription = null,
-                    modifier = Modifier.size(112.dp),
+                    modifier = Modifier
+                        .size(112.dp)
+                        .scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f),
                     contentScale = ContentScale.Fit
                 )
 
@@ -150,20 +156,21 @@ fun NoInternetMiniPopup(
                         .widthIn(max = 204.dp)
                         .clip(bubbleShape)
                         .background(LinguaQuestTheme.colors.whiteColor)
-                    .drawWithContent {
-                        drawContent()
+                        .drawWithContent {
+                            drawContent()
 
                             val cornerPx = 16.dp.toPx()
                             val tailWPx = 8.dp.toPx()
                             val tailHPx = 10.dp.toPx()
                             val strokePx = 2.5.dp.toPx()
 
-                            val bubblePath = buildLeftTailBubblePath(
+                            val bubblePath = buildTailBubblePath(
                                 size = size,
                                 cornerRadiusPx = cornerPx,
                                 tailWidthPx = tailWPx,
                                 tailHeightPx = tailHPx,
-                                tailPositionY = 0.3f
+                                tailPositionY = 0.3f,
+                                isRtl = layoutDirection == LayoutDirection.Rtl
                             )
 
                             val span = size.width + size.height
@@ -204,18 +211,21 @@ fun NoInternetMiniPopup(
     }
 }
 
-private fun buildLeftTailBubblePath(
+private fun buildTailBubblePath(
     size: Size,
     cornerRadiusPx: Float,
     tailWidthPx: Float,
     tailHeightPx: Float,
-    tailPositionY: Float
+    tailPositionY: Float,
+    isRtl: Boolean
 ): Path {
-    val bodyLeft = tailWidthPx
+    val bodyLeft = if (isRtl) 0f else tailWidthPx
+    val bodyRight = if (isRtl) size.width - tailWidthPx else size.width
+
     return Path().apply {
         addRoundRect(
             RoundRect(
-                rect = Rect(bodyLeft, 0f, size.width, size.height),
+                rect = Rect(bodyLeft, 0f, bodyRight, size.height),
                 cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
             )
         )
@@ -223,14 +233,21 @@ private fun buildLeftTailBubblePath(
         val tipY = (size.height * tailPositionY)
             .coerceIn(tailHeightPx, size.height - tailHeightPx)
 
-        moveTo(bodyLeft + 1f, tipY - tailHeightPx / 2f)
-        lineTo(bodyLeft + 1f, tipY + tailHeightPx / 2f)
-        lineTo(0f, tipY)
-        close()
+        if (isRtl) {
+            moveTo(bodyRight - 1f, tipY - tailHeightPx / 2f)
+            lineTo(bodyRight - 1f, tipY + tailHeightPx / 2f)
+            lineTo(size.width, tipY)
+            close()
+        } else {
+            moveTo(bodyLeft + 1f, tipY - tailHeightPx / 2f)
+            lineTo(bodyLeft + 1f, tipY + tailHeightPx / 2f)
+            lineTo(0f, tipY)
+            close()
+        }
     }
 }
 
-private class LeftTailBubbleShape(
+private class TailBubbleShape(
     private val cornerRadius: Dp,
     private val tailWidth: Dp,
     private val tailHeight: Dp,
@@ -241,12 +258,13 @@ private class LeftTailBubbleShape(
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline {
-        val path = buildLeftTailBubblePath(
+        val path = buildTailBubblePath(
             size = size,
             cornerRadiusPx = with(density) { cornerRadius.toPx() },
             tailWidthPx = with(density) { tailWidth.toPx() },
             tailHeightPx = with(density) { tailHeight.toPx() },
-            tailPositionY = tailPositionY
+            tailPositionY = tailPositionY,
+            isRtl = layoutDirection == LayoutDirection.Rtl
         )
         return Outline.Generic(path)
     }

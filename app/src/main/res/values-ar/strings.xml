@@ -557,7 +557,6 @@
     <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
     <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
     <string name="retry_label">إعادة المحاولة</string>
-    <string name="no_internet_short"> لا يوجد اتصال بالإنترنت</string>
-
+    <string name="no_internet_short">لا يوجد إنترنت</string>
     <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
 </resources>
