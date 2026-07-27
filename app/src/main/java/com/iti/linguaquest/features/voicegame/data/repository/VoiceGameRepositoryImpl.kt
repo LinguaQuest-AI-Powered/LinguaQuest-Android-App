@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.voicegame.data.repository
 
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.voicegame.data.remote.PronunciationSentenceGeneratorService
@@ -7,20 +8,37 @@ import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
 import com.iti.linguaquest.features.voicegame.domain.model.PronunciationSentence
 import com.iti.linguaquest.features.voicegame.domain.model.VoiceEvaluation
 import com.iti.linguaquest.features.voicegame.domain.repository.VoiceGameRepository
+import kotlinx.coroutines.flow.firstOrNull
+import java.util.Locale
 import javax.inject.Inject
 
 class VoiceGameRepositoryImpl @Inject constructor(
     private val service: VoiceEvaluationService,
-    private val generatorService: PronunciationSentenceGeneratorService
+    private val generatorService: PronunciationSentenceGeneratorService,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : VoiceGameRepository {
 
     override suspend fun evaluatePronunciation(
         targetSentence: String,
         targetLanguage: String,
-        audioBytes: ByteArray
+        audioBytes: ByteArray,
+        appLanguage: String?
     ): LinguaQuestResult<VoiceEvaluation, LinguaQuestDataError> {
         return try {
-            val response = service.evaluatePronunciation(targetSentence, targetLanguage, audioBytes)
+            val resolvedAppLanguage = if (!appLanguage.isNullOrBlank()) {
+                appLanguage
+            } else {
+                val nativeName = userPreferencesRepository.nativeLanguageName.firstOrNull()
+                val langCode = userPreferencesRepository.appLanguage.firstOrNull()
+                resolveAppLanguageName(nativeName, langCode)
+            }
+
+            val response = service.evaluatePronunciation(
+                targetSentence = targetSentence,
+                targetLanguage = targetLanguage,
+                audioBytes = audioBytes,
+                appLanguage = resolvedAppLanguage
+            )
             val domainModel = VoiceEvaluation(
                 rating = response.rating,
                 correctWords = response.correctWords,
@@ -34,6 +52,26 @@ class VoiceGameRepositoryImpl @Inject constructor(
                     e.message ?: "Voice evaluation failed"
                 )
             )
+        }
+    }
+
+    private fun resolveAppLanguageName(nativeLanguageName: String?, appLanguageCode: String?): String {
+        if (!nativeLanguageName.isNullOrBlank()) {
+            return nativeLanguageName
+        }
+        val code = appLanguageCode?.trim()?.lowercase() ?: Locale.getDefault().language
+        return when (code) {
+            "ar", "arabic" -> "Arabic"
+            "en", "english" -> "English"
+            "es", "spanish" -> "Spanish"
+            "fr", "french" -> "French"
+            "de", "german" -> "German"
+            "it", "italian" -> "Italian"
+            "ja", "japanese" -> "Japanese"
+            "zh", "chinese" -> "Chinese"
+            "pt", "portuguese" -> "Portuguese"
+            "ru", "russian" -> "Russian"
+            else -> Locale.forLanguageTag(code).getDisplayLanguage(Locale.ENGLISH).ifBlank { "English" }
         }
     }
 
