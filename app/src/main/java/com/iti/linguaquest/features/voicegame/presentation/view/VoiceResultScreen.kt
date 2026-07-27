@@ -20,8 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -30,8 +28,7 @@ import com.iti.linguaquest.features.voicegame.presentation.view.components.Flyin
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceResultViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultTopBar
-import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceResultViewModel
-import nl.dionsegijn.konfetti.compose.KonfettiView
+ import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
@@ -103,81 +100,83 @@ fun VoiceResultScreen(
                 showCoins = walletReady,
                 onCoinPillPositioned = { targetOffset = it }
             )
-    OfflineAwareContent(
-        isOnline = isOnline,
-        modifier = modifier.fillMaxSize()
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (result.isPassed) {
-                KonfettiView(
-                    modifier = Modifier.fillMaxSize(),
-                    parties = listOf(party)
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            OfflineAwareContent(
+                isOnline = isOnline,
+                modifier = modifier.fillMaxSize()
             ) {
-                Spacer(Modifier.height(32.dp))
-
-                VoiceResultHeader(
-                    isPassed = result.isPassed,
-                    advice = result.advice,
-                    rating = result.rating,
-                    correctWords = result.correctWords,
-                    wrongWords = result.wrongWords,
-                    coinsAwarded = result.coinsAwarded,
-                    onContinue = onContinue,
-                    onRetry = onRetry,
-                    onHome = onHome
-                )
-
-                Spacer(Modifier.height(24.dp))
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(Modifier.height(12.dp))
-                VoiceResultHeader(
-                    isPassed = result.isPassed,
-                    advice = result.advice,
-                    rating = result.rating,
-                    correctWords = result.correctWords,
-                    wrongWords = result.wrongWords,
-                    coinsAwarded = result.coinsAwarded,
-                    hideCoinsBadge = hasTriggeredFlight,
-                    onCoinsBadgePositioned = { sourceOffset = it },
-                    onContinue = onContinue,
-                    onRetry = onRetry,
-                    onHome = onHome
-                )
-                Spacer(Modifier.height(24.dp))
-            }
-        }
-
-        if (showFlyingCoin && sourceOffset != null && targetOffset != null && containerOrigin != null) {
-
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    FlyingCoinBadge(
-                        coinsAwarded = result.coinsAwarded,
-                        sourceOffset = sourceOffset!!,
-                        targetOffset = targetOffset!!,
-                        containerOrigin = containerOrigin!!,
-                        onLanded = {
-                            soundPlayer.play(AppSound.AddedMoney)
-                            displayedCoins = wallet.coins
-                            showFlyingCoin = false
+                    if (result.isPassed) {
+                        KonfettiView(
+                            modifier = Modifier.fillMaxSize(),
+                            parties = listOf(party)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp, vertical = 20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(Modifier.height(32.dp))
+
+                        VoiceResultHeader(
+                            isPassed = result.isPassed,
+                            advice = result.advice,
+                            rating = result.rating,
+                            correctWords = result.correctWords,
+                            wrongWords = result.wrongWords,
+                            coinsAwarded = result.coinsAwarded,
+                            onContinue = onContinue,
+                            onRetry = onRetry,
+                            onHome = onHome
+                        )
+
+                        Spacer(Modifier.height(24.dp))
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(Modifier.height(12.dp))
+                        VoiceResultHeader(
+                            isPassed = result.isPassed,
+                            advice = result.advice,
+                            rating = result.rating,
+                            correctWords = result.correctWords,
+                            wrongWords = result.wrongWords,
+                            coinsAwarded = result.coinsAwarded,
+                            hideCoinsBadge = hasTriggeredFlight,
+                            onCoinsBadgePositioned = { sourceOffset = it },
+                            onContinue = onContinue,
+                            onRetry = onRetry,
+                            onHome = onHome
+                        )
+                        Spacer(Modifier.height(24.dp))
+                    }
+                }
+
+                if (showFlyingCoin && sourceOffset != null && targetOffset != null && containerOrigin != null) {
+
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            FlyingCoinBadge(
+                                coinsAwarded = result.coinsAwarded,
+                                sourceOffset = sourceOffset!!,
+                                targetOffset = targetOffset!!,
+                                containerOrigin = containerOrigin!!,
+                                onLanded = {
+                                    soundPlayer.play(AppSound.AddedMoney)
+                                    displayedCoins = wallet.coins
+                                    showFlyingCoin = false
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
