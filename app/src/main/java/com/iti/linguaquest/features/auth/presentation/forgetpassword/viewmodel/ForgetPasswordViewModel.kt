@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.forgetpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -17,8 +18,11 @@ import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,14 +30,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ForgetPasswordViewModel @Inject constructor(
     private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     private val _state = MutableStateFlow(ForgetPasswordState())
     val state = _state.asStateFlow()
 
     private val _effects = Channel<ForgetPasswordEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+
 
     fun onIntent(intent: ForgetPasswordIntent) {
         when (intent) {

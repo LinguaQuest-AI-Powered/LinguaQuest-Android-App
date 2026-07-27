@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement.components
+package com.iti.linguaquest.features.achivement.presentation.view.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

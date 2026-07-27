@@ -45,13 +45,13 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
-import com.iti.linguaquest.features.achivement.AchievementScreen
+import com.iti.linguaquest.features.achivement.presentation.view.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
  import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
-import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
+import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen

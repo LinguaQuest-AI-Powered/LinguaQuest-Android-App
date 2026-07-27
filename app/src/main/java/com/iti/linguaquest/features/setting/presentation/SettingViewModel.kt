@@ -3,7 +3,9 @@ package com.iti.linguaquest.features.setting.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
- import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -70,9 +72,17 @@ class SettingViewModel @Inject constructor(
     private val saveReminderDaysUseCase: SaveReminderDaysUseCase,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     val appLanguage: StateFlow<String> = getAppLanguageUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "en")
 

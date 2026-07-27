@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.navigation.SharedVoiceResultHolder
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameEffect
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
@@ -30,7 +32,6 @@ import com.iti.linguaquest.features.voicegame.presentation.view.contents.Evaluat
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.IdlePhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.RecordingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
-import com.iti.linguaquest.core.navigation.SharedVoiceResultHolder
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -40,16 +41,19 @@ fun VoiceGameScreen(
     modifier: Modifier = Modifier,
     viewModel: VoiceGameViewModel = hiltViewModel()
 ) {
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        if (SharedVoiceResultHolder.autoGenerateNextSentence) {
-            SharedVoiceResultHolder.autoGenerateNextSentence = false
-            viewModel.onIntent(VoiceGameIntent.GenerateNewSentenceClicked)
-        } else {
-            viewModel.onIntent(VoiceGameIntent.Init)
+    LaunchedEffect(isOnline) {
+        if (isOnline) {
+            if (SharedVoiceResultHolder.autoGenerateNextSentence) {
+                SharedVoiceResultHolder.autoGenerateNextSentence = false
+                viewModel.onIntent(VoiceGameIntent.GenerateNewSentenceClicked)
+            } else {
+                viewModel.onIntent(VoiceGameIntent.Init)
+            }
         }
     }
 
@@ -75,36 +79,41 @@ fun VoiceGameScreen(
         }
     }
 
+    OfflineAwareContent(
+        isOnline = isOnline,
+        modifier = modifier.fillMaxSize()
+    ) {
     Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
         VoiceGameTopBar(
             coins = wallet.coins,
             onNavigateBack = onNavigateBack
         )
 
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(Modifier.height(16.dp))
 
-            when (state.phase) {
-                VoiceGamePhase.IDLE -> IdlePhaseContent(state, viewModel)
-                VoiceGamePhase.RECORDING -> RecordingPhaseContent(state, viewModel)
-                VoiceGamePhase.EVALUATING -> EvaluatingPhaseContent()
+                when (state.phase) {
+                    VoiceGamePhase.IDLE -> IdlePhaseContent(state, viewModel)
+                    VoiceGamePhase.RECORDING -> RecordingPhaseContent(state, viewModel)
+                    VoiceGamePhase.EVALUATING -> EvaluatingPhaseContent()
+                }
             }
         }
-    }
 
-    if (state.showConfirmationDialog) {
-        RecordingConfirmationDialog(
-            playbackSeconds = state.previewPlaybackSeconds,
-            isPlaying = state.isPreviewPlaying,
-            onTogglePlayback = { viewModel.onIntent(VoiceGameIntent.TogglePreviewPlaybackClicked) },
-            onDiscard = { viewModel.onIntent(VoiceGameIntent.DiscardClicked) },
-            onProcess = { viewModel.onIntent(VoiceGameIntent.ConfirmProcessClicked) }
-        )
+        if (state.showConfirmationDialog) {
+            RecordingConfirmationDialog(
+                playbackSeconds = state.previewPlaybackSeconds,
+                isPlaying = state.isPreviewPlaying,
+                onTogglePlayback = { viewModel.onIntent(VoiceGameIntent.TogglePreviewPlaybackClicked) },
+                onDiscard = { viewModel.onIntent(VoiceGameIntent.DiscardClicked) },
+                onProcess = { viewModel.onIntent(VoiceGameIntent.ConfirmProcessClicked) }
+            )
+        }
     }
 }

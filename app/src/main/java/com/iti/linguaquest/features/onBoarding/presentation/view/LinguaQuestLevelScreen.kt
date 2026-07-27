@@ -27,6 +27,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContra
 import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContract.ProficiencyLevel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.tooling.preview.Preview
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.onBoarding.presentation.components.LevelCard
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -37,6 +38,7 @@ fun LevelScreen(
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -45,16 +47,18 @@ fun LevelScreen(
             }
         }
     }
+    OfflineAwareContent(isOnline = isOnline) {
 
-    LevelScreenContent(
-        state = state,
-        onLevelSelected = {
-            viewModel.onIntent(LevelIntent.SelectLevel(it))
-        },
-        onContinueClick = {
-            viewModel.onIntent(LevelIntent.ContinueClicked)
-        }
-    )
+        LevelScreenContent(
+            state = state,
+            onLevelSelected = {
+                viewModel.onIntent(LevelIntent.SelectLevel(it))
+            },
+            onContinueClick = {
+                viewModel.onIntent(LevelIntent.ContinueClicked)
+            }
+        )
+    }
 }
 
 @Composable

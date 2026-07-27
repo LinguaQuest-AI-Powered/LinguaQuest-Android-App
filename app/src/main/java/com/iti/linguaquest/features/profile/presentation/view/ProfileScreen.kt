@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
@@ -39,10 +40,20 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     var showAvatarSheet by rememberSaveable { mutableStateOf(false) }
     var pendingCameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var showOfflinePopup by rememberSaveable { mutableStateOf(false) }
+
+    fun guardOnline(action: () -> Unit) {
+        if (isOnline) {
+            action()
+        } else {
+            showOfflinePopup = true
+        }
+    }
 
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) pendingCameraUri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
@@ -82,10 +93,20 @@ fun ProfileScreen(
                 state = uiState.profile,
                 isAvatarUploading = uiState.isAvatarUploading,
                 onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                onEditAvatarClick = { showAvatarSheet = true },
-                onViewAllAchievementsClick = { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) },
-                onViewAllLeaderboardClick = { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) },
+                onEditAvatarClick = { guardOnline { showAvatarSheet = true }},
+                onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
+                onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
                 modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        if (showOfflinePopup) {
+            NoInternetMiniPopup(
+                isOnline = isOnline,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 16.dp, top = 16.dp),
+                onDismiss = { showOfflinePopup = false }
             )
         }
     }

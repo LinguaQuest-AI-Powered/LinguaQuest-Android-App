@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement
+package com.iti.linguaquest.features.achivement.presentation.view
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -26,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ShareTopBar
-import com.iti.linguaquest.features.achivement.components.AchievementBottomBar
-import com.iti.linguaquest.features.achivement.components.AchievementGridItem
-import com.iti.linguaquest.features.achivement.components.AchievementHeader
-import com.iti.linguaquest.features.achivement.components.AchievementTabs
-import com.iti.linguaquest.features.achivement.model.AchievementItem
+import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementBottomBar
+import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementGridItem
+import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementHeader
+import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementTabs
+import com.iti.linguaquest.features.achivement.presentation.view.model.AchievementItem
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -120,7 +120,7 @@ fun AchievementContent(
                     }
 
                     item(span = { GridItemSpan(2) }) {
-                        androidx.compose.animation.AnimatedVisibility(
+                        androidx.compose.animation. AnimatedVisibility(
                             visible = tabsVisible,
                             enter   = fadeIn(tween(220)) + slideInVertically(
                                 initialOffsetY = { -20 },

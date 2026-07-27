@@ -9,6 +9,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
@@ -30,6 +32,7 @@ fun GameResultScreen(
     val sharedState by sharedViewModel.sharedState.collectAsState()
     val state by viewModel.state.collectAsState()
     val soundPlayer = LocalSoundPlayer.current
+    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(sharedState.verificationOutcome) {
         val mappedState = when (val outcome = sharedState.verificationOutcome) {
@@ -70,31 +73,42 @@ fun GameResultScreen(
         }
     }
 
-    when (val currentState = state) {
-        is GameResultUiState.Success -> {
-            GameSuccessView(
-                xpGained = currentState.xpAwarded,
-                coinsGained = currentState.coinsAwarded,
-                currentLevel = currentState.currentLevel,
-                progressPercent = currentState.progressPercent,
-                onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
-            )
-        }
-        is GameResultUiState.Failure -> {
-            GameFailView(
-                targetWord = sharedState.targetWord,
-                isHintUsed = sharedState.isHintUsed,
-                onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                onBuyHint = { viewModel.onIntent(GameResultIntent.BuyHintClicked(sharedState.worldId, sharedState.levelId)) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
-            )
-        }
-        is GameResultUiState.Error -> {
-            GameErrorView(
-                state = currentState,
-                onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
-                onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
-            )
+    OfflineAwareContent(isOnline = isOnline) {
+        when (val currentState = state) {
+            is GameResultUiState.Success -> {
+                GameSuccessView(
+                    xpGained = currentState.xpAwarded,
+                    coinsGained = currentState.coinsAwarded,
+                    currentLevel = currentState.currentLevel,
+                    progressPercent = currentState.progressPercent,
+                    onNextLevelClick = { viewModel.onIntent(GameResultIntent.NextLevelClicked) }
+                )
+            }
+
+            is GameResultUiState.Failure -> {
+                GameFailView(
+                    targetWord = sharedState.targetWord,
+                    isHintUsed = sharedState.isHintUsed,
+                    onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
+                    onBuyHint = {
+                        viewModel.onIntent(
+                            GameResultIntent.BuyHintClicked(
+                                sharedState.worldId,
+                                sharedState.levelId
+                            )
+                        )
+                    },
+                    onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
+                )
+            }
+
+            is GameResultUiState.Error -> {
+                GameErrorView(
+                    state = currentState,
+                    onRetry = { viewModel.onIntent(GameResultIntent.RetryClicked) },
+                    onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
+                )
+            }
         }
     }
 }

@@ -24,6 +24,7 @@
     <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
     <string name="repeat">التكرار</string>
     // Languages displayed name
+    <string name="login_error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة والمحاولة مرة أخرى.</string>
     <string name="spanish_language_displayName">الإسبانية</string>
     <string name="japanese_language_displayName">اليابانية</string>
     <string name="english_language_displayName">الإنجليزية</string>
@@ -550,7 +551,12 @@
     <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
 
     <!-- New profile strings -->
-    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت...</string>
+    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت…</string>
     <string name="offline_title">أنت غير متصل بالإنترنت</string>
     <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
+    <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
+    <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
+    <string name="retry_label">إعادة المحاولة</string>
+    <string name="no_internet_short">لا يوجد إنترنت</string>
+    <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
 </resources>

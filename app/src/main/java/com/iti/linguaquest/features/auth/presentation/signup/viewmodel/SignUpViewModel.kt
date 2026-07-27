@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.auth.presentation.signup.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.auth.domain.model.AuthError
@@ -22,9 +23,12 @@ import com.iti.linguaquest.features.auth.presentation.signup.contract.SignUpStat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +40,8 @@ class SignUpViewModel @Inject constructor(
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -44,7 +49,13 @@ class SignUpViewModel @Inject constructor(
 
     private val _effects = Channel<SignUpEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     fun onIntent(intent: SignUpIntent) {
         when (intent) {
             is SignUpIntent.SignUpClicked -> handleSignUpClicked(

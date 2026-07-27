@@ -2,6 +2,8 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.levelView
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetProficiencyLevelUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveProficiencyLevelUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SetIsFirstTimeUseCase
@@ -13,10 +15,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class LevelViewModel @Inject constructor(
     private val getProficiencyLevelUseCase: GetProficiencyLevelUseCase,
     private val saveProficiencyLevelUseCase: SaveProficiencyLevelUseCase,
-    private val setIsFirstTimeUseCase: SetIsFirstTimeUseCase
+    private val setIsFirstTimeUseCase: SetIsFirstTimeUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LevelState())
@@ -33,7 +38,13 @@ class LevelViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<LevelEffect>()
     val effect: SharedFlow<LevelEffect> = _effect.asSharedFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     init {
         loadSavedLevel()
     }

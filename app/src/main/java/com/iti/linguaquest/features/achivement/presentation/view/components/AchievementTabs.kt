@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.achivement.components
+package com.iti.linguaquest.features.achivement.presentation.view.components
 
 import com.iti.linguaquest.R
 import androidx.compose.animation.animateColorAsState

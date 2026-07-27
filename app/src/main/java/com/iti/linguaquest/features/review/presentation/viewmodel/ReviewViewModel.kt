@@ -2,6 +2,8 @@ package com.iti.linguaquest.features.review.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -12,15 +14,19 @@ import com.iti.linguaquest.features.review.presentation.contract.ReviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ReviewViewModel @Inject constructor(
-    private val getAIReviewUseCase: GetAIReviewUseCase
+    private val getAIReviewUseCase: GetAIReviewUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ReviewState())
@@ -28,7 +34,13 @@ class ReviewViewModel @Inject constructor(
 
     private val _effects = Channel<ReviewEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     fun onIntent(intent: ReviewIntent) {
         when (intent) {
             is ReviewIntent.LoadReview   -> loadReview(intent.word)

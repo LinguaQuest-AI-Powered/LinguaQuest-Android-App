@@ -1,5 +1,10 @@
 package com.iti.linguaquest.features.gallery.presentation.view.comonents
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +23,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +40,17 @@ fun EmptyGalleryView(
     modifier: Modifier = Modifier,
     onAddNewClick: () -> Unit = {}
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val translationY by infiniteTransition.animateFloat(
+        initialValue = -15f,
+        targetValue = 15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = ""
+    )
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -66,7 +84,11 @@ fun EmptyGalleryView(
             Image(
                 painter = painterResource(id = R.drawable.lingo_gellary_empty),
                 contentDescription = null,
-                modifier = Modifier.size(300.dp)
+                modifier = Modifier
+                    .size(300.dp)
+                    .graphicsLayer {
+                        this.translationY = translationY
+                    }
             )
 
             Spacer(modifier = Modifier.height(24.dp))

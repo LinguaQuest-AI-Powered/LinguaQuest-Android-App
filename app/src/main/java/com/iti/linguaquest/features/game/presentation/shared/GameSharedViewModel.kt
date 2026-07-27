@@ -2,19 +2,33 @@ package com.iti.linguaquest.features.game.presentation.shared
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+ import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class GameSharedViewModel @Inject constructor() : ViewModel() {
+class GameSharedViewModel @Inject constructor(
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
+) : ViewModel() {
 
     private val _sharedState = MutableStateFlow(GameSharedState())
     val sharedState: StateFlow<GameSharedState> = _sharedState.asStateFlow()
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     fun setWorldAndLevelId(worldId: Int, levelId: Int) {
         _sharedState.update { it.copy(worldId = worldId, levelId = levelId) }

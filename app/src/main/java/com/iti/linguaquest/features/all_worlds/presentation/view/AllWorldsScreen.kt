@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
 import com.iti.linguaquest.features.all_worlds.presentation.view.components.AllWorldsContent
 import com.iti.linguaquest.features.all_worlds.presentation.viewModel.AllWorldsViewModel
@@ -25,6 +26,8 @@ fun AllWorldsScreen(
     viewModel: AllWorldsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -43,10 +46,12 @@ fun AllWorldsScreen(
         if (state.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            AllWorldsContent(
-                state = state,
-                onIntent = viewModel::onIntent
-            )
+            OfflineAwareContent(isOnline = isOnline) {
+                AllWorldsContent(
+                    state = state,
+                    onIntent = viewModel::onIntent
+                )
+            }
         }
     }
 }

@@ -13,7 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingEffect
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameProcessingIntent
 import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackIntent
@@ -36,10 +40,18 @@ fun GameProcessingScreen(
     val context = LocalContext.current
     val whackState by whackViewModel.state.collectAsState()
     val sharedState by sharedViewModel.sharedState.collectAsState()
+    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
 
-    LaunchedEffect(sharedState.capturedImageUri) {
+    LaunchedEffect(sharedState.capturedImageUri, isOnline) {
         val uri = sharedState.capturedImageUri
-        if (uri != null) {
+        if (!isOnline) {
+            sharedViewModel.setVerificationOutcome(
+                VerificationOutcome.Error(
+                    errorMessage = UiText.StringResource(R.string.no_internet_title)
+                )
+            )
+            onNavigateToResult()
+        } else if (uri != null) {
             val file = uriToFile(context, uri)
             processingViewModel.verifyImage(
                 worldId = sharedState.worldId,
@@ -72,28 +84,30 @@ fun GameProcessingScreen(
         }
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LinguaQuestTheme.colors.blackColor.copy(alpha = 0.5f))
-    ) {
+    OfflineAwareContent(isOnline = isOnline, modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LinguaQuestTheme.colors.blackColor.copy(alpha = 0.5f))
+        ) {
 
-        Crossfade(
-            targetState = whackState.isGameActive,
-            label = "ProcessingToGameCrossfade"
-        ) { isGameActive ->
-            if (isGameActive) {
-                GameWhackView(
-                    state = whackState,
-                    onLingoWhacked = { whackViewModel.onIntent(GameWhackIntent.LingoWhacked) },
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                GameProcessingView(
-                    imageUri = sharedState.capturedImageUri,
-                    onStartGameClicked = { whackViewModel.onIntent(GameWhackIntent.StartGame) },
-                    modifier = Modifier.fillMaxSize()
-                )
+            Crossfade(
+                targetState = whackState.isGameActive,
+                label = "ProcessingToGameCrossfade"
+            ) { isGameActive ->
+                if (isGameActive) {
+                    GameWhackView(
+                        state = whackState,
+                        onLingoWhacked = { whackViewModel.onIntent(GameWhackIntent.LingoWhacked) },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    GameProcessingView(
+                        imageUri = sharedState.capturedImageUri,
+                        onStartGameClicked = { whackViewModel.onIntent(GameWhackIntent.StartGame) },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     }

@@ -2,6 +2,8 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageV
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveNativeLanguageUseCase
@@ -16,11 +18,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +35,8 @@ class LanguagesViewModel @Inject constructor(
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val saveNativeLanguageUseCase: SaveNativeLanguageUseCase,
     private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase,
-    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase
+    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LanguagesState())
@@ -39,7 +44,13 @@ class LanguagesViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<LanguagesEffect>()
     val effect: SharedFlow<LanguagesEffect> = _effect.asSharedFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     init {
         loadSavedLanguages()
     }

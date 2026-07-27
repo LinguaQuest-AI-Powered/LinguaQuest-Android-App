@@ -20,6 +20,8 @@ import com.iti.linguaquest.features.review.presentation.viewmodel.ReviewViewMode
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Locale
 import android.speech.tts.UtteranceProgressListener
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+
 @Composable
 fun ReviewScreen(
     word: WordEntity,
@@ -29,6 +31,9 @@ fun ReviewScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
 
     var tts by remember { mutableStateOf<TextToSpeech?>(null) }
 
@@ -78,12 +83,13 @@ fun ReviewScreen(
             }
         }
     }
-
+    OfflineAwareContent(isOnline = isOnline) {
       ReviewContent(
         state = state,
         onIntent = viewModel::onIntent,
         modifier = modifier
     )
+      }
 }
 
 

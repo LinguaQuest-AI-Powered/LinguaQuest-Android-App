@@ -21,10 +21,13 @@ import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageU
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -38,14 +41,24 @@ class LoginViewModel @Inject constructor(
     private val snackbarController: SnackbarController,
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
-    private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase
-) : ViewModel() {
+    private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+
+    ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
 
     private val _effects = Channel<LoginEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+
+     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     fun onIntent(intent: LoginIntent) {
         when (intent) {
@@ -81,10 +94,10 @@ class LoginViewModel @Inject constructor(
         val emailValid = ValidationUtils.isValidEmail(email)
         val passwordValidationError = ValidationUtils.getPasswordValidationErrorRes(password)
         val passwordValid = passwordValidationError == null
-        
+
         if (!emailValid) {
             _state.update { it.copy(
-                emailError = true, 
+                emailError = true,
                 emailErrorRes = if (email.isBlank()) R.string.login_error_email_required else R.string.login_error_invalid_email
             ) }
             sendEffect(LoginEffect.ShakeEmail)
@@ -96,7 +109,7 @@ class LoginViewModel @Inject constructor(
             ) }
             sendEffect(LoginEffect.ShakePassword)
         }
-        
+
         if (emailValid && passwordValid) {
             loginWithEmail(email, password)
         }

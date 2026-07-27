@@ -16,9 +16,13 @@ import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
- fun SectionHeader(title: String, onViewAllClick: () -> Unit) {
+fun SectionHeader(
+    title: String,
+    onViewAllClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
-        Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

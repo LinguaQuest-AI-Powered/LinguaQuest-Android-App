@@ -28,7 +28,6 @@ fun GameFlowHost(
     sharedViewModel: GameSharedViewModel = hiltViewModel()
 ) {
     val gameBackStack = rememberNavBackStack(GameFlowScreen.Level)
-
     NavDisplay(
         backStack = gameBackStack,
         modifier = modifier.fillMaxSize(),

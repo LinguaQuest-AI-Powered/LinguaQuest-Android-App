@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
@@ -28,6 +30,7 @@ fun RoleplayScreen(
     viewModel: RoleplayViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -60,16 +63,21 @@ fun RoleplayScreen(
         }
     }
 
-    RoleplayContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        onStartBossStage = {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                viewModel.onIntent(RoleplayIntent.StartBossStageClicked)
-            } else {
-                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-            }
-        },
-        modifier = modifier
-    )
+    OfflineAwareContent(
+        isOnline = isOnline,
+        modifier = modifier.fillMaxSize()
+    ) {
+        RoleplayContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            onStartBossStage = {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    viewModel.onIntent(RoleplayIntent.StartBossStageClicked)
+                } else {
+                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }
