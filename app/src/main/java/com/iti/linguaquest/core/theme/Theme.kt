@@ -120,7 +120,7 @@ private val DarkExtraColors = LinguaQuestColors(
 
     socialButtonFill = AppColors.DarkSurface,
     socialButtonText = AppColors.DarkTextPrimary,
-    iconsColor = AppColors.DarkTextSecondary,
+    iconsColor = AppColors.DarkTextPrimary,
     splashTopLeftColor = AppColors.SplashTopLeftColor,
     splashBottomRightColor = AppColors.SplashBottomRightColor,
     socialButtonBorder = AppColors.DarkBorderColor,
@@ -178,7 +178,6 @@ fun LinguaQuestTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-
     val materialColors =
         if (darkTheme) DarkColorScheme else LightColorScheme
 
@@ -188,7 +187,6 @@ fun LinguaQuestTheme(
     CompositionLocalProvider(
         LocalLinguaQuestColors provides extraColors
     ) {
-
         MaterialTheme(
             colorScheme = materialColors,
             typography = AppTypography,

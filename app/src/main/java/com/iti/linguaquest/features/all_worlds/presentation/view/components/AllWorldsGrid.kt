@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.features.home.presentation.view.components.WorldCard
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
+import androidx.compose.foundation.shape.RoundedCornerShape
+
 @Composable
 fun AllWorldsGrid(
     worlds: List<WorldItem>,
@@ -31,6 +33,7 @@ fun AllWorldsGrid(
             WorldCard(
                 world = world,
                 onClick = { onWorldClick(world) },
+                imageShape = RoundedCornerShape(percent = 50),
                 modifier = Modifier.width(240.dp).height(220.dp)
             )
         }

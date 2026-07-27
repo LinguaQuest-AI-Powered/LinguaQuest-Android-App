@@ -22,6 +22,10 @@ import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
 import com.iti.linguaquest.features.map.presentation.contract.MapLevelUiModel
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.features.map.presentation.contract.MapState
 
 @Composable
@@ -50,7 +54,8 @@ fun MapScreen(
         MapScreenContent(
             state = state,
             onLevelClick = { viewModel.onIntent(MapIntent.LevelClicked(it)) },
-            onBackClick = { viewModel.onIntent(MapIntent.BackClicked) }
+            onBackClick = { viewModel.onIntent(MapIntent.BackClicked) },
+            onRetry = { viewModel.onIntent(MapIntent.Retry) }
         )
     }
 }
@@ -59,18 +64,34 @@ fun MapScreen(
 fun MapScreenContent(
     state: MapState,
     onLevelClick: (Int) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onRetry: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        MapContent(
-            state = state,
-            onLevelClick = onLevelClick,
-            modifier = Modifier.fillMaxSize()
-        )
+        when {
+            state.isLoading -> {
+                LoadingView(modifier = Modifier.fillMaxSize())
+            }
+            state.hasError && state.levels.isEmpty() -> {
+                ErrorView(
+                    message = state.errorMessage ?: stringResource(R.string.error_generic),
+                    onRetry = onRetry,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            else -> {
+                MapContent(
+                    state = state,
+                    onLevelClick = onLevelClick,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
         LinguaQuestScreenTopBar(
-            title = state.worldTitle.asString(),
+            title = if (state.isLoading) "" else state.worldTitle.asString(),
             onBackClicked = onBackClick,
             isTitleCentered = false,
             titleColor = LinguaQuestTheme.colors.BrownText,
@@ -83,7 +104,7 @@ fun MapScreenContent(
 
 @Preview
 @Composable
-fun MapScreenPreview() {
+fun MapScreenPreview(){
     val mockLevels = listOf(
         MapLevelUiModel(1, LevelStatus.COMPLETED, 3),
         MapLevelUiModel(2, LevelStatus.CURRENT, 0),

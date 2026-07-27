@@ -42,8 +42,6 @@ import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +108,7 @@ fun MyLanguagesBottomSheet(
                         .height(120.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon(size = 36.dp)
                 }
             } else {
                 LazyColumn(

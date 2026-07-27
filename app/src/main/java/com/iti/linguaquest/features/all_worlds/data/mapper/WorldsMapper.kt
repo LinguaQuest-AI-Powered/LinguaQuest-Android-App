@@ -4,7 +4,6 @@ import com.iti.linguaquest.features.all_worlds.data.remote.dto.WorldDto
 import com.iti.linguaquest.features.all_worlds.data.remote.dto.WorldsDataDto
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldStatus
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldsData
 
 fun WorldsDataDto.toDomain(): WorldsData = WorldsData(
@@ -17,7 +16,6 @@ fun WorldDto.toDomain(): World = World(
     name = name.orEmpty(),
     imageUrl = imageUrl.orEmpty(),
     difficulty = safeWorldDifficulty(difficulty),
-    status = safeWorldStatus(status),
     progressPercent = progressPercent ?: 0,
     totalLevels = totalLevels ?: 0,
     completedLevels = completedLevels ?: 0
@@ -29,15 +27,5 @@ private fun safeWorldDifficulty(value: String?): WorldDifficulty {
         WorldDifficulty.valueOf(value.trim().uppercase().replace("-", "_"))
     } catch (e: Exception) {
         WorldDifficulty.EASY
-    }
-}
-
-private fun safeWorldStatus(value: String?): WorldStatus {
-    if (value == null) return WorldStatus.LOCKED
-    return try {
-        val sanitized = value.trim().uppercase().replace("-", "_").replace(" ", "_")
-        WorldStatus.valueOf(sanitized)
-    } catch (e: Exception) {
-        WorldStatus.LOCKED
     }
 }
