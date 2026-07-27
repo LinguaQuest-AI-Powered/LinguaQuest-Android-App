@@ -22,10 +22,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,13 +43,18 @@ import com.iti.linguaquest.core.database.word.WordEntity
 @Composable
 fun WordCard(
     word: WordEntity,
-    onWordClick: (Int) -> Unit,
+    onWordClick: (Int, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var cardBounds by remember(word.id) { mutableStateOf(Rect.Zero) }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onWordClick(word.id) },
+            .onGloballyPositioned { coordinates ->
+                cardBounds = coordinates.boundsInRoot()
+            }
+            .clickable { onWordClick(word.id, cardBounds) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

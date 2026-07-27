@@ -7,28 +7,45 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
+import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground
+import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -36,17 +53,43 @@ import kotlinx.coroutines.flow.collectLatest
 fun GalleryScreen(
     onNavigateToReview: (WordEntity) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: GalleryViewModel = hiltViewModel()
+    viewModel: GalleryViewModel = hiltViewModel(),
+    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    var showOfflinePopup by remember { mutableStateOf(false) }
+    var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
+    var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
+
+    fun guardOnline(anchor: Rect? = null, action: () -> Unit) {
+        if (isOnline) {
+            action()
+        } else {
+            offlinePopupAnchor = anchor
+            showOfflinePopup = true
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
-                is GalleryEffect.ShowError -> {
-                    // TODO: Handle error showing, like using a Snackbar from GlobalUiHost
-                }
+                is GalleryEffect.ShowError -> globalUiHostViewModel.snackbarController.sendEvent(
+                    SnackbarEvent(
+                        title = effect.title,
+                        message = effect.message,
+                        type = effect.type,
+                        actionLabel = if (effect.retryable) UiText.StringResource(R.string.retry) else null,
+                        onAction = if (effect.retryable) {
+                            { viewModel.onIntent(GalleryIntent.LoadWords) }
+                        } else {
+                            null
+                        }
+                    )
+                )
             }
         }
     }
@@ -54,7 +97,7 @@ fun GalleryScreen(
     val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorRes == null
 
     LaunchedEffect(isEmpty) {
-         showBackground = true
+        showBackground = true
     }
 
     Box(
@@ -99,7 +142,40 @@ fun GalleryScreen(
             GalleryContent(
                 state = state,
                 onIntent = viewModel::onIntent,
-                modifier = Modifier.weight(1f)
+                onWordClick = { wordId, anchor ->
+                    guardOnline(anchor) {
+                        viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        if (showOfflinePopup) {
+            val popupOffset = remember(
+                offlinePopupAnchor,
+                offlinePopupSize,
+                configuration.screenWidthDp,
+                configuration.screenHeightDp
+            ) {
+                calculatePopupOffset(
+                    anchor = offlinePopupAnchor,
+                    popupSize = offlinePopupSize,
+                    screenWidthDp = configuration.screenWidthDp,
+                    screenHeightDp = configuration.screenHeightDp,
+                    density = density
+                )
+            }
+
+            NoInternetMiniPopup(
+                isOnline = isOnline,
+                modifier = Modifier
+                    .offset { popupOffset }
+                    .onSizeChanged { offlinePopupSize = it },
+                onDismiss = {
+                    showOfflinePopup = false
+                    offlinePopupAnchor = null
+                }
             )
         }
     }

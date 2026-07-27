@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface WordRepository {
     fun getAllWords(): Flow<List<WordEntity>>
     fun getWordsWithImages(): Flow<List<WordEntity>>
+    suspend fun refreshGalleryWords(): LinguaQuestResult<Unit, LinguaQuestDataError>
 
     suspend fun getWordById(wordId: Int): LinguaQuestResult<WordEntity, LinguaQuestDataError.Local>
     suspend fun deleteWord(word: WordEntity): EmptyResult<LinguaQuestDataError.Local>

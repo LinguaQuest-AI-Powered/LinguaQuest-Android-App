@@ -111,31 +111,7 @@ fun VoiceResultScreen(
                             parties = listOf(party)
                         )
                     }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(horizontal = 20.dp, vertical = 20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Spacer(Modifier.height(32.dp))
-
-                        VoiceResultHeader(
-                            isPassed = result.isPassed,
-                            advice = result.advice,
-                            rating = result.rating,
-                            correctWords = result.correctWords,
-                            wrongWords = result.wrongWords,
-                            coinsAwarded = result.coinsAwarded,
-                            onContinue = onContinue,
-                            onRetry = onRetry,
-                            onHome = onHome
-                        )
-
-                        Spacer(Modifier.height(24.dp))
-                    }
-                    Column(
+                       Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
