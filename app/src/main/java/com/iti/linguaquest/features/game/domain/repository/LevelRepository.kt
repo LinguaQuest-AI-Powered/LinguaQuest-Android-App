@@ -10,4 +10,5 @@ interface LevelRepository {
     suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError>
     suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError>
     suspend fun verifyLevel(worldId: Int, levelId: Int, imageFile: File): LinguaQuestResult<VerifyLevelResult, AppError>
+    suspend fun getHint(worldId: Int, levelId: Int): LinguaQuestResult<com.iti.linguaquest.features.game.domain.model.Hint, AppError>
 }

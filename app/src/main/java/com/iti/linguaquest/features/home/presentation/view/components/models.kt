@@ -21,11 +21,3 @@ data class WorldItem(
     val unlockLevel: Int? = null
 )
 
-data class LessonPreview(
-    val lessonId: Int,
-    val word: UiText,
-    val partOfSpeech: UiText,
-    val translation: UiText,
-    val iconSource: Any?,
-    val sentence: String
-)

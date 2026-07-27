@@ -3,6 +3,8 @@ package com.iti.linguaquest.features.map.presentation.viewmodel
 import com.iti.linguaquest.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.map.domain.usecase.GetMapLevelsUseCase
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
 import com.iti.linguaquest.features.map.presentation.contract.MapEffect
@@ -25,12 +27,25 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.core.result.onFailure
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val getMapLevelsUseCase: GetMapLevelsUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
+
 
     private val _state = MutableStateFlow(MapState())
     val state = _state.asStateFlow()
@@ -40,7 +55,7 @@ class MapViewModel @Inject constructor(
 
     fun onIntent(intent: MapIntent) {
         when (intent) {
-            is MapIntent.LevelClicked -> handleLevelClicked(intent.levelNumber)
+            is MapIntent.LevelClicked -> handleLevelClicked(intent.levelId)
             MapIntent.BackClicked -> sendEffect(MapEffect.NavigateBack)
             MapIntent.Retry -> loadLevels(_state.value.worldId, force = true)
         }
@@ -56,7 +71,7 @@ class MapViewModel @Inject constructor(
             result.onSuccess { detail ->
                 val uiLevels = detail.levels.map { level ->
                     val status = when (level.status) {
-                        "AVAILABLE" -> LevelStatus.CURRENT
+                        "AVAILABLE", "INPROGRESS" -> LevelStatus.CURRENT
                         "COMPLETED" -> LevelStatus.COMPLETED
                         else -> LevelStatus.LOCKED
                     }
@@ -103,10 +118,10 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun handleLevelClicked(levelNumber: Int) {
-        val level = _state.value.levels.find { it.levelNumber == levelNumber } ?: return
+    private fun handleLevelClicked(levelId: Int) {
+        val level = _state.value.levels.find { it.levelId == levelId } ?: return
         if (level.status == LevelStatus.LOCKED) return
-        sendEffect(MapEffect.NavigateToLevel(levelNumber))
+        sendEffect(MapEffect.NavigateToLevel(levelId))
     }
 
     private fun sendEffect(effect: MapEffect) {

@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginEffect
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.viewmodel.LoginViewModel
@@ -22,12 +23,14 @@ fun LoginScreen(
     onForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit,
     onOAuthLanguageSelection: () -> Unit,
+    onNavigateToOTP: (String) -> Unit,
     isOAuthLanguageSelectionCompleted: Boolean = false,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val activity = context as? ComponentActivity
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     var emailShakeTrigger by remember { mutableIntStateOf(0) }
     var passwordShakeTrigger by remember { mutableIntStateOf(0) }
     var googleShakeTrigger by remember { mutableIntStateOf(0) }
@@ -55,15 +58,18 @@ fun LoginScreen(
                 LoginEffect.NavigateToSignUp -> onSignUp()
                 LoginEffect.NavigateToSignUpWithoutLanguages -> onSignUpWithoutLanguages()
                 LoginEffect.NavigateToOAuthLanguageSelection -> onOAuthLanguageSelection()
+                is LoginEffect.NavigateToOTP -> onNavigateToOTP(effect.email)
             }
         }
     }
 
-    LoginContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        emailShakeTrigger = emailShakeTrigger,
-        passwordShakeTrigger = passwordShakeTrigger,
-        googleShakeTrigger = googleShakeTrigger
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        LoginContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            emailShakeTrigger = emailShakeTrigger,
+            passwordShakeTrigger = passwordShakeTrigger,
+            googleShakeTrigger = googleShakeTrigger
+        )
+    }
 }

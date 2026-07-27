@@ -1,8 +1,9 @@
 package com.iti.linguaquest.features.home.presentation.viewModel
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -10,6 +11,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.utils.DailyRewardSessionState
+import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
@@ -19,7 +21,6 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
-import com.iti.linguaquest.features.home.presentation.mapper.toUiLessonPreview
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
@@ -32,15 +33,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-private val mockExploreWorlds = listOf(
-    World(10, "Kitchen World", "/media/worlds/kitchen.jpg", DomainWorldDifficulty.EASY, 40, 20, 8),
-    World(11, "City World", "/media/worlds/city.jpg", DomainWorldDifficulty.MEDIUM, 10, 20, 2),
-    World(12, "Park World", "/media/worlds/park.jpg", DomainWorldDifficulty.EASY, 0, 20, 0),
-    World(13, "School World", "/media/worlds/school.jpg", DomainWorldDifficulty.HARD, 0, 20, 0)
-).map { it.toUiWorldItem() }
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -56,73 +52,79 @@ class HomeViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<HomeEffect>()
     val effect: SharedFlow<HomeEffect> = _effect.asSharedFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     init {
-        loadHome()
+        observeLocalCache()
+        refreshFromRemote()
     }
 
     fun onIntent(intent: HomeIntent) {
         when (intent) {
-            HomeIntent.LoadHome, HomeIntent.Retry -> loadHome()
+            HomeIntent.LoadHome, HomeIntent.Retry -> refreshFromRemote()
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
-            HomeIntent.ContinueLessonClicked -> {
-                _state.value.continueLesson?.let { lesson ->
-                    sendEffect(HomeEffect.NavigateToVoiceGame(lesson.lessonId, lesson.sentence))
-                }
-            }
-
+            HomeIntent.StartVoicePractiseClicked -> sendEffect(HomeEffect.NavigateToVoiceGame)
+            HomeIntent.RoleplayCardClicked -> sendEffect(HomeEffect.NavigateToRoleplayList)
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
-
-            HomeIntent.FabClicked -> {
-                _state.update { it.copy(isLanguageBottomSheetVisible = true) }
-            }
-
-            HomeIntent.DismissLanguageBottomSheet -> {
-                _state.update { it.copy(isLanguageBottomSheetVisible = false) }
-            }
-
+            HomeIntent.FabClicked -> _state.update { it.copy(isLanguageBottomSheetVisible = true) }
+            HomeIntent.DismissLanguageBottomSheet -> _state.update { it.copy(isLanguageBottomSheetVisible = false) }
             HomeIntent.AddNewLanguageClicked -> {
                 _state.update { it.copy(isLanguageBottomSheetVisible = false) }
                 sendEffect(HomeEffect.NavigateToAddLanguages)
             }
-
-            HomeIntent.DailyRewardBannerClicked -> {
-                _state.update {
-                    it.copy(
-                        isDailyRewardDialogVisible = true,
-                        isDailyRewardBannerVisible = false
-                    )
-                }
+            HomeIntent.DailyRewardBannerClicked -> _state.update {
+                it.copy(isDailyRewardDialogVisible = true, isDailyRewardBannerVisible = false)
             }
-
             HomeIntent.DismissDailyRewardBanner -> _state.update {
-                it.copy(
-                    isDailyRewardBannerVisible = false
-                )
+                it.copy(isDailyRewardBannerVisible = false)
             }
-
             HomeIntent.DismissDailyRewardDialog -> _state.update {
-                it.copy(
-                    isDailyRewardDialogVisible = false
-                )
+                it.copy(isDailyRewardDialogVisible = false)
             }
-
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
         }
     }
 
-    private fun loadHome() {
+    private fun observeLocalCache() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, hasError = false) }
+            getHomeSummaryUseCase.observe().collect { summary ->
+                summary ?: return@collect
+                _state.update { current ->
+                    current.copy(
+                        xp = summary.xp,
+                        coins = summary.coins,
+                        languageProgress = summary.toLanguageProgressUi(),
+                        worlds = summary.exploreWorlds.map { it.toUiWorldItem() },
+                        startVoicePractise = true
+                    )
+                }
+            }
+        }
+    }
 
-            val homeSummaryDeferred = async { getHomeSummaryUseCase() }
+    private fun refreshFromRemote() {
+        viewModelScope.launch {
+            val hasCache = state.value.xp > 0 || state.value.worlds.isNotEmpty()
+            if (!hasCache) {
+                _state.update { it.copy(isLoading = true, hasError = false) }
+            }
+
+            val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+            val walletDeferred = async { refreshWalletUseCase() }
 
             val homeSummaryResult = homeSummaryDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
+            walletDeferred.await()
+
+            _state.update { it.copy(isLoading = false) }
 
             if (homeSummaryResult is LinguaQuestResult.Success) {
-                val summary = homeSummaryResult.data
                 val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                 val shouldShowBanner = dailyRewardUi != null &&
                         !dailyRewardUi.claimedToday &&
@@ -132,24 +134,20 @@ class HomeViewModel @Inject constructor(
 
                 _state.update {
                     it.copy(
-                        isLoading = false,
                         hasError = false,
-                        languageProgress = summary.toLanguageProgressUi(),
-                        worlds = mockExploreWorlds,
-                        continueLesson = summary.continueLesson?.toUiLessonPreview(),
                         dailyReward = dailyRewardUi,
                         isDailyRewardBannerVisible = shouldShowBanner
                     )
                 }
             } else {
                 val errorResult = homeSummaryResult as LinguaQuestResult.Failure
-                _state.update { it.copy(isLoading = false, hasError = true) }
+                _state.update { it.copy(hasError = true) }
                 snackbarController.sendEvent(
                     SnackbarEvent(
                         message = errorResult.error.toUiText(),
                         type = SnackbarType.ERROR,
                         actionLabel = UiText.DynamicString("Retry"),
-                        onAction = { loadHome() }
+                        onAction = { refreshFromRemote() }
                     )
                 )
             }
@@ -163,17 +161,19 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isDailyRewardDialogVisible = false,
-                            dailyReward = it.dailyReward?.copy(claimedToday = true)
+                            dailyReward = it.dailyReward?.copy(claimedToday = true),
+                            coins = result.data.newCoinsBalance,
+                            xp = result.data.newXpBalance
                         )
-                }
+                    }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = UiText.DynamicString("+${result.data.coinsAwarded} coins claimed!"),
                             type = SnackbarType.SUCCESS
                         )
                     )
+                    refreshWalletUseCase()
                 }
-
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isDailyRewardDialogVisible = false) }
                     snackbarController.sendEvent(
@@ -183,7 +183,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun sendEffect(effect: HomeEffect) {
         viewModelScope.launch { _effect.emit(effect) }

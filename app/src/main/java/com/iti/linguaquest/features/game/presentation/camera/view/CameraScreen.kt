@@ -10,8 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.game.presentation.camera.viewmodel.CameraViewModel
 import com.iti.linguaquest.features.game.presentation.camera.contract.CameraIntent
 import com.iti.linguaquest.features.game.presentation.camera.contract.PermissionStatus
@@ -30,6 +32,7 @@ fun CameraScreen(
     val context = LocalContext.current
     val soundPlayer = LocalSoundPlayer.current
     val sharedState by sharedViewModel.sharedState.collectAsState()
+    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
     val cameraState by viewModel.state.collectAsState()
 
     val cameraController = remember {
@@ -51,46 +54,48 @@ fun CameraScreen(
         cameraController.enableTorch(cameraState.isFlashEnabled)
     }
 
-    CameraOverlay(
-        effectFlow = viewModel.effect,
-        onPermissionResult = { isGranted ->
-            viewModel.onIntent(CameraIntent.PermissionResult(isGranted))
-        },
-        onNavigateToProcessing = { uri ->
-            sharedViewModel.setCapturedImage(uri)
-            onSubmitPhoto()
-        },
-        onNavigateBack = onBack
-    )
-    if (cameraState.permissionStatus != PermissionStatus.GRANTED) {
-        CameraPermissionView(
-            status = cameraState.permissionStatus,
-            onGrantClicked = { viewModel.onIntent(CameraIntent.GrantPermissionClicked) },
-            onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) }
+    OfflineAwareContent(isOnline = isOnline) {
+        CameraOverlay(
+            effectFlow = viewModel.effect,
+            onPermissionResult = { isGranted ->
+                viewModel.onIntent(CameraIntent.PermissionResult(isGranted))
+            },
+            onNavigateToProcessing = { uri ->
+                sharedViewModel.setCapturedImage(uri)
+                onSubmitPhoto()
+            },
+            onNavigateBack = onBack
         )
-    } else if (cameraState.capturedUri == null) {
-        CameraContent(
-            hasPermission = true,
-            targetWord = sharedState.targetWord.asString(),
-            isHintUsed = sharedState.isHintUsed,
-            isFlashEnabled = cameraState.isFlashEnabled,
-            cameraController = cameraController,
-            onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) },
-            onToggleFlash = { viewModel.onIntent(CameraIntent.ToggleFlash) },
-            onFlipCamera = { viewModel.onIntent(CameraIntent.ToggleCameraLens) },
-            onCaptureClicked = {
-                soundPlayer.play(AppSound.CAMERA)
-                takePhoto(context, cameraController) { uri ->
-                    viewModel.onIntent(CameraIntent.CapturePhoto(uri))
+        if (cameraState.permissionStatus != PermissionStatus.GRANTED) {
+            CameraPermissionView(
+                status = cameraState.permissionStatus,
+                onGrantClicked = { viewModel.onIntent(CameraIntent.GrantPermissionClicked) },
+                onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) }
+            )
+        } else if (cameraState.capturedUri == null) {
+            CameraContent(
+                hasPermission = true,
+                targetWord = sharedState.targetWord.asString(),
+                isHintUsed = sharedState.isHintUsed,
+                isFlashEnabled = cameraState.isFlashEnabled,
+                cameraController = cameraController,
+                onBackClicked = { viewModel.onIntent(CameraIntent.BackClicked) },
+                onToggleFlash = { viewModel.onIntent(CameraIntent.ToggleFlash) },
+                onFlipCamera = { viewModel.onIntent(CameraIntent.ToggleCameraLens) },
+                onCaptureClicked = {
+                    soundPlayer.play(AppSound.CAMERA)
+                    takePhoto(context, cameraController) { uri ->
+                        viewModel.onIntent(CameraIntent.CapturePhoto(uri))
+                    }
                 }
-            }
-        )
-    } else {
-        CameraPreviewContent(
-            imageUri = cameraState.capturedUri!!,
-            targetWord = sharedState.targetWord.asString(),
-            onRetryClicked = { viewModel.onIntent(CameraIntent.RetryCapture) },
-            onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto(sharedState.worldId, sharedState.levelId)) }
-        )
+            )
+        } else {
+            CameraPreviewContent(
+                imageUri = cameraState.capturedUri!!,
+                targetWord = sharedState.targetWord.asString(),
+                onRetryClicked = { viewModel.onIntent(CameraIntent.RetryCapture) },
+                onSubmitClicked = { viewModel.onIntent(CameraIntent.SubmitPhoto(sharedState.worldId, sharedState.levelId)) }
+            )
+        }
     }
 }

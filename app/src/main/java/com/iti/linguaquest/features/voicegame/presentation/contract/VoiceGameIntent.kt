@@ -1,7 +1,7 @@
 package com.iti.linguaquest.features.voicegame.presentation.contract
 
 sealed interface VoiceGameIntent {
-    data class Init(val sentence: String, val lessonId: Int) : VoiceGameIntent
+    data object Init : VoiceGameIntent
     data object ListenClicked : VoiceGameIntent
     data object RecordClicked : VoiceGameIntent
     data object MicPermissionGranted : VoiceGameIntent

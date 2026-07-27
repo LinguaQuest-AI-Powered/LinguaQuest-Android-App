@@ -10,4 +10,5 @@ interface LanguagesRepo {
     suspend fun getAvailableLanguages(): LinguaQuestResult<List<LanguageOption>, LinguaQuestDataError>
     suspend fun addLanguages(languageIds: List<Int>): LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError>
     suspend fun setActiveLanguage(languageId: Int): LinguaQuestResult<UserLanguage, LinguaQuestDataError>
+    suspend fun setNativeLanguage(languageId: Int): LinguaQuestResult<UserLanguage, LinguaQuestDataError>
 }

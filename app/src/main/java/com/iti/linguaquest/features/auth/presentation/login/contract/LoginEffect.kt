@@ -10,4 +10,5 @@ sealed interface LoginEffect {
     data object NavigateToSignUp : LoginEffect
     data object NavigateToSignUpWithoutLanguages : LoginEffect
     data object NavigateToOAuthLanguageSelection : LoginEffect
+    data class NavigateToOTP(val email: String) : LoginEffect
 }

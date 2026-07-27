@@ -10,7 +10,6 @@ import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenI
 
 import android.Manifest
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
@@ -36,7 +35,10 @@ fun SettingScreen(
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsStateWithLifecycle()
     val isLoggingOut by viewModel.isLoggingOut.collectAsStateWithLifecycle()
     val reminderState by viewModel.reminderState.collectAsStateWithLifecycle()
-    
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
+    val availableLanguages by viewModel.availableLanguages.collectAsStateWithLifecycle()
+
     val lockScreenState by lockScreenViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -68,17 +70,16 @@ fun SettingScreen(
                         lockScreenViewModel.onIntent(LockScreenIntent.NotificationPermissionResult(true))
                     }
                 }
-
-                is LockScreenEffect.ShowMessage -> {
-                    Toast.makeText(context, effect.message.asString(context), Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }
 
     SettingContent(
+        isOnline = isOnline,
         onBackClick = onBack,
         appLanguage = appLanguage,
+        availableLanguagesState = availableLanguages,
+        onRetryLanguages = viewModel::retryLoadLanguages,
         onChangeAppLanguage = viewModel::changeAppLanguage,
         appTheme = appTheme,
         onChangeAppTheme = viewModel::changeAppTheme,

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "scenario_market_01",
+    "worldId": "world_1",
+    "bossName": "الحاجة أسماء",
+    "roleDescription": "بائعة فاكهة ودودة ولكنها حازمة في سوق صاخب بالقاهرة.",
+    "objective": "شراء تفاحتين وموز بأقل من 50 جنيها.",
+    "voiceName": "KORE"
+  },
+  {
+    "id": "scenario_cafe_01",
+    "worldId": "world_1",
+    "bossName": "نورا",
+    "roleDescription": "نادل مشغولة في مقهى شهير بوسط البلد تتحدث بسرعة كبيرة.",
+    "objective": "اطلب لاتيه مثلج كبير بحليب الشوفان بدون سكر.",
+    "voiceName": "AOEDE"
+  },
+  {
+    "id": "scenario_library_01",
+    "worldId": "world_2",
+    "bossName": "محمد علي",
+    "roleDescription": "أمين مكتبة دقيق يطالب بالهدوء التام والالتزام الصارم بالقواعد.",
+    "objective": "إقناعه بإعفائك من غرامات التأخير لكتاب تاريخ متأخر.",
+    "voiceName": "CHARON"
+  },
+  {
+    "id": "scenario_school_01",
+    "worldId": "world_2",
+    "bossName": "الأستاذ عمرو",
+    "roleDescription": "مدرس رياضيات شغوف ولكنه صارم يتحدى طلابه دائمًا.",
+    "objective": "اطلب منه تمديد موعد تسليم المشروع النهائي بسبب ظروف شخصية.",
+    "voiceName": "FENRIR"
+  },
+  {
+    "id": "scenario_taxi_01",
+    "worldId": "world_1",
+    "bossName": "الكابتن سيد",
+    "roleDescription": "سائق تاكسي ثرثار يتنقل في شوارع الإسكندرية المزدحمة.",
+    "objective": "وجهه إلى مطعم محدد غير معروف مع التفاوض على الأجرة النهائية.",
+    "voiceName": "CHARON"
+  },
+  {
+    "id": "scenario_apartment_01",
+    "worldId": "world_3",
+    "bossName": "أم خالد",
+    "roleDescription": "صاحبة عقار يقظة وفضولية تدير المبنى السكني بقبضة من حديد.",
+    "objective": "اشرح سبب تأخر الإيجار لمدة ثلاثة أيام دون إثارة غضبها.",
+    "voiceName": "KORE"
+  }
+]

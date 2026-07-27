@@ -53,9 +53,11 @@ fun QuestCard(
     wordToGuess: String,
     hintText: String,
     onOpenCameraClick: () -> Unit,
-    onSkipClick: () -> Unit,
+    onChangeWordClick: () -> Unit,
     onSoundClick: () -> Unit,
     onMascotClick: () -> Unit,
+    isCameraEnabled: Boolean,
+    isChangeWordEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     val imageSize = 120.dp
@@ -143,14 +145,16 @@ fun QuestCard(
                         onClick = onOpenCameraClick,
                         variant = ButtonVariant.PRIMARY,
                         iconPosition = IconPosition.START,
-                        icon = rememberVectorPainter(Icons.Default.CameraAlt)
+                        icon = rememberVectorPainter(Icons.Default.CameraAlt),
+                        enabled = isCameraEnabled
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     AppOutlinedButton(
-                        text = stringResource(id = R.string.skip),
-                        onClick = onSkipClick
+                        text = stringResource(id = R.string.change_word),
+                        onClick = onChangeWordClick,
+                        enabled = isChangeWordEnabled
                     )
 
                 }

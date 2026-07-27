@@ -7,7 +7,10 @@ data class LevelState(
     val coinCount: Int = 1250,
     val wordToGuess: String = "PAN",
     val languageCode: String = "en",
+    val isLevelReady: Boolean = false,
+    val isChangeWordAvailable: Boolean = true,
     val isBottomSheetVisible: Boolean = false,
-    val hasError: Boolean = false,
-    val errorMessage: String? = null
+    val isChangeWordDialogVisible: Boolean = false,
+    val isChangeWordUsed: Boolean = false,
+    val hintText: String? = null
 )

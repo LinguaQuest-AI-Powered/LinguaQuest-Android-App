@@ -79,7 +79,8 @@ fun AppButton(
     isLoading: Boolean = false,
     isError: Boolean = false,
     contentColorOverride: Color? = null,
-    borderColorOverride: Color? = null
+    borderColorOverride: Color? = null,
+    backgroundColorOverride: Color? = null
 ) {
     val style = variant.toStyle()
 
@@ -92,7 +93,7 @@ fun AppButton(
         onClick = onClick,
         enabled = enabled && !isLoading,
         shape = shape,
-        color = style.background,
+        color = backgroundColorOverride ?: style.background,
         border = actualBorderColor?.let { BorderStroke(if (variant == ButtonVariant.SOCIAL) 1.dp else 2.dp, it) },
         modifier = modifier
             .fillMaxWidth()

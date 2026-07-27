@@ -28,6 +28,8 @@ fun AllWorldsScreen(
     viewModel: AllWorldsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -51,10 +53,12 @@ fun AllWorldsScreen(
                 onRetry = { viewModel.onIntent(AllWorldsIntent.OnRetry) }
             )
         } else {
-            AllWorldsContent(
-                state = state,
-                onIntent = viewModel::onIntent
-            )
+            OfflineAwareContent(isOnline = isOnline) {
+                AllWorldsContent(
+                    state = state,
+                    onIntent = viewModel::onIntent
+                )
+            }
         }
     }
 }

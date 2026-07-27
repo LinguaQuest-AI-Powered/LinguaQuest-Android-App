@@ -18,9 +18,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageDropdown
-import com.iti.linguaquest.features.onBoarding.presentation.components.PopularLanguageRow
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageViewModel.LanguagesViewModel
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
@@ -28,6 +28,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.languageCon
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageMascotVideo
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -36,17 +37,20 @@ fun LanguagesScreen(
     viewModel: LanguagesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             if (effect is LanguagesEffect.NavigateToLevelScreen) onContinue()
         }
     }
+    OfflineAwareContent(isOnline = isOnline) {
 
-    LanguagesScreenContent(
-        state = state,
-        onIntent = viewModel::onIntent
-    )
+        LanguagesScreenContent(
+            state = state,
+            onIntent = viewModel::onIntent
+        )
+    }
 }
 
 @Composable
@@ -69,13 +73,13 @@ private fun LanguagesScreenContent(
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
         Spacer(Modifier.height(32.dp))
 
-        Image(
-            painter = painterResource(R.drawable.lingo_level_language),
-            contentDescription = null,
-            modifier = Modifier.size(130.dp).align(Alignment.CenterHorizontally)
+        LanguageMascotVideo(
+            modifier = Modifier
+                .size(320.dp)
+                .align(Alignment.CenterHorizontally)
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(2.dp))
 
         Text(
             text = stringResource(R.string.choose_your_languages),
@@ -114,27 +118,7 @@ private fun LanguagesScreenContent(
             onSelect = { onIntent(LanguagesIntent.SelectTargetLanguage(it)) },
             accentColor = MaterialTheme.colorScheme.tertiary
         )
-
         Spacer(Modifier.height(24.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.popular_choices),
-            style = AppTextStyles.LessonTitle,
-            color = LinguaQuestTheme.colors.titleAndCationsColor,
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(state.availableLanguages, key = { it.code }) { language ->
-                PopularLanguageRow(
-                    language = language,
-                    onClick = { onIntent(LanguagesIntent.SelectTargetLanguage(language)) }
-                )
-            }
-        }
 
         AppButton(
             text = stringResource(R.string.continue_button),
@@ -147,19 +131,3 @@ private fun LanguagesScreenContent(
     }
 }
 
-@Preview
-@Composable
-private fun LanguagesScreenPreview_Selected() {
-    LinguaQuestTheme {
-        LanguagesScreenContent(
-            state = LanguagesState(
-                nativeLanguage = null,
-                targetLanguage = null,
-                availableLanguages = emptyList(),
-                isContinueEnabled = true,
-                isLoading = false
-            ),
-            onIntent = {}
-        )
-    }
-}

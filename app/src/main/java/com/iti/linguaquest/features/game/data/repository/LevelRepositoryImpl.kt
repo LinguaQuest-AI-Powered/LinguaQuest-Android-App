@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.game.data.repository
 import com.iti.linguaquest.core.result.AppError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.game.data.remote.LevelRemoteDataSource
+import com.iti.linguaquest.features.game.domain.model.Hint
 import com.iti.linguaquest.features.game.domain.model.VerifyLevelResult
 import com.iti.linguaquest.features.game.domain.repository.LevelRepository
 import java.io.File
@@ -13,16 +14,14 @@ class LevelRepositoryImpl @Inject constructor(
 ) : LevelRepository {
 
     override suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
-        val result = remoteDataSource.startLevel(worldId, levelId)
-        return when (result) {
+        return when (val result = remoteDataSource.startLevel(worldId, levelId)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.targetWord.orEmpty())
             is LinguaQuestResult.Failure -> result
         }
     }
 
     override suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
-        val result = remoteDataSource.changeWord(worldId, levelId)
-        return when (result) {
+        return when (val result = remoteDataSource.changeWord(worldId, levelId)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.targetWord.orEmpty())
             is LinguaQuestResult.Failure -> result
         }
@@ -47,6 +46,19 @@ class LevelRepositoryImpl @Inject constructor(
                     )
                 )
             }
+            is LinguaQuestResult.Failure -> result
+        }
+    }
+
+    override suspend fun getHint(worldId: Int, levelId: Int): LinguaQuestResult<com.iti.linguaquest.features.game.domain.model.Hint, AppError> {
+        return when (val result = remoteDataSource.getHint(worldId, levelId)) {
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(
+                Hint(
+                    hint = result.data.hint,
+                    coinsSpent = result.data.coinsSpent,
+                    remainingCoins = result.data.remainingCoins
+                )
+            )
             is LinguaQuestResult.Failure -> result
         }
     }

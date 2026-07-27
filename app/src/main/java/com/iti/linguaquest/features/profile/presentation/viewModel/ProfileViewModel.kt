@@ -4,6 +4,8 @@ package com.iti.linguaquest.features.profile.presentation.viewModel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -23,12 +25,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,6 +44,7 @@ class ProfileViewModel @Inject constructor(
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val snackbarController: SnackbarController,
     private val preloadImageUseCase: PreloadImageUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileUiState())
@@ -47,7 +52,13 @@ class ProfileViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<ProfileEffect>()
     val effect: SharedFlow<ProfileEffect> = _effect.asSharedFlow()
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     init {
         observeCachedProfile()
         refreshProfile()
@@ -109,10 +120,8 @@ class ProfileViewModel @Inject constructor(
                     if (stillHasCache && result.error.isNoInternet()) {
                         snackbarController.sendEvent(
                             SnackbarEvent(
-                                title = UiText.DynamicString("You're offline"),
-                                message = UiText.DynamicString(
-                                    "Showing your saved profile - it'll refresh automatically once you're back online."
-                                ),
+                                title = UiText.StringResource(com.iti.linguaquest.R.string.offline_title),
+                                message = UiText.StringResource(com.iti.linguaquest.R.string.offline_msg),
                                 type = SnackbarType.INFO
                             )
                         )
@@ -121,7 +130,7 @@ class ProfileViewModel @Inject constructor(
                             SnackbarEvent(
                                 message = result.error.toUiText(),
                                 type = SnackbarType.ERROR,
-                                actionLabel = UiText.DynamicString("Retry"),
+                                actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
                                 onAction = { refreshProfile() }
                             )
                         )
@@ -143,7 +152,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    message = UiText.DynamicString("Uploading your photo, this may take a moment..."),
+                    message = UiText.StringResource(com.iti.linguaquest.R.string.uploading_photo_msg),
                     type = SnackbarType.INFO
                 )
             )
@@ -154,8 +163,8 @@ class ProfileViewModel @Inject constructor(
                     _state.update { it.copy(isAvatarUploading = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            title = UiText.DynamicString("Congratulations"),
-                            message = UiText.DynamicString("Profile photo updated"),
+                            title = UiText.StringResource(com.iti.linguaquest.R.string.congrates),
+                            message = UiText.StringResource(com.iti.linguaquest.R.string.profile_photo_updated_successfully),
                             type = SnackbarType.SUCCESS
                         )
                     )
@@ -172,7 +181,7 @@ class ProfileViewModel @Inject constructor(
                         SnackbarEvent(
                             message = result.error.toUiText(),
                             type = SnackbarType.ERROR,
-                            actionLabel = UiText.DynamicString("Retry"),
+                            actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
                             onAction = { uploadAvatar(uri) }
                         )
                     )

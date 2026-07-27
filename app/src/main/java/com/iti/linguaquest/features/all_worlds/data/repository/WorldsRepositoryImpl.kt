@@ -18,8 +18,7 @@ class WorldsRepositoryImpl @Inject constructor(
         difficulty: WorldDifficulty?
     ): LinguaQuestResult<WorldsData, LinguaQuestDataError> {
         val difficultyString = difficulty?.name ?: "ALL"
-        val result = remoteDataSource.getWorlds(difficultyString)
-        return when (result) {
+        return when (val result = remoteDataSource.getWorlds(difficultyString)) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.toDomain())
             is LinguaQuestResult.Failure -> {
                 Log.e("WorldsRepositoryImpl", "getWorlds: ${result.error}")

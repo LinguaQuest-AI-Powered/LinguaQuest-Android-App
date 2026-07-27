@@ -19,6 +19,7 @@ internal fun AuthError.toMessageRes(): Int = when (this) {
     AuthError.UsernameAlreadyExists -> R.string.login_error_username_already_exists
     AuthError.InvalidOtp -> R.string.otp_error_invalid
     AuthError.OtpExpired -> R.string.otp_error_expired
+    AuthError.OtpNotFound -> R.string.otp_error_expired
     AuthError.InvalidRefreshToken -> R.string.login_error_token_not_valid
     AuthError.RefreshTokenExpired -> R.string.login_error_token_not_valid
     AuthError.InvalidResetToken -> R.string.login_error_invalid_reset_token

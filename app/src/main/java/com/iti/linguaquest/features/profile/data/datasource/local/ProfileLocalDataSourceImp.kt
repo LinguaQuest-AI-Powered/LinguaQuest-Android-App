@@ -26,10 +26,11 @@ class ProfileLocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveProfile(profile: ProfileSummary) {
         runCatching {
+            profileDao.clearProfile()
             profileDao.upsertProfile(profile.toEntity())
         }
 
-        if (profile.photoUrl.isNotBlank()) {
+        if (profile.photoUrl != null) {
             runCatching {
                 dataStore.edit { it[TokenKeys.AVATAR_URL] = profile.photoUrl }
             }

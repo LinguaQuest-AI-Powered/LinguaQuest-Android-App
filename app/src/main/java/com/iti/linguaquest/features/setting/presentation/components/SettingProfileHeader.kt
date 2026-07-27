@@ -25,16 +25,10 @@ fun SettingProfileHeader(
         ImageWrapper(
             model = R.drawable.lingo_stting,
             contentDescription = null,
-            modifier = Modifier.size(110.dp),
+            modifier = Modifier.size(130.dp),
             contentScale = ContentScale.Fit
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Explorer Alex",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = LocalLinguaQuestColors.current.BrownText
-        )
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(id = R.string.settings_customize_journey),
             fontSize = 14.sp,

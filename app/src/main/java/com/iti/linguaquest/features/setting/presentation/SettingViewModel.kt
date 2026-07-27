@@ -3,7 +3,9 @@ package com.iti.linguaquest.features.setting.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
- import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.connectivity.NetworkMonitor
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -28,6 +30,9 @@ import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
 import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
+import com.iti.linguaquest.features.auth.domain.usecase.GetAuthLanguagesUseCase
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.setting.presentation.utils.parseDays
 import com.iti.linguaquest.features.setting.presentation.utils.toReminderSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,6 +50,8 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import javax.inject.Inject
 import com.iti.linguaquest.features.setting.presentation.utils.parseTime
+
+
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getAppLanguageUseCase: GetAppLanguageUseCase,
@@ -56,6 +63,7 @@ class SettingViewModel @Inject constructor(
     private val toggleSoundUseCase: ToggleSoundUseCase,
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
     private val logoutUserUseCase: LogoutUserUseCase,
+    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
     private val getReminderEnabledUseCase: GetReminderEnabledUseCase,
     private val getReminderTimeUseCase: GetReminderTimeUseCase,
     private val getReminderDaysUseCase: GetReminderDaysUseCase,
@@ -64,9 +72,17 @@ class SettingViewModel @Inject constructor(
     private val saveReminderDaysUseCase: SaveReminderDaysUseCase,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     val appLanguage: StateFlow<String> = getAppLanguageUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "en")
 
@@ -85,8 +101,28 @@ class SettingViewModel @Inject constructor(
     private val _reminderEffect = MutableSharedFlow<ReminderEffect>()
     val reminderEffect: SharedFlow<ReminderEffect> = _reminderEffect.asSharedFlow()
 
+    private val _availableLanguages = MutableStateFlow(LanguagesUiState())
+    val availableLanguages: StateFlow<LanguagesUiState> = _availableLanguages.asStateFlow()
+
     init {
         loadReminderSettings()
+        loadLanguages()
+    }
+
+    private fun loadLanguages() {
+        viewModelScope.launch {
+            _availableLanguages.update { it.copy(isLoading = true, isError = false) }
+            val result = getAuthLanguagesUseCase()
+            if (result is LinguaQuestResult.Success) {
+                _availableLanguages.update { it.copy(isLoading = false, languages = result.data, isError = false) }
+            } else {
+                _availableLanguages.update { it.copy(isLoading = false, isError = true) }
+            }
+        }
+    }
+    
+    fun retryLoadLanguages() {
+        loadLanguages()
     }
 
     private fun loadReminderSettings() {
@@ -256,8 +292,8 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun changeAppLanguage(language: String) {
-        viewModelScope.launch { changeAppLanguageUseCase(language) }
+    fun changeAppLanguage(language: LanguageOption) {
+        viewModelScope.launch { changeAppLanguageUseCase(language.id, language.code, language.name) }
     }
 
     fun changeAppTheme(theme: String) {

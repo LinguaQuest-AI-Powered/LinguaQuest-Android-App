@@ -14,20 +14,33 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @HiltViewModel
-class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetWorldsUseCase) : ViewModel() {
+class AllWorldsViewModel @Inject constructor(
+    private val getWorldsUseCase: GetWorldsUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
+
 
     private val _state = MutableStateFlow(AllWorldsState())
     val state: StateFlow<AllWorldsState> = _state.asStateFlow()
@@ -53,6 +66,7 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
                         )
                     }
                 }
+
                 is LinguaQuestResult.Failure -> {
                     _state.update {
                         it.copy(
@@ -88,9 +102,11 @@ class AllWorldsViewModel @Inject constructor(private val getWorldsUseCase : GetW
             is AllWorldsIntent.OnFilterSelected -> {
                 _state.update { it.copy(selectedFilter = intent.filter) }
             }
+
             is AllWorldsIntent.OnWorldClicked -> {
                 emitEffect(AllWorldsEffect.NavigateToWorldDetails(intent.world.id))
             }
+
             AllWorldsIntent.OnBackClicked -> {
                 emitEffect(AllWorldsEffect.NavigateBack)
             }

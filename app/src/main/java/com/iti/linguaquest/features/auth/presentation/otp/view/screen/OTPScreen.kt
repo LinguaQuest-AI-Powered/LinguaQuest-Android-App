@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -17,7 +16,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,10 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginDimens
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
@@ -49,6 +49,7 @@ fun OTPScreen(
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.onIntent(OTPIntent.Initialize(email, isPasswordReset))
@@ -60,11 +61,12 @@ fun OTPScreen(
             }
         }
     }
-
-    OTPContent(
-        state = state,
-        onIntent = { intent -> viewModel.onIntent(intent) }
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        OTPContent(
+            state = state,
+            onIntent = { intent -> viewModel.onIntent(intent) }
+        )
+    }
 }
 
 @Composable
@@ -139,7 +141,9 @@ fun OTPContent(
                     Text(
                         text = stringResource(id = R.string.otp_resend_code),
                         style = MaterialTheme.typography.labelLarge,
-                        color = if (!state.isTimerActive) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f),
+                        color = if (!state.isTimerActive) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.38f
+                        ),
                         fontWeight = FontWeight.Bold
                     )
                 }

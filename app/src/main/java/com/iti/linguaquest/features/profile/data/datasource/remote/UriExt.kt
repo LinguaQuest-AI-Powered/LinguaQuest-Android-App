@@ -25,13 +25,42 @@ fun Uri.toMultipartBodyPart(
     val originalBytes = contentResolver.openInputStream(this)?.use { it.readBytes() }
         ?: throw IOException("Unable to read image data from $this")
 
+    val orientation = try {
+        java.io.ByteArrayInputStream(originalBytes).use { inputStream ->
+            androidx.exifinterface.media.ExifInterface(inputStream).getAttributeInt(
+                androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+                androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL
+            )
+        }
+    } catch (e: Exception) {
+        androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL
+    }
+
+    val rotationDegrees = when (orientation) {
+        androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+        androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+        androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+        else -> 0f
+    }
+
     val bitmap = BitmapFactory.decodeByteArray(originalBytes, 0, originalBytes.size)
         ?: throw IOException("Unable to decode image at $this")
 
     val scale = maxDimension.toFloat() / maxOf(bitmap.width, bitmap.height)
-    val scaledBitmap = if (scale < 1f) {
+    var scaledBitmap = if (scale < 1f) {
         bitmap.scale((bitmap.width * scale).toInt(), (bitmap.height * scale).toInt())
     } else bitmap
+
+    if (rotationDegrees != 0f) {
+        val matrix = android.graphics.Matrix().apply { postRotate(rotationDegrees) }
+        val rotatedBitmap = Bitmap.createBitmap(
+            scaledBitmap, 0, 0, scaledBitmap.width, scaledBitmap.height, matrix, true
+        )
+        if (scaledBitmap != bitmap) {
+            scaledBitmap.recycle()
+        }
+        scaledBitmap = rotatedBitmap
+    }
 
     val outputStream = ByteArrayOutputStream()
     scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)

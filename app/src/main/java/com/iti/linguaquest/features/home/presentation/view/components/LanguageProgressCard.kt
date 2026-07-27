@@ -57,14 +57,21 @@ fun LanguageProgressCard(
                     .background(LinguaQuestTheme.colors.whiteColor),
                 contentAlignment = Alignment.Center
             ) {
-                ImageWrapper(
-                    model = flagSource,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(34.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+                if (flagSource is String && !flagSource.startsWith("http")) {
+                    Text(
+                        text = flagSource,
+                        fontSize = 28.sp
+                    )
+                } else {
+                    ImageWrapper(
+                        model = flagSource,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -115,7 +122,7 @@ private fun LevelLabel(level: Int) {
 private fun StreakBadge(streakDays: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            painter = painterResource(R.drawable.streak_icon),
+            painter = painterResource(R.drawable.ic_streak),
             contentDescription = null,
             modifier = Modifier.size(16.dp)
         )

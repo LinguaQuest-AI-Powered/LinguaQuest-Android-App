@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
 import com.iti.linguaquest.features.map.presentation.contract.MapLevelUiModel
@@ -35,6 +36,7 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(worldId) {
         viewModel.loadLevels(worldId)
@@ -48,43 +50,29 @@ fun MapScreen(
             }
         }
     }
-
-    MapScreenContent(
-        state = state,
-        onLevelClick = { viewModel.onIntent(MapIntent.LevelClicked(it)) },
-        onBackClick = { viewModel.onIntent(MapIntent.BackClicked) },
-        onRetry = { viewModel.onIntent(MapIntent.Retry) }
-    )
+    OfflineAwareContent(isOnline = isOnline) {
+        MapScreenContent(
+            state = state,
+            onLevelClick = { viewModel.onIntent(MapIntent.LevelClicked(it)) },
+            onBackClick = { viewModel.onIntent(MapIntent.BackClicked) }
+        )
+    }
 }
 
 @Composable
 fun MapScreenContent(
     state: MapState,
     onLevelClick: (Int) -> Unit,
-    onBackClick: () -> Unit,
-    onRetry: () -> Unit = {}
+    onBackClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        when {
-            state.isLoading -> {
-                LoadingView()
-            }
-            state.hasError -> {
-                ErrorView(
-                    message = state.errorMessage ?: stringResource(R.string.error_generic),
-                    onRetry = onRetry
-                )
-            }
-            else -> {
-                MapContent(
-                    state = state,
-                    onLevelClick = onLevelClick,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
+        MapContent(
+            state = state,
+            onLevelClick = onLevelClick,
+            modifier = Modifier.fillMaxSize()
+        )
         LinguaQuestScreenTopBar(
             title = state.worldTitle.asString(),
             onBackClicked = onBackClick,

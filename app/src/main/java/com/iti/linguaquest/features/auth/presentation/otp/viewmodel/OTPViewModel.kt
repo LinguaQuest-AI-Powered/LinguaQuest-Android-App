@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.auth.presentation.otp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
@@ -25,6 +26,8 @@ import com.iti.linguaquest.features.auth.domain.usecase.SendRegistrationOtpUseCa
 import com.iti.linguaquest.features.auth.domain.usecase.VerifyEmailOtpUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.VerifyPasswordResetOtpUseCase
 import com.iti.linguaquest.features.auth.presentation.login.mapper.toMessageRes
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,12 +36,19 @@ class OTPViewModel @Inject constructor(
     private val verifyPasswordResetOtpUseCase: VerifyPasswordResetOtpUseCase,
     private val sendRegistrationOtpUseCase: SendRegistrationOtpUseCase,
     private val sendPasswordResetOtpUseCase: SendPasswordResetOtpUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
     private var email: String = ""
     private var isPasswordReset: Boolean = false
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
     private val _state = MutableStateFlow(OTPState())
     val state: StateFlow<OTPState> = _state.asStateFlow()
 
@@ -47,15 +57,12 @@ class OTPViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    init {
-        startTimer()
-    }
-
     fun onIntent(intent: OTPIntent) {
         when (intent) {
             is OTPIntent.Initialize -> {
                 this.email = intent.email
                 this.isPasswordReset = intent.isPasswordReset
+                startTimer()
             }
             is OTPIntent.OnOtpCodeChanged -> {
                 if (intent.code.length <= 4) {
@@ -79,12 +86,15 @@ class OTPViewModel @Inject constructor(
     private fun verifyOtp() {
         val otpCode = _state.value.otpCode
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
             if (isPasswordReset) {
                 when (val result = verifyPasswordResetOtpUseCase(email, otpCode)) {
                     is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(isLoading = false) }
                         sendEffect(OTPEffect.NavigateToNextScreen(result.data))
                     }
                     is LinguaQuestResult.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         snackbarController.sendEvent(
                             SnackbarEvent(
                                 message = UiText.StringResource(result.error.toMessageRes()),
@@ -96,9 +106,11 @@ class OTPViewModel @Inject constructor(
             } else {
                 when (val result = verifyEmailOtpUseCase(email, otpCode)) {
                     is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(isLoading = false) }
                         sendEffect(OTPEffect.NavigateToNextScreen(null))
                     }
                     is LinguaQuestResult.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         snackbarController.sendEvent(
                             SnackbarEvent(
                                 message = UiText.StringResource(result.error.toMessageRes()),

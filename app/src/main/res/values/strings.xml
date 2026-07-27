@@ -13,6 +13,7 @@
     <string name="i_want_to_learn">I WANT TO LEARN...</string>
     <string name="popular_choices">Popular Choices</string>
     <string name="continue_button">Continue</string>
+    <string name="start_button">Start</string>
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
@@ -105,7 +106,6 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
-    <string name="otp_timer_content_description">Timer</string>
     <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
     <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
     <string name="level_beginner">Beginner</string>
@@ -114,12 +114,6 @@
     <string name="level_intermediate_description">I can navigate basic paths</string>
     <string name="level_advanced">Advanced</string>
     <string name="level_advanced_description">Ready for grand challenges</string>
-    <string name="camera_permission_required">Camera permission is required.</string>
-    <string name="camera_permission_title">Is Your Camera Ready?</string>
-    <string name="camera_permission_blocked_desc">We need camera access to play, but it looks like it\'s blocked. Please enable it in your device settings.</string>
-    <string name="camera_permission_desc">LinguaQuest needs your camera to find objects and earn points!</string>
-    <string name="open_settings">Open Settings</string>
-    <string name="grant_permission">Grant Permission</string>
     <string name="go_back">Go Back</string>
     <string name="captured_preview">Captured Preview</string>
     <string name="find_label">Find:</string>
@@ -150,6 +144,7 @@
     <string name="streak_label">STREAK</string>
     <string name="worlds_label">WORLDS</string>
     <string name="continue_lesson">CONTINUE LESSON</string>
+    <string name="voice_practise">Voice Practice</string>
     <string name="leaderboard_title">Leaderboard</string>
     <string name="achievements_title">Achievements</string>
     <string name="learning_label">Learning</string>
@@ -159,6 +154,7 @@
     <string name="view_all_label">VIEW ALL</string>
     <string name="you_label">You</string>
 
+    <string name="practice_pronunciation">Practice your\npronunciation</string>
     <!-- WorldDifficulty -->
     <string name="medium">MEDIUM</string>
     <string name="easy">EASY</string>
@@ -199,6 +195,10 @@
     <string name="show_category_clue">Show category clue</string>
     <string name="use_hint">Use Hint</string>
     <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+    <string name="change_word_confirm_title">Change the word?</string>
+    <string name="change_word_confirm_message">This will deduct 50 coins.</string>
+    <string name="change_word_confirm_action">Change Word</string>
+    <string name="change_word_cancel_action">Cancel</string>
 
 
     <string name="xp">XP</string>
@@ -476,7 +476,7 @@
     <string name="dialog_voice_confirmation_sub_title">Listen to your audio before evaluating</string>
     <string name="dialog_voice_confirmation_discard">Discard</string>
     <string name="dialog_voice_confirmation_process">Evaluate</string>
-
+    <string name="failed_upload_photo">Failed to upload photo</string>
     <!-- Auth & Error Strings -->
     <string name="login_error_email_already_in_use">Email is already in use.</string>
     <string name="login_error_email_not_found">Email address not found.</string>
@@ -484,15 +484,88 @@
     <string name="login_error_invalid_reset_token">Invalid password reset token.</string>
     <string name="login_error_reset_token_expired">Password reset token has expired.</string>
     <string name="login_error_validation_error">Validation error occurred.</string>
+    <string name="otp_timer_content_description">OTP resend timer</string>
 
     <!-- Camera Strings -->
-
+    <string name="change_password_label">Change password</string>
+    <string name="old_password_placeholder">old password</string>
+    <string name="new_password_placeholder">new password</string>
     <string name="choose_a_source">Choose a source</string>
     <!-- Snackbars messages -->
     <string name="congrates">Congratulations</string>
+    <string name="change_word">Change Word</string>
 
+    <string name="display_name_empty">Display name can\'t be empty</string>
+    <string name="enter_current_password">Enter your current password</string>
+    <string name="new_password_min_length">New password must be at least 6 characters</string>
+    <string name="incorrect_old_password">Incorrect current password</string>
 
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="failed_update_profile">Failed to update profile</string>
+
+    <string name="password_updated_successfully">Password updated successfully</string>
+    <string name="failed_update_password">Failed to update password</string>
+
+    <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
     <string name="add_languages_no_results">add_languages_no_results</string>
+    <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
+    <string name="error_loading_languages">Could not load languages. Please try again.</string>
+    <string name="no_languages_available">No languages available</string>
+    <string name="logout_dialog_message">Are you sure you want to log out? You will need to sign in again to access your progress.</string>
 
+    <string name="camera_permission_required">Camera permission is required.</string>
+    <string name="camera_permission_title">Camera Permission Required</string>
+    <string name="camera_permission_blocked_desc">Camera permission is blocked. Please enable it in Settings.</string>
+    <string name="camera_permission_desc">LinguaQuest needs camera access to capture objects for language learning.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="grant_permission">Grant Permission</string>
 
+    <!-- Roleplay Feature Strings -->
+    <string name="roleplay_boss_level">Boss Level</string>
+    <string name="roleplay_boss_stage">Boss Stage</string>
+    <string name="roleplay_stop_recording">Stop recording</string>
+    <string name="roleplay_start_recording">Start recording</string>
+    <string name="roleplay_victory">Victory!</string>
+    <string name="roleplay_next_world">Next World</string>
+    <string name="roleplay_stage_failed">Stage Failed</string>
+    <string name="roleplay_try_again">Try Again</string>
+    <string name="roleplay_evaluating">Evaluating...</string>
+    <string name="roleplay_ai_analyzing">AI is analyzing your conversation to calculate your score.</string>
+    <string name="roleplay_oops">Oops!</string>
+    <string name="roleplay_exit">Exit</string>
+    <string name="roleplay_finish_stage_question">Finish Stage?</string>
+    <string name="roleplay_finish_stage_message">Are you ready to end the conversation and receive your evaluation?</string>
+    <string name="roleplay_yes_evaluate">Yes, Evaluate!</string>
+    <string name="roleplay_keep_talking">Keep Talking</string>
+    <string name="roleplay_objective_format">Objective: %1$s</string>
+    <string name="roleplay_connecting">Connecting...</string>
+    <string name="roleplay_not_connected">Not connected.</string>
+    <string name="roleplay_tap_to_stop">Tap to Stop</string>
+    <string name="roleplay_tap_to_speak">Tap to Speak</string>
+    <string name="roleplay_finish_stage">Finish Stage</string>
+    <string name="roleplay_meet_boss">Meet %1$s</string>
+    <string name="roleplay_your_objective">Your Objective</string>
+    <string name="roleplay_read_carefully">(Read carefully in your native language before starting)</string>
+    <string name="roleplay_start_roleplay">Start Roleplay</string>
+    <string name="roleplay_xp">XP</string>
+    <string name="roleplay_coins">Coins</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_subtitle">Check your network and try again</string>
+    <string name="retry_label">Retry</string>
+    <string name="no_internet_image_desc">No internet connection illustration</string>
+    <string name="login_error_no_internet">No internet connection. Please check your network and try again.</string>
+    <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
+    <string name="roleplay_browse_roleplays">Browse Roleplays</string>
+    <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
+    <string name="roleplay_no_roleplays_available">No roleplays available.</string>
+    <string name="roleplay_objective">Objective</string>
+    <string name="roleplay_label">Roleplay</string>
+    <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
+    <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="no_internet_short">No internet</string>
+    <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
+    <!-- New profile strings -->
+    <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
 </resources>

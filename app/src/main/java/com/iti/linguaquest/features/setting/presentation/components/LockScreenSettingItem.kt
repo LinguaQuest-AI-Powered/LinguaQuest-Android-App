@@ -31,19 +31,20 @@ import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 
 @Composable
 fun LockScreenSettingItem(
+    modifier: Modifier = Modifier,
     isFeatureActive: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(44.dp)
-                .background(AppColors.OrangeActive, RoundedCornerShape(12.dp)),
+                .size(40.dp)
+                .background( MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             Icon(

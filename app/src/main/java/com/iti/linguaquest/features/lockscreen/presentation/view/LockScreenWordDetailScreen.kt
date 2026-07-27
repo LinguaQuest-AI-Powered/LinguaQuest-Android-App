@@ -36,6 +36,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
@@ -59,6 +61,8 @@ fun LockScreenWordDetailScreen(
     onNavigateToReview: (LockScreenWord) -> Unit,
     viewModel: LockScreenWordDetailViewModel = hiltViewModel()
 ) {
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showListMode by remember { mutableStateOf(wordId <= 0) }
     var searchQuery by remember { mutableStateOf("") }
@@ -133,68 +137,72 @@ fun LockScreenWordDetailScreen(
                 }
 
                 else -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // Header
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp, vertical = 16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                    OfflineAwareContent(isOnline = isOnline) {
+
+                        Column(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            Column {
-                                Text(
-                                    text = stringResource(R.string.lockscreen_vocabulary_vault_title),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = LinguaQuestTheme.colors.titleAndCationsColor
-                                )
-                                Text(
-                                    text = stringResource(
-                                        R.string.lockscreen_vocabulary_words_collected,
-                                        state.words.size
-                                    ),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.7f)
-                                )
-                            }
-                        }
-
-                        if (!showListMode) {
-                            val currentWord = state.words.find { it.id == state.highlightedWordId }
-                                ?: state.words.firstOrNull()
-
-                            if (currentWord != null) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 32.dp)
-                                ) {
-                                    LargeWordCard(
-                                        word = currentWord,
-                                        onGotItClick = { showListMode = true }
+                            // Header
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.lockscreen_vocabulary_vault_title),
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = LinguaQuestTheme.colors.titleAndCationsColor
+                                    )
+                                    Text(
+                                        text = stringResource(
+                                            R.string.lockscreen_vocabulary_words_collected,
+                                            state.words.size
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = LinguaQuestTheme.colors.titleAndCationsColor.copy(
+                                            alpha = 0.7f
+                                        )
                                     )
                                 }
-                            } else {
-                                EmptyVaultState(modifier = Modifier.fillMaxSize())
                             }
-                        } else {
-                             VaultListMode(
-                                words = state.words,
-                                searchQuery = searchQuery,
-                                onSearchQueryChange = { searchQuery = it },
-                                onNavigateToReview = onNavigateToReview,
-                                tts = tts
-                            )
+
+                            if (!showListMode) {
+                                val currentWord =
+                                    state.words.find { it.id == state.highlightedWordId }
+                                        ?: state.words.firstOrNull()
+
+                                if (currentWord != null) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 32.dp)
+                                    ) {
+                                        LargeWordCard(
+                                            word = currentWord,
+                                            onGotItClick = { showListMode = true }
+                                        )
+                                    }
+                                } else {
+                                    EmptyVaultState(modifier = Modifier.fillMaxSize())
+                                }
+                            } else {
+                                VaultListMode(
+                                    words = state.words,
+                                    searchQuery = searchQuery,
+                                    onSearchQueryChange = { searchQuery = it },
+                                    onNavigateToReview = onNavigateToReview,
+                                    tts = tts
+                                )
+                            }
                         }
                     }
                 }
             }
-
-            // Milestone Reward Dialog (every 10 words)
-            if (showMilestoneDialog) {
+             if (showMilestoneDialog) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CoinRainOverlay(modifier = Modifier.fillMaxSize())
                     AppDialog(
