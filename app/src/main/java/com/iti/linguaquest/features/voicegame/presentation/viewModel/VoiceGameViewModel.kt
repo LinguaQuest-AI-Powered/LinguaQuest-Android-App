@@ -290,7 +290,8 @@ class VoiceGameViewModel @Inject constructor(
                             coinsAwarded = if (passed) 10 else 0,
                             isPassed = passed,
                             lessonId = lessonId,
-                            sentence = _state.value.sentence
+                            sentence = _state.value.sentence,
+                            coinsBeforeAward = wallet.value.coins
                         )
 
                         sendEffect(VoiceGameEffect.NavigateToResult(voiceResult))

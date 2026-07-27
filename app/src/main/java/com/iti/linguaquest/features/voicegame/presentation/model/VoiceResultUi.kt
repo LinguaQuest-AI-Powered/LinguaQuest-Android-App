@@ -9,5 +9,6 @@ data class VoiceResultUi(
     val coinsAwarded: Int,
     val isPassed: Boolean,
     val lessonId: Int,
-    val sentence: String
+    val sentence: String,
+    val coinsBeforeAward: Int
 )
