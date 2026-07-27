@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import jakarta.inject.Inject
@@ -26,6 +27,7 @@ class LockScreenPreferencesLocalDataSourceImpl @Inject constructor(
         val LAST_TARGET_LANGUAGE = stringPreferencesKey("lockscreen_last_target_language")
         val LAST_PROFICIENCY_LEVEL = stringPreferencesKey("lockscreen_last_proficiency_level")
         val PENDING_OPERATION_ID = stringPreferencesKey("lockscreen_pending_operation_id")
+        val LAST_REWARDED_MILESTONE_COUNT = intPreferencesKey("lockscreen_last_rewarded_milestone_count")
     }
 
     override val featureEnabled: Flow<Boolean> =
@@ -51,6 +53,9 @@ class LockScreenPreferencesLocalDataSourceImpl @Inject constructor(
 
     override val pendingOperationId: Flow<String?> =
         dataStore.data.map { it[Keys.PENDING_OPERATION_ID] }
+
+    override val lastRewardedMilestoneCount: Flow<Int?> =
+        dataStore.data.map { it[Keys.LAST_REWARDED_MILESTONE_COUNT] }
 
     override suspend fun saveFeatureEnabled(enabled: Boolean) {
         dataStore.edit { it[Keys.FEATURE_ENABLED] = enabled }
@@ -94,6 +99,16 @@ class LockScreenPreferencesLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveLastRewardedMilestoneCount(count: Int?) {
+        dataStore.edit { prefs ->
+            if (count == null) {
+                prefs.remove(Keys.LAST_REWARDED_MILESTONE_COUNT)
+            } else {
+                prefs[Keys.LAST_REWARDED_MILESTONE_COUNT] = count
+            }
+        }
+    }
+
     override suspend fun clear() {
         dataStore.edit { prefs ->
             prefs.remove(Keys.FEATURE_ENABLED)
@@ -104,6 +119,7 @@ class LockScreenPreferencesLocalDataSourceImpl @Inject constructor(
             prefs.remove(Keys.LAST_TARGET_LANGUAGE)
             prefs.remove(Keys.LAST_PROFICIENCY_LEVEL)
             prefs.remove(Keys.PENDING_OPERATION_ID)
+            prefs.remove(Keys.LAST_REWARDED_MILESTONE_COUNT)
         }
     }
 }

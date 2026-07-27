@@ -15,6 +15,7 @@ interface LockScreenRepository {
     val lastTargetLanguage: Flow<String?>
     val lastProficiencyLevel: Flow<String?>
     val pendingOperationId: Flow<String?>
+    val lastRewardedMilestoneCount: Flow<Int?>
     val pendingCount: Flow<Int>
     val allWords: Flow<List<LockScreenWord>>
     val pendingWord: Flow<LockScreenWord?>
@@ -57,6 +58,7 @@ interface LockScreenRepository {
         lastTargetLanguage: String? = null,
         lastProficiencyLevel: String? = null
     )
+    suspend fun saveLastRewardedMilestoneCount(count: Int?)
     suspend fun recentGeneratedWords(limit: Int = 100): List<String>
     suspend fun pendingCountOnce(): Int
     suspend fun observePendingOnce(): LockScreenWord?

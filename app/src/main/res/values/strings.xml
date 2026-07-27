@@ -246,6 +246,7 @@
     <string name="lockscreen_vocabulary_enabled">Lock screen vocabulary enabled.</string>
     <string name="lockscreen_vocabulary_disabled">Lock screen vocabulary disabled.</string>
     <string name="lockscreen_vocabulary_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_milestone_reward_error">Could not claim the milestone reward right now. Please try again.</string>
     <string name="lockscreen_vocabulary_word_detail_title">Word detail</string>
     <string name="lockscreen_vocabulary_example_label">Example sentence</string>
     <string name="lockscreen_vocabulary_translation_label">Translation</string>

@@ -4,6 +4,7 @@ import android.util.Log
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenLocalDataSource
 import com.iti.linguaquest.features.lockscreen.data.mapper.toDomain
 import com.iti.linguaquest.features.lockscreen.data.mapper.toEntity
@@ -19,7 +20,8 @@ import kotlinx.coroutines.flow.first
 class LockScreenRepositoryImpl @Inject constructor(
     private val remoteDataSource: LockScreenRemoteDataSource,
     private val localDataSource: LockScreenLocalDataSource,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val adjustWalletUseCase: AdjustWalletUseCase
 ) : LockScreenRepository {
 
     override val featureEnabled: Flow<Boolean> = localDataSource.featureEnabled
@@ -30,6 +32,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     override val lastTargetLanguage: Flow<String?> = localDataSource.lastTargetLanguage
     override val lastProficiencyLevel: Flow<String?> = localDataSource.lastProficiencyLevel
     override val pendingOperationId: Flow<String?> = localDataSource.pendingOperationId
+    override val lastRewardedMilestoneCount: Flow<Int?> = localDataSource.lastRewardedMilestoneCount
     override val pendingCount: Flow<Int> = localDataSource.pendingCount
     override val allWords: Flow<List<LockScreenWord>> = localDataSource.allWords().map { list -> list.map { it.toDomain() } }
     override val pendingWord: Flow<LockScreenWord?> = localDataSource.pendingWord().map { it?.toDomain() }
@@ -49,13 +52,21 @@ class LockScreenRepositoryImpl @Inject constructor(
         operationId: String,
         amount: Int
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        return try {
-            // Backend is intentionally disabled for now.
-             localDataSource.savePendingOperationId(operationId)
-            enable()
-            LinguaQuestResult.Success(Unit)
-        } catch (_: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+        return when (val result = adjustWalletUseCase(
+            xpDelta = 0,
+            coinsDelta = -amount
+        )) {
+            is LinguaQuestResult.Success -> {
+                try {
+                    localDataSource.savePendingOperationId(operationId)
+                    enable()
+                    LinguaQuestResult.Success(Unit)
+                } catch (_: Exception) {
+                    LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+                }
+            }
+
+            is LinguaQuestResult.Failure -> result
         }
     }
 
@@ -243,6 +254,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         localDataSource.saveLastNativeLanguage(lastNativeLanguage)
         localDataSource.saveLastTargetLanguage(lastTargetLanguage)
         localDataSource.saveLastProficiencyLevel(lastProficiencyLevel)
+    }
+
+    override suspend fun saveLastRewardedMilestoneCount(count: Int?) {
+        localDataSource.saveLastRewardedMilestoneCount(count)
     }
 
     override suspend fun recentGeneratedWords(limit: Int): List<String> {

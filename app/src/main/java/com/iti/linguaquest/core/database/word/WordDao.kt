@@ -40,6 +40,6 @@ interface WordDao {
     @Query("UPDATE words SET isCorrect = :isCorrect WHERE id = :wordId")
     suspend fun setCorrectStatus(wordId: Int, isCorrect: Boolean)
 
-     @Query("SELECT * FROM words WHERE imagePath != ''")
+     @Query("SELECT * FROM words ORDER BY id DESC")
     fun getWordsWithImages(): Flow<List<WordEntity>>
 }

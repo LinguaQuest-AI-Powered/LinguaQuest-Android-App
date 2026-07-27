@@ -161,6 +161,7 @@ fun SettingContent(
                     },
                     isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE ||
                         lockScreenState.featureState == LockScreenFeatureState.ENABLING,
+                    onClick = { guardOnline(lockScreenY) { onLockScreenVocabularyClick() } },
                     onCheckedChange = { isChecked ->
                         guardOnline(lockScreenY) {
                             onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
@@ -240,7 +241,8 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_info_icon),
                     title = stringResource(id = R.string.settings_about_app),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(aboutY) { } }
+                    onClick = { guardOnline(aboutY) {
+                    } }
                 )
             }
 

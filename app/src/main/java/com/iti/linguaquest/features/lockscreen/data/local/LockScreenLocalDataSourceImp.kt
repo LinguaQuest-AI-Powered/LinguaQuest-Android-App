@@ -21,6 +21,7 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
     override val lastTargetLanguage: Flow<String?> = preferences.lastTargetLanguage
     override val lastProficiencyLevel: Flow<String?> = preferences.lastProficiencyLevel
     override val pendingOperationId: Flow<String?> = preferences.pendingOperationId
+    override val lastRewardedMilestoneCount: Flow<Int?> = preferences.lastRewardedMilestoneCount
 
     override fun allWords(): Flow<List<LockScreenWordEntity>> = wordDao.allWords()
 
@@ -95,6 +96,10 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
 
     override suspend fun savePendingOperationId(operationId: String?) {
         preferences.savePendingOperationId(operationId)
+    }
+
+    override suspend fun saveLastRewardedMilestoneCount(count: Int?) {
+        preferences.saveLastRewardedMilestoneCount(count)
     }
 
     override suspend fun clearFeatureMetadata() {

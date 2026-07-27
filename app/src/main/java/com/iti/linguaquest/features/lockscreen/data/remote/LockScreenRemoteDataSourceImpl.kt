@@ -6,8 +6,10 @@ import com.google.firebase.ai.GenerativeModel
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
 import com.google.firebase.ai.type.generationConfig
+import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.lockscreen.data.remote.dto.DeductCoinsRequestDto
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
 import jakarta.inject.Inject
 import org.json.JSONArray
@@ -15,7 +17,8 @@ import org.json.JSONObject
 import org.json.JSONTokener
 
 class LockScreenRemoteDataSourceImpl @Inject constructor(
-    private val promptBuilder: PromptBuilder
+    private val promptBuilder: PromptBuilder,
+    private val coinsApiService: CoinsApiService
 ) : LockScreenRemoteDataSource {
 
     private val model: GenerativeModel by lazy {
@@ -33,8 +36,15 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
         amount: Int,
         reason: String
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        // No backend is wired yet. Keep this as a safe no-op so enable flow never errors.
-        return LinguaQuestResult.Success(Unit)
+        return when (val result = safeApiCall {
+            coinsApiService.deductCoins(
+                idempotencyKey = operationId,
+                request = DeductCoinsRequestDto(amount = amount, reason = reason)
+            )
+        }) {
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(Unit)
+            is LinguaQuestResult.Failure -> result
+        }
     }
 
     override suspend fun generateVocabulary(

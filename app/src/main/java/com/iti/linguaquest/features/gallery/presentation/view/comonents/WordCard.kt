@@ -1,24 +1,23 @@
 package com.iti.linguaquest.features.gallery.presentation.view.comonents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,11 +32,13 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 
 @Composable
@@ -67,9 +68,12 @@ fun WordCard(
                     .aspectRatio(1f)
             ) {
                 AsyncImage(
-                    model = word.imagePath,
+                    model = word.imagePath.takeIf { it.isNotBlank() },
                     contentDescription = word.sourceWord,
                     contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.lingo_gallery_defualt),
+                    error = painterResource(id = R.drawable.lingo_gallery_defualt),
+                    fallback = painterResource(id = R.drawable.lingo_gallery_defualt),
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
@@ -101,10 +105,9 @@ fun WordCard(
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 10.dp, vertical = 10.dp)
             ) {
-                 Column(
+                Column(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .padding(end = 40.dp)
                 ) {
                     Text(
                         text = word.sourceWord,
@@ -123,33 +126,47 @@ fun WordCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-               Box(
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .size(28.dp)
-                        .then(
-                            if (word.isCorrect) {
-                                Modifier.background(color = MaterialTheme.colorScheme.tertiary, shape = CircleShape)
-                            } else {
-                                Modifier.border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.tertiary,
-                                    shape = CircleShape
-                                )
-                            }
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (word.isCorrect) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(18.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.14f),
+                            shape = RoundedCornerShape(50)
                         )
-                    }
+                        .padding(horizontal = 8.dp, vertical = 5.dp)
+                ) {
+                    Text(
+                        text = compactLanguageLabel(word.sourceLanguage),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.height(10.dp)
+                    )
+                    Text(
+                        text = compactLanguageLabel(word.targetLanguage),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }
     }
+}
+private fun compactLanguageLabel(language: String): String {
+    val cleaned = language.trim().filter { it.isLetterOrDigit() }
+    if (cleaned.isBlank()) return "--"
+    return cleaned.take(2).uppercase()
 }
