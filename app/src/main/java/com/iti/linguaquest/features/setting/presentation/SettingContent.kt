@@ -71,7 +71,6 @@ fun SettingContent(
     isLoggingOut: Boolean = false,
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onLockScreenVocabularyClick: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
     lockScreenState: LockScreenState,
@@ -161,7 +160,6 @@ fun SettingContent(
                     },
                     isFeatureActive = lockScreenState.featureState == LockScreenFeatureState.ACTIVE ||
                         lockScreenState.featureState == LockScreenFeatureState.ENABLING,
-                    onClick = { guardOnline(lockScreenY) { onLockScreenVocabularyClick() } },
                     onCheckedChange = { isChecked ->
                         guardOnline(lockScreenY) {
                             onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
@@ -320,7 +318,6 @@ fun SettingContentPreview() {
             isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
-            onLockScreenVocabularyClick = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),
@@ -349,7 +346,6 @@ fun SettingContentOfflinePreview() {
             isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
-            onLockScreenVocabularyClick = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),

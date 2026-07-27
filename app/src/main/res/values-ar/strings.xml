@@ -440,6 +440,7 @@
     <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن! سيظهر الإشعار خلال 5 ثوانٍ.</string>
     <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
     <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
+    <string name="error_insufficient_balance">رصيدك غير كافٍ.</string>
     <!-- Game Voice Feature -->
     <string name="voice_game_title">تدريب النطق</string>
     <string name="voice_evaluating">جارٍ تقييم النطق…</string>

@@ -52,7 +52,6 @@ import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
-import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditProfileScreen
@@ -401,16 +400,7 @@ fun AppNavigation(
                                 clear()
                                 navigateSingleTop(RootScreen.Onboarding)
                             }
-                        },
-                        onLockScreenVocabularyClick = {
-                            rootBackStack.navigateSingleTop(RootScreen.LockScreenVocabulary)
                         }
-                    )
-                }
-
-                entry<RootScreen.LockScreenVocabulary> {
-                    LockScreenSettingsScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
                     )
                 }
 

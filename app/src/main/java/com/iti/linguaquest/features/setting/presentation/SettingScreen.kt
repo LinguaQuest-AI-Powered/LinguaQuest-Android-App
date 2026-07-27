@@ -25,7 +25,6 @@ fun SettingScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onLogout: () -> Unit,
-    onLockScreenVocabularyClick: () -> Unit,
     viewModel: SettingViewModel = hiltViewModel(),
     lockScreenViewModel: LockScreenSettingsViewModel = hiltViewModel()
 ) {
@@ -92,7 +91,6 @@ fun SettingScreen(
             viewModel.logout(onSuccess = onLogout)
         },
         onEditProfileClick = onEdit,
-        onLockScreenVocabularyClick = onLockScreenVocabularyClick,
         reminderState = reminderState,
         onReminderIntent = viewModel::onReminderIntent,
         lockScreenState = lockScreenState,

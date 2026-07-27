@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.setting.presentation.components
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,13 +33,11 @@ import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 fun LockScreenSettingItem(
     modifier: Modifier = Modifier,
     isFeatureActive: Boolean,
-    onClick: (() -> Unit)? = null,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

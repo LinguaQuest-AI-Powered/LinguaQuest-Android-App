@@ -22,6 +22,7 @@ import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenS
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -319,6 +320,7 @@ class LockScreenSettingsViewModel @Inject constructor(
                             errorMessage = com.iti.linguaquest.R.string.lockscreen_enable_error.toString()
                         )
                     }
+                    showMessage(enableResult.error.toUiText(), SnackbarType.ERROR)
                 }
             }
         }
@@ -435,9 +437,9 @@ class LockScreenSettingsViewModel @Inject constructor(
         viewModelScope.launch { _effect.emit(effect) }
     }
 
-    private fun showMessage(text: UiText) {
+    private fun showMessage(text: UiText, type: SnackbarType = SnackbarType.INFO) {
         viewModelScope.launch {
-            snackbarController.sendEvent(SnackbarEvent(message = text, type = SnackbarType.INFO))
+            snackbarController.sendEvent(SnackbarEvent(message = text, type = type))
         }
     }
 

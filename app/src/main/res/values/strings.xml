@@ -290,6 +290,7 @@
     <string name="error_bad_request">error_bad_request</string>
     <string name="error_unauthorized">error_unauthorized</string>
     <string name="error_too_many_requests">error_too_many_requests</string>
+    <string name="error_insufficient_balance">Your balance is not enough.</string>
 
     <string name="map_lets_learn">Let\'s Learn!</string>
     <string name="cd_treasure">Treasure</string>

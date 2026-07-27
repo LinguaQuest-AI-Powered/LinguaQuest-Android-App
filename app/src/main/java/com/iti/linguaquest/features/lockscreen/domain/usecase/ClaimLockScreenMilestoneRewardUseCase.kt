@@ -9,12 +9,11 @@ import javax.inject.Inject
 
 class ClaimLockScreenMilestoneRewardUseCase @Inject constructor(
     private val repository: LockScreenRepository,
-    private val adjustWalletUseCase: AdjustWalletUseCase,
-    private val clearLockScreenWordsUseCase: ClearLockScreenWordsUseCase
+    private val adjustWalletUseCase: AdjustWalletUseCase
 ) {
     suspend operator fun invoke(
         wordCount: Int,
-        coinsReward: Int = 100
+        coinsReward: Int = 10
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         if (wordCount <= 0 || wordCount % 10 != 0) {
             return LinguaQuestResult.Success(Unit)
@@ -29,10 +28,7 @@ class ClaimLockScreenMilestoneRewardUseCase @Inject constructor(
             is LinguaQuestResult.Success -> {
                 try {
                     repository.saveLastRewardedMilestoneCount(wordCount)
-                    when (val clearResult = clearLockScreenWordsUseCase()) {
-                        is LinguaQuestResult.Success -> LinguaQuestResult.Success(Unit)
-                        is LinguaQuestResult.Failure -> clearResult
-                    }
+                    LinguaQuestResult.Success(Unit)
                 } catch (_: Exception) {
                     LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
                 }

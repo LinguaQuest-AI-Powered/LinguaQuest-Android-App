@@ -12,6 +12,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
@@ -328,7 +329,17 @@ class VoiceGameViewModel @Inject constructor(
 
     fun onGameWon(xpDelta: Int = 0, coinsDelta: Int = 5) {
         viewModelScope.launch {
-            adjustWalletUseCase(xpDelta = xpDelta, coinsDelta = coinsDelta)
+            when (val result = adjustWalletUseCase(xpDelta = xpDelta, coinsDelta = coinsDelta)) {
+                is LinguaQuestResult.Success -> Unit
+                is LinguaQuestResult.Failure -> {
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 

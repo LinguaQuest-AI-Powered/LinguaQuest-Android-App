@@ -50,7 +50,7 @@ import com.iti.linguaquest.features.lockscreen.presentation.view.component.Vault
 import com.iti.linguaquest.features.lockscreen.presentation.viewmodel.LockScreenWordDetailViewModel
 
 private const val MILESTONE_STEP = 10
-private const val COINS_PER_MILESTONE = 100
+private const val COINS_PER_MILESTONE = 10
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +61,7 @@ fun LockScreenWordDetailScreen(
     viewModel: LockScreenWordDetailViewModel = hiltViewModel()
 ) {
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val wallet by viewModel.wallet.collectAsStateWithLifecycle()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showListMode by remember { mutableStateOf(wordId <= 0) }
@@ -96,7 +97,7 @@ fun LockScreenWordDetailScreen(
 
     Scaffold(
         topBar = {
-            CustomTopBar()
+            CustomTopBar(coins = wallet.coins)
         },
         floatingActionButton = {
             FloatingActionButton(

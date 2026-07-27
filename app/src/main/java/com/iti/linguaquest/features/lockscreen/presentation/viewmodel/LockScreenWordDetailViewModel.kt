@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ClaimLockScreenMilestoneRewardUseCase
@@ -29,6 +31,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
      private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
      private val claimMilestoneRewardUseCase: ClaimLockScreenMilestoneRewardUseCase,
      private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+     getWalletUseCase: GetWalletUseCase,
      private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
  ) : ViewModel() {
 
@@ -38,6 +41,13 @@ class LockScreenWordDetailViewModel @Inject constructor(
              scope = viewModelScope,
              started = SharingStarted.WhileSubscribed(5_000),
              initialValue = true
+         )
+
+     val wallet: StateFlow<Wallet> = getWalletUseCase()
+         .stateIn(
+             scope = viewModelScope,
+             started = SharingStarted.WhileSubscribed(5_000),
+             initialValue = Wallet(xp = 0, coins = 0)
          )
 
 
