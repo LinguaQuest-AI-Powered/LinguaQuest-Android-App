@@ -60,11 +60,15 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun loadLevels(worldId: Int) {
-        if (_state.value.levels.isNotEmpty() && _state.value.worldId == worldId) return
+    fun loadLevels(worldId: Int, forceRefresh: Boolean = false) {
+        if (!forceRefresh && _state.value.levels.isNotEmpty() && _state.value.worldId == worldId) return
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, worldId = worldId) }
+            if (_state.value.levels.isEmpty()) {
+                _state.update { it.copy(isLoading = true, worldId = worldId) }
+            } else {
+                _state.update { it.copy(worldId = worldId) }
+            }
             val result = getMapLevelsUseCase(worldId)
             
             result.onSuccess { detail ->

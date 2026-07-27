@@ -64,13 +64,15 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
     override suspend fun evaluateBossStage(
         transcript: List<String>,
         taskObjective: String,
-        nativeLanguage: String
+        nativeLanguage: String,
+        targetLanguage: String
     ): BossEvaluationResult? = withContext(Dispatchers.IO) {
         val transcriptText = transcript.joinToString("\n")
         val systemPrompt = PromptFactory.createBossEvaluationPrompt(
             transcriptText = transcriptText,
             taskObjective = taskObjective,
-            nativeLanguage = nativeLanguage
+            nativeLanguage = nativeLanguage,
+            targetLanguage = targetLanguage
         )
         
         try {

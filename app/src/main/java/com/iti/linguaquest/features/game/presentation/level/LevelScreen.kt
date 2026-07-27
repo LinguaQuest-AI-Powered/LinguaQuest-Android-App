@@ -53,6 +53,7 @@ fun LevelScreen(
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val sharedState by sharedViewModel.sharedState.collectAsStateWithLifecycle()
     val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     
@@ -66,6 +67,12 @@ fun LevelScreen(
 
     LaunchedEffect(worldId, levelNumber) {
         viewModel.loadLevelDetails(worldId, levelNumber)
+    }
+
+    LaunchedEffect(state.wordToGuess) {
+        if (state.wordToGuess.isNotEmpty()) {
+            sharedViewModel.clearHint()
+        }
     }
 
     LaunchedEffect(viewModel) {
@@ -146,13 +153,17 @@ fun LevelScreen(
 
                 QuestCard(
                     wordToGuess = state.wordToGuess,
-                    hintText = stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                    hintText = sharedState.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                     onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                     onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                     onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
-                    onMascotClick = { viewModel.onIntent(LevelIntent.MascotTapped) },
+                    onMascotClick = { 
+                        if (sharedState.hintText == null) {
+                            viewModel.onIntent(LevelIntent.MascotTapped)
+                        }
+                    },
                     isCameraEnabled = state.isLevelReady && !state.isLoading,
-                    isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isChangeWordUsed && !state.isLoading,
+                    isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isLoading,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
@@ -160,6 +171,7 @@ fun LevelScreen(
         if (state.isBottomSheetVisible) {
             HintsBottomSheet(
                 coinCount = state.coinCount,
+                isLoading = state.isLoading,
                 onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
                 onBuyHint = { viewModel.onIntent(LevelIntent.GetHintClicked) }
             )

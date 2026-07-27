@@ -69,7 +69,9 @@ fun GameProcessingScreen(
                 is GameProcessingEffect.NavigateToSuccess -> {
                     VerificationOutcome.Success(
                         xpAwarded = effect.xp,
-                        coinsAwarded = effect.coins + whackState.currentCoins
+                        coinsAwarded = effect.coins + whackState.currentCoins,
+                        level = effect.level,
+                        levelProgressPercentage = effect.progressPercentage
                     )
                 }
                 is GameProcessingEffect.NavigateToFailure -> {
