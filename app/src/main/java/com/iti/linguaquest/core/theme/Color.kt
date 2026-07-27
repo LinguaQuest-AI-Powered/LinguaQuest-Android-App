@@ -8,7 +8,7 @@ object AppColors {
     val BrownText = Color(0xFF5D4037)
     val OrangeActive = Color(0xFFFFA726)
     val ShadowOrange = Color(0xFFC77800)
-    val ProfileCardColor = Color(0xff0F9F3EB)
+    val ProfileCardColor = Color(0xFFF9F3EB)
     val ProfileCardBorderColor = Color(0xFFDAC2AE)
 
     // Map
@@ -107,7 +107,7 @@ object AppColors {
 
     val DarkBackground = Color(0xFF0F172A)
     val DarkSurface = Color(0xFF1E293B)
-    val DarkTextPrimary = Color(0xFFF8FAFC)
+    val DarkTextPrimary = Color(0xFFFFFFFF)
     val DarkTextSecondary = Color(0xFF94A3B8)
     val DarkSecondaryColor = Color(0xFF334155)
     val DarkBorderColor = Color(0xFF334155)

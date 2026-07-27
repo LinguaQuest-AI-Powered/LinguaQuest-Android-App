@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsIntent
 import com.iti.linguaquest.features.all_worlds.presentation.view.components.AllWorldsContent

@@ -46,7 +46,7 @@ fun MapScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 MapEffect.NavigateBack -> onBack()
-                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelNumber)
+                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelId)
             }
         }
     }
@@ -54,7 +54,8 @@ fun MapScreen(
         MapScreenContent(
             state = state,
             onLevelClick = { viewModel.onIntent(MapIntent.LevelClicked(it)) },
-            onBackClick = { viewModel.onIntent(MapIntent.BackClicked) }
+            onBackClick = { viewModel.onIntent(MapIntent.BackClicked) },
+            onRetry = { viewModel.onIntent(MapIntent.Retry) }
         )
     }
 }
@@ -63,18 +64,34 @@ fun MapScreen(
 fun MapScreenContent(
     state: MapState,
     onLevelClick: (Int) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onRetry: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        MapContent(
-            state = state,
-            onLevelClick = onLevelClick,
-            modifier = Modifier.fillMaxSize()
-        )
+        when {
+            state.isLoading -> {
+                LoadingView(modifier = Modifier.fillMaxSize())
+            }
+            state.hasError && state.levels.isEmpty() -> {
+                ErrorView(
+                    message = state.errorMessage ?: stringResource(R.string.error_generic),
+                    onRetry = onRetry,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            else -> {
+                MapContent(
+                    state = state,
+                    onLevelClick = onLevelClick,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
         LinguaQuestScreenTopBar(
-            title = state.worldTitle.asString(),
+            title = if (state.isLoading) "" else state.worldTitle.asString(),
             onBackClicked = onBackClick,
             isTitleCentered = false,
             titleColor = LinguaQuestTheme.colors.BrownText,

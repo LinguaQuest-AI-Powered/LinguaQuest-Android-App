@@ -41,8 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
-import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
 @Composable
@@ -55,6 +53,7 @@ fun LevelScreen(
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     
     val speechManager = remember { SpeechManager(context) }

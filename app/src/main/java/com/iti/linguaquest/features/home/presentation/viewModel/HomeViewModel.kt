@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.home.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -22,8 +21,6 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
-import com.iti.linguaquest.features.all_worlds.domain.model.World
-import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +41,9 @@ class HomeViewModel @Inject constructor(
     private val getWorldsUseCase: GetWorldsUseCase,
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val refreshWalletUseCase: RefreshWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())

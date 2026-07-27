@@ -13,7 +13,8 @@ import javax.inject.Inject
 class ReviewRemoteDataSource @Inject constructor() {
 
     private val model: GenerativeModel by lazy {
-        Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel("gemini-3.1-flash-lite")
+        Firebase.ai(backend = GenerativeBackend.googleAI())
+            .generativeModel(modelName = "gemini-3.1-flash-lite")
     }
      suspend fun getAIReview(
         word: WordEntity
