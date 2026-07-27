@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Canvas
@@ -36,11 +35,11 @@ fun SpeechBubble(text: String) {
                 )
                 .border(
                     width = 2.dp,
-                    color = MaterialTheme.colorScheme.background,
+                    color = LinguaQuestTheme.colors.BrownText,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
+                .background(LinguaQuestTheme.colors.whiteColor)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
             Text(

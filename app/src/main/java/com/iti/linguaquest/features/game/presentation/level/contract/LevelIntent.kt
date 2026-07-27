@@ -11,4 +11,5 @@ sealed interface LevelIntent {
     data object SkipClicked : LevelIntent
     data object GetHintClicked : LevelIntent
     data object SoundClicked : LevelIntent
+    data object RetryClicked : LevelIntent
 }

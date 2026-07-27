@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
+import com.iti.linguaquest.R
 import kotlinx.coroutines.flow.collectLatest
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
@@ -51,7 +52,7 @@ import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
  import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
-import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
+import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
@@ -426,7 +427,7 @@ fun AppNavigation(
                                 sourceLanguage = lockScreenWord.targetLanguage,
                                 targetLanguage = lockScreenWord.nativeLanguage,
                                 category = lockScreenWord.proficiencyLevel,
-                                imagePath = "android.resource://com.iti.linguaquest/${com.iti.linguaquest.R.drawable.lingo_searching}"
+                                imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
                             )
                             rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
                         }

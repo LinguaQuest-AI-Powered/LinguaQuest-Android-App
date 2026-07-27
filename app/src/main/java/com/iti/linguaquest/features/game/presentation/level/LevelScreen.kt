@@ -53,7 +53,7 @@ fun LevelScreen(
     viewModel: LevelViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     
     val speechManager = remember { SpeechManager(context) }

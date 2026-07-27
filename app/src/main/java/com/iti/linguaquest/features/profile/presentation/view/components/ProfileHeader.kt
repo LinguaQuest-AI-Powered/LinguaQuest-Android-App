@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,10 +90,8 @@ fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUp
                             .background(Color.Black.copy(alpha = 0.35f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(28.dp),
-                            color = LinguaQuestTheme.colors.whiteColor,
-                            strokeWidth = 2.dp
+                        com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon(
+                            size = 28.dp
                         )
                     }
                 }

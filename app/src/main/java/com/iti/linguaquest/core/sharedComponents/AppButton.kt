@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.iti.linguaquest.R
@@ -107,10 +106,8 @@ fun AppButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = actualContentColor,
-                    strokeWidth = 2.dp
+                LingoSpinningIcon(
+                    size = 24.dp
                 )
             } else {
                 if (icon != null && iconPosition == IconPosition.START) {

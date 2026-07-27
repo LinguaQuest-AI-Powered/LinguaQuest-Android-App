@@ -9,7 +9,8 @@ interface VoiceGameRepository {
     suspend fun evaluatePronunciation(
         targetSentence: String,
         targetLanguage: String,
-        audioBytes: ByteArray
+        audioBytes: ByteArray,
+        appLanguage: String? = null
     ): LinguaQuestResult<VoiceEvaluation, LinguaQuestDataError>
 
     suspend fun generatePronunciationSentence(

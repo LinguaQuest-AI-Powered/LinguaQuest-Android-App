@@ -12,7 +12,6 @@ data class WorldDto(
     @SerializedName("name") val name: String? = null,
     @SerializedName("imageUrl") val imageUrl: String? = null,
     @SerializedName("difficulty") val difficulty: String? = null,
-    @SerializedName("status") val status: String? = null,
     @SerializedName("progressPercent") val progressPercent: Int? = null,
     @SerializedName("totalLevels") val totalLevels: Int? = null,
     @SerializedName("completedLevels") val completedLevels: Int? = null
