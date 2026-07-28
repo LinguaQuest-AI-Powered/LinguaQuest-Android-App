@@ -26,6 +26,10 @@ class LinguaQuestApplication : Application(), Configuration.Provider {
             DebugAppCheckProviderFactory.getInstance()
         )
         appIconWorkScheduler.scheduleDailyRefresh()
+
+        if (BuildConfig.DEBUG) {
+            timber.log.Timber.plant(timber.log.Timber.DebugTree())
+        }
     }
 
     override val workManagerConfiguration: Configuration

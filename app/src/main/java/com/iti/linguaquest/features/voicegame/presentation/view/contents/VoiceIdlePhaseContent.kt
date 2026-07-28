@@ -34,8 +34,8 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameSta
 import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.text.font.FontStyle
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 
 @Composable
 fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
@@ -50,9 +50,8 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
         Spacer(Modifier.height(8.dp))
 
         if (state.isLoadingSentence) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(32.dp),
-                color = MaterialTheme.colorScheme.primary
+            LingoSpinningIcon(
+                size = 32.dp
             )
         } else {
             Text(

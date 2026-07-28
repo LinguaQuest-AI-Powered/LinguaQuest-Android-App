@@ -22,22 +22,24 @@ fun AppOutlinedButton(
     color: Color = AppColors.DialogSecondaryButtonOutline,
     enabled: Boolean = true
 ) {
+    val actualColor = if (enabled) color else Color.Gray.copy(alpha = 0.5f)
     OutlinedButton(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(50),
         enabled = enabled,
-        border = BorderStroke(2.dp, color),
+        border = BorderStroke(2.dp, actualColor),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = Color.Transparent,
-            contentColor = color
+            contentColor = actualColor,
+            disabledContentColor = actualColor
         ),
         contentPadding = PaddingValues(vertical = 16.dp, horizontal = 24.dp)
     ) {
         Text(
             text = text,
             style = AppTextStyles.Button,
-            color = color
+            color = actualColor
         )
     }
 }

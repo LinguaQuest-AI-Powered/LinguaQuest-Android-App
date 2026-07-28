@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.home.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -43,8 +42,8 @@ class HomeViewModel @Inject constructor(
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController,
-    private val refreshWalletUseCase: RefreshWalletUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val refreshWalletUseCase: RefreshWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())

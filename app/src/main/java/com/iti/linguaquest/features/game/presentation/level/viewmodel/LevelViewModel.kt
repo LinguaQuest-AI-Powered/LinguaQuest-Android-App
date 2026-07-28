@@ -28,6 +28,10 @@ import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.game.domain.usecase.ChangeWordUseCase
 import com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import com.iti.linguaquest.features.game.domain.usecase.StartLevelUseCase
 
 @HiltViewModel
@@ -38,6 +42,7 @@ class LevelViewModel @Inject constructor(
     private val refreshWalletUseCase: RefreshWalletUseCase,
     private val getWalletUseCase: GetWalletUseCase,
     private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -46,6 +51,13 @@ class LevelViewModel @Inject constructor(
 
     private val _effects = Channel<LevelEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     init {
         viewModelScope.launch {
@@ -134,6 +146,7 @@ class LevelViewModel @Inject constructor(
                     languageCode = _state.value.languageCode
                 )
             )
+            LevelIntent.RetryClicked -> loadLevelDetails(_state.value.worldId, _state.value.levelNumber)
         }
     }
 
@@ -157,8 +170,8 @@ class LevelViewModel @Inject constructor(
                         it.copy(
                             isLoading = false,
                             wordToGuess = newWord,
-                            isChangeWordUsed = false,
-                            isChangeWordAvailable = true
+                            isChangeWordUsed = markAsUsed,
+                            isChangeWordAvailable = !markAsUsed
                         )
                     }
                     refreshWalletUseCase()

@@ -54,7 +54,7 @@ fun LevelScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val sharedState by sharedViewModel.sharedState.collectAsStateWithLifecycle()
-    val isOnline by sharedViewModel.isOnline.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     
     val speechManager = remember { SpeechManager(context) }
@@ -154,6 +154,7 @@ fun LevelScreen(
                 QuestCard(
                     wordToGuess = state.wordToGuess,
                     hintText = sharedState.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                    isLoading = state.isLoading,
                     onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                     onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                     onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },

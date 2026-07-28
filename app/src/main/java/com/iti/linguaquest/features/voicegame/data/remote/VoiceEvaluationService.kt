@@ -16,12 +16,14 @@ class VoiceEvaluationService @Inject constructor(
     suspend fun evaluatePronunciation(
         targetSentence: String,
         targetLanguage: String,
-        audioBytes: ByteArray
+        audioBytes: ByteArray,
+        appLanguage: String = "English"
     ): VoiceEvaluationResponse {
         val promptText = """
             You are a supportive language coach. The user is practicing speaking a sentence.
             Target Sentence: "$targetSentence"
             Target Language: $targetLanguage
+            User's Application Language: $appLanguage
             
             Analyze the provided audio recording.
             1. Compare what they actually said against the Target Sentence word by word.
@@ -33,17 +35,17 @@ class VoiceEvaluationService @Inject constructor(
             - `correct_words` and `wrong_words` MUST contain ONLY words present in the Target Sentence.
             - Do NOT include punctuation marks (like '.', '?', ',', '!') attached to any word in `correct_words` or `wrong_words`.
             - A word belongs in `correct_words` ONLY if it was clearly spoken and recognizable.
-            - If the audio is completely silent, incomprehensible, or you cannot hear any speech, set rating to 0, `correct_words` to [], put ALL words from the Target Sentence into `wrong_words`, and give advice "I couldn't hear you clearly. Please try speaking again."
+            - If the audio is completely silent, incomprehensible, or you cannot hear any speech, set rating to 0, `correct_words` to [], put ALL words from the Target Sentence into `wrong_words`, and provide encouraging advice written in $appLanguage explaining that you couldn't hear them clearly and asking them to try speaking again.
             
             4. Provide a score out of 10 based on how many target words were spoken correctly.
-            5. Give a short, encouraging piece of advice (max 2 sentences).
+            5. Provide a short, encouraging piece of advice (max 2 sentences) WRITTEN ENTIRELY IN THE USER'S APPLICATION LANGUAGE ($appLanguage).
             
             Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
             {
                 "rating": <integer score between 0 and 10>,
                 "correct_words": ["word1", "word2"],
                 "wrong_words": ["word3"],
-                "advice": "a short, encouraging tip for improvement"
+                "advice": "a short, encouraging tip for improvement written in $appLanguage"
             }
         """.trimIndent()
 

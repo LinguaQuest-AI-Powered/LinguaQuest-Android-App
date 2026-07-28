@@ -70,7 +70,7 @@ class PronunciationSentenceGeneratorService @Inject constructor(
 
             val rawText = geminiAiService.generateJson(prompt)
             if (rawText == null) {
-                return getRandomFallback(count)
+                return getRandomFallback(targetLanguage, count)
             }
 
 
@@ -102,15 +102,48 @@ class PronunciationSentenceGeneratorService @Inject constructor(
             }
 
             results.ifEmpty {
-                getRandomFallback(count)
+                getRandomFallback(targetLanguage, count)
             }
         } catch (e: Exception) {
-            getRandomFallback(count)
+            getRandomFallback(targetLanguage, count)
         }
     }
 
-    private fun getRandomFallback(count: Int): List<GeneratedSentence> {
-        return fallbackSentences.shuffled().take(count)
+    private fun getRandomFallback(targetLanguage: String, count: Int): List<GeneratedSentence> {
+        val list = when (targetLanguage.trim().lowercase()) {
+            "spanish", "es" -> listOf(
+                GeneratedSentence("Hola, ¿cómo estás hoy?", "Easy", "/ˈo.la ˈko.mo esˈtas oi/", "Hello, how are you today?"),
+                GeneratedSentence("Me encanta aprender idiomas.", "Easy", "/me enˈkan.ta a.prenˈder iˈðjo.mas/", "I love learning new languages."),
+                GeneratedSentence("¡Que tengas un buen día!", "Easy", "/ke ˈten.ɡas un bwen ˈdi.a/", "Have a nice day!"),
+                GeneratedSentence("Mucho gusto en conocerte.", "Easy", "/ˈmu.tʃo ˈɣus.to en ko.noˈser.te/", "Nice to meet you.")
+            )
+            "french", "fr" -> listOf(
+                GeneratedSentence("Bonjour, comment allez-vous?", "Easy", "/bɔ̃ʒuʁ kɔmɑ̃t ale vu/", "Hello, how are you?"),
+                GeneratedSentence("J'aime apprendre des langues.", "Easy", "/ʒɛm apʁɑ̃dʁ de lɑ̃ɡ/", "I love learning languages."),
+                GeneratedSentence("Passez une excellente journée!", "Easy", "/pase yn ɛksɛlɑ̃t ʒuʁne/", "Have a great day!"),
+                GeneratedSentence("Ravi de vous rencontrer.", "Easy", "/ʁavi də vu ʁɑ̃kɔ̃tʁe/", "Nice to meet you.")
+            )
+            "german", "de" -> listOf(
+                GeneratedSentence("Hallo, wie geht es dir?", "Easy", "/haˈloː viː ɡeːt ɛs diːɐ̯/", "Hello, how are you?"),
+                GeneratedSentence("Ich lerne gerne Sprachen.", "Easy", "/ɪç ˈlɛʁnə ˈɡɛʁnə ˈʃpʁaːxn̩/", "I like learning languages."),
+                GeneratedSentence("Einen schönen Tag noch!", "Easy", "/ˈaɪ̯nən ˈʃøːnən taːk nɔx/", "Have a nice day!"),
+                GeneratedSentence("Schön dich kennenzulernen.", "Easy", "/ʃøːn dɪç ˈkɛnəntsuːˌlɛʁnən/", "Nice to meet you.")
+            )
+            "italian", "it" -> listOf(
+                GeneratedSentence("Ciao, come stai oggi?", "Easy", "/ˈtʃa.o ˈko.me stai ˈod.dʒi/", "Hello, how are you today?"),
+                GeneratedSentence("Mi piace imparare le lingue.", "Easy", "/mi ˈpja.tʃe im.paˈra.re le ˈliŋ.ɡwe/", "I like learning languages."),
+                GeneratedSentence("Buona giornata a te!", "Easy", "/ˈbwɔ.na dʒorˈna.ta a te/", "Have a nice day!"),
+                GeneratedSentence("Piacere di conoscerti.", "Easy", "/pjaˈtʃe.re di koˈno.ʃer.ti/", "Nice to meet you.")
+            )
+            "arabic", "ar" -> listOf(
+                GeneratedSentence("مرحباً، كيف حالك اليوم؟", "Easy", "/marħaban kayfa ħaːluka l-yawm/", "Hello, how are you today?"),
+                GeneratedSentence("أنا أحب تعلم اللغات.", "Easy", "/ʔanaː ʔuħibbu taʕalluma l-luɣaːt/", "I love learning languages."),
+                GeneratedSentence("أتمنى لك يوماً سعيداً!", "Easy", "/ʔatamannaː laka yawman saʕiːdan/", "Have a nice day!"),
+                GeneratedSentence("سعدت بلقائك كثيراً.", "Easy", "/suʕidtu biliqaːʔika kaθiːran/", "Nice to meet you.")
+            )
+            else -> fallbackSentences
+        }
+        return list.shuffled().take(count)
     }
 
     private companion object {
