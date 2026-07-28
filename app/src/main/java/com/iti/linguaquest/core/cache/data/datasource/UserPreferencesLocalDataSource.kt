@@ -1,9 +1,12 @@
 package com.iti.linguaquest.core.cache.data.datasource
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.iti.linguaquest.core.di.UserSettingsDataStore
+import com.iti.linguaquest.core.utils.LocaleUtils
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -39,32 +42,44 @@ interface UserPreferencesLocalDataSource {
 }
 
 class UserPreferencesLocalDataSourceImpl @Inject constructor(
-    @UserSettingsDataStore private val dataStore: DataStore<Preferences>
+    @UserSettingsDataStore private val dataStore: DataStore<Preferences>,
+    @ApplicationContext private val context: Context
 ) : UserPreferencesLocalDataSource {
 
-    override val targetLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE] }
-    override val targetLanguageName: Flow<String?> = dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE_NAME] }
+    override val targetLanguage: Flow<Int?> =
+        dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE] }
+    override val targetLanguageName: Flow<String?> =
+        dataStore.data.map { it[PreferencesKeys.TARGET_LANGUAGE_NAME] }
 
-    override val nativeLanguage: Flow<Int?> = dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE] }
-    override val nativeLanguageName: Flow<String?> = dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE_NAME] }
+    override val nativeLanguage: Flow<Int?> =
+        dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE] }
+    override val nativeLanguageName: Flow<String?> =
+        dataStore.data.map { it[PreferencesKeys.NATIVE_LANGUAGE_NAME] }
 
-    override val proficiencyLevel: Flow<String?> = dataStore.data.map { it[PreferencesKeys.PROFICIENCY_LEVEL] }
+    override val proficiencyLevel: Flow<String?> =
+        dataStore.data.map { it[PreferencesKeys.PROFICIENCY_LEVEL] }
 
-    override val appTheme: Flow<String> = dataStore.data.map { it[PreferencesKeys.APP_THEME] ?: "system" }
+    override val appTheme: Flow<String> =
+        dataStore.data.map { it[PreferencesKeys.APP_THEME] ?: "system" }
 
-    override val soundEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.SOUND_ENABLED] ?: true }
+    override val soundEnabled: Flow<Boolean> =
+        dataStore.data.map { it[PreferencesKeys.SOUND_ENABLED] ?: true }
 
-    override val appLanguage: Flow<String> = dataStore.data.map { it[PreferencesKeys.APP_LANGUAGE] ?: "en" }
+    override val appLanguage: Flow<String> = LocaleUtils.languageFlow(context)
 
-    override val notificationsEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.NOTIFICATIONS_ENABLED] ?: true }
+    override val notificationsEnabled: Flow<Boolean> =
+        dataStore.data.map { it[PreferencesKeys.NOTIFICATIONS_ENABLED] ?: true }
 
-    override val reminderEnabled: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.REMINDER_ENABLED] ?: false }
+    override val reminderEnabled: Flow<Boolean> =
+        dataStore.data.map { it[PreferencesKeys.REMINDER_ENABLED] ?: false }
 
-    override val reminderTime: Flow<String> = dataStore.data.map { it[PreferencesKeys.REMINDER_TIME] ?: "08:00" }
+    override val reminderTime: Flow<String> =
+        dataStore.data.map { it[PreferencesKeys.REMINDER_TIME] ?: "08:00" }
 
-    override val reminderDays: Flow<String> = dataStore.data.map { it[PreferencesKeys.REMINDER_DAYS] ?: "1,2,3,4,5,6,7" }
+    override val reminderDays: Flow<String> =
+        dataStore.data.map { it[PreferencesKeys.REMINDER_DAYS] ?: "1,2,3,4,5,6,7" }
 
-     override suspend fun saveTargetLanguage(languageId: Int) {
+    override suspend fun saveTargetLanguage(languageId: Int) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.TARGET_LANGUAGE] = languageId
         }
@@ -108,9 +123,7 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun saveAppLanguage(language: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.APP_LANGUAGE] = language
-        }
+        LocaleUtils.saveLanguage(context, language)
     }
 
     override suspend fun saveNotificationsEnabled(enabled: Boolean) {
@@ -146,4 +159,6 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
             preferences.remove(PreferencesKeys.PROFICIENCY_LEVEL)
         }
     }
+
+
 }
