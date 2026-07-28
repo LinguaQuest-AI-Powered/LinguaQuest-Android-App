@@ -115,11 +115,9 @@ class HomeViewModel @Inject constructor(
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
-            val walletDeferred = async { refreshWalletUseCase() }
 
             val homeSummaryResult = homeSummaryDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
-            walletDeferred.await()
 
             _state.update { it.copy(isLoading = false) }
 

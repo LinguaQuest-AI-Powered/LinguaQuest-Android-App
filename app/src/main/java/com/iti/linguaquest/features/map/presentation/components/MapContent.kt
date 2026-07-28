@@ -144,9 +144,23 @@ fun MapContent(
                             label = "float"
                         )
 
+                        val targetOffsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp)
+                        val targetOffsetY = nodeY - 60.dp
+
+                        val animatedOffsetX by animateDpAsState(
+                            targetValue = targetOffsetX,
+                            animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                            label = "mascotX"
+                        )
+                        val animatedOffsetY by animateDpAsState(
+                            targetValue = targetOffsetY,
+                            animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                            label = "mascotY"
+                        )
+
                         Mascot(
-                            offsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp),
-                            offsetY = nodeY - 60.dp + floatOffset.dp
+                            offsetX = animatedOffsetX,
+                            offsetY = animatedOffsetY + floatOffset.dp
                         )
                     }
                 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.activity.compose.BackHandler
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -25,6 +26,7 @@ import com.iti.linguaquest.features.game.presentation.shared.VerificationOutcome
 fun GameResultScreen(
     sharedViewModel: GameSharedViewModel,
     onNavigateToCamera: () -> Unit,
+    onNavigateToLevel: () -> Unit,
     onNavigateToNextLevel: () -> Unit,
     onExit: () -> Unit,
     viewModel: GameResultViewModel = hiltViewModel()
@@ -59,6 +61,13 @@ fun GameResultScreen(
     }
 
 
+    BackHandler(true) {
+        if (state is GameResultUiState.Success) {
+            onNavigateToNextLevel()
+        } else {
+            onExit()
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -97,6 +106,10 @@ fun GameResultScreen(
                                 sharedState.levelId
                             )
                         )
+                    },
+                    onChangeWord = {
+                        sharedViewModel.triggerChangeWordDialog()
+                        onNavigateToLevel()
                     },
                     onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
                 )

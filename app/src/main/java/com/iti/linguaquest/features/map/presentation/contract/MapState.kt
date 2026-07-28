@@ -11,7 +11,7 @@ data class MapLevelUiModel(
 )
 
 data class MapState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val worldId: Int = 0,
     val worldTitle: UiText = UiText.DynamicString("Park World"),
     val levels: List<MapLevelUiModel> = emptyList(),

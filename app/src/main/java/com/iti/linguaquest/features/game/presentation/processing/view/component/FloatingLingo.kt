@@ -24,7 +24,6 @@ import kotlin.random.Random
 
 @Composable
 fun FloatingLingo(
-    onLingoTapped: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
@@ -83,11 +82,6 @@ fun FloatingLingo(
                 )
             }
             .size(lingoSizeDp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onLingoTapped
-            )
             .graphicsLayer {
                 this.scaleX = scaleX.value
             }

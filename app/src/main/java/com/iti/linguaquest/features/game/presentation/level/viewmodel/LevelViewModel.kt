@@ -24,6 +24,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.game.domain.usecase.ChangeWordUseCase
 import com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase
@@ -39,6 +40,7 @@ class LevelViewModel @Inject constructor(
     private val changeWordUseCase: ChangeWordUseCase,
     private val getHintUseCase: GetHintUseCase,
     private val refreshWalletUseCase: RefreshWalletUseCase,
+    private val getWalletUseCase: GetWalletUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     savedStateHandle: SavedStateHandle
@@ -57,8 +59,21 @@ class LevelViewModel @Inject constructor(
             initialValue = true
         )
 
-    fun loadLevelDetails(worldId: Int, levelNumber: Int) {
+    init {
         viewModelScope.launch {
+            getWalletUseCase().collect { wallet ->
+                _state.update { it.copy(coinCount = wallet.coins) }
+            }
+        }
+    }
+
+    fun loadLevelDetails(worldId: Int, levelNumber: Int) {
+        if (_state.value.worldId == worldId && _state.value.levelNumber == levelNumber && _state.value.isLevelReady) {
+            return
+        }
+        
+        viewModelScope.launch {
+            refreshWalletUseCase()
             _state.update {
                 it.copy(
                     isLoading = true,
@@ -73,7 +88,6 @@ class LevelViewModel @Inject constructor(
             when (val result = startLevelUseCase(worldId, levelNumber)) {
                 is LinguaQuestResult.Success -> {
                     val targetWord = result.data.ifEmpty { if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE" }
-                    val coinCount = 1250
                     val languageCode = if (worldId == 1) "es" else "en"
 
                     _state.update {
@@ -82,7 +96,6 @@ class LevelViewModel @Inject constructor(
                             worldId = worldId,
                             levelNumber = levelNumber,
                             wordToGuess = targetWord,
-                            coinCount = coinCount,
                             languageCode = languageCode,
                             isLevelReady = true,
                             isChangeWordAvailable = true,
@@ -146,6 +159,9 @@ class LevelViewModel @Inject constructor(
         val levelNumber = _state.value.levelNumber
 
         viewModelScope.launch {
+            if (cost > 0) {
+                _state.update { it.copy(coinCount = maxOf(0, it.coinCount - cost)) }
+            }
             _state.update { it.copy(isLoading = true) }
             when (val result = changeWordUseCase(worldId, levelNumber)) {
                 is LinguaQuestResult.Success -> {
@@ -154,16 +170,18 @@ class LevelViewModel @Inject constructor(
                         it.copy(
                             isLoading = false,
                             wordToGuess = newWord,
-                            coinCount = if (cost > 0 && it.coinCount >= cost) it.coinCount - cost else it.coinCount,
                             isChangeWordUsed = markAsUsed,
-                            isChangeWordAvailable = if (markAsUsed) false else it.isChangeWordAvailable
+                            isChangeWordAvailable = !markAsUsed
                         )
                     }
+                    refreshWalletUseCase()
                 }
                 is LinguaQuestResult.Failure -> {
+                    refreshWalletUseCase()
                     val shouldDisableChangeWord = isInsufficientCoinsError(result.error)
                     _state.update {
                         it.copy(
+                            coinCount = if (cost > 0) it.coinCount + cost else it.coinCount,
                             isLoading = false,
                             isChangeWordAvailable = if (shouldDisableChangeWord) false else it.isChangeWordAvailable
                         )
@@ -184,7 +202,7 @@ class LevelViewModel @Inject constructor(
 
     private fun openChangeWordDialog() {
         val current = _state.value
-        if (current.isLoading || !current.isLevelReady || current.isChangeWordUsed || current.coinCount < 50) {
+        if (current.isLoading || !current.isLevelReady) {
             return
         }
         _state.update { it.copy(isChangeWordDialogVisible = true) }
@@ -192,7 +210,7 @@ class LevelViewModel @Inject constructor(
 
     private fun confirmChangeWord() {
         val current = _state.value
-        if (current.isLoading || !current.isLevelReady || current.isChangeWordUsed || current.coinCount < 50) {
+        if (current.isLoading || !current.isLevelReady || current.coinCount < 50) {
             _state.update { it.copy(isChangeWordDialogVisible = false) }
             return
         }
@@ -206,12 +224,12 @@ class LevelViewModel @Inject constructor(
         val levelNumber = _state.value.levelNumber
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(coinCount = maxOf(0, it.coinCount - 20), isHintLoading = true) }
             when (val result = getHintUseCase(worldId, levelNumber)) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
+                            isHintLoading = false,
                             isBottomSheetVisible = false,
                             hintText = result.data.hint,
                             coinCount = result.data.remainingCoins
@@ -221,7 +239,8 @@ class LevelViewModel @Inject constructor(
                     refreshWalletUseCase()
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false, isBottomSheetVisible = false) }
+                    refreshWalletUseCase()
+                    _state.update { it.copy(coinCount = it.coinCount + 20, isHintLoading = false, isBottomSheetVisible = false) }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
 

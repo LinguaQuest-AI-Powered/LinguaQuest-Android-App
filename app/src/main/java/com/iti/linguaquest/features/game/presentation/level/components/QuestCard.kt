@@ -47,11 +47,14 @@ import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 
 @Composable
 fun QuestCard(
     wordToGuess: String,
     hintText: String,
+    isLoading: Boolean,
+    isHintLoading: Boolean,
     onOpenCameraClick: () -> Unit,
     onChangeWordClick: () -> Unit,
     onSoundClick: () -> Unit,
@@ -101,12 +104,18 @@ fun QuestCard(
                                 .border(1.dp, LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = wordToGuess,
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = LinguaQuestTheme.colors.BrownText
-                            )
+                            if (isLoading) {
+                                LingoSpinningIcon(
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = wordToGuess,
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = LinguaQuestTheme.colors.BrownText
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.width(16.dp))
@@ -130,13 +139,19 @@ fun QuestCard(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text(
-                        text = hintText,
-                        color = LinguaQuestTheme.colors.iconsColor,
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
+                    if (isHintLoading) {
+                        LingoSpinningIcon(
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = hintText,
+                            color = LinguaQuestTheme.colors.iconsColor,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(32.dp))
 

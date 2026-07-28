@@ -25,7 +25,6 @@ fun GameProcessingView(
         ProcessingBackground(imageUri = imageUri)
 
         FloatingLingo(
-            onLingoTapped = onStartGameClicked,
             modifier = Modifier.align(Alignment.Center)
         )
 
@@ -40,10 +39,6 @@ fun GameProcessingView(
 
 
             ProcessingStatusText()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            GameHintText()
 
 
         }
