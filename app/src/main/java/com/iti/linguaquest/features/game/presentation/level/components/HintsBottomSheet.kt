@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +46,7 @@ import com.iti.linguaquest.R
 @Composable
 fun HintsBottomSheet(
     coinCount: Int,
+    isLoading: Boolean,
     onDismiss: () -> Unit,
     onBuyHint: () -> Unit
 ) {
@@ -127,7 +129,9 @@ fun HintsBottomSheet(
             HintItem(
                 icon = Icons.Default.Info,
                 title = stringResource(id = R.string.game_result_hint_button),
-                cost = 25,
+                cost = 20,
+                isLoading = isLoading,
+                isEnabled = coinCount >= 20,
                 onClick = onBuyHint
             )
         }
@@ -139,6 +143,8 @@ private fun HintItem(
     icon: ImageVector,
     title: String,
     cost: Int,
+    isLoading: Boolean,
+    isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Row(
@@ -183,17 +189,25 @@ private fun HintItem(
 
         Box(
             modifier = Modifier
-                .background(Color(0xFFFF9800), RoundedCornerShape(16.dp))
+                .background(Color(0xFFFF9800).copy(alpha = if (isEnabled) 1f else 0.5f), RoundedCornerShape(16.dp))
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .clickable { onClick() },
+                .clickable(enabled = !isLoading && isEnabled) { onClick() },
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(id = R.string.use_hint),
-                color = LinguaQuestTheme.colors.whiteColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    color = LinguaQuestTheme.colors.whiteColor,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.use_hint),
+                    color = LinguaQuestTheme.colors.whiteColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }

@@ -34,7 +34,7 @@
   {
     "id": "scenario_taxi_01",
     "worldId": "world_1",
-    "bossName": "Captain Sayed",
+    "bossName": "Captain Mido",
     "roleDescription": "A talkative taxi driver navigating the chaotic streets of Alexandria.",
     "objective": "Direct him to a specific hidden restaurant while negotiating the final fare.",
     "voiceName": "CHARON"
@@ -46,5 +46,53 @@
     "roleDescription": "A watchful and nosy landlord who manages the apartment building with an iron fist.",
     "objective": "Explain why your rent is three days late without angering her.",
     "voiceName": "KORE"
+  },
+  {
+    "id": "scenario_restaurant_01",
+    "worldId": "world_2",
+    "bossName": "Chef Ahlam",
+    "roleDescription": "A very proud and stubborn chef. She thinks her food is perfect and hates changing her recipes for anyone.",
+    "objective": "You think the meal she cooked for you tastes very bad. Argue with her to make her cook something else or give you your money back, but be careful not to make her too angry!",
+    "voiceName": "KORE"
+  },
+  {
+    "id": "scenario_barbershop_01",
+    "worldId": "world_3",
+    "bossName": "Eslam",
+    "roleDescription": "A fiercely defensive barber who thinks he is a misunderstood visionary of modern European hair trends. He refuses to admit mistakes.",
+    "objective": "He completely ruined your hair right before a major job interview. Argue with him until he admits fault and agrees to fix the disastrous haircut for free.",
+    "voiceName": "FENRIR"
+  },
+  {
+    "id": "scenario_techsupport_01",
+    "worldId": "world_1",
+    "bossName": "Ahmed Sayed",
+    "roleDescription": "An impossibly relaxed customer service agent who insists that restarting your router for the 15th time will fix the neighborhood's total internet outage.",
+    "objective": "Bypass his scripted responses and get him to actually send a technician to your house, all while he tries to talk to you about last night's football match.",
+    "voiceName": "AOEDE"
+  },
+  {
+    "id": "scenario_microbus_01",
+    "worldId": "world_1",
+    "bossName": "Osta Eldemy",
+    "roleDescription": "A hyperactive microbus driver blasting loud Mahraganat music who treats traffic laws as mere suggestions.",
+    "objective": "Politely but firmly demand your exact change back after handing him a 200 pound note for a 5 pound ride, all while shouting over the music.",
+    "voiceName": "FENRIR"
+  },
+  {
+    "id": "scenario_government_01",
+    "worldId": "world_2",
+    "bossName": "Ms. Sherry",
+    "roleDescription": "A deeply unbothered government clerk on the third floor whose primary focus is eating her morning foul sandwich and gossiping on the phone.",
+    "objective": "Get her to finally stamp your crucial paperwork before the office closes in five minutes, without interrupting her breakfast or being told to 'come back tomorrow'.",
+    "voiceName": "KORE"
+  },
+  {
+    "id": "scenario_neighborhood_01",
+    "worldId": "world_3",
+    "bossName": "Madame Shahd",
+    "roleDescription": "A notoriously loud and confrontational downstairs neighbor who stands on her balcony ready to scream at anyone she suspects of dropping dust on her freshly washed laundry.",
+    "objective": "De-escalate her furious shouting match after your rug-dusting accidentally dirtied her white sheets, and negotiate peace before she gets the entire building involved.",
+    "voiceName": "AOEDE"
   }
 ]

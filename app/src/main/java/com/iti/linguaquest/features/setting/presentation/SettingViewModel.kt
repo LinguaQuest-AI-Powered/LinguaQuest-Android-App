@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.setting.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
@@ -103,6 +105,8 @@ class SettingViewModel @Inject constructor(
 
     private val _availableLanguages = MutableStateFlow(LanguagesUiState())
     val availableLanguages: StateFlow<LanguagesUiState> = _availableLanguages.asStateFlow()
+    private val _languageChanged = MutableSharedFlow<Unit>()
+    val languageChanged: SharedFlow<Unit> = _languageChanged.asSharedFlow()
 
     init {
         loadReminderSettings()
@@ -157,6 +161,7 @@ class SettingViewModel @Inject constructor(
     private val _isLoggingOut = MutableStateFlow(false)
     val isLoggingOut = _isLoggingOut.asStateFlow()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onReminderIntent(intent: ReminderIntent) {
         if (!notificationsEnabled.value) {
             when (intent) {
@@ -216,6 +221,7 @@ class SettingViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun applyPreset(preset: RepeatPreset) {
         val days = when (preset) {
             RepeatPreset.EVERY_DAY -> DayOfWeek.entries.toSet()
@@ -240,6 +246,7 @@ class SettingViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveRepeat() {
         viewModelScope.launch {
             val daysStr = _reminderState.value.selectedDays
@@ -292,9 +299,12 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun changeAppLanguage(language: LanguageOption) {
-        viewModelScope.launch { changeAppLanguageUseCase(language.id, language.code, language.name) }
+fun changeAppLanguage(language: LanguageOption) {
+    viewModelScope.launch {
+        changeAppLanguageUseCase(language.id, language.code, language.name)
+        _languageChanged.emit(Unit)
     }
+}
 
     fun changeAppTheme(theme: String) {
         viewModelScope.launch { changeAppThemeUseCase(theme) }

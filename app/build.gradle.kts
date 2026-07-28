@@ -115,4 +115,5 @@ dependencies {
     debugImplementation(libs.firebase.appcheck.debug)
 
     implementation(libs.konfetti.compose)
+    implementation(libs.timber)
 }

@@ -1,10 +1,13 @@
 package com.iti.linguaquest
 
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O_MR1
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
 import android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
@@ -22,10 +25,13 @@ import com.iti.linguaquest.core.navigation.AppNavigation
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.LocaleUtils
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -102,5 +108,14 @@ class MainActivity : ComponentActivity() {
         }
 
          viewModel.refreshAppIcon()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val context = if (SDK_INT < TIRAMISU) {
+            LocaleUtils.wrapContext(newBase)
+        } else {
+            newBase
+        }
+        super.attachBaseContext(context)
     }
 }

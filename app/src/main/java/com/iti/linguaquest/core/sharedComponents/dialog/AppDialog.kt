@@ -39,6 +39,7 @@ fun AppDialog(
     onDismissRequest: () -> Unit = {},
     showCloseIcon: Boolean = false,
     primaryButtonText: String,
+    isPrimaryButtonEnabled: Boolean = true,
     onPrimaryClick: () -> Unit,
     primaryButtonIcon: Int? = null,
     secondaryButtonText: String? = null,
@@ -60,6 +61,7 @@ fun AppDialog(
             onDismissRequest = onDismissRequest,
             showCloseIcon = showCloseIcon,
             primaryButtonText = primaryButtonText,
+            isPrimaryButtonEnabled = isPrimaryButtonEnabled,
             onPrimaryClick = onPrimaryClick,
             primaryButtonIcon = primaryButtonIcon,
             secondaryButtonText = secondaryButtonText,
@@ -81,6 +83,7 @@ fun AppDialogContent(
     onDismissRequest: () -> Unit = {},
     showCloseIcon: Boolean = false,
     primaryButtonText: String,
+    isPrimaryButtonEnabled: Boolean = true,
     onPrimaryClick: () -> Unit,
     primaryButtonIcon: Int? = null,
     secondaryButtonText: String? = null,
@@ -146,7 +149,8 @@ fun AppDialogContent(
                     variant = ButtonVariant.PRIMARY,
                     icon = primaryButtonIcon?.let { painterResource(it) },
                     iconPosition = if (primaryButtonIcon != null) IconPosition.START else IconPosition.NONE,
-                    tintIcon = false
+                    tintIcon = false,
+                    enabled = isPrimaryButtonEnabled
                 )
 
                 if (secondaryButtonText != null && onSecondaryClick != null) {

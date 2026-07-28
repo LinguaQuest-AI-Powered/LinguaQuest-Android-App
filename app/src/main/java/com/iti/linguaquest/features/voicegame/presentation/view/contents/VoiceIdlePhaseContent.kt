@@ -35,6 +35,7 @@ import com.iti.linguaquest.features.voicegame.presentation.view.components.Speec
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 
 import androidx.compose.ui.text.font.FontStyle
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 
 @Composable
 fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
@@ -49,7 +50,7 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
         Spacer(Modifier.height(8.dp))
 
         if (state.isLoadingSentence) {
-            com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon(
+            LingoSpinningIcon(
                 size = 32.dp
             )
         } else {

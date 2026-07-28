@@ -5,7 +5,8 @@ object PromptFactory {
     fun createBossEvaluationPrompt(
         transcriptText: String,
         taskObjective: String,
-        nativeLanguage: String
+        nativeLanguage: String,
+        targetLanguage: String
     ): String {
         return """
             You are a roleplay evaluator. 
@@ -18,7 +19,7 @@ object PromptFactory {
             
             IMPORTANT: The user's input transcript is generated via an automated speech-to-text system. Because the user is utilizing an open microphone, background noise or moments of silence are occasionally hallucinated by the STT engine into unrelated foreign languages (e.g., Hindi, Chinese, Welsh) or random character strings. 
 
-            You must strictly ignore any sudden, out-of-context language shifts or bizarre character artifacts in the transcript. Do NOT treat these as the user speaking the wrong language, do NOT mention them in your feedback, and absolutely do NOT let them negatively impact the user's `fluency_score`, `accuracy_score`, or overall task evaluation. Grade the user solely on the coherent portions of their intended target language.
+            You must strictly ignore any sudden, out-of-context language shifts or bizarre character artifacts in the transcript. Do NOT treat these as the user speaking the wrong language, do NOT mention them in your feedback, and absolutely do NOT let them negatively impact the user's `fluency_score`, `accuracy_score`, or overall task evaluation. Grade the user solely on the coherent portions of their intended target language ($targetLanguage).
             
             Return ONLY a valid JSON object matching this schema exactly:
             {

@@ -4,22 +4,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-
+import android.app.Activity
+import android.os.Build.VERSION_CODES.TIRAMISU
 import com.iti.linguaquest.features.lockscreen.presentation.viewmodel.LockScreenSettingsViewModel
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
-
 import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import kotlinx.coroutines.flow.collectLatest
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingScreen(
     onBack: () -> Unit,
@@ -48,7 +49,7 @@ fun SettingScreen(
     }
 
     LaunchedEffect(Unit) {
-        val granted = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        val granted = if (Build.VERSION.SDK_INT < TIRAMISU) {
             true
         } else {
             ContextCompat.checkSelfPermission(
@@ -63,16 +64,28 @@ fun SettingScreen(
         lockScreenViewModel.effect.collectLatest { effect ->
             when (effect) {
                 LockScreenEffect.RequestNotificationPermission -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (Build.VERSION.SDK_INT >= TIRAMISU) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
-                        lockScreenViewModel.onIntent(LockScreenIntent.NotificationPermissionResult(true))
+                        lockScreenViewModel.onIntent(
+                            LockScreenIntent.NotificationPermissionResult(
+                                true
+                            )
+                        )
                     }
                 }
             }
         }
     }
 
+
+    LaunchedEffect(Unit) {
+        viewModel.languageChanged.collectLatest {
+            if (Build.VERSION.SDK_INT < TIRAMISU) {
+                (context as? Activity)?.recreate()
+            }
+        }
+    }
     SettingContent(
         isOnline = isOnline,
         onBackClick = onBack,

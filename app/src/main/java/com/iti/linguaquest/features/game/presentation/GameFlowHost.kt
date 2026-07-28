@@ -76,8 +76,19 @@ fun GameFlowHost(
                 GameResultScreen(
                     sharedViewModel = sharedViewModel,
                     onNavigateToCamera = {
-                        gameBackStack.clear()
-                        gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
+                        while (gameBackStack.lastOrNull() != GameFlowScreen.Camera && gameBackStack.isNotEmpty()) {
+                            gameBackStack.removeLastOrNull()
+                        }
+                        if (gameBackStack.isEmpty() || gameBackStack.lastOrNull() != GameFlowScreen.Camera) {
+                            gameBackStack.clear()
+                            gameBackStack.navigateSingleTop(GameFlowScreen.Level)
+                            gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
+                        }
+                    },
+                    onNavigateToLevel = {
+                        while (gameBackStack.lastOrNull() != GameFlowScreen.Level && gameBackStack.isNotEmpty()) {
+                            gameBackStack.removeLastOrNull()
+                        }
                     },
                     onNavigateToNextLevel = { rootBackStack.removeLastOrNull() },
                     onExit = { rootBackStack.removeLastOrNull() }

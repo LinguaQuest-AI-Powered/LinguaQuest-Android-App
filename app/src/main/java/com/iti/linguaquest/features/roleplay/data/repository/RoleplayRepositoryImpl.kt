@@ -60,10 +60,12 @@ class RoleplayRepositoryImpl @Inject constructor(
     override suspend fun evaluateBossStage(transcript: List<String>, scenario: BossScenario): Result<BossEvaluationResult> {
         return try {
             val nativeLanguage = userPreferences.nativeLanguageName.firstOrNull() ?: "English"
+            val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
             val evaluationResult = geminiService.evaluateBossStage(
                 transcript = transcript,
                 taskObjective = scenario.objective,
-                nativeLanguage = nativeLanguage
+                nativeLanguage = nativeLanguage,
+                targetLanguage = targetLanguage
             )
             
             if (evaluationResult != null) {

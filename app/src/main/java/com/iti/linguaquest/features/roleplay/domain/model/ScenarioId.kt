@@ -21,7 +21,25 @@ enum class ScenarioId(val rawValue: String) {
     SCENARIO_TAXI_01("scenario_taxi_01"),
 
     @SerializedName("scenario_apartment_01")
-    SCENARIO_APARTMENT_01("scenario_apartment_01");
+    SCENARIO_APARTMENT_01("scenario_apartment_01"),
+
+    @SerializedName("scenario_restaurant_01")
+    SCENARIO_RESTAURANT_01("scenario_restaurant_01"),
+
+    @SerializedName("scenario_barbershop_01")
+    SCENARIO_BARBERSHOP_01("scenario_barbershop_01"),
+
+    @SerializedName("scenario_techsupport_01")
+    SCENARIO_TECHSUPPORT_01("scenario_techsupport_01"),
+
+    @SerializedName("scenario_microbus_01")
+    SCENARIO_MICROBUS_01("scenario_microbus_01"),
+
+    @SerializedName("scenario_government_01")
+    SCENARIO_GOVERNMENT_01("scenario_government_01"),
+
+    @SerializedName("scenario_neighborhood_01")
+    SCENARIO_NEIGHBORHOOD_01("scenario_neighborhood_01");
 
     companion object {
         fun fromString(value: String?): ScenarioId? {

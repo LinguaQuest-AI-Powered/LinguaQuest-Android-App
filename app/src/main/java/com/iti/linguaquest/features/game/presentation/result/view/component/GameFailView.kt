@@ -34,6 +34,7 @@ fun GameFailView(
     isHintUsed: Boolean,
     onRetry: () -> Unit,
     onBuyHint: () -> Unit,
+    onChangeWord: () -> Unit,
     onExit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +100,7 @@ fun GameFailView(
 
             AppOutlinedButton(
                 text = stringResource(R.string.game_result_change_word),
-                onClick = onExit
+                onClick = onChangeWord
             )
         }
     }

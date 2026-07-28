@@ -133,6 +133,7 @@
     <string name="empty_gallery_desc">You haven\'t captured any words yet.\nTap the button above to add your first capture.</string>
     <string name="add_new">Add New</string>
     <string name="general_error">An error occurred. Please try again.</string>
+    <string name="not_enough_coins">Not enough coins!</string>
     <string name="progress">Progress</string>
     <string name="see_more">See more</string>
     <string name="explore_worlds">Explore Worlds</string>

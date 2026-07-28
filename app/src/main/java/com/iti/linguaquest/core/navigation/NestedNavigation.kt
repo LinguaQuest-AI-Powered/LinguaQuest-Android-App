@@ -53,9 +53,7 @@ fun MainScreen(
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val soundPlayer = LocalSoundPlayer.current
 
-    LaunchedEffect(currentScreen) {
-        viewModel.refreshWallet()
-    }
+
     var previousWallet by remember { mutableStateOf<Wallet?>(null) }
     LaunchedEffect(wallet.xp, wallet.coins) {
         val previous = previousWallet

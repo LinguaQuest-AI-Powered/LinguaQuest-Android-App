@@ -1,7 +1,8 @@
 package com.iti.linguaquest.features.game.presentation.level.contract
 
 data class LevelState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
+    val isHintLoading: Boolean = false,
     val worldId: Int = 1,
     val levelNumber: Int = 1,
     val coinCount: Int = 1250,

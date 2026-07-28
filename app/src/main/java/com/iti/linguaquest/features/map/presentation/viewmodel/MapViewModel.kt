@@ -65,7 +65,11 @@ class MapViewModel @Inject constructor(
         if (!force && _state.value.levels.isNotEmpty() && _state.value.worldId == worldId && !_state.value.hasError) return
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, worldId = worldId, hasError = false, errorMessage = null) }
+            if (_state.value.levels.isEmpty()) {
+                _state.update { it.copy(isLoading = true, worldId = worldId, hasError = false, errorMessage = null) }
+            } else {
+                _state.update { it.copy(worldId = worldId, hasError = false, errorMessage = null) }
+            }
             val result = getMapLevelsUseCase(worldId)
             
             result.onSuccess { detail ->
