@@ -22,6 +22,17 @@ class GameSharedViewModel @Inject constructor(
     private val _sharedState = MutableStateFlow(GameSharedState())
     val sharedState: StateFlow<GameSharedState> = _sharedState.asStateFlow()
 
+    private val _requestChangeWordDialog = MutableStateFlow(false)
+    val requestChangeWordDialog: StateFlow<Boolean> = _requestChangeWordDialog.asStateFlow()
+
+    fun triggerChangeWordDialog() {
+        _requestChangeWordDialog.value = true
+    }
+
+    fun consumeChangeWordDialogRequest() {
+        _requestChangeWordDialog.value = false
+    }
+
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 
         .stateIn(

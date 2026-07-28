@@ -65,6 +65,15 @@ fun LevelScreen(
         }
     }
 
+    val requestChangeWordDialog by sharedViewModel.requestChangeWordDialog.collectAsStateWithLifecycle()
+
+    LaunchedEffect(requestChangeWordDialog) {
+        if (requestChangeWordDialog) {
+            sharedViewModel.consumeChangeWordDialogRequest()
+            viewModel.onIntent(LevelIntent.ChangeWordClicked)
+        }
+    }
+
     LaunchedEffect(worldId, levelNumber) {
         viewModel.loadLevelDetails(worldId, levelNumber)
     }
@@ -103,6 +112,7 @@ fun LevelScreen(
             imageRes = R.drawable.lingo,
             onDismissRequest = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
             primaryButtonText = stringResource(R.string.change_word_confirm_action),
+            isPrimaryButtonEnabled = state.coinCount >= 50,
             onPrimaryClick = { viewModel.onIntent(LevelIntent.ConfirmChangeWordClicked) },
             secondaryButtonText = stringResource(R.string.change_word_cancel_action),
             onSecondaryClick = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
@@ -155,16 +165,17 @@ fun LevelScreen(
                     wordToGuess = state.wordToGuess,
                     hintText = sharedState.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                     isLoading = state.isLoading,
+                    isHintLoading = state.isHintLoading,
                     onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                     onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                     onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
-                    onMascotClick = { 
+                    onMascotClick = {
                         if (sharedState.hintText == null) {
                             viewModel.onIntent(LevelIntent.MascotTapped)
                         }
                     },
                     isCameraEnabled = state.isLevelReady && !state.isLoading,
-                    isChangeWordEnabled = state.isLevelReady && state.isChangeWordAvailable && state.coinCount >= 50 && !state.isLoading,
+                    isChangeWordEnabled = state.isLevelReady && !state.isLoading,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
@@ -172,7 +183,7 @@ fun LevelScreen(
         if (state.isBottomSheetVisible) {
             HintsBottomSheet(
                 coinCount = state.coinCount,
-                isLoading = state.isLoading,
+                isLoading = state.isHintLoading,
                 onDismiss = { viewModel.onIntent(LevelIntent.DismissBottomSheet) },
                 onBuyHint = { viewModel.onIntent(LevelIntent.GetHintClicked) }
             )

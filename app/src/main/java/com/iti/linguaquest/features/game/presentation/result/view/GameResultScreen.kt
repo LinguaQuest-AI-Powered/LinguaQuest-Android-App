@@ -26,6 +26,7 @@ import com.iti.linguaquest.features.game.presentation.shared.VerificationOutcome
 fun GameResultScreen(
     sharedViewModel: GameSharedViewModel,
     onNavigateToCamera: () -> Unit,
+    onNavigateToLevel: () -> Unit,
     onNavigateToNextLevel: () -> Unit,
     onExit: () -> Unit,
     viewModel: GameResultViewModel = hiltViewModel()
@@ -105,6 +106,10 @@ fun GameResultScreen(
                                 sharedState.levelId
                             )
                         )
+                    },
+                    onChangeWord = {
+                        sharedViewModel.triggerChangeWordDialog()
+                        onNavigateToLevel()
                     },
                     onExit = { viewModel.onIntent(GameResultIntent.ExitClicked) }
                 )

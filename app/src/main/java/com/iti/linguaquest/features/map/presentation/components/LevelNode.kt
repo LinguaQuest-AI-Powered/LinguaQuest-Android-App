@@ -146,24 +146,6 @@ fun LevelNode(
             }
         }
 
-        if (status == LevelStatus.COMPLETED) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                for (i in 1..3) {
-                    val isFilled = i <= stars
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_star),
-                        contentDescription = "Star",
-                        tint = if (isFilled) MaterialTheme.colorScheme.primary else Color.Gray,
-                        modifier = Modifier.size(12.dp)
-                    )
-                }
-            }
-        }
+        // Stars removed based on feature request
     }
 }

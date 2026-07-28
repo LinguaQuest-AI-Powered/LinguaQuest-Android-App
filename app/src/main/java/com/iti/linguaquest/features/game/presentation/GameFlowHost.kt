@@ -85,6 +85,11 @@ fun GameFlowHost(
                             gameBackStack.navigateSingleTop(GameFlowScreen.Camera)
                         }
                     },
+                    onNavigateToLevel = {
+                        while (gameBackStack.lastOrNull() != GameFlowScreen.Level && gameBackStack.isNotEmpty()) {
+                            gameBackStack.removeLastOrNull()
+                        }
+                    },
                     onNavigateToNextLevel = { rootBackStack.removeLastOrNull() },
                     onExit = { rootBackStack.removeLastOrNull() }
                 )

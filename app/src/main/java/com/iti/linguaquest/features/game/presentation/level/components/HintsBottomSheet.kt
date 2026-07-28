@@ -131,6 +131,7 @@ fun HintsBottomSheet(
                 title = stringResource(id = R.string.game_result_hint_button),
                 cost = 20,
                 isLoading = isLoading,
+                isEnabled = coinCount >= 20,
                 onClick = onBuyHint
             )
         }
@@ -143,6 +144,7 @@ private fun HintItem(
     title: String,
     cost: Int,
     isLoading: Boolean,
+    isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Row(
@@ -187,9 +189,9 @@ private fun HintItem(
 
         Box(
             modifier = Modifier
-                .background(Color(0xFFFF9800), RoundedCornerShape(16.dp))
+                .background(Color(0xFFFF9800).copy(alpha = if (isEnabled) 1f else 0.5f), RoundedCornerShape(16.dp))
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .clickable(enabled = !isLoading) { onClick() },
+                .clickable(enabled = !isLoading && isEnabled) { onClick() },
             contentAlignment = Alignment.Center
         ) {
             if (isLoading) {
