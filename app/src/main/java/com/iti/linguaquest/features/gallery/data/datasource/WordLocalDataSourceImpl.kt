@@ -21,11 +21,8 @@ class WordLocalDataSourceImpl @Inject constructor(
     override suspend fun replaceWords(
         words: List<WordEntity>
     ): EmptyResult<LinguaQuestDataError.Local> =
-        safeDatabaseCall {
-            wordDao.clearWords()
-            if (words.isNotEmpty()) {
-                wordDao.insertWords(words)
-            }
+           safeDatabaseCall {
+            wordDao.replaceAllWords(words)
         }
 
     override suspend fun getWordById(

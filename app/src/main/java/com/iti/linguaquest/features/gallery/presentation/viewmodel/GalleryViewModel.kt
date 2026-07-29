@@ -3,11 +3,9 @@ package com.iti.linguaquest.features.gallery.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
@@ -116,23 +114,18 @@ class GalleryViewModel @Inject constructor(
                         )
                     }
 
-                    val showOfflineBanner = stillHasCache && result.error == LinguaQuestDataError.Remote.NO_INTERNET
-                    sendEffect(
-                        GalleryEffect.ShowError(
-                            title = if (showOfflineBanner) UiText.StringResource(R.string.offline_title) else null,
-                            message = if (showOfflineBanner) {
-                                UiText.StringResource(R.string.offline_msg)
-                            } else {
-                                result.error.toUiText()
-                            },
-                            type = if (showOfflineBanner) {
-                                com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType.INFO
-                            } else {
-                                com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType.ERROR
-                            },
-                            retryable = !showOfflineBanner
+                      val isSilentOfflineWithCache =
+                        stillHasCache && result.error == LinguaQuestDataError.Remote.NO_INTERNET
+
+                    if (!isSilentOfflineWithCache) {
+                        sendEffect(
+                            GalleryEffect.ShowError(
+                                message = result.error.toUiText(),
+                                type = com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType.ERROR,
+                                retryable = true
+                            )
                         )
-                    )
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.Transaction
 import androidx.room3.Update
 import kotlinx.coroutines.flow.Flow
 @Dao
@@ -27,6 +28,14 @@ interface WordDao {
 
     @Query("DELETE FROM words")
     suspend fun clearWords()
+
+    @Transaction
+    suspend fun replaceAllWords(words: List<WordEntity>) {
+        clearWords()
+        if (words.isNotEmpty()) {
+            insertWords(words)
+        }
+    }
 
     @Query("SELECT * FROM words")
     fun getAllWords(): Flow<List<WordEntity>>
