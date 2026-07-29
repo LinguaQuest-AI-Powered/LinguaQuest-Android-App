@@ -51,7 +51,11 @@ import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
  import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
-    import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
+import com.iti.linguaquest.features.help.presentation.contact.view.ContactUsScreen
+import com.iti.linguaquest.features.help.presentation.faqs.view.FaqsScreen
+import com.iti.linguaquest.features.help.presentation.guide.view.UserGuideScreen
+import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
+import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
@@ -74,7 +78,7 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Settings)
+    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
