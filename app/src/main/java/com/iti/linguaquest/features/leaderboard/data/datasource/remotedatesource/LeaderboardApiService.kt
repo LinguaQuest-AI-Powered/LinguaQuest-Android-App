@@ -11,7 +11,7 @@ interface LeaderboardApiService {
     suspend fun getLeaderboard(
         @Query("scope") scope: String = "GLOBAL",
         @Query("languageId") languageId: Int? = null,
-        @Query("page") page: Int = 1,
+        @Query("page") page: Int = 0,
         @Query("limit") limit: Int = 20
     ): SuccessResponseDto<LeaderboardDataDto>
 }

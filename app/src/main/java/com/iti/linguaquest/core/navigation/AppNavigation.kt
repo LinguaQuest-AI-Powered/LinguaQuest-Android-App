@@ -51,7 +51,7 @@ import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
  import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
-import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
+    import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
@@ -74,7 +74,7 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
+    val rootBackStack = rememberNavBackStack(RootScreen.Settings)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -401,7 +401,46 @@ fun AppNavigation(
                                 clear()
                                 navigateSingleTop(RootScreen.Onboarding)
                             }
+                        },
+                        onLockScreenVocabularyClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.LockScreenVocabulary)
+                        },
+                        onHelpSupportClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.HelpSupport)
                         }
+                    )
+                }
+
+                entry<RootScreen.HelpSupport> {
+                    HelpScreen(
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        onOpenFaqs = {
+                            rootBackStack.navigateSingleTop(RootScreen.HelpFaqs)
+                        },
+                        onOpenContactUs = {
+                            rootBackStack.navigateSingleTop(RootScreen.HelpContactUs)
+                        },
+                        onOpenUserGuide = {
+                            rootBackStack.navigateSingleTop(RootScreen.HelpGuide)
+                        }
+                    )
+                }
+
+                entry<RootScreen.HelpFaqs> {
+                    FaqsScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.HelpContactUs> {
+                    ContactUsScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.HelpGuide> {
+                    UserGuideScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
                     )
                 }
 

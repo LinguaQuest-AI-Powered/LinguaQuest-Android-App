@@ -71,6 +71,8 @@ fun SettingContent(
     isLoggingOut: Boolean = false,
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
+    onLockScreenVocabularyClick: () -> Unit,
+    onHelpSupportClick: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
     lockScreenState: LockScreenState,
@@ -227,7 +229,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_help_icon),
                     title = stringResource(id = R.string.settings_help_support),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(helpY) { } }
+                    onClick = { onHelpSupportClick() }
                 )
                 SectionDivider()
 
@@ -318,6 +320,8 @@ fun SettingContentPreview() {
             isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
+            onLockScreenVocabularyClick = {},
+            onHelpSupportClick = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),
@@ -346,6 +350,8 @@ fun SettingContentOfflinePreview() {
             isLoggingOut = false,
             onLogoutClick = {},
             onEditProfileClick = {},
+            onLockScreenVocabularyClick = {},
+            onHelpSupportClick = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),
