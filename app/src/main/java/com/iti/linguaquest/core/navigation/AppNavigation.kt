@@ -1,5 +1,4 @@
 package com.iti.linguaquest.core.navigation
-
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
@@ -56,7 +55,7 @@ import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
 import com.iti.linguaquest.features.help.presentation.faqs.view.FaqsScreen
 import com.iti.linguaquest.features.help.presentation.guide.view.UserGuideScreen
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
-import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
+import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
@@ -79,7 +78,7 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Settings)
+    val rootBackStack = rememberNavBackStack(RootScreen.Leaderboard)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 

@@ -5,7 +5,11 @@ import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 
 data class LeaderboardState(
     val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
     val leaderboard: Leaderboard? = null,
     val scope: LeaderboardScope = LeaderboardScope.GLOBAL,
+    val languageId: Int? = null,
+    val currentPage: Int = 1,
+    val endReached: Boolean = false,
     val errorMessage: String? = null
 )
