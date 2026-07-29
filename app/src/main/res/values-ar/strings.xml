@@ -560,4 +560,30 @@
     <string name="retry_label">إعادة المحاولة</string>
     <string name="no_internet_short">لا يوجد إنترنت</string>
     <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
+
+    <!-- About App Strings -->
+    <string name="about_app_title">عن التطبيق</string>
+    <string name="about_app_name">Lingua Quest</string>
+    <string name="about_app_version">v1.0 (1)</string>
+    <string name="about_app_tagline">مغامرتك اللغوية المدعومة بالذكاء الاصطناعي</string>
+    <string name="about_app_mission_title">مهمتنا</string>
+    <string name="about_app_mission_desc">يحول Lingua Quest تعلم اللغات إلى رحلة ممتعة. نجمع بين المهام التفاعلية والتحدث بالذكاء الاصطناعي والاستكشاف الواقعي لمساعدتك على إتقان لغات جديدة بطبيعية وثقة.</string>
+    <string name="about_app_why_title">لماذا Lingua Quest؟</string>
+    <string name="about_app_speaking_lab_title">مختبر المحادثة بالذكاء الاصطناعي</string>
+    <string name="about_app_speaking_lab_desc">مارس النطق مع ملاحظات ذكية وسيناريوهات محادثة تفاعلية.</string>
+    <string name="about_app_camera_quests_title">مهام المفردات بالكاميرا</string>
+    <string name="about_app_camera_quests_desc">اكتشف وتعلم كلمات جديدة من خلال التقاط الأجسام من حولك في العالم الحقيقي.</string>
+    <string name="about_app_gamified_title">تقدم ألعاب تفاعلي</string>
+    <string name="about_app_gamified_desc">احصل على نقاط الخبرة والعملات، واهزم مستويات الزعماء، وتنافس في لائحة الصدارة العالمية.</string>
+    <string name="about_app_community_title">انضم لمجتمعنا</string>
+    <string name="about_app_rate_store">قيم التطبيق على المتجر</string>
+    <string name="about_app_official_website">الموقع الرسمي</string>
+    <string name="about_app_privacy_policy">سياسة الخصوصية</string>
+    <string name="about_app_terms_service">شروط الخدمة</string>
+    <string name="about_app_footer_made_with">صُنع بـ ❤️ لمستكشفي اللغات حول العالم.</string>
+    <string name="about_app_footer_copyright">© 2026 فريق Lingua Quest. جميع الحقوق محفوظة.</string>
+    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_website_url">https://linguaquest.app</string>
+    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
+    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
 </resources>

@@ -63,6 +63,7 @@ import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayView
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
+import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
 
 @Composable
@@ -405,7 +406,16 @@ fun AppNavigation(
                         },
                         onLockScreenVocabularyClick = {
                             rootBackStack.navigateSingleTop(RootScreen.LockScreenVocabulary)
+                        },
+                        onAboutAppClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.AboutApp)
                         }
+                    )
+                }
+
+                entry<RootScreen.AboutApp> {
+                    AboutAppScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
                     )
                 }
 

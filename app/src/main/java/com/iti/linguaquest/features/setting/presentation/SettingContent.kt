@@ -72,6 +72,7 @@ fun SettingContent(
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLockScreenVocabularyClick: () -> Unit,
+    onAboutAppClick: () -> Unit = {},
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
     lockScreenState: LockScreenState,
@@ -240,7 +241,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_info_icon),
                     title = stringResource(id = R.string.settings_about_app),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(aboutY) { } }
+                    onClick = { guardOnline(aboutY) { onAboutAppClick() } }
                 )
             }
 

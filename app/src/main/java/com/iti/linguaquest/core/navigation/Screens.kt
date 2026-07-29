@@ -86,8 +86,8 @@ sealed interface RootScreen : NavKey {
 
     @Serializable
     data object VoiceResult : RootScreen
-
-
+    @Serializable
+    data object AboutApp : RootScreen
 }
 @Serializable
 sealed interface NestedScreen : NavKey {
