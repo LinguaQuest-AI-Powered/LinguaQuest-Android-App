@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
@@ -116,7 +117,7 @@ fun LeaderboardContent(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        LingoSpinningIcon()
                     }
                 }
             }
