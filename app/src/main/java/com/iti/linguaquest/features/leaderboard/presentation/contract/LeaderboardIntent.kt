@@ -6,6 +6,8 @@ sealed interface LeaderboardIntent {
 
     data object LoadLeaderboard : LeaderboardIntent
 
+    data object LoadMore : LeaderboardIntent
+
     data class ChangeScope(
         val scope: LeaderboardScope,
         val languageId: Int? = null

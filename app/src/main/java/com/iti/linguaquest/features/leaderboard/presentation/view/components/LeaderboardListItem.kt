@@ -20,33 +20,40 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ImageWrapper
- import kotlinx.coroutines.delay
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 
 @Composable
-fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
+fun LeaderboardListItem(entry: LeaderboardEntry, index: Int, animatedIds: MutableSet<Int>) {
 
     val isYou = entry.isCurrentUser
     val borderColor = if (isYou) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.textFieldBorder
     val textColor = if (isYou) MaterialTheme.colorScheme.tertiary else LinguaQuestTheme.colors.BrownText
     val subtitleColor = if (isYou) MaterialTheme.colorScheme.tertiary.copy(alpha = 0.8f) else LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.7f)
 
-    var visible by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        val baseDelay = 2100L
-        val itemDelay = if (index < 10) baseDelay + (index * 150L) else 0L
-        delay(itemDelay.milliseconds)
-        visible = true
+    val alreadyAnimated = remember(entry.userId) { entry.userId in animatedIds }
+    var visible by remember(entry.userId) { mutableStateOf(alreadyAnimated) }
+
+    LaunchedEffect(entry.userId) {
+        if (!alreadyAnimated) {
+            val baseDelay = 60L
+            val staggerStep = 20L
+            val maxStaggeredIndex = 10
+            val itemDelay = baseDelay + (index.coerceAtMost(maxStaggeredIndex)) * staggerStep
+            delay(itemDelay.milliseconds)
+            visible = true
+            animatedIds.add(entry.userId)
+        }
     }
 
     val offsetY by animateFloatAsState(
         targetValue = if (visible) 0f else 50f,
-        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
     )
     val alphaAnim by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(durationMillis = 500)
+        animationSpec = tween(durationMillis = 300)
     )
 
     Box(
