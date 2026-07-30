@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.lockscreen.presentation.contract
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
 
 data class LockScreenState(
@@ -18,5 +19,5 @@ data class LockScreenState(
     val currentTargetLanguage: String? = null,
     val currentProficiencyLevel: String? = null,
     val pendingOperationId: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: UiText? = null,
 )

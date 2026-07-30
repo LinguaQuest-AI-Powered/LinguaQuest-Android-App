@@ -33,6 +33,7 @@ import coil.compose.AsyncImage
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.ImageWrapper
 
 
 @Composable
@@ -53,7 +54,7 @@ fun ReviewWordHeader(
                 .height(276.dp)
                 .clip(RoundedCornerShape(28.dp))
         ) {
-            AsyncImage(
+            ImageWrapper(
                 model = heroModel,
                 contentDescription = word.sourceWord,
                 contentScale = ContentScale.Crop,
