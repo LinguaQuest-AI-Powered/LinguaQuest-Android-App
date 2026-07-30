@@ -8,6 +8,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.iti.linguaquest.core.utils.formatCompact
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
 import com.iti.linguaquest.features.roleplay.presentation.view.components.ActiveLiveChatView
@@ -15,21 +37,41 @@ import com.iti.linguaquest.features.roleplay.presentation.view.components.BossEv
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossLobbyView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossResultView
 import com.iti.linguaquest.features.roleplay.presentation.view.components.BossErrorView
-import com.iti.linguaquest.features.roleplay.presentation.view.components.RoleplayTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 
 @Composable
 fun RoleplayContent(
     state: RoleplayState,
-
+    coins: Int,
     onIntent: (RoleplayIntent) -> Unit,
     onStartBossStage: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
-        RoleplayTopBar(
-            targetLanguage = state.targetLanguage,
-            onExitClicked = {
-                onIntent(RoleplayIntent.ReturnHomeClicked)
+    Column(modifier = modifier.fillMaxSize()) {
+        LinguaQuestScreenTopBar(
+            title = stringResource(R.string.roleplay_boss_level),
+            onBackClicked = { onIntent(RoleplayIntent.ReturnHomeClicked) },
+            showDivider = true,
+            trailingContent = {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(LocalLinguaQuestColors.current.whiteColor)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_coin),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = coins.formatCompact(),
+                        fontWeight = FontWeight.Bold,
+                        color = LinguaQuestTheme.colors.iconsColor
+                    )
+                }
             }
         )
 

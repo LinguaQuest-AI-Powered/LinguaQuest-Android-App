@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -38,7 +39,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.core.utils.formatCompact
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
@@ -131,10 +132,10 @@ fun LevelScreen(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ShareTopBar(
-                    titleText = stringResource(id = R.string.level_title, state.levelNumber),
-                    onBackClick = { viewModel.onIntent(LevelIntent.BackClicked) },
-                    modifier = Modifier.padding(top = 40.dp),
+                LinguaQuestScreenTopBar(
+                    title = stringResource(id = R.string.level_title, state.levelNumber),
+                    onBackClicked = { viewModel.onIntent(LevelIntent.BackClicked) },
+                    showDivider = true,
                     trailingContent = {
                         androidx.compose.foundation.layout.Row(
                             modifier = Modifier
