@@ -42,10 +42,14 @@ fun LeaderboardContent(
     isLoadingMore: Boolean = false,
     endReached: Boolean = true,
 
-) {
+    ) {
     val listState = rememberLazyListState()
 
-     val shouldLoadMore by remember(endReached, isLoadingMore) {
+
+
+
+    val animatedItemIds = remember { mutableSetOf<Int>() }
+    val shouldLoadMore by remember(endReached, isLoadingMore) {
         derivedStateOf {
             if (endReached || isLoadingMore) {
                 false
@@ -86,16 +90,21 @@ fun LeaderboardContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 PodiumSection(
-                    topThree = leaderboard.topThree
+                    topThree = leaderboard.topThree,
+                    animatedIds = animatedItemIds
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            itemsIndexed(leaderboard.entries) { index, entry ->
+            itemsIndexed(
+                items = leaderboard.entries,
+                key = { _, entry -> entry.userId }
+            ) { index, entry ->
                 LeaderboardListItem(
                     entry = entry,
-                    index = index
+                    index = index,
+                    animatedIds = animatedItemIds
                 )
             }
 
@@ -131,7 +140,7 @@ fun LeaderboardContentPreview() {
                         level = 20,
                         xp = 4250,
                         isCurrentUser = false,
-                     ),
+                    ),
                     LeaderboardEntry(
                         rank = 2,
                         userId = 2,
@@ -140,7 +149,7 @@ fun LeaderboardContentPreview() {
                         level = 19,
                         xp = 3890,
                         isCurrentUser = false,
-                     ),
+                    ),
                     LeaderboardEntry(
                         rank = 3,
                         userId = 3,
@@ -149,7 +158,7 @@ fun LeaderboardContentPreview() {
                         level = 18,
                         xp = 3420,
                         isCurrentUser = false,
-                     )
+                    )
                 ),
                 entries = listOf(
                     LeaderboardEntry(
@@ -160,7 +169,7 @@ fun LeaderboardContentPreview() {
                         level = 13,
                         xp = 2900,
                         isCurrentUser = false,
-                     ),
+                    ),
                     LeaderboardEntry(
                         rank = 99,
                         userId = 5,
@@ -169,7 +178,7 @@ fun LeaderboardContentPreview() {
                         level = 13,
                         xp = 2750,
                         isCurrentUser = false,
-                     ),
+                    ),
                     LeaderboardEntry(
                         rank = 100,
                         userId = 6,
@@ -178,7 +187,7 @@ fun LeaderboardContentPreview() {
                         level = 12,
                         xp = 3150,
                         isCurrentUser = true,
-                     )
+                    )
                 )
             ),
             onBack = {}

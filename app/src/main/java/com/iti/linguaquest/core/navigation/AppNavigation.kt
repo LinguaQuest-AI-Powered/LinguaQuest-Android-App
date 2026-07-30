@@ -78,7 +78,7 @@ fun AppNavigation(
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
-    val rootBackStack = rememberNavBackStack(RootScreen.Leaderboard)
+    val rootBackStack = rememberNavBackStack(RootScreen.Splash)
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 

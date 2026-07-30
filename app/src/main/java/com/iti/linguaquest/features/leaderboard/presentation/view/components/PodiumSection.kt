@@ -67,15 +67,19 @@ fun Modifier.coloredShadow(
 }
 
 @Composable
-fun PodiumSection(topThree: List<LeaderboardEntry>) {
+fun PodiumSection(topThree: List<LeaderboardEntry>, animatedIds: MutableSet<Int>) {
     val first = topThree.find { it.rank == 1 }
     val second = topThree.find { it.rank == 2 }
     val third = topThree.find { it.rank == 3 }
 
-    var parrotVisible by remember { mutableStateOf(false) }
+    val parrotAlreadyAnimated = remember { -1 in animatedIds }
+    var parrotVisible by remember { mutableStateOf(parrotAlreadyAnimated) }
     LaunchedEffect(Unit) {
-        delay(1800.milliseconds)
-        parrotVisible = true
+        if (!parrotAlreadyAnimated) {
+            delay(200.milliseconds)
+            parrotVisible = true
+            animatedIds.add(-1)
+        }
     }
 
     val parrotScale by animateFloatAsState(
@@ -118,7 +122,8 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                         entry = second,
                         rankColor = LinguaQuestTheme.colors.LeaderboardBlue,
                         cardHeight = 130.dp,
-                        delayMillis = 600
+                        delayMillis = 100,
+                        animatedIds = animatedIds
                     )
                 }
             }
@@ -130,7 +135,8 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                         rankColor = LinguaQuestTheme.colors.LeaderboardGold,
                         cardHeight = 165.dp,
                         isFirst = true,
-                        delayMillis = 1200
+                        delayMillis = 200,
+                        animatedIds = animatedIds
                     )
                 }
             }
@@ -141,7 +147,8 @@ fun PodiumSection(topThree: List<LeaderboardEntry>) {
                         entry = third,
                         rankColor = LinguaQuestTheme.colors.LeaderboardBronze,
                         cardHeight = 130.dp,
-                        delayMillis = 0
+                        delayMillis = 0,
+                        animatedIds = animatedIds
                     )
                 }
             }
