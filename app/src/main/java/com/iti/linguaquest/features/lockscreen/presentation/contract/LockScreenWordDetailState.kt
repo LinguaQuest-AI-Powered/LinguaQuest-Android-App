@@ -6,5 +6,6 @@ data class LockScreenWordDetailState(
     val isLoading: Boolean = true,
     val words: List<LockScreenWord> = emptyList(),
     val highlightedWordId: Int? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val walletCoins: Int = 0
 )

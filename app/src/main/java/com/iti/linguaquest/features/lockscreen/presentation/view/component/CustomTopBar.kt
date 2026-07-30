@@ -21,14 +21,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.formatCompact
 
 @Composable
-fun CustomTopBar() {
+fun CustomTopBar(coins: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +45,10 @@ fun CustomTopBar() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.lingo_app_bar),
                 contentDescription = null,
@@ -57,27 +62,32 @@ fun CustomTopBar() {
                 text = stringResource(R.string.app_name),
                 color = LinguaQuestTheme.colors.titleAndCationsColor,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
 
          Row(
             modifier = Modifier
+                .padding(start = 8.dp)
                 .background(AppColors.OrangeActive.copy(alpha = 0.15f), shape = RoundedCornerShape(50))
                 .padding(horizontal = 12.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_doller),
+                painter = painterResource(id = R.drawable.ic_coin),
                 contentDescription = stringResource(R.string.cd_coins),
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = stringResource(R.string.lockscreen_sample_coins),
+                text = coins.formatCompact(),
                 color = LinguaQuestTheme.colors.titleAndCationsColor,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

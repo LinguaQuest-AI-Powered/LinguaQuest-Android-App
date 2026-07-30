@@ -39,7 +39,7 @@ fun RewardAmountBadge(modifier: Modifier = Modifier, rewardAmount: Int) {
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_doller),
+                painter = painterResource(id = R.drawable.ic_coin),
                 contentDescription = stringResource(id = R.string.cd_coin),
                 tint = Color.Unspecified,
                 modifier = Modifier.size(20.dp)

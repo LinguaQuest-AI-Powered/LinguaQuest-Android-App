@@ -13,6 +13,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.GetCachedProfileUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.RefreshProfileSummaryUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
@@ -22,6 +23,7 @@ import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileUiState
 import com.iti.linguaquest.features.profile.presentation.mapper.toProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -45,10 +47,14 @@ class ProfileViewModel @Inject constructor(
     private val snackbarController: SnackbarController,
     private val preloadImageUseCase: PreloadImageUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val refreshWalletUseCase: RefreshWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileUiState())
     val state: StateFlow<ProfileUiState> = _state.asStateFlow()
+
+    private var lastRefreshTime = 0L
+    private val REFRESH_COOLDOWN_MS = 5000L
 
     private val _effect = MutableSharedFlow<ProfileEffect>()
     val effect: SharedFlow<ProfileEffect> = _effect.asSharedFlow()
@@ -85,8 +91,14 @@ class ProfileViewModel @Inject constructor(
         when (intent) {
             ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
             ProfileIntent.Refresh -> {
-                _state.update { it.copy(isRefreshing = true) }
-                refreshProfile()
+                val now = System.currentTimeMillis()
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && !state.value.isRefreshing) {
+                    lastRefreshTime = now
+                    _state.update { it.copy(isRefreshing = true) }
+                    refreshProfile(isPullToRefresh = true)
+                } else {
+                    _state.update { it.copy(isRefreshing = false) }
+                }
             }
             ProfileIntent.SettingsClicked -> sendEffect(ProfileEffect.NavigateToSettings)
             ProfileIntent.ViewAllAchievementsClicked -> sendEffect(ProfileEffect.NavigateToAllAchievements)
@@ -95,7 +107,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun refreshProfile() {
+    private fun refreshProfile(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
             val hasCache = getCachedProfileUseCase().firstOrNull() != null
             _state.update {
@@ -106,7 +118,13 @@ class ProfileViewModel @Inject constructor(
                 )
             }
 
-            when (val result = refreshProfileSummaryUseCase()) {
+            val profileDeferred = async { refreshProfileSummaryUseCase() }
+            val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
+
+            val result = profileDeferred.await()
+            walletDeferred?.await()
+
+            when (result) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false, isRefreshing = false, isOffline = false) }
                 }

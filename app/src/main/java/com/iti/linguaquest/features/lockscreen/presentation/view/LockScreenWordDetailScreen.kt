@@ -95,7 +95,7 @@ fun LockScreenWordDetailScreen(
 
     Scaffold(
         topBar = {
-            CustomTopBar()
+            CustomTopBar(coins = state.walletCoins)
         },
         floatingActionButton = {
             FloatingActionButton(

@@ -9,6 +9,7 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPoste
 import com.iti.linguaquest.features.lockscreen.domain.usecase.MarkLockScreenWordOpenedUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenPendingOnceUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
      private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
      private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
      private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+     private val getWalletUseCase: GetWalletUseCase
  ) : ViewModel() {
 
      val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -44,6 +46,15 @@ class LockScreenWordDetailViewModel @Inject constructor(
 
     init {
         observeWords()
+        observeWallet()
+    }
+
+    private fun observeWallet() {
+        viewModelScope.launch {
+            getWalletUseCase().collect { wallet ->
+                _state.update { it.copy(walletCoins = wallet.coins) }
+            }
+        }
     }
 
     fun setHighlightedWordId(wordId: Int?) {
