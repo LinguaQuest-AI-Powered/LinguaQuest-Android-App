@@ -65,7 +65,28 @@ data class LinguaQuestColors(
     val DailyRewardActiveText: Color,
     val DailyRewardSubtitleText: Color,
     val DailyRewardInactiveLine: Color,
-    val DailyRewardInactiveText: Color
+    val DailyRewardInactiveText: Color,
+
+    val aboutFaqTitle: Color,
+    val aboutFaqContainerBg: Color,
+    val aboutFaqBorder: Color,
+    val aboutFaqIconBoxBg: Color,
+    val aboutFaqButtonBg: Color,
+    val aboutFaqButtonIconTint: Color,
+
+    val aboutContactTitle: Color,
+    val aboutContactContainerBg: Color,
+    val aboutContactBorder: Color,
+    val aboutContactIconBoxBg: Color,
+    val aboutContactButtonBg: Color,
+    val aboutContactButtonIconTint: Color,
+
+    val aboutGuideTitle: Color,
+    val aboutGuideContainerBg: Color,
+    val aboutGuideBorder: Color,
+    val aboutGuideIconBoxBg: Color,
+    val aboutGuideButtonBg: Color,
+    val aboutGuideButtonIconTint: Color
 )
 
 internal val LocalLinguaQuestColors =
