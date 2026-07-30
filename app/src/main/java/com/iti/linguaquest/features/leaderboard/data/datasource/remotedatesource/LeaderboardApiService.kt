@@ -12,6 +12,6 @@ interface LeaderboardApiService {
         @Query("scope") scope: String = "GLOBAL",
         @Query("languageId") languageId: Int? = null,
         @Query("page") page: Int = 0,
-        @Query("limit") limit: Int = 20
+        @Query("limit") limit: Int = 10
     ): SuccessResponseDto<LeaderboardDataDto>
 }

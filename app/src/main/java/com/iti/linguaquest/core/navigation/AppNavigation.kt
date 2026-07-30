@@ -56,6 +56,8 @@ import com.iti.linguaquest.features.help.presentation.faqs.view.FaqsScreen
 import com.iti.linguaquest.features.help.presentation.guide.view.UserGuideScreen
 import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
+import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
@@ -66,6 +68,7 @@ import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayView
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
+import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
 
 @Composable
@@ -411,6 +414,9 @@ fun AppNavigation(
                         },
                         onHelpSupportClick = {
                             rootBackStack.navigateSingleTop(RootScreen.HelpSupport)
+                        },
+                        onAboutAppClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.AboutApp)
                         }
                     )
                 }
@@ -444,6 +450,18 @@ fun AppNavigation(
 
                 entry<RootScreen.HelpGuide> {
                     UserGuideScreen(
+                        onBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.AboutApp> {
+                    AboutAppScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.LockScreenVocabulary> {
+                    LockScreenSettingsScreen(
                         onBack = { rootBackStack.removeLastOrNull() }
                     )
                 }

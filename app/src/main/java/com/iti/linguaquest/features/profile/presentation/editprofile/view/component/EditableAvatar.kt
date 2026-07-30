@@ -8,10 +8,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
@@ -28,7 +29,6 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileState
 
 @Composable
 fun EditableAvatar(
@@ -36,7 +36,9 @@ fun EditableAvatar(
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
     size: Dp = 110.dp,
-    isAvatarUploading: Boolean = false
+    isAvatarUploading: Boolean = false,
+    avatarContentDescription: String? = null,
+    editButtonContentDescription: String? = null
 ) {
     Column(
         modifier = modifier,
@@ -54,11 +56,11 @@ fun EditableAvatar(
             ) {
                 ImageWrapper(
                     model = avatarModel ?: R.drawable.lingo_app_bar,
-                    contentDescription = null,
+                    contentDescription = avatarContentDescription,
                     modifier = Modifier.fillMaxSize().clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 if (isAvatarUploading) {
                     Box(
                         modifier = Modifier
@@ -75,23 +77,26 @@ fun EditableAvatar(
                 }
             }
 
-            Box(
+                Box(
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(30.dp)
+                    .clip(CircleShape)
+                    .background(LinguaQuestTheme.colors.whiteColor)
+                    .padding(2.5.dp)
                     .clip(CircleShape)
                     .background(LinguaQuestTheme.colors.blackColor)
                     .clickable(
                         onClick = onEditClick,
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = ripple(bounded = true, radius = 12.dp)
+                        indication = ripple(bounded = true, radius = 15.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = null,
+                    imageVector = Icons.Filled.CameraAlt,
+                    contentDescription = editButtonContentDescription,
                     tint = LinguaQuestTheme.colors.whiteColor,
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(14.dp)
                 )
             }
         }

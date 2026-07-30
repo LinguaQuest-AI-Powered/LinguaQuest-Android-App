@@ -56,40 +56,46 @@ fun PodiumItem(
     rankColor: Color,
     cardHeight: Dp,
     isFirst: Boolean = false,
-    delayMillis: Int
+    delayMillis: Int,
+    animatedIds: MutableSet<Int>
 ) {
     val avatarSize = if (isFirst) 72.dp else 60.dp
 
-    var step by remember { mutableIntStateOf(0) }
-    LaunchedEffect(Unit) {
-        delay(delayMillis.toLong().milliseconds)
-        step = 1 
-        delay(150.milliseconds)
-        step = 2  
-        delay(200.milliseconds)
-        step = 3 
+    val alreadyAnimated = remember(entry.userId) { entry.userId in animatedIds }
+    var step by remember(entry.userId) { mutableIntStateOf(if (alreadyAnimated) 3 else 0) }
+
+    LaunchedEffect(entry.userId) {
+        if (!alreadyAnimated) {
+            delay(delayMillis.toLong().milliseconds)
+            step = 1
+            delay(80.milliseconds)
+            step = 2
+            delay(100.milliseconds)
+            step = 3
+            animatedIds.add(entry.userId)
+        }
     }
 
     val lineScaleX by animateFloatAsState(
         targetValue = if (step >= 1) 1f else 0f,
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow)
+        animationSpec = spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMedium)
     )
 
     val animatedCardHeight by animateDpAsState(
         targetValue = if (step >= 2) cardHeight else 0.dp,
-        animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessLow)
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessMedium)
     )
 
     val avatarScale by animateFloatAsState(
         targetValue = if (step >= 3) 1f else 0f,
-        animationSpec = spring(dampingRatio = 0.5f, stiffness = Spring.StiffnessLow)
+        animationSpec = spring(dampingRatio = 0.5f, stiffness = Spring.StiffnessMedium)
     )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-         Box(
+        Box(
             modifier = Modifier
                 .size(avatarSize)
                 .offset(y = 20.dp)
@@ -141,7 +147,7 @@ fun PodiumItem(
             }
         }
 
-         Card(
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(animatedCardHeight.coerceAtLeast(0.dp))

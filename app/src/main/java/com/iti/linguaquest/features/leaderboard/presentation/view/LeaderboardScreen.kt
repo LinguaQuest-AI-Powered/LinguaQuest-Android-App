@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.leaderboard.presentation
+package com.iti.linguaquest.features.leaderboard.presentation.view
 
 import androidx.compose.runtime.Composable
 
@@ -9,7 +9,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
-import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardContent
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.leaderboard.presentation.viewmodel.LeaderboardViewModel
 
@@ -39,7 +38,10 @@ fun LeaderboardScreen(
             OfflineAwareContent(isOnline = isOnline) {
                 LeaderboardContent(
                     leaderboard = state.leaderboard!!,
-                    onBack = onBack
+                    onBack = onBack,
+                    onLoadMore = { viewModel.onIntent(LeaderboardIntent.LoadMore) },
+                    isLoadingMore = state.isLoadingMore,
+                    endReached = state.endReached
                 )
             }
         }

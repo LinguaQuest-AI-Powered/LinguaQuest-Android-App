@@ -13,8 +13,8 @@ class GetLeaderboardUseCase @Inject constructor(
     suspend operator fun invoke(
         scope: LeaderboardScope = LeaderboardScope.GLOBAL,
         languageId: Int? = null,
-        page: Int = 1,
-        limit: Int = 20
+        page: Int = 0,
+        limit: Int = 10
     ): LinguaQuestResult<Leaderboard, LinguaQuestDataError> =
         repository.getLeaderboard(scope, languageId, page, limit)
 }

@@ -26,6 +26,11 @@ class LeaderboardViewModel @Inject constructor(
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
+    companion object {
+        private const val PAGE_SIZE = 10
+        private const val FIRST_PAGE = 0
+    }
+
     private val _state = MutableStateFlow(LeaderboardState())
     val state: StateFlow<LeaderboardState> = _state.asStateFlow()
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -46,6 +51,8 @@ class LeaderboardViewModel @Inject constructor(
 
             LeaderboardIntent.LoadLeaderboard -> loadLeaderboard()
 
+            LeaderboardIntent.LoadMore -> loadMore()
+
             is LeaderboardIntent.ChangeScope -> onChangeScope(intent)
 
         }
@@ -53,7 +60,7 @@ class LeaderboardViewModel @Inject constructor(
 
     private fun onChangeScope(intent: LeaderboardIntent.ChangeScope) {
         _state.update {
-            it.copy(scope = intent.scope)
+            it.copy(scope = intent.scope, languageId = intent.languageId)
         }
 
         loadLeaderboard(
@@ -71,20 +78,26 @@ class LeaderboardViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     isLoading = true,
-                    errorMessage = null
+                    errorMessage = null,
+                    currentPage = FIRST_PAGE,
+                    endReached = false
                 )
             }
 
             getLeaderboardUseCase(
                 scope = scope,
-                languageId = languageId
+                languageId = languageId,
+                page = FIRST_PAGE,
+                limit = PAGE_SIZE
             )
                 .onSuccess { leaderboard ->
 
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            leaderboard = leaderboard
+                            leaderboard = leaderboard,
+                            currentPage = FIRST_PAGE,
+                            endReached = leaderboard.entries.size < PAGE_SIZE
                         )
                     }
                 }
@@ -92,6 +105,46 @@ class LeaderboardViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            errorMessage = error.toString()
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun loadMore() {
+        val current = _state.value
+
+         if (current.isLoading || current.isLoadingMore || current.endReached || current.leaderboard == null) {
+            return
+        }
+
+        val nextPage = current.currentPage + 1
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoadingMore = true) }
+
+            getLeaderboardUseCase(
+                scope = current.scope,
+                languageId = current.languageId,
+                page = nextPage,
+                limit = PAGE_SIZE
+            )
+                .onSuccess { newPage ->
+                    _state.update {
+                        val mergedEntries = (it.leaderboard?.entries.orEmpty()) + newPage.entries
+                        it.copy(
+                            isLoadingMore = false,
+                            currentPage = nextPage,
+                            endReached = newPage.entries.size < PAGE_SIZE,
+                            leaderboard = it.leaderboard?.copy(entries = mergedEntries)
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isLoadingMore = false,
                             errorMessage = error.toString()
                         )
                     }

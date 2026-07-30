@@ -1,0 +1,159 @@
+package com.iti.linguaquest.core.sharedComponents
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+
+enum class ButtonVisualState {
+    DEFAULT,
+    LOADING,
+    SUCCESS
+}
+
+@Composable
+fun AppButton3D(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    ledgeColor: Color = LinguaQuestTheme.colors.ShadowOrange,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    ledgeHeight: Dp = 6.dp,
+    cornerRadius: Dp = 16.dp,
+    buttonHeight: Dp = 52.dp,
+    enabled: Boolean = true,
+    isLoading: Boolean = false,
+    isSuccess: Boolean = false,
+    successText: String = text,
+    playSound: Boolean = true
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    
+    val pressOffset by animateDpAsState(
+        targetValue = if (isPressed && enabled && !isLoading) ledgeHeight else 0.dp,
+        animationSpec = tween(durationMillis = 80),
+        label = "buttonPressOffset"
+    )
+    
+    val soundPlayer = LocalSoundPlayer.current
+
+    val visualState = when {
+        isLoading -> ButtonVisualState.LOADING
+        isSuccess -> ButtonVisualState.SUCCESS
+        else -> ButtonVisualState.DEFAULT
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(buttonHeight + ledgeHeight)
+    ) {
+         Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(buttonHeight)
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(cornerRadius))
+                .background(ledgeColor)
+        )
+
+         Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(buttonHeight)
+                .offset(y = pressOffset)
+                .clip(RoundedCornerShape(cornerRadius))
+                .background(if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.6f))
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    enabled = enabled && !isLoading,
+                    onClick = {
+                        if (playSound) {
+                            soundPlayer.play(AppSound.POP)
+                        }
+                        onClick()
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            AnimatedContent(
+                targetState = visualState,
+                label = "buttonContentAnimation"
+            ) { state ->
+                when (state) {
+                    ButtonVisualState.LOADING -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(22.dp),
+                            color = textColor,
+                            strokeWidth = 2.dp
+                        )
+                    }
+
+                    ButtonVisualState.SUCCESS -> {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = null,
+                                tint = textColor,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = successText,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = textColor,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    ButtonVisualState.DEFAULT -> {
+                        Text(
+                            text = text,
+                            color = textColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

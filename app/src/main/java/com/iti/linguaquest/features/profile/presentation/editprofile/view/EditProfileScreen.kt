@@ -23,7 +23,6 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.viewmodel.E
 fun EditProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: EditProfileViewModel = hiltViewModel(),
-
     onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
@@ -53,6 +52,7 @@ fun EditProfileScreen(
             cameraImageUri?.let { cameraLauncher.launch(it) }
         }
     }
+
     OfflineAwareContent(isOnline = isOnline) {
         EditProfileScreenContent(
             modifier = modifier,
@@ -66,6 +66,8 @@ fun EditProfileScreen(
             isLoading = state.isLoading,
             isSavingName = state.isSavingName,
             isSavingPassword = state.isSavingPassword,
+            selectedTab = state.selectedTab,
+            onTabChange = { viewModel.onIntent(EditProfileIntent.OnTabChanged(it)) },
             onGalleryClick = { galleryLauncher.launch("image/*") },
             onCameraClick = {
                 val uri = createImageCaptureUri(context)
@@ -73,8 +75,7 @@ fun EditProfileScreen(
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             },
             onBackClick = onBackClick,
-            onSaveNameClick = { viewModel.onIntent(EditProfileIntent.SaveNameChanges) },
-            onSavePasswordClick = { viewModel.onIntent(EditProfileIntent.SavePasswordChanges) },
+            onSaveClick = { viewModel.onIntent(EditProfileIntent.SaveCurrentTabChanges) },
             onCancelClick = onBackClick,
             displayNameError = state.displayNameError,
             oldPasswordError = state.oldPasswordError,

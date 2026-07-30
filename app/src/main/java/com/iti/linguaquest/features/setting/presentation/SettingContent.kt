@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -39,7 +40,6 @@ import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
-import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
 import com.iti.linguaquest.features.setting.presentation.components.DailyReminderSection
 import com.iti.linguaquest.features.setting.presentation.components.EnableLockScreenDialog
 import com.iti.linguaquest.features.setting.presentation.components.LanguageSelectionBottomSheet
@@ -72,6 +72,7 @@ fun SettingContent(
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLockScreenVocabularyClick: () -> Unit,
+    onAboutAppClick: () -> Unit = {},
     onHelpSupportClick: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
@@ -229,7 +230,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_help_icon),
                     title = stringResource(id = R.string.settings_help_support),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { onHelpSupportClick() }
+                    onClick = { guardOnline(helpY) { } }
                 )
                 SectionDivider()
 
@@ -241,8 +242,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_info_icon),
                     title = stringResource(id = R.string.settings_about_app),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(aboutY) {
-                    } }
+                    onClick = { guardOnline(aboutY) { onAboutAppClick() } }
                 )
             }
 

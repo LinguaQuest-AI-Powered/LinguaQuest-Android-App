@@ -22,7 +22,9 @@
     <string name="japanese_language_displayName">Japanese</string>
     <string name="english_language_displayName">English</string>
     <string name="germany_language_displayName">Germany</string>
-
+    <string name="new_password_min_length_hint">Minimum 6 characters</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="security">Security</string>
     // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>
@@ -632,4 +634,62 @@
     <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
     <string name="offline_title">You\'re offline</string>
     <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
+
+    <!-- About App Strings -->
+    <string name="about_app_title">About</string>
+    <string name="about_app_name">LinguaQuest</string>
+    <string name="about_app_description">LinguaQuest helps you learn languages through fun games, AI-powered lessons, and daily challenges.</string>
+    <string name="about_app_rate_app">Rate the App</string>
+    <string name="about_app_follow_instagram">Follow us on Instagram</string>
+    <string name="about_app_visit_website">Visit our Website</string>
+    <string name="about_app_terms_service">Terms of Service</string>
+    <string name="about_app_privacy_policy">Privacy Policy</string>
+    <string name="about_app_licenses_credits">Licenses &amp; Credits</string>
+    <string name="about_app_footer_made_with">Made with 💛 by The Lingo Team</string>
+    <string name="about_app_footer_copyright">© 2026 LinguaQuest. All rights reserved.</string>
+    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
+    <string name="about_app_website_url">https://linguaquest.app</string>
+    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
+    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
+    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
+
+    <!-- Help, Support & FAQs Strings -->
+    <string name="about_app_banner_title">Help &amp; Support</string>
+    <string name="about_app_banner_subtitle">Explore FAQs, contact support, or read the user guide to get the most out of your journey.</string>
+    <string name="about_app_section_title">Support Topics</string>
+    <string name="about_app_faqs_title">Frequently Asked Questions</string>
+    <string name="about_app_faqs_subtitle">Quick answers to common questions about your account, lessons, and rewards.</string>
+    <string name="about_app_contact_title">Contact Us</string>
+    <string name="about_app_contact_subtitle">Reach out to our support team for help with any issues or feedback.</string>
+    <string name="about_app_user_guide_title">User Guide</string>
+    <string name="about_app_user_guide_subtitle">Learn how to navigate LinguaQuest features, games, and learning paths.</string>
+
+    <string name="faqs_q1">How do I start learning in LinguaQuest?</string>
+    <string name="faqs_a1">Choose your languages during onboarding, then continue to Home to start quests, lessons, and practice.</string>
+    <string name="faqs_q2">What is Camera Hunt?</string>
+    <string name="faqs_a2">Camera Hunt asks you to capture a real-world object and match it with the target vocabulary word.</string>
+    <string name="faqs_q3">How does AI Image Verification work?</string>
+    <string name="faqs_a3">After you take a photo, AI checks whether the object matches the target word before you earn rewards.</string>
+    <string name="faqs_q4">How do I practice speaking?</string>
+    <string name="faqs_a4">Use Voice Challenge or Review to speak out loud, then listen to instant pronunciation feedback.</string>
+
+    <string name="user_guide_step1_title">Explore &amp; Quests</string>
+    <string name="user_guide_step1_desc">Navigate through different worlds on the map, complete interactive quests, and collect words.</string>
+    <string name="user_guide_step2_title">Voice &amp; Pronunciation</string>
+    <string name="user_guide_step2_desc">Practice speaking in real-time with AI-powered pronunciation feedback and interactive scenarios.</string>
+    <string name="user_guide_step3_title">Camera &amp; Real World</string>
+    <string name="user_guide_step3_desc">Find objects in your environment, capture them with your camera, and learn vocabulary in context.</string>
+    <string name="user_guide_step4_title">Lock Screen &amp; Vault</string>
+    <string name="user_guide_step4_desc">Keep learning on the go with lock screen notifications and review your collected words in the vault.</string>
+
+    <string name="contact_us_banner_title">Contact Us</string>
+    <string name="contact_us_banner_subtitle">Have a question or feedback? Drop us a message below.</string>
+    <string name="contact_us_email_card_title">Email Support</string>
+    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
+    <string name="contact_us_subject_label">Subject</string>
+    <string name="contact_us_subject_placeholder">What do you need help with?</string>
+    <string name="contact_us_message_label">Message</string>
+    <string name="contact_us_message_placeholder">Describe your issue or feedback in detail...</string>
+    <string name="contact_us_send_button">Send Message</string>
 </resources>
