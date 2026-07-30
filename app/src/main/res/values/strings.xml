@@ -22,7 +22,9 @@
     <string name="japanese_language_displayName">Japanese</string>
     <string name="english_language_displayName">English</string>
     <string name="germany_language_displayName">Germany</string>
-
+    <string name="new_password_min_length_hint">Minimum 6 characters</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="security">Security</string>
     // Languages code
     <string name="spanish_language_code">es</string>
     <string name="japanese_language_code">ja</string>

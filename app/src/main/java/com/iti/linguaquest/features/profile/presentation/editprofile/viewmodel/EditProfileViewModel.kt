@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
+import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileTab
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -69,6 +70,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
+
     fun onIntent(intent: EditProfileIntent) {
         when (intent) {
             is EditProfileIntent.OnDisplayNameChanged ->
@@ -83,11 +85,15 @@ class EditProfileViewModel @Inject constructor(
             is EditProfileIntent.UploadPhoto ->
                 uploadPhoto(intent.uri)
 
-            is EditProfileIntent.SaveNameChanges ->
-                validateAndSaveName()
+             is EditProfileIntent.OnTabChanged ->
+                _state.update { it.copy(selectedTab = intent.tab) }
 
-            is EditProfileIntent.SavePasswordChanges ->
-                validateAndSavePassword()
+            is EditProfileIntent.SaveCurrentTabChanges -> {
+                when (_state.value.selectedTab) {
+                    EditProfileTab.PERSONAL_INFO -> validateAndSaveName()
+                    EditProfileTab.SECURITY -> validateAndSavePassword()
+                }
+            }
         }
     }
 
