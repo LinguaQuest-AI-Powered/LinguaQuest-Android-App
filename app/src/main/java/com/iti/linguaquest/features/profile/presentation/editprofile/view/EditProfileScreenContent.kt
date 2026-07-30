@@ -1,29 +1,18 @@
 package com.iti.linguaquest.features.profile.presentation.editprofile.view
 
-import android.Manifest
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -229,18 +218,16 @@ fun EditProfileScreenContent(
                             Spacer(modifier = Modifier.height(32.dp))
 
                             Image(
-                                painter = painterResource(id = R.drawable.lingo_change_name
-
-
-
-
-                                ),
+                                painter = painterResource(id = R.drawable.lingo_change_name),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(200.dp),
                                 contentScale = ContentScale.Fit
                             )
+
+                            Spacer(modifier = Modifier.height(30.dp))
+                            InfoNote(text = stringResource(R.string.profile_visibility_note))
                         }
                     }
                     EditProfileTab.SECURITY -> {
@@ -262,8 +249,6 @@ fun EditProfileScreenContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
-            InfoNote(text = stringResource(R.string.profile_visibility_note))
             Spacer(modifier = Modifier.height(20.dp))
         }
 
