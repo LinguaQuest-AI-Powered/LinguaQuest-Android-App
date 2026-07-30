@@ -26,32 +26,72 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
-fun RewardAmountBadge(modifier: Modifier = Modifier, rewardAmount: Int) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
-            .padding(horizontal = 32.dp, vertical = 12.dp),
-        contentAlignment = Alignment.Center
+fun RewardAmountBadge(
+    modifier: Modifier = Modifier,
+    rewardAmount: Int,
+    rewardXp: Int? = null
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
+                .padding(horizontal = 24.dp, vertical = 12.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_doller),
-                contentDescription = stringResource(id = R.string.cd_coin),
-                tint = Color.Unspecified,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = LinguaQuestTheme.colors.DailyRewardBadgeText
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_doller),
+                    contentDescription = stringResource(id = R.string.cd_coin),
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(20.dp)
                 )
-            )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = LinguaQuestTheme.colors.DailyRewardBadgeText
+                    )
+                )
+            }
+        }
+
+        if (rewardXp != null && rewardXp > 0) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_xp),
+                        contentDescription = stringResource(id = R.string.cd_xp),
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.daily_reward_xp_format, rewardXp),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = LinguaQuestTheme.colors.DailyRewardBadgeText
+                        )
+                    )
+                }
+            }
         }
     }
 }

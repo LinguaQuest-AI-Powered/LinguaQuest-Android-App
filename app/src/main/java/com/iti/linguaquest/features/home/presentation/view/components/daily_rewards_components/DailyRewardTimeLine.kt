@@ -35,13 +35,18 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
-fun DailyRewardTimeline(currentDay: Int) {
-    val totalNodes = 5
+fun DailyRewardTimeline(
+    modifier: Modifier = Modifier,
+    currentDay: Int,
+    cycleLength: Int = 5
+) {
+    val maxVisibleNodes = 5
+    val totalNodes = minOf(cycleLength.coerceAtLeast(1), maxVisibleNodes)
     val activeColor = MaterialTheme.colorScheme.primary
     val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
-    val startDay = maxOf(1, currentDay - 2)
-    val endDay = startDay + totalNodes - 1
+    val startDay = maxOf(1, minOf(currentDay - 2, (cycleLength - totalNodes + 1).coerceAtLeast(1)))
+    val endDay = minOf(cycleLength.coerceAtLeast(1), startDay + totalNodes - 1)
     val displayedDays = (startDay..endDay).toList()
 
     val activeNodesCount = displayedDays.count { it < currentDay }
@@ -58,7 +63,7 @@ fun DailyRewardTimeline(currentDay: Int) {
     )
 
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
         val isRtl = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
