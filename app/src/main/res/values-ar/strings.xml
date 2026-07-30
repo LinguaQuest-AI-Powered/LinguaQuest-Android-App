@@ -644,4 +644,52 @@
     <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
     <string name="about_app_terms_url">https://linguaquest.app/terms</string>
     <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
+    <!-- Help, Support & FAQs Strings -->
+    <string name="about_app_banner_title">المساعدة والدعم</string>
+    <string name="about_app_banner_subtitle">استكشف الأسئلة الشائعة، وتواصل مع الدعم، أو اطّلع على دليل المستخدم لتحقيق أقصى استفادة من رحلتك التعليمية.</string>
+    <string name="about_app_section_title">مواضيع الدعم</string>
+    <string name="about_app_faqs_title">الأسئلة الشائعة</string>
+    <string name="about_app_faqs_subtitle">إجابات سريعة عن الأسئلة الأكثر شيوعًا حول حسابك، والدروس، والمكافآت.</string>
+    <string name="about_app_contact_title">تواصل معنا</string>
+    <string name="about_app_contact_subtitle">تواصل مع فريق الدعم لدينا إذا واجهت أي مشكلة أو كان لديك أي اقتراح.</string>
+    <string name="about_app_user_guide_title">دليل المستخدم</string>
+    <string name="about_app_user_guide_subtitle">تعرّف على كيفية استخدام ميزات LinguaQuest والألعاب ومسارات التعلّم.</string>
+
+    <string name="faqs_q1">كيف أبدأ التعلّم في LinguaQuest؟</string>
+    <string name="faqs_a1">اختر لغاتك أثناء الإعداد الأولي، ثم انتقل إلى الصفحة الرئيسية لبدء المهام والدروس والتدريب.</string>
+
+    <string name="faqs_q2">ما هي ميزة Camera Hunt؟</string>
+    <string name="faqs_a2">تطلب منك ميزة Camera Hunt التقاط صورة لعنصر حقيقي ومطابقته مع الكلمة المستهدفة.</string>
+
+    <string name="faqs_q3">كيف تعمل ميزة التحقق بالذكاء الاصطناعي من الصور؟</string>
+    <string name="faqs_a3">بعد التقاط الصورة، يتحقق الذكاء الاصطناعي من مطابقتها للكلمة المستهدفة قبل منحك المكافآت.</string>
+
+    <string name="faqs_q4">كيف يمكنني التدرب على التحدث؟</string>
+    <string name="faqs_a4">استخدم تحدي الصوت أو المراجعة للتحدث بصوت عالٍ، ثم استمع إلى ملاحظات فورية لتحسين النطق.</string>
+
+    <string name="user_guide_step1_title">الاستكشاف والمهام</string>
+    <string name="user_guide_step1_desc">تنقّل بين العوالم المختلفة على الخريطة، وأكمل المهام التفاعلية، واجمع الكلمات الجديدة.</string>
+
+    <string name="user_guide_step2_title">الصوت والنطق</string>
+    <string name="user_guide_step2_desc">تدرّب على التحدث في الوقت الفعلي مع ملاحظات نطق مدعومة بالذكاء الاصطناعي وسيناريوهات تفاعلية.</string>
+
+    <string name="user_guide_step3_title">الكاميرا والعالم الحقيقي</string>
+    <string name="user_guide_step3_desc">اعثر على العناصر من حولك، والتقط صورًا لها بالكاميرا، وتعلّم المفردات في سياقها الحقيقي.</string>
+
+    <string name="user_guide_step4_title">شاشة القفل والخزنة</string>
+    <string name="user_guide_step4_desc">واصل التعلّم أثناء التنقل من خلال إشعارات شاشة القفل، وراجع الكلمات التي جمعتها داخل الخزنة.</string>
+
+    <string name="contact_us_banner_title">تواصل معنا</string>
+    <string name="contact_us_banner_subtitle">هل لديك سؤال أو اقتراح؟ أرسل لنا رسالة عبر النموذج أدناه.</string>
+
+    <string name="contact_us_email_card_title">دعم البريد الإلكتروني</string>
+    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
+
+    <string name="contact_us_subject_label">الموضوع</string>
+    <string name="contact_us_subject_placeholder">بماذا يمكننا مساعدتك؟</string>
+
+    <string name="contact_us_message_label">الرسالة</string>
+    <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل...</string>
+
+    <string name="contact_us_send_button">إرسال الرسالة</string>
 </resources>

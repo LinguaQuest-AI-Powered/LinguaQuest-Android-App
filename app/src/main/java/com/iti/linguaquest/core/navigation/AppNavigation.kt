@@ -58,7 +58,6 @@ import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
-import com.iti.linguaquest.features.leaderboard.presentation.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditProfileScreen
