@@ -38,6 +38,8 @@ A memorable sentence contains:
 TASK
 
 Return ONLY a valid JSON object.
+Use ONLY two languages in the entire response: ${word.sourceLanguage} and ${word.targetLanguage}.
+Do not introduce any third language anywhere in the JSON.
 
 Required keys:
 {
@@ -62,12 +64,13 @@ translation
 - Natural and fluent
 
 tip
-- Give one memorable memory hook.
+- Write the memory hook in ${word.sourceLanguage}.
 - Prefer sound association, funny image, mini-story, or word shape.
 - Don't simply describe the object.
 - Maximum 2 short sentences.
 
 fact
+- Write the fact in ${word.sourceLanguage}.
 - Give one genuinely interesting fact about the word, its origin, or the "${word.category}" category.
 - Avoid obvious facts.
 - Maximum 2 short sentences.
@@ -81,6 +84,7 @@ RULES
 - No extra keys.
 - No explanations outside JSON.
 - Every value must be non-empty.
+- Do not mix languages inside a single field.
 - Warm, friendly, encouraging tone.
 """.trimIndent()
     }

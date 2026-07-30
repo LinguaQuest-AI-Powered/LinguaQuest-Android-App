@@ -14,6 +14,8 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.DisableLockScreenV
 import com.iti.linguaquest.features.lockscreen.domain.usecase.EnableLockScreenVocabularyUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.EnqueueGenerationWorkUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPendingWordUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenMetadata
 import com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenUserPreferences
@@ -35,6 +37,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -49,6 +53,8 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val enableUseCase: EnableLockScreenVocabularyUseCase,
     private val disableUseCase: DisableLockScreenVocabularyUseCase,
     private val generateUseCase: GenerateVocabularyBatchUseCase,
+    private val getPendingWordUseCase: GetLockScreenPendingWordUseCase,
+    private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
     private val enqueueGenerationWorkUseCase: EnqueueGenerationWorkUseCase,
     private val scheduleNotificationUseCase: ScheduleVocabularyNotificationUseCase,
     private val showTestNotificationUseCase: ShowTestNotificationUseCase,
@@ -208,23 +214,37 @@ class LockScreenSettingsViewModel @Inject constructor(
             return
         }
 
-        val current = _state.value
-        if (!hasRequiredGenerationInputs(current)) {
+        viewModelScope.launch {
+            val (targetLanguage, proficiencyLevel) = resolveRequiredInputs()
+
             _state.update {
                 it.copy(
-                    featureState = LockScreenFeatureState.ERROR,
-                    errorMessage = UiText.StringResource(R.string.lockscreen_required_inputs_error)
+                    currentTargetLanguage = targetLanguage,
+                    currentProficiencyLevel = proficiencyLevel
                 )
             }
-            return
-        }
 
-        if (!_state.value.isNotificationPermissionGranted) {
-            sendEffect(LockScreenEffect.RequestNotificationPermission)
-            return
-        }
+            if (targetLanguage.isBlank() || proficiencyLevel.isBlank()) {
+                _state.update {
+                    it.copy(
+                        featureState = LockScreenFeatureState.ERROR,
+                        errorMessage = UiText.StringResource(R.string.lockscreen_required_inputs_error)
+                    )
+                }
+                showMessage(
+                    UiText.StringResource(R.string.lockscreen_required_inputs_error),
+                    SnackbarType.ERROR
+                )
+                return@launch
+            }
 
-        _state.update { it.copy(isConfirmDialogVisible = true, errorMessage = null) }
+            if (!_state.value.isNotificationPermissionGranted) {
+                sendEffect(LockScreenEffect.RequestNotificationPermission)
+                return@launch
+            }
+
+            _state.update { it.copy(isConfirmDialogVisible = true, errorMessage = null) }
+        }
     }
 
     private fun handlePermissionResult(granted: Boolean) {
@@ -237,25 +257,38 @@ class LockScreenSettingsViewModel @Inject constructor(
     }
 
     private fun confirmEnable() {
-        val current = _state.value
-        if (current.featureState == LockScreenFeatureState.ACTIVE || current.featureState == LockScreenFeatureState.ENABLING) {
-            _state.update { it.copy(isConfirmDialogVisible = false) }
-            return
-        }
+        viewModelScope.launch {
+            val current = _state.value
+            if (current.featureState == LockScreenFeatureState.ACTIVE || current.featureState == LockScreenFeatureState.ENABLING) {
+                _state.update { it.copy(isConfirmDialogVisible = false) }
+                return@launch
+            }
 
-        if (!hasRequiredGenerationInputs(current)) {
+            val (targetLanguage, proficiencyLevel) = resolveRequiredInputs()
+
             _state.update {
                 it.copy(
-                    isConfirmDialogVisible = false,
-                    isLoading = false,
-                    featureState = LockScreenFeatureState.ERROR,
-                    errorMessage = UiText.StringResource(R.string.lockscreen_required_inputs_error)
+                    currentTargetLanguage = targetLanguage,
+                    currentProficiencyLevel = proficiencyLevel
                 )
             }
-            return
-        }
 
-        viewModelScope.launch {
+            if (targetLanguage.isBlank() || proficiencyLevel.isBlank()) {
+                _state.update {
+                    it.copy(
+                        isConfirmDialogVisible = false,
+                        isLoading = false,
+                        featureState = LockScreenFeatureState.ERROR,
+                        errorMessage = UiText.StringResource(R.string.lockscreen_required_inputs_error)
+                    )
+                }
+                showMessage(
+                    UiText.StringResource(R.string.lockscreen_required_inputs_error),
+                    SnackbarType.ERROR
+                )
+                return@launch
+            }
+
             val operationId = current.pendingOperationId ?: UUID.randomUUID().toString()
             _state.update {
                 it.copy(
@@ -427,5 +460,31 @@ class LockScreenSettingsViewModel @Inject constructor(
 
     private fun hasRequiredGenerationInputs(state: LockScreenState): Boolean {
         return !state.currentTargetLanguage.isNullOrBlank() && !state.currentProficiencyLevel.isNullOrBlank()
+    }
+
+    private suspend fun resolveRequiredInputs(): Pair<String, String> {
+        val latestPrefs = observeUserPreferencesUseCase().first()
+        val latestMetadata = observeSettingsMetadataUseCase().first()
+        val pendingWord = getPendingWordUseCase().first()
+        val anyStoredWord = pendingWord ?: getPostedOrOpenedWordsUseCase().firstOrNull()?.firstOrNull()
+
+        val targetLanguage = latestPrefs.targetLanguageName
+            .orEmpty()
+            .ifBlank {
+                latestMetadata.lastTargetLanguage
+                    .orEmpty()
+                    .ifBlank { anyStoredWord?.targetLanguage.orEmpty() }
+            }
+
+        val proficiencyLevel = latestPrefs.proficiencyLevel
+            .orEmpty()
+            .ifBlank {
+                latestMetadata.lastProficiencyLevel
+                    .orEmpty()
+                    .ifBlank { anyStoredWord?.proficiencyLevel.orEmpty() }
+            }
+            .ifBlank { "BEGINNER" }
+
+        return targetLanguage to proficiencyLevel
     }
 }

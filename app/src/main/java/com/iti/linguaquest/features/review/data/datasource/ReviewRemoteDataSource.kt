@@ -66,10 +66,19 @@ class ReviewRemoteDataSourceImpl @Inject constructor() : ReviewRemoteDataSource 
         val fact = json.optString("fact", "")
 
         val fullText = buildString {
-            if (sentence.isNotBlank())    append("Example sentence. $sentence. ")
-            if (translation.isNotBlank()) append("Translation. $translation. ")
-            if (tip.isNotBlank())         append("Memory tip. $tip. ")
-            if (fact.isNotBlank())        append("Fun fact. $fact.")
+            if (sentence.isNotBlank()) append(sentence)
+            if (translation.isNotBlank()) {
+                if (isNotEmpty()) append("\n\n")
+                append(translation)
+            }
+            if (tip.isNotBlank()) {
+                if (isNotEmpty()) append("\n\n")
+                append(tip)
+            }
+            if (fact.isNotBlank()) {
+                if (isNotEmpty()) append("\n\n")
+                append(fact)
+            }
         }.trim()
 
         return AIReviewResponse(

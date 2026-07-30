@@ -142,7 +142,8 @@ fun WordCard(
                         .padding(horizontal = 8.dp, vertical = 5.dp)
                 ) {
                     Text(
-                        text = compactLanguageLabel(word.sourceLanguage),
+
+                        text = compactLanguageLabel(word.targetLanguage),
                         color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 9.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -156,7 +157,7 @@ fun WordCard(
                         modifier = Modifier.height(10.dp)
                     )
                     Text(
-                        text = compactLanguageLabel(word.targetLanguage),
+                        text = compactLanguageLabel(word.sourceLanguage),
                         color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 9.sp,
                         fontWeight = FontWeight.SemiBold,

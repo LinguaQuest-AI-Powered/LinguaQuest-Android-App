@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_VOCAB_REMINDER = "com.iti.linguaquest.ACTION_VOCAB_REMINDER"
+        const val EXTRA_FORCE_SHOW = "extra_force_show"
         const val MIN_PENDING_WORDS = 5
     }
 
@@ -42,31 +44,31 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
             try {
                 val isFeatureEnabled = repository.featureEnabled.first()
                 if (!isFeatureEnabled) return@launch
+                val forceShow = intent.getBooleanExtra(EXTRA_FORCE_SHOW, false)
                 val keyguardManager =
                     context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-                if (!keyguardManager.isKeyguardLocked) {
-
-                    scheduler.testNotification(60)
+                if (!forceShow && !keyguardManager.isKeyguardLocked) {
+                    scheduler.scheduleNotificationWork()
                     return@launch
                 }
 
                 val word = repository.observePendingOnce()
-                
+                    ?: repository.postedOrOpenedWords.firstOrNull()?.firstOrNull()
+
                 if (word == null) {
-                     scheduler.enqueueGenerationWork()
+                    scheduler.enqueueGenerationWork()
                 } else {
-                     val shown = notificationManager.show(word)
-                    
+                    val shown = notificationManager.show(word)
+
                     if (shown) {
                         repository.markPosted(word.id)
-                     }
+                    }
                     if (repository.pendingCountOnce() < MIN_PENDING_WORDS) {
-                         scheduler.enqueueGenerationWork()
+                        scheduler.enqueueGenerationWork()
                     }
                 }
 
-                 scheduler.scheduleNotificationWork()
-                
+                scheduler.scheduleNotificationWork()
             } catch (e: Exception) {
              } finally {
                 pendingResult.finish()
