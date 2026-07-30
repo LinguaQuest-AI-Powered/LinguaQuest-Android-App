@@ -84,12 +84,12 @@ fun ReviewScreen(
         }
     }
     OfflineAwareContent(isOnline = isOnline) {
-      ReviewContent(
-        state = state,
-        onIntent = viewModel::onIntent,
-        modifier = modifier
-    )
-      }
+        ReviewStoryContent(
+            state = state,
+            onIntent = viewModel::onIntent,
+            modifier = modifier
+        )
+    }
 }
 
 

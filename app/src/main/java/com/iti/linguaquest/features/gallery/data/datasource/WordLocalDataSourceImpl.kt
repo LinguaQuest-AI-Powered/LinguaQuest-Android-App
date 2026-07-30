@@ -18,6 +18,13 @@ class WordLocalDataSourceImpl @Inject constructor(
 
     override fun getWordsWithImages(): Flow<List<WordEntity>> = wordDao.getWordsWithImages()
 
+    override suspend fun replaceWords(
+        words: List<WordEntity>
+    ): EmptyResult<LinguaQuestDataError.Local> =
+           safeDatabaseCall {
+            wordDao.replaceAllWords(words)
+        }
+
     override suspend fun getWordById(
         wordId: Int
     ): LinguaQuestResult<WordEntity?, LinguaQuestDataError.Local> =

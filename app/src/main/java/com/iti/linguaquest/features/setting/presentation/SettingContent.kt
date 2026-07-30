@@ -262,7 +262,7 @@ fun SettingContent(
                     logoutY = coordinates.boundsInWindow().top
                 },
                 text = stringResource(id = R.string.settings_log_out),
-                onClick = { guardOnline(logoutY) { } },
+                onClick = { guardOnline(logoutY) {showLogoutDialog = true } },
                 textColor = Color.Black,
                 isLoading = isLoggingOut,
              )

@@ -2,19 +2,26 @@ package com.iti.linguaquest.features.gallery.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.database.word.WordEntity
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
+import com.iti.linguaquest.features.gallery.domain.usecase.RefreshGalleryUseCase
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +29,9 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private val getWordsWithImagesUseCase: GetWordsWithImagesUseCase,
-    private val deleteWordUseCase: DeleteWordUseCase
+    private val refreshGalleryUseCase: RefreshGalleryUseCase,
+    private val deleteWordUseCase: DeleteWordUseCase,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GalleryState())
@@ -30,47 +39,49 @@ class GalleryViewModel @Inject constructor(
 
     private val _effects = Channel<GalleryEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+    val isOnline = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     init {
-        onIntent(GalleryIntent.LoadWords)
+        observeWords()
+        refreshWords()
     }
 
     fun onIntent(intent: GalleryIntent) {
         when (intent) {
-            GalleryIntent.LoadWords -> loadWords()
+            GalleryIntent.LoadWords -> refreshWords()
             is GalleryIntent.CategorySelected -> filterByCategory(intent.category)
             is GalleryIntent.DeleteWordClicked -> deleteWord(intent.word)
             is GalleryIntent.WordItemClicked -> navigateToReview(intent.wordId)
         }
     }
 
-    private fun loadWords() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorRes = null) }
+    private fun observeWords() {
+        getWordsWithImagesUseCase()
+            .onEach { words ->
+                val categories = extractCategories(words)
+                val selectedCategory = resolveSelectedCategory(
+                    selectedCategory = _state.value.selectedCategory,
+                    categories = categories
+                )
+                val filteredWords = filterWords(words, selectedCategory)
 
-
-            getWordsWithImagesUseCase()
-                .catch {
-                    _state.update { state ->
-                        state.copy(isLoading = false, errorRes = R.string.general_error)
-                    }
+                _state.update { current ->
+                    current.copy(
+                        isLoading = if (words.isNotEmpty()) false else current.isLoading,
+                        words = words,
+                        filteredWords = filteredWords,
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        errorRes = if (words.isNotEmpty()) null else current.errorRes
+                    )
                 }
-                .collect { words ->
-                    val categories = extractCategories(words)
-                    val selectedCategory = _state.value.selectedCategory
-                    val filteredWords = filterWords(words, selectedCategory)
-                    
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            words = words,
-                            categories = categories,
-                            filteredWords = filteredWords,
-                            errorRes = null
-                        )
-                    }
-                }
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun filterByCategory(category: String) {
@@ -79,6 +90,44 @@ class GalleryViewModel @Inject constructor(
                 selectedCategory = category,
                 filteredWords = filterWords(it.words, category)
             )
+        }
+    }
+
+    private fun refreshWords() {
+        viewModelScope.launch {
+            val hasCache = _state.value.words.isNotEmpty()
+            if (!hasCache) {
+                _state.update { it.copy(isLoading = true, errorRes = null) }
+            }
+
+            when (val result = refreshGalleryUseCase()) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(isLoading = false, errorRes = null) }
+                }
+
+                is LinguaQuestResult.Failure -> {
+                    val stillHasCache = _state.value.words.isNotEmpty()
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorRes = if (stillHasCache) null else result.error.toErrorRes()
+                        )
+                    }
+
+                      val isSilentOfflineWithCache =
+                        stillHasCache && result.error == LinguaQuestDataError.Remote.NO_INTERNET
+
+                    if (!isSilentOfflineWithCache) {
+                        sendEffect(
+                            GalleryEffect.ShowError(
+                                message = result.error.toUiText(),
+                                type = com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType.ERROR,
+                                retryable = true
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -102,6 +151,13 @@ class GalleryViewModel @Inject constructor(
         return listOf(ALL_ITEMS_CATEGORY) + uniqueCategories
     }
 
+    private fun resolveSelectedCategory(
+        selectedCategory: String,
+        categories: List<String>
+    ): String {
+        return if (categories.contains(selectedCategory)) selectedCategory else ALL_ITEMS_CATEGORY
+    }
+
     private fun filterWords(words: List<WordEntity>, category: String): List<WordEntity> {
         return if (category == ALL_ITEMS_CATEGORY) {
             words
@@ -109,6 +165,11 @@ class GalleryViewModel @Inject constructor(
             words.filter { it.category.equals(category, ignoreCase = true) }
         }
     }
+
+    private fun sendEffect(effect: GalleryEffect) {
+        viewModelScope.launch { _effects.send(effect) }
+    }
+
 
     companion object {
         const val ALL_ITEMS_CATEGORY = "All Items"

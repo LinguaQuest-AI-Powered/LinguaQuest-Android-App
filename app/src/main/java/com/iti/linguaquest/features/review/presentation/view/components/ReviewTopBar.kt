@@ -23,9 +23,9 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun ReviewTopBar(
-    title: String,
+    modifier: Modifier = Modifier,
+    title: String? = null,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         IconButton(
@@ -45,13 +45,15 @@ fun ReviewTopBar(
             )
         }
 
-        Text(
-            text = title,
-            modifier = Modifier.align(Alignment.Center),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        if (!title.isNullOrBlank()) {
+            Text(
+                text = title,
+                modifier = Modifier.align(Alignment.Center),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
 

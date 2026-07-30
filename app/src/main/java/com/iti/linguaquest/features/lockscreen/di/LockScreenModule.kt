@@ -4,6 +4,7 @@ import com.iti.linguaquest.features.lockscreen.data.local.LockScreenLocalDataSou
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenLocalDataSourceImpl
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenPreferencesLocalDataSource
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenPreferencesLocalDataSourceImpl
+import com.iti.linguaquest.features.lockscreen.data.remote.CoinsApiService
 import com.iti.linguaquest.features.lockscreen.data.remote.LockScreenRemoteDataSource
 import com.iti.linguaquest.features.lockscreen.data.remote.LockScreenRemoteDataSourceImpl
 import com.iti.linguaquest.features.lockscreen.data.remote.PromptBuilder
@@ -14,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -52,4 +54,9 @@ object LockScreenProvides {
     @Provides
     @Singleton
     fun providePromptBuilder(): PromptBuilder = PromptBuilder()
+
+    @Provides
+    @Singleton
+    fun provideCoinsApiService(retrofit: Retrofit): CoinsApiService =
+        retrofit.create(CoinsApiService::class.java)
 }

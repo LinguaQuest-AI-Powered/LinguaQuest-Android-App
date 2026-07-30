@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
+import com.iti.linguaquest.features.lockscreen.domain.usecase.ClaimLockScreenMilestoneRewardUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.MarkLockScreenWordOpenedUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenPendingOnceUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -26,7 +29,9 @@ class LockScreenWordDetailViewModel @Inject constructor(
      private val markOpenedUseCase: MarkLockScreenWordOpenedUseCase,
      private val generateBatchUseCase: GenerateVocabularyBatchUseCase,
      private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
+     private val claimMilestoneRewardUseCase: ClaimLockScreenMilestoneRewardUseCase,
      private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+     private val getWalletUseCase: GetWalletUseCase,
      private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
  ) : ViewModel() {
 
@@ -38,9 +43,17 @@ class LockScreenWordDetailViewModel @Inject constructor(
              initialValue = true
          )
 
+     val wallet: StateFlow<Wallet> = getWalletUseCase()
+         .stateIn(
+             scope = viewModelScope,
+             started = SharingStarted.WhileSubscribed(5_000),
+             initialValue = Wallet(xp = 0, coins = 0)
+         )
+
 
     private val _state = MutableStateFlow(LockScreenWordDetailState())
     val state: StateFlow<LockScreenWordDetailState> = _state.asStateFlow()
+    private var isClaimingMilestoneReward = false
 
     init {
         observeWords()
@@ -73,6 +86,33 @@ class LockScreenWordDetailViewModel @Inject constructor(
                         errorMessage = null
                     )
                 }
+                maybeClaimMilestoneReward(words.size)
+            }
+        }
+    }
+
+    private fun maybeClaimMilestoneReward(wordCount: Int) {
+        if (wordCount == 0) return
+        if (wordCount % 10 != 0) return
+        if (isClaimingMilestoneReward) return
+
+        isClaimingMilestoneReward = true
+        viewModelScope.launch {
+            try {
+                when (val result = claimMilestoneRewardUseCase(wordCount)) {
+                    is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(errorMessage = null) }
+                    }
+                    is LinguaQuestResult.Failure -> {
+                        _state.update {
+                            it.copy(
+                                errorMessage = com.iti.linguaquest.R.string.lockscreen_milestone_reward_error.toString()
+                            )
+                        }
+                    }
+                }
+            } finally {
+                isClaimingMilestoneReward = false
             }
         }
     }

@@ -147,7 +147,7 @@ fun LockScreenSettingsScreen(
                 StatsCard(state = state)
 
                 if (state.errorMessage != null) {
-                    ErrorCard(message = state.errorMessage.orEmpty())
+                    ErrorCard(message = state.errorMessage!!.asString(context))
                 }
 
                 val primaryLabel = when (state.featureState) {

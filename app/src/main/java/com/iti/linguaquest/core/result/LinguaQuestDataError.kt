@@ -9,6 +9,7 @@ sealed interface LinguaQuestDataError : AppError {
         NO_INTERNET,
         BAD_REQUEST,
         UNAUTHORIZED,
+        INSUFFICIENT_BALANCE,
         SERVER,
         SERIALIZATION,
         UNKNOWN,

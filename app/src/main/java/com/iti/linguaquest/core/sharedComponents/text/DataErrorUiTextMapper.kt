@@ -10,6 +10,7 @@ fun LinguaQuestDataError.toUiText(): UiText = when (this) {
     LinguaQuestDataError.Remote.BAD_REQUEST -> UiText.StringResource(R.string.error_bad_request)
     LinguaQuestDataError.Remote.UNAUTHORIZED -> UiText.StringResource(R.string.error_unauthorized)
     LinguaQuestDataError.Remote.TOO_MANY_REQUESTS -> UiText.StringResource(R.string.error_too_many_requests)
+    LinguaQuestDataError.Remote.INSUFFICIENT_BALANCE -> UiText.StringResource(R.string.error_insufficient_balance)
     LinguaQuestDataError.Remote.SERIALIZATION -> UiText.StringResource(R.string.error_generic)
     LinguaQuestDataError.Remote.EMPTY_RESULT -> UiText.StringResource(R.string.error_generic)
     LinguaQuestDataError.Remote.UNKNOWN -> UiText.StringResource(R.string.error_generic)

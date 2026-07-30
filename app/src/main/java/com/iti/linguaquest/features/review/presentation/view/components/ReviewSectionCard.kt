@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.review.presentation.view.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +36,7 @@ import com.iti.linguaquest.R
 
 @Composable
 fun ReviewSectionCard(
-    emoji: String,
+    @DrawableRes leadingIconRes: Int,
     label: String,
     content: String,
     accentColor: Color,
@@ -48,25 +50,49 @@ fun ReviewSectionCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(22.dp))
             .background(background)
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .padding(16.dp)
     ) {
-         Row(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
-            Text(text = emoji, fontSize = 16.sp)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = label,
-                color = accentColor,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                modifier = Modifier.weight(1f)
-            )
-             SpeakIconButton(
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(accentColor.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                androidx.compose.foundation.Image(
+                    painter = painterResource(id = leadingIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = label,
+                    color = accentColor,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Box(
+                    modifier = Modifier
+                        .width(34.dp)
+                        .height(2.dp)
+                        .background(accentColor, RoundedCornerShape(1.dp))
+                )
+            }
+
+            SpeakIconButton(
                 isSpeaking = isSpeaking,
                 pulseScale = pulseScale,
                 onClick = onSpeak,
@@ -75,27 +101,17 @@ fun ReviewSectionCard(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-         Box(
-            modifier = Modifier
-                .width(32.dp)
-                .height(2.dp)
-                .background(accentColor, RoundedCornerShape(1.dp))
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text = content,
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 15.sp,
             fontStyle = contentStyle,
-            lineHeight = 22.sp
+            lineHeight = 23.sp
         )
     }
 }
-
 
 @Composable
 private fun SpeakIconButton(
@@ -117,16 +133,15 @@ private fun SpeakIconButton(
             )
     ) {
         Icon(
-            imageVector = if (isSpeaking) Icons.AutoMirrored.Filled.VolumeUp
-            else Icons.AutoMirrored.Filled.VolumeOff,
-            contentDescription = if (isSpeaking)
+            imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+            contentDescription = if (isSpeaking) {
                 stringResource(R.string.review_stop_speaking_description)
-            else
-                stringResource(R.string.review_speak_description),
+            } else {
+                stringResource(R.string.review_speak_description)
+            },
             tint = if (isSpeaking) MaterialTheme.colorScheme.onTertiary
             else MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.size(iconSize)
         )
     }
 }
-

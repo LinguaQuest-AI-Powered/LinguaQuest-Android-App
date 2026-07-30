@@ -1,7 +1,6 @@
 package com.iti.linguaquest.features.lockscreen.data.repository
 
-import android.util.Log
-import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.data.local.LockScreenLocalDataSource
@@ -9,17 +8,17 @@ import com.iti.linguaquest.features.lockscreen.data.mapper.toDomain
 import com.iti.linguaquest.features.lockscreen.data.mapper.toEntity
 import com.iti.linguaquest.features.lockscreen.data.remote.LockScreenRemoteDataSource
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
+import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
+import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.first
 
 class LockScreenRepositoryImpl @Inject constructor(
     private val remoteDataSource: LockScreenRemoteDataSource,
-    private val localDataSource: LockScreenLocalDataSource,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val localDataSource: LockScreenLocalDataSource
 ) : LockScreenRepository {
 
     override val featureEnabled: Flow<Boolean> = localDataSource.featureEnabled
@@ -30,6 +29,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     override val lastTargetLanguage: Flow<String?> = localDataSource.lastTargetLanguage
     override val lastProficiencyLevel: Flow<String?> = localDataSource.lastProficiencyLevel
     override val pendingOperationId: Flow<String?> = localDataSource.pendingOperationId
+    override val lastRewardedMilestoneCount: Flow<Int?> = localDataSource.lastRewardedMilestoneCount
     override val pendingCount: Flow<Int> = localDataSource.pendingCount
     override val allWords: Flow<List<LockScreenWord>> = localDataSource.allWords().map { list -> list.map { it.toDomain() } }
     override val pendingWord: Flow<LockScreenWord?> = localDataSource.pendingWord().map { it?.toDomain() }
@@ -45,111 +45,29 @@ class LockScreenRepositoryImpl @Inject constructor(
         localDataSource.clearFeatureMetadata()
     }
 
-    override suspend fun deduceCoinsAndEnable(
-        operationId: String,
-        amount: Int
-    ): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        return try {
-            // Backend is intentionally disabled for now.
-             localDataSource.savePendingOperationId(operationId)
-            enable()
-            LinguaQuestResult.Success(Unit)
-        } catch (_: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
-        }
-    }
-
-    override suspend fun generateBatch(): LinguaQuestResult<Int, LinguaQuestDataError> {
-         val nativeLanguage = userPreferencesRepository.appLanguage.first()
-            .ifBlankOrDefault("Arabic")
-        val targetLanguage = userPreferencesRepository.targetLanguageName.first()
-            .orEmpty().ifBlank { "English" }
-        val proficiencyLevel = userPreferencesRepository.proficiencyLevel.first()
-            .orEmpty().ifBlank { "Beginner" }
-        val batchSizeValue = localDataSource.batchSize.first().takeIf { it > 0 } ?: 10
-        val excludeWords = localDataSource.getRecentWords(100)
-
-        Log.d(TAG, "generateBatch → native=$nativeLanguage, target=$targetLanguage, level=$proficiencyLevel, batch=$batchSizeValue")
-
-        return when (
-            val result = generateBatch(
-                batchSize = batchSizeValue,
-                excludeWords = excludeWords,
-                nativeLanguage = nativeLanguage,
-                targetLanguage = targetLanguage,
-                proficiencyLevel = proficiencyLevel
-            )
-        ) {
-            is LinguaQuestResult.Success -> {
-                Log.d(TAG, "generateBatch remote SUCCESS: ${result.data.size} words")
-                saveGeneratedBatch(
-                    words = result.data,
-                    nativeLanguage = nativeLanguage,
-                    targetLanguage = targetLanguage,
-                    proficiencyLevel = proficiencyLevel
-                )
-            }
-            is LinguaQuestResult.Failure -> {
-                Log.w(TAG, "generateBatch remote FAILED: ${result.error} — trying fallback")
-                val fallbackWords = buildFallbackVocabulary(
-                    targetLanguage = targetLanguage,
-                    batchSize = batchSizeValue
-                )
-
-                if (fallbackWords.isNotEmpty()) {
-                    Log.w(
-                        TAG,
-                        "Using local fallback vocabulary for $targetLanguage because remote generation failed: ${result.error}"
-                    )
-                    saveGeneratedBatch(
-                        words = fallbackWords,
-                        nativeLanguage = nativeLanguage,
-                        targetLanguage = targetLanguage,
-                        proficiencyLevel = proficiencyLevel
-                    )
-                } else {
-                    Log.e(TAG, "No fallback available for $targetLanguage — returning failure")
-                    result
-                }
-            }
-        }
-    }
-
     override suspend fun generateBatch(
-        batchSize: Int,
-        excludeWords: List<String>,
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String
+        params: VocabularyBatchParams
     ): LinguaQuestResult<List<GeneratedVocabularyWord>, LinguaQuestDataError> {
-        return remoteDataSource.generateVocabulary(
-            nativeLanguage = nativeLanguage,
-            targetLanguage = targetLanguage,
-            proficiencyLevel = proficiencyLevel,
-            batchSize = batchSize,
-            excludeWords = excludeWords
-        )
+        return remoteDataSource.generateVocabulary(params)
     }
 
     override suspend fun saveGeneratedBatch(
         words: List<GeneratedVocabularyWord>,
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String
+        params: VocabularyBatchParams
     ): LinguaQuestResult<Int, LinguaQuestDataError> {
         val entities = words.distinctBy { it.word.lowercase() }
-            .map { it.toEntity(nativeLanguage, targetLanguage, proficiencyLevel) }
+            .map { it.toEntity(params.nativeLanguage, params.targetLanguage, params.proficiencyLevel) }
         return try {
             localDataSource.insertBatch(entities)
             localDataSource.saveFeatureEnabled(true)
             localDataSource.savePendingGeneration(false)
             localDataSource.saveLastGenerationTime(System.currentTimeMillis())
-            localDataSource.saveLastNativeLanguage(nativeLanguage)
-            localDataSource.saveLastTargetLanguage(targetLanguage)
-            localDataSource.saveLastProficiencyLevel(proficiencyLevel)
+            localDataSource.saveLastNativeLanguage(params.nativeLanguage)
+            localDataSource.saveLastTargetLanguage(params.targetLanguage)
+            localDataSource.saveLastProficiencyLevel(params.proficiencyLevel)
             LinguaQuestResult.Success(entities.size)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -161,12 +79,12 @@ class LockScreenRepositoryImpl @Inject constructor(
         return try {
             localDataSource.updateStatus(
                 wordId = wordId,
-                status = com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.POSTED.name,
+                status = LockScreenWordStatus.POSTED.name,
                 postedAt = System.currentTimeMillis()
             )
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -174,11 +92,11 @@ class LockScreenRepositoryImpl @Inject constructor(
         return try {
             localDataSource.updateStatus(
                 wordId = wordId,
-                status = com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.FAILED.name
+                status = LockScreenWordStatus.FAILED.name
             )
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -186,12 +104,12 @@ class LockScreenRepositoryImpl @Inject constructor(
         return try {
             localDataSource.updateStatus(
                 wordId = wordId,
-                status = com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.OPENED.name,
+                status = LockScreenWordStatus.OPENED.name,
                 openedAt = System.currentTimeMillis()
             )
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -200,7 +118,7 @@ class LockScreenRepositoryImpl @Inject constructor(
             localDataSource.clearAll()
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -209,7 +127,7 @@ class LockScreenRepositoryImpl @Inject constructor(
             localDataSource.clearByTargetLanguage(targetLanguage)
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
@@ -221,28 +139,23 @@ class LockScreenRepositoryImpl @Inject constructor(
             localDataSource.clearByTargetLanguageAndLevel(targetLanguage, proficiencyLevel)
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
-            LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
+             LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         }
     }
 
-    override suspend fun updateFeatureMetadata(
-        enabled: Boolean,
-        pendingGeneration: Boolean,
-        operationId: String?,
-        batchSize: Int?,
-        lastGenerationTime: Long?,
-        lastNativeLanguage: String?,
-        lastTargetLanguage: String?,
-        lastProficiencyLevel: String?
-    ) {
-        localDataSource.saveFeatureEnabled(enabled)
-        localDataSource.savePendingGeneration(pendingGeneration)
-        localDataSource.savePendingOperationId(operationId)
-        if (batchSize != null) localDataSource.saveBatchSize(batchSize)
-        localDataSource.saveLastGenerationTime(lastGenerationTime)
-        localDataSource.saveLastNativeLanguage(lastNativeLanguage)
-        localDataSource.saveLastTargetLanguage(lastTargetLanguage)
-        localDataSource.saveLastProficiencyLevel(lastProficiencyLevel)
+    override suspend fun updateFeatureMetadata(metadata: LockScreenFeatureMetadata) {
+        localDataSource.saveFeatureEnabled(metadata.enabled)
+        localDataSource.savePendingGeneration(metadata.pendingGeneration)
+        localDataSource.savePendingOperationId(metadata.operationId)
+        if (metadata.batchSize != null) localDataSource.saveBatchSize(metadata.batchSize)
+        localDataSource.saveLastGenerationTime(metadata.lastGenerationTime)
+        localDataSource.saveLastNativeLanguage(metadata.lastNativeLanguage)
+        localDataSource.saveLastTargetLanguage(metadata.lastTargetLanguage)
+        localDataSource.saveLastProficiencyLevel(metadata.lastProficiencyLevel)
+    }
+
+    override suspend fun saveLastRewardedMilestoneCount(count: Int?) {
+        localDataSource.saveLastRewardedMilestoneCount(count)
     }
 
     override suspend fun recentGeneratedWords(limit: Int): List<String> {
@@ -268,7 +181,6 @@ class LockScreenRepositoryImpl @Inject constructor(
             "japanese" -> japaneseFallbackWords()
             else -> spanishFallbackWords()
         }
-
         return words.take(batchSize)
     }
 
@@ -323,12 +235,4 @@ class LockScreenRepositoryImpl @Inject constructor(
         GeneratedVocabularyWord("ともだち", "friend", "ともだち は きょう ほほえみます。"),
         GeneratedVocabularyWord("がっこう", "school", "がっこう は あいています。")
     )
-
-    private fun String?.ifBlankOrDefault(default: String): String {
-        return if (this.isNullOrBlank()) default else this
-    }
-
-    companion object {
-        private const val TAG = "LockScreenRepo"
-    }
 }

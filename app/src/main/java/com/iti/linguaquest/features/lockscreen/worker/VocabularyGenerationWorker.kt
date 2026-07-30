@@ -6,7 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -14,18 +14,18 @@ import dagger.assisted.AssistedInject
 class VocabularyGenerationWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val repository: LockScreenRepository,
+    private val generateVocabularyBatchUseCase: GenerateVocabularyBatchUseCase,
     private val scheduler: VocabularyWorkScheduler
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        return when (val result = repository.generateBatch()) {
-            is  LinguaQuestResult.Success -> {
+        return when (val result = generateVocabularyBatchUseCase()) {
+            is LinguaQuestResult.Success -> {
                 scheduler.scheduleImmediateNotification()
                 scheduler.scheduleNotificationWork()
                 Result.success()
             }
-            is  LinguaQuestResult.Failure -> {
+            is LinguaQuestResult.Failure -> {
                 if (result.error.shouldRetryAutomatically()) {
                     Result.retry()
                 } else {
@@ -51,7 +51,6 @@ class VocabularyGenerationWorker @AssistedInject constructor(
             LinguaQuestDataError.Local.CONSTRAINT_VIOLATION,
             LinguaQuestDataError.Local.UNKNOWN,
             is LinguaQuestDataError.CustomServerMessage -> false
-
             else -> false
         }
     }

@@ -58,8 +58,7 @@ class VocabularyNotificationManager @Inject constructor(
 
     fun show(word: LockScreenWord): Boolean {
         if (!notificationManager.areNotificationsEnabled()) {
-            android.util.Log.e("VocabNotification", "Notifications are disabled by the user.")
-            return false
+             return false
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,8 +67,7 @@ class VocabularyNotificationManager @Inject constructor(
                  POST_NOTIFICATIONS
             )
             if (permission !=  PERMISSION_GRANTED) {
-                android.util.Log.e("VocabNotification", "POST_NOTIFICATIONS permission not granted.")
-                return false
+                 return false
             }
         }
 

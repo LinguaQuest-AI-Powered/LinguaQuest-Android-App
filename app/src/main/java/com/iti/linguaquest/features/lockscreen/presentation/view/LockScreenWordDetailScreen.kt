@@ -41,6 +41,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
+import com.iti.linguaquest.features.lockscreen.presentation.view.component.ErrorCard
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailIntent
@@ -51,7 +52,7 @@ import com.iti.linguaquest.features.lockscreen.presentation.view.component.Vault
 import com.iti.linguaquest.features.lockscreen.presentation.viewmodel.LockScreenWordDetailViewModel
 
 private const val MILESTONE_STEP = 10
-private const val COINS_PER_MILESTONE = 100
+private const val COINS_PER_MILESTONE = 10
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +63,7 @@ fun LockScreenWordDetailScreen(
     viewModel: LockScreenWordDetailViewModel = hiltViewModel()
 ) {
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val wallet by viewModel.wallet.collectAsStateWithLifecycle()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showListMode by remember { mutableStateOf(wordId <= 0) }
@@ -71,7 +73,9 @@ fun LockScreenWordDetailScreen(
 
      LaunchedEffect(state.words.size) {
         val count = state.words.size
-        if (count > 0 && count % MILESTONE_STEP == 0 && count != lastMilestoneCount) {
+        if (count == 0) {
+            lastMilestoneCount = 0
+        } else if (count % MILESTONE_STEP == 0 && count != lastMilestoneCount) {
             lastMilestoneCount = count
             showMilestoneDialog = true
         }
@@ -95,7 +99,7 @@ fun LockScreenWordDetailScreen(
 
     Scaffold(
         topBar = {
-            CustomTopBar()
+            CustomTopBar(coins = wallet.coins)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -168,6 +172,12 @@ fun LockScreenWordDetailScreen(
                                         )
                                     )
                                 }
+                            }
+
+                            if (state.errorMessage != null) {
+                                ErrorCard(
+                                    message = state.errorMessage.orEmpty()
+                                )
                             }
 
                             if (!showListMode) {

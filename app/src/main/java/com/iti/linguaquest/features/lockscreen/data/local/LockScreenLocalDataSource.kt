@@ -12,6 +12,7 @@ interface LockScreenLocalDataSource {
     val lastTargetLanguage: Flow<String?>
     val lastProficiencyLevel: Flow<String?>
     val pendingOperationId: Flow<String?>
+    val lastRewardedMilestoneCount: Flow<Int?>
 
     fun allWords(): Flow<List<LockScreenWordEntity>>
     fun pendingWord(): Flow<LockScreenWordEntity?>
@@ -37,5 +38,6 @@ interface LockScreenLocalDataSource {
     suspend fun saveLastTargetLanguage(language: String?)
     suspend fun saveLastProficiencyLevel(level: String?)
     suspend fun savePendingOperationId(operationId: String?)
+    suspend fun saveLastRewardedMilestoneCount(count: Int?)
     suspend fun clearFeatureMetadata()
 }

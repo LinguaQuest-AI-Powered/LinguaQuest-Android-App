@@ -4,6 +4,8 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
 
+import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
+
 interface LockScreenRemoteDataSource {
     suspend fun deductCoins(
         operationId: String,
@@ -12,10 +14,6 @@ interface LockScreenRemoteDataSource {
     ): LinguaQuestResult<Unit, LinguaQuestDataError>
 
     suspend fun generateVocabulary(
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String,
-        batchSize: Int,
-        excludeWords: List<String>
+        params: VocabularyBatchParams
     ): LinguaQuestResult<List<GeneratedVocabularyWord>, LinguaQuestDataError>
 }
