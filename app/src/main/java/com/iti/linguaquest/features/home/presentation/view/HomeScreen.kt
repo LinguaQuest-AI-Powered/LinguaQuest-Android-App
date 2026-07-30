@@ -1,9 +1,6 @@
 package com.iti.linguaquest.features.home.presentation.view
 
-import androidx.compose.runtime.DisposableEffect
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -117,18 +114,7 @@ fun HomeScreen(
         onHeaderDataChanged(state.xp, state.coins)
     }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.onIntent(HomeIntent.LoadHome)
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
+
 
     LaunchedEffect(state.isDailyRewardBannerVisible) {
         if (state.isDailyRewardBannerVisible) {
