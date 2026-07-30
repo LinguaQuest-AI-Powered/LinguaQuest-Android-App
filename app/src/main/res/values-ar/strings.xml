@@ -596,6 +596,7 @@
     <string name="roleplay_read_carefully">(اقرأ بعناية بلغتك الأم قبل البدء)</string>
     <string name="roleplay_start_roleplay">بدء تبادل الأدوار</string>
     <string name="roleplay_xp">XP</string>
+    <string name="new_password_min_length_hint">6 أحرف على الأقل</string>
     <string name="roleplay_coins">العملات</string>
     <string name="roleplay_interactive_scenarios">سيناريوهات تفاعلية</string>
     <string name="roleplay_browse_roleplays">تصفح تبادل الأدوار</string>
@@ -609,7 +610,8 @@
     <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
     <string name="no_languages_available">لا توجد لغات متاحة</string>
     <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
-
+    <string name="personal_info">المعلومات الشخصية</string>
+    <string name="security">الأمان</string>
     <!-- New profile strings -->
     <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت…</string>
     <string name="offline_title">أنت غير متصل بالإنترنت</string>
