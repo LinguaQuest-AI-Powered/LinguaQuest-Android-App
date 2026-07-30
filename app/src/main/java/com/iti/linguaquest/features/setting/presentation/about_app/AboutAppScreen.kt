@@ -13,23 +13,31 @@ fun AboutAppScreen(
 ) {
     val uriHandler = LocalUriHandler.current
     val playStoreUrl = stringResource(id = R.string.about_app_play_store_url)
+    val instagramUrl = stringResource(id = R.string.about_app_instagram_url)
     val websiteUrl = stringResource(id = R.string.about_app_website_url)
-    val privacyUrl = stringResource(id = R.string.about_app_privacy_url)
     val termsUrl = stringResource(id = R.string.about_app_terms_url)
+    val privacyUrl = stringResource(id = R.string.about_app_privacy_url)
+    val licensesUrl = stringResource(id = R.string.about_app_licenses_url)
 
     AboutAppContent(
         onBackClick = onBackClick,
         onRateAppClick = {
             runCatching { uriHandler.openUri(playStoreUrl) }
         },
+        onInstagramClick = {
+            runCatching { uriHandler.openUri(instagramUrl) }
+        },
         onWebsiteClick = {
             runCatching { uriHandler.openUri(websiteUrl) }
+        },
+        onTermsClick = {
+            runCatching { uriHandler.openUri(termsUrl) }
         },
         onPrivacyClick = {
             runCatching { uriHandler.openUri(privacyUrl) }
         },
-        onTermsClick = {
-            runCatching { uriHandler.openUri(termsUrl) }
+        onLicensesClick = {
+            runCatching { uriHandler.openUri(licensesUrl) }
         },
         modifier = modifier
     )

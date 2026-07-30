@@ -630,30 +630,23 @@
     <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
 
     <!-- About App Strings -->
-    <string name="about_app_title">About App</string>
-    <string name="about_app_name">Lingua Quest</string>
-    <string name="about_app_version">v1.0 (1)</string>
-    <string name="about_app_tagline">Your AI-Powered Language Adventure</string>
-    <string name="about_app_mission_title">Our Mission</string>
-    <string name="about_app_mission_desc">Lingua Quest transforms language learning into an exhilarating journey. We combine gamified quests, interactive AI roleplays, and real-world exploration to help you master new languages naturally and confidently.</string>
-    <string name="about_app_why_title">Why Lingua Quest?</string>
-    <string name="about_app_speaking_lab_title">AI-Powered Speaking Lab</string>
-    <string name="about_app_speaking_lab_desc">Practice pronunciation with intelligent feedback and dynamic conversational roleplays.</string>
-    <string name="about_app_camera_quests_title">Camera Vocabulary Quests</string>
-    <string name="about_app_camera_quests_desc">Discover and learn new words by capturing real-world objects in your surroundings.</string>
-    <string name="about_app_gamified_title">Gamified Progression</string>
-    <string name="about_app_gamified_desc">Earn XP, collect coins, conquer boss levels, and compete on global leaderboards.</string>
-    <string name="about_app_community_title">Join Our Community</string>
-    <string name="about_app_rate_store">Rate on App Store</string>
-    <string name="about_app_official_website">Official Website</string>
-    <string name="about_app_privacy_policy">Privacy Policy</string>
+    <string name="about_app_title">About</string>
+    <string name="about_app_name">LinguaQuest</string>
+    <string name="about_app_description">LinguaQuest helps you learn languages through fun games, AI-powered lessons, and daily challenges.</string>
+    <string name="about_app_rate_app">Rate the App</string>
+    <string name="about_app_follow_instagram">Follow us on Instagram</string>
+    <string name="about_app_visit_website">Visit our Website</string>
     <string name="about_app_terms_service">Terms of Service</string>
-    <string name="about_app_footer_made_with">Made with ❤️ for language explorers around the globe.</string>
-    <string name="about_app_footer_copyright">© 2026 Lingua Quest Team. All rights reserved.</string>
+    <string name="about_app_privacy_policy">Privacy Policy</string>
+    <string name="about_app_licenses_credits">Licenses &amp; Credits</string>
+    <string name="about_app_footer_made_with">Made with 💛 by The Lingo Team</string>
+    <string name="about_app_footer_copyright">© 2026 LinguaQuest. All rights reserved.</string>
     <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
     <string name="about_app_website_url">https://linguaquest.app</string>
     <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
     <string name="about_app_terms_url">https://linguaquest.app/terms</string>
+    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
 
     <!-- Help, Support & FAQs Strings -->
     <string name="about_app_banner_title">Help &amp; Support</string>

@@ -109,28 +109,7 @@ private val LightExtraColors = LinguaQuestColors(
     DailyRewardActiveText = AppColors.DailyRewardActiveText,
     DailyRewardSubtitleText = AppColors.DailyRewardSubtitleText,
     DailyRewardInactiveLine = AppColors.DailyRewardInactiveLine,
-    DailyRewardInactiveText = AppColors.DailyRewardInactiveText,
-
-    aboutFaqTitle = AppColors.AboutFaqTitleLight,
-    aboutFaqContainerBg = AppColors.AboutFaqContainerBgLight,
-    aboutFaqBorder = AppColors.AboutFaqBorderLight,
-    aboutFaqIconBoxBg = AppColors.AboutFaqIconBoxBgLight,
-    aboutFaqButtonBg = AppColors.AboutFaqIconBoxBgLight,
-    aboutFaqButtonIconTint = AppColors.AboutFaqTitleLight,
-
-    aboutContactTitle = AppColors.AboutContactTitleLight,
-    aboutContactContainerBg = AppColors.AboutContactContainerBgLight,
-    aboutContactBorder = AppColors.AboutContactBorderLight,
-    aboutContactIconBoxBg = AppColors.AboutContactIconBoxBgLight,
-    aboutContactButtonBg = AppColors.AboutContactIconBoxBgLight,
-    aboutContactButtonIconTint = AppColors.AboutContactTitleLight,
-
-    aboutGuideTitle = AppColors.AboutGuideTitleLight,
-    aboutGuideContainerBg = AppColors.AboutGuideContainerBgLight,
-    aboutGuideBorder = AppColors.AboutGuideBorderLight,
-    aboutGuideIconBoxBg = AppColors.AboutGuideIconBoxBgLight,
-    aboutGuideButtonBg = AppColors.AboutGuideIconBoxBgLight,
-    aboutGuideButtonIconTint = AppColors.AboutGuideTitleLight
+    DailyRewardInactiveText = AppColors.DailyRewardInactiveText
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -191,28 +170,7 @@ private val DarkExtraColors = LinguaQuestColors(
     DailyRewardActiveText = AppColors.DarkDailyRewardActiveText,
     DailyRewardSubtitleText = AppColors.DarkDailyRewardSubtitleText,
     DailyRewardInactiveLine = AppColors.DarkDailyRewardInactiveLine,
-    DailyRewardInactiveText = AppColors.DarkDailyRewardInactiveText,
-
-    aboutFaqTitle = AppColors.AboutFaqTitleDark,
-    aboutFaqContainerBg = AppColors.AboutFaqContainerBgDark,
-    aboutFaqBorder = AppColors.AboutFaqBorderDark,
-    aboutFaqIconBoxBg = AppColors.AboutFaqIconBoxBgDark,
-    aboutFaqButtonBg = AppColors.AboutFaqIconBoxBgDark,
-    aboutFaqButtonIconTint = AppColors.AboutFaqTitleDark,
-
-    aboutContactTitle = AppColors.AboutContactTitleDark,
-    aboutContactContainerBg = AppColors.AboutContactContainerBgDark,
-    aboutContactBorder = AppColors.AboutContactBorderDark,
-    aboutContactIconBoxBg = AppColors.AboutContactIconBoxBgDark,
-    aboutContactButtonBg = AppColors.AboutContactIconBoxBgDark,
-    aboutContactButtonIconTint = AppColors.AboutContactTitleDark,
-
-    aboutGuideTitle = AppColors.AboutGuideTitleDark,
-    aboutGuideContainerBg = AppColors.AboutGuideContainerBgDark,
-    aboutGuideBorder = AppColors.AboutGuideBorderDark,
-    aboutGuideIconBoxBg = AppColors.AboutGuideIconBoxBgDark,
-    aboutGuideButtonBg = AppColors.AboutGuideIconBoxBgDark,
-    aboutGuideButtonIconTint = AppColors.AboutGuideTitleDark
+    DailyRewardInactiveText = AppColors.DarkDailyRewardInactiveText
 )
 
 @Composable
