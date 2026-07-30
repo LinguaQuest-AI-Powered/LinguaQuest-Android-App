@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.review.di
 
+import com.iti.linguaquest.features.review.data.datasource.ReviewRemoteDataSource
+import com.iti.linguaquest.features.review.data.datasource.ReviewRemoteDataSourceImpl
 import com.iti.linguaquest.features.review.data.repository.ReviewRepositoryImpl
 import com.iti.linguaquest.features.review.domain.repository.ReviewRepository
 import dagger.Binds
@@ -17,4 +19,14 @@ abstract class ReviewModule {
     abstract fun bindReviewRepository(
         reviewRepositoryImpl: ReviewRepositoryImpl
     ): ReviewRepository
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class ReviewDataSourceModule {
+
+        @Binds
+        abstract fun bindReviewRemoteDataSource(
+            impl: ReviewRemoteDataSourceImpl
+        ): ReviewRemoteDataSource
+    }
 }

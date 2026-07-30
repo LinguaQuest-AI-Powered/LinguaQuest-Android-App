@@ -31,7 +31,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
      private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
      private val claimMilestoneRewardUseCase: ClaimLockScreenMilestoneRewardUseCase,
      private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
-     getWalletUseCase: GetWalletUseCase,
+     private val  getWalletUseCase: GetWalletUseCase,
      private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
  ) : ViewModel() {
 
