@@ -72,6 +72,7 @@ fun SettingContent(
     onLogoutClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLockScreenVocabularyClick: () -> Unit,
+    onAboutAppClick: () -> Unit = {},
     onHelpSupportClick: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
@@ -229,7 +230,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_help_icon),
                     title = stringResource(id = R.string.settings_help_support),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { onHelpSupportClick() }
+                    onClick = { guardOnline(helpY) { } }
                 )
                 SectionDivider()
 
@@ -241,7 +242,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_info_icon),
                     title = stringResource(id = R.string.settings_about_app),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(aboutY) { } }
+                    onClick = { guardOnline(aboutY) { onAboutAppClick() } }
                 )
             }
 
