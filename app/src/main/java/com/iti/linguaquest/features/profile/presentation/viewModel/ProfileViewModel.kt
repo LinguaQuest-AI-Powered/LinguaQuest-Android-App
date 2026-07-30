@@ -84,6 +84,10 @@ class ProfileViewModel @Inject constructor(
     fun onIntent(intent: ProfileIntent) {
         when (intent) {
             ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
+            ProfileIntent.Refresh -> {
+                _state.update { it.copy(isRefreshing = true) }
+                refreshProfile()
+            }
             ProfileIntent.SettingsClicked -> sendEffect(ProfileEffect.NavigateToSettings)
             ProfileIntent.ViewAllAchievementsClicked -> sendEffect(ProfileEffect.NavigateToAllAchievements)
             ProfileIntent.ViewAllLeaderboardClicked -> sendEffect(ProfileEffect.NavigateToAllLeaderboard)
@@ -104,7 +108,7 @@ class ProfileViewModel @Inject constructor(
 
             when (val result = refreshProfileSummaryUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false, isOffline = false) }
+                    _state.update { it.copy(isLoading = false, isRefreshing = false, isOffline = false) }
                 }
 
                 is LinguaQuestResult.Failure -> {
@@ -112,6 +116,7 @@ class ProfileViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             hasError = !stillHasCache,
                             isOffline = stillHasCache && result.error.isNoInternet()
                         )

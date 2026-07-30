@@ -15,5 +15,6 @@ data class HomeState(
     val isLanguageBottomSheetVisible: Boolean = false,
     val dailyReward: DailyRewardUi? = null,
     val isDailyRewardDialogVisible: Boolean = false,
-    val isDailyRewardBannerVisible: Boolean = false
+    val isDailyRewardBannerVisible: Boolean = false,
+    val isRefreshing: Boolean = false
 )

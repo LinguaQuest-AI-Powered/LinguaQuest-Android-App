@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -31,6 +33,7 @@ import com.iti.linguaquest.features.profile.presentation.view.components.*
 import com.iti.linguaquest.features.profile.presentation.viewModel.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
@@ -89,15 +92,21 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            ProfileContent(
-                state = uiState.profile,
-                isAvatarUploading = uiState.isAvatarUploading,
-                onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                onEditAvatarClick = { guardOnline { showAvatarSheet = true }},
-                onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
-                onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
+            PullToRefreshBox(
+                isRefreshing = uiState.isRefreshing,
+                onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
                 modifier = Modifier.fillMaxSize()
-            )
+            ) {
+                ProfileContent(
+                    state = uiState.profile,
+                    isAvatarUploading = uiState.isAvatarUploading,
+                    onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
+                    onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
+                    onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
+                    onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
 
         if (showOfflinePopup) {

@@ -42,10 +42,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.core.utils.ShareTopBar
-import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
 
 @Composable
 fun HelpSupportContent(

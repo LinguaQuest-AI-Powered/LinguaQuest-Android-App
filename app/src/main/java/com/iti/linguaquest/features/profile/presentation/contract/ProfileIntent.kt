@@ -4,6 +4,7 @@ import android.net.Uri
 
 sealed interface ProfileIntent {
     data object LoadProfile : ProfileIntent
+    data object Refresh : ProfileIntent
     data object Retry : ProfileIntent
     data object SettingsClicked : ProfileIntent
     data class AvatarPicked(val uri: Uri) : ProfileIntent

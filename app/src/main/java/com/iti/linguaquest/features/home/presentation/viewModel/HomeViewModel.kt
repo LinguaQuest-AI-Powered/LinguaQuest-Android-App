@@ -66,6 +66,10 @@ class HomeViewModel @Inject constructor(
     fun onIntent(intent: HomeIntent) {
         when (intent) {
             HomeIntent.LoadHome, HomeIntent.Retry -> refreshFromRemote()
+            HomeIntent.Refresh -> {
+                _state.update { it.copy(isRefreshing = true) }
+                refreshFromRemote()
+            }
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
             HomeIntent.StartVoicePractiseClicked -> sendEffect(HomeEffect.NavigateToVoiceGame)
             HomeIntent.RoleplayCardClicked -> sendEffect(HomeEffect.NavigateToRoleplayList)
@@ -119,7 +123,7 @@ class HomeViewModel @Inject constructor(
             val homeSummaryResult = homeSummaryDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
 
-            _state.update { it.copy(isLoading = false) }
+            _state.update { it.copy(isLoading = false, isRefreshing = false) }
 
             if (homeSummaryResult is LinguaQuestResult.Success) {
                 val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()

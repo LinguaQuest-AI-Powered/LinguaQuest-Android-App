@@ -9,5 +9,6 @@ data class ProfileUiState(
     val hasCachedData: Boolean = false,
     val hasError: Boolean = false,
     val isAvatarUploading: Boolean = false,
-    val isOffline: Boolean = false
+    val isOffline: Boolean = false,
+    val isRefreshing: Boolean = false
 )
