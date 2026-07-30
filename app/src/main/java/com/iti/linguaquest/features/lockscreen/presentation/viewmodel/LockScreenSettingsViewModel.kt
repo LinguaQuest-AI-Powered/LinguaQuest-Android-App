@@ -14,6 +14,7 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.DisableLockScreenV
 import com.iti.linguaquest.features.lockscreen.domain.usecase.EnableLockScreenVocabularyUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.EnqueueGenerationWorkUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GenerateVocabularyBatchUseCase
+import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenMetadata
 import com.iti.linguaquest.features.lockscreen.domain.usecase.LockScreenUserPreferences
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenSettingsMetadataUseCase
@@ -177,12 +178,14 @@ class LockScreenSettingsViewModel @Inject constructor(
                     if (currentNativeLanguage != null && currentTargetLanguage != null && currentProficiencyLevel != null) {
                         clearWordsUseCase()
                         updateMetadataUseCase(
-                            enabled = true,
-                            pendingGeneration = true,
-                            batchSize = 30,
-                            lastNativeLanguage = currentNativeLanguage,
-                            lastTargetLanguage = currentTargetLanguage,
-                            lastProficiencyLevel = currentProficiencyLevel
+                            LockScreenFeatureMetadata(
+                                enabled = true,
+                                pendingGeneration = true,
+                                batchSize = 30,
+                                lastNativeLanguage = currentNativeLanguage,
+                                lastTargetLanguage = currentTargetLanguage,
+                                lastProficiencyLevel = currentProficiencyLevel
+                            )
                         )
                         enqueueGenerationWorkUseCase()
                         _state.update {
@@ -269,9 +272,11 @@ class LockScreenSettingsViewModel @Inject constructor(
                     when (val generationResult = generateUseCase()) {
                         is LinguaQuestResult.Success -> {
                             updateMetadataUseCase(
-                                enabled = true,
-                                pendingGeneration = false,
-                                operationId = null
+                                LockScreenFeatureMetadata(
+                                    enabled = true,
+                                    pendingGeneration = false,
+                                    operationId = null
+                                )
                             )
                             scheduleNotificationUseCase(immediate = true)
                             _state.update {
@@ -288,9 +293,11 @@ class LockScreenSettingsViewModel @Inject constructor(
                         is LinguaQuestResult.Failure -> {
                             val shouldRetry = generationResult.error.shouldRetryAutomatically()
                             updateMetadataUseCase(
-                                enabled = true,
-                                pendingGeneration = true,
-                                operationId = operationId
+                                LockScreenFeatureMetadata(
+                                    enabled = true,
+                                    pendingGeneration = true,
+                                    operationId = operationId
+                                )
                             )
                             if (shouldRetry) {
                                 enqueueGenerationWorkUseCase()
@@ -356,9 +363,11 @@ class LockScreenSettingsViewModel @Inject constructor(
             when (val result = generateUseCase()) {
                 is LinguaQuestResult.Success -> {
                     updateMetadataUseCase(
-                        enabled = true,
-                        pendingGeneration = false,
-                        operationId = null
+                        LockScreenFeatureMetadata(
+                            enabled = true,
+                            pendingGeneration = false,
+                            operationId = null
+                        )
                     )
                     scheduleNotificationUseCase(immediate = true)
                     _state.update {
@@ -372,8 +381,10 @@ class LockScreenSettingsViewModel @Inject constructor(
                 is LinguaQuestResult.Failure -> {
                     val shouldRetry = result.error.shouldRetryAutomatically()
                     updateMetadataUseCase(
-                        enabled = true,
-                        pendingGeneration = true
+                        LockScreenFeatureMetadata(
+                            enabled = true,
+                            pendingGeneration = true
+                        )
                     )
                     if (shouldRetry) {
                         enqueueGenerationWorkUseCase()

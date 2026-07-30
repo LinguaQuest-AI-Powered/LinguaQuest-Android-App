@@ -27,7 +27,7 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     }
 
     override fun scheduleNotificationWork() {
-         scheduleAlarm(15 * 60 * 1000L)
+        scheduleAlarm(15 * 1000L)
     }
 
     private fun scheduleAlarm(delayMillis: Long, requestCode: Int = ALARM_REQUEST_CODE) {
@@ -40,7 +40,7 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
+
         val triggerAt = System.currentTimeMillis() + delayMillis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {

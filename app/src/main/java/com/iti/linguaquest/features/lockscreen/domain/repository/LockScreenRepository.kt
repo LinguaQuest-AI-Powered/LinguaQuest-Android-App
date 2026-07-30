@@ -3,8 +3,11 @@ package com.iti.linguaquest.features.lockscreen.domain.repository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
+import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import kotlinx.coroutines.flow.Flow
+
+import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
 
 interface LockScreenRepository {
     val featureEnabled: Flow<Boolean>
@@ -23,20 +26,12 @@ interface LockScreenRepository {
 
     suspend fun enable()
     suspend fun disable()
-    suspend fun deduceCoinsAndEnable(operationId: String, amount: Int = 50): LinguaQuestResult<Unit, LinguaQuestDataError>
-    suspend fun generateBatch(): LinguaQuestResult<Int, LinguaQuestDataError>
     suspend fun generateBatch(
-        batchSize: Int,
-        excludeWords: List<String>,
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String
+        params: VocabularyBatchParams
     ): LinguaQuestResult<List<GeneratedVocabularyWord>, LinguaQuestDataError>
     suspend fun saveGeneratedBatch(
         words: List<GeneratedVocabularyWord>,
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String
+        params: VocabularyBatchParams
     ): LinguaQuestResult<Int, LinguaQuestDataError>
     suspend fun getWordById(wordId: Int): LockScreenWord?
     suspend fun markPosted(wordId: Int): LinguaQuestResult<Unit, LinguaQuestDataError>
@@ -48,16 +43,7 @@ interface LockScreenRepository {
         targetLanguage: String,
         proficiencyLevel: String
     ): LinguaQuestResult<Unit, LinguaQuestDataError>
-    suspend fun updateFeatureMetadata(
-        enabled: Boolean,
-        pendingGeneration: Boolean,
-        operationId: String? = null,
-        batchSize: Int? = null,
-        lastGenerationTime: Long? = null,
-        lastNativeLanguage: String? = null,
-        lastTargetLanguage: String? = null,
-        lastProficiencyLevel: String? = null
-    )
+    suspend fun updateFeatureMetadata(metadata: LockScreenFeatureMetadata)
     suspend fun saveLastRewardedMilestoneCount(count: Int?)
     suspend fun recentGeneratedWords(limit: Int = 100): List<String>
     suspend fun pendingCountOnce(): Int

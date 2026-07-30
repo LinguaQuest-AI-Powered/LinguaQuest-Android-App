@@ -11,6 +11,7 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.data.remote.dto.DeductCoinsRequestDto
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
+import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
 import jakarta.inject.Inject
 import org.json.JSONArray
 import org.json.JSONObject
@@ -48,25 +49,13 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun generateVocabulary(
-        nativeLanguage: String,
-        targetLanguage: String,
-        proficiencyLevel: String,
-        batchSize: Int,
-        excludeWords: List<String>
+        params: VocabularyBatchParams
     ): LinguaQuestResult<List<GeneratedVocabularyWord>, LinguaQuestDataError> {
         return try {
-            val prompt = promptBuilder.build(
-                nativeLanguage = nativeLanguage,
-                targetLanguage = targetLanguage,
-                proficiencyLevel = proficiencyLevel,
-                batchSize = batchSize,
-                excludeWords = excludeWords
-            )
+            val prompt = promptBuilder.build(params)
              val response = model.generateContent(prompt)
             val text = response.text
-             if (text == null) {
-                 return LinguaQuestResult.Failure(LinguaQuestDataError.Remote.EMPTY_RESULT)
-            }
+                ?: return LinguaQuestResult.Failure(LinguaQuestDataError.Remote.EMPTY_RESULT)
             val parsed = parseResponse(text)
              if (parsed.isEmpty()) {
                  LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)

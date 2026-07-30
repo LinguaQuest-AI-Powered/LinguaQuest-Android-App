@@ -42,44 +42,33 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
             try {
                 val isFeatureEnabled = repository.featureEnabled.first()
                 if (!isFeatureEnabled) return@launch
-          val keyguardManager =
+                val keyguardManager =
                     context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
                 if (!keyguardManager.isKeyguardLocked) {
-                    android.util.Log.d(
-                        "VocabReceiver",
-                        "Device is unlocked — skipping this cycle, rescheduling."
-                    )
-                    scheduler.scheduleNotificationWork()
+
+                    scheduler.testNotification(60)
                     return@launch
                 }
 
                 val word = repository.observePendingOnce()
                 
                 if (word == null) {
-                    Log.d("VocabReceiver", "No pending words found, enqueueing generation.")
-                    scheduler.enqueueGenerationWork()
+                     scheduler.enqueueGenerationWork()
                 } else {
-                     Log.d("VocabReceiver", "Found word to show: ${word.word}")
-                    val shown = notificationManager.show(word)
+                     val shown = notificationManager.show(word)
                     
                     if (shown) {
                         repository.markPosted(word.id)
-                        Log.d("VocabReceiver", "Notification shown successfully for: ${word.word}")
-                    } else {
-                       Log.e("VocabReceiver", "Failed to show notification. Check permissions.")
-                    }
-
+                     }
                     if (repository.pendingCountOnce() < MIN_PENDING_WORDS) {
-                         Log.d("VocabReceiver", "Pending count low, enqueueing generation.")
-                        scheduler.enqueueGenerationWork()
+                         scheduler.enqueueGenerationWork()
                     }
                 }
 
                  scheduler.scheduleNotificationWork()
                 
             } catch (e: Exception) {
-                android.util.Log.e("VocabReceiver", "Error in onReceive", e)
-            } finally {
+             } finally {
                 pendingResult.finish()
             }
         }
