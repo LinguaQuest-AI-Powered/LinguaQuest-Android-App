@@ -53,7 +53,7 @@ fun LeaderboardContent(
                 val layoutInfo = listState.layoutInfo
                 val totalItems = layoutInfo.totalItemsCount
                 val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                totalItems > 0 && lastVisibleIndex >= totalItems - 3
+                totalItems > 0 && lastVisibleIndex >= totalItems - 1
             }
         }
     }

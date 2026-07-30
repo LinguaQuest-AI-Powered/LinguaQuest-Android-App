@@ -9,7 +9,7 @@ data class LeaderboardState(
     val leaderboard: Leaderboard? = null,
     val scope: LeaderboardScope = LeaderboardScope.GLOBAL,
     val languageId: Int? = null,
-    val currentPage: Int = 1,
+    val currentPage: Int = 0,
     val endReached: Boolean = false,
     val errorMessage: String? = null
 )

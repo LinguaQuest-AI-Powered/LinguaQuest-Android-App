@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.utils.ImageWrapper
- import kotlinx.coroutines.delay
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardEntry
 
@@ -34,8 +34,10 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int) {
 
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        val baseDelay = 2100L
-        val itemDelay = if (index < 10) baseDelay + (index * 150L) else 0L
+        val baseDelay = 1600L
+        val staggerStep = 40L
+        val maxStaggeredIndex = 15
+        val itemDelay = baseDelay + (index.coerceAtMost(maxStaggeredIndex)) * staggerStep
         delay(itemDelay.milliseconds)
         visible = true
     }
