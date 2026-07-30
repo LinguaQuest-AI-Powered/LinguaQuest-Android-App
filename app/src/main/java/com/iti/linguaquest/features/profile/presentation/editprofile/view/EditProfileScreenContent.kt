@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -45,8 +46,6 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.view.compon
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.ChangePhotoButton
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.DisplayNameTrailingIcon
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.EditableAvatar
-import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.InfoNote
-import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.PrimaryActionButton
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.ProfileInputCard
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.SecondaryTextButton
 import com.iti.linguaquest.features.profile.presentation.view.components.AvatarPickerBottomSheet
@@ -112,7 +111,7 @@ fun EditProfileScreenContent(
                     .background(LinguaQuestTheme.colors.textFieldFill)
                     .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-                PrimaryActionButton(
+                AppButton3D(
                     text = stringResource(R.string.save_changes),
                     onClick = onSaveClick,
                     isLoading = if (selectedTab == EditProfileTab.PERSONAL_INFO) isSavingName else isSavingPassword,
@@ -226,9 +225,7 @@ fun EditProfileScreenContent(
                                 contentScale = ContentScale.Fit
                             )
 
-                            Spacer(modifier = Modifier.height(30.dp))
-                            InfoNote(text = stringResource(R.string.profile_visibility_note))
-                        }
+                          }
                     }
                     EditProfileTab.SECURITY -> {
                         Column {

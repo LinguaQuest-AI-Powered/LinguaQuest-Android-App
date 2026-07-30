@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -39,7 +40,6 @@ import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
-import com.iti.linguaquest.features.setting.presentation.components.AppButton3D
 import com.iti.linguaquest.features.setting.presentation.components.DailyReminderSection
 import com.iti.linguaquest.features.setting.presentation.components.EnableLockScreenDialog
 import com.iti.linguaquest.features.setting.presentation.components.LanguageSelectionBottomSheet
