@@ -16,7 +16,9 @@ import androidx.compose.ui.unit.dp
 fun DailyRewardCard(
     modifier: Modifier = Modifier,
     currentDay: Int = 3,
+    cycleLength: Int = 5,
     rewardAmount: Int = 50,
+    rewardXp: Int? = null,
     onClaimClick: () -> Unit = {}
 ) {
     val gradientBrush = Brush.verticalGradient(
@@ -48,11 +50,11 @@ fun DailyRewardCard(
 
                 Spacer(modifier = Modifier.height(48.dp))
 
-                DailyRewardTimeline(currentDay = currentDay)
+                DailyRewardTimeline(currentDay = currentDay, cycleLength = cycleLength)
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                RewardAmountBadge(rewardAmount = rewardAmount)
+                RewardAmountBadge(rewardAmount = rewardAmount, rewardXp = rewardXp)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -67,6 +69,6 @@ fun DailyRewardCard(
 @Composable
 fun DailyRewardCardPreview() {
     Box(modifier = Modifier.padding(16.dp)) {
-        DailyRewardCard(currentDay = 10, rewardAmount = 50)
+        DailyRewardCard(currentDay = 3, cycleLength = 5, rewardAmount = 50, rewardXp = 20)
     }
 }

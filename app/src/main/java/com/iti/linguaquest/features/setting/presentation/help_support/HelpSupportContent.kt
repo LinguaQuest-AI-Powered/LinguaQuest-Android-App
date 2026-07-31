@@ -46,6 +46,7 @@ import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 
 @Composable
 fun HelpSupportContent(

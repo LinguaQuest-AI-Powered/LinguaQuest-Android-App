@@ -6,11 +6,15 @@ import com.iti.linguaquest.features.home.domain.model.DailyRewardStatus
 data class DailyRewardUi(
     val claimedToday: Boolean,
     val currentDay: Int,
-    val rewardCoins: Int
+    val cycleLength: Int,
+    val rewardCoins: Int,
+    val rewardXp: Int? = null
 )
 
 fun DailyRewardStatus.toUi() = DailyRewardUi(
     claimedToday = claimedToday,
     currentDay = currentDay,
-    rewardCoins = rewardCoins
+    cycleLength = cycleLength,
+    rewardCoins = rewardCoins,
+    rewardXp = rewardXp
 )
