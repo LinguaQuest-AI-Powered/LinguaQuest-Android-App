@@ -520,7 +520,7 @@
     <string name="lockscreen_error_no_internet">We could not generate words right now. Please try again later.</string>
     <string name="lockscreen_error_bad_format">The AI response was not in the expected format. Please try again later.</string>
     <string name="lockscreen_error_generate_failed">Failed to generate new words. Please try again.</string>
-    <string name="voice_game_title">Pronunciation Practice</string>
+    <string name="voice_game_title">Pronunciation</string>
     <string name="voice_evaluating">Evaluating Pronunciation…</string>
     <string name="listening_to_your_pronunciation">Listening carefully to your speech.</string>
     <string name="voice_idle_yo_can_do_it">You can do it!</string>

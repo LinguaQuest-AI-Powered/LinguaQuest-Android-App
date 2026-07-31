@@ -31,6 +31,7 @@ fun RoleplayScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -69,6 +70,7 @@ fun RoleplayScreen(
     ) {
         RoleplayContent(
             state = state,
+            coins = wallet.coins,
             onIntent = viewModel::onIntent,
             onStartBossStage = {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {

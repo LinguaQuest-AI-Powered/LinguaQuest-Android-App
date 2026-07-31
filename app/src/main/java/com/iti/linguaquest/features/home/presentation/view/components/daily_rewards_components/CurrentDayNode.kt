@@ -76,7 +76,7 @@ fun CurrentDayNode() {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_doller),
+                    painter = painterResource(id = R.drawable.ic_coin),
                     contentDescription = stringResource(id = R.string.cd_current),
                     tint = LinguaQuestTheme.colors.whiteColor,
                     modifier = Modifier.size(16.dp)

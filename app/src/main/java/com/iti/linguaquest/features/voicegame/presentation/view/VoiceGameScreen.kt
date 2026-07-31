@@ -11,6 +11,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.formatCompact
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,7 +43,7 @@ import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameInt
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGamePhase
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.RecordingConfirmationDialog
-import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceGameTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.EvaluatingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.IdlePhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.view.contents.RecordingPhaseContent
@@ -83,10 +99,13 @@ fun VoiceGameScreen(
         isOnline = isOnline,
         modifier = modifier.fillMaxSize()
     ) {
-    Column(modifier = modifier.fillMaxSize().padding(vertical = 25.dp)) {
-        VoiceGameTopBar(
-            coins = wallet.coins,
-            onNavigateBack = onNavigateBack
+    Column(modifier = modifier.fillMaxSize()) {
+        LinguaQuestScreenTopBar(
+            title = stringResource(id = R.string.voice_game_title),
+            onBackClicked = onNavigateBack,
+            showDivider = true,
+            showCoins = true,
+            coinsCount = wallet.coins
         )
 
             Column(

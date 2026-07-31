@@ -101,7 +101,7 @@ private fun FallingCoinItem(
             .rotate(rotation)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_doller),
+            painter = painterResource(id = R.drawable.ic_coin),
             contentDescription = null,
             modifier = Modifier.size(coin.sizeDp.dp)
         )

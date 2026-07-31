@@ -27,17 +27,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.formatCompact
 
 
 @Composable
 fun LinguaQuestTopAppBar(
     xp: Int,
-    lives: Int,
+    coins: Int,
     modifier: Modifier = Modifier
 ) {
     val animatedXp by animateIntAsState(
@@ -45,8 +47,8 @@ fun LinguaQuestTopAppBar(
         animationSpec = tween(durationMillis = 600),
         label = "xpAnim"
     )
-    val animatedLives by animateIntAsState(
-        targetValue = lives,
+    val animatedCoins by animateIntAsState(
+        targetValue = coins,
         animationSpec = tween(durationMillis = 600),
         label = "livesAnim"
     )
@@ -65,7 +67,10 @@ fun LinguaQuestTopAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-         Row(verticalAlignment = Alignment.CenterVertically) {
+         Row(
+             modifier = Modifier.weight(1f),
+             verticalAlignment = Alignment.CenterVertically
+         ) {
 
             Image(
                 painter = painterResource(id = R.drawable.lingo_app_bar),
@@ -88,11 +93,14 @@ fun LinguaQuestTopAppBar(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
-                letterSpacing = (-0.3).sp
+                letterSpacing = (-0.3).sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
          Row(
+            modifier = Modifier.padding(start = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -102,8 +110,8 @@ fun LinguaQuestTopAppBar(
                 textColor = MaterialTheme.colorScheme.onSurface
             )
             StatChip(
-                iconRes = R.drawable.ic_doller,
-                value = animatedLives,
+                iconRes = R.drawable.ic_coin,
+                value = animatedCoins,
                 textColor = MaterialTheme.colorScheme.onSurface
             )
         }
@@ -132,10 +140,12 @@ private fun StatChip(
             modifier = Modifier.size(18.dp)
         )
         Text(
-            text = value.toString(),
+            text = value.formatCompact(),
             color = textColor,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -145,7 +155,7 @@ private fun StatChip(
 @Composable
 private fun LinguaQuestTopAppBarPreview() {
     LinguaQuestTheme {
-        LinguaQuestTopAppBar(xp = 1250, lives = 45)
+        LinguaQuestTopAppBar(xp = 1250, coins = 45)
     }
 }
 
