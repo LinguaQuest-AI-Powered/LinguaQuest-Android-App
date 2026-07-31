@@ -34,25 +34,27 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 
-private val NODE_VERTICAL_SPACING = 200.dp
-private val TOP_PADDING = 100.dp
-private val BOTTOM_PADDING = 100.dp
-private val NODE_SIZE = 100.dp
-private val HORIZONTAL_MARGIN = 60.dp
+private object MapDefaults {
+    val NODE_VERTICAL_SPACING = 200.dp
+    val TOP_PADDING = 100.dp
+    val BOTTOM_PADDING = 100.dp
+    val NODE_SIZE = 100.dp
+    val HORIZONTAL_MARGIN = 60.dp
+}
 
 private fun computeNodePositions(levelCount: Int, leftX: Dp, rightX: Dp): List<Pair<Dp, Dp>> {
     if (levelCount == 0) return emptyList()
-    val totalHeight = TOP_PADDING + BOTTOM_PADDING + (NODE_VERTICAL_SPACING * (levelCount - 1))
+    val totalHeight = MapDefaults.TOP_PADDING + MapDefaults.BOTTOM_PADDING + (MapDefaults.NODE_VERTICAL_SPACING * (levelCount - 1))
     return List(levelCount) { index ->
         val x = if (index % 2 == 0) rightX else leftX
-        val y = totalHeight - BOTTOM_PADDING - (NODE_VERTICAL_SPACING * index)
+        val y = totalHeight - MapDefaults.BOTTOM_PADDING - (MapDefaults.NODE_VERTICAL_SPACING * index)
         x to y
     }
 }
 
 private fun computeMapHeight(levelCount: Int): Dp {
     if (levelCount == 0) return 600.dp
-    return TOP_PADDING + BOTTOM_PADDING + (NODE_VERTICAL_SPACING * (levelCount - 1)) + 100.dp
+    return MapDefaults.TOP_PADDING + MapDefaults.BOTTOM_PADDING + (MapDefaults.NODE_VERTICAL_SPACING * (levelCount - 1)) + 100.dp
 }
 
 @Composable
@@ -71,8 +73,8 @@ fun MapContent(
 
             var viewportHeightPx by remember { mutableIntStateOf(0) }
 
-            val leftX = HORIZONTAL_MARGIN
-            val rightX = availableWidth - NODE_SIZE - HORIZONTAL_MARGIN
+            val leftX = MapDefaults.HORIZONTAL_MARGIN
+            val rightX = availableWidth - MapDefaults.NODE_SIZE - MapDefaults.HORIZONTAL_MARGIN
 
             val nodePositions = remember(state.levels.size, leftX, rightX) {
                 computeNodePositions(state.levels.size, leftX, rightX)

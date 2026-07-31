@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
-
 @Composable
 fun RewardAmountBadge(
     modifier: Modifier = Modifier,
@@ -36,62 +35,54 @@ fun RewardAmountBadge(
         horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
-                .padding(horizontal = 24.dp, vertical = 12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_doller),
-                    contentDescription = stringResource(id = R.string.cd_coin),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.DailyRewardBadgeText
-                    )
-                )
-            }
-        }
+        RewardBadgeItem(
+            iconRes = R.drawable.ic_doller,
+            contentDescriptionRes = R.string.cd_coin,
+            text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount)
+        )
 
         if (rewardXp != null && rewardXp > 0) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_xp),
-                        contentDescription = stringResource(id = R.string.cd_xp),
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = R.string.daily_reward_xp_format, rewardXp),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.DailyRewardBadgeText
-                        )
-                    )
-                }
-            }
+            RewardBadgeItem(
+                iconRes = R.drawable.ic_xp,
+                contentDescriptionRes = R.string.cd_xp,
+                text = stringResource(id = R.string.daily_reward_xp_format, rewardXp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun RewardBadgeItem(
+    modifier: Modifier = Modifier,
+    iconRes: Int,
+    contentDescriptionRes: Int,
+    text: String
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
+            .padding(horizontal = 24.dp, vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = stringResource(id = contentDescriptionRes),
+                tint = Color.Unspecified,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = LinguaQuestTheme.colors.DailyRewardBadgeText
+                )
+            )
         }
     }
 }

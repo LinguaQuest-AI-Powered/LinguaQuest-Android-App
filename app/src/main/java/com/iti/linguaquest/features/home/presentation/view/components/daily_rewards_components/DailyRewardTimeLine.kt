@@ -26,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
@@ -66,7 +68,7 @@ fun DailyRewardTimeline(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
-        val isRtl = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
+        val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
@@ -84,7 +86,7 @@ fun DailyRewardTimeline(
                 cap = StrokeCap.Round
             )
 
-            if (activeNodesCount > 0) {
+            if (activeNodesCount > 0 && totalNodes > 1) {
                 val segmentWidth = size.width / (totalNodes - 1)
                 val activeEnd = segmentWidth * activeNodesCount * animatedLineProgress
                 drawLine(
