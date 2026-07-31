@@ -1,0 +1,376 @@
+{
+  "attributes": [
+    {
+      "id": "is_food",
+      "question": {
+        "ar": "هل هو طعام؟",
+        "en": "Is it food?",
+        "es": "¿Es comida?",
+        "de": "Ist es Essen?",
+        "it": "È cibo?",
+        "fr": "Est-ce de la nourriture ?",
+        "pt": "É comida?"
+      }
+    },
+    {
+      "id": "is_drink",
+      "question": {
+        "ar": "هل هو مشروب؟",
+        "en": "Is it a drink?",
+        "es": "¿Es una bebida?",
+        "de": "Ist es ein Getränk?",
+        "it": "È una bevanda?",
+        "fr": "Est-ce une boisson ?",
+        "pt": "É uma bebida?"
+      }
+    },
+    {
+      "id": "is_animal",
+      "question": {
+        "ar": "هل هو حيوان؟",
+        "en": "Is it an animal?",
+        "es": "¿Es un animal?",
+        "de": "Ist es ein Tier?",
+        "it": "È un animale?",
+        "fr": "Est-ce un animal ?",
+        "pt": "É um animal?"
+      }
+    },
+    {
+      "id": "is_person",
+      "question": {
+        "ar": "هل هو شخص؟",
+        "en": "Is it a person?",
+        "es": "¿Es una persona?",
+        "de": "Ist es eine Person?",
+        "it": "È una persona?",
+        "fr": "Est-ce une personne ?",
+        "pt": "É uma pessoa?"
+      }
+    },
+    {
+      "id": "is_red",
+      "question": {
+        "ar": "هل لونه أحمر؟",
+        "en": "Is it red?",
+        "es": "¿Es rojo?",
+        "de": "Ist es rot?",
+        "it": "È rosso?",
+        "fr": "Est-ce rouge ?",
+        "pt": "É vermelho?"
+      }
+    },
+    {
+      "id": "is_green",
+      "question": {
+        "ar": "هل لونه أخضر؟",
+        "en": "Is it green?",
+        "es": "¿Es verde?",
+        "de": "Ist es grün?",
+        "it": "È verde?",
+        "fr": "Est-ce vert ?",
+        "pt": "É verde?"
+      }
+    },
+    {
+      "id": "is_round",
+      "question": {
+        "ar": "هل هو دائري؟",
+        "en": "Is it round?",
+        "es": "¿Es redondo?",
+        "de": "Ist es rund?",
+        "it": "È rotondo?",
+        "fr": "Est-ce rond ?",
+        "pt": "É redondo?"
+      }
+    },
+    {
+      "id": "is_soft",
+      "question": {
+        "ar": "هل هو لين؟",
+        "en": "Is it soft?",
+        "es": "¿Es suave?",
+        "de": "Ist es weich?",
+        "it": "È morbido?",
+        "fr": "Est-ce doux ?",
+        "pt": "É macio?"
+      }
+    },
+    {
+      "id": "is_hard",
+      "question": {
+        "ar": "هل هو صلب؟",
+        "en": "Is it hard?",
+        "es": "¿Es duro?",
+        "de": "Ist es hart?",
+        "it": "È duro?",
+        "fr": "Est-ce dur ?",
+        "pt": "É duro?"
+      }
+    },
+    {
+      "id": "made_of_metal",
+      "question": {
+        "ar": "هل هو مصنوع من معدن؟",
+        "en": "Is it made of metal?",
+        "es": "¿Está hecho de metal?",
+        "de": "Ist es aus Metall?",
+        "it": "È fatto di metallo?",
+        "fr": "Est-ce en métal ?",
+        "pt": "É feito de metal?"
+      }
+    },
+    {
+      "id": "made_of_wood",
+      "question": {
+        "ar": "هل هو مصنوع من خشب؟",
+        "en": "Is it made of wood?",
+        "es": "¿Está hecho de madera?",
+        "de": "Ist es aus Holz?",
+        "it": "È fatto di legno?",
+        "fr": "Est-ce en bois ?",
+        "pt": "É feito de madeira?"
+      }
+    },
+    {
+      "id": "made_of_plastic",
+      "question": {
+        "ar": "هل هو مصنوع من بلاستيك؟",
+        "en": "Is it made of plastic?",
+        "es": "¿Está hecho de plástico?",
+        "de": "Ist es aus Plastik?",
+        "it": "È fatto di plastica?",
+        "fr": "Est-ce en plastique ?",
+        "pt": "É feito de plástico?"
+      }
+    },
+    {
+      "id": "electric",
+      "question": {
+        "ar": "هل يعمل بالكهرباء؟",
+        "en": "Does it use electricity?",
+        "es": "¿Usa electricidad?",
+        "de": "Braucht es Strom?",
+        "it": "Usa elettricità?",
+        "fr": "Utilise-t-il l'électricité ?",
+        "pt": "Usa eletricidade?"
+      }
+    },
+    {
+      "id": "can_cut",
+      "question": {
+        "ar": "هل يمكنه القطع؟",
+        "en": "Can it cut things?",
+        "es": "¿Puede cortar cosas?",
+        "de": "Kann es Dinge schneiden?",
+        "it": "Può tagliare?",
+        "fr": "Peut-il couper des choses ?",
+        "pt": "Pode cortar coisas?"
+      }
+    },
+    {
+      "id": "can_move",
+      "question": {
+        "ar": "هل يمكنه التحرك؟",
+        "en": "Can it move?",
+        "es": "¿Puede moverse?",
+        "de": "Kann es sich bewegen?",
+        "it": "Può muoversi?",
+        "fr": "Peut-il bouger ?",
+        "pt": "Pode se mover?"
+      }
+    },
+    {
+      "id": "can_fly",
+      "question": {
+        "ar": "هل يمكنه الطيران؟",
+        "en": "Can it fly?",
+        "es": "¿Puede volar?",
+        "de": "Kann es fliegen?",
+        "it": "Può volare?",
+        "fr": "Peut-il voler ?",
+        "pt": "Pode voar?"
+      }
+    },
+    {
+      "id": "can_swim",
+      "question": {
+        "ar": "هل يمكنه السباحة؟",
+        "en": "Can it swim?",
+        "es": "¿Puede nadar?",
+        "de": "Kann es schwimmen?",
+        "it": "Può nuotare?",
+        "fr": "Peut-il nager ?",
+        "pt": "Pode nadar?"
+      }
+    },
+    {
+      "id": "has_wheels",
+      "question": {
+        "ar": "هل لديه عجلات؟",
+        "en": "Does it have wheels?",
+        "es": "¿Tiene ruedas?",
+        "de": "Hat es Räder?",
+        "it": "Ha ruote?",
+        "fr": "A-t-il des roues ?",
+        "pt": "Tem rodas?"
+      }
+    },
+    {
+      "id": "used_for_cooking",
+      "question": {
+        "ar": "هل يُستخدم في الطبخ؟",
+        "en": "Is it used for cooking?",
+        "es": "¿Se usa para cocinar?",
+        "de": "Wird es zum Kochen benutzt?",
+        "it": "Si usa per cucinare?",
+        "fr": "Est-ce utilisé pour cuisiner ?",
+        "pt": "É usado para cozinhar?"
+      }
+    },
+    {
+      "id": "used_for_cleaning",
+      "question": {
+        "ar": "هل يُستخدم في التنظيف؟",
+        "en": "Is it used for cleaning?",
+        "es": "¿Se usa para limpiar?",
+        "de": "Wird es zum Reinigen benutzt?",
+        "it": "Si usa per pulire?",
+        "fr": "Est-ce utilisé pour nettoyer ?",
+        "pt": "É usado para limpar?"
+      }
+    },
+    {
+      "id": "used_for_writing",
+      "question": {
+        "ar": "هل يُستخدم في الكتابة؟",
+        "en": "Is it used for writing?",
+        "es": "¿Se usa para escribir?",
+        "de": "Wird es zum Schreiben benutzt?",
+        "it": "Si usa per scrivere?",
+        "fr": "Est-ce utilisé pour écrire ?",
+        "pt": "É usado para escrever?"
+      }
+    },
+    {
+      "id": "is_vehicle",
+      "question": {
+        "ar": "هل هو مركبة؟",
+        "en": "Is it a vehicle?",
+        "es": "¿Es un vehículo?",
+        "de": "Ist es ein Fahrzeug?",
+        "it": "È un veicolo?",
+        "fr": "Est-ce un véhicule ?",
+        "pt": "É um veículo?"
+      }
+    },
+    {
+      "id": "is_device",
+      "question": {
+        "ar": "هل هو جهاز؟",
+        "en": "Is it a device?",
+        "es": "¿Es un dispositivo?",
+        "de": "Ist es ein Gerät?",
+        "it": "È un dispositivo?",
+        "fr": "Est-ce un appareil ?",
+        "pt": "É um dispositivo?"
+      }
+    },
+    {
+      "id": "is_container",
+      "question": {
+        "ar": "هل هو حاوية؟",
+        "en": "Is it a container?",
+        "es": "¿Es un recipiente?",
+        "de": "Ist es ein Behälter?",
+        "it": "È un contenitore?",
+        "fr": "Est-ce un contenant ?",
+        "pt": "É um recipiente?"
+      }
+    },
+    {
+      "id": "is_clothing",
+      "question": {
+        "ar": "هل هو لباس؟",
+        "en": "Is it clothing?",
+        "es": "¿Es ropa?",
+        "de": "Ist es Kleidung?",
+        "it": "È un indumento?",
+        "fr": "Est-ce un vêtement ?",
+        "pt": "É uma peça de roupa?"
+      }
+    },
+    {
+      "id": "is_stationery",
+      "question": {
+        "ar": "هل هو من أدوات القرطاسية؟",
+        "en": "Is it stationery?",
+        "es": "¿Es material de papelería?",
+        "de": "Ist es Schreibwaren?",
+        "it": "È cancelleria?",
+        "fr": "Est-ce de la papeterie ?",
+        "pt": "É material de papelaria?"
+      }
+    },
+    {
+      "id": "made_of_fabric",
+      "question": {
+        "ar": "هل هو مصنوع من القماش؟",
+        "en": "Is it made of fabric?",
+        "es": "¿Está hecho de tela?",
+        "de": "Ist es aus Stoff?",
+        "it": "È fatto di tessuto?",
+        "fr": "Est-ce en tissu ?",
+        "pt": "É feito de tecido?"
+      }
+    },
+    {
+      "id": "used_for_sitting",
+      "question": {
+        "ar": "هل يُستخدم للجلوس؟",
+        "en": "Is it used for sitting?",
+        "es": "¿Se usa para sentarse?",
+        "de": "Wird es zum Sitzen benutzt?",
+        "it": "Si usa per sedersi?",
+        "fr": "Est-ce utilisé pour s'asseoir ?",
+        "pt": "É usado para sentar?"
+      }
+    },
+    {
+      "id": "has_screen",
+      "question": {
+        "ar": "هل له شاشة؟",
+        "en": "Does it have a screen?",
+        "es": "¿Tiene pantalla?",
+        "de": "Hat es einen Bildschirm?",
+        "it": "Ha uno schermo?",
+        "fr": "A-t-il un écran ?",
+        "pt": "Tem tela?"
+      }
+    },
+    {
+      "id": "can_hold_liquid",
+      "question": {
+        "ar": "هل يمكنه حمل سائل؟",
+        "en": "Can it hold liquid?",
+        "es": "¿Puede contener líquido?",
+        "de": "Kann es Flüssigkeit halten?",
+        "it": "Può contenere liquidi?",
+        "fr": "Peut-il contenir un liquide ?",
+        "pt": "Pode conter líquido?"
+      }
+    },
+    {
+      "id": "has_pages",
+      "question": {
+        "ar": "هل له صفحات؟",
+        "en": "Does it have pages?",
+        "es": "¿Tiene páginas?",
+        "de": "Hat es Seiten?",
+        "it": "Ha pagine?",
+        "fr": "A-t-il des pages ?",
+        "pt": "Tem páginas?"
+      }
+    }
+  ]
+}

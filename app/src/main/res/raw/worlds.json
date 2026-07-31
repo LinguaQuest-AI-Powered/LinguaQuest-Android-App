@@ -1,0 +1,64 @@
+{
+  "worlds": [
+    {
+      "id": 1,
+      "key": "kitchen",
+      "difficulty": "EASY"
+    },
+    {
+      "id": 2,
+      "key": "park",
+      "difficulty": "EASY"
+    },
+    {
+      "id": 3,
+      "key": "market",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 4,
+      "key": "city",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 5,
+      "key": "school",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 6,
+      "key": "airport",
+      "difficulty": "HARD"
+    },
+    {
+      "id": 7,
+      "key": "living_room",
+      "difficulty": "EASY"
+    },
+    {
+      "id": 8,
+      "key": "office",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 9,
+      "key": "train_station",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 10,
+      "key": "hospital",
+      "difficulty": "HARD"
+    },
+    {
+      "id": 11,
+      "key": "sports_stadium",
+      "difficulty": "HARD"
+    },
+    {
+      "id": 12,
+      "key": "bathroom",
+      "difficulty": "EASY"
+    }
+  ]
+}

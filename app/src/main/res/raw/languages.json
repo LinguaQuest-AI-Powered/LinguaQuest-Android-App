@@ -1,0 +1,47 @@
+{
+  "defaultTargetLanguage": "en",
+  "supportedLanguages": [
+    {
+      "id": "ar",
+      "name": "العربية",
+      "nativeName": "العربية",
+      "rtl": true
+    },
+    {
+      "id": "en",
+      "name": "English",
+      "nativeName": "English",
+      "rtl": false
+    },
+    {
+      "id": "es",
+      "name": "Spanish",
+      "nativeName": "Español",
+      "rtl": false
+    },
+    {
+      "id": "de",
+      "name": "German",
+      "nativeName": "Deutsch",
+      "rtl": false
+    },
+    {
+      "id": "it",
+      "name": "Italian",
+      "nativeName": "Italiano",
+      "rtl": false
+    },
+    {
+      "id": "fr",
+      "name": "French",
+      "nativeName": "Français",
+      "rtl": false
+    },
+    {
+      "id": "pt",
+      "name": "Portuguese",
+      "nativeName": "Português",
+      "rtl": false
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "start_game": {
+    "ar": "ابدأ اللعبة",
+    "en": "Start Game",
+    "es": "Comenzar",
+    "de": "Spiel starten",
+    "it": "Inizia",
+    "fr": "Commencer",
+    "pt": "Começar"
+  },
+  "translate": {
+    "ar": "ترجمة",
+    "en": "Translate",
+    "es": "Traducir",
+    "de": "Übersetzen",
+    "it": "Traduci",
+    "fr": "Traduire",
+    "pt": "Traduzir"
+  }
+}

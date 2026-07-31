@@ -1,0 +1,41 @@
+package com.iti.linguaquest.features.mindreader.domain.usecase
+
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import javax.inject.Inject
+import kotlinx.coroutines.flow.first
+
+class ResolveMindReaderTargetLanguageCodeUseCase @Inject constructor(
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val authRepository: AuthRepository
+) {
+    suspend operator fun invoke(fallbackLanguageCode: String = "en"): String {
+        val targetLanguageId = userPreferencesRepository.targetLanguage.first()
+        val targetLanguageName = userPreferencesRepository.targetLanguageName.first()
+        val appLanguage = userPreferencesRepository.appLanguage.first()
+        val availableLanguages = loadAvailableLanguages()
+
+        targetLanguageId
+            ?.let { id -> availableLanguages.firstOrNull { it.id == id }?.code }
+            ?.let { return it }
+
+        targetLanguageName
+            ?.let { name -> availableLanguages.firstOrNull { it.name.equals(name, ignoreCase = true) }?.code }
+            ?.let { return it }
+
+        appLanguage
+            .takeIf { it.isNotBlank() }
+            ?.let { code -> availableLanguages.firstOrNull { it.code.equals(code, ignoreCase = true) }?.code }
+            ?.let { return it }
+
+        return fallbackLanguageCode
+    }
+
+    private suspend fun loadAvailableLanguages(): List<LanguageOption> {
+        return when (val result = authRepository.getAuthLanguages()) {
+            is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> result.data
+            is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> emptyList()
+        }
+    }
+}
