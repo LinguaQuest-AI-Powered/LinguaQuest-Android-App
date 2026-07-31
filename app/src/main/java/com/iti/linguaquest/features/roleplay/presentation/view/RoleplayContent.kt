@@ -52,27 +52,8 @@ fun RoleplayContent(
             title = stringResource(R.string.roleplay_boss_level),
             onBackClicked = { onIntent(RoleplayIntent.ReturnHomeClicked) },
             showDivider = true,
-            trailingContent = {
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(LocalLinguaQuestColors.current.whiteColor)
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_coin),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = coins.formatCompact(),
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.iconsColor
-                    )
-                }
-            }
+            showCoins = true,
+            coinsCount = coins
         )
 
         Box(

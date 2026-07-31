@@ -104,27 +104,8 @@ fun VoiceGameScreen(
             title = stringResource(id = R.string.voice_game_title),
             onBackClicked = onNavigateBack,
             showDivider = true,
-            trailingContent = {
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(LocalLinguaQuestColors.current.whiteColor)
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_coin),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = wallet.coins.formatCompact(),
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.iconsColor
-                    )
-                }
-            }
+            showCoins = true,
+            coinsCount = wallet.coins
         )
 
             Column(

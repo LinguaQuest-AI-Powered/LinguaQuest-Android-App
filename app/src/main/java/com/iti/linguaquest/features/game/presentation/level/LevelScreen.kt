@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -125,7 +127,7 @@ fun LevelScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(LinguaQuestTheme.colors.whiteColor),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -136,27 +138,8 @@ fun LevelScreen(
                     title = stringResource(id = R.string.level_title, state.levelNumber),
                     onBackClicked = { viewModel.onIntent(LevelIntent.BackClicked) },
                     showDivider = true,
-                    trailingContent = {
-                        androidx.compose.foundation.layout.Row(
-                            modifier = Modifier
-                                .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_coin),
-                                contentDescription = stringResource(id = R.string.coins),
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = state.coinCount.formatCompact(),
-                                color = LinguaQuestTheme.colors.BrownText,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                    showCoins = true,
+                    coinsCount = state.coinCount
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
