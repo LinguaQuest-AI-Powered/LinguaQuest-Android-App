@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_VOCAB_REMINDER = "com.iti.linguaquest.ACTION_VOCAB_REMINDER"
+        const val EXTRA_FORCE_SHOW = "extra_force_show"
         const val MIN_PENDING_WORDS = 5
     }
 
@@ -42,44 +44,33 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
             try {
                 val isFeatureEnabled = repository.featureEnabled.first()
                 if (!isFeatureEnabled) return@launch
-          val keyguardManager =
+                val forceShow = intent.getBooleanExtra(EXTRA_FORCE_SHOW, false)
+                val keyguardManager =
                     context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-                if (!keyguardManager.isKeyguardLocked) {
-                    android.util.Log.d(
-                        "VocabReceiver",
-                        "Device is unlocked — skipping this cycle, rescheduling."
-                    )
+                if (!forceShow && !keyguardManager.isKeyguardLocked) {
                     scheduler.scheduleNotificationWork()
                     return@launch
                 }
 
                 val word = repository.observePendingOnce()
-                
+                    ?: repository.postedOrOpenedWords.firstOrNull()?.firstOrNull()
+
                 if (word == null) {
-                    Log.d("VocabReceiver", "No pending words found, enqueueing generation.")
                     scheduler.enqueueGenerationWork()
                 } else {
-                     Log.d("VocabReceiver", "Found word to show: ${word.word}")
                     val shown = notificationManager.show(word)
-                    
+
                     if (shown) {
                         repository.markPosted(word.id)
-                        Log.d("VocabReceiver", "Notification shown successfully for: ${word.word}")
-                    } else {
-                       Log.e("VocabReceiver", "Failed to show notification. Check permissions.")
                     }
-
                     if (repository.pendingCountOnce() < MIN_PENDING_WORDS) {
-                         Log.d("VocabReceiver", "Pending count low, enqueueing generation.")
                         scheduler.enqueueGenerationWork()
                     }
                 }
 
-                 scheduler.scheduleNotificationWork()
-                
+                scheduler.scheduleNotificationWork()
             } catch (e: Exception) {
-                android.util.Log.e("VocabReceiver", "Error in onReceive", e)
-            } finally {
+             } finally {
                 pendingResult.finish()
             }
         }

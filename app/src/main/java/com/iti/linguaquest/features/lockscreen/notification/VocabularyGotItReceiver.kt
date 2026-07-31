@@ -40,15 +40,12 @@ class VocabularyGotItReceiver : BroadcastReceiver() {
         scope.launch {
             try {
                 repository.markOpened(wordId)
-                Log.d("GotItReceiver", "Word $wordId marked as opened.")
-            } catch (e: Exception) {
-                 Log.e("GotItReceiver", "Failed to mark word as opened", e)
-            } finally {
+             } catch (e: Exception) {
+             } finally {
                 val nm =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 nm.cancel(notificationId)
-                Log.d("GotItReceiver", "Notification $notificationId cancelled.")
-                pendingResult.finish()
+                 pendingResult.finish()
             }
         }
     }

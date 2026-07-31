@@ -23,16 +23,24 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     override fun scheduleImmediateNotification() {
-        scheduleAlarm(5000L, IMMEDIATE_ALARM_REQUEST_CODE)
+        scheduleAlarm(
+            delayMillis = 5000L,
+            requestCode = IMMEDIATE_ALARM_REQUEST_CODE
+        )
     }
 
     override fun scheduleNotificationWork() {
-         scheduleAlarm(15 * 60 * 1000L)
+        scheduleAlarm(15 * 60 * 1000L)
     }
 
-    private fun scheduleAlarm(delayMillis: Long, requestCode: Int = ALARM_REQUEST_CODE) {
+    private fun scheduleAlarm(
+        delayMillis: Long,
+        requestCode: Int = ALARM_REQUEST_CODE,
+        forceShow: Boolean = false
+    ) {
         val intent = Intent(context, VocabularyNotificationReceiver::class.java).apply {
             action = VocabularyNotificationReceiver.ACTION_VOCAB_REMINDER
+            putExtra(VocabularyNotificationReceiver.EXTRA_FORCE_SHOW, forceShow)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -40,7 +48,7 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
+
         val triggerAt = System.currentTimeMillis() + delayMillis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
@@ -95,7 +103,10 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     }
 
     override fun testNotification(delaySeconds: Long) {
-        scheduleAlarm(delaySeconds * 1000L)
+        scheduleAlarm(
+            delayMillis = delaySeconds * 1000L,
+            forceShow = true
+        )
     }
 
     companion object {

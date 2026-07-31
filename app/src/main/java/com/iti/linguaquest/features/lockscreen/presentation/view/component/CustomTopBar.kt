@@ -28,7 +28,9 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
-fun CustomTopBar() {
+fun CustomTopBar(
+    coins: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -61,7 +63,7 @@ fun CustomTopBar() {
             )
         }
 
-         Row(
+        Row(
             modifier = Modifier
                 .background(AppColors.OrangeActive.copy(alpha = 0.15f), shape = RoundedCornerShape(50))
                 .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -74,7 +76,7 @@ fun CustomTopBar() {
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = stringResource(R.string.lockscreen_sample_coins),
+                text = coins.toString(),
                 color = LinguaQuestTheme.colors.titleAndCationsColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold

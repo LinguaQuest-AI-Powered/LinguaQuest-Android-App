@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
     val lastTargetLanguage: Flow<String?>
     val lastProficiencyLevel: Flow<String?>
     val pendingOperationId: Flow<String?>
+    val lastRewardedMilestoneCount: Flow<Int?>
 
     suspend fun saveFeatureEnabled(enabled: Boolean)
     suspend fun savePendingGeneration(pending: Boolean)
@@ -20,5 +21,6 @@ import kotlinx.coroutines.flow.Flow
     suspend fun saveLastTargetLanguage(language: String?)
     suspend fun saveLastProficiencyLevel(level: String?)
     suspend fun savePendingOperationId(operationId: String?)
+    suspend fun saveLastRewardedMilestoneCount(count: Int?)
     suspend fun clear()
 }

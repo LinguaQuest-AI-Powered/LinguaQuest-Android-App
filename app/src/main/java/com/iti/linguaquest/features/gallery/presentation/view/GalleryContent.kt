@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.sharedComponents.ErrorView
@@ -24,6 +25,7 @@ import com.iti.linguaquest.features.gallery.presentation.view.comonents.WordCard
 fun GalleryContent(
     state: GalleryState,
     onIntent: (GalleryIntent) -> Unit,
+    onWordClick: (Int, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -39,10 +41,10 @@ fun GalleryContent(
         }
 
         when {
-            state.isLoading -> {
+            state.isLoading && state.words.isEmpty() -> {
                 LoadingView(modifier = Modifier.weight(1f))
             }
-            state.errorRes != null -> {
+            state.errorRes != null && state.words.isEmpty() -> {
                 ErrorView(
                     message = androidx.compose.ui.res.stringResource(state.errorRes),
                     onRetry = { onIntent(GalleryIntent.LoadWords) },
@@ -65,7 +67,7 @@ fun GalleryContent(
                     ) { word ->
                         WordCard(
                             word = word,
-                            onWordClick = { onIntent(GalleryIntent.WordItemClicked(it)) }
+                            onWordClick = onWordClick
                         )
                     }
                 }

@@ -38,10 +38,10 @@ fun GameBottomNavBar(
         modifier = modifier
             .fillMaxWidth()
             .clip(barShape)
-            .background(LinguaQuestTheme.colors.whiteColor)
+            .background(LinguaQuestTheme.colors.ProfileCardColor)
             .border(
-                width = 0.5.dp,
-                color = LinguaQuestTheme.colors.BrownText.copy(alpha = 0.15f),
+                width = 1.dp,
+                color = LinguaQuestTheme.colors.ProfileCardBorderColor,
                 shape = barShape
             )
             .padding(horizontal = 8.dp, vertical = 12.dp),

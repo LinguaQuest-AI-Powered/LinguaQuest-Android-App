@@ -1,28 +1,24 @@
 package com.iti.linguaquest.features.lockscreen.data.remote
 
- class PromptBuilder {
+import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
 
-    fun build(
-        nativeLanguage: String?,
-        targetLanguage: String?,
-        proficiencyLevel: String?,
-        batchSize: Int,
-        excludeWords: List<String>
-    ): String {
+class PromptBuilder {
 
-        val safeNativeLanguage = nativeLanguage ?: "Arabic"
-        val safeTargetLanguage = targetLanguage ?: "English"
-        val safeLevel = proficiencyLevel ?: "Beginner"
+    fun build(params: VocabularyBatchParams): String {
+
+        val safeNativeLanguage = params.nativeLanguage
+        val safeTargetLanguage = params.targetLanguage
+        val safeLevel = params.proficiencyLevel
 
         val exclusions =
-            if (excludeWords.isEmpty()) {
+            if (params.excludeWords.isEmpty()) {
                 "None"
             } else {
-                excludeWords.joinToString(separator = "\n")
+                params.excludeWords.joinToString(separator = "\n")
             }
 
         return """
-Generate exactly $batchSize unique vocabulary words.
+Generate exactly ${params.batchSize} unique vocabulary words.
 
 Target language:
 $safeTargetLanguage
@@ -38,7 +34,7 @@ Requirements:
 The vocabulary word must be written in the target language.
 The translation must be written in the native language.
 The example sentence must be written in the target language.
-The response must be a single JSON array with exactly $batchSize objects.
+The response must be a single JSON array with exactly ${params.batchSize} objects.
 Do not wrap the array in any other object.
 
 Avoid repeating any word from the following list:
