@@ -230,7 +230,9 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_help_icon),
                     title = stringResource(id = R.string.settings_help_support),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(helpY) { } }
+                    onClick ={
+                        onHelpSupportClick()
+                    }
                 )
                 SectionDivider()
 
@@ -242,7 +244,7 @@ fun SettingContent(
                     icon = painterResource(id = R.drawable.ic_info_icon),
                     title = stringResource(id = R.string.settings_about_app),
                     iconTint = MaterialTheme.colorScheme.tertiary,
-                    onClick = { guardOnline(aboutY) { onAboutAppClick() } }
+                    onClick = {   onAboutAppClick() }
                 )
             }
 

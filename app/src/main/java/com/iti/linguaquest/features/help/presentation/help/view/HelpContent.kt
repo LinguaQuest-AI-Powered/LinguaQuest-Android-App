@@ -5,26 +5,32 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.core.utils.ShareTopBar
-import com.iti.linguaquest.features.help.data.HelpTopic
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpIntent
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpState
-import com.iti.linguaquest.features.help.presentation.help.view.components.HelpHeroSection
-import com.iti.linguaquest.features.help.presentation.help.view.components.HelpTopicCard
+import com.iti.linguaquest.features.help.presentation.help.view.components.FaqAccordionItem
+import com.iti.linguaquest.features.help.presentation.help.view.components.HelpActionCard
+import com.iti.linguaquest.features.help.presentation.help.view.components.HeroBubble
 
 @Composable
 fun HelpContent(
@@ -32,49 +38,88 @@ fun HelpContent(
     onIntent: (HelpIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalLinguaQuestColors.current
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
+            .padding(bottom = 24.dp)
     ) {
+
         ShareTopBar(
             title = R.string.help_support_title,
             onBackClick = { onIntent(HelpIntent.OnBackClicked) }
         )
 
-        HelpHeroSection()
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        Text(
-            text = stringResource(R.string.help_how_can_we_help),
-            modifier = Modifier.padding(horizontal = 20.dp),
-            color = LinguaQuestTheme.colors.BrownText,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
 
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-            HelpTopicCard(
-                topic = HelpTopic.FAQS,
-                isSelected = state.selectedTopic == HelpTopic.FAQS,
-                onClick = { onIntent(HelpIntent.OnTopicSelected(HelpTopic.FAQS)) }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            HeroBubble(
+                text = stringResource(id = R.string.help_banner_speech_bubble),
+                bubbleColor = colors.whiteColor
             )
-            HelpTopicCard(
-                topic = HelpTopic.CONTACT_US,
-                isSelected = state.selectedTopic == HelpTopic.CONTACT_US,
-                onClick = { onIntent(HelpIntent.OnTopicSelected(HelpTopic.CONTACT_US)) }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ImageWrapper(
+                model = R.drawable.lingo_help,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally)
             )
-            HelpTopicCard(
-                topic = HelpTopic.USER_GUIDE,
-                isSelected = state.selectedTopic == HelpTopic.USER_GUIDE,
-                onClick = { onIntent(HelpIntent.OnTopicSelected(HelpTopic.USER_GUIDE)) }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(id = R.string.help_faq_section_title),
+                style = AppTextStyles.SectionTitle.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
+                state.faqItems.forEach { faq ->
+                    FaqAccordionItem(
+                        faq = faq,
+                        isExpanded = faq.id == state.expandedFaqId,
+                        onToggle = { onIntent(HelpIntent.OnFaqToggled(faq.id)) }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(id = R.string.help_still_need_help_title),
+                style = AppTextStyles.SectionTitle.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            HelpActionCard(
+                onContactSupportClick = { onIntent(HelpIntent.OnContactSupportClicked) },
+                onReportBugClick = { onIntent(HelpIntent.OnReportBugClicked) }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = stringResource(id = R.string.help_reply_footer),
+                style = AppTextStyles.Caption,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         }
     }
