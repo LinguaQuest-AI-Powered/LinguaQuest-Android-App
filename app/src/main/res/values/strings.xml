@@ -275,12 +275,14 @@
     <string name="daily_reward_title">Daily\nReward!</string>
     <string name="daily_reward_subtitle">You found a treasure on your\nadventure today.</string>
     <string name="daily_reward_coins_format">+%1$d Coins</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
     <string name="claim_reward">Claim Reward</string>
     <string name="day_format">Day %1$d</string>
     <string name="daily_streak_bonus">Daily Streak Bonus!</string>
     <string name="claim_your_daily_reward">Claim your daily reward!</string>
     <string name="cd_daily_reward">Daily Reward</string>
     <string name="cd_coin">Coin</string>
+    <string name="cd_xp">XP</string>
     <string name="cd_gift">Gift</string>
     <string name="cd_completed">Completed</string>
     <string name="cd_current">Current</string>
@@ -524,7 +526,7 @@
     <string name="lockscreen_error_no_internet">We could not generate words right now. Please try again later.</string>
     <string name="lockscreen_error_bad_format">The AI response was not in the expected format. Please try again later.</string>
     <string name="lockscreen_error_generate_failed">Failed to generate new words. Please try again.</string>
-    <string name="voice_game_title">Pronunciation Practice</string>
+    <string name="voice_game_title">Pronunciation</string>
     <string name="voice_evaluating">Evaluating Pronunciation…</string>
     <string name="listening_to_your_pronunciation">Listening carefully to your speech.</string>
     <string name="voice_idle_yo_can_do_it">You can do it!</string>

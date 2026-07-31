@@ -93,7 +93,7 @@ fun MainScreen(
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = wallet.xp,
-                    lives = wallet.coins
+                    coins = wallet.coins
                 )
             },
             bottomBar = {

@@ -30,25 +30,31 @@ import androidx.compose.animation.core.*
 import com.iti.linguaquest.R
 import com.iti.linguaquest.features.map.presentation.contract.MapState
 
-private val NODE_VERTICAL_SPACING = 200.dp
-private val TOP_PADDING = 100.dp
-private val BOTTOM_PADDING = 100.dp
-private val NODE_SIZE = 100.dp
-private val HORIZONTAL_MARGIN = 60.dp
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+
+private object MapDefaults {
+    val NODE_VERTICAL_SPACING = 200.dp
+    val TOP_PADDING = 100.dp
+    val BOTTOM_PADDING = 100.dp
+    val NODE_SIZE = 100.dp
+    val HORIZONTAL_MARGIN = 60.dp
+}
 
 private fun computeNodePositions(levelCount: Int, leftX: Dp, rightX: Dp): List<Pair<Dp, Dp>> {
     if (levelCount == 0) return emptyList()
-    val totalHeight = TOP_PADDING + BOTTOM_PADDING + (NODE_VERTICAL_SPACING * (levelCount - 1))
+    val totalHeight = MapDefaults.TOP_PADDING + MapDefaults.BOTTOM_PADDING + (MapDefaults.NODE_VERTICAL_SPACING * (levelCount - 1))
     return List(levelCount) { index ->
         val x = if (index % 2 == 0) rightX else leftX
-        val y = totalHeight - BOTTOM_PADDING - (NODE_VERTICAL_SPACING * index)
+        val y = totalHeight - MapDefaults.BOTTOM_PADDING - (MapDefaults.NODE_VERTICAL_SPACING * index)
         x to y
     }
 }
 
 private fun computeMapHeight(levelCount: Int): Dp {
     if (levelCount == 0) return 600.dp
-    return TOP_PADDING + BOTTOM_PADDING + (NODE_VERTICAL_SPACING * (levelCount - 1)) + 100.dp
+    return MapDefaults.TOP_PADDING + MapDefaults.BOTTOM_PADDING + (MapDefaults.NODE_VERTICAL_SPACING * (levelCount - 1)) + 100.dp
 }
 
 @Composable
@@ -57,138 +63,140 @@ fun MapContent(
     onLevelClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BoxWithConstraints(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        val scrollState = rememberScrollState()
-        val density = LocalDensity.current
-        val availableWidth = maxWidth
-
-        var viewportHeightPx by remember { mutableIntStateOf(0) }
-
-        val leftX = HORIZONTAL_MARGIN
-        val rightX = availableWidth - NODE_SIZE - HORIZONTAL_MARGIN
-
-        val nodePositions = remember(state.levels.size, leftX, rightX) {
-            computeNodePositions(state.levels.size, leftX, rightX)
-        }
-        val mapHeight = remember(state.levels.size) {
-            computeMapHeight(state.levels.size)
-        }
-
-        LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {
-            if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
-                val nodeTopYDp = nodePositions[state.currentLevelIndex].second
-                val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
-                val nodeCenterYPx = nodeTopYPx + with(density) { 50.dp.toPx() }
-
-                val scrollTarget = (nodeCenterYPx - viewportHeightPx / 2f)
-                    .coerceAtLeast(0f)
-                    .toInt()
-
-                scrollState.animateScrollTo(scrollTarget)
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onSizeChanged { size ->
-                    viewportHeightPx = size.height
-                }
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        BoxWithConstraints(
+            modifier = modifier.fillMaxWidth()
         ) {
+            val scrollState = rememberScrollState()
+            val density = LocalDensity.current
+            val availableWidth = maxWidth
+
+            var viewportHeightPx by remember { mutableIntStateOf(0) }
+
+            val leftX = MapDefaults.HORIZONTAL_MARGIN
+            val rightX = availableWidth - MapDefaults.NODE_SIZE - MapDefaults.HORIZONTAL_MARGIN
+
+            val nodePositions = remember(state.levels.size, leftX, rightX) {
+                computeNodePositions(state.levels.size, leftX, rightX)
+            }
+            val mapHeight = remember(state.levels.size) {
+                computeMapHeight(state.levels.size)
+            }
+
+            LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {
+                if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
+                    val nodeTopYDp = nodePositions[state.currentLevelIndex].second
+                    val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
+                    val nodeCenterYPx = nodeTopYPx + with(density) { 50.dp.toPx() }
+
+                    val scrollTarget = (nodeCenterYPx - viewportHeightPx / 2f)
+                        .coerceAtLeast(0f)
+                        .toInt()
+
+                    scrollState.animateScrollTo(scrollTarget)
+                }
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .verticalScroll(scrollState)
+                    .onSizeChanged { size ->
+                        viewportHeightPx = size.height
+                    }
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(mapHeight)
+                        .verticalScroll(scrollState)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.map_bg),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    if (nodePositions.size >= 2) {
-                        MapPath(nodePositions = nodePositions)
-                    }
-
-                    state.levels.forEachIndexed { index, level ->
-                        val (x, y) = nodePositions.getOrNull(index) ?: return@forEachIndexed
-                        LevelNode(
-                            levelNumber = level.levelNumber,
-                            status = level.status,
-                            stars = level.stars,
-                            offsetX = x,
-                            offsetY = y,
-                            isLastLevel = index == state.levels.lastIndex,
-                            onClick = { onLevelClick(level.levelId) }
-                        )
-                    }
-
-                    if (state.currentLevelIndex in nodePositions.indices) {
-                        val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
-                        val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
-                        val floatOffset by infiniteTransition.animateFloat(
-                            initialValue = 0f,
-                            targetValue = -12f,
-                            animationSpec = infiniteRepeatable(
-                                animation = tween(1000, easing = FastOutSlowInEasing),
-                                repeatMode = RepeatMode.Reverse
-                            ),
-                            label = "float"
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(mapHeight)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.map_bg),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
 
-                        val targetOffsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp)
-                        val targetOffsetY = nodeY - 60.dp
+                        if (nodePositions.size >= 2) {
+                            MapPath(nodePositions = nodePositions)
+                        }
 
-                        val animatedOffsetX by animateDpAsState(
-                            targetValue = targetOffsetX,
-                            animationSpec = tween(1000, easing = FastOutSlowInEasing),
-                            label = "mascotX"
-                        )
-                        val animatedOffsetY by animateDpAsState(
-                            targetValue = targetOffsetY,
-                            animationSpec = tween(1000, easing = FastOutSlowInEasing),
-                            label = "mascotY"
-                        )
+                        state.levels.forEachIndexed { index, level ->
+                            val (x, y) = nodePositions.getOrNull(index) ?: return@forEachIndexed
+                            LevelNode(
+                                levelNumber = level.levelNumber,
+                                status = level.status,
+                                stars = level.stars,
+                                offsetX = x,
+                                offsetY = y,
+                                isLastLevel = index == state.levels.lastIndex,
+                                onClick = { onLevelClick(level.levelId) }
+                            )
+                        }
 
-                        Mascot(
-                            offsetX = animatedOffsetX,
-                            offsetY = animatedOffsetY + floatOffset.dp
-                        )
+                        if (state.currentLevelIndex in nodePositions.indices) {
+                            val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
+                            val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
+                            val floatOffset by infiniteTransition.animateFloat(
+                                initialValue = 0f,
+                                targetValue = -12f,
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(1000, easing = FastOutSlowInEasing),
+                                    repeatMode = RepeatMode.Reverse
+                                ),
+                                label = "float"
+                            )
+
+                            val targetOffsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp)
+                            val targetOffsetY = nodeY - 60.dp
+
+                            val animatedOffsetX by animateDpAsState(
+                                targetValue = targetOffsetX,
+                                animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                                label = "mascotX"
+                            )
+                            val animatedOffsetY by animateDpAsState(
+                                targetValue = targetOffsetY,
+                                animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                                label = "mascotY"
+                            )
+
+                            Mascot(
+                                offsetX = animatedOffsetX,
+                                offsetY = animatedOffsetY + floatOffset.dp
+                            )
+                        }
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .align(Alignment.TopCenter)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(LinguaQuestTheme.colors.whiteColor, Color.Transparent)
+                            )
+                        )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .align(Alignment.BottomCenter)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, LinguaQuestTheme.colors.whiteColor)
+                            )
+                        )
+                )
             }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp)
-                    .align(Alignment.TopCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(LinguaQuestTheme.colors.whiteColor, Color.Transparent)
-                        )
-                    )
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp)
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, LinguaQuestTheme.colors.whiteColor)
-                        )
-                    )
-            )
         }
     }
 }

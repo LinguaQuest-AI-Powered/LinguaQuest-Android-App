@@ -1,19 +1,21 @@
 package com.iti.linguaquest.core.sharedComponents
-import com.iti.linguaquest.core.theme.AppColors
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,63 +26,125 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
+import com.iti.linguaquest.core.utils.formatCompact
 
 @Composable
 fun LinguaQuestScreenTopBar(
-    title: String,
+    title: String? = null,
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
     isTitleCentered: Boolean = true,
     containerColor: Color = Color.Transparent,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
+    showDivider: Boolean = false,
+    showCoins: Boolean = false,
+    coinsCount: Int = 0,
+    showXp: Boolean = false,
+    xpCount: Int = 0,
+    trailingContent: @Composable RowScope.() -> Unit = {}
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(containerColor)
-            .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
-                    shape = CircleShape
-                )
-                .clickable { onBackClicked() },
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .background(containerColor)
+                .statusBarsPadding()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
+            IconButton(
+                onClick = onBackClicked
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back_arrow),
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            if (title != null) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = titleColor,
+                        fontSize = 16.sp
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    textAlign = TextAlign.Start,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (showXp) {
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(LocalLinguaQuestColors.current.whiteColor)
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_start),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = xpCount.formatCompact(),
+                            fontWeight = FontWeight.Bold,
+                            color = LinguaQuestTheme.colors.iconsColor
+                        )
+                    }
+                }
+
+                if (showCoins && showXp) {
+                    Spacer(Modifier.width(8.dp))
+                }
+
+                if (showCoins) {
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(LocalLinguaQuestColors.current.whiteColor)
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_coin),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = coinsCount.formatCompact(),
+                            fontWeight = FontWeight.Bold,
+                            color = LinguaQuestTheme.colors.iconsColor
+                        )
+                    }
+                }
+
+                trailingContent()
+            }
+        }
+
+        if (showDivider) {
+            HorizontalDivider(
+                color = LinguaQuestTheme.colors.ProfileCardBorderColor,
+                thickness = 1.dp
             )
         }
-
-        if (!isTitleCentered) {
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = titleColor,
-                fontSize = 20.sp
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .then(if (isTitleCentered) Modifier.padding(end = 48.dp) else Modifier),
-            textAlign = if (isTitleCentered) TextAlign.Center else TextAlign.Start
-        )
     }
 }

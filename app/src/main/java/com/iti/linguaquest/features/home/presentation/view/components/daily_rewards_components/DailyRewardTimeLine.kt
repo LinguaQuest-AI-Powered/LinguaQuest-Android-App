@@ -26,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
@@ -35,13 +37,18 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
 @Composable
-fun DailyRewardTimeline(currentDay: Int) {
-    val totalNodes = 5
+fun DailyRewardTimeline(
+    modifier: Modifier = Modifier,
+    currentDay: Int,
+    cycleLength: Int = 5
+) {
+    val maxVisibleNodes = 5
+    val totalNodes = minOf(cycleLength.coerceAtLeast(1), maxVisibleNodes)
     val activeColor = MaterialTheme.colorScheme.primary
     val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
-    val startDay = maxOf(1, currentDay - 2)
-    val endDay = startDay + totalNodes - 1
+    val startDay = maxOf(1, minOf(currentDay - 2, (cycleLength - totalNodes + 1).coerceAtLeast(1)))
+    val endDay = minOf(cycleLength.coerceAtLeast(1), startDay + totalNodes - 1)
     val displayedDays = (startDay..endDay).toList()
 
     val activeNodesCount = displayedDays.count { it < currentDay }
@@ -58,10 +65,10 @@ fun DailyRewardTimeline(currentDay: Int) {
     )
 
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
-        val isRtl = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
+        val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,7 +86,7 @@ fun DailyRewardTimeline(currentDay: Int) {
                 cap = StrokeCap.Round
             )
 
-            if (activeNodesCount > 0) {
+            if (activeNodesCount > 0 && totalNodes > 1) {
                 val segmentWidth = size.width / (totalNodes - 1)
                 val activeEnd = segmentWidth * activeNodesCount * animatedLineProgress
                 drawLine(

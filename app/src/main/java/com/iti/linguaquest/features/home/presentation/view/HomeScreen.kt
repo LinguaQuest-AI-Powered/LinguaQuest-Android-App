@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -74,6 +76,7 @@ import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import androidx.compose.ui.res.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -181,21 +184,27 @@ fun HomeScreen(
             )
         } else {
 
-            HomeContent(
-                state = state,
-                onSeeMoreClick = { anchor ->
-                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
-                },
-                onWorldClick = { world, anchor ->
-                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
-                },
-                onStartVoiceClick = { anchor ->
-                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.StartVoicePractiseClicked) }
-                },
-                onRoleplayClick = { anchor ->
-                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.RoleplayCardClicked) }
-                }
-            )
+            PullToRefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                HomeContent(
+                    state = state,
+                    onSeeMoreClick = { anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
+                    },
+                    onWorldClick = { world, anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                    },
+                    onStartVoiceClick = { anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.StartVoicePractiseClicked) }
+                    },
+                    onRoleplayClick = { anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.RoleplayCardClicked) }
+                    }
+                )
+            }
         }
 
         FloatingActionButton(
@@ -300,7 +309,9 @@ fun HomeScreen(
             ) {
                 DailyRewardCard(
                     currentDay = state.dailyReward?.currentDay ?: 1,
+                    cycleLength = state.dailyReward?.cycleLength ?: 5,
                     rewardAmount = state.dailyReward?.rewardCoins ?: 0,
+                    rewardXp = state.dailyReward?.rewardXp,
                     onClaimClick = {
                         soundPlayer.play(AppSound.COIN)
                         viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked)

@@ -47,6 +47,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.core.utils.ShareTopBar
 
+
 @Composable
 fun HelpSupportContent(
     onBackClick: () -> Unit,

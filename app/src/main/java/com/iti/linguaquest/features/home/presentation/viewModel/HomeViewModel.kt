@@ -49,6 +49,9 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
+    private var lastRefreshTime = 0L
+    private val REFRESH_COOLDOWN_MS = 5000L
+
     private val _effect = MutableSharedFlow<HomeEffect>()
     val effect: SharedFlow<HomeEffect> = _effect.asSharedFlow()
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -66,6 +69,16 @@ class HomeViewModel @Inject constructor(
     fun onIntent(intent: HomeIntent) {
         when (intent) {
             HomeIntent.LoadHome, HomeIntent.Retry -> refreshFromRemote()
+            HomeIntent.Refresh -> {
+                val now = System.currentTimeMillis()
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && !state.value.isRefreshing) {
+                    lastRefreshTime = now
+                    _state.update { it.copy(isRefreshing = true) }
+                    refreshFromRemote(isPullToRefresh = true)
+                } else {
+                    _state.update { it.copy(isRefreshing = false) }
+                }
+            }
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
             HomeIntent.StartVoicePractiseClicked -> sendEffect(HomeEffect.NavigateToVoiceGame)
             HomeIntent.RoleplayCardClicked -> sendEffect(HomeEffect.NavigateToRoleplayList)
@@ -106,7 +119,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun refreshFromRemote() {
+    private fun refreshFromRemote(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
             val hasCache = state.value.xp > 0 || state.value.worlds.isNotEmpty()
             if (!hasCache) {
@@ -115,11 +128,13 @@ class HomeViewModel @Inject constructor(
 
             val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
             val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+            val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
 
             val homeSummaryResult = homeSummaryDeferred.await()
             val dailyRewardResult = dailyRewardDeferred.await()
+            walletDeferred?.await()
 
-            _state.update { it.copy(isLoading = false) }
+            _state.update { it.copy(isLoading = false, isRefreshing = false) }
 
             if (homeSummaryResult is LinguaQuestResult.Success) {
                 val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()

@@ -32,7 +32,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
      private val claimMilestoneRewardUseCase: ClaimLockScreenMilestoneRewardUseCase,
      private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
      private val getWalletUseCase: GetWalletUseCase,
-     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
  ) : ViewModel() {
 
      val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -58,6 +58,8 @@ class LockScreenWordDetailViewModel @Inject constructor(
     init {
         observeWords()
     }
+
+
 
     fun setHighlightedWordId(wordId: Int?) {
         _state.update { it.copy(highlightedWordId = wordId) }
