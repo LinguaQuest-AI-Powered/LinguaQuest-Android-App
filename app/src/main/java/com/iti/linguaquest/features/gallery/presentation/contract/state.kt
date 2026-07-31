@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.gallery.presentation.contract
 import com.iti.linguaquest.core.database.word.WordEntity
 
 data class GalleryState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val words: List<WordEntity> = emptyList(),
     val filteredWords: List<WordEntity> = emptyList(),
     val categories: List<String> = emptyList(),

@@ -68,7 +68,7 @@ fun CustomTopBar(coins: Int) {
             )
         }
 
-         Row(
+        Row(
             modifier = Modifier
                 .padding(start = 8.dp)
                 .background(AppColors.OrangeActive.copy(alpha = 0.15f), shape = RoundedCornerShape(50))

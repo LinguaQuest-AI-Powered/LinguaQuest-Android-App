@@ -309,7 +309,9 @@ fun HomeScreen(
             ) {
                 DailyRewardCard(
                     currentDay = state.dailyReward?.currentDay ?: 1,
+                    cycleLength = state.dailyReward?.cycleLength ?: 5,
                     rewardAmount = state.dailyReward?.rewardCoins ?: 0,
+                    rewardXp = state.dailyReward?.rewardXp,
                     onClaimClick = {
                         soundPlayer.play(AppSound.COIN)
                         viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked)

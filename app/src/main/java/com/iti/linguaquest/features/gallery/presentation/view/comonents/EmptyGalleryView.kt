@@ -54,26 +54,6 @@ fun EmptyGalleryView(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        Button(
-            onClick = onAddNewClick,
-            modifier = Modifier
-                .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = LinguaQuestTheme.colors.whiteColor
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.AddPhotoAlternate,
-                contentDescription = stringResource(R.string.Add_New),
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = stringResource(R.string.add_new))
-        }
-
-        Spacer(modifier = Modifier.weight(0.7f))
 
         Column(
             modifier = Modifier

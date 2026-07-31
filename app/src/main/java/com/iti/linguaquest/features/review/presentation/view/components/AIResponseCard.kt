@@ -63,99 +63,20 @@ fun AIResponseCard(
     )
 
     Column(modifier = modifier.fillMaxWidth()) {
+        ReviewWordHeader(word = word)
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp)
-                .clip(RoundedCornerShape(24.dp))
-        ) {
-            AsyncImage(
-                model = word.imagePath,
-                contentDescription = word.sourceWord,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize()
-            )
-
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                LinguaQuestTheme.colors.blackColor.copy(alpha = 0.55f)
-                            ),
-                            startY = 80f
-                        )
-                    )
-            )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(14.dp)
-                    .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(50))
-                    .padding(horizontal = 14.dp, vertical = 6.dp)
-            ) {
-                Text(
-                    text = word.category.uppercase(),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = word.sourceWord,
-                    color = LinguaQuestTheme.colors.whiteColor,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = word.translatedWord,
-                    color = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.85f),
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(14.dp)
-                    .background(LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.18f), RoundedCornerShape(10.dp))
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-            ) {
-                Text(
-                    text = "${word.sourceLanguage}${stringResource(R.string.review_language_arrow)}${word.targetLanguage}",
-                    color = LinguaQuestTheme.colors.whiteColor,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         AnimatedVisibility(
             visible = true,
             enter = fadeIn(tween(300)) + slideInVertically(spring(), { it / 2 })
         ) {
             ReviewSectionCard(
-                emoji = stringResource(R.string.review_section_sentence_emoji),
+                leadingIconRes = R.drawable.lingo_sentence,
                 label = stringResource(R.string.review_section_sentence_label),
                 content = response.exampleSentence,
-                accentColor = MaterialTheme.colorScheme.tertiary,
-                background = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                accentColor = MaterialTheme.colorScheme.primary,
+                background = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.42f),
                 isSpeaking = speakingSectionId == ReviewSectionIds.SENTENCE,
                 pulseScale = pulseScale,
                 onSpeak = {
@@ -177,11 +98,11 @@ fun AIResponseCard(
             enter = fadeIn(tween(400)) + slideInVertically(spring(), { it / 2 })
         ) {
             ReviewSectionCard(
-                emoji = stringResource(R.string.review_section_translation_emoji),
+                leadingIconRes = R.drawable.lingo_translation,
                 label = stringResource(R.string.review_section_translation_label),
                 content = response.sentenceTranslation,
                 accentColor = MaterialTheme.colorScheme.primary,
-                background = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
+                background = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.48f),
                 contentStyle = FontStyle.Italic,
                 isSpeaking = speakingSectionId == ReviewSectionIds.TRANSLATION,
                 pulseScale = pulseScale,
@@ -204,11 +125,11 @@ fun AIResponseCard(
             enter = fadeIn(tween(500)) + slideInVertically(spring(), { it / 2 })
         ) {
             ReviewSectionCard(
-                emoji = stringResource(R.string.review_section_memory_emoji),
+                leadingIconRes = R.drawable.lingo_memory_track,
                 label = stringResource(R.string.review_section_memory_label),
                 content = response.memoryTip,
-                accentColor = MaterialTheme.colorScheme.onSurface,
-                background = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                accentColor = MaterialTheme.colorScheme.secondary,
+                background = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f),
                 isSpeaking = speakingSectionId == ReviewSectionIds.MEMORY,
                 pulseScale = pulseScale,
                 onSpeak = {
@@ -230,11 +151,11 @@ fun AIResponseCard(
             enter = fadeIn(tween(600)) + slideInVertically(spring(), { it / 2 })
         ) {
             ReviewSectionCard(
-                emoji = stringResource(R.string.review_section_fun_emoji),
+                leadingIconRes = R.drawable.lingo_did_you_know,
                 label = stringResource(R.string.review_section_fun_label),
                 content = response.funFact,
                 accentColor = LinguaQuestTheme.colors.splashTopLeftColor,
-                background = LinguaQuestTheme.colors.splashTopLeftColor.copy(alpha = 0.08f),
+                background = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
                 isSpeaking = speakingSectionId == ReviewSectionIds.FUN_FACT,
                 pulseScale = pulseScale,
                 onSpeak = {

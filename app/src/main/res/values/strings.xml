@@ -164,7 +164,7 @@
     <string name="hard">HARD</string>
 
     <!-- Review Screen -->
-    <string name="review_screen_title">AI Review</string>
+    <string name="review_screen_title">Lingo Review</string>
     <string name="review_back_content_description">Back</string>
     <string name="review_loading_message">AI is reviewing your word…</string>
     <string name="review_error_emoji">😔</string>
@@ -181,8 +181,10 @@
     <string name="review_section_fun_emoji">💡</string>
     <string name="review_section_fun_label">DID YOU KNOW?</string>
     <string name="review_language_arrow"> → </string>
-
+    <string name="review_section_welcome_label">WELCOME</string>
+    <string name="review_section_welcome_message">Hey there! Let\'s review %1$s together, scene by scene.</string>
     // Level Feature
+    <string name="review_captured_word">Captured word</string>
     <string name="level_title">Level %1$d</string>
     <string name="back">Back</string>
     <string name="coins">Coins</string>
@@ -250,6 +252,7 @@
     <string name="lockscreen_vocabulary_enabled">Lock screen vocabulary enabled.</string>
     <string name="lockscreen_vocabulary_disabled">Lock screen vocabulary disabled.</string>
     <string name="lockscreen_vocabulary_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_milestone_reward_error">Could not claim the milestone reward right now. Please try again.</string>
     <string name="lockscreen_vocabulary_word_detail_title">Word detail</string>
     <string name="lockscreen_vocabulary_example_label">Example sentence</string>
     <string name="lockscreen_vocabulary_translation_label">Translation</string>
@@ -272,12 +275,14 @@
     <string name="daily_reward_title">Daily\nReward!</string>
     <string name="daily_reward_subtitle">You found a treasure on your\nadventure today.</string>
     <string name="daily_reward_coins_format">+%1$d Coins</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
     <string name="claim_reward">Claim Reward</string>
     <string name="day_format">Day %1$d</string>
     <string name="daily_streak_bonus">Daily Streak Bonus!</string>
     <string name="claim_your_daily_reward">Claim your daily reward!</string>
     <string name="cd_daily_reward">Daily Reward</string>
     <string name="cd_coin">Coin</string>
+    <string name="cd_xp">XP</string>
     <string name="cd_gift">Gift</string>
     <string name="cd_completed">Completed</string>
     <string name="cd_current">Current</string>
@@ -291,6 +296,7 @@
     <string name="error_bad_request">error_bad_request</string>
     <string name="error_unauthorized">error_unauthorized</string>
     <string name="error_too_many_requests">error_too_many_requests</string>
+    <string name="error_insufficient_balance">Your balance is not enough.</string>
 
     <string name="map_lets_learn">Let\'s Learn!</string>
     <string name="cd_treasure">Treasure</string>
