@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.mindreader.presentation
+package com.iti.linguaquest.features.mindreader.presentation.view
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -18,13 +18,14 @@ import android.widget.Toast
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderEffect
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
-import com.iti.linguaquest.features.mindreader.presentation.components.PreGameLobbyContent
-import com.iti.linguaquest.features.mindreader.presentation.components.ActiveGameContent
-import com.iti.linguaquest.features.mindreader.presentation.components.GuessRevealContent
-import com.iti.linguaquest.features.mindreader.presentation.components.PopQuizContent
-import com.iti.linguaquest.features.mindreader.presentation.components.AkinatorTrapContent
-import com.iti.linguaquest.features.mindreader.presentation.components.ResultContent
-import com.iti.linguaquest.features.mindreader.presentation.components.LoadingGuessContent
+import com.iti.linguaquest.features.mindreader.presentation.viewmodel.MindReaderViewModel
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.AkinatorLobbyContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.ActiveGameContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.GuessRevealContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.PopQuizContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.AkinatorTrapContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.ResultContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.LoadingGuessContent
 
 @Composable
 fun MindReaderScreen(
@@ -62,7 +63,7 @@ fun MindReaderScreen(
     ) {
         Crossfade(targetState = state.currentPhase, label = "PhaseCrossfade") { phase ->
             when (phase) {
-                MindReaderPhase.LOBBY -> PreGameLobbyContent(
+                MindReaderPhase.LOBBY -> AkinatorLobbyContent(
                     state = state,
                     onIntent = viewModel::onIntent
                 )

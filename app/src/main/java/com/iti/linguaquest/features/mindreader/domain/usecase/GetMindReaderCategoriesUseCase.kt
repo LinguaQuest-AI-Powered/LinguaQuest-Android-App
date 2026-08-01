@@ -9,21 +9,19 @@ class GetMindReaderCategoriesUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): List<MindReaderCategory> {
         val dataset = getMindReaderDatasetUseCase()
-        
-        // Extract unique world keys and map to proper display names
-        return dataset.entities
-            .map { it.worldKey }
-            .distinct()
-            .map { key ->
-                val displayName = key
-                    .replace("_", " ")
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                
-                MindReaderCategory(
-                    id = key,
-                    displayName = displayName
-                )
-            }
-            .sortedBy { it.displayName }
+
+        val entitiesByWorld = dataset.entities.groupBy { it.worldKey }
+
+        return entitiesByWorld.map { (key, entities) ->
+            val displayName = key
+                .replace("_", " ")
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+            MindReaderCategory(
+                id = key,
+                displayName = displayName,
+                emoji = entities.firstOrNull()?.emoji.orEmpty()
+            )
+        }.sortedBy { it.displayName }
     }
 }

@@ -721,8 +721,8 @@
     <string name="mind_reader_busted">Busted!</string>
     <string name="mind_reader_stumped">Stumped!</string>
     <string name="mind_reader_stumped_desc">I surrender! You win.</string>
-    <string name="mind_reader_experience">Experience</string>
-    <string name="mind_reader_earnings">Earnings</string>
+    <string name="mind_reader_experience">EXPERIENCE</string>
+    <string name="mind_reader_earnings">EARNINGS</string>
     <string name="mind_reader_try_again">Play Again</string>
     <string name="mind_reader_return_home">Return Home</string>
     <string name="mind_reader_card_title">Mind Reader</string>
@@ -731,4 +731,13 @@
     <string name="mind_reader_trap_dropdown_title">%1$s Vocabulary</string>
     <string name="mind_reader_trap_dropdown_hint">Select your word...</string>
     <string name="mind_reader_trap_submit">Submit ▷</string>
+    <string name="mind_reader_pop_quiz_speech">AWESOME! TAP THE CORRECT TRANSLATION TO CLAIM YOUR REWARD.</string>
+    <string name="mind_reader_victory_speech">YOUR LANGUAGE SKILLS ARE LEGENDARY.</string>
+    <string name="mind_reader_stumped_title">You Stumped\nLingo!</string>
+    <string name="mind_reader_return_to_home">Return to Home</string>
+    <string name="mind_reader_play_again">Play Again</string>
+    <string name="mind_reader_xp_value">%1$d XP</string>
+    <string name="mind_reader_coins_value">%1$d Coins</string>
+    <string name="mind_reader_trap_speech">I GIVE UP! WHAT WERE YOU THINKING OF?</string>
+    <string name="mind_reader_busted_title">BUSTED!</string>
 </resources>

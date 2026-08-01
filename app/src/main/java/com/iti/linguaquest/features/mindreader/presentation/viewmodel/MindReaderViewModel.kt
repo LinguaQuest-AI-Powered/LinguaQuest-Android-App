@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.mindreader.presentation
+package com.iti.linguaquest.features.mindreader.presentation.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
