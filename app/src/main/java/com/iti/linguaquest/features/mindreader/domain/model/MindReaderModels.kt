@@ -221,6 +221,16 @@ sealed interface MindReaderRewardChallenge {
 sealed interface MindReaderResult {
     data object Playing : MindReaderResult
 
+    data class PopQuiz(
+        val question: MindReaderPopQuizQuestion,
+        val originalGuess: MindReaderGuessResult
+    ) : MindReaderResult
+
+    data class Stump(
+        val candidates: List<MindReaderEntity>,
+        val originalGuess: MindReaderGuessResult
+    ) : MindReaderResult
+
     data class Guessing(
         val guess: MindReaderGuessResult
     ) : MindReaderResult

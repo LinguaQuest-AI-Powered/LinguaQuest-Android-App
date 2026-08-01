@@ -371,6 +371,906 @@
         "fr": "A-t-il des pages ?",
         "pt": "Tem páginas?"
       }
+    },
+    {
+      "id": "is_blue",
+      "question": {
+        "ar": "هل لونه أزرق؟",
+        "en": "Is it blue?",
+        "es": "¿Es azul?",
+        "de": "Ist es blau?",
+        "it": "È blu?",
+        "fr": "Est-ce bleu ?",
+        "pt": "É azul?"
+      }
+    },
+    {
+      "id": "is_yellow",
+      "question": {
+        "ar": "هل لونه أصفر؟",
+        "en": "Is it yellow?",
+        "es": "¿Es amarillo?",
+        "de": "Ist es gelb?",
+        "it": "È giallo?",
+        "fr": "Est-ce jaune ?",
+        "pt": "É amarelo?"
+      }
+    },
+    {
+      "id": "is_black",
+      "question": {
+        "ar": "هل لونه أسود؟",
+        "en": "Is it black?",
+        "es": "¿Es negro?",
+        "de": "Ist es schwarz?",
+        "it": "È nero?",
+        "fr": "Est-ce noir ?",
+        "pt": "É preto?"
+      }
+    },
+    {
+      "id": "is_white",
+      "question": {
+        "ar": "هل لونه أبيض؟",
+        "en": "Is it white?",
+        "es": "¿Es blanco?",
+        "de": "Ist es weiß?",
+        "it": "È bianco?",
+        "fr": "Est-ce blanc ?",
+        "pt": "É branco?"
+      }
+    },
+    {
+      "id": "is_big",
+      "question": {
+        "ar": "هل هو كبير الحجم؟",
+        "en": "Is it big?",
+        "es": "¿Es grande?",
+        "de": "Ist es groß?",
+        "it": "È grande?",
+        "fr": "Est-ce grand ?",
+        "pt": "É grande?"
+      }
+    },
+    {
+      "id": "is_small",
+      "question": {
+        "ar": "هل هو صغير الحجم؟",
+        "en": "Is it small?",
+        "es": "¿Es pequeño?",
+        "de": "Ist es klein?",
+        "it": "È piccolo?",
+        "fr": "Est-ce petit ?",
+        "pt": "É pequeno?"
+      }
+    },
+    {
+      "id": "is_heavy",
+      "question": {
+        "ar": "هل هو ثقيل؟",
+        "en": "Is it heavy?",
+        "es": "¿Es pesado?",
+        "de": "Ist es schwer?",
+        "it": "È pesante?",
+        "fr": "Est-ce lourd ?",
+        "pt": "É pesado?"
+      }
+    },
+    {
+      "id": "is_light_weight",
+      "question": {
+        "ar": "هل هو خفيف الوزن؟",
+        "en": "Is it lightweight?",
+        "es": "¿Es liviano?",
+        "de": "Ist es leicht?",
+        "it": "È leggero?",
+        "fr": "Est-ce léger ?",
+        "pt": "É leve?"
+      }
+    },
+    {
+      "id": "is_plant",
+      "question": {
+        "ar": "هل هو نبات؟",
+        "en": "Is it a plant?",
+        "es": "¿Es una planta?",
+        "de": "Ist es eine Pflanze?",
+        "it": "È una pianta?",
+        "fr": "Est-ce une plante ?",
+        "pt": "É uma planta?"
+      }
+    },
+    {
+      "id": "is_insect",
+      "question": {
+        "ar": "هل هو حشرة؟",
+        "en": "Is it an insect?",
+        "es": "¿Es un insecto?",
+        "de": "Ist es ein Insekt?",
+        "it": "È un insetto?",
+        "fr": "Est-ce un insecte ?",
+        "pt": "É um inseto?"
+      }
+    },
+    {
+      "id": "has_legs",
+      "question": {
+        "ar": "هل له أرجل؟",
+        "en": "Does it have legs?",
+        "es": "¿Tiene patas?",
+        "de": "Hat es Beine?",
+        "it": "Ha delle zampe?",
+        "fr": "A-t-il des pattes ?",
+        "pt": "Tem pernas?"
+      }
+    },
+    {
+      "id": "has_wings",
+      "question": {
+        "ar": "هل له أجنحة؟",
+        "en": "Does it have wings?",
+        "es": "¿Tiene alas?",
+        "de": "Hat es Flügel?",
+        "it": "Ha le ali?",
+        "fr": "A-t-il des ailes ?",
+        "pt": "Tem asas?"
+      }
+    },
+    {
+      "id": "lives_in_water",
+      "question": {
+        "ar": "هل يعيش في الماء؟",
+        "en": "Does it live in water?",
+        "es": "¿Vive en el agua?",
+        "de": "Lebt es im Wasser?",
+        "it": "Vive nell'acqua?",
+        "fr": "Vit-il dans l'eau ?",
+        "pt": "Vive na água?"
+      }
+    },
+    {
+      "id": "found_in_kitchen",
+      "question": {
+        "ar": "هل يوجد عادة في المطبخ؟",
+        "en": "Is it usually found in the kitchen?",
+        "es": "¿Se encuentra normalmente en la cocina?",
+        "de": "Findet man es normalerweise in der Küche?",
+        "it": "Si trova di solito in cucina?",
+        "fr": "Se trouve-t-il habituellement dans la cuisine ?",
+        "pt": "Costuma estar na cozinha?"
+      }
+    },
+    {
+      "id": "found_in_bathroom",
+      "question": {
+        "ar": "هل يوجد عادة في الحمام؟",
+        "en": "Is it usually found in the bathroom?",
+        "es": "¿Se encuentra normalmente en el baño?",
+        "de": "Findet man es normalerweise im Badezimmer?",
+        "it": "Si trova di solito in bagno?",
+        "fr": "Se trouve-t-il habituellement dans la salle de bain ?",
+        "pt": "Costuma estar no banheiro?"
+      }
+    },
+    {
+      "id": "used_for_communication",
+      "question": {
+        "ar": "هل يُستخدم في التواصل؟",
+        "en": "Is it used for communication?",
+        "es": "¿Se usa para comunicarse?",
+        "de": "Wird es zur Kommunikation benutzt?",
+        "it": "Si usa per comunicare?",
+        "fr": "Est-ce utilisé pour communiquer ?",
+        "pt": "É usado para comunicação?"
+      }
+    },
+    {
+      "id": "gives_light",
+      "question": {
+        "ar": "هل يعطي ضوء؟",
+        "en": "Does it give off light?",
+        "es": "¿Emite luz?",
+        "de": "Gibt es Licht ab?",
+        "it": "Emette luce?",
+        "fr": "Émet-il de la lumière ?",
+        "pt": "Emite luz?"
+      }
+    },
+    {
+      "id": "is_edible_raw",
+      "question": {
+        "ar": "هل يمكن أكله نيئاً؟",
+        "en": "Can it be eaten raw?",
+        "es": "¿Se puede comer crudo?",
+        "de": "Kann man es roh essen?",
+        "it": "Si può mangiare crudo?",
+        "fr": "Peut-on le manger cru ?",
+        "pt": "Pode ser comido cru?"
+      }
+    },
+    {
+      "id": "is_sweet",
+      "question": {
+        "ar": "هل طعمه حلو؟",
+        "en": "Does it taste sweet?",
+        "es": "¿Tiene sabor dulce?",
+        "de": "Schmeckt es süß?",
+        "it": "Ha un sapore dolce?",
+        "fr": "A-t-il un goût sucré ?",
+        "pt": "Tem sabor doce?"
+      }
+    },
+    {
+      "id": "worn_on_head",
+      "question": {
+        "ar": "هل يُلبس على الرأس؟",
+        "en": "Is it worn on the head?",
+        "es": "¿Se lleva en la cabeza?",
+        "de": "Wird es auf dem Kopf getragen?",
+        "it": "Si indossa sulla testa?",
+        "fr": "Se porte-t-il sur la tête ?",
+        "pt": "É usado na cabeça?"
+      }
+    },
+    {
+      "id": "is_orange",
+      "question": {
+        "ar": "هل لونه برتقالي؟",
+        "en": "Is it orange?",
+        "es": "¿Es naranja?",
+        "de": "Ist es orange?",
+        "it": "È arancione?",
+        "fr": "Est-ce orange ?",
+        "pt": "É laranja?"
+      }
+    },
+    {
+      "id": "is_pink",
+      "question": {
+        "ar": "هل لونه وردي؟",
+        "en": "Is it pink?",
+        "es": "¿Es rosa?",
+        "de": "Ist es rosa?",
+        "it": "È rosa?",
+        "fr": "Est-ce rose ?",
+        "pt": "É rosa?"
+      }
+    },
+    {
+      "id": "is_brown",
+      "question": {
+        "ar": "هل لونه بني؟",
+        "en": "Is it brown?",
+        "es": "¿Es marrón?",
+        "de": "Ist es braun?",
+        "it": "È marrone?",
+        "fr": "Est-ce marron ?",
+        "pt": "É marrom?"
+      }
+    },
+    {
+      "id": "is_purple",
+      "question": {
+        "ar": "هل لونه بنفسجي؟",
+        "en": "Is it purple?",
+        "es": "¿Es morado?",
+        "de": "Ist es lila?",
+        "it": "È viola?",
+        "fr": "Est-ce violet ?",
+        "pt": "É roxo?"
+      }
+    },
+    {
+      "id": "has_tail",
+      "question": {
+        "ar": "هل له ذيل؟",
+        "en": "Does it have a tail?",
+        "es": "¿Tiene cola?",
+        "de": "Hat es einen Schwanz?",
+        "it": "Ha una coda?",
+        "fr": "A-t-il une queue ?",
+        "pt": "Tem cauda?"
+      }
+    },
+    {
+      "id": "has_fur",
+      "question": {
+        "ar": "هل له فرو؟",
+        "en": "Does it have fur?",
+        "es": "¿Tiene pelaje?",
+        "de": "Hat es Fell?",
+        "it": "Ha la pelliccia?",
+        "fr": "A-t-il de la fourrure ?",
+        "pt": "Tem pelagem?"
+      }
+    },
+    {
+      "id": "has_feathers",
+      "question": {
+        "ar": "هل له ريش؟",
+        "en": "Does it have feathers?",
+        "es": "¿Tiene plumas?",
+        "de": "Hat es Federn?",
+        "it": "Ha le piume?",
+        "fr": "A-t-il des plumes ?",
+        "pt": "Tem penas?"
+      }
+    },
+    {
+      "id": "has_claws",
+      "question": {
+        "ar": "هل له مخالب؟",
+        "en": "Does it have claws?",
+        "es": "¿Tiene garras?",
+        "de": "Hat es Krallen?",
+        "it": "Ha gli artigli?",
+        "fr": "A-t-il des griffes ?",
+        "pt": "Tem garras?"
+      }
+    },
+    {
+      "id": "lives_in_forest",
+      "question": {
+        "ar": "هل يعيش في الغابة؟",
+        "en": "Does it live in the forest?",
+        "es": "¿Vive en el bosque?",
+        "de": "Lebt es im Wald?",
+        "it": "Vive nella foresta?",
+        "fr": "Vit-il dans la forêt ?",
+        "pt": "Vive na floresta?"
+      }
+    },
+    {
+      "id": "is_wild",
+      "question": {
+        "ar": "هل هو حيوان بري؟",
+        "en": "Is it a wild animal?",
+        "es": "¿Es un animal salvaje?",
+        "de": "Ist es ein Wildtier?",
+        "it": "È un animale selvatico?",
+        "fr": "Est-ce un animal sauvage ?",
+        "pt": "É um animal selvagem?"
+      }
+    },
+    {
+      "id": "is_pet",
+      "question": {
+        "ar": "هل يمكن تربيته كحيوان أليف؟",
+        "en": "Can it be kept as a pet?",
+        "es": "¿Se puede tener como mascota?",
+        "de": "Kann man es als Haustier halten?",
+        "it": "Può essere tenuto come animale domestico?",
+        "fr": "Peut-il être gardé comme animal de compagnie ?",
+        "pt": "Pode ser criado como animal de estimação?"
+      }
+    },
+    {
+      "id": "grows_on_trees",
+      "question": {
+        "ar": "هل ينمو على الأشجار؟",
+        "en": "Does it grow on trees?",
+        "es": "¿Crece en los árboles?",
+        "de": "Wächst es auf Bäumen?",
+        "it": "Cresce sugli alberi?",
+        "fr": "Pousse-t-il sur les arbres ?",
+        "pt": "Cresce em árvores?"
+      }
+    },
+    {
+      "id": "grows_underground",
+      "question": {
+        "ar": "هل ينمو تحت الأرض؟",
+        "en": "Does it grow underground?",
+        "es": "¿Crece bajo tierra?",
+        "de": "Wächst es unter der Erde?",
+        "it": "Cresce sottoterra?",
+        "fr": "Pousse-t-il sous terre ?",
+        "pt": "Cresce debaixo da terra?"
+      }
+    },
+    {
+      "id": "has_seeds",
+      "question": {
+        "ar": "هل له بذور؟",
+        "en": "Does it have seeds?",
+        "es": "¿Tiene semillas?",
+        "de": "Hat es Kerne?",
+        "it": "Ha dei semi?",
+        "fr": "A-t-il des graines ?",
+        "pt": "Tem sementes?"
+      }
+    },
+    {
+      "id": "is_spicy",
+      "question": {
+        "ar": "هل طعمه حار؟",
+        "en": "Does it taste spicy?",
+        "es": "¿Tiene sabor picante?",
+        "de": "Schmeckt es scharf?",
+        "it": "Ha un sapore piccante?",
+        "fr": "A-t-il un goût épicé ?",
+        "pt": "Tem sabor picante?"
+      }
+    },
+    {
+      "id": "is_sour",
+      "question": {
+        "ar": "هل طعمه حامض؟",
+        "en": "Does it taste sour?",
+        "es": "¿Tiene sabor agrio?",
+        "de": "Schmeckt es sauer?",
+        "it": "Ha un sapore aspro?",
+        "fr": "A-t-il un goût acide ?",
+        "pt": "Tem sabor azedo?"
+      }
+    },
+    {
+      "id": "made_of_glass",
+      "question": {
+        "ar": "هل هو مصنوع من زجاج؟",
+        "en": "Is it made of glass?",
+        "es": "¿Está hecho de vidrio?",
+        "de": "Ist es aus Glas?",
+        "it": "È fatto di vetro?",
+        "fr": "Est-ce en verre ?",
+        "pt": "É feito de vidro?"
+      }
+    },
+    {
+      "id": "is_transparent",
+      "question": {
+        "ar": "هل هو شفاف؟",
+        "en": "Is it transparent?",
+        "es": "¿Es transparente?",
+        "de": "Ist es durchsichtig?",
+        "it": "È trasparente?",
+        "fr": "Est-ce transparent ?",
+        "pt": "É transparente?"
+      }
+    },
+    {
+      "id": "worn_on_feet",
+      "question": {
+        "ar": "هل يُلبس في القدمين؟",
+        "en": "Is it worn on the feet?",
+        "es": "¿Se lleva en los pies?",
+        "de": "Wird es an den Füßen getragen?",
+        "it": "Si indossa sui piedi?",
+        "fr": "Se porte-t-il aux pieds ?",
+        "pt": "É usado nos pés?"
+      }
+    },
+    {
+      "id": "worn_on_hands",
+      "question": {
+        "ar": "هل يُلبس في اليدين؟",
+        "en": "Is it worn on the hands?",
+        "es": "¿Se lleva en las manos?",
+        "de": "Wird es an den Händen getragen?",
+        "it": "Si indossa sulle mani?",
+        "fr": "Se porte-t-il aux mains ?",
+        "pt": "É usado nas mãos?"
+      }
+    },
+    {
+      "id": "can_prescribe_medicine",
+      "question": {
+        "ar": "هل يمكنه وصف الدواء؟",
+        "en": "Can it prescribe medicine?",
+        "es": "¿Puede recetar medicinas?",
+        "de": "Kann es Medikamente verschreiben?",
+        "it": "Può prescrivere medicine?",
+        "fr": "Peut-il prescrire des médicaments ?",
+        "pt": "Pode receitar remédios?"
+      }
+    },
+    {
+      "id": "has_two_wheels",
+      "question": {
+        "ar": "هل له عجلتان؟",
+        "en": "Does it have two wheels?",
+        "es": "¿Tiene dos ruedas?",
+        "de": "Hat es zwei Räder?",
+        "it": "Ha due ruote?",
+        "fr": "A-t-il deux roues ?",
+        "pt": "Tem duas rodas?"
+      }
+    },
+    {
+      "id": "is_hot",
+      "question": {
+        "ar": "هل هو ساخن؟",
+        "en": "Is it hot?",
+        "es": "¿Está caliente?",
+        "de": "Ist es heiß?",
+        "it": "È caldo?",
+        "fr": "Est-ce chaud ?",
+        "pt": "Está quente?"
+      }
+    },
+    {
+      "id": "is_cold",
+      "question": {
+        "ar": "هل هو بارد؟",
+        "en": "Is it cold?",
+        "es": "¿Está frío?",
+        "de": "Ist es kalt?",
+        "it": "È freddo?",
+        "fr": "Est-ce froid ?",
+        "pt": "Está frio?"
+      }
+    },
+    {
+      "id": "is_dangerous",
+      "question": {
+        "ar": "هل هو خطير؟",
+        "en": "Is it dangerous?",
+        "es": "¿Es peligroso?",
+        "de": "Ist es gefährlich?",
+        "it": "È pericoloso?",
+        "fr": "Est-ce dangereux ?",
+        "pt": "É perigoso?"
+      }
+    },
+    {
+      "id": "is_expensive",
+      "question": {
+        "ar": "هل هو غالي الثمن؟",
+        "en": "Is it expensive?",
+        "es": "¿Es caro?",
+        "de": "Ist es teuer?",
+        "it": "È costoso?",
+        "fr": "Est-ce cher ?",
+        "pt": "É caro?"
+      }
+    },
+    {
+      "id": "is_natural",
+      "question": {
+        "ar": "هل هو طبيعي؟",
+        "en": "Is it natural?",
+        "es": "¿Es natural?",
+        "de": "Ist es natürlich?",
+        "it": "È naturale?",
+        "fr": "Est-ce naturel ?",
+        "pt": "É natural?"
+      }
+    },
+    {
+      "id": "is_man_made",
+      "question": {
+        "ar": "هل هو من صنع الإنسان؟",
+        "en": "Is it man-made?",
+        "es": "¿Es hecho por el hombre?",
+        "de": "Ist es von Menschen gemacht?",
+        "it": "È fatto dall'uomo?",
+        "fr": "Est-il fabriqué par l'homme ?",
+        "pt": "É feito pelo homem?"
+      }
+    },
+    {
+      "id": "has_engine",
+      "question": {
+        "ar": "هل له محرك؟",
+        "en": "Does it have an engine?",
+        "es": "¿Tiene motor?",
+        "de": "Hat es einen Motor?",
+        "it": "Ha un motore?",
+        "fr": "A-t-il un moteur ?",
+        "pt": "Tem motor?"
+      }
+    },
+    {
+      "id": "is_furniture",
+      "question": {
+        "ar": "هل هو قطعة أثاث؟",
+        "en": "Is it a piece of furniture?",
+        "es": "¿Es un mueble?",
+        "de": "Ist es ein Möbelstück?",
+        "it": "È un mobile?",
+        "fr": "Est-ce un meuble ?",
+        "pt": "É um móvel?"
+      }
+    },
+    {
+      "id": "is_musical_instrument",
+      "question": {
+        "ar": "هل هو آلة موسيقية؟",
+        "en": "Is it a musical instrument?",
+        "es": "¿Es un instrumento musical?",
+        "de": "Ist es ein Musikinstrument?",
+        "it": "È uno strumento musicale?",
+        "fr": "Est-ce un instrument de musique ?",
+        "pt": "É um instrumento musical?"
+      }
+    },
+    {
+      "id": "is_toy",
+      "question": {
+        "ar": "هل هو لعبة؟",
+        "en": "Is it a toy?",
+        "es": "¿Es un juguete?",
+        "de": "Ist es ein Spielzeug?",
+        "it": "È un giocattolo?",
+        "fr": "Est-ce un jouet ?",
+        "pt": "É um brinquedo?"
+      }
+    },
+    {
+      "id": "is_reptile",
+      "question": {
+        "ar": "هل هو زاحف؟",
+        "en": "Is it a reptile?",
+        "es": "¿Es un reptil?",
+        "de": "Ist es ein Reptil?",
+        "it": "È un rettile?",
+        "fr": "Est-ce un reptile ?",
+        "pt": "É um réptil?"
+      }
+    },
+    {
+      "id": "is_bird",
+      "question": {
+        "ar": "هل هو طائر؟",
+        "en": "Is it a bird?",
+        "es": "¿Es un pájaro?",
+        "de": "Ist es ein Vogel?",
+        "it": "È un uccello?",
+        "fr": "Est-ce un oiseau ?",
+        "pt": "É um pássaro?"
+      }
+    },
+    {
+      "id": "is_fish",
+      "question": {
+        "ar": "هل هو سمكة؟",
+        "en": "Is it a fish?",
+        "es": "¿Es un pez?",
+        "de": "Ist es ein Fisch?",
+        "it": "È un pesce?",
+        "fr": "Est-ce un poisson ?",
+        "pt": "É um peixe?"
+      }
+    },
+    {
+      "id": "is_mammal",
+      "question": {
+        "ar": "هل هو ثديي؟",
+        "en": "Is it a mammal?",
+        "es": "¿Es un mamífero?",
+        "de": "Ist es ein Säugetier?",
+        "it": "È un mammifero?",
+        "fr": "Est-ce un mammifère ?",
+        "pt": "É um mamífero?"
+      }
+    },
+    {
+      "id": "has_horns",
+      "question": {
+        "ar": "هل له قرون؟",
+        "en": "Does it have horns?",
+        "es": "¿Tiene cuernos?",
+        "de": "Hat es Hörner?",
+        "it": "Ha le corna?",
+        "fr": "A-t-il des cornes ?",
+        "pt": "Tem chifres?"
+      }
+    },
+    {
+      "id": "has_beak",
+      "question": {
+        "ar": "هل له منقار؟",
+        "en": "Does it have a beak?",
+        "es": "¿Tiene pico?",
+        "de": "Hat es einen Schnabel?",
+        "it": "Ha il becco?",
+        "fr": "A-t-il un bec ?",
+        "pt": "Tem bico?"
+      }
+    },
+    {
+      "id": "is_sport_equipment",
+      "question": {
+        "ar": "هل هو معدات رياضية؟",
+        "en": "Is it sports equipment?",
+        "es": "¿Es equipo deportivo?",
+        "de": "Ist es Sportausrüstung?",
+        "it": "È attrezzatura sportiva?",
+        "fr": "Est-ce du matériel de sport ?",
+        "pt": "É equipamento esportivo?"
+      }
+    },
+    {
+      "id": "is_ball",
+      "question": {
+        "ar": "هل هو كرة؟",
+        "en": "Is it a ball?",
+        "es": "¿Es una pelota?",
+        "de": "Ist es ein Ball?",
+        "it": "È una palla?",
+        "fr": "Est-ce un ballon ?",
+        "pt": "É uma bola?"
+      }
+    },
+    {
+      "id": "is_uniform",
+      "question": {
+        "ar": "هل هو زي موحد؟",
+        "en": "Is it a uniform?",
+        "es": "¿Es un uniforme?",
+        "de": "Ist es eine Uniform?",
+        "it": "È un'uniforme?",
+        "fr": "Est-ce un uniforme ?",
+        "pt": "É um uniforme?"
+      }
+    },
+    {
+      "id": "is_medical_equipment",
+      "question": {
+        "ar": "هل هو معدات طبية؟",
+        "en": "Is it medical equipment?",
+        "es": "¿Es equipo médico?",
+        "de": "Ist es medizinische Ausrüstung?",
+        "it": "È attrezzatura medica?",
+        "fr": "Est-ce du matériel médical ?",
+        "pt": "É equipamento médico?"
+      }
+    },
+    {
+      "id": "found_in_office",
+      "question": {
+        "ar": "هل يوجد في المكتب؟",
+        "en": "Is it found in an office?",
+        "es": "¿Se encuentra en una oficina?",
+        "de": "Findet man es im Büro?",
+        "it": "Si trova in un ufficio?",
+        "fr": "Le trouve-t-on dans un bureau ?",
+        "pt": "É encontrado em um escritório?"
+      }
+    },
+    {
+      "id": "found_in_farm",
+      "question": {
+        "ar": "هل يوجد في المزرعة؟",
+        "en": "Is it found on a farm?",
+        "es": "¿Se encuentra en una granja?",
+        "de": "Findet man es auf einem Bauernhof?",
+        "it": "Si trova in una fattoria?",
+        "fr": "Le trouve-t-on dans une ferme ?",
+        "pt": "É encontrado em uma fazenda?"
+      }
+    },
+    {
+      "id": "found_in_zoo",
+      "question": {
+        "ar": "هل يوجد في حديقة الحيوان؟",
+        "en": "Is it found in a zoo?",
+        "es": "¿Se encuentra en un zoológico?",
+        "de": "Findet man es im Zoo?",
+        "it": "Si trova allo zoo?",
+        "fr": "Le trouve-t-on dans un zoo ?",
+        "pt": "É encontrado em um zoológico?"
+      }
+    },
+    {
+      "id": "found_in_school",
+      "question": {
+        "ar": "هل يوجد في المدرسة؟",
+        "en": "Is it found in a school?",
+        "es": "¿Se encuentra en una escuela?",
+        "de": "Findet man es in der Schule?",
+        "it": "Si trova a scuola?",
+        "fr": "Le trouve-t-on à l'école ?",
+        "pt": "É encontrado em uma escola?"
+      }
+    },
+    {
+      "id": "found_in_hospital",
+      "question": {
+        "ar": "هل يوجد في المستشفى؟",
+        "en": "Is it found in a hospital?",
+        "es": "¿Se encuentra en un hospital?",
+        "de": "Findet man es im Krankenhaus?",
+        "it": "Si trova in ospedale?",
+        "fr": "Le trouve-t-on à l'hôpital ?",
+        "pt": "É encontrado em um hospital?"
+      }
+    },
+    {
+      "id": "found_in_stadium",
+      "question": {
+        "ar": "هل يوجد في الملعب؟",
+        "en": "Is it found in a stadium?",
+        "es": "¿Se encuentra en un estadio?",
+        "de": "Findet man es im Stadion?",
+        "it": "Si trova allo stadio?",
+        "fr": "Le trouve-t-on dans un stade ?",
+        "pt": "É encontrado em um estádio?"
+      }
+    },
+    {
+      "id": "is_flat",
+      "question": {
+        "ar": "هل هو مسطح؟",
+        "en": "Is it flat?",
+        "es": "¿Es plano?",
+        "de": "Ist es flach?",
+        "it": "È piatto?",
+        "fr": "Est-ce plat ?",
+        "pt": "É plano?"
+      }
+    },
+    {
+      "id": "is_sticky",
+      "question": {
+        "ar": "هل هو لزج؟",
+        "en": "Is it sticky?",
+        "es": "¿Es pegajoso?",
+        "de": "Ist es klebrig?",
+        "it": "È appiccicoso?",
+        "fr": "Est-ce collant ?",
+        "pt": "É pegajoso?"
+      }
+    },
+    {
+      "id": "is_wet",
+      "question": {
+        "ar": "هل هو مبلل؟",
+        "en": "Is it wet?",
+        "es": "¿Está mojado?",
+        "de": "Ist es nass?",
+        "it": "È bagnato?",
+        "fr": "Est-ce mouillé ?",
+        "pt": "Está molhado?"
+      }
+    },
+    {
+      "id": "makes_sound",
+      "question": {
+        "ar": "هل يصدر صوتًا؟",
+        "en": "Does it make a sound?",
+        "es": "¿Hace ruido?",
+        "de": "Macht es ein Geräusch?",
+        "it": "Fa rumore?",
+        "fr": "Fait-il du bruit ?",
+        "pt": "Faz barulho?"
+      }
+    },
+    {
+      "id": "is_sharp",
+      "question": {
+        "ar": "هل هو حاد؟",
+        "en": "Is it sharp?",
+        "es": "¿Es afilado?",
+        "de": "Ist es scharf?",
+        "it": "È affilato?",
+        "fr": "Est-ce tranchant ?",
+        "pt": "É afiado?"
+      }
+    },
+    {
+      "id": "is_gray",
+      "question": {
+        "ar": "هل لونه رمادي؟",
+        "en": "Is it gray?",
+        "es": "¿Es gris?",
+        "de": "Ist es grau?",
+        "it": "È grigio?",
+        "fr": "Est-ce gris ?",
+        "pt": "É cinza?"
+      }
+    },
+    {
+      "id": "is_tall",
+      "question": {
+        "ar": "هل هو طويل؟",
+        "en": "Is it tall?",
+        "es": "¿Es alto?",
+        "de": "Ist es hoch?",
+        "it": "È alto?",
+        "fr": "Est-ce haut ?",
+        "pt": "É alto?"
+      }
     }
   ]
 }

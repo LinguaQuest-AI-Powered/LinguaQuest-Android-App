@@ -59,6 +59,36 @@
       "id": 12,
       "key": "bathroom",
       "difficulty": "EASY"
+    },
+    {
+      "id": 13,
+      "key": "zoo",
+      "difficulty": "EASY"
+    },
+    {
+      "id": 14,
+      "key": "farm",
+      "difficulty": "EASY"
+    },
+    {
+      "id": 15,
+      "key": "beach",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 16,
+      "key": "restaurant",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 17,
+      "key": "forest",
+      "difficulty": "MEDIUM"
+    },
+    {
+      "id": 18,
+      "key": "space",
+      "difficulty": "HARD"
     }
   ]
 }

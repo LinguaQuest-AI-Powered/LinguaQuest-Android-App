@@ -39,7 +39,7 @@ class InformationGainMindReaderEngine(
     fun nextQuestion(state: MindReaderGameState): MindReaderQuestionCandidate? {
         if (state.candidates.size <= 1) return null
 
-        val remainingAttributes = attributes.filterNot { it.id in state.askedAttributes }
+        val remainingAttributes = attributes.filterNot { it.id in state.askedAttributes }.shuffled()
 
         return remainingAttributes
             .mapNotNull { attribute ->
@@ -111,6 +111,7 @@ class InformationGainMindReaderEngine(
     fun rankedAttributes(state: MindReaderGameState): List<MindReaderQuestionCandidate> {
         return attributes
             .filterNot { it.id in state.askedAttributes }
+            .shuffled()
             .mapNotNull { attribute ->
                 val gain = informationGain(state.candidates, attribute.id)
                 if (gain <= 0.0) return@mapNotNull null

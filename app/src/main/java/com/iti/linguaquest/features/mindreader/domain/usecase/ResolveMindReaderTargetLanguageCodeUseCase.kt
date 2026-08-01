@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import javax.inject.Inject
@@ -34,8 +35,9 @@ class ResolveMindReaderTargetLanguageCodeUseCase @Inject constructor(
 
     private suspend fun loadAvailableLanguages(): List<LanguageOption> {
         return when (val result = authRepository.getAuthLanguages()) {
-            is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> result.data
-            is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> emptyList()
+            is LinguaQuestResult.Success -> result.data
+            is  LinguaQuestResult.Failure -> emptyList()
         }
     }
+
 }
