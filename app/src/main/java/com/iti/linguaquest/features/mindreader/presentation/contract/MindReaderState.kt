@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.mindreader.presentation.contract
 
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizChoice
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizQuestion
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
@@ -38,7 +39,8 @@ data class MindReaderState(
     val isLoading: Boolean = false,
     val currentPhase: MindReaderPhase = MindReaderPhase.LOBBY,
     val lingoEmotion: LingoEmotion = LingoEmotion.DEFAULT,
-    val selectedWorldId: Int? = null,
+    val selectedCategory: MindReaderCategory? = null,
+    val availableCategories: List<MindReaderCategory> = emptyList(),
     
     // Core game state
     val coinBalance: Int = 0,

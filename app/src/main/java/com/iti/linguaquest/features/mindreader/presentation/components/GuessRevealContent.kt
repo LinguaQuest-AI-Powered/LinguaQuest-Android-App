@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.tooling.preview.Preview
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
@@ -42,11 +45,9 @@ fun GuessRevealContent(
             coinsCount = state.coinBalance
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        AppMascotGradientBox(
+            imageRes = R.drawable.lingo_mind_answer,
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = stringResource(id = R.string.mind_reader_i_think_its),
@@ -88,5 +89,16 @@ fun GuessRevealContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GuessRevealContentPreview() {
+    LinguaQuestTheme {
+        GuessRevealContent(
+            state = MindReaderState(),
+            onIntent = {}
+        )
     }
 }

@@ -13,6 +13,7 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizChoice
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderRewardChallenge
+import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderCategoriesUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.BuildMindReaderPopQuizQuestionUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.CheckMindReaderContradictionsUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderCurrentResultUseCase
@@ -47,6 +48,7 @@ class MindReaderViewModel @Inject constructor(
     private val resolveMindReaderRewardUseCase: ResolveMindReaderRewardUseCase,
     private val checkMindReaderContradictionsUseCase: CheckMindReaderContradictionsUseCase,
     private val buildMindReaderPopQuizQuestionUseCase: BuildMindReaderPopQuizQuestionUseCase,
+    private val getMindReaderCategoriesUseCase: GetMindReaderCategoriesUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -60,14 +62,28 @@ class MindReaderViewModel @Inject constructor(
     private var dataset: MindReaderDataset? = null
 
     init {
-        // We get worldId from route arguments. Note: NavKey parsing isn't directly supported by SavedStateHandle like Jetpack Nav, 
-        // but let's assume we can set it if provided or rely on user selection.
-        val worldId = savedStateHandle.get<Int>("worldId")
-        _state.update { it.copy(selectedWorldId = worldId) }
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            try {
+                val categories = getMindReaderCategoriesUseCase()
+                _state.update { 
+                    it.copy(
+                        isLoading = false,
+                        availableCategories = categories,
+                        selectedCategory = categories.firstOrNull()
+                    ) 
+                }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false) }
+            }
+        }
     }
 
     fun onIntent(intent: MindReaderIntent) {
         when (intent) {
+            is MindReaderIntent.CategorySelected -> {
+                _state.update { it.copy(selectedCategory = intent.category) }
+            }
             is MindReaderIntent.StartGameClicked -> startGame()
             is MindReaderIntent.AnswerClicked -> submitAnswer(intent.answer)
             is MindReaderIntent.TranslateClicked -> toggleTranslation()
@@ -89,7 +105,7 @@ class MindReaderViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, currentPhase = MindReaderPhase.LOBBY) }
             try {
                 val launchData: MindReaderGameLaunch = startMindReaderGameUseCase(
-                    worldKey = _state.value.selectedWorldId?.toString()
+                    worldKey = _state.value.selectedCategory?.id
                 )
                 dataset = launchData.dataset
                 domainState = launchData.state

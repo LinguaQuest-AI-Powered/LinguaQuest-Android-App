@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.mindreader.presentation.components
 
+
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.ui.tooling.preview.Preview
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
@@ -51,11 +56,9 @@ fun AkinatorTrapContent(
             coinsCount = state.coinBalance
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        AppMascotGradientBox(
+            imageRes = R.drawable.lingo_mind_busted,
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = stringResource(id = R.string.mind_reader_trap_title),
@@ -78,7 +81,7 @@ fun AkinatorTrapContent(
                     label = { 
                         Text(stringResource(
                             id = R.string.mind_reader_trap_dropdown_title, 
-                            state.selectedWorldId?.toString() ?: ""
+                            state.selectedCategory?.displayName ?: ""
                         )) 
                     },
                     placeholder = { Text(stringResource(id = R.string.mind_reader_trap_dropdown_hint)) },
@@ -113,5 +116,16 @@ fun AkinatorTrapContent(
                 enabled = selectedEntity != null
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AkinatorTrapContentPreview() {
+    LinguaQuestTheme {
+        AkinatorTrapContent(
+            state = MindReaderState(),
+            onIntent = {}
+        )
     }
 }

@@ -10,6 +10,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import com.iti.linguaquest.core.utils.SpeechManager
+import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderEffect
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
 import com.iti.linguaquest.features.mindreader.presentation.components.PreGameLobbyContent
 import com.iti.linguaquest.features.mindreader.presentation.components.ActiveGameContent
@@ -25,9 +32,28 @@ fun MindReaderScreen(
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val speechManager = remember { SpeechManager(context) }
 
-    // Assuming we handle effects elsewhere or inline
-    // (We will use a LaunchedEffect block if needed for navigation back, toasts, etc.)
+    DisposableEffect(Unit) {
+        onDispose {
+            speechManager.shutdown()
+        }
+    }
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is MindReaderEffect.NavigateBack -> onNavigateBack()
+                is MindReaderEffect.PlayAudio -> {
+                    speechManager.speak(effect.text, effect.languageCode)
+                }
+                is MindReaderEffect.ShowToast -> {
+                    Toast.makeText(context, effect.message.asString(context), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier

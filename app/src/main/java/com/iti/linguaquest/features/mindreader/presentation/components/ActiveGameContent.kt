@@ -1,5 +1,8 @@
 package com.iti.linguaquest.features.mindreader.presentation.components
 
+import androidx.compose.ui.tooling.preview.Preview
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
@@ -42,14 +46,13 @@ fun ActiveGameContent(
         LinguaQuestScreenTopBar(
             title = stringResource(id = R.string.mind_reader_lobby_title),
             onBackClicked = { onIntent(MindReaderIntent.ReturnToHomeClicked) },
+            showCoins = true,
             coinsCount = state.coinBalance
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        AppMascotGradientBox(
+            imageRes = R.drawable.lingo_mind_asking,
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = stringResource(
@@ -129,5 +132,16 @@ fun ActiveGameContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ActiveGameContentPreview() {
+    LinguaQuestTheme {
+        ActiveGameContent(
+            state = MindReaderState(),
+            onIntent = {}
+        )
     }
 }
