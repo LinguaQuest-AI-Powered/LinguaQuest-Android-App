@@ -6,4 +6,5 @@ sealed interface HomeEffect {
     data object NavigateToAllWorlds : HomeEffect
     data object NavigateToAddLanguages : HomeEffect
     data object NavigateToRoleplayList : HomeEffect
+    data object NavigateToMindReader : HomeEffect
 }

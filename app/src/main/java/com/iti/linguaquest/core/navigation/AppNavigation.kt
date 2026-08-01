@@ -63,6 +63,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.view.LevelScreen
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditProfileScreen
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
+import com.iti.linguaquest.features.mindreader.presentation.MindReaderScreen
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
@@ -369,6 +370,12 @@ fun AppNavigation(
                             SharedVoiceResultHolder.pendingResult = result
                             rootBackStack.navigateSingleTop(RootScreen.VoiceResult)
                         }
+                    )
+                }
+
+                entry<RootScreen.MindReader> {
+                    MindReaderScreen(
+                        onNavigateBack = { rootBackStack.removeLastOrNull() }
                     )
                 }
 
