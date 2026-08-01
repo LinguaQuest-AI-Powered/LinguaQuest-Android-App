@@ -12,10 +12,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun HelpScreen(
     onBack: () -> Unit,
-    onOpenFaqs: () -> Unit,
-    onOpenContactUs: () -> Unit,
-    onOpenUserGuide: () -> Unit,
-    viewModel: HelpViewModel = hiltViewModel()
+    onNavigateToContactSupport: () -> Unit = {},
+    onNavigateToReportBug: () -> Unit = {},
+    viewModel: HelpViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -23,9 +22,8 @@ fun HelpScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 HelpEffect.NavigateBack -> onBack()
-                HelpEffect.NavigateToFaqs -> onOpenFaqs()
-                HelpEffect.NavigateToContactUs -> onOpenContactUs()
-                HelpEffect.NavigateToUserGuide -> onOpenUserGuide()
+                HelpEffect.NavigateToContactSupport -> onNavigateToContactSupport()
+                HelpEffect.NavigateToReportBug -> onNavigateToReportBug()
             }
         }
     }

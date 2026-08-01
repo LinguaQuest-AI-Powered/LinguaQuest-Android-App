@@ -49,11 +49,8 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.presentation.view.AchievementScreen
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
- import com.iti.linguaquest.features.map.presentation.MapScreen
+import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
-import com.iti.linguaquest.features.help.presentation.contact.view.ContactUsScreen
-import com.iti.linguaquest.features.help.presentation.faqs.view.FaqsScreen
-import com.iti.linguaquest.features.help.presentation.guide.view.UserGuideScreen
 import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
 import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
@@ -187,7 +184,8 @@ fun AppNavigation(
             ),
             entryProvider = entryProvider {
                 entry<RootScreen.Splash> {
-                    val splashViewModel: com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel = hiltViewModel()
+                    val splashViewModel: com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel =
+                        hiltViewModel()
                     val destination by splashViewModel.destination.collectAsState()
 
                     LinguaQuestSplashScreen()
@@ -227,8 +225,18 @@ fun AppNavigation(
                         onContinue = {
                             when (screen.flow) {
                                 "SIGN_UP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp())
-                                "OAUTH" -> rootBackStack.navigateSingleTop(RootScreen.Login(isOAuthLanguageSelectionCompleted = true))
-                                "OAUTH_SIGNUP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp(isOAuthLanguageSelectionCompleted = true))
+                                "OAUTH" -> rootBackStack.navigateSingleTop(
+                                    RootScreen.Login(
+                                        isOAuthLanguageSelectionCompleted = true
+                                    )
+                                )
+
+                                "OAUTH_SIGNUP" -> rootBackStack.navigateSingleTop(
+                                    RootScreen.SignUp(
+                                        isOAuthLanguageSelectionCompleted = true
+                                    )
+                                )
+
                                 else -> rootBackStack.navigateSingleTop(RootScreen.Login())
                             }
                         }
@@ -430,35 +438,9 @@ fun AppNavigation(
                 entry<RootScreen.HelpSupport> {
                     HelpScreen(
                         onBack = { rootBackStack.removeLastOrNull() },
-                        onOpenFaqs = {
-                            rootBackStack.navigateSingleTop(RootScreen.HelpFaqs)
-                        },
-                        onOpenContactUs = {
-                            rootBackStack.navigateSingleTop(RootScreen.HelpContactUs)
-                        },
-                        onOpenUserGuide = {
-                            rootBackStack.navigateSingleTop(RootScreen.HelpGuide)
-                        }
                     )
                 }
 
-                entry<RootScreen.HelpFaqs> {
-                    FaqsScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
-                    )
-                }
-
-                entry<RootScreen.HelpContactUs> {
-                    ContactUsScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
-                    )
-                }
-
-                entry<RootScreen.HelpGuide> {
-                    UserGuideScreen(
-                        onBack = { rootBackStack.removeLastOrNull() }
-                    )
-                }
 
                 entry<RootScreen.AboutApp> {
                     AboutAppScreen(
@@ -477,15 +459,16 @@ fun AppNavigation(
                         wordId = screen.wordId,
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToReview = { lockScreenWord ->
-                            SharedWordHolder.pendingWord = com.iti.linguaquest.core.database.word.WordEntity(
-                                id = lockScreenWord.id,
-                                sourceWord = lockScreenWord.word,
-                                translatedWord = lockScreenWord.translation,
-                                sourceLanguage = lockScreenWord.targetLanguage,
-                                targetLanguage = lockScreenWord.nativeLanguage,
-                                category = lockScreenWord.proficiencyLevel,
-                                imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
-                            )
+                            SharedWordHolder.pendingWord =
+                                com.iti.linguaquest.core.database.word.WordEntity(
+                                    id = lockScreenWord.id,
+                                    sourceWord = lockScreenWord.word,
+                                    translatedWord = lockScreenWord.translation,
+                                    sourceLanguage = lockScreenWord.targetLanguage,
+                                    targetLanguage = lockScreenWord.nativeLanguage,
+                                    category = lockScreenWord.proficiencyLevel,
+                                    imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
+                                )
                             rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
                         }
                     )
@@ -494,7 +477,8 @@ fun AppNavigation(
                 entry<RootScreen.Leaderboard> {
 
                     LeaderboardScreen(
-                        onBack = { rootBackStack.removeLastOrNull() })}
+                        onBack = { rootBackStack.removeLastOrNull() })
+                }
 
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
@@ -516,7 +500,7 @@ fun AppNavigation(
 
                 entry<RootScreen.Roleplay> { screen ->
                     val viewModel: RoleplayViewModel = hiltViewModel()
-                    
+
                     RoleplayScreen(
                         scenarioId = screen.scenarioId,
                         onNavigateHome = { rootBackStack.removeLastOrNull() },
@@ -531,16 +515,16 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Achievement> {
-                    AchievementScreen (
+                    AchievementScreen(
                         onBackClick = { rootBackStack.removeLastOrNull() },
-                     )
+                    )
 
                 }
                 entry<RootScreen.EditProfile> {
-                         EditProfileScreen(
-                            onBackClick = { rootBackStack.removeLastOrNull() }
-                        )
-                    }
+                    EditProfileScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
+                    )
+                }
 
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })

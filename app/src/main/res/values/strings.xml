@@ -308,6 +308,12 @@
     <string name="worlds_count_format">%1$d worlds</string>
     <string name="all_filter">All</string>
     <string name="help_support_title">Help &amp; Support</string>
+    <string name="help_banner_speech_bubble">How can I help you today?</string>
+    <string name="help_faq_section_title">Frequently Asked Questions</string>
+    <string name="help_still_need_help_title">Still need help?</string>
+    <string name="help_contact_support_action">Contact Support</string>
+    <string name="help_report_bug_action">Report a Bug</string>
+    <string name="help_reply_footer">Our team usually replies within 24 hours</string>
     <string name="help_hero_title">We\'re here to help!</string>
     <string name="help_hero_subtitle">Choose a topic below and we\'ll guide you.</string>
     <string name="help_how_can_we_help">How can we help you?</string>
@@ -694,6 +700,20 @@
     <string name="contact_us_message_label">Message</string>
     <string name="contact_us_message_placeholder">Describe your issue or feedback in detail...</string>
     <string name="contact_us_send_button">Send Message</string>
+    <string name="faq_earn_coins_question">How do I earn coins?</string>
+    <string name="faq_earn_coins_answer">Complete lessons and challenges to earn coins.</string>
+
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
+
+    <string name="faq_lock_screen_question">How does Lock Screen Vocabulary work?</string>
+    <string name="faq_lock_screen_answer">Go to Settings to enable lock screen notifications for daily word challenges.</string>
+
+    <string name="faq_change_language_question">Can I change my target language?</string>
+    <string name="faq_change_language_answer">Yes! You can change your target language in the profile settings.</string>
+
+    <string name="faq_maintain_streak_question">How do I maintain my streak?</string>
+    <string name="faq_maintain_streak_answer">Complete at least one lesson or challenge every day to keep your streak alive!</string>
     <!-- Mind Reader Game Strings -->
     <string name="mind_reader_lobby_title">Lingo\'s Mind Reader</string>
     <string name="mind_reader_lobby_subtitle">\"I\'ll try to guess it in 20 questions... prepare your mind!\"</string>

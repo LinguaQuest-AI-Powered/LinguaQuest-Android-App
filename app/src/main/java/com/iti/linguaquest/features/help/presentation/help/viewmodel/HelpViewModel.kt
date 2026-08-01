@@ -2,7 +2,7 @@ package com.iti.linguaquest.features.help.presentation.help.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.features.help.data.HelpTopic
+import com.iti.linguaquest.features.help.data.HelpFaqProvider
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpEffect
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpIntent
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpState
@@ -19,7 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HelpViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow(HelpState())
+    private val _state = MutableStateFlow(
+        HelpState(
+            faqItems = HelpFaqProvider.defaultFaqs(),
+            expandedFaqId = null
+        )
+    )
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<HelpEffect>()
@@ -27,14 +32,20 @@ class HelpViewModel @Inject constructor() : ViewModel() {
 
     fun onIntent(intent: HelpIntent) {
         when (intent) {
-            is HelpIntent.OnTopicSelected -> {
-                when (intent.topic) {
-                    HelpTopic.FAQS -> emitEffect(HelpEffect.NavigateToFaqs)
-                    HelpTopic.CONTACT_US -> emitEffect(HelpEffect.NavigateToContactUs)
-                    HelpTopic.USER_GUIDE -> emitEffect(HelpEffect.NavigateToUserGuide)
-                }
-            }
+            is HelpIntent.OnFaqToggled -> onFaq(intent)
+
+            HelpIntent.OnContactSupportClicked -> emitEffect(HelpEffect.NavigateToContactSupport)
+
+            HelpIntent.OnReportBugClicked -> emitEffect(HelpEffect.NavigateToReportBug)
+
             HelpIntent.OnBackClicked -> emitEffect(HelpEffect.NavigateBack)
+        }
+    }
+
+    private fun onFaq(intent: HelpIntent.OnFaqToggled) {
+        _state.update { current ->
+            val newExpandedId = if (current.expandedFaqId == intent.faqId) null else intent.faqId
+            current.copy(expandedFaqId = newExpandedId)
         }
     }
 

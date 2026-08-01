@@ -689,9 +689,30 @@
     <string name="contact_us_subject_placeholder">بماذا يمكننا مساعدتك؟</string>
 
     <string name="contact_us_message_label">الرسالة</string>
-    <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل...</string>
-
+    <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل…</string>
+    <string name="help_banner_speech_bubble">كيف يمكنني مساعدتك اليوم؟</string>
+    <string name="help_faq_section_title">الأسئلة الشائعة</string>
+    <string name="help_still_need_help_title">هل ما زلت بحاجة إلى المساعدة؟</string>
+    <string name="help_contact_support_action">التواصل مع الدعم</string>
+    <string name="help_report_bug_action">الإبلاغ عن خطأ</string>
+    <string name="help_reply_footer">يرد فريقنا عادةً خلال 24 ساعة</string>
     <string name="contact_us_send_button">إرسال الرسالة</string>
+    <string name="faq_earn_coins_question">كيف أكسب العملات؟</string>
+    <string name="faq_earn_coins_answer">أكمل الدروس والتحديات لكسب العملات.</string>
+
+    <string name="expand">عرض المزيد</string>
+    <string name="collapse">عرض أقل</string>
+
+    <string name="faq_lock_screen_question">كيف تعمل ميزة مفردات شاشة القفل؟</string>
+    <string name="faq_lock_screen_answer">انتقل إلى الإعدادات لتفعيل إشعارات شاشة القفل الخاصة بتحديات الكلمات اليومية.</string>
+
+    <string name="faq_change_language_question">هل يمكنني تغيير اللغة التي أتعلمها؟</string>
+    <string name="faq_change_language_answer">نعم! يمكنك تغيير اللغة التي تتعلمها من إعدادات الملف الشخصي.</string>
+
+    <string name="faq_maintain_streak_question">كيف أحافظ على سلسلة التعلم؟</string>
+    <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
+
+
 
     <!-- Mind Reader Game Strings -->
     <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
