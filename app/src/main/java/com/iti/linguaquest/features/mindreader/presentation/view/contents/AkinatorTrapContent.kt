@@ -92,7 +92,9 @@ fun AkinatorTrapContent(
                     entities = state.stumpCandidates ?: emptyList(),
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
-                    onEntitySelected = { selectedEntity = it }
+                    onEntitySelected = { selectedEntity = it },
+                    targetLanguageCode = state.targetLanguageCode,
+                    nativeLanguageCode = state.nativeLanguageCode
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))

@@ -692,4 +692,51 @@
     <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل...</string>
 
     <string name="contact_us_send_button">إرسال الرسالة</string>
+
+    <!-- Mind Reader Game Strings -->
+    <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
+    <string name="mind_reader_lobby_subtitle">\"سأحاول تخمين كلمتك في 20 سؤالاً... جهّز عقلك!\"</string>
+    <string name="mind_reader_think_of_a_word">فكر في كلمة من فئتك المختارة!</string>
+    <string name="mind_reader_current_category">الفئة الحالية</string>
+    <string name="mind_reader_start_game">ابدأ اللعبة ⚡</string>
+    <string name="mind_reader_change_category">تغيير</string>
+    <string name="mind_reader_confirm_dialog_title">هل لديك كلمة في ذهنك؟</string>
+    <string name="mind_reader_confirm_dialog_desc">تأكد من أنها تنتمي لعالم %1$s!</string>
+    <string name="mind_reader_not_yet">ليس بعد</string>
+    <string name="mind_reader_yes_lets_go">نعم، هيا بنا! ✓</string>
+    <string name="mind_reader_question_progress">السؤال %1$d من %2$d</string>
+    <string name="mind_reader_progress_complete">اكتمل %1$d%%</string>
+    <string name="mind_reader_translate">ترجمة</string>
+    <string name="mind_reader_answer_yes">نعم</string>
+    <string name="mind_reader_answer_no">لا</string>
+    <string name="mind_reader_answer_sometimes">أحياناً</string>
+    <string name="mind_reader_answer_probably_not">على الأغلب لا</string>
+    <string name="mind_reader_answer_dont_know">لا أعلم</string>
+    <string name="mind_reader_thinking">لينجو يفكر بعمق...</string>
+    <string name="mind_reader_i_think_its">أعتقد أنها...</string>
+    <string name="mind_reader_wrong">✕ لا، أنت مخطئ!</string>
+    <string name="mind_reader_correct">✓ نعم، لقد عرفتها!</string>
+    <string name="mind_reader_pop_quiz_title">ترجم هذه الكلمة</string>
+    <string name="mind_reader_busted">كُشفت الحيلة!</string>
+    <string name="mind_reader_stumped">حيّرت لينجو!</string>
+    <string name="mind_reader_stumped_desc">أنا أستسلم! لقد فزت.</string>
+    <string name="mind_reader_experience">الخبرة</string>
+    <string name="mind_reader_earnings">المكافآت</string>
+    <string name="mind_reader_try_again">العب مرة أخرى</string>
+    <string name="mind_reader_return_home">العودة للرئيسية</string>
+    <string name="mind_reader_card_title">قارئ الأفكار</string>
+    <string name="mind_reader_card_desc">دع لينجو يخمن كلمتك!</string>
+    <string name="mind_reader_trap_title">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
+    <string name="mind_reader_trap_dropdown_title">مفردات %1$s</string>
+    <string name="mind_reader_trap_dropdown_hint">اختر كلمتك...</string>
+    <string name="mind_reader_trap_submit">إرسال ▷</string>
+    <string name="mind_reader_pop_quiz_speech">رائع! اضغط على الترجمة الصحيحة لاستلام مكافأتك.</string>
+    <string name="mind_reader_victory_speech">مهاراتك اللغوية أسطورية حقاً.</string>
+    <string name="mind_reader_stumped_title">لقد حيّرت\nلينجو!</string>
+    <string name="mind_reader_return_to_home">العودة إلى الرئيسية</string>
+    <string name="mind_reader_play_again">العب مجدداً</string>
+    <string name="mind_reader_xp_value">%1$d نقطة خبرة</string>
+    <string name="mind_reader_coins_value">%1$d عملة</string>
+    <string name="mind_reader_trap_speech">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
+    <string name="mind_reader_busted_title">كُشفت الحيلة!</string>
 </resources>

@@ -94,7 +94,7 @@ fun MindReaderCard(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.lingo_searching),
+                    painter = painterResource(id = R.drawable.lingo_mind_thinking),
                     contentDescription = null,
                     modifier = Modifier.size(70.dp)
                 )

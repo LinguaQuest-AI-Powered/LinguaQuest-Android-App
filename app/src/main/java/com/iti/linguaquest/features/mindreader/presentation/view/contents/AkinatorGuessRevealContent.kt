@@ -73,6 +73,21 @@ fun GuessRevealContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                state.guessResult?.entity?.let { entity ->
+                    val word = entity.resolveTranslation(state.targetLanguageCode)
+                    if (word.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = word.uppercase(),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = LinguaQuestTheme.colors.BrownText,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.weight(1f))
             }
 

@@ -708,11 +708,11 @@
     <string name="mind_reader_question_progress">Question %1$d of %2$d</string>
     <string name="mind_reader_progress_complete">%1$d%% Complete</string>
     <string name="mind_reader_translate">Translate</string>
-    <string name="mind_reader_answer_yes">Sí</string>
+    <string name="mind_reader_answer_yes">Yes</string>
     <string name="mind_reader_answer_no">No</string>
-    <string name="mind_reader_answer_sometimes">A veces</string>
-    <string name="mind_reader_answer_probably_not">Probablemente no</string>
-    <string name="mind_reader_answer_dont_know">No sé</string>
+    <string name="mind_reader_answer_sometimes">Sometimes</string>
+    <string name="mind_reader_answer_probably_not">Probably Not</string>
+    <string name="mind_reader_answer_dont_know">Don\'t Know</string>
     <string name="mind_reader_thinking">Lingo is thinking hard...</string>
     <string name="mind_reader_i_think_its">I think it\'s...</string>
     <string name="mind_reader_wrong">✕ No, you\'re wrong!</string>

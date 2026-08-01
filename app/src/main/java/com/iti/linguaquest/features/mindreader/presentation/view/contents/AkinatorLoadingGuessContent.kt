@@ -1,5 +1,11 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,9 +19,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,19 +32,41 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
+import com.iti.linguaquest.core.sharedComponents.LingoBouncingDots
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun LoadingGuessContent(
     modifier: Modifier = Modifier
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "lingo_pop")
+
+    val translateY by infiniteTransition.animateFloat(
+        initialValue = -8f,
+        targetValue = 8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pop_translateY"
+    )
+
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 0.92f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pop_scale"
+    )
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         AppGradientBackgroundBox(
-            modifier = Modifier
-                .fillMaxWidth(0.85f),
+            modifier = Modifier.fillMaxWidth(0.85f),
             gradientColors = listOf(
                 LinguaQuestTheme.colors.DialogGradientTopRight,
                 LinguaQuestTheme.colors.whiteColor,
@@ -65,7 +95,13 @@ fun LoadingGuessContent(
                         Image(
                             painter = painterResource(id = R.drawable.lingo_mind_processing),
                             contentDescription = null,
-                            modifier = Modifier.size(150.dp)
+                            modifier = Modifier
+                                .size(150.dp)
+                                .graphicsLayer {
+                                    translationY = translateY
+                                    scaleX = scale
+                                    scaleY = scale
+                                }
                         )
                     }
 
@@ -80,7 +116,13 @@ fun LoadingGuessContent(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    LingoBouncingDots(
+                        dotColor = LinguaQuestTheme.colors.BrownText
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }

@@ -35,7 +35,9 @@ fun MindReaderEntityDropdown(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     onEntitySelected: (MindReaderEntity) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    targetLanguageCode: String = "en",
+    nativeLanguageCode: String = "en"
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         ExposedDropdownMenuBox(
@@ -55,7 +57,7 @@ fun MindReaderEntityDropdown(
             ) {
                 Text(
                     text = selectedEntity?.let {
-                        "${it.emoji} ${it.resolveTranslation("en")}"
+                        "${it.emoji} ${it.resolveTranslation(targetLanguageCode)}"
                     } ?: stringResource(id = R.string.mind_reader_trap_dropdown_hint),
                     style = MaterialTheme.typography.bodyLarge,
                     color = if (selectedEntity != null) {
@@ -74,6 +76,14 @@ fun MindReaderEntityDropdown(
                 onDismissRequest = { onExpandedChange(false) }
             ) {
                 entities.forEach { entity ->
+                    val targetText = entity.resolveTranslation(targetLanguageCode)
+                    val nativeText = entity.resolveTranslation(nativeLanguageCode)
+                    val label = if (targetLanguageCode.equals(nativeLanguageCode, ignoreCase = true) || targetText.equals(nativeText, ignoreCase = true)) {
+                        targetText
+                    } else {
+                        "$targetText ($nativeText)"
+                    }
+
                     DropdownMenuItem(
                         text = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -83,7 +93,7 @@ fun MindReaderEntityDropdown(
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(
-                                    text = entity.resolveTranslation("en"),
+                                    text = label,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }

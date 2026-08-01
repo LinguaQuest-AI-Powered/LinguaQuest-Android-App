@@ -88,35 +88,35 @@ fun ActiveGameContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_answer_yes),
+                    text = MindReaderAnswerOption.YES.resolveLabel(state.nativeLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.YES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_answer_no),
+                    text = MindReaderAnswerOption.NO.resolveLabel(state.nativeLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.NO)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_answer_sometimes),
+                    text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.nativeLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.SOMETIMES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_answer_probably_not),
+                    text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.nativeLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY_NOT)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_answer_dont_know),
+                    text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.nativeLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY)) }
                 )
             }

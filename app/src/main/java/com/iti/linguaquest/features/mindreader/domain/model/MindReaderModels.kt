@@ -115,6 +115,57 @@ enum class MindReaderAnswerOption(val rawId: String) {
         }
     }
 
+    fun resolveLabel(languageCode: String?): String {
+        val code = languageCode.orEmpty().trim().lowercase(Locale.ROOT).take(2)
+        return when (this) {
+            YES -> when (code) {
+                "ar" -> "نعم"
+                "es" -> "Sí"
+                "de" -> "Ja"
+                "fr" -> "Oui"
+                "it" -> "Sì"
+                "pt" -> "Sim"
+                else -> "Yes"
+            }
+            NO -> when (code) {
+                "ar" -> "لا"
+                "es" -> "No"
+                "de" -> "Nein"
+                "fr" -> "Non"
+                "it" -> "No"
+                "pt" -> "Não"
+                else -> "No"
+            }
+            SOMETIMES -> when (code) {
+                "ar" -> "أحياناً"
+                "es" -> "A veces"
+                "de" -> "Manchmal"
+                "fr" -> "Parfois"
+                "it" -> "A volte"
+                "pt" -> "Às vezes"
+                else -> "Sometimes"
+            }
+            PROBABLY_NOT -> when (code) {
+                "ar" -> "على الأغلب لا"
+                "es" -> "Probablemente no"
+                "de" -> "Wahrscheinlich nicht"
+                "fr" -> "Probablement pas"
+                "it" -> "Probabilmente no"
+                "pt" -> "Provavelmente não"
+                else -> "Probably Not"
+            }
+            PROBABLY -> when (code) {
+                "ar" -> "لا أعلم"
+                "es" -> "No sé"
+                "de" -> "Ich weiß nicht"
+                "fr" -> "Je ne sais pas"
+                "it" -> "Non lo so"
+                "pt" -> "Não sei"
+                else -> "Don't Know"
+            }
+        }
+    }
+
     companion object {
         fun fromRawId(rawId: String?): MindReaderAnswerOption? {
             val normalized = rawId?.trim().orEmpty()
@@ -203,6 +254,7 @@ data class MindReaderDataset(
 
 data class MindReaderGameLaunch(
     val languageCode: String,
+    val nativeLanguageCode: String = "en",
     val dataset: MindReaderDataset,
     val state: MindReaderGameState
 )
