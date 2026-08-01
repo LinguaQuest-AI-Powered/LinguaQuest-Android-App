@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,7 +25,11 @@ fun MindReaderAnswerButton(
     enabled: Boolean = true
 ) {
     val shape = RoundedCornerShape(50)
-    val backgroundColor = if (enabled) Color(0xFFEBE0D3) else Color(0xFFEBE0D3).copy(alpha = 0.5f)
+    val backgroundColor = if (enabled) {
+        LinguaQuestTheme.colors.MindReaderBeige
+    } else {
+        LinguaQuestTheme.colors.MindReaderBeige.copy(alpha = 0.5f)
+    }
 
     Box(
         contentAlignment = Alignment.Center,

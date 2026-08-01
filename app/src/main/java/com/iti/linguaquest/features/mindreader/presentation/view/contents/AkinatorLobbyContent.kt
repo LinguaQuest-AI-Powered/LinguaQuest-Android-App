@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,10 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,10 +32,9 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
-import com.iti.linguaquest.features.mindreader.presentation.view.components.CategorySelectionCard
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderCategoryDropdown
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AkinatorLobbyContent(
     modifier: Modifier = Modifier,
@@ -100,35 +94,13 @@ fun AkinatorLobbyContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    ExposedDropdownMenuBox(
-                        expanded = showCategoryDropdown,
-                        onExpandedChange = { showCategoryDropdown = !showCategoryDropdown },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        CategorySelectionCard(
-                            category = state.selectedCategory,
-                            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                        )
-
-                        ExposedDropdownMenu(
-                            expanded = showCategoryDropdown,
-                            onDismissRequest = { showCategoryDropdown = false }
-                        ) {
-                            state.availableCategories.forEach { category ->
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = "${category.emoji} ${category.displayName}")
-                                    },
-                                    onClick = {
-                                        onIntent(MindReaderIntent.CategorySelected(category))
-                                        showCategoryDropdown = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
+                MindReaderCategoryDropdown(
+                    selectedCategory = state.selectedCategory,
+                    availableCategories = state.availableCategories,
+                    expanded = showCategoryDropdown,
+                    onExpandedChange = { showCategoryDropdown = it },
+                    onCategorySelected = { onIntent(MindReaderIntent.CategorySelected(it)) }
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -185,3 +157,4 @@ private fun AkinatorLobbyContentPreview() {
         )
     }
 }
+

@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +40,7 @@ fun LoadingGuessContent(
             gradientColors = listOf(
                 LinguaQuestTheme.colors.DialogGradientTopRight,
                 LinguaQuestTheme.colors.whiteColor,
-                Color(0xFFFCEBAE)
+                LinguaQuestTheme.colors.DialogGradientBottomLeft
             )
         ) {
             Box(
@@ -61,7 +60,7 @@ fun LoadingGuessContent(
                         modifier = Modifier
                             .size(180.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFFEBE0D3))
+                            .background(LinguaQuestTheme.colors.MindReaderBeige)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.lingo_mind_processing),
@@ -95,3 +94,4 @@ private fun LoadingGuessContentPreview() {
         LoadingGuessContent()
     }
 }
+

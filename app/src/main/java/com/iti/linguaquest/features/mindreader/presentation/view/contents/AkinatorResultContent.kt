@@ -1,16 +1,11 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +29,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderRewardRow
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
 @Composable
@@ -104,56 +100,10 @@ fun ResultContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_start),
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(id = R.string.mind_reader_experience),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = LinguaQuestTheme.colors.BrownText.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.mind_reader_xp_value,
-                                resultInfo.xpEarned
-                            ),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.BrownText
-                        )
-                    }
-
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_coin),
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(id = R.string.mind_reader_earnings),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = LinguaQuestTheme.colors.BrownText.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.mind_reader_coins_value,
-                                resultInfo.coinsEarned
-                            ),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.BrownText
-                        )
-                    }
-                }
+                MindReaderRewardRow(
+                    xpEarned = resultInfo.xpEarned,
+                    coinsEarned = resultInfo.coinsEarned
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -200,3 +150,4 @@ private fun ResultContentPreview() {
         )
     }
 }
+

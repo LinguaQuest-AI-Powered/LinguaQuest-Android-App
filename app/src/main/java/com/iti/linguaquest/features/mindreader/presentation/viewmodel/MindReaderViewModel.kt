@@ -122,7 +122,6 @@ class MindReaderViewModel @Inject constructor(
                 
                 processCurrentDomainState()
             } catch (e: Exception) {
-                // Log and handle error
                 _state.update { it.copy(isLoading = false) }
             }
         }
@@ -168,7 +167,7 @@ class MindReaderViewModel @Inject constructor(
             is MindReaderResult.Guessing -> {
                 viewModelScope.launch {
                     _state.update { it.copy(currentPhase = MindReaderPhase.GUESSING_LOADING, lingoEmotion = LingoEmotion.DETECTIVE) }
-                    delay(2500) // Loading state as requested in docs
+                    delay(2500)
                     _state.update {
                         it.copy(
                             currentPhase = MindReaderPhase.GUESS_REVEAL,
@@ -346,8 +345,6 @@ class MindReaderViewModel @Inject constructor(
                     coinBalance = it.coinBalance - (if (it.showTranslation) 0 else cost)
                 )
             }
-        } else {
-            // Trigger Ad flow or show error toast
         }
     }
 

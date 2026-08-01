@@ -41,20 +41,14 @@ data class MindReaderState(
     val lingoEmotion: LingoEmotion = LingoEmotion.DEFAULT,
     val selectedCategory: MindReaderCategory? = null,
     val availableCategories: List<MindReaderCategory> = emptyList(),
-    
-    // Core game state
     val coinBalance: Int = 0,
     val xpBalance: Int = 0,
     val maxQuestions: Int = 20,
     val currentQuestionNumber: Int = 0,
-    
-    // Playing phase state
     val currentQuestion: String? = null,
     val translatedQuestion: String? = null,
     val showTranslation: Boolean = false,
     val targetLanguageCode: String = "en",
-    
-    // Outcomes & special phases state
     val guessResult: MindReaderGuessResult? = null,
     val popQuizQuestion: MindReaderPopQuizQuestion? = null,
     val stumpCandidates: List<MindReaderEntity>? = null,

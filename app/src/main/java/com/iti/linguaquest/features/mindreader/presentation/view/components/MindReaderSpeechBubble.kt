@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,8 +23,8 @@ fun MindReaderSpeechBubble(
 
     Box(
         modifier = modifier
-            .shadow(4.dp, shape, spotColor = Color(0x22000000))
-            .background(Color(0xFFFFF3E6), shape)
+            .shadow(4.dp, shape, spotColor = LinguaQuestTheme.colors.blackColor.copy(alpha = 0.13f))
+            .background(LinguaQuestTheme.colors.MindReaderCream, shape)
             .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
         Text(

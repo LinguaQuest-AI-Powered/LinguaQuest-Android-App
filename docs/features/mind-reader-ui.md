@@ -1,44 +1,51 @@
-# MindReader UI Refinement
+# MindReader UI Refinement & Modularization
 
 ## Overview
-The MindReader (Akinator-style) game feature's UI was refined to match the Figma design specifications. All 7 content screens, 2 shared components, and supporting model/string changes were updated.
+The MindReader (Akinator-style) game feature presentation layer was modularized into granular, reusable composables and fully theme-integrated to comply with LinguaQuest's design system standards.
 
-## Changes Summary
+## Theme Integration
+- **`LinguaQuestColors.MindReaderBeige`**: Semantic token for game answer buttons, dropdown backgrounds, category cards, and mascot frames (maps to `AppColors.MindReaderBeige` / `DarkMindReaderBeige`).
+- **`LinguaQuestColors.MindReaderCream`**: Semantic token for speech bubbles, action chips, and speaker icon backgrounds (maps to `AppColors.MindReaderCream` / `DarkMindReaderCream`).
+- Zero hardcoded hex colors across all feature files.
 
-### Model Layer
-- **MindReaderCategory** (`domain/model/MindReaderCategory.kt`): Added `emoji: String` field
-- **GetMindReaderCategoriesUseCase** (`domain/usecase/GetMindReaderCategoriesUseCase.kt`): Now derives category emoji from the first entity in each world group
+## Component Architecture
 
-### New Components
-- **MindReaderAnswerButton** (`presentation/view/components/MindReaderAnswerButton.kt`): Beige/tan pill-shaped button used for game answers and quiz choices. Background `Color(0xFFEBE0D3)`, full-width, rounded pill shape.
+All UI components are modularized under `com.iti.linguaquest.features.mindreader.presentation.view.components`:
 
-### Updated Components
-- **MindReaderSpeechBubble** (`presentation/view/components/MindReaderSpeechBubble.kt`): Warm cream background (`Color(0xFFFFF3E6)`), subtle shadow, bold uppercase text
-- **CategorySelectionCard** (`presentation/view/components/CategorySelectionCard.kt`): Now shows "CURRENT CATEGORY" label with emoji icon and category name, no longer acts as dropdown trigger
+| Component | Responsibility |
+|-----------|----------------|
+| `CategorySelectionCard` | Displays the currently selected category with emoji and title |
+| `MindReaderAnswerButton` | Themed pill button for user responses and quiz choices |
+| `MindReaderSpeechBubble` | Elevated speech bubble with rounded corners and themed cream background |
+| `MindReaderProgressBar` | Progress indicator tracking question index vs max questions |
+| `MindReaderActionRow` | Quick-action row containing translation toggle chip and speaker TTS trigger |
+| `MindReaderCategoryDropdown` | Exposed dropdown menu for selecting game categories |
+| `MindReaderEntityDropdown` | Dropdown for choosing candidate entities during the stump/trap phase |
+| `MindReaderRewardRow` | Experience (XP) and earnings (coins) summary badges |
+| `MindReaderQuizWordCard` | Orange-bordered card highlighting the target quiz word |
 
-### Screen Refinements
+Shared components reused from `core/sharedComponents`:
+- `AppDialog`: Used for pre-game start confirmation in Lobby.
+- `AppButton`: Used for primary actions, secondary actions, and navigation.
+- `AppMascotGradientBox`: Standard container for mascot headers.
+- `AppGradientBackgroundBox`: Gradient cards for loading states.
+- `LinguaQuestScreenTopBar`: Top bar with back navigation, XP count, and coin balance.
 
-| Screen | File | Key Changes |
-|--------|------|-------------|
-| Lobby | `AkinatorLobbyContent.kt` | Large `displaySmall` title, speech bubble, static category card + dropdown, START GAME + Change buttons, XP+Coins in top bar |
-| Active Game | `ActiveGameContent.kt` | Progress bar above gradient box with teal track, speech bubble question, translate chip with 🌐 icon, speaker icon, beige answer buttons |
-| Loading | `LoadingGuessContent.kt` | Mascot in circular beige frame, large heading text, gradient card, removed CircularProgressIndicator |
-| Guess Reveal | `GuessRevealContent.kt` | Large "I think it's..." heading, prominently displayed entity emoji (72sp), beige "wrong" + orange "correct" buttons side by side |
-| Pop Quiz | `PopQuizContent.kt` | Speech bubble, large heading, target word in orange-bordered card, beige choice buttons |
-| Stump/Trap | `AkinatorTrapContent.kt` | Speech bubble, styled dropdown with emoji items, Submit + Return to Home buttons |
-| Result | `ResultContent.kt` | Contextual speech bubble (victory/busted), XP/Coins with icon badges, Play Again with replay icon, Return to Home with teal outline |
+## Screen Structure
 
-### String Resources
-New strings added to `strings.xml`:
-- `mind_reader_pop_quiz_speech`, `mind_reader_victory_speech`, `mind_reader_stumped_title`
-- `mind_reader_return_to_home`, `mind_reader_play_again`
-- `mind_reader_xp_value`, `mind_reader_coins_value`
-- `mind_reader_trap_speech`, `mind_reader_busted_title`
+All content screens live under `com.iti.linguaquest.features.mindreader.presentation.view.contents`:
 
-Updated: `mind_reader_experience` → "EXPERIENCE", `mind_reader_earnings` → "EARNINGS"
+- `AkinatorLobbyContent.kt`: Initial screen with category selection, start game button, and confirm dialog.
+- `AkinatorActiveGameContent.kt`: Active game loop with progress, mascot speech, translate/TTS actions, and 5 response buttons.
+- `AkinatorLoadingGuessContent.kt`: Animated/processing mascot view during AI computation.
+- `AkinatorGuessRevealContent.kt`: Displays AI's guessed entity with emoji and confirmation actions.
+- `AkinatorPopQuizContent.kt`: Intermediate vocabulary quiz testing the player on foreign words.
+- `AkinatorTrapContent.kt`: Candidate selection when AI is stumped and requires user input.
+- `AkinatorResultContent.kt`: Final game outcome screen displaying victory/loss status, rewards earned, and replay options.
 
-## Design System Compliance
-- All screens use `LinguaQuestTheme.colors` and `MaterialTheme.colorScheme`/`typography`
-- No hardcoded color values except for feature-specific beige (`0xFFEBE0D3`) and cream (`0xFFFFF3E6`) that are consistent across the feature
-- `AppButton`, `AppMascotGradientBox`, `AppGradientBackgroundBox`, and `LinguaQuestScreenTopBar` shared components are reused throughout
-- All user-facing text uses `stringResource()` with no string literals
+## Clean Architecture Compliance
+- Strict MVI: `MindReaderState`, `MindReaderIntent`, `MindReaderEffect`
+- Zero inline fully qualified package names
+- Zero code comments / boilerplate comments
+- String resources strictly managed via `R.string.*` and `UiText`
+

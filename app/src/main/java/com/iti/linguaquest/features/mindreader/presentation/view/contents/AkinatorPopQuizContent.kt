@@ -1,14 +1,13 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,18 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderAnswerButton
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderQuizWordCard
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
 @Composable
-fun GuessRevealContent(
+fun PopQuizContent(
     modifier: Modifier = Modifier,
     state: MindReaderState,
     onIntent: (MindReaderIntent) -> Unit
@@ -49,15 +48,23 @@ fun GuessRevealContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MindReaderSpeechBubble(
+                text = stringResource(id = R.string.mind_reader_pop_quiz_speech)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             AppMascotGradientBox(
-                imageRes = R.drawable.lingo_mind_answer,
-                modifier = Modifier.weight(1f)
+                imageRes = R.drawable.lingo_mind_quiz
             ) {
                 Text(
-                    text = stringResource(id = R.string.mind_reader_i_think_its),
+                    text = stringResource(id = R.string.mind_reader_pop_quiz_title),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Black,
                     color = LinguaQuestTheme.colors.BrownText,
@@ -65,35 +72,22 @@ fun GuessRevealContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = state.guessResult?.entity?.emoji ?: "",
-                    fontSize = 72.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                MindReaderQuizWordCard(
+                    word = state.popQuizQuestion?.prompt?.resolve(state.targetLanguageCode)?.uppercase()
+                        ?: ""
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
-            }
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                MindReaderAnswerButton(
-                    text = stringResource(id = R.string.mind_reader_wrong),
-                    onClick = { onIntent(MindReaderIntent.GuessVerifiedIncorrect) },
-                    modifier = Modifier.weight(1f)
-                )
-
-                AppButton(
-                    text = stringResource(id = R.string.mind_reader_correct),
-                    onClick = { onIntent(MindReaderIntent.GuessVerifiedCorrect) },
-                    modifier = Modifier.weight(1f)
-                )
+                state.popQuizQuestion?.choices?.forEach { choice ->
+                    MindReaderAnswerButton(
+                        text = choice.entity.resolveTranslation("en"),
+                        onClick = { onIntent(MindReaderIntent.PopQuizAnswered(choice)) }
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -103,11 +97,12 @@ fun GuessRevealContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun GuessRevealContentPreview() {
+private fun PopQuizContentPreview() {
     LinguaQuestTheme {
-        GuessRevealContent(
+        PopQuizContent(
             state = MindReaderState(),
             onIntent = {}
         )
     }
 }
+

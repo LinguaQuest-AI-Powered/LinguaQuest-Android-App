@@ -130,4 +130,9 @@ object AppColors {
     val DarkDialogGradientTopRight = Color(0xFF1B3D34)
     val DarkDialogGradientBottomLeft = Color(0xFF4C452F)
     val DarkShadowOrange = Color(0xFF855000)
+
+    val MindReaderBeige = Color(0xFFEBE0D3)
+    val MindReaderCream = Color(0xFFFFF3E6)
+    val DarkMindReaderBeige = Color(0xFF334155)
+    val DarkMindReaderCream = Color(0xFF1E293B)
 }
