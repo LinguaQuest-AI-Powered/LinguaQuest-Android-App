@@ -42,6 +42,7 @@ import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.AddLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.languages.component.LanguageSelectionCard
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
@@ -82,6 +83,19 @@ fun AddLanguagesContent(
     onIntent: (AddLanguagesIntent) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+
+    if (state.languagePendingRemoval != null) {
+        AppDialog(
+            title = stringResource(R.string.remove_language_title),
+            message = stringResource(R.string.remove_language_message, state.languagePendingRemoval.name),
+            onDismissRequest = { onIntent(AddLanguagesIntent.DismissRemoveDialog) },
+            primaryButtonText = stringResource(R.string.remove),
+            onPrimaryClick = { onIntent(AddLanguagesIntent.ConfirmRemoveLanguage) },
+            secondaryButtonText = stringResource(R.string.cancel),
+            onSecondaryClick = { onIntent(AddLanguagesIntent.DismissRemoveDialog) }
+        )
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -209,6 +223,9 @@ fun AddLanguagesContent(
                             language = language,
                             isSelected = state.selectedLanguageIds.contains(language.id),
                             onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                            onRemoveClick = if (language.isAdded) {
+                                { onIntent(AddLanguagesIntent.RequestRemoveLanguage(language)) }
+                            } else null,
                             modifier = Modifier.height(180.dp)
                         )
                     }

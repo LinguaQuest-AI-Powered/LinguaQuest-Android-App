@@ -43,6 +43,16 @@ class LanguagesRepoImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeLanguages(languageIds: List<Int>): LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError> {
+        val result = remoteDataSource.removeLanguages(languageIds)
+        return when (result) {
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(
+                result.data.map { it.toDomain() }
+            )
+            is LinguaQuestResult.Failure -> result
+        }
+    }
+
     override suspend fun setActiveLanguage(languageId: Int): LinguaQuestResult<UserLanguage, LinguaQuestDataError> {
         val result = remoteDataSource.setActiveLanguage(languageId)
         return when (result) {

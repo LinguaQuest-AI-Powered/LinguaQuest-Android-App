@@ -576,7 +576,7 @@
     <string name="failed_update_password">فشل تحديث كلمة المرور</string>
     <string name="profile_photo_updated_successfully">تم تحديث صورة الملف الشخصي بنجاح</string>
     <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
-    <string name="add_languages_no_results">add_languages_no_results</string>
+    <string name="add_languages_no_results">لم يتم العثور على لغات</string>
     <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
 
     <!-- Roleplay Feature Strings -->
@@ -771,4 +771,10 @@
     <string name="mind_reader_coins_value">%1$d عملة</string>
     <string name="mind_reader_trap_speech">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
     <string name="mind_reader_busted_title">كُشفت الحيلة!</string>
+
+    <string name="cannot_remove_active_language">لا يمكن حذف اللغة النشطة حاليًا.</string>
+    <string name="language_removed_success">تم حذف اللغة بنجاح.</string>
+    <string name="remove_language_title">حذف اللغة</string>
+    <string name="remove_language_message">هل أنت متأكد من أنك تريد حذف %1$s من اللغات المستهدفة؟</string>
+    <string name="remove">حذف</string>
 </resources>

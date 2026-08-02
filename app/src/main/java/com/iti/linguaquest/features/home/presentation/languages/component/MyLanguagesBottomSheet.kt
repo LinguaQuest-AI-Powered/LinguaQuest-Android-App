@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.AppButton
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -50,12 +53,27 @@ fun MyLanguagesBottomSheet(
     languages: List<MyLanguageUiModel>,
     isLoading: Boolean = false,
     isSettingActive: Boolean = false,
+    languagePendingRemoval: MyLanguageUiModel? = null,
     onDismiss: () -> Unit,
     onAddNewLanguageClick: () -> Unit,
     onLanguageSelect: (Int) -> Unit,
-
+    onRemoveLanguageClick: ((MyLanguageUiModel) -> Unit)? = null,
+    onConfirmRemoveLanguage: (() -> Unit)? = null,
+    onDismissRemoveDialog: (() -> Unit)? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    if (languagePendingRemoval != null && onConfirmRemoveLanguage != null && onDismissRemoveDialog != null) {
+        AppDialog(
+            title = stringResource(R.string.remove_language_title),
+            message = stringResource(R.string.remove_language_message, languagePendingRemoval.name),
+            onDismissRequest = onDismissRemoveDialog,
+            primaryButtonText = stringResource(R.string.remove),
+            onPrimaryClick = onConfirmRemoveLanguage,
+            secondaryButtonText = stringResource(R.string.cancel),
+            onSecondaryClick = onDismissRemoveDialog
+        )
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -108,7 +126,7 @@ fun MyLanguagesBottomSheet(
                         .height(120.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon(size = 36.dp)
+                    LingoSpinningIcon(size = 36.dp)
                 }
             } else {
                 LazyColumn(
@@ -119,7 +137,10 @@ fun MyLanguagesBottomSheet(
                         MyLanguageItem(
                             language = language,
                             enabled = !isSettingActive,
-                            onClick = { onLanguageSelect(language.id) }
+                            onClick = { onLanguageSelect(language.id) },
+                            onRemoveClick = if (onRemoveLanguageClick != null && !language.isCurrent) {
+                                { onRemoveLanguageClick(language) }
+                            } else null
                         )
                     }
                 }
@@ -144,6 +165,7 @@ fun MyLanguagesBottomSheet(
 fun MyLanguageItem(
     language: MyLanguageUiModel,
     onClick: () -> Unit,
+    onRemoveClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
@@ -200,6 +222,15 @@ fun MyLanguageItem(
                 tint = LinguaQuestTheme.colors.SuccessAccent,
                 modifier = Modifier.size(24.dp)
             )
+        } else if (onRemoveClick != null) {
+            IconButton(onClick = onRemoveClick) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.remove),
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ interface LanguagesRemoteDataSource {
     suspend fun getMyLanguages(): LinguaQuestResult<List<UserLanguageDto>, LinguaQuestDataError>
     suspend fun getAvailableLanguages(): LinguaQuestResult<List<LanguageOptionDto>, LinguaQuestDataError>
     suspend fun addLanguages(languageIds: List<Int>): LinguaQuestResult<List<UserLanguageDto>, LinguaQuestDataError>
+    suspend fun removeLanguages(languageIds: List<Int>): LinguaQuestResult<List<UserLanguageDto>, LinguaQuestDataError>
     suspend fun setActiveLanguage(languageId: Int): LinguaQuestResult<UserLanguageDto, LinguaQuestDataError>
     suspend fun setNativeLanguage(languageId: Int): LinguaQuestResult<UserLanguageDto, LinguaQuestDataError>
 }
