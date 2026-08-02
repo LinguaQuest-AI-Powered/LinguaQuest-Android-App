@@ -59,7 +59,7 @@ fun ErrorView(
 
             if (onRetry != null) {
                 Spacer(modifier = Modifier.height(24.dp))
-                AppButton(
+                AppButton3D(
                     text = retryText,
                     onClick = onRetry,
                     variant = ButtonVariant.PRIMARY

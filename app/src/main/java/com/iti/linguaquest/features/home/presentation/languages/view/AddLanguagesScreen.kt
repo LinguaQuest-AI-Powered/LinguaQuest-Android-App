@@ -38,7 +38,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.layout.statusBarsPadding
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -111,7 +111,7 @@ fun AddLanguagesContent(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
             ) {
-                AppButton(
+                AppButton3D(
                     text = stringResource(R.string.add_selected_format, state.selectedLanguageIds.size),
                     onClick = { onIntent(AddLanguagesIntent.AddSelectedClicked) },
                     enabled = state.selectedLanguageIds.isNotEmpty()

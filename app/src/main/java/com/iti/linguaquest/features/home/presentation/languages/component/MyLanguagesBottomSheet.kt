@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
@@ -148,7 +148,7 @@ fun MyLanguagesBottomSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.add_new_language),
                 onClick = {
                     onDismiss()

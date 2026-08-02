@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
@@ -129,21 +129,20 @@ fun AppDialogContent(
                 Text(
                     text = message,
                     style = AppTextStyles.DialogMessage.copy(
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                        fontSize = 16.sp
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                     ),
                     textAlign = TextAlign.Center
                 )
 
                 if (customContent != null) {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     customContent()
                     Spacer(modifier = Modifier.height(24.dp))
                 } else {
                     Spacer(modifier = Modifier.height(24.dp))
                 }
 
-                AppButton(
+                AppButton3D(
                     text = primaryButtonText,
                     onClick = onPrimaryClick,
                     variant = ButtonVariant.PRIMARY,
@@ -155,14 +154,15 @@ fun AppDialogContent(
 
                 if (secondaryButtonText != null && onSecondaryClick != null) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    AppButton(
+                    AppButton3D(
                         text = secondaryButtonText,
                         onClick = onSecondaryClick,
                         variant = ButtonVariant.SOCIAL,
                         icon = secondaryButtonIcon?.let { painterResource(it) },
                         iconPosition = if (secondaryButtonIcon != null) IconPosition.START else IconPosition.NONE,
                         contentColorOverride = secondaryButtonOutlineColor,
-                        borderColorOverride = secondaryButtonOutlineColor
+                        borderColorOverride = secondaryButtonOutlineColor,
+                        backgroundColorOverride = MaterialTheme.colorScheme.surface
                     )
                 }
             }

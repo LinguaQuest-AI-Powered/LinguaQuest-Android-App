@@ -16,7 +16,7 @@ import com.iti.linguaquest.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppTextStyles
@@ -62,14 +62,14 @@ fun BossErrorView(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.roleplay_try_again),
                 onClick = onRetry
             )
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.roleplay_exit),
                 onClick = onExit,
                 variant = ButtonVariant.SECONDARY

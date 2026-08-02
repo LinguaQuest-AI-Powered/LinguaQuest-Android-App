@@ -39,7 +39,7 @@ import com.iti.linguaquest.features.auth.presentation.login.contract.LoginIntent
 import com.iti.linguaquest.features.auth.presentation.login.contract.LoginState
 
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 import com.iti.linguaquest.features.auth.share.components.AuthDivider
 import com.iti.linguaquest.features.auth.share.components.AuthFooter
@@ -148,7 +148,7 @@ fun LoginContent(
                     )
                 }
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.login_log_in),
                     onClick = { onLoginClick() },
                     enabled = !state.isLoading,
@@ -160,7 +160,7 @@ fun LoginContent(
 
                 AuthDivider(textRes = R.string.login_or_continue_with)
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.login_google),
                     onClick = { onIntent(LoginIntent.GoogleSignInClicked) },
                     enabled = !state.isLoading,
