@@ -41,23 +41,23 @@ fun RewardPill(
                 color = LinguaQuestTheme.colors.whiteColor,
                 shape = RoundedCornerShape(32.dp)
             )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = label,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(24.dp)
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         Column(horizontalAlignment = Alignment.Start) {
             Text(
                 text = amount,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = LinguaQuestTheme.colors.BrownText
@@ -65,7 +65,7 @@ fun RewardPill(
             Text(
                 text = label,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = LinguaQuestTheme.colors.iconsColor

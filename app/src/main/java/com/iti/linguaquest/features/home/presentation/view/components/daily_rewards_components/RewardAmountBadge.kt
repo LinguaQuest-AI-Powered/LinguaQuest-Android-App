@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -32,10 +33,11 @@ fun RewardAmountBadge(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RewardBadgeItem(
+            modifier = Modifier.weight(1f, fill = false),
             iconRes = R.drawable.ic_doller,
             contentDescriptionRes = R.string.cd_coin,
             text = stringResource(id = R.string.daily_reward_coins_format, rewardAmount)
@@ -43,6 +45,7 @@ fun RewardAmountBadge(
 
         if (rewardXp != null && rewardXp > 0) {
             RewardBadgeItem(
+                modifier = Modifier.weight(1f, fill = false),
                 iconRes = R.drawable.ic_xp,
                 contentDescriptionRes = R.string.cd_xp,
                 text = stringResource(id = R.string.daily_reward_xp_format, rewardXp)
@@ -62,7 +65,7 @@ private fun RewardBadgeItem(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .background(LinguaQuestTheme.colors.DailyRewardBadgeBg)
-            .padding(horizontal = 24.dp, vertical = 12.dp),
+            .padding(horizontal = 14.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -73,15 +76,17 @@ private fun RewardBadgeItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = stringResource(id = contentDescriptionRes),
                 tint = Color.Unspecified,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(18.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = LinguaQuestTheme.colors.DailyRewardBadgeText
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
