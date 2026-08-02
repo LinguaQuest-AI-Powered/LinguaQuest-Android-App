@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.game.presentation.result.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.appicon.usecase.LessonCompletedUseCase
+import com.iti.linguaquest.core.appicon.domain.usecase.LessonCompletedUseCase
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent

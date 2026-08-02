@@ -1,4 +1,4 @@
-package com.iti.linguaquest.core.appicon.usecase
+package com.iti.linguaquest.core.appicon.domain.usecase
 
 import javax.inject.Inject
 

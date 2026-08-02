@@ -8,7 +8,8 @@ class AppIconRuleEngine @Inject constructor(
 ) {
     private val orderedRules = rules.sortedByDescending { it.priority }
 
-    suspend fun evaluate(): AppIconType {
-        return orderedRules.firstNotNullOfOrNull { it.evaluate() } ?: AppIconType.DEFAULT
+     suspend fun evaluate(): AppIconDecision {
+        return orderedRules.firstNotNullOfOrNull { it.evaluate() }
+            ?: AppIconDecision(AppIconType.DEFAULT)
     }
 }

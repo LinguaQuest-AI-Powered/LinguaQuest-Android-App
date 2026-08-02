@@ -107,7 +107,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-         viewModel.refreshAppIcon()
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -1,7 +1,7 @@
 package com.iti.linguaquest.core.appicon.di
 
+import com.iti.linguaquest.core.appicon.data.AndroidAppIconController
 import com.iti.linguaquest.core.appicon.data.AppIconStateRepositoryImpl
-import com.iti.linguaquest.core.appicon.dataimport.AndroidAppIconController
 import com.iti.linguaquest.core.appicon.domain.AppIconController
 import com.iti.linguaquest.core.appicon.domain.AppIconRule
 import com.iti.linguaquest.core.appicon.domain.AppIconStateRepository

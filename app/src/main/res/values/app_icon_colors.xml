@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_icon_default_background">#DF8207</color>
-    <color name="app_icon_fire_background">#C94A2C</color>
-    <color name="app_icon_sleep_background">#243B53</color>
-    <color name="app_icon_angry_background">#7A1E1E</color>
-    <color name="app_icon_reward_background">#E1A515</color>
+    <color name="app_icon_default_background">#FC7C02</color>
+    <color name="app_icon_fire_background">#8C0A02</color>
+    <color name="app_icon_sleep_background">#011247</color>
+    <color name="app_icon_angry_background">#680A05</color>
+    <color name="app_icon_reward_background">#FBBB09</color>
 </resources>

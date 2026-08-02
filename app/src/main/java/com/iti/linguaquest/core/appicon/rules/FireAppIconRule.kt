@@ -1,5 +1,6 @@
 package com.iti.linguaquest.core.appicon.rules
 
+import com.iti.linguaquest.core.appicon.domain.AppIconDecision
 import com.iti.linguaquest.core.appicon.domain.AppIconRule
 import com.iti.linguaquest.core.appicon.domain.AppIconStateRepository
 import com.iti.linguaquest.core.appicon.domain.AppIconType
@@ -10,8 +11,8 @@ class FireAppIconRule @Inject constructor(
 ) : AppIconRule {
     override val priority: Int = 4000
 
-    override suspend fun evaluate(): AppIconType? {
+    override suspend fun evaluate(): AppIconDecision? {
         val streakDays = stateRepository.snapshot().observedStreakDays
-        return if (streakDays >= 30) AppIconType.FIRE else null
+        return if (streakDays >= 2) AppIconDecision(AppIconType.FIRE) else null
     }
 }

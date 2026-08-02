@@ -4,7 +4,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.iti.linguaquest.core.appicon.domain.AppIconSnapshot
 import com.iti.linguaquest.core.appicon.domain.AppIconStateRepository
 import com.iti.linguaquest.core.appicon.util.AppIconClock
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class AppIconStateRepositoryImpl @Inject constructor(
     private val dataSource: AppIconPreferencesDataSource,
