@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -92,7 +91,6 @@ fun AppButton3D(
     isError: Boolean = false,
     isSuccess: Boolean = false,
     successText: String = text,
-    playSound: Boolean = true,
     backgroundColor: Color? = null,
     ledgeColor: Color? = null,
     textColor: Color? = null,
@@ -168,9 +166,6 @@ fun AppButton3D(
                     indication = null,
                     enabled = enabled && !isLoading,
                     onClick = {
-                        if (playSound) {
-                            soundPlayer.play(AppSound.POP)
-                        }
                         onClick()
                     }
                 ),
