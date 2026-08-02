@@ -17,27 +17,44 @@ import com.iti.linguaquest.features.profile.domain.model.LeaderboardSummary
 import com.iti.linguaquest.features.profile.domain.model.ProfileStats
 import com.iti.linguaquest.features.profile.domain.model.ProfileSummary
 
-fun ProfileSummaryDto.toDomain(): ProfileSummary = ProfileSummary(
-    id = id,
-    username = username,
-    photoUrl = photoUrl,
-    level = level,
-    stats = stats.toDomain(),
-    languageJourney = currentLanguageJourney.toDomain(),
-    achievementsSummary = achievementsSummary?.toDomain()
+fun ProfileSummaryDto.toDomain(): ProfileSummary {
+    val mappedAchievementsSummary = achievementsSummary?.toDomain()
+        ?: achievements?.let { list ->
+            AchievementsSummary(
+                earnedCount = list.count { it.status == "EARNED" },
+                totalCount = list.size,
+                preview = list.map { it.toDomain() }
+            )
+        }
         ?: AchievementsSummary(
             earnedCount = 0,
             totalCount = 0,
             preview = emptyList()
-        ),
+        )
 
-    leaderboardSummary = leaderboardSummary?.toDomain()
+    val mappedLeaderboardSummary = leaderboardSummary?.toDomain()
+        ?: leaderboard?.let { list ->
+            LeaderboardSummary(
+                myRank = list.find { it.isCurrentUser }?.rank ?: 0,
+                preview = list.map { it.toDomain() }
+            )
+        }
         ?: LeaderboardSummary(
             myRank = 0,
             preview = emptyList()
         )
 
-)
+    return ProfileSummary(
+        id = id,
+        username = username,
+        photoUrl = photoUrl,
+        level = level,
+        stats = stats.toDomain(),
+        languageJourney = currentLanguageJourney.toDomain(),
+        achievementsSummary = mappedAchievementsSummary,
+        leaderboardSummary = mappedLeaderboardSummary
+    )
+}
 
 private fun ProfileStatsDto.toDomain() = ProfileStats(coins, totalXp, streakDays, worldsCount)
 

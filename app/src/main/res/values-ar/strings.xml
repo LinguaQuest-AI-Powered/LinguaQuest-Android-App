@@ -401,7 +401,18 @@
     <string name="achievement_stat_xp_gained">الـ XP المكتسب</string>
     <string name="achievement_claim_rewards">المطالبة بالمكافآت الأسبوعية</string>
     <string name="achievement_header_trophies_cd">كؤوسي</string>
+    <string name="achievement_header_subtitle">كل كلمة هي خطوة أعمق في المغامرة.</string>
     <string name="achievement_card_icon_cd">أيقونة الإنجاز</string>
+    <string name="achievement_detail_rewards">المكافآت</string>
+    <string name="achievement_detail_progress">التقدم</string>
+    <string name="achievement_detail_earned_on">تم الحصول عليه في %1$s</string>
+    <string name="achievement_detail_status_locked">مغلق</string>
+    <string name="achievement_detail_status_in_progress">قيد التقدم</string>
+    <string name="achievement_detail_status_completed">مكتمل</string>
+    <string name="achievement_detail_close">إغلاق</string>
+    <string name="achievement_detail_keep_going">أكمل المزيد من المهام لفتح هذا الكأس!</string>
+    <string name="achievement_detail_xp_format">+%1$d XP</string>
+    <string name="achievement_detail_coins_format">+%1$d عملة</string>
 
     <!-- Languages Feature -->
     <string name="add_languages_title">إضافة لغات</string>

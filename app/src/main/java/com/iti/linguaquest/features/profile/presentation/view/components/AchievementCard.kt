@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.profile.presentation.view.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,18 +14,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.profile.presentation.model.Achievement
 
 @Composable
- fun AchievementCard(achievement: Achievement) {
+fun AchievementCard(
+    achievement: Achievement,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .width(380.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(LinguaQuestTheme.colors.ProfileCardColor)
@@ -42,10 +45,11 @@ import com.iti.linguaquest.features.profile.presentation.model.Achievement
                     .background(LinguaQuestTheme.colors.IconBoxBackground),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(achievement.iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                ImageWrapper(
+                    model = achievement.icon,
+                    contentDescription = achievement.title,
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
 

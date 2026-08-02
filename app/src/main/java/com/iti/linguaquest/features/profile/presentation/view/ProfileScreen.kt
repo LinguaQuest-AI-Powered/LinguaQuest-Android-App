@@ -166,7 +166,7 @@ fun ProfileContent(
                 }
             }
         }
-        if (state.nearbyLeaderboard.isEmpty()){
+        if (state.nearbyLeaderboard.isNotEmpty()) {
             item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
             items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
         }

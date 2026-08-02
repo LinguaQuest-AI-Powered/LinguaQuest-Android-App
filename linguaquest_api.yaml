@@ -38,19 +38,9 @@ info:
 
     ## Open items / assumptions (flagged for confirmation, not yet approved)
 
-    - Daily reward cycle is assumed to be a 5-day rotating cycle (Day 1-5)
-      based on the popup screenshot; confirm the reset/cycle logic
-      (does day 5 loop back to day 1, or does streak keep counting past 5
-      while the *reward tier* resets every 5 days?).
     - The achievements screen's "240" stat is assumed to be XP earned via
       achievements specifically (`xpEarned`), not a count. Confirm against
       the design.
-    - "Learning Language: English" on the Settings screen is assumed to be
-      the **app's UI/interface language** (per the user story), distinct
-      from the target language(s) being learned (Spanish/French/Japanese).
-      Confirm this reading is correct.
-    - Weekly achievement rewards follow the same GET-status / POST-claim
-     shape as Daily Rewards, for consistency.
 
   version: 1.1.0
   contact:
@@ -1582,12 +1572,76 @@ paths:
                     success: true
                     data:
                       hint: Ø´ÙŠØ¡ ØªØ£ÙƒÙ„Ù‡ ÙˆÙ„Ù‡ Ù„ÙˆÙ† Ø£Ø­Ù…Ø± Ø£Ùˆ Ø£Ø®Ø¶Ø±
-                      coinsSpent: 10
+                      coinsSpent: 35
                       remainingCoins: 140
+        '400':
+          description: Insufficient coins, or user has no native language set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                insufficientCoins:
+                  summary: Not enough coins
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/level/12/hint
+                      errorCode: 400
+                      errorKey: INSUFFICIENT_COINS
+                      errorMessage: You do not have enough coins to buy a hint
+                      errorTime: '2026-07-17T10:15:00Z'
+                nativeLanguageNotSet:
+                  summary: Native language not set
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/level/12/hint
+                      errorCode: 400
+                      errorKey: NATIVE_LANGUAGE_NOT_SET
+                      errorMessage: User has no native language set
+                      errorTime: '2026-07-17T10:15:00Z'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          description: World or level not found
+          description: World, level, or active level progress not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                worldNotFound:
+                  summary: World not found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/level/12/hint
+                      errorCode: 404
+                      errorKey: WORLD_NOT_FOUND
+                      errorMessage: World with id 3 does not exist
+                      errorTime: '2026-07-17T10:15:00Z'
+                levelNotFound:
+                  summary: Level not found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/level/12/hint
+                      errorCode: 404
+                      errorKey: NOT_FOUND
+                      errorMessage: Level with id 12 does not exist in world 3
+                      errorTime: '2026-07-17T10:15:00Z'
+                activeLevelNotFound:
+                  summary: No in-progress or completed level found
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/worlds/3/level/12/hint
+                      errorCode: 404
+                      errorKey: ACTIVE_LEVEL_NOT_FOUND
+                      errorMessage: No in-progress or completed level found for user 7 in world 3, level 12
+                      errorTime: '2026-07-17T10:15:00Z'
+        '409':
+          description: Hint already used for this level
           content:
             application/json:
               schema:
@@ -1597,37 +1651,10 @@ paths:
                   value:
                     success: false
                     error:
-                      apiPath: /api/v1/worlds/3/levels/12/hint
-                      errorCode: 404
-                      errorKey: LEVEL_NOT_FOUND
-                      errorMessage: The specified level does not exist
-                      errorTime: '2026-07-17T10:15:00Z'
-        '409':
-          description: Hint already used for this level, or insufficient coins
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                hintAlreadyUsed:
-                  summary: Hint already used
-                  value:
-                    success: false
-                    error:
-                      apiPath: /api/v1/worlds/3/levels/12/hint
+                      apiPath: /api/v1/worlds/3/level/12/hint
                       errorCode: 409
                       errorKey: HINT_ALREADY_USED
                       errorMessage: You have already used your hint for this level
-                      errorTime: '2026-07-17T10:15:00Z'
-                insufficientCoins:
-                  summary: Not enough coins
-                  value:
-                    success: false
-                    error:
-                      apiPath: /api/v1/worlds/3/levels/12/hint
-                      errorCode: 409
-                      errorKey: INSUFFICIENT_COINS
-                      errorMessage: You do not have enough coins to buy a hint
                       errorTime: '2026-07-17T10:15:00Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -1924,6 +1951,108 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+    delete:
+      tags: [Languages]
+      summary: Remove one or more target languages
+      description: >
+        Removes the given languages from the user's profile. A language
+        that is currently active cannot be removed until another language
+        is set as active first.
+      operationId: removeLanguages
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveLanguagesRequest'
+            examples:
+              default:
+                value:
+                  languageIds: [3, 4]
+      responses:
+        '200':
+          description: Languages removed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          languages:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/UserLanguage'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      languages:
+                        - id: 1
+                          name: Spanish
+                          code: es
+                          imageUrl: /media/languages/spanish.png
+                          level: 12
+                          isActive: true
+                          progressPercent: 65
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: One or more languages are not in the user's profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages
+                      errorCode: 404
+                      errorKey: LANGUAGE_NOT_FOUND
+                      errorMessage: One or more selected languages are not in your profile
+                      errorTime: '2026-07-17T10:15:00Z'
+        '409':
+          description: >
+            Cannot remove the currently active language, or the removal
+            would leave the user with zero languages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                activeLanguage:
+                  summary: Attempting to remove the active language
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages
+                      errorCode: 409
+                      errorKey: CANNOT_REMOVE_ACTIVE_LANGUAGE
+                      errorMessage: Cannot remove your active language. Set another language as active first.
+                      errorTime: '2026-07-17T10:15:00Z'
+                lastLanguage:
+                  summary: Attempting to remove all remaining languages
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/languages
+                      errorCode: 409
+                      errorKey: CANNOT_REMOVE_LAST_LANGUAGE
+                      errorMessage: You must have at least one language in your profile.
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /languages/active:
     patch:
       tags: [Languages]
@@ -2116,6 +2245,39 @@ paths:
                         journeyLabel: Intermediate Journey
                         currentXp: 2460
                         nextMilestoneXp: 3000
+                      achievements:
+                        - id: 1
+                          name: Wild Explorer
+                          description: Complete 10 lessons in French
+                          iconUrl: /media/achievements/wild_explorer.png
+                          status: EARNED
+                          progressPercent: 100
+                          targetValue: 10
+                          xpReward: 100
+                          coinReward: 50
+                          earnedAt: '2026-07-30T15:30:00Z'
+                      leaderboard:
+                        - rank: 99
+                          userId: 5
+                          username: Sacagawea
+                          photoUrl: /media/avatars/sacagawea.jpg
+                          level: 11
+                          xp: 3200
+                          isCurrentUser: false
+                        - rank: 100
+                          userId: 1234
+                          username: adham_a
+                          photoUrl: /media/avatars/alex.jpg
+                          level: 12
+                          xp: 3150
+                          isCurrentUser: true
+                        - rank: 101
+                          userId: 8
+                          username: Zheng He
+                          photoUrl: /media/avatars/zheng.jpg
+                          level: 10
+                          xp: 3100
+                          isCurrentUser: false
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -2453,7 +2615,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  # --- Achievements ---
   /achievements:
     get:
       tags: [Achievements]
@@ -2499,127 +2660,35 @@ paths:
                           iconUrl: /media/achievements/wild-explorer.png
                           status: EARNED
                           progressPercent: 100
+                          targetValue: 5
+                          xpReward: 50
+                          coinReward: 20
+                          earnedAt: "2026-10-12T09:30:00"
                         - id: 2
                           name: Hidden Oasis
                           description: Discover a secret World
                           iconUrl: /media/achievements/hidden-oasis.png
                           status: LOCKED
                           progressPercent: 0
+                          targetValue: 1
+                          xpReward: 75
+                          coinReward: 30
+                          earnedAt: null
                         - id: 3
                           name: Streak Master
                           description: Maintain a 30-day streak
                           iconUrl: /media/achievements/streak-master.png
                           status: LOCKED
                           progressPercent: 23
+                          targetValue: 30
+                          xpReward: 100
+                          coinReward: 40
+                          earnedAt: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /achievements/weekly-reward:
-    get:
-      tags: [Achievements]
-      summary: Get this week's achievement reward status
-      description: Returns whether the weekly reward is available to claim.
-      operationId: getWeeklyRewardStatus
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Weekly reward status retrieved successfully
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          claimedThisWeek:
-                            type: boolean
-                            example: false
-                          rewardXp:
-                            type: integer
-                            example: 100
-                          rewardCoins:
-                            type: integer
-                            example: 200
-              examples:
-                default:
-                  value:
-                    success: true
-                    data:
-                      claimedThisWeek: false
-                      rewardXp: 100
-                      rewardCoins: 200
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-
-  /achievements/weekly-reward/claim:
-    post:
-      tags: [Achievements]
-      summary: Claim this week's achievement reward
-      operationId: claimWeeklyReward
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Reward claimed successfully
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          xpAwarded:
-                            type: integer
-                            example: 100
-                          coinsAwarded:
-                            type: integer
-                            example: 200
-                          newXpBalance:
-                            type: integer
-                            example: 4600
-                          newCoinsBalance:
-                            type: integer
-                            example: 1450
-              examples:
-                default:
-                  value:
-                    success: true
-                    data:
-                      xpAwarded: 100
-                      coinsAwarded: 200
-                      newXpBalance: 4600
-                      newCoinsBalance: 1450
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '409':
-          description: This week's reward has already been claimed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                default:
-                  value:
-                    success: false
-                    error:
-                      apiPath: /api/v1/achievements/weekly-reward/claim
-                      errorCode: 409
-                      errorKey: ACHIEVEMENT_REWARD_ALREADY_CLAIMED
-                      errorMessage: You've already claimed this week's reward
-                      errorTime: '2026-07-17T10:15:00Z'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
   /wallet:
     get:
       tags: [Wallet]
@@ -3205,6 +3274,39 @@ components:
           items:
             $ref: '#/components/schemas/LevelSummary'
 
+    WorldSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Kitchen World
+        imageUrl:
+          type: string
+          example: /media/worlds/kitchen.jpg
+        difficulty:
+          type: string
+          enum: [EASY, MEDIUM, HARD]
+          example: EASY
+        status:
+          type: string
+          enum: [LOCKED,AVAILABLE,INPROGRESS,COMPLETED]
+          example: EASY
+        progressPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 40
+        totalLevels:
+          type: integer
+          example: 20
+        completedLevels:
+          type: integer
+          example: 8
+
     LevelSummary:
       type: object
       properties:
@@ -3434,6 +3536,16 @@ components:
             nextMilestoneXp:
               type: integer
               example: 3000
+        achievements:
+          type: array
+          description: Preview snippet of top 3 achievements (recent earned + active in-progress).
+          items:
+            $ref: '#/components/schemas/AchievementSummary'
+        leaderboard:
+          type: array
+          description: Preview snippet of surrounding leaderboard entries (1 rank above, current user, 1 rank below).
+          items:
+            $ref: '#/components/schemas/LeaderboardEntry'
 
     UpdateProfileRequest:
       type: object
@@ -3524,39 +3636,38 @@ components:
       properties:
         id:
           type: integer
-          example: 1
+          format: int64
         name:
           type: string
-          example: Wild Explorer
         description:
           type: string
-          example: Complete 5 lessons in the Kitchen World
         iconUrl:
           type: string
-          example: /media/achievements/wild-explorer.png
         status:
           type: string
           enum: [EARNED, LOCKED]
-          example: EARNED
         progressPercent:
           type: integer
-          minimum: 0
-          maximum: 100
-          example: 100
+        targetValue:
+          type: integer
+        xpReward:
+          type: integer
+        coinReward:
+          type: integer
+        earnedAt:
+          type: string
+          format: date-time
+          nullable: true
 
     AchievementsListData:
       type: object
       properties:
         earnedCount:
           type: integer
-          example: 8
         inProgressCount:
           type: integer
-          example: 15
         xpEarned:
           type: integer
-          description: Total XP earned specifically from achievements.
-          example: 240
         achievements:
           type: array
           items:
@@ -3642,7 +3753,7 @@ components:
         world:
           $ref: '#/components/schemas/WorldRef'
 
-    HintResponseDto:
+    HintResponse:
       type: object
       properties:
         hint:
@@ -3650,7 +3761,18 @@ components:
           example: Ø´ÙŠØ¡ ØªØ£ÙƒÙ„Ù‡ ÙˆÙ„Ù‡ Ù„ÙˆÙ† Ø£Ø­Ù…Ø± Ø£Ùˆ Ø£Ø®Ø¶Ø±
         coinsSpent:
           type: integer
-          example: 10
+          example: 35
         remainingCoins:
           type: integer
           example: 140
+
+    RemoveLanguagesRequest:
+      type: object
+      required: [languageIds]
+      properties:
+        languageIds:
+          type: array
+          items:
+            type: integer
+          minItems: 1
+          example: [3, 4]

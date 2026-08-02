@@ -39,7 +39,7 @@ fun ProfileSummary.toProfileState(): ProfileState = ProfileState(
 private fun AchievementPreview.toUiAchievement() = Achievement(
     id = id.toString(),
     title = name,
-    iconRes = localAchievementIconFor(name),
+    icon = iconUrl.ifBlank { localAchievementIconFor(name) },
     progressLabel = description
 )
 
@@ -48,6 +48,6 @@ private fun LeaderboardPreviewEntry.toUiLeaderboardEntry() = LeaderboardEntry(
     name = username,
     title = placeholderTitleFor(level),
     xp = xp,
-    avatarUrl = localAvatarPlaceholder(),
+    avatarUrl = photoUrl?.ifBlank { null } ?: localAvatarPlaceholder(),
     isCurrentUser = isCurrentUser
 )

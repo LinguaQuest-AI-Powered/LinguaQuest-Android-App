@@ -21,7 +21,7 @@ data class ProfileState(
 data class Achievement(
     val id: String,
     val title: String,
-    val iconRes: Int,
+    val icon: Any,
     val progressLabel: String
 )
 
@@ -30,6 +30,6 @@ data class LeaderboardEntry(
     val name: String,
     val title: String,
     val xp: Int,
-    val avatarUrl: Int? = null,
+    val avatarUrl: Any? = null,
     val isCurrentUser: Boolean = false
 )

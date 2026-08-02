@@ -5,13 +5,22 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,10 +32,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.achivement.presentation.view.model.AchievementItem
 import kotlinx.coroutines.delay
@@ -36,27 +48,32 @@ import kotlin.time.Duration.Companion.milliseconds
 fun AchievementGridItem(
     item: AchievementItem,
     index: Int,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    animatedIds: MutableSet<Int>? = null
 ) {
-     var visible by remember { mutableStateOf(index >= 8) }
+    val alreadyAnimated = remember(item.id) { animatedIds?.contains(item.id) == true }
+    var visible by remember(item.id) { mutableStateOf(alreadyAnimated) }
 
-    LaunchedEffect(Unit) {
-        if (index < 8) {
-            val baseDelay = 100L
-            val itemDelay = baseDelay + (index * 50L)
-        delay(itemDelay.milliseconds)
+    LaunchedEffect(item.id) {
+        if (!alreadyAnimated) {
+            val itemDelay = (index.coerceAtMost(6) * 15L)
+            if (itemDelay > 0) {
+                delay(itemDelay.milliseconds)
+            }
             visible = true
+            animatedIds?.add(item.id)
         }
     }
 
     val scale by animateFloatAsState(
-        targetValue = if (visible) 1f else 0.5f,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        targetValue = if (visible) 1f else 0.8f,
+        animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing),
         label = "scale"
     )
     val alphaAnim by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(durationMillis = 300),
+        animationSpec = tween(durationMillis = 180),
         label = "alpha"
     )
 
@@ -71,8 +88,10 @@ fun AchievementGridItem(
             .aspectRatio(0.85f)
             .background(LinguaQuestTheme.colors.AchievementCardBorder, RoundedCornerShape(16.dp))
             .padding(bottom = 3.dp)
-            .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(LinguaQuestTheme.colors.whiteColor)
             .border(1.dp, LinguaQuestTheme.colors.AchievementCardBorder, RoundedCornerShape(16.dp))
+            .clickable { onClick() }
             .padding(12.dp)
     ) {
         Column(
@@ -80,7 +99,7 @@ fun AchievementGridItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-             Box(
+            Box(
                 modifier = Modifier
                     .size(56.dp)
                     .background(
@@ -90,7 +109,7 @@ fun AchievementGridItem(
                 contentAlignment = Alignment.Center
             ) {
                 ImageWrapper(
-                    model = item.iconRes,
+                    model = item.icon,
                     contentDescription = item.title,
                     modifier = Modifier
                         .size(36.dp)
@@ -127,14 +146,14 @@ fun AchievementGridItem(
                     )
                 }
             } else {
-                 Box(
+                Box(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Locked",
+                        text = stringResource(R.string.achievement_tab_locked),
                         color = LinguaQuestTheme.colors.titleAndCationsColor.copy(alpha = 0.6f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
