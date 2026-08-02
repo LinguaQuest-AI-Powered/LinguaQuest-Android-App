@@ -37,3 +37,7 @@ data class SetActiveLanguageRequestDto(
 data class SetActiveLanguageResponseDto(
     val activeLanguage: UserLanguageDto
 )
+
+data class RemoveLanguagesRequestDto(
+    val languageIds: List<Int>
+)

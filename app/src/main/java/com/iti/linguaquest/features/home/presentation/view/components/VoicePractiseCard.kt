@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.home.presentation.view.components
 
 
 import androidx.compose.foundation.Image
-import com.iti.linguaquest.core.utils.ImageWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -105,7 +104,7 @@ fun VoicePractiseCard(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        AppButton(
+        AppButton3D(
             text = stringResource(R.string.start_button),
             onClick = { onStartClick(cardBounds) },
             variant = ButtonVariant.PRIMARY,

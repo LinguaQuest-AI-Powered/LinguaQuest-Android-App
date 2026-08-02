@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -140,7 +140,7 @@ fun NewPasswordContent(
                     )
                 }
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.new_password_reset_button),
                     onClick = onResetClick,
                     enabled = !state.isLoading,

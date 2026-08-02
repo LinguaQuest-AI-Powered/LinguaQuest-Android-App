@@ -4,7 +4,9 @@ data class AddLanguagesState(
     val isLoading: Boolean = false,
     val searchQuery: String = "",
     val availableLanguages: List<LanguageUiItem> = emptyList(),
-    val selectedLanguageIds: Set<Int> = emptySet()
+    val selectedLanguageIds: Set<Int> = emptySet(),
+    val isRemoving: Boolean = false,
+    val languagePendingRemoval: LanguageUiItem? = null
 )
 
 data class LanguageUiItem(

@@ -331,10 +331,20 @@ fun HomeScreen(
             languages = myLanguagesState.languages,
             isLoading = myLanguagesState.isLoading,
             isSettingActive = myLanguagesState.isSettingActive,
+            languagePendingRemoval = myLanguagesState.languagePendingRemoval,
             onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
             onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
             onLanguageSelect = { selectedId ->
                 myLanguagesViewModel.onIntent(MyLanguagesIntent.SetActiveLanguage(selectedId))
+            },
+            onRemoveLanguageClick = { lang ->
+                myLanguagesViewModel.onIntent(MyLanguagesIntent.RequestRemoveLanguage(lang))
+            },
+            onConfirmRemoveLanguage = {
+                myLanguagesViewModel.onIntent(MyLanguagesIntent.ConfirmRemoveLanguage)
+            },
+            onDismissRemoveDialog = {
+                myLanguagesViewModel.onIntent(MyLanguagesIntent.DismissRemoveDialog)
             }
         )
     }

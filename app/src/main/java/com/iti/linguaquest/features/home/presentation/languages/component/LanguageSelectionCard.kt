@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,12 +39,13 @@ fun LanguageSelectionCard(
     language: LanguageUiItem,
     isSelected: Boolean,
     onClick: () -> Unit,
+    onRemoveClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val isEffectivelySelected = isSelected || language.isAdded
     val borderColor = if (isEffectivelySelected) MaterialTheme.colorScheme.primary else LinguaQuestTheme.colors.textFieldBorder
     val checkmarkTint = if (language.isAdded) LinguaQuestTheme.colors.textFieldPlaceholder else LinguaQuestTheme.colors.SuccessAccent
-    val cardAlpha = if (language.isAdded) 0.6f else 1f
+    val cardAlpha = if (language.isAdded) 0.8f else 1f
 
     Box(
         modifier = modifier
@@ -54,13 +57,31 @@ fun LanguageSelectionCard(
                 color = borderColor,
                 shape = RoundedCornerShape(24.dp)
             )
-            .clickable(enabled = !language.isAdded, onClick = onClick)
+            .clickable(onClick = {
+                if (language.isAdded && onRemoveClick != null) {
+                    onRemoveClick()
+                } else if (!language.isAdded) {
+                    onClick()
+                }
+            })
             .padding(16.dp)
     ) {
         Box(
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            if (isEffectivelySelected) {
+            if (language.isAdded && onRemoveClick != null) {
+                IconButton(
+                    onClick = onRemoveClick,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.remove),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            } else if (isEffectivelySelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = stringResource(R.string.cd_selected),

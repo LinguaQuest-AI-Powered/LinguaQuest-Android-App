@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.achivement.domain.model.AchievementStatus
@@ -257,7 +257,7 @@ fun AchievementDetailBottomSheet(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.achievement_detail_close),
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth()

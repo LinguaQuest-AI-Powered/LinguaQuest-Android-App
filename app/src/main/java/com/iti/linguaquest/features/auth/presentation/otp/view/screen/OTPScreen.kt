@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
@@ -150,7 +150,7 @@ fun OTPContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.otp_verify_button),
                     onClick = { onIntent(OTPIntent.OnVerifyClicked) },
                     enabled = state.isVerifyEnabled && !state.isLoading,

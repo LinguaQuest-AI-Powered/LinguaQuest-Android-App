@@ -592,7 +592,7 @@
     <string name="failed_update_password">Failed to update password</string>
 
     <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
-    <string name="add_languages_no_results">add_languages_no_results</string>
+    <string name="add_languages_no_results">No languages found</string>
     <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
     <string name="error_loading_languages">Could not load languages. Please try again.</string>
     <string name="no_languages_available">No languages available</string>
@@ -771,4 +771,10 @@
     <string name="mind_reader_coins_value">%1$d Coins</string>
     <string name="mind_reader_trap_speech">I GIVE UP! WHAT WERE YOU THINKING OF?</string>
     <string name="mind_reader_busted_title">BUSTED!</string>
+
+    <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
+    <string name="language_removed_success">Language removed successfully.</string>
+    <string name="remove_language_title">Remove Language</string>
+    <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
+    <string name="remove">Remove</string>
 </resources>

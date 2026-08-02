@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.AppColors
@@ -107,7 +107,7 @@ fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) 
             modifier = Modifier.weight(1f),
             color = AppColors.DialogSecondaryButtonOutline
         )
-        AppButton(
+        AppButton3D(
             text = stringResource(R.string.voice_recording_done),
             onClick = { viewModel.onIntent(VoiceGameIntent.DoneClicked) },
             modifier = Modifier.weight(1f)

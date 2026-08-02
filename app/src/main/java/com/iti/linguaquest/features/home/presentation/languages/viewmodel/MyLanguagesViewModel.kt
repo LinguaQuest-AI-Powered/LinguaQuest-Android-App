@@ -11,6 +11,8 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
+import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
+import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesState
@@ -30,6 +32,7 @@ import javax.inject.Inject
 class MyLanguagesViewModel @Inject constructor(
     private val getMyLanguagesUseCase: GetMyLanguagesUseCase,
     private val setActiveLanguageUseCase: SetActiveLanguageUseCase,
+    private val removeLanguagesUseCase: RemoveLanguagesUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -46,6 +49,9 @@ class MyLanguagesViewModel @Inject constructor(
         when (intent) {
             MyLanguagesIntent.LoadMyLanguages -> loadMyLanguages()
             is MyLanguagesIntent.SetActiveLanguage -> setActiveLanguage(intent.languageId)
+            is MyLanguagesIntent.RequestRemoveLanguage -> requestRemoveLanguage(intent.language)
+            MyLanguagesIntent.ConfirmRemoveLanguage -> confirmRemoveLanguage()
+            MyLanguagesIntent.DismissRemoveDialog -> dismissRemoveDialog()
             MyLanguagesIntent.AddNewLanguageClicked -> sendEffect(MyLanguagesEffect.NavigateToAddLanguages)
             MyLanguagesIntent.Dismiss -> sendEffect(MyLanguagesEffect.Dismiss)
         }
@@ -95,6 +101,57 @@ class MyLanguagesViewModel @Inject constructor(
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSettingActive = false) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun requestRemoveLanguage(language: MyLanguageUiModel) {
+        if (language.isCurrent) {
+            viewModelScope.launch {
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = UiText.StringResource(R.string.cannot_remove_active_language),
+                        type = SnackbarType.WARNING
+                    )
+                )
+            }
+            return
+        }
+        _state.update { it.copy(languagePendingRemoval = language) }
+    }
+
+    private fun dismissRemoveDialog() {
+        _state.update { it.copy(languagePendingRemoval = null) }
+    }
+
+    private fun confirmRemoveLanguage() {
+        val targetLanguage = _state.value.languagePendingRemoval ?: return
+        viewModelScope.launch {
+            _state.update { it.copy(isRemoving = true, languagePendingRemoval = null) }
+            when (val result = removeLanguagesUseCase(listOf(targetLanguage.id))) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { currentState ->
+                        currentState.copy(
+                            isRemoving = false,
+                            languages = result.data.map { lang -> lang.toUiModel() }
+                        )
+                    }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.language_removed_success),
+                            type = SnackbarType.SUCCESS
+                        )
+                    )
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(isRemoving = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),

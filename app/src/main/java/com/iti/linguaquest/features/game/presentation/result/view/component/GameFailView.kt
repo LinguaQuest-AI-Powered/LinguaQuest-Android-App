@@ -20,7 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
@@ -79,7 +79,7 @@ fun GameFailView(
             Spacer(modifier = Modifier.height(32.dp))
 
             if (!isHintUsed) {
-                AppButton(
+                AppButton3D(
                     text = stringResource(R.string.game_result_hint_button),
                     onClick = onBuyHint,
                     variant = ButtonVariant.SECONDARY,
@@ -90,7 +90,7 @@ fun GameFailView(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.game_result_retry_camera),
                 onClick = onRetry,
                 variant = ButtonVariant.PRIMARY
