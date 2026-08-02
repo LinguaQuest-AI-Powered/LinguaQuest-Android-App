@@ -2,7 +2,6 @@ package com.iti.linguaquest.core.sharedComponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -93,7 +92,7 @@ fun LinguaQuestScreenTopBar(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50))
                             .background(LocalLinguaQuestColors.current.whiteColor)
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -105,13 +104,16 @@ fun LinguaQuestScreenTopBar(
                         Text(
                             text = xpCount.formatCompact(),
                             fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             color = LinguaQuestTheme.colors.iconsColor
                         )
                     }
                 }
 
                 if (showCoins && showXp) {
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(6.dp))
                 }
 
                 if (showCoins) {
@@ -119,7 +121,7 @@ fun LinguaQuestScreenTopBar(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50))
                             .background(LocalLinguaQuestColors.current.whiteColor)
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -131,6 +133,9 @@ fun LinguaQuestScreenTopBar(
                         Text(
                             text = coinsCount.formatCompact(),
                             fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             color = LinguaQuestTheme.colors.iconsColor
                         )
                     }

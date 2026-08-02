@@ -21,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -42,16 +44,12 @@ fun DailyRewardTimeline(
     currentDay: Int,
     cycleLength: Int = 5
 ) {
-    val maxVisibleNodes = 5
-    val totalNodes = minOf(cycleLength.coerceAtLeast(1), maxVisibleNodes)
+    val totalNodes = cycleLength.coerceAtLeast(1)
     val activeColor = MaterialTheme.colorScheme.primary
     val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
-    val startDay = maxOf(1, minOf(currentDay - 2, (cycleLength - totalNodes + 1).coerceAtLeast(1)))
-    val endDay = minOf(cycleLength.coerceAtLeast(1), startDay + totalNodes - 1)
-    val displayedDays = (startDay..endDay).toList()
-
-    val activeNodesCount = displayedDays.count { it < currentDay }
+    val displayedDays = (1..totalNodes).toList()
+    val activeNodesCount = (displayedDays.count { it < currentDay }).coerceAtMost(totalNodes - 1)
 
     var startAnimation by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -64,84 +62,96 @@ fun DailyRewardTimeline(
         label = "lineProgress"
     )
 
+    val scrollState = rememberScrollState()
+    val nodeWidth = 56.dp
+    val nodeSpacing = 16.dp
+    val totalWidth = if (totalNodes <= 1) nodeWidth else (nodeWidth * totalNodes + nodeSpacing * (totalNodes - 1))
+
     Box(
-        modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.TopCenter
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),
+        contentAlignment = Alignment.TopStart
     ) {
-        val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .height(48.dp)
-                .scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f)
+        Box(
+            modifier = Modifier.width(totalWidth),
+            contentAlignment = Alignment.TopStart
         ) {
-            val yOffset = size.height / 2
+            val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+            Canvas(
+                modifier = Modifier
+                    .width(totalWidth)
+                    .padding(horizontal = 28.dp)
+                    .height(48.dp)
+                    .scale(scaleX = if (isRtl) -1f else 1f, scaleY = 1f)
+            ) {
+                val yOffset = size.height / 2
 
-            drawLine(
-                color = inactiveColor,
-                start = Offset(0f, yOffset),
-                end = Offset(size.width, yOffset),
-                strokeWidth = 2.dp.toPx(),
-                cap = StrokeCap.Round
-            )
-
-            if (activeNodesCount > 0 && totalNodes > 1) {
-                val segmentWidth = size.width / (totalNodes - 1)
-                val activeEnd = segmentWidth * activeNodesCount * animatedLineProgress
                 drawLine(
-                    color = activeColor,
+                    color = inactiveColor,
                     start = Offset(0f, yOffset),
-                    end = Offset(activeEnd, yOffset),
-                    strokeWidth = 3.dp.toPx(),
+                    end = Offset(size.width, yOffset),
+                    strokeWidth = 2.dp.toPx(),
                     cap = StrokeCap.Round
                 )
-            }
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            for ((index, day) in displayedDays.withIndex()) {
-                val isCompleted = day < currentDay
-
-                val nodeScale by animateFloatAsState(
-                    targetValue = if (startAnimation) 1f else 0f,
-                    animationSpec = tween(
-                        durationMillis = 400,
-                        delayMillis = index * 150,
-                        easing = FastOutSlowInEasing
-                    ),
-                    label = "nodeScale"
-                )
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.width(56.dp)
-                ) {
-                    Box(
-                        modifier = Modifier.height(48.dp).scale(nodeScale),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        when {
-                            isCompleted -> CompletedDayNode()
-                            day == currentDay -> CurrentDayNode()
-                            else -> LockedDayNode()
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = stringResource(id = R.string.day_format, day),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = if (day == currentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
-                            fontWeight = if (day == currentDay) FontWeight.Bold else FontWeight.Medium,
-                            fontSize = 11.sp
-                        )
+                if (activeNodesCount > 0 && totalNodes > 1) {
+                    val segmentWidth = size.width / (totalNodes - 1)
+                    val activeEnd = segmentWidth * activeNodesCount * animatedLineProgress
+                    drawLine(
+                        color = activeColor,
+                        start = Offset(0f, yOffset),
+                        end = Offset(activeEnd, yOffset),
+                        strokeWidth = 3.dp.toPx(),
+                        cap = StrokeCap.Round
                     )
+                }
+            }
+
+            Row(
+                modifier = Modifier.width(totalWidth),
+                horizontalArrangement = Arrangement.spacedBy(nodeSpacing),
+                verticalAlignment = Alignment.Top
+            ) {
+                for ((index, day) in displayedDays.withIndex()) {
+                    val isCompleted = day < currentDay
+
+                    val nodeScale by animateFloatAsState(
+                        targetValue = if (startAnimation) 1f else 0f,
+                        animationSpec = tween(
+                            durationMillis = 400,
+                            delayMillis = index * 150,
+                            easing = FastOutSlowInEasing
+                        ),
+                        label = "nodeScale"
+                    )
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.width(nodeWidth)
+                    ) {
+                        Box(
+                            modifier = Modifier.height(48.dp).scale(nodeScale),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            when {
+                                isCompleted -> CompletedDayNode()
+                                day == currentDay -> CurrentDayNode()
+                                else -> LockedDayNode()
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = stringResource(id = R.string.day_format, day),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = if (day == currentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
+                                fontWeight = if (day == currentDay) FontWeight.Bold else FontWeight.Medium,
+                                fontSize = 11.sp
+                            )
+                        )
+                    }
                 }
             }
         }
