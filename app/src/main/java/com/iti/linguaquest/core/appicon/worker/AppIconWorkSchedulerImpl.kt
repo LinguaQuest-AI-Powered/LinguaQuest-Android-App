@@ -1,10 +1,11 @@
 package com.iti.linguaquest.core.appicon.worker
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.iti.linguaquest.core.appicon.domain.AppIconTiming
@@ -13,15 +14,18 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import timber.log.Timber
+import kotlin.time.Duration
 
 @Singleton
 class AppIconWorkSchedulerImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : AppIconWorkScheduler {
 
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
     override fun scheduleDailyRefresh() {
         val request = PeriodicWorkRequestBuilder<AppIconRefreshWorker>(
-            AppIconTiming.PERIODIC_REFRESH_INTERVAL_MINUTES, TimeUnit.MINUTES
+            AppIconTiming.PERIODIC_REFRESH_INTERVAL.inWholeMinutes, TimeUnit.MINUTES
         ).build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             DAILY_REFRESH_WORK_NAME,
@@ -31,53 +35,68 @@ class AppIconWorkSchedulerImpl @Inject constructor(
     }
 
     override fun scheduleAngryWindowCheck() {
-        val request = OneTimeWorkRequestBuilder<AppIconRefreshWorker>()
-            .setInitialDelay(AppIconTiming.ANGRY_CHECK_DELAY_SECONDS, TimeUnit.SECONDS)
-            .build()
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            STATE_TRANSITION_WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            request
+        scheduleAlarm(
+            delayMillis = AppIconTiming.ANGRY_CHECK_DELAY.inWholeMilliseconds,
+            requestCode = STATE_TRANSITION_REQUEST_CODE
         )
     }
 
-    override fun scheduleFollowUpCheck(delayMillis: Long) {
-        val safeDelay = delayMillis.coerceAtLeast(0L)
-        val request = if (safeDelay == 0L) {
-            OneTimeWorkRequestBuilder<AppIconRefreshWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .build()
-        } else {
-            OneTimeWorkRequestBuilder<AppIconRefreshWorker>()
-                .setInitialDelay(safeDelay, TimeUnit.MILLISECONDS)
-                .build()
-        }
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            STATE_TRANSITION_WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            request
+    override fun scheduleNextEvaluation(nextDelay: Duration) {
+        scheduleAlarm(
+            delayMillis = nextDelay.inWholeMilliseconds,
+            requestCode = STATE_TRANSITION_REQUEST_CODE
         )
     }
 
     override fun scheduleBackgroundExitCheck() {
-        Timber.d("AppIcon: Scheduling BACKGROUND_EXIT check in ${AppIconTiming.BACKGROUND_EXIT_DELAY_SECONDS}s")
-        val request = OneTimeWorkRequestBuilder<AppIconRefreshWorker>()
-            .setInitialDelay(AppIconTiming.BACKGROUND_EXIT_DELAY_SECONDS, TimeUnit.SECONDS)
-            .build()
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            BACKGROUND_EXIT_WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            request
+        Timber.d("AppIcon: Scheduling BACKGROUND_EXIT check in ${AppIconTiming.BACKGROUND_EXIT_DELAY.inWholeMilliseconds}ms")
+        scheduleAlarm(
+            delayMillis = AppIconTiming.BACKGROUND_EXIT_DELAY.inWholeMilliseconds,
+            requestCode = BACKGROUND_EXIT_REQUEST_CODE
         )
     }
 
     override fun cancelBackgroundExitCheck() {
-        WorkManager.getInstance(context).cancelUniqueWork(BACKGROUND_EXIT_WORK_NAME)
+        alarmManager.cancel(buildPendingIntent(BACKGROUND_EXIT_REQUEST_CODE))
     }
 
     private companion object {
         const val DAILY_REFRESH_WORK_NAME = "app_icon_refresh_work"
-        const val STATE_TRANSITION_WORK_NAME = "app_icon_state_transition_work"
-        const val BACKGROUND_EXIT_WORK_NAME = "app_icon_background_exit_work"
+        const val ACTION_APP_ICON_REFRESH = "com.iti.linguaquest.ACTION_APP_ICON_REFRESH"
+        const val STATE_TRANSITION_REQUEST_CODE = 9101
+        const val BACKGROUND_EXIT_REQUEST_CODE = 9102
+    }
+
+    private fun scheduleAlarm(delayMillis: Long, requestCode: Int) {
+        val safeDelayMillis = delayMillis.coerceAtLeast(0L)
+        val pendingIntent = buildPendingIntent(requestCode)
+        alarmManager.cancel(pendingIntent)
+        val triggerAtMillis = System.currentTimeMillis() + safeDelayMillis
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pendingIntent
+            )
+        } else {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pendingIntent
+            )
+        }
+    }
+
+    private fun buildPendingIntent(requestCode: Int): PendingIntent {
+        val intent = Intent(context, AppIconRefreshReceiver::class.java).apply {
+            action = ACTION_APP_ICON_REFRESH
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 }

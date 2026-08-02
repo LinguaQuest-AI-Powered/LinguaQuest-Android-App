@@ -1,21 +1,19 @@
 package com.iti.linguaquest.core.appicon.domain
 
-import com.iti.linguaquest.core.appicon.util.AppIconClock
 import com.iti.linguaquest.core.appicon.worker.AppIconWorkScheduler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration
 
 @Singleton
 class AppIconService @Inject constructor(
     private val stateRepository: AppIconStateRepository,
     private val ruleEngine: AppIconRuleEngine,
     private val manager: AppIconController,
-    private val workScheduler: AppIconWorkScheduler,
-    private val clock: AppIconClock
+    private val workScheduler: AppIconWorkScheduler
 ) {
     suspend fun onAppBackgrounded() {
         withContext(Dispatchers.IO) {
@@ -39,44 +37,24 @@ class AppIconService @Inject constructor(
     suspend fun refresh() {
         withContext(Dispatchers.IO) {
             Timber.d("AppIcon: refresh called by worker")
-            applyIcon()
+            val evaluation = ruleEngine.evaluate()
+            Timber.d("AppIcon: ruleEngine evaluated to ${evaluation.type}")
+
+            scheduleNextEvaluation(evaluation.nextDelay)
+
+            val applied = manager.switchTo(evaluation.type)
+            if (applied) {
+                evaluation.onApplied()
+            } else {
+                Timber.w("App icon switch to ${evaluation.type} did not apply; will retry on next refresh")
+            }
         }
     }
 
-    private suspend fun applyIcon() {
-        val decision = ruleEngine.evaluate()
-        Timber.d("AppIcon: ruleEngine evaluated to ${decision.type}")
-        
-        scheduleFollowUpIfNeeded(decision.type)
+    private fun scheduleNextEvaluation(nextDelay: Duration?) {
+        if (nextDelay == null) return
 
-        val applied = manager.switchTo(decision.type)
-
-        if (applied) {
-            decision.onApplied()
-        } else {
-            Timber.w("App icon switch to ${decision.type} did not apply; will retry on next refresh")
-        }
-    }
-
-    private suspend fun scheduleFollowUpIfNeeded(currentType: AppIconType) {
-        val lastInteractionAt = stateRepository.snapshot().lastUserInteractionAtMillis ?: return
-
-        when (currentType) {
-            AppIconType.FIRE, AppIconType.DEFAULT, AppIconType.REWARD -> {
-                val angryStartsAtMillis = lastInteractionAt +
-                    TimeUnit.MINUTES.toMillis(AppIconTiming.ANGRY_START_MINUTES)
-                val delayMillis = (angryStartsAtMillis - clock.nowMillis()).coerceAtLeast(0L)
-                Timber.d("AppIcon: Scheduling ANGRY follow-up in ${delayMillis}ms")
-                workScheduler.scheduleFollowUpCheck(delayMillis)
-            }
-            AppIconType.ANGRY -> {
-                val sleepStartsAtMillis = lastInteractionAt +
-                    TimeUnit.MINUTES.toMillis(AppIconTiming.SLEEP_START_MINUTES)
-                val delayMillis = (sleepStartsAtMillis - clock.nowMillis()).coerceAtLeast(0L)
-                Timber.d("AppIcon: Scheduling SLEEP follow-up in ${delayMillis}ms")
-                workScheduler.scheduleFollowUpCheck(delayMillis)
-            }
-            AppIconType.SLEEP -> Unit
-        }
+        Timber.d("AppIcon: Scheduling next evaluation in ${nextDelay.inWholeMilliseconds}ms")
+        workScheduler.scheduleNextEvaluation(nextDelay)
     }
 }

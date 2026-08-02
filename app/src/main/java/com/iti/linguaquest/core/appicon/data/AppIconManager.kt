@@ -17,15 +17,11 @@ class AndroidAppIconController @Inject constructor(
 ) : AppIconController {
 
     private val packageManager: PackageManager = context.packageManager
-    private var currentType: AppIconType? = null
 
     override fun switchTo(type: AppIconType): Boolean {
         Timber.d("AppIcon: Attempting to switch to $type")
         val isAlreadyActive = AppIconType.entries.firstOrNull { candidate ->
-            val componentName = ComponentName(
-                context.packageName,
-                "${context.packageName}.${candidate.aliasActivityName}"
-            )
+            val componentName = componentName(candidate)
             val state = packageManager.getComponentEnabledSetting(componentName)
             state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED ||
                     (candidate == AppIconType.DEFAULT && state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)
@@ -37,14 +33,12 @@ class AndroidAppIconController @Inject constructor(
         }
 
         return try {
-
             updateAlias(type, enabled = true)
             AppIconType.entries
                 .filter { it != type }
                 .forEach { candidate -> updateAlias(candidate, enabled = false) }
 
             Timber.d("AppIcon: Successfully switched to $type")
-            currentType = type
             true
         } catch (e: Exception) {
             Timber.e(e, "Failed to switch app icon to $type")
@@ -53,10 +47,7 @@ class AndroidAppIconController @Inject constructor(
     }
 
     private fun updateAlias(type: AppIconType, enabled: Boolean) {
-        val componentName = ComponentName(
-            context.packageName,
-            "${context.packageName}.${type.aliasActivityName}"
-        )
+        val componentName = componentName(type)
 
         packageManager.setComponentEnabledSetting(
             componentName,
@@ -66,6 +57,13 @@ class AndroidAppIconController @Inject constructor(
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED
             },
             PackageManager.DONT_KILL_APP
+        )
+    }
+
+    private fun componentName(type: AppIconType): ComponentName {
+        return ComponentName(
+            context.packageName,
+            "${context.packageName}.${type.aliasActivityName}"
         )
     }
 }

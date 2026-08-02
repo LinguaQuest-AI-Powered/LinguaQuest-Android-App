@@ -1,6 +1,6 @@
 package com.iti.linguaquest.core.appicon.rules
 
-import com.iti.linguaquest.core.appicon.domain.AppIconDecision
+import com.iti.linguaquest.core.appicon.domain.AppIconEvaluation
 import com.iti.linguaquest.core.appicon.domain.AppIconRule
 import com.iti.linguaquest.core.appicon.domain.SeasonalIconWindow
 import com.iti.linguaquest.core.appicon.util.AppIconClock
@@ -13,7 +13,7 @@ class SeasonalAppIconRule @Inject constructor(
 ) : AppIconRule {
     override val priority: Int = 1000
 
-    override suspend fun evaluate(): AppIconDecision? {
+    override suspend fun evaluate(): AppIconEvaluation? {
         if (windows.isEmpty()) return null
 
         val calendar = Calendar.getInstance().apply { timeInMillis = clock.nowMillis() }
@@ -24,7 +24,7 @@ class SeasonalAppIconRule @Inject constructor(
             isInRange(month, day, window.startMonth, window.startDay, window.endMonth, window.endDay)
         } ?: return null
 
-        return AppIconDecision(matched.iconType)
+        return AppIconEvaluation(matched.iconType)
     }
 
     private fun isInRange(

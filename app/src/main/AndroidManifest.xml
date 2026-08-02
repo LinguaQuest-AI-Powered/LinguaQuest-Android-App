@@ -144,6 +144,10 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".core.appicon.worker.AppIconRefreshReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

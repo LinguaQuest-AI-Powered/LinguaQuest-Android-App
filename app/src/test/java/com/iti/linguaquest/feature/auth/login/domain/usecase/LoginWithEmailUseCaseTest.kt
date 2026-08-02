@@ -1,10 +1,12 @@
 package com.iti.linguaquest.feature.auth.login.domain.usecase
 
-import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.feature.auth.login.domain.model.AuthLoginResult
-import com.iti.linguaquest.feature.auth.login.domain.model.AuthUser
-import com.iti.linguaquest.feature.auth.login.domain.repository.LoginRepository
+import com.iti.linguaquest.features.auth.domain.model.AuthError
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.features.auth.domain.usecase.LoginUserUseCase
+import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -13,8 +15,8 @@ class LoginWithEmailUseCaseTest {
 
     @Test
     fun invoke_passesEmailAndPasswordToRepository() = runBlocking {
-        val repository = FakeLoginRepository()
-        val useCase = LoginWithEmailUseCase(repository)
+        val repository = FakeAuthRepository()
+        val useCase = LoginUserUseCase(repository)
 
         useCase("a@b.com", "secret")
 
@@ -22,53 +24,71 @@ class LoginWithEmailUseCaseTest {
         assertEquals("secret", repository.lastPassword)
     }
 
-    private class FakeLoginRepository : LoginRepository {
+    private class FakeAuthRepository : AuthRepository {
         var lastEmail: String? = null
         var lastPassword: String? = null
 
-        override suspend fun loginWithEmail(
+        override suspend fun getAuthLanguages(): LinguaQuestResult<List<LanguageOption>, AuthError> {
+            return LinguaQuestResult.Success(emptyList())
+        }
+
+        override suspend fun register(
             email: String,
-            password: String,
-        ): LinguaQuestResult<AuthLoginResult, LinguaQuestDataError.Auth> {
+            username: String,
+            password: String
+        ): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
+        }
+
+        override suspend fun login(
+            email: String,
+            password: String
+        ): LinguaQuestResult<Unit, AuthError> {
             lastEmail = email
             lastPassword = password
-            return sampleResult()
+            return LinguaQuestResult.Success(Unit)
         }
 
-        override suspend fun loginWithGoogle(
-            idToken: String,
-        ): LinguaQuestResult<AuthLoginResult, LinguaQuestDataError.Auth> {
-            return sampleResult()
+        override suspend fun signInWithGoogle(idToken: String): LinguaQuestResult<Boolean, AuthError> {
+            return LinguaQuestResult.Success(true)
         }
 
-        override suspend fun continueAsGuest(): LinguaQuestResult<AuthUser, LinguaQuestDataError.Auth> {
-            return LinguaQuestResult.Success(
-                AuthUser(
-                    id = 1,
-                    username = "guest",
-                    name = "Guest",
-                    nativeLanguage = "Arabic",
-                    isVerified = false,
-                )
-            )
+        override suspend fun completeOAuthProfile(
+            nativeLanguageId: Int,
+            targetLanguageId: Int,
+            username: String?
+        ): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
         }
 
-        private fun sampleResult(): LinguaQuestResult<AuthLoginResult, LinguaQuestDataError.Auth> {
-            return LinguaQuestResult.Success(
-                AuthLoginResult(
-                    accessToken = "access",
-                    refreshToken = "refresh",
-                    tokenType = "Bearer",
-                    expiresIn = 3600,
-                    user = AuthUser(
-                        id = 1,
-                        username = "user",
-                        name = "User",
-                        nativeLanguage = "Arabic",
-                        isVerified = true,
-                    ),
-                )
-            )
+        override suspend fun sendRegistrationOtp(email: String): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
+        }
+
+        override suspend fun sendPasswordResetOtp(email: String): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
+        }
+
+        override suspend fun verifyEmailOtp(email: String, otpCode: String): LinguaQuestResult<Boolean, AuthError> {
+            return LinguaQuestResult.Success(true)
+        }
+
+        override suspend fun verifyPasswordResetOtp(email: String, otpCode: String): LinguaQuestResult<String, AuthError> {
+            return LinguaQuestResult.Success("token")
+        }
+
+        override suspend fun setNewPassword(newPassword: String, resetToken: String): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
+        }
+
+        override fun isLoggedIn(): Flow<Boolean> = flowOf(true)
+
+        override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
+        }
+
+        override suspend fun refreshToken(refreshToken: String): LinguaQuestResult<Unit, AuthError> {
+            return LinguaQuestResult.Success(Unit)
         }
     }
 }
