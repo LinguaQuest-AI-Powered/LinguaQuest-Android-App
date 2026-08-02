@@ -1,0 +1,2746 @@
+{
+  "entities": [
+    {
+      "id": "apple",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "تفاحة",
+        "en": "apple",
+        "es": "manzana",
+        "de": "Apfel",
+        "it": "mela",
+        "fr": "pomme",
+        "pt": "maçã"
+      },
+      "emoji": "🍎",
+      "positiveAttributes": [
+        "is_food",
+        "is_red",
+        "is_round",
+        "is_soft",
+        "grows_on_trees",
+        "has_seeds"
+      ]
+    },
+    {
+      "id": "pan",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "مقلاة",
+        "en": "pan",
+        "es": "sartén",
+        "de": "Pfanne",
+        "it": "padella",
+        "fr": "poêle",
+        "pt": "frigideira"
+      },
+      "emoji": "🍳",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "used_for_cooking",
+        "is_container"
+      ]
+    },
+    {
+      "id": "knife",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "سكين",
+        "en": "knife",
+        "es": "cuchillo",
+        "de": "Messer",
+        "it": "coltello",
+        "fr": "couteau",
+        "pt": "faca"
+      },
+      "emoji": "🔪",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "can_cut"
+      ]
+    },
+    {
+      "id": "dog",
+      "worldKey": "park",
+      "translations": {
+        "ar": "كلب",
+        "en": "dog",
+        "es": "perro",
+        "de": "Hund",
+        "it": "cane",
+        "fr": "chien",
+        "pt": "cachorro"
+      },
+      "emoji": "🐶",
+      "positiveAttributes": [
+        "is_animal",
+        "can_move",
+        "has_tail",
+        "has_fur",
+        "is_pet",
+        "can_swim"
+      ]
+    },
+    {
+      "id": "tree",
+      "worldKey": "park",
+      "translations": {
+        "ar": "شجرة",
+        "en": "tree",
+        "es": "árbol",
+        "de": "Baum",
+        "it": "albero",
+        "fr": "arbre",
+        "pt": "árvore"
+      },
+      "emoji": "🌳",
+      "positiveAttributes": [
+        "is_green",
+        "made_of_wood",
+        "is_hard",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "banana",
+      "worldKey": "market",
+      "translations": {
+        "ar": "موزة",
+        "en": "banana",
+        "es": "plátano",
+        "de": "Banane",
+        "it": "banana",
+        "fr": "banane",
+        "pt": "banana"
+      },
+      "emoji": "🍌",
+      "positiveAttributes": [
+        "is_food",
+        "is_soft",
+        "is_round",
+        "grows_on_trees"
+      ]
+    },
+    {
+      "id": "water",
+      "worldKey": "market",
+      "translations": {
+        "ar": "ماء",
+        "en": "water",
+        "es": "agua",
+        "de": "Wasser",
+        "it": "acqua",
+        "fr": "eau",
+        "pt": "água"
+      },
+      "emoji": "💧",
+      "positiveAttributes": [
+        "is_drink"
+      ]
+    },
+    {
+      "id": "bus",
+      "worldKey": "city",
+      "translations": {
+        "ar": "أوتوبيس",
+        "en": "bus",
+        "es": "autobús",
+        "de": "Bus",
+        "it": "autobus",
+        "fr": "bus",
+        "pt": "ônibus"
+      },
+      "emoji": "🚌",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "is_vehicle",
+        "made_of_metal",
+        "is_big"
+      ]
+    },
+    {
+      "id": "car",
+      "worldKey": "city",
+      "translations": {
+        "ar": "سيارة",
+        "en": "car",
+        "es": "coche",
+        "de": "Auto",
+        "it": "auto",
+        "fr": "voiture",
+        "pt": "carro"
+      },
+      "emoji": "🚗",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "made_of_metal",
+        "is_vehicle"
+      ]
+    },
+    {
+      "id": "pencil",
+      "worldKey": "school",
+      "translations": {
+        "ar": "قلم رصاص",
+        "en": "pencil",
+        "es": "lápiz",
+        "de": "Bleistift",
+        "it": "matita",
+        "fr": "crayon",
+        "pt": "lápis"
+      },
+      "emoji": "✏️",
+      "positiveAttributes": [
+        "made_of_wood",
+        "is_hard",
+        "used_for_writing",
+        "is_stationery",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "notebook",
+      "worldKey": "school",
+      "translations": {
+        "ar": "دفتر",
+        "en": "notebook",
+        "es": "cuaderno",
+        "de": "Notizbuch",
+        "it": "quaderno",
+        "fr": "cahier",
+        "pt": "caderno"
+      },
+      "emoji": "📓",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "used_for_writing",
+        "is_stationery",
+        "has_pages"
+      ]
+    },
+    {
+      "id": "airplane",
+      "worldKey": "airport",
+      "translations": {
+        "ar": "طائرة",
+        "en": "airplane",
+        "es": "avión",
+        "de": "Flugzeug",
+        "it": "aereo",
+        "fr": "avion",
+        "pt": "avião"
+      },
+      "emoji": "✈️",
+      "positiveAttributes": [
+        "can_move",
+        "can_fly",
+        "has_wheels",
+        "electric",
+        "is_vehicle"
+      ]
+    },
+    {
+      "id": "suitcase",
+      "worldKey": "airport",
+      "translations": {
+        "ar": "حقيبة سفر",
+        "en": "suitcase",
+        "es": "maleta",
+        "de": "Koffer",
+        "it": "valigia",
+        "fr": "valise",
+        "pt": "mala"
+      },
+      "emoji": "🧳",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_hard",
+        "has_wheels",
+        "is_container"
+      ]
+    },
+    {
+      "id": "sofa",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "كنبة",
+        "en": "sofa",
+        "es": "sofá",
+        "de": "Sofa",
+        "it": "divano",
+        "fr": "canapé",
+        "pt": "sofá"
+      },
+      "emoji": "🛋️",
+      "positiveAttributes": [
+        "is_soft",
+        "made_of_wood",
+        "used_for_sitting",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "lamp",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "مصباح",
+        "en": "lamp",
+        "es": "lámpara",
+        "de": "Lampe",
+        "it": "lampada",
+        "fr": "lampe",
+        "pt": "lâmpada"
+      },
+      "emoji": "💡",
+      "positiveAttributes": [
+        "electric",
+        "is_hard",
+        "is_device"
+      ]
+    },
+    {
+      "id": "chair",
+      "worldKey": "office",
+      "translations": {
+        "ar": "كرسي",
+        "en": "chair",
+        "es": "silla",
+        "de": "Stuhl",
+        "it": "sedia",
+        "fr": "chaise",
+        "pt": "cadeira"
+      },
+      "emoji": "🪑",
+      "positiveAttributes": [
+        "made_of_wood",
+        "is_hard",
+        "used_for_sitting",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "keyboard",
+      "worldKey": "office",
+      "translations": {
+        "ar": "لوحة مفاتيح",
+        "en": "keyboard",
+        "es": "teclado",
+        "de": "Tastatur",
+        "it": "tastiera",
+        "fr": "clavier",
+        "pt": "teclado"
+      },
+      "emoji": "⌨️",
+      "positiveAttributes": [
+        "electric",
+        "used_for_writing",
+        "is_device"
+      ]
+    },
+    {
+      "id": "train",
+      "worldKey": "train_station",
+      "translations": {
+        "ar": "قطار",
+        "en": "train",
+        "es": "tren",
+        "de": "Zug",
+        "it": "treno",
+        "fr": "train",
+        "pt": "trem"
+      },
+      "emoji": "🚆",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "electric",
+        "is_vehicle"
+      ]
+    },
+    {
+      "id": "ticket",
+      "worldKey": "train_station",
+      "translations": {
+        "ar": "تذكرة",
+        "en": "ticket",
+        "es": "billete",
+        "de": "Fahrkarte",
+        "it": "biglietto",
+        "fr": "billet",
+        "pt": "bilhete"
+      },
+      "emoji": "🎫",
+      "positiveAttributes": [
+        "is_hard"
+      ]
+    },
+    {
+      "id": "doctor",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "طبيب",
+        "en": "doctor",
+        "es": "médico",
+        "de": "Arzt",
+        "it": "medico",
+        "fr": "médecin",
+        "pt": "médico"
+      },
+      "emoji": "🧑‍⚕️",
+      "positiveAttributes": [
+        "is_person",
+        "can_prescribe_medicine"
+      ]
+    },
+    {
+      "id": "stethoscope",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "سماعة طبيب",
+        "en": "stethoscope",
+        "es": "estetoscopio",
+        "de": "Stethoskop",
+        "it": "stetoscopio",
+        "fr": "stéthoscope",
+        "pt": "estetoscópio"
+      },
+      "emoji": "🩺",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "is_device"
+      ]
+    },
+    {
+      "id": "ball",
+      "worldKey": "sports_stadium",
+      "translations": {
+        "ar": "كرة",
+        "en": "ball",
+        "es": "pelota",
+        "de": "Ball",
+        "it": "palla",
+        "fr": "balle",
+        "pt": "bola"
+      },
+      "emoji": "⚽",
+      "positiveAttributes": [
+        "is_round",
+        "can_move"
+      ]
+    },
+    {
+      "id": "trophy",
+      "worldKey": "sports_stadium",
+      "translations": {
+        "ar": "كأس",
+        "en": "trophy",
+        "es": "trofeo",
+        "de": "Pokal",
+        "it": "trofeo",
+        "fr": "trophée",
+        "pt": "troféu"
+      },
+      "emoji": "🏆",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "soap",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "صابون",
+        "en": "soap",
+        "es": "jabón",
+        "de": "Seife",
+        "it": "sapone",
+        "fr": "savon",
+        "pt": "sabão"
+      },
+      "emoji": "🧼",
+      "positiveAttributes": [
+        "is_soft",
+        "used_for_cleaning"
+      ]
+    },
+    {
+      "id": "towel",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "منشفة",
+        "en": "towel",
+        "es": "toalla",
+        "de": "Handtuch",
+        "it": "asciugamano",
+        "fr": "serviette",
+        "pt": "toalha"
+      },
+      "emoji": "🧻",
+      "positiveAttributes": [
+        "is_soft",
+        "used_for_cleaning",
+        "made_of_fabric"
+      ]
+    },
+    {
+      "id": "book",
+      "worldKey": "school",
+      "translations": {
+        "ar": "كتاب",
+        "en": "book",
+        "es": "libro",
+        "de": "Buch",
+        "it": "libro",
+        "fr": "livre",
+        "pt": "livro"
+      },
+      "emoji": "📖",
+      "positiveAttributes": [
+        "used_for_writing",
+        "is_hard",
+        "is_stationery",
+        "has_pages"
+      ]
+    },
+    {
+      "id": "phone",
+      "worldKey": "office",
+      "translations": {
+        "ar": "هاتف",
+        "en": "phone",
+        "es": "teléfono",
+        "de": "Telefon",
+        "it": "telefono",
+        "fr": "téléphone",
+        "pt": "telefone"
+      },
+      "emoji": "📱",
+      "positiveAttributes": [
+        "electric",
+        "is_hard",
+        "is_device",
+        "has_screen"
+      ]
+    },
+    {
+      "id": "laptop",
+      "worldKey": "office",
+      "translations": {
+        "ar": "حاسوب محمول",
+        "en": "laptop",
+        "es": "portátil",
+        "de": "Laptop",
+        "it": "portatile",
+        "fr": "ordinateur portable",
+        "pt": "laptop"
+      },
+      "emoji": "💻",
+      "positiveAttributes": [
+        "electric",
+        "is_hard",
+        "used_for_writing",
+        "is_device",
+        "has_screen"
+      ]
+    },
+    {
+      "id": "cat",
+      "worldKey": "park",
+      "translations": {
+        "ar": "قط",
+        "en": "cat",
+        "es": "gato",
+        "de": "Katze",
+        "it": "gatto",
+        "fr": "chat",
+        "pt": "gato"
+      },
+      "emoji": "🐱",
+      "positiveAttributes": [
+        "is_animal",
+        "can_move",
+        "has_tail",
+        "has_fur",
+        "is_pet"
+      ]
+    },
+    {
+      "id": "fish",
+      "worldKey": "market",
+      "translations": {
+        "ar": "سمكة",
+        "en": "fish",
+        "es": "pez",
+        "de": "Fisch",
+        "it": "pesce",
+        "fr": "poisson",
+        "pt": "peixe"
+      },
+      "emoji": "🐟",
+      "positiveAttributes": [
+        "is_animal",
+        "can_swim",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "bicycle",
+      "worldKey": "city",
+      "translations": {
+        "ar": "دراجة",
+        "en": "bicycle",
+        "es": "bicicleta",
+        "de": "Fahrrad",
+        "it": "bicicletta",
+        "fr": "vélo",
+        "pt": "bicicleta"
+      },
+      "emoji": "🚲",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "is_vehicle",
+        "has_two_wheels"
+      ]
+    },
+    {
+      "id": "truck",
+      "worldKey": "city",
+      "translations": {
+        "ar": "شاحنة",
+        "en": "truck",
+        "es": "camión",
+        "de": "Lastwagen",
+        "it": "camion",
+        "fr": "camion",
+        "pt": "caminhão"
+      },
+      "emoji": "🚚",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "made_of_metal",
+        "is_vehicle",
+        "is_big",
+        "is_heavy"
+      ]
+    },
+    {
+      "id": "egg",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "بيضة",
+        "en": "egg",
+        "es": "huevo",
+        "de": "Ei",
+        "it": "uovo",
+        "fr": "oeuf",
+        "pt": "ovo"
+      },
+      "emoji": "🥚",
+      "positiveAttributes": [
+        "is_food",
+        "is_round",
+        "is_soft"
+      ]
+    },
+    {
+      "id": "spoon",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "ملعقة",
+        "en": "spoon",
+        "es": "cuchara",
+        "de": "Löffel",
+        "it": "cucchiaio",
+        "fr": "cuillère",
+        "pt": "colher"
+      },
+      "emoji": "🥄",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "used_for_cooking"
+      ]
+    },
+    {
+      "id": "broom",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "مكنسة",
+        "en": "broom",
+        "es": "escoba",
+        "de": "Besen",
+        "it": "scopa",
+        "fr": "balai",
+        "pt": "vassoura"
+      },
+      "emoji": "🧹",
+      "positiveAttributes": [
+        "made_of_wood",
+        "is_hard",
+        "used_for_cleaning",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "boat",
+      "worldKey": "city",
+      "translations": {
+        "ar": "قارب",
+        "en": "boat",
+        "es": "barco",
+        "de": "Boot",
+        "it": "barca",
+        "fr": "bateau",
+        "pt": "barco"
+      },
+      "emoji": "⛵",
+      "positiveAttributes": [
+        "can_move",
+        "can_swim",
+        "made_of_wood",
+        "is_vehicle"
+      ]
+    },
+    {
+      "id": "helicopter",
+      "worldKey": "airport",
+      "translations": {
+        "ar": "مروحية",
+        "en": "helicopter",
+        "es": "helicóptero",
+        "de": "Hubschrauber",
+        "it": "elicottero",
+        "fr": "hélicoptère",
+        "pt": "helicóptero"
+      },
+      "emoji": "🚁",
+      "positiveAttributes": [
+        "can_move",
+        "can_fly",
+        "electric",
+        "is_vehicle"
+      ]
+    },
+    {
+      "id": "tv",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "تلفاز",
+        "en": "tv",
+        "es": "televisor",
+        "de": "Fernseher",
+        "it": "televisore",
+        "fr": "télévision",
+        "pt": "televisão"
+      },
+      "emoji": "📺",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "has_screen",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "tablet",
+      "worldKey": "office",
+      "translations": {
+        "ar": "جهاز لوحي",
+        "en": "tablet",
+        "es": "tableta",
+        "de": "Tablet",
+        "it": "tablet",
+        "fr": "tablette",
+        "pt": "tablet"
+      },
+      "emoji": "📱",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "has_screen",
+        "used_for_writing"
+      ]
+    },
+    {
+      "id": "cup",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "كوب",
+        "en": "cup",
+        "es": "taza",
+        "de": "Becher",
+        "it": "tazza",
+        "fr": "tasse",
+        "pt": "copo"
+      },
+      "emoji": "☕",
+      "positiveAttributes": [
+        "is_container",
+        "can_hold_liquid",
+        "made_of_plastic",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "mug",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "كوب كبير",
+        "en": "mug",
+        "es": "taza grande",
+        "de": "Becher",
+        "it": "tazza grande",
+        "fr": "mug",
+        "pt": "caneca"
+      },
+      "emoji": "🍵",
+      "positiveAttributes": [
+        "is_container",
+        "can_hold_liquid",
+        "made_of_metal",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "bottle",
+      "worldKey": "market",
+      "translations": {
+        "ar": "زجاجة",
+        "en": "bottle",
+        "es": "botella",
+        "de": "Flasche",
+        "it": "bottiglia",
+        "fr": "bouteille",
+        "pt": "garrafa"
+      },
+      "emoji": "🍼",
+      "positiveAttributes": [
+        "is_container",
+        "can_hold_liquid",
+        "made_of_plastic",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "backpack",
+      "worldKey": "school",
+      "translations": {
+        "ar": "حقيبة ظهر",
+        "en": "backpack",
+        "es": "mochila",
+        "de": "Rucksack",
+        "it": "zaino",
+        "fr": "sac à dos",
+        "pt": "mochila"
+      },
+      "emoji": "🎒",
+      "positiveAttributes": [
+        "is_container",
+        "made_of_fabric",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "hat",
+      "worldKey": "market",
+      "translations": {
+        "ar": "قبعة",
+        "en": "hat",
+        "es": "sombrero",
+        "de": "Hut",
+        "it": "cappello",
+        "fr": "chapeau",
+        "pt": "chapéu"
+      },
+      "emoji": "🎩",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_soft",
+        "worn_on_head"
+      ]
+    },
+    {
+      "id": "magazine",
+      "worldKey": "school",
+      "translations": {
+        "ar": "مجلة",
+        "en": "magazine",
+        "es": "revista",
+        "de": "Zeitschrift",
+        "it": "rivista",
+        "fr": "magazine",
+        "pt": "revista"
+      },
+      "emoji": "📰",
+      "positiveAttributes": [
+        "is_stationery",
+        "has_pages",
+        "made_of_plastic"
+      ]
+    },
+    {
+      "id": "shirt",
+      "worldKey": "market",
+      "translations": {
+        "ar": "قميص",
+        "en": "shirt",
+        "es": "camisa",
+        "de": "Hemd",
+        "it": "camicia",
+        "fr": "chemise",
+        "pt": "camisa"
+      },
+      "emoji": "👕",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_soft"
+      ]
+    },
+    {
+      "id": "shoes",
+      "worldKey": "market",
+      "translations": {
+        "ar": "حذاء",
+        "en": "shoes",
+        "es": "zapatos",
+        "de": "Schuhe",
+        "it": "scarpe",
+        "fr": "chaussures",
+        "pt": "sapatos"
+      },
+      "emoji": "👟",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_hard",
+        "worn_on_feet"
+      ]
+    },
+    {
+      "id": "bench",
+      "worldKey": "park",
+      "translations": {
+        "ar": "مقعد",
+        "en": "bench",
+        "es": "banco",
+        "de": "Bank",
+        "it": "panchina",
+        "fr": "banc",
+        "pt": "banco"
+      },
+      "emoji": "🪑",
+      "positiveAttributes": [
+        "made_of_wood",
+        "is_hard",
+        "used_for_sitting",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "lion",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "أسد",
+        "en": "lion",
+        "es": "león",
+        "de": "Löwe",
+        "it": "leone",
+        "fr": "lion",
+        "pt": "leão"
+      },
+      "emoji": "🦁",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "is_yellow",
+        "has_tail",
+        "has_fur",
+        "has_claws",
+        "is_wild"
+      ]
+    },
+    {
+      "id": "elephant",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "فيل",
+        "en": "elephant",
+        "es": "elefante",
+        "de": "Elefant",
+        "it": "elefante",
+        "fr": "éléphant",
+        "pt": "elefante"
+      },
+      "emoji": "🐘",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "is_heavy",
+        "has_tail",
+        "is_wild"
+      ]
+    },
+    {
+      "id": "cow",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "بقرة",
+        "en": "cow",
+        "es": "vaca",
+        "de": "Kuh",
+        "it": "mucca",
+        "fr": "vache",
+        "pt": "vaca"
+      },
+      "emoji": "🐄",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "has_tail",
+        "has_fur"
+      ]
+    },
+    {
+      "id": "horse",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "حصان",
+        "en": "horse",
+        "es": "caballo",
+        "de": "Pferd",
+        "it": "cavallo",
+        "fr": "cheval",
+        "pt": "cavalo"
+      },
+      "emoji": "🐴",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "has_tail",
+        "has_fur",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "snake",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "ثعبان",
+        "en": "snake",
+        "es": "serpiente",
+        "de": "Schlange",
+        "it": "serpente",
+        "fr": "serpent",
+        "pt": "cobra"
+      },
+      "emoji": "🐍",
+      "positiveAttributes": [
+        "is_animal",
+        "can_move",
+        "is_green",
+        "is_wild"
+      ]
+    },
+    {
+      "id": "bird",
+      "worldKey": "park",
+      "translations": {
+        "ar": "عصفور",
+        "en": "bird",
+        "es": "pájaro",
+        "de": "Vogel",
+        "it": "uccello",
+        "fr": "oiseau",
+        "pt": "pássaro"
+      },
+      "emoji": "🐦",
+      "positiveAttributes": [
+        "is_animal",
+        "has_wings",
+        "can_fly",
+        "is_small",
+        "has_feathers",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "butterfly",
+      "worldKey": "park",
+      "translations": {
+        "ar": "فراشة",
+        "en": "butterfly",
+        "es": "mariposa",
+        "de": "Schmetterling",
+        "it": "farfalla",
+        "fr": "papillon",
+        "pt": "borboleta"
+      },
+      "emoji": "🦋",
+      "positiveAttributes": [
+        "is_animal",
+        "is_insect",
+        "has_wings",
+        "can_fly",
+        "is_small",
+        "is_light_weight"
+      ]
+    },
+    {
+      "id": "ant",
+      "worldKey": "park",
+      "translations": {
+        "ar": "نملة",
+        "en": "ant",
+        "es": "hormiga",
+        "de": "Ameise",
+        "it": "formica",
+        "fr": "fourmi",
+        "pt": "formiga"
+      },
+      "emoji": "🐜",
+      "positiveAttributes": [
+        "is_animal",
+        "is_insect",
+        "has_legs",
+        "is_small",
+        "is_black"
+      ]
+    },
+    {
+      "id": "watermelon",
+      "worldKey": "market",
+      "translations": {
+        "ar": "بطيخ",
+        "en": "watermelon",
+        "es": "sandía",
+        "de": "Wassermelone",
+        "it": "anguria",
+        "fr": "pastèque",
+        "pt": "melancia"
+      },
+      "emoji": "🍉",
+      "positiveAttributes": [
+        "is_food",
+        "is_round",
+        "is_green",
+        "is_big",
+        "is_sweet",
+        "is_edible_raw",
+        "has_seeds"
+      ]
+    },
+    {
+      "id": "carrot",
+      "worldKey": "market",
+      "translations": {
+        "ar": "جزر",
+        "en": "carrot",
+        "es": "zanahoria",
+        "de": "Karotte",
+        "it": "carota",
+        "fr": "carotte",
+        "pt": "cenoura"
+      },
+      "emoji": "🥕",
+      "positiveAttributes": [
+        "is_food",
+        "is_hard",
+        "is_edible_raw",
+        "grows_underground",
+        "is_orange"
+      ]
+    },
+    {
+      "id": "milk",
+      "worldKey": "market",
+      "translations": {
+        "ar": "حليب",
+        "en": "milk",
+        "es": "leche",
+        "de": "Milch",
+        "it": "latte",
+        "fr": "lait",
+        "pt": "leite"
+      },
+      "emoji": "🥛",
+      "positiveAttributes": [
+        "is_drink",
+        "is_white"
+      ]
+    },
+    {
+      "id": "juice",
+      "worldKey": "market",
+      "translations": {
+        "ar": "عصير",
+        "en": "juice",
+        "es": "jugo",
+        "de": "Saft",
+        "it": "succo",
+        "fr": "jus",
+        "pt": "suco"
+      },
+      "emoji": "🧃",
+      "positiveAttributes": [
+        "is_drink",
+        "is_sweet"
+      ]
+    },
+    {
+      "id": "umbrella",
+      "worldKey": "city",
+      "translations": {
+        "ar": "مظلة",
+        "en": "umbrella",
+        "es": "paraguas",
+        "de": "Regenschirm",
+        "it": "ombrello",
+        "fr": "parapluie",
+        "pt": "guarda-chuva"
+      },
+      "emoji": "☂️",
+      "positiveAttributes": [
+        "is_hard",
+        "made_of_fabric",
+        "is_light_weight"
+      ]
+    },
+    {
+      "id": "glasses",
+      "worldKey": "office",
+      "translations": {
+        "ar": "نظارة",
+        "en": "glasses",
+        "es": "gafas",
+        "de": "Brille",
+        "it": "occhiali",
+        "fr": "lunettes",
+        "pt": "óculos"
+      },
+      "emoji": "👓",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_hard",
+        "worn_on_head",
+        "is_small",
+        "is_transparent"
+      ]
+    },
+    {
+      "id": "gloves",
+      "worldKey": "market",
+      "translations": {
+        "ar": "قفازات",
+        "en": "gloves",
+        "es": "guantes",
+        "de": "Handschuhe",
+        "it": "guanti",
+        "fr": "gants",
+        "pt": "luvas"
+      },
+      "emoji": "🧤",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_soft",
+        "worn_on_hands"
+      ]
+    },
+    {
+      "id": "drum",
+      "worldKey": "school",
+      "translations": {
+        "ar": "طبلة",
+        "en": "drum",
+        "es": "tambor",
+        "de": "Trommel",
+        "it": "tamburo",
+        "fr": "tambour",
+        "pt": "tambor"
+      },
+      "emoji": "🥁",
+      "positiveAttributes": [
+        "made_of_wood",
+        "is_round",
+        "is_hard",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "computer_mouse",
+      "worldKey": "office",
+      "translations": {
+        "ar": "فأرة الحاسوب",
+        "en": "computer mouse",
+        "es": "ratón de computadora",
+        "de": "Computermaus",
+        "it": "mouse del computer",
+        "fr": "souris d'ordinateur",
+        "pt": "mouse de computador"
+      },
+      "emoji": "🖱️",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "is_small",
+        "made_of_plastic"
+      ]
+    },
+    {
+      "id": "remote_control",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "ريموت كنترول",
+        "en": "remote control",
+        "es": "control remoto",
+        "de": "Fernbedienung",
+        "it": "telecomando",
+        "fr": "télécommande",
+        "pt": "controle remoto"
+      },
+      "emoji": "📺",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "made_of_plastic",
+        "is_small"
+      ]
+    },
+    {
+      "id": "toothbrush",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "فرشاة أسنان",
+        "en": "toothbrush",
+        "es": "cepillo de dientes",
+        "de": "Zahnbürste",
+        "it": "spazzolino da denti",
+        "fr": "brosse à dents",
+        "pt": "escova de dentes"
+      },
+      "emoji": "🪥",
+      "positiveAttributes": [
+        "used_for_cleaning",
+        "made_of_plastic",
+        "found_in_bathroom",
+        "is_small"
+      ]
+    },
+    {
+      "id": "candle",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "شمعة",
+        "en": "candle",
+        "es": "vela",
+        "de": "Kerze",
+        "it": "candela",
+        "fr": "bougie",
+        "pt": "vela"
+      },
+      "emoji": "🕯️",
+      "positiveAttributes": [
+        "gives_light",
+        "is_soft"
+      ]
+    },
+    {
+      "id": "flashlight",
+      "worldKey": "office",
+      "translations": {
+        "ar": "كشاف",
+        "en": "flashlight",
+        "es": "linterna",
+        "de": "Taschenlampe",
+        "it": "torcia",
+        "fr": "lampe de poche",
+        "pt": "lanterna"
+      },
+      "emoji": "🔦",
+      "positiveAttributes": [
+        "electric",
+        "gives_light",
+        "is_device",
+        "made_of_plastic"
+      ]
+    },
+    {
+      "id": "mirror",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "مرآة",
+        "en": "mirror",
+        "es": "espejo",
+        "de": "Spiegel",
+        "it": "specchio",
+        "fr": "miroir",
+        "pt": "espelho"
+      },
+      "emoji": "🪞",
+      "positiveAttributes": [
+        "is_hard",
+        "found_in_bathroom"
+      ]
+    },
+    {
+      "id": "fork",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "شوكة",
+        "en": "fork",
+        "es": "tenedor",
+        "de": "Gabel",
+        "it": "forchetta",
+        "fr": "fourchette",
+        "pt": "garfo"
+      },
+      "emoji": "🍴",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "used_for_cooking",
+        "found_in_kitchen"
+      ]
+    },
+    {
+      "id": "plate",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "طبق",
+        "en": "plate",
+        "es": "plato",
+        "de": "Teller",
+        "it": "piatto",
+        "fr": "assiette",
+        "pt": "prato"
+      },
+      "emoji": "🍽️",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_round",
+        "is_container",
+        "found_in_kitchen"
+      ]
+    },
+    {
+      "id": "kettle",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "غلاية",
+        "en": "kettle",
+        "es": "tetera",
+        "de": "Wasserkocher",
+        "it": "bollitore",
+        "fr": "bouilloire",
+        "pt": "chaleira"
+      },
+      "emoji": "🫖",
+      "positiveAttributes": [
+        "electric",
+        "made_of_metal",
+        "used_for_cooking",
+        "found_in_kitchen"
+      ]
+    },
+    {
+      "id": "bread",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "خبز",
+        "en": "bread",
+        "es": "pan",
+        "de": "Brot",
+        "it": "pane",
+        "fr": "pain",
+        "pt": "pão"
+      },
+      "emoji": "🍞",
+      "positiveAttributes": [
+        "is_food",
+        "is_soft",
+        "found_in_kitchen"
+      ]
+    },
+    {
+      "id": "cheese",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "جبنة",
+        "en": "cheese",
+        "es": "queso",
+        "de": "Käse",
+        "it": "formaggio",
+        "fr": "fromage",
+        "pt": "queijo"
+      },
+      "emoji": "🧀",
+      "positiveAttributes": [
+        "is_food",
+        "is_soft",
+        "is_yellow"
+      ]
+    },
+    {
+      "id": "tomato",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "طماطم",
+        "en": "tomato",
+        "es": "tomate",
+        "de": "Tomate",
+        "it": "pomodoro",
+        "fr": "tomate",
+        "pt": "tomate"
+      },
+      "emoji": "🍅",
+      "positiveAttributes": [
+        "is_food",
+        "is_round",
+        "is_red",
+        "is_edible_raw",
+        "has_seeds"
+      ]
+    },
+    {
+      "id": "onion",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "بصلة",
+        "en": "onion",
+        "es": "cebolla",
+        "de": "Zwiebel",
+        "it": "cipolla",
+        "fr": "oignon",
+        "pt": "cebola"
+      },
+      "emoji": "🧅",
+      "positiveAttributes": [
+        "is_food",
+        "is_round",
+        "is_edible_raw",
+        "grows_underground"
+      ]
+    },
+    {
+      "id": "rice",
+      "worldKey": "kitchen",
+      "translations": {
+        "ar": "أرز",
+        "en": "rice",
+        "es": "arroz",
+        "de": "Reis",
+        "it": "riso",
+        "fr": "riz",
+        "pt": "arroz"
+      },
+      "emoji": "🍚",
+      "positiveAttributes": [
+        "is_food",
+        "is_white"
+      ]
+    },
+    {
+      "id": "monkey",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "قرد",
+        "en": "monkey",
+        "es": "mono",
+        "de": "Affe",
+        "it": "scimmia",
+        "fr": "singe",
+        "pt": "macaco"
+      },
+      "emoji": "🐒",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_small",
+        "has_tail",
+        "has_fur",
+        "is_wild",
+        "lives_in_forest"
+      ]
+    },
+    {
+      "id": "giraffe",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "زرافة",
+        "en": "giraffe",
+        "es": "jirafa",
+        "de": "Giraffe",
+        "it": "giraffa",
+        "fr": "girafe",
+        "pt": "girafa"
+      },
+      "emoji": "🦒",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "has_tail",
+        "has_fur",
+        "is_wild"
+      ]
+    },
+    {
+      "id": "zebra",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "حمار وحشي",
+        "en": "zebra",
+        "es": "cebra",
+        "de": "Zebra",
+        "it": "zebra",
+        "fr": "zèbre",
+        "pt": "zebra"
+      },
+      "emoji": "🦓",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "is_black",
+        "has_tail",
+        "has_fur",
+        "is_wild"
+      ]
+    },
+    {
+      "id": "tiger",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "نمر",
+        "en": "tiger",
+        "es": "tigre",
+        "de": "Tiger",
+        "it": "tigre",
+        "fr": "tigre",
+        "pt": "tigre"
+      },
+      "emoji": "🐯",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "is_yellow",
+        "has_tail",
+        "has_fur",
+        "has_claws",
+        "is_wild",
+        "is_orange"
+      ]
+    },
+    {
+      "id": "bear",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "دب",
+        "en": "bear",
+        "es": "oso",
+        "de": "Bär",
+        "it": "orso",
+        "fr": "ours",
+        "pt": "urso"
+      },
+      "emoji": "🐻",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "has_fur",
+        "has_claws",
+        "is_wild",
+        "lives_in_forest",
+        "is_brown"
+      ]
+    },
+    {
+      "id": "penguin",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "بطريق",
+        "en": "penguin",
+        "es": "pingüino",
+        "de": "Pinguin",
+        "it": "pinguino",
+        "fr": "pingouin",
+        "pt": "pinguim"
+      },
+      "emoji": "🐧",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "can_swim",
+        "is_black",
+        "has_feathers",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "gorilla",
+      "worldKey": "zoo",
+      "translations": {
+        "ar": "غوريلا",
+        "en": "gorilla",
+        "es": "gorila",
+        "de": "Gorilla",
+        "it": "gorilla",
+        "fr": "gorille",
+        "pt": "gorila"
+      },
+      "emoji": "🦍",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_big",
+        "is_heavy",
+        "has_fur",
+        "is_wild",
+        "lives_in_forest"
+      ]
+    },
+    {
+      "id": "sheep",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "خروف",
+        "en": "sheep",
+        "es": "oveja",
+        "de": "Schaf",
+        "it": "pecora",
+        "fr": "mouton",
+        "pt": "ovelha"
+      },
+      "emoji": "🐑",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_soft",
+        "is_white",
+        "has_fur",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "chicken",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "دجاجة",
+        "en": "chicken",
+        "es": "gallina",
+        "de": "Huhn",
+        "it": "gallina",
+        "fr": "poule",
+        "pt": "galinha"
+      },
+      "emoji": "🐔",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "has_wings",
+        "can_move",
+        "is_small",
+        "has_feathers"
+      ]
+    },
+    {
+      "id": "pig",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "خنزير",
+        "en": "pig",
+        "es": "cerdo",
+        "de": "Schwein",
+        "it": "maiale",
+        "fr": "cochon",
+        "pt": "porco"
+      },
+      "emoji": "🐖",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "has_tail",
+        "is_pink"
+      ]
+    },
+    {
+      "id": "goat",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "ماعز",
+        "en": "goat",
+        "es": "cabra",
+        "de": "Ziege",
+        "it": "capra",
+        "fr": "chèvre",
+        "pt": "cabra"
+      },
+      "emoji": "🐐",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "has_fur",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "rooster",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "ديك",
+        "en": "rooster",
+        "es": "gallo",
+        "de": "Hahn",
+        "it": "gallo",
+        "fr": "coq",
+        "pt": "galo"
+      },
+      "emoji": "🐓",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "has_wings",
+        "can_move",
+        "has_feathers",
+        "has_tail"
+      ]
+    },
+    {
+      "id": "tractor",
+      "worldKey": "farm",
+      "translations": {
+        "ar": "جرار",
+        "en": "tractor",
+        "es": "tractor",
+        "de": "Traktor",
+        "it": "trattore",
+        "fr": "tracteur",
+        "pt": "trator"
+      },
+      "emoji": "🚜",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "is_vehicle",
+        "made_of_metal"
+      ]
+    },
+    {
+      "id": "kite",
+      "worldKey": "park",
+      "translations": {
+        "ar": "طائرة ورقية",
+        "en": "kite",
+        "es": "cometa",
+        "de": "Drachen",
+        "it": "aquilone",
+        "fr": "cerf-volant",
+        "pt": "pipa"
+      },
+      "emoji": "🪁",
+      "positiveAttributes": [
+        "can_fly",
+        "is_light_weight",
+        "made_of_fabric"
+      ]
+    },
+    {
+      "id": "flower",
+      "worldKey": "park",
+      "translations": {
+        "ar": "زهرة",
+        "en": "flower",
+        "es": "flor",
+        "de": "Blume",
+        "it": "fiore",
+        "fr": "fleur",
+        "pt": "flor"
+      },
+      "emoji": "🌸",
+      "positiveAttributes": [
+        "is_plant",
+        "is_soft",
+        "is_small"
+      ]
+    },
+    {
+      "id": "orange",
+      "worldKey": "market",
+      "translations": {
+        "ar": "برتقالة",
+        "en": "orange",
+        "es": "naranja",
+        "de": "Orange",
+        "it": "arancia",
+        "fr": "orange",
+        "pt": "laranja"
+      },
+      "emoji": "🍊",
+      "positiveAttributes": [
+        "is_food",
+        "is_round",
+        "is_edible_raw",
+        "is_sweet",
+        "grows_on_trees",
+        "has_seeds",
+        "is_orange"
+      ]
+    },
+    {
+      "id": "strawberry",
+      "worldKey": "market",
+      "translations": {
+        "ar": "فراولة",
+        "en": "strawberry",
+        "es": "fresa",
+        "de": "Erdbeere",
+        "it": "fragola",
+        "fr": "fraise",
+        "pt": "morango"
+      },
+      "emoji": "🍓",
+      "positiveAttributes": [
+        "is_food",
+        "is_red",
+        "is_sweet",
+        "is_small",
+        "has_seeds"
+      ]
+    },
+    {
+      "id": "pineapple",
+      "worldKey": "market",
+      "translations": {
+        "ar": "أناناس",
+        "en": "pineapple",
+        "es": "piña",
+        "de": "Ananas",
+        "it": "ananas",
+        "fr": "ananas",
+        "pt": "abacaxi"
+      },
+      "emoji": "🍍",
+      "positiveAttributes": [
+        "is_food",
+        "is_sweet",
+        "is_hard",
+        "grows_on_trees"
+      ]
+    },
+    {
+      "id": "potato",
+      "worldKey": "market",
+      "translations": {
+        "ar": "بطاطس",
+        "en": "potato",
+        "es": "patata",
+        "de": "Kartoffel",
+        "it": "patata",
+        "fr": "pomme de terre",
+        "pt": "batata"
+      },
+      "emoji": "🥔",
+      "positiveAttributes": [
+        "is_food",
+        "is_hard",
+        "grows_underground"
+      ]
+    },
+    {
+      "id": "traffic_light",
+      "worldKey": "city",
+      "translations": {
+        "ar": "إشارة مرور",
+        "en": "traffic light",
+        "es": "semáforo",
+        "de": "Ampel",
+        "it": "semaforo",
+        "fr": "feu de circulation",
+        "pt": "semáforo"
+      },
+      "emoji": "🚦",
+      "positiveAttributes": [
+        "electric",
+        "is_hard",
+        "gives_light"
+      ]
+    },
+    {
+      "id": "motorcycle",
+      "worldKey": "city",
+      "translations": {
+        "ar": "دراجة نارية",
+        "en": "motorcycle",
+        "es": "motocicleta",
+        "de": "Motorrad",
+        "it": "motocicletta",
+        "fr": "moto",
+        "pt": "motocicleta"
+      },
+      "emoji": "🏍️",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "is_vehicle",
+        "made_of_metal",
+        "has_two_wheels"
+      ]
+    },
+    {
+      "id": "taxi",
+      "worldKey": "city",
+      "translations": {
+        "ar": "تاكسي",
+        "en": "taxi",
+        "es": "taxi",
+        "de": "Taxi",
+        "it": "taxi",
+        "fr": "taxi",
+        "pt": "táxi"
+      },
+      "emoji": "🚕",
+      "positiveAttributes": [
+        "can_move",
+        "has_wheels",
+        "is_vehicle",
+        "is_yellow"
+      ]
+    },
+    {
+      "id": "building",
+      "worldKey": "city",
+      "translations": {
+        "ar": "مبنى",
+        "en": "building",
+        "es": "edificio",
+        "de": "Gebäude",
+        "it": "edificio",
+        "fr": "bâtiment",
+        "pt": "edifício"
+      },
+      "emoji": "🏢",
+      "positiveAttributes": [
+        "is_hard",
+        "is_big"
+      ]
+    },
+    {
+      "id": "ruler",
+      "worldKey": "school",
+      "translations": {
+        "ar": "مسطرة",
+        "en": "ruler",
+        "es": "regla",
+        "de": "Lineal",
+        "it": "righello",
+        "fr": "règle",
+        "pt": "régua"
+      },
+      "emoji": "📏",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_hard",
+        "is_stationery"
+      ]
+    },
+    {
+      "id": "scissors",
+      "worldKey": "school",
+      "translations": {
+        "ar": "مقص",
+        "en": "scissors",
+        "es": "tijeras",
+        "de": "Schere",
+        "it": "forbici",
+        "fr": "ciseaux",
+        "pt": "tesoura"
+      },
+      "emoji": "✂️",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_hard",
+        "can_cut"
+      ]
+    },
+    {
+      "id": "globe",
+      "worldKey": "school",
+      "translations": {
+        "ar": "كرة أرضية",
+        "en": "globe",
+        "es": "globo terráqueo",
+        "de": "Globus",
+        "it": "mappamondo",
+        "fr": "globe terrestre",
+        "pt": "globo"
+      },
+      "emoji": "🌍",
+      "positiveAttributes": [
+        "is_round",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "clock",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "ساعة حائط",
+        "en": "clock",
+        "es": "reloj",
+        "de": "Uhr",
+        "it": "orologio",
+        "fr": "horloge",
+        "pt": "relógio"
+      },
+      "emoji": "🕐",
+      "positiveAttributes": [
+        "is_round",
+        "is_hard",
+        "electric"
+      ]
+    },
+    {
+      "id": "painting",
+      "worldKey": "living_room",
+      "translations": {
+        "ar": "لوحة",
+        "en": "painting",
+        "es": "pintura",
+        "de": "Gemälde",
+        "it": "dipinto",
+        "fr": "tableau",
+        "pt": "pintura"
+      },
+      "emoji": "🖼️",
+      "positiveAttributes": [
+        "is_hard",
+        "made_of_wood"
+      ]
+    },
+    {
+      "id": "printer",
+      "worldKey": "office",
+      "translations": {
+        "ar": "طابعة",
+        "en": "printer",
+        "es": "impresora",
+        "de": "Drucker",
+        "it": "stampante",
+        "fr": "imprimante",
+        "pt": "impressora"
+      },
+      "emoji": "🖨️",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "used_for_writing",
+        "is_big"
+      ]
+    },
+    {
+      "id": "calculator",
+      "worldKey": "office",
+      "translations": {
+        "ar": "آلة حاسبة",
+        "en": "calculator",
+        "es": "calculadora",
+        "de": "Taschenrechner",
+        "it": "calcolatrice",
+        "fr": "calculatrice",
+        "pt": "calculadora"
+      },
+      "emoji": "🧮",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "is_small",
+        "has_screen"
+      ]
+    },
+    {
+      "id": "monitor",
+      "worldKey": "office",
+      "translations": {
+        "ar": "شاشة حاسوب",
+        "en": "monitor",
+        "es": "monitor",
+        "de": "Monitor",
+        "it": "monitor",
+        "fr": "moniteur",
+        "pt": "monitor"
+      },
+      "emoji": "🖥️",
+      "positiveAttributes": [
+        "electric",
+        "is_device",
+        "has_screen"
+      ]
+    },
+    {
+      "id": "folder",
+      "worldKey": "office",
+      "translations": {
+        "ar": "ملف",
+        "en": "folder",
+        "es": "carpeta",
+        "de": "Ordner",
+        "it": "cartella",
+        "fr": "dossier",
+        "pt": "pasta"
+      },
+      "emoji": "📁",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_container",
+        "has_pages"
+      ]
+    },
+    {
+      "id": "bandage",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "ضمادة",
+        "en": "bandage",
+        "es": "venda",
+        "de": "Verband",
+        "it": "benda",
+        "fr": "bandage",
+        "pt": "bandagem"
+      },
+      "emoji": "🩹",
+      "positiveAttributes": [
+        "is_soft",
+        "made_of_fabric"
+      ]
+    },
+    {
+      "id": "syringe",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "حقنة",
+        "en": "syringe",
+        "es": "jeringa",
+        "de": "Spritze",
+        "it": "siringa",
+        "fr": "seringue",
+        "pt": "seringa"
+      },
+      "emoji": "💉",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "is_hard",
+        "is_device"
+      ]
+    },
+    {
+      "id": "wheelchair",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "كرسي متحرك",
+        "en": "wheelchair",
+        "es": "silla de ruedas",
+        "de": "Rollstuhl",
+        "it": "sedia a rotelle",
+        "fr": "fauteuil roulant",
+        "pt": "cadeira de rodas"
+      },
+      "emoji": "🦽",
+      "positiveAttributes": [
+        "has_wheels",
+        "can_move",
+        "used_for_sitting",
+        "made_of_metal"
+      ]
+    },
+    {
+      "id": "thermometer",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "ترمومتر",
+        "en": "thermometer",
+        "es": "termómetro",
+        "de": "Thermometer",
+        "it": "termometro",
+        "fr": "thermomètre",
+        "pt": "termômetro"
+      },
+      "emoji": "🌡️",
+      "positiveAttributes": [
+        "is_device",
+        "made_of_plastic",
+        "is_small"
+      ]
+    },
+    {
+      "id": "pill",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "حبة دواء",
+        "en": "pill",
+        "es": "píldora",
+        "de": "Pille",
+        "it": "pillola",
+        "fr": "pilule",
+        "pt": "pílula"
+      },
+      "emoji": "💊",
+      "positiveAttributes": [
+        "is_small",
+        "is_round"
+      ]
+    },
+    {
+      "id": "nurse",
+      "worldKey": "hospital",
+      "translations": {
+        "ar": "ممرضة",
+        "en": "nurse",
+        "es": "enfermera",
+        "de": "Krankenschwester",
+        "it": "infermiera",
+        "fr": "infirmière",
+        "pt": "enfermeira"
+      },
+      "emoji": "🧑‍⚕️",
+      "positiveAttributes": [
+        "is_person"
+      ]
+    },
+    {
+      "id": "medal",
+      "worldKey": "sports_stadium",
+      "translations": {
+        "ar": "ميدالية",
+        "en": "medal",
+        "es": "medalla",
+        "de": "Medaille",
+        "it": "medaglia",
+        "fr": "médaille",
+        "pt": "medalha"
+      },
+      "emoji": "🏅",
+      "positiveAttributes": [
+        "made_of_metal",
+        "is_round",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "jersey",
+      "worldKey": "sports_stadium",
+      "translations": {
+        "ar": "قميص رياضي",
+        "en": "jersey",
+        "es": "camiseta deportiva",
+        "de": "Trikot",
+        "it": "maglia",
+        "fr": "maillot",
+        "pt": "camisa de time"
+      },
+      "emoji": "👕",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_soft"
+      ]
+    },
+    {
+      "id": "toilet",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "مرحاض",
+        "en": "toilet",
+        "es": "inodoro",
+        "de": "Toilette",
+        "it": "water",
+        "fr": "toilettes",
+        "pt": "vaso sanitário"
+      },
+      "emoji": "🚽",
+      "positiveAttributes": [
+        "is_hard",
+        "found_in_bathroom",
+        "is_container"
+      ]
+    },
+    {
+      "id": "bathtub",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "حوض استحمام",
+        "en": "bathtub",
+        "es": "bañera",
+        "de": "Badewanne",
+        "it": "vasca da bagno",
+        "fr": "baignoire",
+        "pt": "banheira"
+      },
+      "emoji": "🛁",
+      "positiveAttributes": [
+        "can_hold_liquid",
+        "is_hard",
+        "found_in_bathroom",
+        "used_for_cleaning"
+      ]
+    },
+    {
+      "id": "shower",
+      "worldKey": "bathroom",
+      "translations": {
+        "ar": "دش",
+        "en": "shower",
+        "es": "ducha",
+        "de": "Dusche",
+        "it": "doccia",
+        "fr": "douche",
+        "pt": "chuveiro"
+      },
+      "emoji": "🚿",
+      "positiveAttributes": [
+        "found_in_bathroom",
+        "made_of_metal"
+      ]
+    },
+    {
+      "id": "seashell",
+      "worldKey": "beach",
+      "translations": {
+        "ar": "صدفة",
+        "en": "seashell",
+        "es": "concha marina",
+        "de": "Muschel",
+        "it": "conchiglia",
+        "fr": "coquillage",
+        "pt": "concha do mar"
+      },
+      "emoji": "🐚",
+      "positiveAttributes": [
+        "is_hard",
+        "is_small"
+      ]
+    },
+    {
+      "id": "sunglasses",
+      "worldKey": "beach",
+      "translations": {
+        "ar": "نظارة شمسية",
+        "en": "sunglasses",
+        "es": "gafas de sol",
+        "de": "Sonnenbrille",
+        "it": "occhiali da sole",
+        "fr": "lunettes de soleil",
+        "pt": "óculos de sol"
+      },
+      "emoji": "🕶️",
+      "positiveAttributes": [
+        "made_of_plastic",
+        "worn_on_head",
+        "is_hard"
+      ]
+    },
+    {
+      "id": "swimsuit",
+      "worldKey": "beach",
+      "translations": {
+        "ar": "ملابس سباحة",
+        "en": "swimsuit",
+        "es": "traje de baño",
+        "de": "Badeanzug",
+        "it": "costume da bagno",
+        "fr": "maillot de bain",
+        "pt": "maiô"
+      },
+      "emoji": "🩱",
+      "positiveAttributes": [
+        "is_clothing",
+        "made_of_fabric",
+        "is_soft"
+      ]
+    },
+    {
+      "id": "menu",
+      "worldKey": "restaurant",
+      "translations": {
+        "ar": "قائمة طعام",
+        "en": "menu",
+        "es": "menú",
+        "de": "Speisekarte",
+        "it": "menu",
+        "fr": "menu",
+        "pt": "cardápio"
+      },
+      "emoji": "📋",
+      "positiveAttributes": [
+        "has_pages",
+        "is_stationery"
+      ]
+    },
+    {
+      "id": "chef",
+      "worldKey": "restaurant",
+      "translations": {
+        "ar": "شيف",
+        "en": "chef",
+        "es": "chef",
+        "de": "Koch",
+        "it": "chef",
+        "fr": "chef cuisinier",
+        "pt": "chef"
+      },
+      "emoji": "🧑‍🍳",
+      "positiveAttributes": [
+        "is_person"
+      ]
+    },
+    {
+      "id": "pizza",
+      "worldKey": "restaurant",
+      "translations": {
+        "ar": "بيتزا",
+        "en": "pizza",
+        "es": "pizza",
+        "de": "Pizza",
+        "it": "pizza",
+        "fr": "pizza",
+        "pt": "pizza"
+      },
+      "emoji": "🍕",
+      "positiveAttributes": [
+        "is_food",
+        "is_round"
+      ]
+    },
+    {
+      "id": "mushroom",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "فطر",
+        "en": "mushroom",
+        "es": "hongo",
+        "de": "Pilz",
+        "it": "fungo",
+        "fr": "champignon",
+        "pt": "cogumelo"
+      },
+      "emoji": "🍄",
+      "positiveAttributes": [
+        "is_plant",
+        "is_small",
+        "is_round"
+      ]
+    },
+    {
+      "id": "owl",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "بومة",
+        "en": "owl",
+        "es": "búho",
+        "de": "Eule",
+        "it": "gufo",
+        "fr": "hibou",
+        "pt": "coruja"
+      },
+      "emoji": "🦉",
+      "positiveAttributes": [
+        "is_animal",
+        "has_wings",
+        "can_fly",
+        "has_feathers",
+        "lives_in_forest"
+      ]
+    },
+    {
+      "id": "wolf",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "ذئب",
+        "en": "wolf",
+        "es": "lobo",
+        "de": "Wolf",
+        "it": "lupo",
+        "fr": "loup",
+        "pt": "lobo"
+      },
+      "emoji": "🐺",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "has_fur",
+        "has_tail",
+        "has_claws",
+        "is_wild",
+        "lives_in_forest"
+      ]
+    },
+    {
+      "id": "deer",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "غزال",
+        "en": "deer",
+        "es": "ciervo",
+        "de": "Hirsch",
+        "it": "cervo",
+        "fr": "cerf",
+        "pt": "cervo"
+      },
+      "emoji": "🦌",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "has_fur",
+        "has_tail",
+        "is_wild",
+        "lives_in_forest"
+      ]
+    },
+    {
+      "id": "rabbit",
+      "worldKey": "forest",
+      "translations": {
+        "ar": "أرنب",
+        "en": "rabbit",
+        "es": "conejo",
+        "de": "Kaninchen",
+        "it": "coniglio",
+        "fr": "lapin",
+        "pt": "coelho"
+      },
+      "emoji": "🐇",
+      "positiveAttributes": [
+        "is_animal",
+        "has_legs",
+        "can_move",
+        "is_soft",
+        "is_small",
+        "has_fur",
+        "has_tail",
+        "is_pet"
+      ]
+    },
+    {
+      "id": "rocket",
+      "worldKey": "space",
+      "translations": {
+        "ar": "صاروخ",
+        "en": "rocket",
+        "es": "cohete",
+        "de": "Rakete",
+        "it": "razzo",
+        "fr": "fusée",
+        "pt": "foguete"
+      },
+      "emoji": "🚀",
+      "positiveAttributes": [
+        "can_fly",
+        "can_move",
+        "is_vehicle",
+        "made_of_metal"
+      ]
+    },
+    {
+      "id": "astronaut",
+      "worldKey": "space",
+      "translations": {
+        "ar": "رائد فضاء",
+        "en": "astronaut",
+        "es": "astronauta",
+        "de": "Astronaut",
+        "it": "astronauta",
+        "fr": "astronaute",
+        "pt": "astronauta"
+      },
+      "emoji": "👨‍🚀",
+      "positiveAttributes": [
+        "is_person"
+      ]
+    },
+    {
+      "id": "star",
+      "worldKey": "space",
+      "translations": {
+        "ar": "نجمة",
+        "en": "star",
+        "es": "estrella",
+        "de": "Stern",
+        "it": "stella",
+        "fr": "étoile",
+        "pt": "estrela"
+      },
+      "emoji": "⭐",
+      "positiveAttributes": [
+        "gives_light",
+        "is_yellow"
+      ]
+    },
+    {
+      "id": "planet",
+      "worldKey": "space",
+      "translations": {
+        "ar": "كوكب",
+        "en": "planet",
+        "es": "planeta",
+        "de": "Planet",
+        "it": "pianeta",
+        "fr": "planète",
+        "pt": "planeta"
+      },
+      "emoji": "🪐",
+      "positiveAttributes": [
+        "is_round",
+        "is_big"
+      ]
+    },
+    {
+      "id": "moon",
+      "worldKey": "space",
+      "translations": {
+        "ar": "قمر",
+        "en": "moon",
+        "es": "luna",
+        "de": "Mond",
+        "it": "luna",
+        "fr": "lune",
+        "pt": "lua"
+      },
+      "emoji": "🌙",
+      "positiveAttributes": [
+        "is_round",
+        "gives_light"
+      ]
+    }
+  ]
+}

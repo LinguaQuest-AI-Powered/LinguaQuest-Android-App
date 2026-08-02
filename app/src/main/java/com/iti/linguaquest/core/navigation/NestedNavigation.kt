@@ -134,6 +134,9 @@ fun MainScreen(
                             onNavigateToRoleplayList = {
                                 rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
                             },
+                            onNavigateToMindReader = {
+                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
+                            },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
