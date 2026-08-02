@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.profile.data.datasource.remote.dto
 
+import com.google.gson.annotations.SerializedName
 
 data class ProfileSummaryDto(
     val id: Int,
@@ -8,8 +9,14 @@ data class ProfileSummaryDto(
     val level: Int,
     val stats: ProfileStatsDto,
     val currentLanguageJourney: LanguageJourneyDto,
-    val achievementsSummary: AchievementsSummaryDto?,
-    val leaderboardSummary: LeaderboardSummaryDto?
+    @SerializedName("achievements")
+    val achievements: List<AchievementPreviewDto>? = null,
+    @SerializedName("leaderboard")
+    val leaderboard: List<LeaderboardPreviewEntryDto>? = null,
+    @SerializedName("achievementsSummary")
+    val achievementsSummary: AchievementsSummaryDto? = null,
+    @SerializedName("leaderboardSummary")
+    val leaderboardSummary: LeaderboardSummaryDto? = null
 )
 
 data class ProfileStatsDto(

@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.leaderboard.presentation.contract
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 
@@ -11,5 +12,5 @@ data class LeaderboardState(
     val languageId: Int? = null,
     val currentPage: Int = 0,
     val endReached: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: UiText? = null
 )

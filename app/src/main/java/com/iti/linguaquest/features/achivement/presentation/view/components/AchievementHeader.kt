@@ -90,7 +90,7 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "My Trophies",
+                    text = stringResource(R.string.achievement_header_trophies_cd),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = LinguaQuestTheme.colors.BrownText
@@ -99,7 +99,7 @@ fun AchievementHeader(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Every word is a step deeper into the\nquest.",
+                    text = stringResource(R.string.achievement_header_subtitle),
                     fontSize = 13.sp,
                     color = LinguaQuestTheme.colors.titleAndCationsColor,
                     textAlign = TextAlign.Center,

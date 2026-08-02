@@ -1,27 +1,29 @@
 package com.iti.linguaquest.features.achivement.presentation.view.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun AchievementBottomBar(
@@ -38,7 +40,7 @@ fun AchievementBottomBar(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondary)
     ) {
-         Divider(
+        HorizontalDivider(
             color = dividerColor,
             thickness = 2.dp,
             modifier = Modifier.fillMaxWidth()
@@ -50,7 +52,7 @@ fun AchievementBottomBar(
                 .navigationBarsPadding()
                 .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
-             Row(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -62,7 +64,12 @@ fun AchievementBottomBar(
                     modifier = Modifier.weight(1f)
                 )
 
-                 Box(modifier = Modifier.width(1.dp).height(40.dp).background(dividerColor))
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(40.dp)
+                        .background(dividerColor)
+                )
 
                 StatItem(
                     value = inProgressCount.toString(),
@@ -71,7 +78,12 @@ fun AchievementBottomBar(
                     modifier = Modifier.weight(1f)
                 )
 
-                 Box(modifier = Modifier.width(1.dp).height(40.dp).background(dividerColor))
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(40.dp)
+                        .background(dividerColor)
+                )
 
                 StatItem(
                     value = xpGained.toString(),
@@ -80,49 +92,17 @@ fun AchievementBottomBar(
                     modifier = Modifier.weight(1f)
                 )
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(LinguaQuestTheme.colors.AchievementButtonShadow, RoundedCornerShape(16.dp))
-                    .padding(bottom = 6.dp)
-                    .background(LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { onClaimClick() },
-                contentAlignment = Alignment.Center
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(LinguaQuestTheme.colors.whiteColor, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            tint = LinguaQuestTheme.colors.OrangeActive,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.achievement_claim_rewards),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.whiteColor
-                    )
-                }
-            }
         }
     }
 }
 
 @Composable
-private fun StatItem(value: String, label: String, valueColor: Color, modifier: Modifier = Modifier) {
+private fun StatItem(
+    value: String,
+    label: String,
+    valueColor: Color,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally

@@ -2,10 +2,10 @@ package com.iti.linguaquest.features.leaderboard.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.onFailure
 import com.iti.linguaquest.core.result.onSuccess
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 import com.iti.linguaquest.features.leaderboard.domain.usecase.GetLeaderboardUseCase
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
@@ -34,13 +34,11 @@ class LeaderboardViewModel @Inject constructor(
     private val _state = MutableStateFlow(LeaderboardState())
     val state: StateFlow<LeaderboardState> = _state.asStateFlow()
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
-
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = true
         )
-
 
     init {
         onIntent(LeaderboardIntent.LoadLeaderboard)
@@ -48,13 +46,9 @@ class LeaderboardViewModel @Inject constructor(
 
     fun onIntent(intent: LeaderboardIntent) {
         when (intent) {
-
             LeaderboardIntent.LoadLeaderboard -> loadLeaderboard()
-
             LeaderboardIntent.LoadMore -> loadMore()
-
             is LeaderboardIntent.ChangeScope -> onChangeScope(intent)
-
         }
     }
 
@@ -73,7 +67,6 @@ class LeaderboardViewModel @Inject constructor(
         scope: LeaderboardScope = LeaderboardScope.GLOBAL,
         languageId: Int? = null
     ) {
-
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -91,7 +84,6 @@ class LeaderboardViewModel @Inject constructor(
                 limit = PAGE_SIZE
             )
                 .onSuccess { leaderboard ->
-
                     _state.update {
                         it.copy(
                             isLoading = false,
@@ -105,7 +97,7 @@ class LeaderboardViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.toString()
+                            errorMessage = error.toUiText()
                         )
                     }
                 }
@@ -115,7 +107,7 @@ class LeaderboardViewModel @Inject constructor(
     private fun loadMore() {
         val current = _state.value
 
-         if (current.isLoading || current.isLoadingMore || current.endReached || current.leaderboard == null) {
+        if (current.isLoading || current.isLoadingMore || current.endReached || current.leaderboard == null) {
             return
         }
 
@@ -145,7 +137,7 @@ class LeaderboardViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoadingMore = false,
-                            errorMessage = error.toString()
+                            errorMessage = error.toUiText()
                         )
                     }
                 }
