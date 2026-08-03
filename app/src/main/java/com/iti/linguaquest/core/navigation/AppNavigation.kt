@@ -40,10 +40,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.iti.linguaquest.R
 import kotlinx.coroutines.flow.collectLatest
+import com.iti.linguaquest.core.session.SessionEvent
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.presentation.view.AchievementScreen
@@ -99,6 +103,31 @@ fun AppNavigation(
             navigateSingleTop(RootScreen.LockScreenWordDetail(wordId))
         }
         onOpenLockScreenWordHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        globalUiHostViewModel.sessionEventBus.events.collectLatest { event ->
+            when (event) {
+                is SessionEvent.SessionExpired -> {
+                    rootBackStack.apply {
+                        clear()
+                        navigateSingleTop(RootScreen.Login())
+                    }
+                    globalUiHostViewModel.snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.login_error_token_not_valid),
+                            type = SnackbarType.WARNING
+                        )
+                    )
+                }
+                is SessionEvent.LoggedOut -> {
+                    rootBackStack.apply {
+                        clear()
+                        navigateSingleTop(RootScreen.Onboarding)
+                    }
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
