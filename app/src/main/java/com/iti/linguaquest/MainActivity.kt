@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
     lateinit var soundPlayer: AppSoundPlayer
 
     private val viewModel: MainViewModel by viewModels()
-
+// hi
     private var openHomeRequested by mutableStateOf(false)
     private var openLockScreenWordId by mutableStateOf<Int?>(null)
 
