@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.map.presentation.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -33,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -42,8 +39,8 @@ import androidx.compose.animation.core.tween
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.launch
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 
 private const val INTRO_DURATION = 1500
 private const val DOT_COUNT = 8
@@ -63,23 +60,48 @@ fun LevelNode(
     val pulseScale by if (status == LevelStatus.CURRENT || isLastLevel) {
         infiniteTransition.animateFloat(
             initialValue = 1f,
-            targetValue = if (isLastLevel) 1.15f else 1.08f,
+            targetValue = 1.05f,
             animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = if (isLastLevel) 800 else 1000,
-                    easing = FastOutSlowInEasing
-                ),
+                animation = tween(1500, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ),
-            label = "pulseScale"
+            label = "pulse"
         )
     } else {
         remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
     }
 
-    val interactionSource = remember { MutableInteractionSource() }
-    var showIntro by remember { androidx.compose.runtime.mutableStateOf(true) }
+    var currentFrame by remember { androidx.compose.runtime.mutableIntStateOf(0) }
+
+    var showIntro by remember { androidx.compose.runtime.mutableStateOf(!isLastLevel) }
     val introScale = remember { Animatable(0.9f) }
+
+    LaunchedEffect(Unit) {
+        launch {
+            introScale.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            )
+        }
+        delay(INTRO_DURATION.toLong().milliseconds)
+        showIntro = false
+    }
+
+    LaunchedEffect(isLastLevel, status) {
+        if (isLastLevel && status == LevelStatus.COMPLETED) {
+            if (showIntro) {
+                delay(INTRO_DURATION.toLong().milliseconds)
+            }
+            // Start from closed chest, then animate
+            currentFrame = 0
+            for (i in 1..6) {
+                delay(500.milliseconds)
+                currentFrame = i
+            }
+        }
+    }
+
+    val interactionSource = remember { MutableInteractionSource() }
 
     val glowPulse by infiniteTransition.animateFloat(
         initialValue = 0.6f,
@@ -90,19 +112,6 @@ fun LevelNode(
         ),
         label = "glowPulse"
     )
-
-    LaunchedEffect(Unit) {
-        launch {
-            introScale.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-            )
-        }
-        launch {
-            kotlinx.coroutines.delay(INTRO_DURATION.toLong())
-            showIntro = false
-        }
-    }
 
     Box(
         modifier = Modifier
@@ -226,29 +235,7 @@ fun LevelNode(
             }
 
             if (isLastLevel) {
-                val context = androidx.compose.ui.platform.LocalContext.current
-                val prefs = remember { context.getSharedPreferences("linguaquest_prefs", android.content.Context.MODE_PRIVATE) }
-                val chestKey = "chest_opened_$levelNumber"
-                val hasOpened = remember { prefs.getBoolean(chestKey, false) }
-                
-                var currentFrame by remember { 
-                    androidx.compose.runtime.mutableIntStateOf(
-                        if (status == LevelStatus.COMPLETED && hasOpened) 6 else 0
-                    ) 
-                }
-                
-                LaunchedEffect(status) {
-                    if (status == LevelStatus.COMPLETED && !hasOpened) {
-                        kotlinx.coroutines.delay(500) // Small delay before animating
-                        for (i in 1..6) {
-                            currentFrame = i
-                            kotlinx.coroutines.delay(150) // 150ms per frame
-                        }
-                        prefs.edit().putBoolean(chestKey, true).apply()
-                    }
-                }
-                
-                val chestImageRes = when(currentFrame) {
+                val chestImageRes = when (currentFrame) {
                     0 -> R.drawable.ic_treasure_chest_close
                     1 -> R.drawable.lingo_map_1
                     2 -> R.drawable.lingo_map_2
@@ -257,7 +244,6 @@ fun LevelNode(
                     5 -> R.drawable.lingo_map_5
                     else -> R.drawable.lingo_map_6
                 }
-
                 Image(
                     painter = painterResource(id = chestImageRes),
                     contentDescription = "Treasure",
