@@ -12,6 +12,8 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
@@ -43,7 +45,8 @@ class VoiceGameViewModel @Inject constructor(
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val soundPlayer: AppSoundPlayer
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -112,11 +115,13 @@ class VoiceGameViewModel @Inject constructor(
             }
 
             VoiceGameIntent.PauseClicked -> {
+                soundPlayer.play(AppSound.CLOSE_MIC)
                 recordAudioUseCase.pause()
                 _state.update { it.copy(isPaused = true) }
             }
 
             VoiceGameIntent.ResumeClicked -> {
+                soundPlayer.play(AppSound.OPEN_MIC)
                 recordAudioUseCase.resume()
                 _state.update { it.copy(isPaused = false) }
             }
@@ -183,6 +188,7 @@ class VoiceGameViewModel @Inject constructor(
     }
 
     private fun startRecording() {
+        soundPlayer.play(AppSound.OPEN_MIC)
         recordAudioUseCase.start()
         _state.update {
             it.copy(

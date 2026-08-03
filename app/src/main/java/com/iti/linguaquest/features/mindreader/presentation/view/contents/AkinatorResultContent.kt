@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
@@ -159,7 +159,7 @@ fun ResultContent(
                         stringResource(id = R.string.mind_reader_try_again)
                     }
 
-                    AppButton(
+                    AppButton3D(
                         text = primaryText,
                         onClick = { onIntent(MindReaderIntent.TryAgainClicked) },
                         modifier = Modifier.fillMaxWidth(),
@@ -169,7 +169,7 @@ fun ResultContent(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    AppButton(
+                    AppButton3D(
                         text = stringResource(id = R.string.mind_reader_return_to_home),
                         onClick = { onIntent(MindReaderIntent.ReturnToHomeClicked) },
                         modifier = Modifier.fillMaxWidth(),

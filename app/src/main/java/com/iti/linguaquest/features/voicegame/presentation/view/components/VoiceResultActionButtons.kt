@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppColors
@@ -23,7 +23,7 @@ fun VoiceResultActionButtons(
     onHome: () -> Unit
 ) {
     if (isPassed) {
-        AppButton(
+        AppButton3D(
             text = stringResource(R.string.voice_result_continue),
             onClick = onContinue,
             variant = ButtonVariant.PRIMARY
@@ -35,7 +35,7 @@ fun VoiceResultActionButtons(
             color = AppColors.DialogSecondaryButtonOutline
         )
     } else {
-        AppButton(
+        AppButton3D(
             text = stringResource(R.string.voice_result_retry),
             icon = rememberVectorPainter(image = Icons.AutoMirrored.Filled.ArrowBack),
             onClick = onRetry,

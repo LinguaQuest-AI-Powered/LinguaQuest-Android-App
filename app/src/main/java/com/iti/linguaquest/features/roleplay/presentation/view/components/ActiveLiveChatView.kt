@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -241,7 +241,7 @@ fun ActiveLiveChatView(
             
             if (isBossStage) {
                 Spacer(Modifier.height(24.dp))
-                AppButton(
+                AppButton3D(
                     onClick = { showFinishDialog = true },
                     backgroundColorOverride = LinguaQuestTheme.colors.ErrorAccent,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),

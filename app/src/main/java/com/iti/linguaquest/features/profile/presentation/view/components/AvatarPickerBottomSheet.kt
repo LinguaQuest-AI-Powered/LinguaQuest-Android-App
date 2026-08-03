@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,7 +89,7 @@ fun AvatarPickerBottomSheet(
 
             Spacer(Modifier.height(16.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.cancel),
                 onClick = onDismiss,
                 modifier = Modifier

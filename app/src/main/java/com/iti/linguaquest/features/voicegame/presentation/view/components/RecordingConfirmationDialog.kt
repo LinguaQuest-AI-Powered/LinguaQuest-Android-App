@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -127,7 +127,7 @@ fun RecordingConfirmationDialog(
                     modifier = Modifier.weight(1f),
                     color = LinguaQuestTheme.colors.iconsColor
                 )
-                AppButton(
+                AppButton3D(
                     text = stringResource(R.string.dialog_voice_confirmation_process),
                     onClick = onProcess,
                     modifier = Modifier.weight(1f)

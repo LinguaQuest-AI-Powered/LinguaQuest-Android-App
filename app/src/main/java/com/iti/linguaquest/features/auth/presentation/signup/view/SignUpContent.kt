@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.features.auth.presentation.login.view.LoginDimens
@@ -181,7 +181,7 @@ fun SignUpContent(
                 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.signup_button),
                     onClick = { onSignUpClick() },
                     enabled = !state.isLoading,
@@ -193,7 +193,7 @@ fun SignUpContent(
 
                 AuthDivider(textRes = R.string.login_or_continue_with)
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.login_google),
                     onClick = { onIntent(SignUpIntent.GoogleSignInClicked) },
                     enabled = !state.isLoading,

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -81,7 +81,7 @@ fun BossFailView(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.roleplay_try_again),
                 onClick = onRetryStage
             )

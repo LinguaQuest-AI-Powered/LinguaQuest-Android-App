@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.levelViewModel.LevelViewModel
 import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContract.LevelEffect
@@ -128,7 +128,7 @@ fun LevelScreenContent(
 
         Spacer(Modifier.weight(1f))
 
-        AppButton(
+        AppButton3D(
             text = stringResource(R.string.continue_button),
             onClick = onContinueClick,
             enabled = state.isContinueEnabled,

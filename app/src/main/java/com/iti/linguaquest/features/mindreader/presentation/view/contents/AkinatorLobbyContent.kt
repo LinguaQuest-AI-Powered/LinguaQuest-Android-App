@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
@@ -104,7 +104,7 @@ fun AkinatorLobbyContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.mind_reader_start_game),
                     onClick = { showConfirmDialog = true },
                     modifier = Modifier.fillMaxWidth(),
@@ -113,7 +113,7 @@ fun AkinatorLobbyContent(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.mind_reader_change_category),
                     onClick = { showCategoryDropdown = true },
                     modifier = Modifier.fillMaxWidth(),

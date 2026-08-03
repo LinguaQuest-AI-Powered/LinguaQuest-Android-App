@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -116,7 +116,7 @@ fun GameSuccessView(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            AppButton(
+            AppButton3D(
                 text = stringResource(R.string.game_result_next_level),
                 onClick = onNextLevelClick
             )

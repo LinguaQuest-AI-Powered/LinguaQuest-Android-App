@@ -10,6 +10,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PATCH
+import retrofit2.http.HTTP
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.RemoveLanguagesRequestDto
 import com.iti.linguaquest.features.home.data.dataSource.remote.dto.SetNativeLanguageRequestDto
 import com.iti.linguaquest.features.home.data.dataSource.remote.dto.UserLanguageDto
 
@@ -23,6 +25,11 @@ interface LanguagesApiService {
     @POST("languages")
     suspend fun addLanguages(
         @Body request: AddLanguagesRequestDto
+    ): SuccessResponseDto<MyLanguagesResponseDto>
+
+    @HTTP(method = "DELETE", path = "languages", hasBody = true)
+    suspend fun removeLanguages(
+        @Body request: RemoveLanguagesRequestDto
     ): SuccessResponseDto<MyLanguagesResponseDto>
 
     @PATCH("languages/active")

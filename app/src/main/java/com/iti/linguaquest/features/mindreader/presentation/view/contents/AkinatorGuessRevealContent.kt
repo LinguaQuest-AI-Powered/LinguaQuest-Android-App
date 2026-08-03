@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -103,7 +103,7 @@ fun GuessRevealContent(
                     modifier = Modifier.weight(1f)
                 )
 
-                AppButton(
+                AppButton3D(
                     text = stringResource(id = R.string.mind_reader_correct),
                     onClick = { onIntent(MindReaderIntent.GuessVerifiedCorrect) },
                     modifier = Modifier.weight(1f)
