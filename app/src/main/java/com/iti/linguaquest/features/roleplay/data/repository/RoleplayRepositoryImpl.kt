@@ -32,6 +32,7 @@ class RoleplayRepositoryImpl @Inject constructor(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var recordingJob: Job? = null
+    private var listeningJob: Job? = null
     
     private val _events = MutableSharedFlow<RoleplayLiveEvent>()
     override val events: Flow<RoleplayLiveEvent> = _events
@@ -41,7 +42,6 @@ class RoleplayRepositoryImpl @Inject constructor(
         audioPlayer.start()
         listenForServerEvents()
     }
-    
 
     override suspend fun connectToBossStage(scenario: BossScenario) {
         val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
@@ -71,7 +71,7 @@ class RoleplayRepositoryImpl @Inject constructor(
             if (evaluationResult != null) {
                 Result.success(evaluationResult)
             } else {
-                Result.failure(Exception("Failed to generate assessment JSON from Gemini"))
+                Result.failure(IllegalStateException("Failed to generate assessment JSON from Gemini"))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -79,6 +79,7 @@ class RoleplayRepositoryImpl @Inject constructor(
     }
     
     override fun startMicrophone() {
+        recordingJob?.cancel()
         recordingJob = scope.launch {
             audioRecorder.startRecording().collect { chunk ->
                 liveService.sendAudioChunk(chunk)
@@ -89,16 +90,20 @@ class RoleplayRepositoryImpl @Inject constructor(
     override fun stopMicrophone() {
         audioRecorder.stopRecording()
         recordingJob?.cancel()
+        recordingJob = null
     }
 
     override suspend fun disconnect() {
         stopMicrophone()
+        listeningJob?.cancel()
+        listeningJob = null
         audioPlayer.stop()
         liveService.close()
     }
 
     private fun listenForServerEvents() {
-        scope.launch {
+        listeningJob?.cancel()
+        listeningJob = scope.launch {
             liveService.observeServerEvents().collect { event ->
                 if (event is RoleplayLiveEvent.AudioChunk) {
                     audioPlayer.write(event.bytes)
@@ -108,3 +113,4 @@ class RoleplayRepositoryImpl @Inject constructor(
         }
     }
 }
+

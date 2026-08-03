@@ -7,7 +7,9 @@ import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRolepl
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayService
 import com.iti.linguaquest.features.roleplay.data.repository.RoleplayRepositoryImpl
+import com.iti.linguaquest.features.roleplay.data.repository.ScenarioRepositoryImpl
 import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepository
+import com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -45,6 +47,7 @@ abstract class RoleplayModule {
     @Binds
     @Singleton
     abstract fun bindScenarioRepository(
-        impl: com.iti.linguaquest.features.roleplay.data.repository.ScenarioRepositoryImpl
-    ): com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
+        impl: ScenarioRepositoryImpl
+    ): ScenarioRepository
 }
+

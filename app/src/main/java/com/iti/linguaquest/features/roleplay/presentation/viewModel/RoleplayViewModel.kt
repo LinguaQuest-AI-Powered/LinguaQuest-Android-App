@@ -2,44 +2,46 @@ package com.iti.linguaquest.features.roleplay.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.AppSoundPlayer
+import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
+import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
-import com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToBossStageUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.DisconnectRoleplayUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.EvaluateBossStageUseCase
+import com.iti.linguaquest.features.roleplay.domain.usecase.GetBossScenariosUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.ObserveLiveEventsUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.StartMicrophoneUseCase
 import com.iti.linguaquest.features.roleplay.domain.usecase.StopMicrophoneUseCase
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
-import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
-import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.AppSoundPlayer
-import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
-import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
+import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +53,7 @@ class RoleplayViewModel @Inject constructor(
     private val stopMicrophoneUseCase: StopMicrophoneUseCase,
     private val disconnectRoleplayUseCase: DisconnectRoleplayUseCase,
     private val observeLiveEventsUseCase: ObserveLiveEventsUseCase,
-    private val scenarioRepository: ScenarioRepository,
+    private val getBossScenariosUseCase: GetBossScenariosUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val getWalletUseCase: GetWalletUseCase,
@@ -86,7 +88,6 @@ class RoleplayViewModel @Inject constructor(
             }
         }
 
-
         viewModelScope.launch {
             observeLiveEventsUseCase().collect { event ->
                 handleLiveEvent(event)
@@ -96,7 +97,6 @@ class RoleplayViewModel @Inject constructor(
 
     fun onIntent(intent: RoleplayIntent) {
         when (intent) {
-
             RoleplayIntent.RecordClicked -> toggleMicrophone(true)
             RoleplayIntent.StopRecordingClicked -> toggleMicrophone(false)
             RoleplayIntent.ReturnHomeClicked -> {
@@ -127,12 +127,12 @@ class RoleplayViewModel @Inject constructor(
     private fun loadBossLobby(scenarioId: ScenarioId) {
         viewModelScope.launch {
             try {
-                val lang = java.util.Locale.getDefault().language
-                val scenarios = scenarioRepository.getBossScenarios(lang)
+                val lang = Locale.getDefault().language
+                val scenarios = getBossScenariosUseCase(lang)
                 val scenario = scenarios.find { it.id == scenarioId }
                 _state.update { it.copy(currentBossScenario = scenario) }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Timber.e(e, "Failed to load boss lobby")
             }
         }
     }
@@ -157,7 +157,7 @@ class RoleplayViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Timber.e(e, "Failed to start boss stage")
                 _state.update { it.copy(isLoading = false, error = UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: ""))) }
                 handleError(UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: "")))
             }
@@ -206,6 +206,7 @@ class RoleplayViewModel @Inject constructor(
                     it.copy(isEvaluating = false, assessmentResult = assessmentResult) 
                 }
             }.onFailure { e ->
+                Timber.e(e, "Failed to evaluate boss stage")
                 _state.update { it.copy(isEvaluating = false) }
                 handleError(UiText.StringResource(R.string.roleplay_connection_lost, listOf(e.message ?: "")))
                 sendEffect(RoleplayEffect.NavigateToHome)
@@ -263,7 +264,6 @@ class RoleplayViewModel @Inject constructor(
                 handleError(UiText.DynamicString(event.message))
             }
             is RoleplayLiveEvent.AudioChunk -> {
-
             }
         }
     }
@@ -290,3 +290,4 @@ class RoleplayViewModel @Inject constructor(
         viewModelScope.launch { disconnectRoleplayUseCase() }
     }
 }
+

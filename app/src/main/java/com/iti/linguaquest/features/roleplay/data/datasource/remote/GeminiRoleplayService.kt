@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
@@ -12,6 +11,7 @@ import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.prompt.PromptFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,10 +43,10 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
             )
             cleanJson(response.text)
         } catch (e: QuotaExceededException) {
-            e.printStackTrace()
+            Timber.e(e, "Quota exceeded during generateRoleplayTurn")
             null
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, "Error during generateRoleplayTurn")
             null
         }
     }
@@ -83,13 +83,13 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
             )
             val jsonString = cleanJson(response.text)
             
-            
             jsonString?.let {
                 Gson().fromJson(it, BossEvaluationResult::class.java) 
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-            null
+            Timber.e(e, "Error during evaluateBossStage")
+            throw e
         }
     }
 }
+

@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.AudioTranscriptionConfig
@@ -23,6 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,6 +55,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
                 InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
             )
         } catch (e: Exception) {
+            Timber.e(e, "Failed to send audio chunk")
         }
     }
 

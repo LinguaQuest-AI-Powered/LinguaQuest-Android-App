@@ -5,11 +5,11 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.media.audiofx.AcousticEchoCanceler
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -51,12 +51,12 @@ class AudioRecorder @Inject constructor() {
             val echoCanceler = AcousticEchoCanceler.create(record.audioSessionId)
             if (echoCanceler != null) {
                 echoCanceler.enabled = true
-                Log.d("AudioSetup", "Acoustic Echo Canceler enabled successfully.")
+                Timber.d("Acoustic Echo Canceler enabled successfully.")
             } else {
-                Log.w("AudioSetup", "Failed to create Acoustic Echo Canceler.")
+                Timber.w("Failed to create Acoustic Echo Canceler.")
             }
         } else {
-            Log.w("AudioSetup", "Acoustic Echo Canceler is not available on this device.")
+            Timber.w("Acoustic Echo Canceler is not available on this device.")
         }
 
         record.startRecording()
@@ -75,7 +75,7 @@ class AudioRecorder @Inject constructor() {
             try {
                 record.stop()
             } catch (e: IllegalStateException) {
-                // Ignore exception if already stopped or uninitialized
+                Timber.w(e, "Error stopping audio recorder")
             }
             record.release()
             audioRecord = null
@@ -87,7 +87,8 @@ class AudioRecorder @Inject constructor() {
         try {
             audioRecord?.stop()
         } catch (e: IllegalStateException) {
-            // Ignore
+            Timber.w(e, "Error stopping audio recorder")
         }
     }
 }
+
