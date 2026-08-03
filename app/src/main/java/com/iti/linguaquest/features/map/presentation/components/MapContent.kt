@@ -138,6 +138,9 @@ fun MapContent(
                             )
                         }
 
+                        // Add snow effect falling over the map
+                        SnowEffect(modifier = Modifier.fillMaxSize())
+
                         if (state.currentLevelIndex in nodePositions.indices) {
                             val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
                             val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")

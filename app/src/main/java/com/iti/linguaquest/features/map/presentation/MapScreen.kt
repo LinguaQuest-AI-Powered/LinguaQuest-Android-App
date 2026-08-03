@@ -120,8 +120,8 @@ fun MapScreenContent(
 fun MapScreenPreview(){
     val mockLevels = listOf(
         MapLevelUiModel(1, LevelStatus.COMPLETED, 3),
-        MapLevelUiModel(2, LevelStatus.CURRENT, 0),
-        MapLevelUiModel(3, LevelStatus.LOCKED, 0)
+        MapLevelUiModel(2, LevelStatus.COMPLETED, 3),
+        MapLevelUiModel(3, LevelStatus.COMPLETED, 3)
     )
     MapScreenContent(
         state = MapState(
