@@ -207,7 +207,8 @@ data class MindReaderContradictionResult(
     val details: List<MindReaderContradictionDetail>,
     val contradictionCount: Int,
     val matchedCount: Int,
-    val totalCount: Int
+    val totalCount: Int,
+    val reason: String? = null
 ) {
     val isHonest: Boolean get() = contradictionCount == 0
 }
@@ -233,17 +234,17 @@ data class MindReaderGameHistory(
 }
 
 data class MindReaderQuestionCandidate(
-    val attributeId: String,
-    val question: LocalizedText,
-    val informationGain: Double
+    val attributeId: String, // Kept for history tracking, can be a random UUID
+    val question: LocalizedText
 )
 
 data class MindReaderGameState(
     val worldKey: String? = null,
-    val candidates: List<MindReaderCandidateScore>,
+    val candidates: List<MindReaderCandidateScore> = emptyList(), // Optional, AI might not use it
     val askedAttributes: Set<String> = emptySet(),
     val questionCount: Int = 0,
-    val history: MindReaderGameHistory = MindReaderGameHistory()
+    val history: MindReaderGameHistory = MindReaderGameHistory(),
+    val pendingGuess: MindReaderGuessResult? = null // Added to store AI's guess
 )
 
 data class MindReaderDataset(

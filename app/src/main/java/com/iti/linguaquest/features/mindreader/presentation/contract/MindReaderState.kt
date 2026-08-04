@@ -10,6 +10,7 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistor
 
 enum class MindReaderPhase {
     LOBBY,
+    THINKING,
     PLAYING,
     GUESSING_LOADING,
     GUESS_REVEAL,
@@ -45,14 +46,17 @@ data class MindReaderState(
     val xpBalance: Int = 0,
     val maxQuestions: Int = 20,
     val currentQuestionNumber: Int = 0,
+    val currentQuestionCandidate: com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate? = null,
     val currentQuestion: String? = null,
     val translatedQuestion: String? = null,
     val showTranslation: Boolean = false,
     val targetLanguageCode: String = "en",
     val nativeLanguageCode: String = "en",
     val guessResult: MindReaderGuessResult? = null,
+    val dynamicPopQuizOptions: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
+    val dynamicStumpOptions: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
     val popQuizQuestion: MindReaderPopQuizQuestion? = null,
-    val stumpCandidates: List<MindReaderEntity>? = null,
+    val stumpCandidates: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
     val resultInfo: MindReaderResultInfo? = null,
     val history: MindReaderGameHistory? = null
 )

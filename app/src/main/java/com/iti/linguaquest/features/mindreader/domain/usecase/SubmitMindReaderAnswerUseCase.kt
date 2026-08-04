@@ -1,23 +1,28 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderDataset
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
-import com.iti.linguaquest.features.mindreader.domain.model.engine
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderHistoryEntry
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate
 import javax.inject.Inject
 
 class SubmitMindReaderAnswerUseCase @Inject constructor() {
 
     operator fun invoke(
-        dataset: MindReaderDataset,
         state: MindReaderGameState,
-        attributeId: String,
+        question: MindReaderQuestionCandidate,
         answer: MindReaderAnswerOption
     ): MindReaderGameState {
-        return dataset.engine().applyAnswer(
-            state = state,
-            attributeId = attributeId,
-            answer = answer
+        val entry = MindReaderHistoryEntry(
+            attributeId = question.attributeId,
+            question = question.question,
+            answer = answer,
+            confidenceAfterAnswer = 0.0
+        )
+        return state.copy(
+            history = state.history.append(entry),
+            askedAttributes = state.askedAttributes + question.attributeId,
+            questionCount = state.questionCount + 1
         )
     }
 }

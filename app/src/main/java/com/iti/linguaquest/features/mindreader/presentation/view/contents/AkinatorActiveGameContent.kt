@@ -88,35 +88,35 @@ fun ActiveGameContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.YES.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.YES.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.YES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.NO.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.NO.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.NO)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.SOMETIMES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY_NOT)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY)) }
                 )
             }
