@@ -44,7 +44,7 @@ import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
-import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
+import com.iti.linguaquest.features.roleplay.domain.model.ChatMessage
 
 
 
@@ -222,17 +222,12 @@ fun ActiveLiveChatView(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     PushToTalkButton(
                         isRecording = state.isUserSpeaking,
-                        onClick = {
-                            if (state.isUserSpeaking) {
-                                onStopRecording()
-                            } else {
-                                onRecord()
-                            }
-                        }
+                        onPressStart = { onRecord() },
+                        onPressEnd = { onStopRecording() }
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = if (state.isUserSpeaking) stringResource(R.string.roleplay_tap_to_stop) else stringResource(R.string.roleplay_tap_to_speak),
+                        text = if (state.isUserSpeaking) stringResource(R.string.roleplay_release_to_send) else stringResource(R.string.roleplay_hold_to_speak),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )

@@ -4,16 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.AppSoundPlayer
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.utils.TranscriptSanitizer
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
-import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
+import com.iti.linguaquest.features.roleplay.domain.model.ChatMessage
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.domain.usecase.ConnectToBossStageUseCase
@@ -26,7 +28,6 @@ import com.iti.linguaquest.features.roleplay.domain.usecase.StopMicrophoneUseCas
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
-import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -57,7 +58,7 @@ class RoleplayViewModel @Inject constructor(
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val getWalletUseCase: GetWalletUseCase,
-    private val soundPlayer: AppSoundPlayer
+    private val adjustWalletUseCase: AdjustWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RoleplayState())
@@ -114,12 +115,7 @@ class RoleplayViewModel @Inject constructor(
 
     fun endRoleplay() {
         viewModelScope.launch {
-            timerJob?.cancel()
-            if (_state.value.isUserSpeaking) {
-                soundPlayer.play(AppSound.CLOSE_MIC)
-            }
-            stopMicrophoneUseCase()
-            disconnectRoleplayUseCase()
+            stopSession()
             _state.update { it.copy(isConnected = false, isUserSpeaking = false) }
         }
     }
@@ -166,50 +162,41 @@ class RoleplayViewModel @Inject constructor(
 
     private fun finishBossStage() {
         val scenario = _state.value.currentBossScenario ?: return
-        
-        val userHasSpoken = _state.value.transcriptionHistory.any { it.isUser }
-        
-        if (!userHasSpoken) {
-            viewModelScope.launch {
-                timerJob?.cancel()
-                stopMicrophoneUseCase()
-                disconnectRoleplayUseCase()
-                _state.update { 
-                    it.copy(
-                        isConnected = false, 
-                        assessmentResult = BossEvaluationResult(
-                            task_completed = false,
-                            fluency_score = 0,
-                            feedback_message = "ERROR_NO_SPEECH"
-                        )
-                    )
-                }
-            }
-            return
-        }
-        
-        val transcript = _state.value.transcriptionHistory.map { msg ->
-            if (msg.isUser) "User: ${msg.text}" else "AI: ${msg.text}"
-        }
-        
+        val history = _state.value.transcriptionHistory
         viewModelScope.launch {
-            timerJob?.cancel()
-            stopMicrophoneUseCase()
-            disconnectRoleplayUseCase()
-            _state.update { 
-                it.copy(isConnected = false, isUserSpeaking = false, isEvaluating = true)
-            }
+            stopSession()
+            _state.update { it.copy(isConnected = false, isUserSpeaking = false, isEvaluating = true) }
             
-            val result = evaluateBossStageUseCase(transcript, scenario)
-            result.onSuccess { assessmentResult ->
-                _state.update { 
-                    it.copy(isEvaluating = false, assessmentResult = assessmentResult) 
+            evaluateBossStageUseCase(history, scenario)
+                .onSuccess { enrichedResult ->
+                    _state.update { it.copy(isEvaluating = false, assessmentResult = enrichedResult) }
+                    if (enrichedResult.task_completed) {
+                        awardRewards(xp = enrichedResult.xp_earned, coins = enrichedResult.coins_earned)
+                    }
                 }
-            }.onFailure { e ->
-                Timber.e(e, "Failed to evaluate boss stage")
-                _state.update { it.copy(isEvaluating = false) }
-                handleError(UiText.StringResource(R.string.roleplay_connection_lost, listOf(e.message ?: "")))
-                sendEffect(RoleplayEffect.NavigateToHome)
+                .onFailure { e ->
+                    Timber.e(e, "Failed to evaluate boss stage")
+                    _state.update { it.copy(isEvaluating = false) }
+                    handleError(UiText.StringResource(R.string.roleplay_connection_lost, listOf(e.message ?: "")))
+                    sendEffect(RoleplayEffect.NavigateToHome)
+                }
+        }
+    }
+
+    private fun awardRewards(xp: Int, coins: Int) {
+        if (xp > 0 || coins > 0) {
+            viewModelScope.launch {
+                when (val result = adjustWalletUseCase(xpDelta = xp, coinsDelta = coins)) {
+                    is LinguaQuestResult.Success -> Unit
+                    is LinguaQuestResult.Failure -> {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = result.error.toUiText(),
+                                type = SnackbarType.ERROR
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -231,10 +218,8 @@ class RoleplayViewModel @Inject constructor(
     private fun toggleMicrophone(active: Boolean) {
         _state.update { it.copy(isUserSpeaking = active) }
         if (active) {
-            soundPlayer.play(AppSound.OPEN_MIC)
             startMicrophoneUseCase()
         } else {
-            soundPlayer.play(AppSound.CLOSE_MIC)
             stopMicrophoneUseCase()
         }
     }
@@ -242,12 +227,13 @@ class RoleplayViewModel @Inject constructor(
     private fun handleLiveEvent(event: RoleplayLiveEvent) {
         when (event) {
             is RoleplayLiveEvent.Transcription -> {
+                val sanitizedChunk = TranscriptSanitizer.sanitize(event.text, _state.value.targetLanguage)
                 val history = _state.value.transcriptionHistory.toMutableList()
                 if (history.isNotEmpty() && history.last().isUser == event.isUser) {
                     val lastMsg = history.removeAt(history.size - 1)
-                    history.add(lastMsg.copy(text = lastMsg.text + event.text))
+                    history.add(lastMsg.copy(text = lastMsg.text + sanitizedChunk))
                 } else {
-                    history.add(ChatMessage(event.text, event.isUser))
+                    history.add(ChatMessage(sanitizedChunk, event.isUser))
                 }
                 
                 _state.update { 
@@ -261,11 +247,35 @@ class RoleplayViewModel @Inject constructor(
                 _state.update { it.copy(isAiSpeaking = false) }
             }
             is RoleplayLiveEvent.Error -> {
-                handleError(UiText.DynamicString(event.message))
+                val wasActive = _state.value.isConnected || _state.value.isLoading
+                viewModelScope.launch {
+                    stopSession()
+                }
+                _state.update {
+                    it.copy(
+                        isConnected = false,
+                        isLoading = false,
+                        isUserSpeaking = false,
+                        isAiSpeaking = false
+                    )
+                }
+                if (wasActive) {
+                    val errorText = UiText.StringResource(R.string.roleplay_connection_lost, listOf(event.message))
+                    handleError(errorText)
+                    sendEffect(RoleplayEffect.ShowSnackbarAndNavigateBack(errorText))
+                } else {
+                    handleError(UiText.DynamicString(event.message))
+                }
             }
-            is RoleplayLiveEvent.AudioChunk -> {
-            }
+            is RoleplayLiveEvent.AudioChunk -> Unit
         }
+    }
+
+    private suspend fun stopSession() {
+        timerJob?.cancel()
+        timerJob = null
+        stopMicrophoneUseCase()
+        disconnectRoleplayUseCase()
     }
 
     private fun handleError(message: UiText) {
@@ -286,8 +296,6 @@ class RoleplayViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        timerJob?.cancel()
-        viewModelScope.launch { disconnectRoleplayUseCase() }
+        viewModelScope.launch { stopSession() }
     }
 }
-

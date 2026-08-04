@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.CancellationException
+import java.util.concurrent.CancellationException as ConcurrentCancellationException
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,11 +33,14 @@ import javax.inject.Singleton
 class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
 
     private var session: LiveSession? = null
+    private var sendChunkCount = 0
 
     override suspend fun connect(systemPrompt: String, voiceName: String) {
+        Timber.d("[LiveService] connect() — authenticating")
         val auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) auth.signInAnonymously().await()
         
+        Timber.d("[LiveService] connect() — creating live model")
         val liveModel = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
             modelName = "gemini-2.5-flash-native-audio-preview-12-2025",
             systemInstruction = content { text(systemPrompt) },
@@ -47,6 +52,8 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
             }
         )
         session = liveModel.connect()
+        sendChunkCount = 0
+        Timber.d("[LiveService] connect() — session established ✅")
     }
 
     override suspend fun sendAudioChunk(chunk: ByteArray) {
@@ -54,8 +61,16 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
             session?.sendAudioRealtime(
                 InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
             )
+            sendChunkCount++
+            if (sendChunkCount <= 5 || sendChunkCount % 100 == 0) {
+                Timber.d("[LiveService] Sent chunk #%d — %d bytes", sendChunkCount, chunk.size)
+            }
+        } catch (e: ConcurrentCancellationException) {
+            Timber.d("[LiveService] sendAudioChunk cancelled (session closed)")
+        } catch (e: CancellationException) {
+            Timber.d("[LiveService] sendAudioChunk cancelled (session closed)")
         } catch (e: Exception) {
-            Timber.e(e, "Failed to send audio chunk")
+            Timber.e(e, "[LiveService] Failed to send audio chunk #%d", sendChunkCount)
         }
     }
 
@@ -81,6 +96,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
     }
 
     override suspend fun close() {
+        Timber.d("[LiveService] close() — total chunks sent: %d", sendChunkCount)
         session?.close()
         session = null
     }

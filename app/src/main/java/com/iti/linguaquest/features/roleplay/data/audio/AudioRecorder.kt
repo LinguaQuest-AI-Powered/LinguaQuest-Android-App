@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.media.audiofx.AcousticEchoCanceler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,10 +17,16 @@ class AudioRecorder @Inject constructor() {
 
     private var audioRecord: AudioRecord? = null
     @Volatile
-    private var isRecording = false
+    private var isActive = false
+    @Volatile
+    private var isSending = false
+
+    private val preBuffer = ArrayDeque<ByteArray>()
+    private val preBufferLock = Any()
 
     @SuppressLint("MissingPermission")
     fun startRecording(): Flow<ByteArray> = flow {
+        Timber.d("[AudioRecorder] startRecording() — initializing hardware")
         val sampleRate = 16000
         val minBufferSize = AudioRecord.getMinBufferSize(
             sampleRate,
@@ -32,14 +37,15 @@ class AudioRecorder @Inject constructor() {
         if (minBufferSize <= 0) return@flow
 
         val record = AudioRecord(
-            MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+            MediaRecorder.AudioSource.VOICE_RECOGNITION,
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
-            minBufferSize
+            minBufferSize * 2
         )
 
         if (record.state != AudioRecord.STATE_INITIALIZED) {
+            Timber.e("[AudioRecorder] AudioRecord failed to initialize")
             record.release()
             return@flow
         }
@@ -47,27 +53,43 @@ class AudioRecorder @Inject constructor() {
         audioRecord = record
         val buffer = ByteArray(minBufferSize)
 
-        if (AcousticEchoCanceler.isAvailable()) {
-            val echoCanceler = AcousticEchoCanceler.create(record.audioSessionId)
-            if (echoCanceler != null) {
-                echoCanceler.enabled = true
-                Timber.d("Acoustic Echo Canceler enabled successfully.")
-            } else {
-                Timber.w("Failed to create Acoustic Echo Canceler.")
-            }
-        } else {
-            Timber.w("Acoustic Echo Canceler is not available on this device.")
-        }
-
         record.startRecording()
-        isRecording = true
+        isActive = true
+        var emitCount = 0
+        Timber.d("[AudioRecorder] Hardware recording started (VOICE_RECOGNITION)")
 
         try {
-            while (isRecording) {
+            while (isActive) {
                 val read = record.read(buffer, 0, buffer.size)
                 when {
-                    read > 0 -> emit(buffer.copyOf(read))
-                    read == 0 -> if (!isRecording) break
+                    read > 0 -> {
+                        val chunk = buffer.copyOf(read)
+                        if (isSending) {
+                            val bufferedChunks = synchronized(preBufferLock) {
+                                val list = preBuffer.toList()
+                                preBuffer.clear()
+                                list
+                            }
+                            for (preChunk in bufferedChunks) {
+                                emit(preChunk)
+                                emitCount++
+                            }
+
+                            emit(chunk)
+                            emitCount++
+                            if (emitCount <= 5 || emitCount % 100 == 0) {
+                                Timber.d("[AudioRecorder] Emitted chunk #%d — %d bytes", emitCount, read)
+                            }
+                        } else {
+                            synchronized(preBufferLock) {
+                                if (preBuffer.size >= 5) {
+                                    preBuffer.removeFirstOrNull()
+                                }
+                                preBuffer.addLast(chunk)
+                            }
+                        }
+                    }
+                    read == 0 -> if (!isActive) break
                     else -> break
                 }
             }
@@ -79,11 +101,32 @@ class AudioRecorder @Inject constructor() {
             }
             record.release()
             audioRecord = null
+            synchronized(preBufferLock) {
+                preBuffer.clear()
+            }
         }
     }.flowOn(Dispatchers.IO)
 
+    fun resumeSending() {
+        Timber.d("[AudioRecorder] resumeSending() — mic open")
+        isSending = true
+    }
+
+    fun pauseSending() {
+        Timber.d("[AudioRecorder] pauseSending() — mic closed")
+        isSending = false
+        synchronized(preBufferLock) {
+            preBuffer.clear()
+        }
+    }
+
     fun stopRecording() {
-        isRecording = false
+        Timber.d("[AudioRecorder] stopRecording() — destroying hardware")
+        isActive = false
+        isSending = false
+        synchronized(preBufferLock) {
+            preBuffer.clear()
+        }
         try {
             audioRecord?.stop()
         } catch (e: IllegalStateException) {

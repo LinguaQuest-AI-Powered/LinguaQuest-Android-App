@@ -47,6 +47,9 @@ fun RoleplayScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RoleplayEffect.NavigateToHome -> onNavigateHome()
+                is RoleplayEffect.ShowSnackbarAndNavigateBack -> {
+                    onNavigateHome()
+                }
             }
         }
     }

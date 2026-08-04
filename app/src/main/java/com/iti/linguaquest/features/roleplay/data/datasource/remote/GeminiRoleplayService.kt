@@ -23,7 +23,7 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
             .generativeModel(
                 modelName = "gemini-3.5-flash-lite",
                 generationConfig = generationConfig {
-                    temperature = 0.5f
+                    temperature = 0.1f
                 }
             )
     }
@@ -53,10 +53,11 @@ class GeminiRoleplayService @Inject constructor() : GeminiRoleplayRemoteDataSour
 
     private fun cleanJson(rawText: String?): String? {
         if (rawText.isNullOrBlank()) return null
-        val startIndex = rawText.indexOf('{')
-        val endIndex = rawText.lastIndexOf('}')
+        val stripped = rawText.replace("```json", "").replace("```", "").trim()
+        val startIndex = stripped.indexOf('{')
+        val endIndex = stripped.lastIndexOf('}')
         if (startIndex != -1 && endIndex != -1 && startIndex <= endIndex) {
-            return rawText.substring(startIndex, endIndex + 1)
+            return stripped.substring(startIndex, endIndex + 1)
         }
         return null
     }

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.roleplay.presentation.model
+package com.iti.linguaquest.features.roleplay.domain.model
 
 data class ChatMessage(
     val text: String,
