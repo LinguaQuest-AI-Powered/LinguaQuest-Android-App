@@ -108,7 +108,10 @@ class MindReaderViewModel @Inject constructor(
             is MindReaderIntent.GuessVerifiedCorrect -> handleGuessVerification(true)
             is MindReaderIntent.GuessVerifiedIncorrect -> handleGuessVerification(false)
             is MindReaderIntent.PopQuizAnswered -> handlePopQuizAnswer(intent.choice)
-            is MindReaderIntent.StumpWordSelected -> handleStumpSelection(intent.entity)
+            is MindReaderIntent.StumpInputValueChanged -> {
+                _state.update { it.copy(stumpInputValue = intent.value) }
+            }
+            is MindReaderIntent.StumpSubmitClicked -> handleStumpSubmit()
             is MindReaderIntent.PlayAudioClicked -> playAudio(isGuess = false)
             is MindReaderIntent.PlayGuessAudioClicked -> playAudio(isGuess = true)
             is MindReaderIntent.TryAgainClicked -> startGame()
@@ -205,9 +208,7 @@ class MindReaderViewModel @Inject constructor(
                     _state.update { 
                         it.copy(
                             currentPhase = MindReaderPhase.GUESSING_LOADING, 
-                            lingoEmotion = LingoEmotion.DETECTIVE,
-                            dynamicPopQuizOptions = nextTurn.popQuizOptions,
-                            dynamicStumpOptions = nextTurn.stumpOptions
+                            lingoEmotion = LingoEmotion.DETECTIVE
                         ) 
                     }
                     delay(2500)
@@ -242,23 +243,38 @@ class MindReaderViewModel @Inject constructor(
         val currentDs = dataset ?: return
         
         if (isCorrect) {
-            val dynamicPool = _state.value.dynamicPopQuizOptions?.takeIf { it.size >= 3 } ?: currentDs.entities
-            val popQuizQuestion = buildMindReaderPopQuizQuestionUseCase(
-                correctEntity = guess.entity,
-                candidatePool = dynamicPool
-            )
-            _state.update {
-                it.copy(
-                    currentPhase = MindReaderPhase.POP_QUIZ,
-                    popQuizQuestion = popQuizQuestion
+            viewModelScope.launch {
+                _state.update { it.copy(currentPhase = MindReaderPhase.GUESSING_LOADING, lingoEmotion = LingoEmotion.DETECTIVE) }
+                val popQuizQuestion = buildMindReaderPopQuizQuestionUseCase(
+                    categoryContext = _state.value.selectedCategory?.id ?: "",
+                    targetLanguage = _state.value.targetLanguageCode,
+                    nativeLanguage = _state.value.nativeLanguageCode,
+                    correctEntity = guess.entity
                 )
+                if (popQuizQuestion != null) {
+                    _state.update {
+                        it.copy(
+                            currentPhase = MindReaderPhase.POP_QUIZ,
+                            popQuizQuestion = popQuizQuestion
+                        )
+                    }
+                } else {
+                    // Fallback to victory if pop quiz generation fails
+                    val history = domainState?.history ?: return@launch
+                    val result = MindReaderResult.Victory(
+                        guess = guess,
+                        history = history,
+                        rewardCoins = currentDs.config.correctRewardCoins,
+                        rewardXp = currentDs.config.correctRewardXp
+                    )
+                    handleResolution(result)
+                }
             }
         } else {
-            val dynamicStump = _state.value.dynamicStumpOptions?.takeIf { it.isNotEmpty() } ?: currentDs.entities
             _state.update {
                 it.copy(
                     currentPhase = MindReaderPhase.STUMP,
-                    stumpCandidates = dynamicStump
+                    stumpInputValue = ""
                 )
             }
         }
@@ -279,10 +295,11 @@ class MindReaderViewModel @Inject constructor(
             )
             
             val contradiction = verifyMindReaderHonestyUseCase(
-                category = categoryId,
+                categoryContext = categoryId,
                 targetLanguage = targetLang,
+                feedbackLanguage = _state.value.nativeLanguageCode,
                 history = currentState.history,
-                userWord = challenge.correctEntity
+                claimedWord = challenge.correctEntity.resolveTranslation(targetLang)
             )
             
             val result = resolveMindReaderRewardUseCase(
@@ -296,24 +313,29 @@ class MindReaderViewModel @Inject constructor(
         }
     }
 
-    private fun handleStumpSelection(entity: MindReaderEntity) {
+    private fun handleStumpSubmit() {
         val currentDs = dataset ?: return
         val currentState = domainState ?: return
         val categoryId = _state.value.selectedCategory?.id ?: ""
         val targetLang = _state.value.targetLanguageCode
+        val nativeLang = _state.value.nativeLanguageCode
+        val inputValue = _state.value.stumpInputValue
+
+        if (inputValue.isBlank()) return
 
         viewModelScope.launch {
             _state.update { it.copy(currentPhase = MindReaderPhase.THINKING, lingoEmotion = LingoEmotion.DETECTIVE) }
 
             val contradiction = verifyMindReaderHonestyUseCase(
-                category = categoryId,
+                categoryContext = categoryId,
                 targetLanguage = targetLang,
+                feedbackLanguage = nativeLang,
                 history = currentState.history,
-                userWord = entity
+                claimedWord = inputValue
             )
 
             val challenge = MindReaderRewardChallenge.Stump(
-                selectedEntity = entity
+                selectedEntity = contradiction.evaluatedEntity
             )
             
             val result = resolveMindReaderRewardUseCase(

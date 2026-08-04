@@ -1,26 +1,23 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
-import com.iti.linguaquest.features.mindreader.data.datasource.remote.MindReaderAiService
+
 import com.iti.linguaquest.features.mindreader.domain.model.LocalizedText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate
 import java.util.UUID
+import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
 import javax.inject.Inject
 
 sealed interface MindReaderNextTurn {
     data class Question(val question: MindReaderQuestionCandidate) : MindReaderNextTurn
-    data class Guess(
-        val guess: MindReaderGuessResult,
-        val popQuizOptions: List<MindReaderEntity>,
-        val stumpOptions: List<MindReaderEntity>
-    ) : MindReaderNextTurn
+    data class Guess(val guess: MindReaderGuessResult) : MindReaderNextTurn
     data object Error : MindReaderNextTurn
 }
 
 class GetMindReaderNextTurnUseCase @Inject constructor(
-    private val aiService: MindReaderAiService
+    private val repository: MindReaderRepository
 ) {
     suspend operator fun invoke(
         category: String,
@@ -32,65 +29,43 @@ class GetMindReaderNextTurnUseCase @Inject constructor(
             "Q: ${turn.question.resolve(targetLanguage)}\nA: ${turn.answer.rawId}"
         }
 
-        val aiResponse = aiService.getNextTurn(
-            category = category,
+        val aiResponse = repository.getNextTurn(
+            categoryContext = category,
             targetLanguage = targetLanguage,
             nativeLanguage = nativeLanguage,
-            history = historyString
-        ) ?: return MindReaderNextTurn.Error
+            historyPrompt = historyString
+        )
 
-        return if (aiResponse.isGuessing) {
+        return if (aiResponse is com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn.Guess) {
             val entity = MindReaderEntity(
                 id = UUID.randomUUID().toString(),
                 worldKey = category,
                 translations = LocalizedText(
                     mapOf(
-                        targetLanguage to (aiResponse.guessWordTargetLang ?: ""),
-                        nativeLanguage to (aiResponse.guessWordNativeLang ?: "")
+                        targetLanguage to aiResponse.word,
+                        nativeLanguage to aiResponse.translation
                     )
                 ),
-                emoji = aiResponse.guessEmoji ?: "🤔",
+                emoji = aiResponse.emoji,
                 positiveAttributes = emptySet()
             )
-            
-            val popQuizEntities = aiResponse.popQuizWrongOptionsTargetLang?.mapIndexed { index, targetWord ->
-                val nativeWord = aiResponse.popQuizWrongOptionsNativeLang?.getOrNull(index) ?: ""
-                MindReaderEntity(
-                    id = UUID.randomUUID().toString(),
-                    worldKey = category,
-                    translations = LocalizedText(mapOf(targetLanguage to targetWord, nativeLanguage to nativeWord)),
-                    emoji = "🤔",
-                    positiveAttributes = emptySet()
-                )
-            } ?: emptyList()
-            
-            val stumpEntities = aiResponse.stumpDropdownOptionsTargetLang?.mapIndexed { index, targetWord ->
-                val nativeWord = aiResponse.stumpDropdownOptionsNativeLang?.getOrNull(index) ?: ""
-                MindReaderEntity(
-                    id = UUID.randomUUID().toString(),
-                    worldKey = category,
-                    translations = LocalizedText(mapOf(targetLanguage to targetWord, nativeLanguage to nativeWord)),
-                    emoji = "🤔",
-                    positiveAttributes = emptySet()
-                )
-            } ?: emptyList()
 
             MindReaderNextTurn.Guess(
-                guess = MindReaderGuessResult(entity, 0.9),
-                popQuizOptions = popQuizEntities,
-                stumpOptions = stumpEntities
+                guess = MindReaderGuessResult(entity, 0.9)
             )
-        } else {
+        } else if (aiResponse is com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn.Question) {
             val question = MindReaderQuestionCandidate(
                 attributeId = UUID.randomUUID().toString(),
                 question = LocalizedText(
                     mapOf(
-                        targetLanguage to (aiResponse.questionTargetLang ?: ""),
-                        nativeLanguage to (aiResponse.questionNativeLang ?: "")
+                        targetLanguage to aiResponse.targetText,
+                        nativeLanguage to aiResponse.nativeText
                     )
                 )
             )
             MindReaderNextTurn.Question(question)
+        } else {
+            MindReaderNextTurn.Error
         }
     }
 }

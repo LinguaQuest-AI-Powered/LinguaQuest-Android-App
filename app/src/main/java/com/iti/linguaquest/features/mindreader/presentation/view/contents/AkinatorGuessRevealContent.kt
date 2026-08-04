@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.border
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,29 +65,37 @@ fun GuessRevealContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = state.guessResult?.entity?.emoji ?: "",
-                    fontSize = 72.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(modifier = Modifier.height(24.dp))
 
                 state.guessResult?.entity?.let { entity ->
                     val word = entity.resolveTranslation(state.targetLanguageCode)
                     if (word.isNotBlank()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = word.uppercase(),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = LinguaQuestTheme.colors.BrownText,
-                            textAlign = TextAlign.Center,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
-                        )
+                        ) {
+                            Text(
+                                text = word,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = LinguaQuestTheme.colors.BrownText,
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                                    .border(2.dp, LinguaQuestTheme.colors.OrangeActive, androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
+
+                Text(
+                    text = state.guessResult?.entity?.emoji ?: "",
+                    fontSize = 80.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -97,9 +106,10 @@ fun GuessRevealContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                MindReaderAnswerButton(
+                AppButton3D(
                     text = stringResource(id = R.string.mind_reader_wrong),
                     onClick = { onIntent(MindReaderIntent.GuessVerifiedIncorrect) },
+                    variant = com.iti.linguaquest.core.sharedComponents.ButtonVariant.SECONDARY,
                     modifier = Modifier.weight(1f)
                 )
 

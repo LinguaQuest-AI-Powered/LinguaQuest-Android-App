@@ -53,10 +53,8 @@ data class MindReaderState(
     val targetLanguageCode: String = "en",
     val nativeLanguageCode: String = "en",
     val guessResult: MindReaderGuessResult? = null,
-    val dynamicPopQuizOptions: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
-    val dynamicStumpOptions: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
     val popQuizQuestion: MindReaderPopQuizQuestion? = null,
-    val stumpCandidates: List<com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity>? = null,
+    val stumpInputValue: String = "",
     val resultInfo: MindReaderResultInfo? = null,
     val history: MindReaderGameHistory? = null
 )

@@ -1,8 +1,10 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -70,17 +72,22 @@ fun ActiveGameContent(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            if (state.showTranslation && state.translatedQuestion != null) {
-                Text(
-                    text = state.translatedQuestion,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+           Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .height(60.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (state.showTranslation && state.translatedQuestion != null) {
+                    Text(
+                        text = state.translatedQuestion,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             AppMascotGradientBox(
                 imageRes = R.drawable.lingo_mind_asking

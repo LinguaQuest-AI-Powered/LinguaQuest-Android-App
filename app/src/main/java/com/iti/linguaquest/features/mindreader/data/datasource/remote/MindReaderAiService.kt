@@ -2,100 +2,127 @@ package com.iti.linguaquest.features.mindreader.data.datasource.remote
 
 import com.google.gson.Gson
 import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderHonestyResponse
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderNextStepResponse
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderQuizResponse
 import javax.inject.Inject
 
-data class MindReaderAiResponse(
-    val isGuessing: Boolean,
-    val questionTargetLang: String?,
-    val questionNativeLang: String?,
-    val guessWordTargetLang: String?,
-    val guessWordNativeLang: String?,
-    val guessEmoji: String?,
-    val popQuizWrongOptionsTargetLang: List<String>?,
-    val popQuizWrongOptionsNativeLang: List<String>?,
-    val stumpDropdownOptionsTargetLang: List<String>?,
-    val stumpDropdownOptionsNativeLang: List<String>?
-)
 
-data class MindReaderStumpVerificationResponse(
-    val isHonest: Boolean,
-    val reason: String
-)
 
 open class MindReaderAiService @Inject constructor(
     private val geminiAiService: GeminiAiService,
     private val gson: Gson
 ) {
     open suspend fun getNextTurn(
-        category: String,
+        categoryContext: String,
         targetLanguage: String,
         nativeLanguage: String,
-        history: String
-    ): MindReaderAiResponse? {
+        historyPrompt: String
+    ): MindReaderNextStepResponse? {
+        val maxTurns = 20
         val prompt = """
-            You are playing the role of a highly intelligent, professional Akinator-style Mind Reader.
-            The user is thinking of a specific concept in the category: '$category'.
-            Target Language: '$targetLanguage'. Native Language: '$nativeLanguage'.
-            
-            Game History:
-            $history
-            
-            Instructions:
-            1. Analyze the history logically. Use process of elimination to narrow down possibilities.
-            2. If you need more information, ask a strategic YES/NO question.
-            3. CRITICAL: DO NOT repeat any questions that have already been asked in the Game History. Ensure your questions are realistic, smart, and progressively narrow down the options.
-            4. CRITICAL: If the Game History is empty, pick a completely RANDOM, unpredictable starting question to ensure each game feels unique. Do not always start with the same question.
-            5. If you are highly confident, make a Guess. 
-            6. If Guessing, you MUST provide 'popQuizWrongOptions' (3 incorrect plausible choices) and 'stumpDropdownOptions' (10 alternative plausible choices from the category in case you are wrong).
-            
-            Reply ONLY in this JSON format:
-            {
-              "isGuessing": boolean,
-              "questionTargetLang": "string or null",
-              "questionNativeLang": "string or null",
-              "guessWordTargetLang": "string or null",
-              "guessWordNativeLang": "string or null",
-              "guessEmoji": "string or null",
-              "popQuizWrongOptionsTargetLang": ["word1", "word2", "word3"] or null,
-              "popQuizWrongOptionsNativeLang": ["word1", "word2", "word3"] or null,
-              "stumpDropdownOptionsTargetLang": ["word1", "word2", ..., "word10"] or null,
-              "stumpDropdownOptionsNativeLang": ["word1", "word2", ..., "word10"] or null
-            }
+        You are the engine behind "Lingo's Mind Reader", an Akinator-style guessing game for language learners. The user is thinking of ONE specific word that belongs to this category:
+
+        Category context: "$categoryContext"
+
+        Conversation so far (question asked in the target language, and the user's answer):
+        $historyPrompt
+
+        (If historyPrompt is empty, this is the very first question.)
+
+        Your job: 
+        1. Analyze the conversation so far carefully. Every new question MUST be logical and strictly build upon the previous answers. Do not ask random questions.
+        2. Pick a yes/no-style question that splits the remaining possibilities roughly in half based on the user's previous answers.
+        3. Never repeat a question already asked.
+        4. If this is the first question, randomly pick an interesting property to ask about (e.g., size, location, usage) so the game feels fresh every time. DO NOT always start with the same question.
+        5. If you are highly confident about the word before reaching $maxTurns questions, STOP asking immediately and make your best guess! You do NOT need to reach $maxTurns questions. $maxTurns is only a maximum limit.
+        6. If the conversation reaches $maxTurns turns, you MUST make a guess.
+
+        Target language: $targetLanguage
+        Native language: $nativeLanguage
+
+        CRITICAL RULE 1: If asking a question, "questionTargetText" MUST be written ONLY in $targetLanguage, and "questionNativeText" MUST be its accurate translation in $nativeLanguage.
+        CRITICAL RULE 2: Only set type to "guess" when you are actually naming a specific concrete word/object, never a category or vague guess.
+        CRITICAL RULE 3: The guessed word must plausibly belong to the given category context.
+        CRITICAL RULE 4: The "guessEmoji" must be a highly relevant, expressive system emoji that directly represents the guessed object visually, not a generic symbol (e.g. dY?Z for apple).
+
+        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        {
+          "type": "question" | "guess",
+          "questionTargetText": "string or null",
+          "questionNativeText": "string or null",
+          "guessWord": "string or null, in target language",
+          "guessTranslation": "string or null, in native language",
+          "guessEmoji": "single system emoji accurately representing the word, or null"
+        }
         """.trimIndent()
 
         val jsonString = geminiAiService.generateJson(prompt) ?: return null
         return try {
-            gson.fromJson(jsonString, MindReaderAiResponse::class.java)
+            gson.fromJson(jsonString, MindReaderNextStepResponse::class.java)
+        } catch(e: Exception) {
+            null
+        }
+    }
+
+    open suspend fun generateQuizChoices(
+        categoryContext: String,
+        correctWord: String,
+        nativeLanguage: String,
+        targetLanguage: String
+    ): MindReaderQuizResponse? {
+        val prompt = """
+        The user just correctly identified the word "$correctWord" (in $targetLanguage) from this category: "$categoryContext".
+
+        Generate exactly 3 answer options for a vocabulary quiz: one is the correct word "$correctWord", and two are plausible-but-wrong words from the same category (in $targetLanguage). Shuffle the order.
+
+        CRITICAL RULE: Exactly one option must have "isCorrect": true.
+
+        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        {
+          "choices": [
+            {"translationText": "string", "isCorrect": true|false},
+            {"translationText": "string", "isCorrect": true|false},
+            {"translationText": "string", "isCorrect": true|false}
+          ]
+        }
+        """.trimIndent()
+
+        val jsonString = geminiAiService.generateJson(prompt) ?: return null
+        return try {
+            gson.fromJson(jsonString, MindReaderQuizResponse::class.java)
         } catch(e: Exception) {
             null
         }
     }
 
     open suspend fun verifyUserWord(
-        category: String,
-        history: String,
-        userWord: String
-    ): MindReaderStumpVerificationResponse? {
+        categoryContext: String,
+        historyPrompt: String,
+        claimedWord: String,
+        feedbackLanguage: String
+    ): MindReaderHonestyResponse? {
         val prompt = """
-            You are a strict game referee for a Mind Reader game (Category: '$category').
-            The AI failed to guess the word, and the user claims they were thinking of the word: '$userWord'.
-            
-            Here is the history of the user's answers to the AI's questions:
-            $history
-            
-            Analyze if the user's answers are logically consistent with the word '$userWord'.
-            Allow for minor human errors or subjectivity, but if the answers fundamentally contradict the word (e.g. saying a Cat is a reptile), they are cheating.
-            
-            Reply ONLY in this JSON format:
-            {
-              "isHonest": boolean,
-              "reason": "Short explanation of why they are honest or why they contradicted themselves."
-            }
+        The user played a guessing game and, when the AI failed to guess, claimed they were thinking of the word "$claimedWord" (category: "$categoryContext").
+
+        Here is the full history of questions asked and the user's answers:
+        $historyPrompt
+
+        Check whether "$claimedWord" is logically consistent with EVERY answer the user gave. A real-world word/object should reasonably match yes/no/sometimes answers about its typical properties. If there is a clear contradiction (e.g. user said "no" to a property that is obviously true for "$claimedWord", or vice versa), the user was not honest.
+
+        CRITICAL RULE 1: Be reasonably lenient — "sometimes" and "probably not" allow for ambiguity, only flag CLEAR contradictions, not borderline cases.
+        CRITICAL RULE 2: "explanation" MUST be written in $feedbackLanguage, must be short (max 2 sentences), friendly if honest, and clearly point out the contradiction if not honest.
+
+        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        {
+          "isHonest": true|false,
+          "explanation": "short message in $feedbackLanguage"
+        }
         """.trimIndent()
 
         val jsonString = geminiAiService.generateJson(prompt) ?: return null
         return try {
-            gson.fromJson(jsonString, MindReaderStumpVerificationResponse::class.java)
+            gson.fromJson(jsonString, MindReaderHonestyResponse::class.java)
         } catch(e: Exception) {
             null
         }
