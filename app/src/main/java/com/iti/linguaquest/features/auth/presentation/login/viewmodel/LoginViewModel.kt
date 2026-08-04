@@ -30,7 +30,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.iti.linguaquest.core.notification.domain.usecase.RegisterDeviceTokenUseCase
 import javax.inject.Inject
 
 
@@ -43,7 +45,8 @@ class LoginViewModel @Inject constructor(
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-
+    private val registerDeviceTokenUseCase: RegisterDeviceTokenUseCase,
+    private val applicationScope: CoroutineScope,
     ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -122,6 +125,7 @@ class LoginViewModel @Inject constructor(
             when (val result = loginUserUseCase(email, password)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
+                    registerDeviceToken()
                     sendEffect(LoginEffect.LoginSucceeded)
                 }
 
@@ -138,6 +142,7 @@ class LoginViewModel @Inject constructor(
                     _state.update { it.copy(isLoading = false, googleError = false) }
                     val profileComplete = result.data
                     if (profileComplete) {
+                        registerDeviceToken()
                         sendEffect(LoginEffect.LoginSucceeded)
                     } else {
                         val targetLanguage = getTargetLanguageUseCase().first()
@@ -163,6 +168,7 @@ class LoginViewModel @Inject constructor(
             when (val result = completeOAuthProfileUseCase(nativeLanguage, targetLanguage, null)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
+                    registerDeviceToken()
                     sendEffect(LoginEffect.LoginSucceeded)
                 }
                 is LinguaQuestResult.Failure -> {
@@ -247,6 +253,12 @@ class LoginViewModel @Inject constructor(
     private fun sendEffect(effect: LoginEffect) {
         viewModelScope.launch {
             _effects.send(effect)
+        }
+    }
+
+    private fun registerDeviceToken() {
+        applicationScope.launch {
+            registerDeviceTokenUseCase().collect {}
         }
     }
 }
