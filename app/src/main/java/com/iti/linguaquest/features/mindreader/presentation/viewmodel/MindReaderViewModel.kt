@@ -114,7 +114,9 @@ class MindReaderViewModel @Inject constructor(
             is MindReaderIntent.StumpSubmitClicked -> handleStumpSubmit()
             is MindReaderIntent.PlayAudioClicked -> playAudio(isGuess = false)
             is MindReaderIntent.PlayGuessAudioClicked -> playAudio(isGuess = true)
-            is MindReaderIntent.TryAgainClicked -> startGame()
+            is MindReaderIntent.TryAgainClicked -> {
+                _state.update { it.copy(currentPhase = MindReaderPhase.LOBBY) }
+            }
             is MindReaderIntent.ReturnToHomeClicked -> {
                 viewModelScope.launch { _effect.emit(MindReaderEffect.NavigateBack) }
             }

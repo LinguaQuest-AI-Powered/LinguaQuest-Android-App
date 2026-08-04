@@ -44,7 +44,7 @@ open class MindReaderAiService @Inject constructor(
         CRITICAL RULE 1: If asking a question, "questionTargetText" MUST be written ONLY in $targetLanguage, and "questionNativeText" MUST be its accurate translation in $nativeLanguage.
         CRITICAL RULE 2: Only set type to "guess" when you are actually naming a specific concrete word/object, never a category or vague guess.
         CRITICAL RULE 3: The guessed word must plausibly belong to the given category context.
-        CRITICAL RULE 4: The "guessEmoji" must be a highly relevant, expressive system emoji that directly represents the guessed object visually, not a generic symbol (e.g. dY?Z for apple).
+        CRITICAL RULE 4: The "guessEmoji" MUST be the exact, most highly relevant single system emoji that directly represents the guessed object visually. Do NOT use generic or loosely related emojis (e.g., if the word is 'Stethoscope', you MUST use 🩺, do NOT use 🩼 or 🏥. If the word is 'Apple', use 🍎). If no exact emoji exists, pick the closest visual match.
 
         Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
         {
