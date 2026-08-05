@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.home.data.repository
 
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.home.data.dataSource.local.HomeLocalDataSource
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
     private val remoteDataSource: HomeRemoteDataSource,
-    private val localDataSource: HomeLocalDataSource
+    private val localDataSource: HomeLocalDataSource,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : HomeRepository {
 
     override fun observeHomeSummary(): Flow<HomeSummary?> {
@@ -25,6 +27,11 @@ class HomeRepositoryImpl @Inject constructor(
     override suspend fun refreshHomeSummary(): LinguaQuestResult<HomeSummary, LinguaQuestDataError> {
         return when (val result = remoteDataSource.getHomeSummary()) {
             is LinguaQuestResult.Success -> {
+                result.data.activeLanguage?.let { activeLang ->
+                    if (activeLang.id != null && !activeLang.name.isNullOrBlank()) {
+                        userPreferencesRepository.saveTargetLanguage(activeLang.id, activeLang.name)
+                    }
+                }
                 localDataSource.upsertHomeSummary(result.data)
                 LinguaQuestResult.Success(result.data.toDomain())
             }

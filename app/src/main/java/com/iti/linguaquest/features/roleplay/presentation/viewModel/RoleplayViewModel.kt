@@ -23,8 +23,6 @@ import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,8 +52,7 @@ class RoleplayViewModel @Inject constructor(
     private val scenarioRepository: ScenarioRepository,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val getWalletUseCase: GetWalletUseCase,
-    private val soundPlayer: AppSoundPlayer
+    private val getWalletUseCase: GetWalletUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RoleplayState())
@@ -115,9 +112,6 @@ class RoleplayViewModel @Inject constructor(
     fun endRoleplay() {
         viewModelScope.launch {
             timerJob?.cancel()
-            if (_state.value.isUserSpeaking) {
-                soundPlayer.play(AppSound.CLOSE_MIC)
-            }
             stopMicrophoneUseCase()
             disconnectRoleplayUseCase()
             _state.update { it.copy(isConnected = false, isUserSpeaking = false) }
@@ -230,10 +224,8 @@ class RoleplayViewModel @Inject constructor(
     private fun toggleMicrophone(active: Boolean) {
         _state.update { it.copy(isUserSpeaking = active) }
         if (active) {
-            soundPlayer.play(AppSound.OPEN_MIC)
             startMicrophoneUseCase()
         } else {
-            soundPlayer.play(AppSound.CLOSE_MIC)
             stopMicrophoneUseCase()
         }
     }

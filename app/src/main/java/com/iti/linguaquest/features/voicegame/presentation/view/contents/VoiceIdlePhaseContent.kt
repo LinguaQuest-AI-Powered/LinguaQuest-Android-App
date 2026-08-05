@@ -36,9 +36,12 @@ import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameVi
 
 import androidx.compose.ui.text.font.FontStyle
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 
 @Composable
 fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
+    val soundPlayer = LocalSoundPlayer.current
     SpeechBubble(stringResource(R.string.voice_idle_yo_can_do_it))
     Spacer(Modifier.height(8.dp))
     AppMascotGradientBox(
@@ -93,6 +96,7 @@ fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)
             .clickable(enabled = !state.isLoadingSentence && state.sentence.isNotBlank()) {
+                soundPlayer.play(AppSound.OPEN_MIC)
                 viewModel.onIntent(VoiceGameIntent.RecordClicked)
             },
         contentAlignment = Alignment.Center
