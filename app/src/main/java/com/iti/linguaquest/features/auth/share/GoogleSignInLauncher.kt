@@ -13,6 +13,7 @@ import com.google.firebase.auth.auth
 import com.iti.linguaquest.R
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 
 fun ComponentActivity.launchGoogleSignIn(
@@ -59,7 +60,8 @@ fun ComponentActivity.launchGoogleSignIn(
                 onError()
             }
         } catch (e: Exception) {
-             onError()
+            Timber.e(e, "Google Sign-In failed")
+            onError()
         }
     }
 }

@@ -78,6 +78,7 @@ class AuthRepositoryImpl @Inject constructor(
         val request = LoginRequestDto(email, password)
         return remoteDataSource.login(request)
             .onSuccess { response ->
+                userPreferencesLocalDataSource.clearTargetLanguage()
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 sessionManagerDataSource.saveIsLoggedIn(true)
                 sessionManagerDataSource.saveFirstTime(false)
@@ -92,6 +93,7 @@ class AuthRepositoryImpl @Inject constructor(
             .onSuccess { response ->
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 if (response.profileComplete) {
+                    userPreferencesLocalDataSource.clearTargetLanguage()
                     sessionManagerDataSource.saveIsLoggedIn(true)
                     sessionManagerDataSource.saveFirstTime(false)
                 }

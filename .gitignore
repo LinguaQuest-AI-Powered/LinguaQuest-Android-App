@@ -14,9 +14,8 @@
 .cxx
 local.properties
 
-app/google-services.json
 
 *.jks
 *.keystore
-
 disposables/
+.kotlin/
