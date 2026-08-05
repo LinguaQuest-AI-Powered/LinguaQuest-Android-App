@@ -36,6 +36,8 @@ import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
 import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
@@ -44,6 +46,7 @@ import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameVi
 
 @Composable
 fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
+    val soundPlayer = LocalSoundPlayer.current
     SpeechBubble(if (state.isPaused) stringResource(R.string.voice_recording_paused) else stringResource(R.string.voice_recording_listening))
     Spacer(Modifier.height(8.dp))
     AppMascotGradientBox(
@@ -87,7 +90,13 @@ fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) 
             .clip(CircleShape)
             .background(LinguaQuestTheme.colors.ErrorAccent)
             .clickable {
-                viewModel.onIntent(if (state.isPaused) VoiceGameIntent.ResumeClicked else VoiceGameIntent.PauseClicked)
+                if (state.isPaused) {
+                    soundPlayer.play(AppSound.OPEN_MIC)
+                    viewModel.onIntent(VoiceGameIntent.ResumeClicked)
+                } else {
+                    soundPlayer.play(AppSound.CLOSE_MIC)
+                    viewModel.onIntent(VoiceGameIntent.PauseClicked)
+                }
             },
         contentAlignment = Alignment.Center
     ) {

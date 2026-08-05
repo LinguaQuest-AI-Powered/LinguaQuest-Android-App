@@ -9,8 +9,6 @@ import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
@@ -54,7 +52,6 @@ class VoiceGameViewModelTest {
     private lateinit var getWalletUseCase: GetWalletUseCase
     private lateinit var adjustWalletUseCase: AdjustWalletUseCase
     private lateinit var snackbarController: SnackbarController
-    private lateinit var soundPlayer: AppSoundPlayer
 
     private lateinit var viewModel: VoiceGameViewModel
 
@@ -70,7 +67,6 @@ class VoiceGameViewModelTest {
         getWalletUseCase = mockk()
         adjustWalletUseCase = mockk()
         snackbarController = mockk(relaxed = true)
-        soundPlayer = mockk(relaxed = true)
 
         every { getTargetLanguageNameUseCase() } returns flowOf("Spanish")
         every { observeNetworkStatusUseCase() } returns flowOf(true)
@@ -86,8 +82,7 @@ class VoiceGameViewModelTest {
             observeNetworkStatusUseCase = observeNetworkStatusUseCase,
             getWalletUseCase = getWalletUseCase,
             adjustWalletUseCase = adjustWalletUseCase,
-            snackbarController = snackbarController,
-            soundPlayer = soundPlayer
+            snackbarController = snackbarController
         )
     }
 
@@ -153,7 +148,6 @@ class VoiceGameViewModelTest {
     fun onIntent_MicPermissionGranted_startsRecording() = runTest {
         viewModel.onIntent(VoiceGameIntent.MicPermissionGranted)
 
-        verify(exactly = 1) { soundPlayer.play(AppSound.OPEN_MIC) }
         verify(exactly = 1) { recordAudioUseCase.start() }
         assertEquals(VoiceGamePhase.RECORDING, viewModel.state.value.phase)
         assertFalse(viewModel.state.value.isPaused)
@@ -171,16 +165,14 @@ class VoiceGameViewModelTest {
     }
 
     @Test
-    fun onIntent_PauseAndResume_togglesRecordingStateAndPlaysSounds() = runTest {
+    fun onIntent_PauseAndResume_togglesRecordingState() = runTest {
         viewModel.onIntent(VoiceGameIntent.PauseClicked)
 
-        verify(exactly = 1) { soundPlayer.play(AppSound.CLOSE_MIC) }
         verify(exactly = 1) { recordAudioUseCase.pause() }
         assertTrue(viewModel.state.value.isPaused)
 
         viewModel.onIntent(VoiceGameIntent.ResumeClicked)
 
-        verify(exactly = 1) { soundPlayer.play(AppSound.OPEN_MIC) }
         verify(exactly = 1) { recordAudioUseCase.resume() }
         assertFalse(viewModel.state.value.isPaused)
     }
