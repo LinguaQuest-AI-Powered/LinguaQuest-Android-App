@@ -38,18 +38,31 @@ fun PushToTalkButton(
     isRecording: Boolean,
     onPressStart: () -> Unit,
     onPressEnd: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val currentOnPressStart by rememberUpdatedState(onPressStart)
     val currentOnPressEnd by rememberUpdatedState(onPressEnd)
 
+    val targetBgColor = when {
+        !isEnabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        isRecording -> LinguaQuestTheme.colors.ErrorAccent
+        else -> MaterialTheme.colorScheme.primary
+    }
+
+    val targetIconColor = when {
+        !isEnabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+        isRecording -> LinguaQuestTheme.colors.whiteColor
+        else -> LinguaQuestTheme.colors.iconsColor
+    }
+
     val backgroundColor by animateColorAsState(
-        targetValue = if (isRecording) LinguaQuestTheme.colors.ErrorAccent else MaterialTheme.colorScheme.primary,
+        targetValue = targetBgColor,
         label = "bgColor"
     )
     val iconColor by animateColorAsState(
-        targetValue = if (isRecording) LinguaQuestTheme.colors.whiteColor else LinguaQuestTheme.colors.iconsColor,
+        targetValue = targetIconColor,
         label = "iconColor"
     )
     val buttonSize by animateDpAsState(
@@ -64,7 +77,7 @@ fun PushToTalkButton(
     val infiniteTransition = rememberInfiniteTransition(label = "recording_pulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = if (isRecording) 1.12f else 1f,
+        targetValue = if (isRecording && isEnabled) 1.12f else 1f,
         animationSpec = infiniteRepeatable(
             tween(600, easing = FastOutSlowInEasing),
             RepeatMode.Reverse
@@ -81,17 +94,18 @@ fun PushToTalkButton(
     Box(
         modifier = modifier
             .size(buttonSize)
-            .scale(if (isRecording) pulseScale else 1f)
+            .scale(if (isRecording && isEnabled) pulseScale else 1f)
             .clip(CircleShape)
             .background(backgroundColor)
             .then(
-                if (isRecording) {
+                if (isRecording && isEnabled) {
                     Modifier.border(3.dp, LinguaQuestTheme.colors.ErrorAccent.copy(alpha = 0.3f), CircleShape)
                 } else {
                     Modifier
                 }
             )
-            .pointerInput(Unit) {
+            .pointerInput(isEnabled) {
+                if (!isEnabled) return@pointerInput
                 detectTapGestures(
                     onPress = {
                         soundPlayer.play(AppSound.OPEN_MIC)

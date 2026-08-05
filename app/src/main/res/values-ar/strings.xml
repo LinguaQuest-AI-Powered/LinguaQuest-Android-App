@@ -603,6 +603,8 @@
     <string name="roleplay_tap_to_speak">انقر للتحدث</string>
     <string name="roleplay_hold_to_speak">اضغط مع الاستمرار للتحدث</string>
     <string name="roleplay_release_to_send">اترك للإرسال</string>
+    <string name="roleplay_ai_thinking">الذكاء الاصطناعي يفكر...</string>
+    <string name="roleplay_ai_speaking">الذكاء الاصطناعي يتحدث...</string>
     <string name="roleplay_finish_stage">إنهاء المرحلة</string>
     <string name="roleplay_meet_boss">قابل %1$s</string>
     <string name="roleplay_your_objective">هدفك</string>

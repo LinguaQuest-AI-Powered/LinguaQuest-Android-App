@@ -11,8 +11,10 @@ The **Roleplay & Boss Challenge** feature delivers an interactive, voice-driven 
 1. **Gemini Live Multimodal API (`LiveRoleplayService`)**:
    - Model: `gemini-2.5-flash-native-audio-preview-12-2025`
    - Role: Real-time, bidirectional audio streaming. Receives 16kHz PCM audio buffers from `AudioRecorder`, streams raw audio chunks back to `AudioPlayer`, and produces real-time speech-to-text transcriptions for both user and AI.
-2. **Generative Content API (`GeminiRoleplayService`)**:
-   - Model: `gemini-3.5-flash-lite`
+2. **Generative Content REST API (`GeminiRoleplayService` & `GeminiApiService`)**:
+   - Architecture: Clean Architecture Retrofit service (`GeminiApiService`) with dedicated DTO models (`GeminiRequestDto`, `GeminiResponseDto`) and Hilt dependency injection in `RoleplayModule`.
+   - Model Fallback Cascade: Automatic transparent failover across active Google AI models (`gemini-3.5-flash-lite`, `gemini-flash-latest`, `gemini-3.1-flash-lite`, `gemini-3.5-flash`).
+   - Authentication: Directly uses `BuildConfig.GEMINI_API_KEY`, completely isolating evaluation quotas from Firebase rate limits and avoiding third-party library conflicts.
    - Role: Structured JSON post-stage assessment via `evaluateBossStage`. Evaluates conversation transcripts against task objectives to compute fluency score, completion status, and granular grammar/vocabulary feedback.
 
 ### 2. Audio Processing Pipeline
@@ -31,7 +33,8 @@ graph TD
     B -->|GetBossScenariosUseCase| D[ScenarioRepositoryImpl]
     C -->|Stream PCM / Events| E[LiveRoleplayService]
     C -->|Evaluate Transcript| F[GeminiRoleplayService]
-    C -->|Record / Play| G[AudioRecorder / AudioPlayer]
+    F -->|Retrofit API Call| G[GeminiApiService]
+    C -->|Record / Play| H[AudioRecorder / AudioPlayer]
 ```
 
 ### Domain Layer
@@ -51,15 +54,18 @@ graph TD
 - **State**: `RoleplayState` holding timer, transcription history, speech status, evaluation results, and connection status.
 - **Intent**: `RoleplayIntent` (`StartBossStageClicked`, `RecordClicked`, `StopRecordingClicked`, `FinishStageClicked`, `RetryStageClicked`, etc.).
 - **Effect**: `RoleplayEffect` (`NavigateToHome`, `ShowSnackbarAndNavigateBack`).
-- **UI Components**:
+- **UI Components & Sound Decoupling**:
+  - `LocalSoundPlayer`: Audio triggers (`OPEN_MIC`, `CLOSE_MIC`, `SUCCESS`, `FAIL`) are handled exclusively at the UI/Composable layer via `LocalSoundPlayer`, keeping ViewModels pure and decoupled from Android UI sounds.
+  - `AiTypingIndicator`: WhatsApp-style 3-dot staggered bouncing animation bubble displayed in the chat transcript when the AI is processing a response.
+  - `LingoRoleplayAvatar`: Dynamic avatar reacting to live states (`idle`, `mic`, `speaking`, `loading`, and `thinking` using `lingo_mind_thinking`).
+  - `PushToTalkButton`: Custom animated press-to-speak interaction component with `isEnabled` guard wired strictly to `!state.isAiSpeaking`, ensuring users can immediately re-record if speech was not detected while locking input during active AI speech output.
   - `BossSuccessView` / `BossFailView`: State-driven result presentation containers.
   - `StarRatingRow`: 1–3 star visual rating indicator.
   - `ScoreMetricItem`: Individual metric card for score percentages.
   - `BossScoreBreakdownRow`: Horizontal metrics breakdown for Fluency, Grammar, and Vocabulary.
   - `BossFeedbackBox`: Translucent scrollable card with strengths and targeted improvements.
   - `BossRewardRow`: Dynamic XP and Coin reward pill container.
-  - `ActiveLiveChatView`: Real-time streaming conversation transcript display.
-  - `PushToTalkButton`: Custom animated press-to-speak interaction component.
+  - `ActiveLiveChatView`: Real-time streaming conversation transcript display with auto-scrolling, dynamic status text ("Hold to Speak", "Release to Send", "AI is thinking...", "AI is speaking..."), and inline typing bubbles.
 
 ---
 
@@ -67,7 +73,7 @@ graph TD
 1. **Logging Standards**: All logging strictly uses `Timber`. All `android.util.Log` and `printStackTrace` instances removed.
 2. **Job & Scope Lifecycle**: Server event listener and microphone recording coroutines are tracked in `RoleplayRepositoryImpl` and explicitly cancelled during `disconnect()`.
 3. **Clean Architecture Compliance**: ViewModels no longer directly access `ScenarioRepository`; operations are delegated via `GetBossScenariosUseCase`.
-4. **Dependency Injection**: Removed inline package references in `RoleplayModule` and added explicit imports.
+4. **Dependency Injection & Clean Retrofit Integration**: `GeminiApiService` provided via Hilt in `RoleplayModule` with dedicated DTO models, isolating external AI endpoints from the main backend Retrofit client.
 5. **Dead Code Elimination**: Cleaned up deprecated models (`RoleplayObjective`, `RoleplayResult`, `RoleplayTurnResponse`).
 6. **Graceful Connection Loss Recovery**: When a live WebSocket session drops or receives a GoAway event, the session is cleanly halted, a descriptive Snackbar is displayed, and the user is routed back safely to the lobby.
 

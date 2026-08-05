@@ -81,6 +81,7 @@ class RoleplayViewModel @Inject constructor(
     val effect: SharedFlow<RoleplayEffect> = _effect.asSharedFlow()
 
     private var timerJob: Job? = null
+    private var thinkingJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -202,12 +203,15 @@ class RoleplayViewModel @Inject constructor(
     }
 
     private fun retryBossStage() {
+        thinkingJob?.cancel()
+        thinkingJob = null
         _state.update { 
             it.copy(
                 transcriptionHistory = emptyList(),
                 assessmentResult = null,
                 isEvaluating = false,
                 isAiSpeaking = false,
+                isAiThinking = false,
                 isUserSpeaking = false,
                 error = null
             ) 
@@ -216,11 +220,23 @@ class RoleplayViewModel @Inject constructor(
     }
 
     private fun toggleMicrophone(active: Boolean) {
-        _state.update { it.copy(isUserSpeaking = active) }
         if (active) {
+            if (_state.value.isAiSpeaking) return
+            thinkingJob?.cancel()
+            thinkingJob = null
+            _state.update { it.copy(isUserSpeaking = true, isAiThinking = false) }
             startMicrophoneUseCase()
         } else {
-            stopMicrophoneUseCase()
+            if (_state.value.isUserSpeaking) {
+                _state.update { it.copy(isUserSpeaking = false, isAiThinking = true) }
+                stopMicrophoneUseCase()
+
+                thinkingJob?.cancel()
+                thinkingJob = viewModelScope.launch {
+                    delay(5000)
+                    _state.update { it.copy(isAiThinking = false) }
+                }
+            }
         }
     }
 
@@ -236,17 +252,27 @@ class RoleplayViewModel @Inject constructor(
                     history.add(ChatMessage(sanitizedChunk, event.isUser))
                 }
                 
+                if (!event.isUser) {
+                    thinkingJob?.cancel()
+                    thinkingJob = null
+                }
+                
                 _state.update { 
                     it.copy(
                         transcriptionHistory = history,
-                        isAiSpeaking = if (!event.isUser) true else it.isAiSpeaking
+                        isAiSpeaking = if (!event.isUser) true else it.isAiSpeaking,
+                        isAiThinking = if (!event.isUser) false else it.isAiThinking
                     ) 
                 }
             }
             is RoleplayLiveEvent.TurnComplete -> {
-                _state.update { it.copy(isAiSpeaking = false) }
+                thinkingJob?.cancel()
+                thinkingJob = null
+                _state.update { it.copy(isAiSpeaking = false, isAiThinking = false) }
             }
             is RoleplayLiveEvent.Error -> {
+                thinkingJob?.cancel()
+                thinkingJob = null
                 val wasActive = _state.value.isConnected || _state.value.isLoading
                 viewModelScope.launch {
                     stopSession()
@@ -256,7 +282,8 @@ class RoleplayViewModel @Inject constructor(
                         isConnected = false,
                         isLoading = false,
                         isUserSpeaking = false,
-                        isAiSpeaking = false
+                        isAiSpeaking = false,
+                        isAiThinking = false
                     )
                 }
                 if (wasActive) {
@@ -267,13 +294,21 @@ class RoleplayViewModel @Inject constructor(
                     handleError(UiText.DynamicString(event.message))
                 }
             }
-            is RoleplayLiveEvent.AudioChunk -> Unit
+            is RoleplayLiveEvent.AudioChunk -> {
+                thinkingJob?.cancel()
+                thinkingJob = null
+                if (!_state.value.isAiSpeaking) {
+                    _state.update { it.copy(isAiSpeaking = true, isAiThinking = false) }
+                }
+            }
         }
     }
 
     private suspend fun stopSession() {
         timerJob?.cancel()
         timerJob = null
+        thinkingJob?.cancel()
+        thinkingJob = null
         stopMicrophoneUseCase()
         disconnectRoleplayUseCase()
     }

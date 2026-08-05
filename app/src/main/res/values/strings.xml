@@ -629,6 +629,8 @@
     <string name="roleplay_tap_to_speak">Tap to Speak</string>
     <string name="roleplay_hold_to_speak">Hold to Speak</string>
     <string name="roleplay_release_to_send">Release to Send</string>
+    <string name="roleplay_ai_thinking">AI is thinking...</string>
+    <string name="roleplay_ai_speaking">AI is speaking...</string>
     <string name="roleplay_finish_stage">Finish Stage</string>
     <string name="roleplay_meet_boss">Meet %1$s</string>
     <string name="roleplay_your_objective">Your Objective</string>

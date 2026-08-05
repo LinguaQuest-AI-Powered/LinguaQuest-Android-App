@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,12 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,14 +40,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
+import com.iti.linguaquest.features.roleplay.domain.model.ChatMessage
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
-import com.iti.linguaquest.features.roleplay.domain.model.ChatMessage
-
-
 
 @Composable
 fun ActiveLiveChatView(
@@ -78,7 +78,6 @@ fun ActiveLiveChatView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(16.dp))
-
 
         if (isBossStage && state.currentBossScenario != null) {
             Box(
@@ -117,15 +116,14 @@ fun ActiveLiveChatView(
             Spacer(Modifier.height(16.dp))
         }
 
-
         LingoRoleplayAvatar(
             isAiSpeaking = state.isAiSpeaking,
             isUserSpeaking = state.isUserSpeaking,
             isLoading = state.isLoading,
+            isAiThinking = state.isAiThinking,
             size = 140.dp
         )
         Spacer(Modifier.height(24.dp))
-
 
         if (state.isLoading) {
             CircularProgressIndicator(color = LinguaQuestTheme.colors.OrangeActive)
@@ -135,11 +133,11 @@ fun ActiveLiveChatView(
             Text(stringResource(R.string.roleplay_not_connected), style = MaterialTheme.typography.bodyMedium, color = LinguaQuestTheme.colors.ErrorAccent)
         }
 
-
-        val listState = androidx.compose.foundation.lazy.rememberLazyListState()
-        androidx.compose.runtime.LaunchedEffect(state.transcriptionHistory.size, state.transcriptionHistory.lastOrNull()?.text?.length) {
-            if (state.transcriptionHistory.isNotEmpty()) {
-                listState.animateScrollToItem(state.transcriptionHistory.size - 1)
+        val listState = rememberLazyListState()
+        LaunchedEffect(state.transcriptionHistory.size, state.transcriptionHistory.lastOrNull()?.text?.length, state.isAiThinking) {
+            val totalItems = state.transcriptionHistory.size + if (state.isAiThinking) 1 else 0
+            if (totalItems > 0) {
+                listState.animateScrollToItem(totalItems - 1)
             }
         }
 
@@ -164,7 +162,7 @@ fun ActiveLiveChatView(
                         blendMode = BlendMode.DstIn
                     )
                 },
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 16.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(state.transcriptionHistory) { message ->
@@ -208,12 +206,17 @@ fun ActiveLiveChatView(
                     }
                 }
             }
+            if (state.isAiThinking) {
+                item {
+                    AiTypingIndicator()
+                }
+            }
         }
 
         Spacer(Modifier.height(16.dp))
 
-
         if (state.isConnected) {
+            val isMicEnabled = !state.isAiSpeaking
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -222,12 +225,19 @@ fun ActiveLiveChatView(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     PushToTalkButton(
                         isRecording = state.isUserSpeaking,
+                        isEnabled = isMicEnabled,
                         onPressStart = { onRecord() },
                         onPressEnd = { onStopRecording() }
                     )
                     Spacer(Modifier.height(8.dp))
+                    val statusText = when {
+                        state.isUserSpeaking -> stringResource(R.string.roleplay_release_to_send)
+                        state.isAiSpeaking -> stringResource(R.string.roleplay_ai_speaking)
+                        state.isAiThinking -> stringResource(R.string.roleplay_ai_thinking)
+                        else -> stringResource(R.string.roleplay_hold_to_speak)
+                    }
                     Text(
-                        text = if (state.isUserSpeaking) stringResource(R.string.roleplay_release_to_send) else stringResource(R.string.roleplay_hold_to_speak),
+                        text = statusText,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -251,13 +261,14 @@ fun ActiveLiveChatView(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFF8F4)
 @Composable
-fun ActiveLiveChatViewPreview() {
+private fun ActiveLiveChatViewPreview() {
     LinguaQuestTheme {
         ActiveLiveChatView(
             state = RoleplayState(
                 isConnected = true,
                 isUserSpeaking = false,
                 isAiSpeaking = false,
+                isAiThinking = true,
                 currentBossScenario = BossScenario(
                     id = ScenarioId.SCENARIO_MARKET_01,
                     bossName = "Sherry",
@@ -267,9 +278,8 @@ fun ActiveLiveChatViewPreview() {
                     voiceName = "KORE"
                 ),
                 transcriptionHistory = listOf(
-                    ChatMessage("[SPOKEN] Hello! I am Sherry, what would you like? [/SPOKEN]", isUser = false),
-                    ChatMessage("I'd like to buy some mangoes please.", isUser = true),
-                    ChatMessage("Hmm, let me see... [SPOKEN] Sure! We have fresh mangoes today. [/SPOKEN]", isUser = false)
+                    ChatMessage("Hello! I am Sherry, what would you like?", isUser = false),
+                    ChatMessage("I'd like to buy some mangoes please.", isUser = true)
                 )
             ),
             isBossStage = true,

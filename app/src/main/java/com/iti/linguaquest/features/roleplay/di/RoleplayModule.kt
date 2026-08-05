@@ -1,7 +1,9 @@
 package com.iti.linguaquest.features.roleplay.di
 
+import com.google.gson.Gson
 import com.iti.linguaquest.features.roleplay.data.datasource.local.ScenarioLocalDataSource
 import com.iti.linguaquest.features.roleplay.data.datasource.local.ScenarioLocalDataSourceImpl
+import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiApiService
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayService
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayRemoteDataSource
@@ -12,8 +14,11 @@ import com.iti.linguaquest.features.roleplay.domain.repository.RoleplayRepositor
 import com.iti.linguaquest.features.roleplay.domain.repository.ScenarioRepository
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -49,5 +54,19 @@ abstract class RoleplayModule {
     abstract fun bindScenarioRepository(
         impl: ScenarioRepositoryImpl
     ): ScenarioRepository
+
+    companion object {
+        @Provides
+        @Singleton
+        fun provideGeminiApiService(
+            gson: Gson
+        ): GeminiApiService {
+            return Retrofit.Builder()
+                .baseUrl("https://generativelanguage.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+                .create(GeminiApiService::class.java)
+        }
+    }
 }
 

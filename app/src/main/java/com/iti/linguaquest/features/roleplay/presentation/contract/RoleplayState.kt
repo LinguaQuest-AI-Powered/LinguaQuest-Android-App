@@ -12,6 +12,7 @@ data class RoleplayState(
     val isConnected: Boolean = false,
     val isUserSpeaking: Boolean = false,
     val isAiSpeaking: Boolean = false,
+    val isAiThinking: Boolean = false,
     val transcriptionHistory: List<ChatMessage> = emptyList(),
     val isObjectiveComplete: Boolean = false,
     val isEvaluating: Boolean = false,
