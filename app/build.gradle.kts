@@ -116,6 +116,7 @@ dependencies {
 
     implementation(libs.firebase.ai)
     debugImplementation(libs.firebase.appcheck.debug)
+    implementation(libs.firebase.messaging)
 
     implementation(libs.konfetti.compose)
     implementation(libs.timber)

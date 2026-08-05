@@ -22,6 +22,38 @@
           }
         },
         {
+          "client_id": "569083981229-3fljscclq5kmjpj0eht585uvkaqgdba9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.linguaquest",
+            "certificate_hash": "584df0a340eaf5b7f5ad6df99864fddef8a2ee9c"
+          }
+        },
+        {
+          "client_id": "569083981229-gaqp8o3ge8r6nmk6efaov6850oa1qqhb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.linguaquest",
+            "certificate_hash": "1a8a5d1a55428293ed98c4f7e53e783970afa13c"
+          }
+        },
+        {
+          "client_id": "569083981229-h16mksn4s016r6cificrs66v2sc1r5pg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.linguaquest",
+            "certificate_hash": "4e2a9a3628ae215892e407b144a3bea30498d667"
+          }
+        },
+        {
+          "client_id": "569083981229-j61r2e5c5cmfaodtsbk2f1kmnqe1f2ql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.linguaquest",
+            "certificate_hash": "6f24e7d10f7c58dd6b3214c18cccc84d2d4894e0"
+          }
+        },
+        {
           "client_id": "569083981229-e4v38jkj8sk23qa3nvv52ouag4n98kuq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +69,13 @@
             {
               "client_id": "569083981229-e4v38jkj8sk23qa3nvv52ouag4n98kuq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "569083981229-pbvgaunq5i8r5d0h70umvk6ipkl6fbep.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "iti.Lingua-Quest"
+              }
             }
           ]
         }

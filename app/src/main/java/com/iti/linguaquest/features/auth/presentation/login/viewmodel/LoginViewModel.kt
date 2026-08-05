@@ -43,8 +43,7 @@ class LoginViewModel @Inject constructor(
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
