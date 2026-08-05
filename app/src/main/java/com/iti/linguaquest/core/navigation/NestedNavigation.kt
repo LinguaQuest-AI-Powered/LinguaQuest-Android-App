@@ -51,8 +51,15 @@ fun MainScreen(
     val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
     val currentScreen = nestedBackStack.lastOrNull()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
+    val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
     val soundPlayer = LocalSoundPlayer.current
 
+    val currentRootScreen = rootBackStack.lastOrNull()
+    LaunchedEffect(currentRootScreen) {
+        if (currentRootScreen == RootScreen.Main) {
+            viewModel.refreshUnreadCount()
+        }
+    }
 
     var previousWallet by remember { mutableStateOf<Wallet?>(null) }
     LaunchedEffect(wallet.xp, wallet.coins) {
@@ -93,9 +100,14 @@ fun MainScreen(
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = wallet.xp,
-                    coins = wallet.coins
+                    coins = wallet.coins,
+                    unreadCount = unreadCount,
+                    onBellClick = {
+                        rootBackStack.navigateSingleTop(RootScreen.Notification)
+                    }
                 )
             },
+
             bottomBar = {
                 GameBottomNavBar(
                     items = BottomNavScreen.entries,

@@ -5,16 +5,22 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,11 +42,12 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.formatCompact
 
-
 @Composable
 fun LinguaQuestTopAppBar(
     xp: Int,
     coins: Int,
+    unreadCount: Int = 0,
+    onBellClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val animatedXp by animateIntAsState(
@@ -62,16 +70,15 @@ fun LinguaQuestTopAppBar(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(0.dp)
             )
-             .statusBarsPadding()
+            .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-         Row(
-             modifier = Modifier.weight(1f),
-             verticalAlignment = Alignment.CenterVertically
-         ) {
-
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.lingo_app_bar),
                 contentDescription = stringResource(R.string.app_logo_description),
@@ -100,7 +107,7 @@ fun LinguaQuestTopAppBar(
             )
         }
 
-         Row(
+        Row(
             modifier = Modifier.padding(start = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -115,21 +122,79 @@ fun LinguaQuestTopAppBar(
                 value = animatedCoins,
                 textColor = MaterialTheme.colorScheme.onSurface
             )
+            NotificationBell(
+                unreadCount = unreadCount,
+                onClick = onBellClick
+            )
         }
     }
 }
 
+@Composable
+private fun NotificationBell(
+    unreadCount: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(40.dp)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier.size(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Notifications,
+                contentDescription = stringResource(R.string.notifications_title),
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(24.dp)
+            )
+
+            if (unreadCount > 0) {
+                val badgeText = if (unreadCount > 99) "+99" else "+$unreadCount"
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset(x = 2.dp, y = (-3).dp)
+                        .background(color = MaterialTheme.colorScheme.error, shape = RoundedCornerShape(10.dp))
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(horizontal = 4.dp, vertical = 1.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = badgeText,
+                        color = LinguaQuestTheme.colors.whiteColor,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun StatChip(
     iconRes: Int,
     value: Int,
-    textColor: androidx.compose.ui.graphics.Color,
+    textColor: Color,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
-            .shadow(elevation = 3.dp, shape = RoundedCornerShape(50), spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+            .shadow(
+                elevation = 3.dp,
+                shape = RoundedCornerShape(50),
+                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(50))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -151,12 +216,10 @@ private fun StatChip(
     }
 }
 
-
 @Preview(showBackground = true, backgroundColor = 0xFFFFF8F2)
 @Composable
 private fun LinguaQuestTopAppBarPreview() {
     LinguaQuestTheme {
-        LinguaQuestTopAppBar(xp = 1250, coins = 45)
+        LinguaQuestTopAppBar(xp = 1250, coins = 45, unreadCount = 4)
     }
 }
-
