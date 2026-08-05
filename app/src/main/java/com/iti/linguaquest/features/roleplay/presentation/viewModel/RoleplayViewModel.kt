@@ -10,6 +10,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.features.roleplay.presentation.mapper.toRoleplayUiText
 import com.iti.linguaquest.core.utils.TranscriptSanitizer
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
@@ -155,8 +156,9 @@ class RoleplayViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to start boss stage")
-                _state.update { it.copy(isLoading = false, error = UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: ""))) }
-                handleError(UiText.StringResource(R.string.roleplay_failed_connect, listOf(e.message ?: "")))
+                val errorText = e.toRoleplayUiText(fallbackResId = R.string.roleplay_error_failed_connect)
+                _state.update { it.copy(isLoading = false, error = errorText) }
+                handleError(errorText)
             }
         }
     }
@@ -178,7 +180,8 @@ class RoleplayViewModel @Inject constructor(
                 .onFailure { e ->
                     Timber.e(e, "Failed to evaluate boss stage")
                     _state.update { it.copy(isEvaluating = false) }
-                    handleError(UiText.StringResource(R.string.roleplay_connection_lost, listOf(e.message ?: "")))
+                    val errorText = e.toRoleplayUiText(fallbackResId = R.string.roleplay_error_evaluation_failed)
+                    handleError(errorText)
                     sendEffect(RoleplayEffect.NavigateToHome)
                 }
         }
@@ -286,12 +289,12 @@ class RoleplayViewModel @Inject constructor(
                         isAiThinking = false
                     )
                 }
+                val errorText = event.message.toRoleplayUiText(fallbackResId = R.string.roleplay_error_connection_lost)
                 if (wasActive) {
-                    val errorText = UiText.StringResource(R.string.roleplay_connection_lost, listOf(event.message))
                     handleError(errorText)
                     sendEffect(RoleplayEffect.ShowSnackbarAndNavigateBack(errorText))
                 } else {
-                    handleError(UiText.DynamicString(event.message))
+                    handleError(errorText)
                 }
             }
             is RoleplayLiveEvent.AudioChunk -> {

@@ -620,6 +620,12 @@
     <string name="roleplay_label">تبادل الأدوار</string>
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">تم الوصول إلى الحد الأقصى لخدمة الذكاء الاصطناعي. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_connection_lost">انقطع الاتصال. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
+    <string name="roleplay_error_failed_connect">تعذر الاتصال بشخصية الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_evaluation_failed">تعذر تقييم المحادثة. يرجى المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_session_ended">انتهت جلسة تبادل الأدوار. يرجى البدء من جديد.</string>
+    <string name="roleplay_error_generic">حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.</string>
     <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
     <string name="roleplay_overall_fluency">الطلاقة العامة</string>
     <string name="roleplay_grammar">القواعد</string>

@@ -57,15 +57,17 @@ graph TD
 - **UI Components & Sound Decoupling**:
   - `LocalSoundPlayer`: Audio triggers (`OPEN_MIC`, `CLOSE_MIC`, `SUCCESS`, `FAIL`) are handled exclusively at the UI/Composable layer via `LocalSoundPlayer`, keeping ViewModels pure and decoupled from Android UI sounds.
   - `AiTypingIndicator`: WhatsApp-style 3-dot staggered bouncing animation bubble displayed in the chat transcript when the AI is processing a response.
-  - `LingoRoleplayAvatar`: Dynamic avatar reacting to live states (`idle`, `mic`, `speaking`, `loading`, and `thinking` using `lingo_mind_thinking`).
+  - `RoleplayObjectiveBanner`: Stateless objective banner with real-time countdown timer and urgency alert theming.
+  - `RoleplayChatMessageBubble`: Reusable chat bubble component rendering user and AI messages with elevation, rounded contours, and responsive styling.
+  - `LingoRoleplayAvatar`: Dynamic avatar helper resolving mascot resource states (`idle`, `mic`, `speaking`, `loading`, and `thinking` with `lingo_mind_thinking`).
   - `PushToTalkButton`: Custom animated press-to-speak interaction component with `isEnabled` guard wired strictly to `!state.isAiSpeaking`, ensuring users can immediately re-record if speech was not detected while locking input during active AI speech output.
-  - `BossSuccessView` / `BossFailView`: State-driven result presentation containers.
+  - `BossSuccessView` / `BossFailView`: State-driven result presentation containers using `AppMascotGradientBox`.
   - `StarRatingRow`: 1–3 star visual rating indicator.
   - `ScoreMetricItem`: Individual metric card for score percentages.
   - `BossScoreBreakdownRow`: Horizontal metrics breakdown for Fluency, Grammar, and Vocabulary.
   - `BossFeedbackBox`: Translucent scrollable card with strengths and targeted improvements.
   - `BossRewardRow`: Dynamic XP and Coin reward pill container.
-  - `ActiveLiveChatView`: Real-time streaming conversation transcript display with auto-scrolling, dynamic status text ("Hold to Speak", "Release to Send", "AI is thinking...", "AI is speaking..."), and inline typing bubbles.
+  - `ActiveLiveChatView`: Real-time streaming conversation container built with `AppMascotGradientBox`, featuring auto-scrolling transcript, dynamic status indicators, and sub-component composition.
 
 ---
 
@@ -75,7 +77,8 @@ graph TD
 3. **Clean Architecture Compliance**: ViewModels no longer directly access `ScenarioRepository`; operations are delegated via `GetBossScenariosUseCase`.
 4. **Dependency Injection & Clean Retrofit Integration**: `GeminiApiService` provided via Hilt in `RoleplayModule` with dedicated DTO models, isolating external AI endpoints from the main backend Retrofit client.
 5. **Dead Code Elimination**: Cleaned up deprecated models (`RoleplayObjective`, `RoleplayResult`, `RoleplayTurnResponse`).
-6. **Graceful Connection Loss Recovery**: When a live WebSocket session drops or receives a GoAway event, the session is cleanly halted, a descriptive Snackbar is displayed, and the user is routed back safely to the lobby.
+6. **Graceful Connection Loss & User-Friendly Error Recovery**: When a live WebSocket session drops, receives a GoAway event, or encounters Gemini rate limits/quotas (HTTP 429), errors are classified and mapped via `toRoleplayUiText()` into clean, localized strings (English and Arabic) rather than raw API stack traces or debug payloads.
+7. **AI Quota & Rate Limit Protection**: Rate limit and quota exhaustion errors across live WebSocket streams and REST evaluation endpoints are mapped directly to `roleplay_error_quota_exceeded`, guiding users gracefully without leaking technical API details.
 
 ---
 

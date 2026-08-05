@@ -86,6 +86,9 @@ class GeminiRoleplayService @Inject constructor(
             )
         )
 
+        var lastException: Throwable? = null
+        var lastHttpCode: Int? = null
+
         for (model in candidateModels) {
             try {
                 val response = apiService.generateContent(
@@ -100,14 +103,22 @@ class GeminiRoleplayService @Inject constructor(
                         return resultText
                     }
                 } else {
+                    lastHttpCode = response.code()
                     Timber.w("Model $model returned HTTP ${response.code()}. Trying fallback...")
                 }
             } catch (e: Exception) {
+                lastException = e
                 Timber.w(e, "Request to $model failed. Trying fallback...")
             }
         }
 
         Timber.e("All candidate Gemini models failed to generate evaluation")
+        if (lastHttpCode == 429 || lastException?.message?.contains("429") == true || lastException?.message?.contains("quota", ignoreCase = true) == true) {
+            throw IllegalStateException("HTTP 429: Quota exceeded for Gemini AI service", lastException)
+        }
+        if (lastException != null) {
+            throw lastException
+        }
         return null
     }
 

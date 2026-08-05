@@ -651,6 +651,12 @@
     <string name="roleplay_label">Roleplay</string>
     <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
+    <string name="roleplay_error_connection_lost">Connection lost. Please check your internet connection and try again.</string>
+    <string name="roleplay_error_failed_connect">Could not connect to the AI character. Please try again.</string>
+    <string name="roleplay_error_evaluation_failed">Failed to evaluate the conversation. Please try again.</string>
+    <string name="roleplay_error_session_ended">The roleplay session has ended. Please start again.</string>
+    <string name="roleplay_error_generic">Something went wrong. Please try again.</string>
     <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
     <string name="roleplay_overall_fluency">Overall Fluency</string>
