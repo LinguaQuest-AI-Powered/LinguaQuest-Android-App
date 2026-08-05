@@ -11,8 +11,6 @@ import com.iti.linguaquest.core.notification.domain.repository.NotificationRepos
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
@@ -20,42 +18,34 @@ class NotificationRepositoryImpl @Inject constructor(
     private val fcmTokenProvider: FcmTokenProvider
 ) : NotificationRepository {
 
-    override fun registerDeviceToken(platform: String): Flow<LinguaQuestResult<NotificationResponse, LinguaQuestDataError>> =
-        flow {
-            val token = fcmTokenProvider.getToken()
-            if (token.isNullOrBlank()) {
-                emit(LinguaQuestResult.Failure(LinguaQuestDataError.CustomServerMessage("Device token is blank or unavailable")))
-                return@flow
-            }
-
-            val result = safeApiCall {
-                apiService.registerDeviceToken(
-                    RegisterDeviceRequestDto(
-                        token = token,
-                        platform = platform
-                    )
-                ).data
-            }.map { it.toDomain() }
-
-            emit(result)
+    override suspend fun registerDeviceToken(platform: String): LinguaQuestResult<NotificationResponse, LinguaQuestDataError> {
+        val token = fcmTokenProvider.getToken()
+        if (token.isNullOrBlank()) {
+            return LinguaQuestResult.Failure(LinguaQuestDataError.CustomServerMessage("Device token is blank or unavailable"))
         }
 
-    override fun unregisterDeviceToken(): Flow<LinguaQuestResult<NotificationResponse, LinguaQuestDataError>> =
-        flow {
-            val token = fcmTokenProvider.getToken()
-            if (token.isNullOrBlank()) {
-                emit(LinguaQuestResult.Failure(LinguaQuestDataError.CustomServerMessage("Device token is blank or unavailable")))
-                return@flow
-            }
+        return safeApiCall {
+            apiService.registerDeviceToken(
+                RegisterDeviceRequestDto(
+                    token = token,
+                    platform = platform
+                )
+            ).data
+        }.map { it.toDomain() }
+    }
 
-            val result = safeApiCall {
-                apiService.unregisterDeviceToken(
-                    UnregisterDeviceRequestDto(
-                        token = token
-                    )
-                ).data
-            }.map { it.toDomain() }
-
-            emit(result)
+    override suspend fun unregisterDeviceToken(): LinguaQuestResult<NotificationResponse, LinguaQuestDataError> {
+        val token = fcmTokenProvider.getToken()
+        if (token.isNullOrBlank()) {
+            return LinguaQuestResult.Failure(LinguaQuestDataError.CustomServerMessage("Device token is blank or unavailable"))
         }
+
+        return safeApiCall {
+            apiService.unregisterDeviceToken(
+                UnregisterDeviceRequestDto(
+                    token = token
+                )
+            ).data
+        }.map { it.toDomain() }
+    }
 }

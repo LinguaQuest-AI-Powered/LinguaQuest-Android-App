@@ -52,10 +52,6 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import javax.inject.Inject
 import com.iti.linguaquest.features.setting.presentation.utils.parseTime
-import com.iti.linguaquest.core.notification.domain.usecase.UnregisterDeviceTokenUseCase
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.time.Duration.Companion.milliseconds
 
 
 @HiltViewModel
@@ -79,8 +75,7 @@ class SettingViewModel @Inject constructor(
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val snackbarController: SnackbarController,
-    private val unregisterDeviceTokenUseCase: UnregisterDeviceTokenUseCase
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -329,14 +324,6 @@ fun changeAppLanguage(language: LanguageOption) {
         if (_isLoggingOut.value) return
         _isLoggingOut.value = true
         viewModelScope.launch {
-            withTimeoutOrNull(3_000L.milliseconds) {
-                try {
-                    unregisterDeviceTokenUseCase()
-                        .catch {}
-                        .collect {}
-                } catch (e: Exception) {
-                }
-            }
             logoutUserUseCase()
             onSuccess()
             _isLoggingOut.value = false

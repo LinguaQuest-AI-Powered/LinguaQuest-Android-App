@@ -4,13 +4,19 @@
 The FCM Device Registration & Unregistration service manages Firebase Cloud Messaging push notification tokens across authenticated user lifecycle events. The architecture is cleanly partitioned within the core layer (`com.iti.linguaquest.core.notification`) as a shared, reusable cross-cutting feature across auth and settings modules.
 
 To ensure strict Clean Architecture isolation:
-- Token retrieval (`FirebaseMessaging.getInstance().token.await()`) is encapsulated strictly within the Data layer (`FcmTokenManager`).
-- UseCases operate completely independent of SDK specifics and token delivery mechanisms, relying purely on domain abstractions (`NotificationRepository`).
+- Token retrieval (`FirebaseMessaging.getInstance().token.await()`) is encapsulated strictly within the Data layer (`FcmTokenManager`), with potential runtime exceptions caught and logged cleanly using **Timber** (`Timber.e`).
+- Single-shot token registration and unregistration operations utilize lightweight standard `suspend` functions (`RegisterDeviceTokenUseCase` and `UnregisterDeviceTokenUseCase`) rather than continuous reactive Flows, avoiding unnecessary reactive scaffolding for single-shot RPC calls.
+
+## Domain-Layer Orchestration (UseCases)
+Device registration and unregistration occur seamlessly during user authentication and session termination without presentation-layer (ViewModel) intervention or coroutine scope leaks:
+- **Login Orchestration**: Triggered inside domain use cases (`LoginUserUseCase`, `SignInWithGoogleUseCase`, and `CompleteOAuthProfileUseCase`) immediately upon successful authentication or OAuth language profile completion.
+- **Logout Orchestration**: Triggered inside `LogoutUserUseCase` prior to clearing credentials from `AuthRepository`.
+- **Timeout & Failure Protection**: Every invocation of token registration or unregistration within Auth UseCases is safeguarded with a 3,000ms timeout (`withTimeoutOrNull(3_000L)`) and wrapped in a try-catch block logging via Timber. Whether network operations succeed, stall, or fail, local session transitions are guaranteed to execute safely without blocking the user.
 
 ## State Management (MVI / ViewModel Integration)
-Device registration status operates asynchronously without intruding on UI rendering or interrupting primary screen navigation states:
-- **Login Flow (`LoginViewModel`)**: Triggered immediately upon successful user authentication (Email/Password login, Google Sign-In with complete profile, or completion of OAuth language selection). Calls `RegisterDeviceTokenUseCase` asynchronously inside `applicationScope` (fire-and-forget), preventing cancellation on navigation away from the screen.
-- **Logout Flow (`SettingViewModel`)**: Triggered prior to clearing user credentials during logout. Invocation of `UnregisterDeviceTokenUseCase` is safeguarded with a 3,000ms timeout (`withTimeoutOrNull`) and coroutine exception handling (`catch` block). Whether network operations succeed, fail, or stall, local user session termination (`logoutUserUseCase()`) always executes safely without blocking the user.
+ViewModels are completely decoupled from FCM token dependencies and long-lived coroutine scopes:
+- **`LoginViewModel`**: Remains purely focused on user intent processing and UI state management without injecting `applicationScope` or `RegisterDeviceTokenUseCase`.
+- **`SettingViewModel`**: Simplifies logout processing by directly calling `logoutUserUseCase()`, delegating all session and device token cleanup to the domain layer.
 
 ## Navigation 3 Keys Used
 This core service does not directly alter back stack state or register new standalone destination `NavKey` entries in `Screens.kt`. It reacts seamlessly to standard authentication transitions handled by:
@@ -21,5 +27,5 @@ This core service does not directly alter back stack state or register new stand
 
 ## Shared Components & Extensions Created
 - **`FcmTokenProvider` & `FcmTokenManager`**: Abstracted asynchronous wrapper around Firebase SDK token extraction utilizing coroutines (`await()`) and Timber exception logging.
-- **`NotificationRepository` & `NotificationRepositoryImpl`**: Flow-backed reactive implementation invoking remote API endpoints (`POST /devices` and `DELETE /devices`) wrapped inside standard `safeApiCall` execution blocks.
+- **`NotificationRepository` & `NotificationRepositoryImpl`**: Suspend-backed implementation invoking remote API endpoints (`POST /devices` and `DELETE /devices`) wrapped inside standard `safeApiCall` execution blocks.
 - **`NotificationApiService`**: Retrofit contract utilizing explicit HTTP method declarations (`@POST` and `@HTTP(method = "DELETE", path = "devices", hasBody = true)`).
