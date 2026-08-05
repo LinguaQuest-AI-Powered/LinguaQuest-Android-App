@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayState
@@ -56,6 +58,7 @@ fun ActiveLiveChatView(
     onRecord: () -> Unit,
     onFinishStage: () -> Unit
 ) {
+    val soundPlayer = LocalSoundPlayer.current
     var showFinishDialog by remember { mutableStateOf(false) }
 
     if (showFinishDialog) {
@@ -224,8 +227,10 @@ fun ActiveLiveChatView(
                         isRecording = state.isUserSpeaking,
                         onClick = {
                             if (state.isUserSpeaking) {
+                                soundPlayer.play(AppSound.CLOSE_MIC)
                                 onStopRecording()
                             } else {
+                                soundPlayer.play(AppSound.OPEN_MIC)
                                 onRecord()
                             }
                         }

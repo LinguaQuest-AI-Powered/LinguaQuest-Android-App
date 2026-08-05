@@ -65,4 +65,8 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override suspend fun saveReminderDays(days: String) {
         localDataSource.saveReminderDays(days)
     }
+
+    override suspend fun clearTargetLanguage() {
+        localDataSource.clearTargetLanguage()
+    }
 }
