@@ -120,16 +120,17 @@ fun HomeScreen(
 
 
 
-    LaunchedEffect(state.isDailyRewardBannerVisible) {
-        if (state.isDailyRewardBannerVisible) {
+    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
+        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
+            soundPlayer.play(AppSound.AddedMoney)
             showCoinRain = true
             delay(3000.milliseconds)
             showCoinRain = false
         }
     }
 
-    LaunchedEffect(state.isDailyRewardBannerVisible) {
-        if (state.isDailyRewardBannerVisible) {
+    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
+        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
             delay(6000.milliseconds)
             viewModel.onIntent(HomeIntent.DismissDailyRewardBanner)
         }
@@ -231,7 +232,7 @@ fun HomeScreen(
         }
 
         AnimatedVisibility(
-            visible = state.isDailyRewardBannerVisible,
+            visible = state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> -fullHeight },
                 animationSpec = tween(400, easing = FastOutSlowInEasing)

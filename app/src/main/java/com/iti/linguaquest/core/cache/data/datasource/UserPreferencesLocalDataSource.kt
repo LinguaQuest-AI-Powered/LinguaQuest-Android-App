@@ -38,6 +38,7 @@ interface UserPreferencesLocalDataSource {
     suspend fun saveReminderEnabled(enabled: Boolean)
     suspend fun saveReminderTime(time: String)
     suspend fun saveReminderDays(days: String)
+    suspend fun clearTargetLanguage()
     suspend fun clearOnboardingPreferences()
 }
 
@@ -147,6 +148,13 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
     override suspend fun saveReminderDays(days: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.REMINDER_DAYS] = days
+        }
+    }
+
+    override suspend fun clearTargetLanguage() {
+        dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE)
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE_NAME)
         }
     }
 
