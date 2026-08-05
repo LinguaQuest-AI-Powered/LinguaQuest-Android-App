@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -138,37 +140,45 @@ fun MapContent(
                             )
                         }
 
+                        // Add snow effect falling over the map
+                        SnowEffect(modifier = Modifier.fillMaxSize())
+
                         if (state.currentLevelIndex in nodePositions.indices) {
-                            val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
-                            val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
-                            val floatOffset by infiniteTransition.animateFloat(
-                                initialValue = 0f,
-                                targetValue = -12f,
-                                animationSpec = infiniteRepeatable(
-                                    animation = tween(1000, easing = FastOutSlowInEasing),
-                                    repeatMode = RepeatMode.Reverse
-                                ),
-                                label = "float"
-                            )
+                            val isLastLevel = state.currentLevelIndex == state.levels.lastIndex
+                            val isLastLevelCompleted = isLastLevel && state.levels.getOrNull(state.currentLevelIndex)?.status == LevelStatus.COMPLETED
 
-                            val targetOffsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp)
-                            val targetOffsetY = nodeY - 60.dp
+                            if (!isLastLevelCompleted) {
+                                val (nodeX, nodeY) = nodePositions[state.currentLevelIndex]
+                                val infiniteTransition = rememberInfiniteTransition(label = "mascot_halo")
+                                val floatOffset by infiniteTransition.animateFloat(
+                                    initialValue = 0f,
+                                    targetValue = -12f,
+                                    animationSpec = infiniteRepeatable(
+                                        animation = tween(1000, easing = FastOutSlowInEasing),
+                                        repeatMode = RepeatMode.Reverse
+                                    ),
+                                    label = "float"
+                                )
 
-                            val animatedOffsetX by animateDpAsState(
-                                targetValue = targetOffsetX,
-                                animationSpec = tween(1000, easing = FastOutSlowInEasing),
-                                label = "mascotX"
-                            )
-                            val animatedOffsetY by animateDpAsState(
-                                targetValue = targetOffsetY,
-                                animationSpec = tween(1000, easing = FastOutSlowInEasing),
-                                label = "mascotY"
-                            )
+                                val targetOffsetX = (nodeX + 60.dp).coerceAtMost(availableWidth - 100.dp)
+                                val targetOffsetY = nodeY - 60.dp
 
-                            Mascot(
-                                offsetX = animatedOffsetX,
-                                offsetY = animatedOffsetY + floatOffset.dp
-                            )
+                                val animatedOffsetX by animateDpAsState(
+                                    targetValue = targetOffsetX,
+                                    animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                                    label = "mascotX"
+                                )
+                                val animatedOffsetY by animateDpAsState(
+                                    targetValue = targetOffsetY,
+                                    animationSpec = tween(1000, easing = FastOutSlowInEasing),
+                                    label = "mascotY"
+                                )
+
+                                Mascot(
+                                    offsetX = animatedOffsetX,
+                                    offsetY = animatedOffsetY + floatOffset.dp
+                                )
+                            }
                         }
                     }
                 }

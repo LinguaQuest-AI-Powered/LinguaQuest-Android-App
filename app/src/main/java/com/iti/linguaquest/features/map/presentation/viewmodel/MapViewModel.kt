@@ -87,7 +87,11 @@ class MapViewModel @Inject constructor(
                     )
                 }
 
-                val currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
+                var currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
+                if (currentIndex == -1 && uiLevels.isNotEmpty()) {
+                    currentIndex = uiLevels.lastIndex
+                }
+                
                 _state.update {
                     it.copy(
                         isLoading = false,
