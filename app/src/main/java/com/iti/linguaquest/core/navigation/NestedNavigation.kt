@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
@@ -29,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
@@ -44,7 +44,15 @@ fun MainScreen(
     val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
     val currentScreen = nestedBackStack.lastOrNull()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
+    val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
 
+
+    val currentRootScreen = rootBackStack.lastOrNull()
+    LaunchedEffect(currentRootScreen) {
+        if (currentRootScreen == RootScreen.Main) {
+            viewModel.refreshUnreadCount()
+        }
+    }
 
     DisposableEffect(Unit) {
         onDispose { SharedBottomBarState.heightPx = 0 }
@@ -77,9 +85,14 @@ fun MainScreen(
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = wallet.xp,
-                    coins = wallet.coins
+                    coins = wallet.coins,
+                    unreadCount = unreadCount,
+                    onBellClick = {
+                        rootBackStack.navigateSingleTop(RootScreen.Notification)
+                    }
                 )
             },
+
             bottomBar = {
                 GameBottomNavBar(
                     items = BottomNavScreen.entries,

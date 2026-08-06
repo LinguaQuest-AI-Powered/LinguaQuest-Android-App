@@ -796,4 +796,19 @@
     <string name="remove_language_title">حذف اللغة</string>
     <string name="remove_language_message">هل أنت متأكد من أنك تريد حذف %1$s من اللغات المستهدفة؟</string>
     <string name="remove">حذف</string>
+
+    <string name="delete_all">حذف الكل</string>
+    <string name="clear_all_notifications_title">حذف كافة الإشعارات؟</string>
+
+    <string name="clear_all_notifications_message">هل أنت متأكد من رغبتك في حذف كافة الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_notification_title">حذف الإشعار</string>
+    <string name="delete_notification_message">هل أنت متأكد من رغبتك في حذف هذا الإشعار؟</string>
+    <string name="no_notifications_found">لا توجد إشعارات حتى الآن!</string>
+    <string name="no_notifications_desc">عندما تتلقى تحديثات، تنبيهات أو مكافآت، ستظهر لك هنا مباشرة.</string>
+    <string name="notification_dismiss">إلغاء</string>
+    <string name="notification_delete_confirm">حذف</string>
+    <string name="notification_delete_all_confirm">حذف الكل</string>
+    <string name="notifications_load_error">تعذر تحميل الإشعارات. يرجى المحاولة مرة أخرى.</string>
+    <string name="notification_deleted_toast">تم حذف الإشعار.</string>
+    <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
 </resources>

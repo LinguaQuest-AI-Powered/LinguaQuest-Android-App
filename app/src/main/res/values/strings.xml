@@ -796,4 +796,20 @@
     <string name="remove_language_title">Remove Language</string>
     <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
     <string name="remove">Remove</string>
+
+    <string name="delete_all">Delete All</string>
+    <string name="clear_all_notifications_title">Clear All Notifications?</string>
+
+    <string name="clear_all_notifications_message">Are you sure you want to delete all notifications? This action cannot be undone.</string>
+    <string name="delete_notification_title">Delete Notification</string>
+    <string name="delete_notification_message">Are you sure you want to remove this notification?</string>
+    <string name="no_notifications_found">No notifications yet!</string>
+    <string name="no_notifications_desc">When you get updates, reminders, or rewards, they will show up right here.</string>
+    <string name="notification_dismiss">Cancel</string>
+    <string name="notification_delete_confirm">Delete</string>
+    <string name="notification_delete_all_confirm">Delete All</string>
+    <string name="notifications_load_error">Could not load notifications. Please try again.</string>
+    <string name="notification_deleted_toast">Notification deleted.</string>
+    <string name="notifications_all_deleted_toast">All notifications deleted.</string>
 </resources>
+

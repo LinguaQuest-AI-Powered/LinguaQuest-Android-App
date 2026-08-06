@@ -1,5 +1,7 @@
 package com.iti.linguaquest.core.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
@@ -28,6 +30,7 @@ import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.view.ForgetPasswordScreen
 import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
+import com.iti.linguaquest.features.notification.presentation.view.NotificationScreen
 import kotlin.time.Duration.Companion.milliseconds
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -65,6 +68,7 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditPr
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
 import com.iti.linguaquest.features.mindreader.presentation.view.MindReaderScreen
+import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
@@ -72,6 +76,7 @@ import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
@@ -213,7 +218,7 @@ fun AppNavigation(
             ),
             entryProvider = entryProvider {
                 entry<RootScreen.Splash> {
-                    val splashViewModel: com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel =
+                    val splashViewModel: SplashViewModel =
                         hiltViewModel()
                     val destination by splashViewModel.destination.collectAsState()
 
@@ -364,6 +369,12 @@ fun AppNavigation(
 
                 entry<RootScreen.Main> {
                     MainScreen(rootBackStack)
+                }
+
+                entry<RootScreen.Notification> {
+                    NotificationScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
+                    )
                 }
 
                 entry<RootScreen.Map> { screen ->
