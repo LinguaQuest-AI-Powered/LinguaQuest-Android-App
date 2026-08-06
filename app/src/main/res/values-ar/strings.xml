@@ -824,4 +824,6 @@
     <string name="notification_deleted_toast">تم حذف الإشعار.</string>
     <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
     <string name="new_notification">اشعار جديد</string>
+    <string name="start_hunting">أبدا مغامرتك</string>
+    <string name="mystery_world">عالم غامض</string>
 </resources>

@@ -5,12 +5,22 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+data class NotificationBannerState(
+    val title: String,
+    val message: String,
+    val type: String? = null
+)
+
 @Singleton
 class NotificationBannerController @Inject constructor() {
-    private val _notificationMessage = MutableStateFlow<String?>(null)
-    val notificationMessage: StateFlow<String?> = _notificationMessage
+    private val _notificationMessage = MutableStateFlow<NotificationBannerState?>(null)
+    val notificationMessage: StateFlow<NotificationBannerState?> = _notificationMessage
 
-    fun showNotification(message: String?) {
-        _notificationMessage.value = message
+    fun showNotification(title: String, message: String, type: String? = null) {
+        _notificationMessage.value = NotificationBannerState(title, message, type)
+    }
+    
+    fun hideNotification() {
+        _notificationMessage.value = null
     }
 }

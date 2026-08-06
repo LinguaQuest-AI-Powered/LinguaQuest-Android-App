@@ -25,6 +25,7 @@ import com.iti.linguaquest.R
 
 @Composable
 fun InAppNotificationBanner(
+    title: String,
     message: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -59,7 +60,7 @@ fun InAppNotificationBanner(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = stringResource(R.string.new_notification),
+                text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = LinguaQuestTheme.colors.whiteColor,

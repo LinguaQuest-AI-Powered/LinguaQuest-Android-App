@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
@@ -89,12 +90,13 @@ import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScree
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier,
     openHomeRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
     onOpenLockScreenWordHandled: () -> Unit = {},
-    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
+    modifier: Modifier = Modifier,
+    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val rootBackStack = rememberNavBackStack(RootScreen.Splash)
@@ -579,12 +581,16 @@ fun AppNavigation(
             })
 
             val notificationMessage by globalUiHostViewModel.notificationBannerController.notificationMessage.collectAsState()
+            var activeNotification by remember { androidx.compose.runtime.mutableStateOf<com.iti.linguaquest.core.sharedComponents.NotificationBannerState?>(null) }
             
             LaunchedEffect(notificationMessage) {
                 if (notificationMessage != null) {
+                    mainViewModel.refreshUnreadCount()
+                    activeNotification = notificationMessage
                     soundPlayer.play(AppSound.Notification)
-                    delay(4000)
-                    globalUiHostViewModel.notificationBannerController.showNotification(null)
+                    delay(6000)
+                    soundPlayer.play(AppSound.NotificationDisappear)
+                    globalUiHostViewModel.notificationBannerController.hideNotification()
                 }
             }
 
@@ -600,10 +606,19 @@ fun AppNavigation(
                 ) + fadeOut(tween(300)),
                 modifier = Modifier.align(Alignment.TopCenter)
             ) {
-                notificationMessage?.let { msg ->
+                activeNotification?.let { notif ->
                     InAppNotificationBanner(
-                        message = msg,
-                        onClick = { globalUiHostViewModel.notificationBannerController.showNotification(null) },
+                        title = notif.title,
+                        message = notif.message,
+                        onClick = {
+                            globalUiHostViewModel.notificationBannerController.hideNotification()
+                            val isAchievement = notif.type?.contains("ACHIEVEMENT", ignoreCase = true) == true ||
+                                                notif.title.contains("Achievement", ignoreCase = true) ||
+                                                notif.title.contains("Trophy", ignoreCase = true)
+                            if (isAchievement) {
+                                rootBackStack.navigateSingleTop(RootScreen.Achievement)
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .statusBarsPadding()

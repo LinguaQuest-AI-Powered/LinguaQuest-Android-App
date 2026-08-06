@@ -172,3 +172,19 @@ internal fun CameraBody(
         }
     }
 }
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+@Composable
+private fun WordCaptureCardPreview() {
+    LinguaQuestTheme {
+        WordCaptureCard(
+            modifier = Modifier.padding(16.dp),
+            questLabel = "Current Quest",
+            worldName = "Kitchen",
+            instruction = "Find & capture:",
+            progressText = "2 of 10",
+            targetWord = "Apple",
+            buttonText = "Continue"
+        )
+    }
+}

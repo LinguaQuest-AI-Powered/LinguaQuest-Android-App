@@ -16,9 +16,11 @@ class LinguaQuestFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val text = message.notification?.body ?: message.data["data"] ?: message.data["message"] ?: "New Notification Received"
+        val title = message.notification?.title ?: message.data["title"] ?: "New Notification"
+        val text = message.notification?.body ?: message.data["data"] ?: message.data["message"] ?: "You have a new message."
+        val type = message.data["type"] ?: message.data["notificationType"] ?: message.data["TYPE"]
         
-        notificationBannerController.showNotification(text)
+        notificationBannerController.showNotification(title, text, type)
     }
 
     override fun onNewToken(token: String) {
