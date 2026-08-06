@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.voicegame.presentation.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,10 @@ fun VoiceGameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    BackHandler {
+        onNavigateBack()
+    }
 
     LaunchedEffect(isOnline) {
         if (isOnline) {

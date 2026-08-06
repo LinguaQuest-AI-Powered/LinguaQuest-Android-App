@@ -62,7 +62,7 @@ import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLang
 import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
+import com.iti.linguaquest.features.home.presentation.view.components.WordCaptureCard
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
@@ -80,9 +80,6 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToVoiceGame: () -> Unit,
-    onNavigateToRoleplayList: () -> Unit,
-    onNavigateToMindReader: () -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
@@ -143,9 +140,6 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame()
-                is HomeEffect.NavigateToRoleplayList -> onNavigateToRoleplayList()
-                is HomeEffect.NavigateToMindReader -> onNavigateToMindReader()
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
@@ -199,15 +193,6 @@ fun HomeScreen(
                     },
                     onWorldClick = { world, anchor ->
                         guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
-                    },
-                    onStartVoiceClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.StartVoicePractiseClicked) }
-                    },
-                    onRoleplayClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.RoleplayCardClicked) }
-                    },
-                    onMindReaderClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.MindReaderCardClicked) }
                     }
                 )
             }
@@ -358,9 +343,6 @@ fun HomeContent(
     state: HomeState,
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
-    onStartVoiceClick: (Rect) -> Unit,
-    onRoleplayClick: (Rect) -> Unit,
-    onMindReaderClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -382,6 +364,14 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
+        WordCaptureCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         if (state.worlds.isNotEmpty()) {
             ExploreWorldsSection(
                 worlds = state.worlds,
@@ -391,32 +381,5 @@ fun HomeContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
-
-        VoicePractiseCard(
-            onStartClick = onStartVoiceClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        com.iti.linguaquest.features.home.presentation.view.components.RoleplayCard(
-            onStartClick = onRoleplayClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        com.iti.linguaquest.features.home.presentation.view.components.MindReaderCard(
-            onStartClick = onMindReaderClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }

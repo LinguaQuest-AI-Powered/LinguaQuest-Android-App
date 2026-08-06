@@ -80,9 +80,6 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
-            HomeIntent.StartVoicePractiseClicked -> sendEffect(HomeEffect.NavigateToVoiceGame)
-            HomeIntent.RoleplayCardClicked -> sendEffect(HomeEffect.NavigateToRoleplayList)
-            HomeIntent.MindReaderCardClicked -> sendEffect(HomeEffect.NavigateToMindReader)
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
             HomeIntent.FabClicked -> _state.update { it.copy(isLanguageBottomSheetVisible = true) }
             HomeIntent.DismissLanguageBottomSheet -> _state.update { it.copy(isLanguageBottomSheetVisible = false) }

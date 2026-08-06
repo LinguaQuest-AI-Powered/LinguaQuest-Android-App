@@ -17,6 +17,10 @@
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
+    <string name="dummy_world_name">Kitchen World</string>
+    <string name="dummy_progress_text">4 of 10</string>
+    <string name="dummy_target_word">la taza</string>
+
     // Languages displayed name
     <string name="spanish_language_displayName">Spanish</string>
     <string name="japanese_language_displayName">Japanese</string>
@@ -777,4 +781,10 @@
     <string name="remove_language_title">Remove Language</string>
     <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
     <string name="remove">Remove</string>
+    <string name="lingos_label">Lingos</string>
+    <string name="current_quest_label">CURRENT QUEST</string>
+    <string name="find_and_capture_instruction">Find &amp; capture</string>
+    <string name="word_capture_continue_button">Continue</string>
+    <string name="mascot_camera_cd">Camera Mascot</string>
+    <string name="camera_icon_cd">Camera Icon</string>
 </resources>

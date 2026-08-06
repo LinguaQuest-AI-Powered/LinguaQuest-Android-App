@@ -33,6 +33,7 @@ import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
+import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
 
 
 @Composable
@@ -41,7 +42,11 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
+    val nestedBackStack = if (viewModel.lastActiveTab == NestedScreen.Home) {
+        rememberNavBackStack(NestedScreen.Home)
+    } else {
+        rememberNavBackStack(NestedScreen.Home, viewModel.lastActiveTab)
+    }
     val currentScreen = nestedBackStack.lastOrNull()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
 
@@ -85,6 +90,7 @@ fun MainScreen(
                     items = BottomNavScreen.entries,
                     currentRoute = currentScreen,
                     onItemClick = { bottomNavScreen ->
+                        viewModel.lastActiveTab = bottomNavScreen.route
                         nestedBackStack.apply {
                             clear()
                             navigateSingleTop(NestedScreen.Home)
@@ -112,15 +118,6 @@ fun MainScreen(
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
-                            onNavigateToVoiceGame = {
-                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
-                            },
-                            onNavigateToRoleplayList = {
-                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
-                            },
-                            onNavigateToMindReader = {
-                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
-                            },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
@@ -137,6 +134,19 @@ fun MainScreen(
                             onNavigateToReview = { word ->
                                 SharedWordHolder.pendingWord = word
                                 rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                            }
+                        )
+                    }
+                    entry<NestedScreen.Lingos> {
+                        LingosScreen(
+                            onNavigateToVoiceGame = {
+                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
+                            },
+                            onNavigateToRoleplayList = {
+                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                            },
+                            onNavigateToMindReader = {
+                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
                             }
                         )
                     }

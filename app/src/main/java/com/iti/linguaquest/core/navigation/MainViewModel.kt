@@ -24,6 +24,8 @@ class MainViewModel @Inject constructor(
         initialValue = Wallet(0, 0)
     )
 
+    var lastActiveTab: NestedScreen = NestedScreen.Home
+
     init {
         refreshWallet()
     }

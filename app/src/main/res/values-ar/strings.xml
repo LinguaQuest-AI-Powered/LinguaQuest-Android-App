@@ -182,7 +182,7 @@
     <string name="hard">صعب</string>
 
     <!-- Review Screen -->
-     <string name="review_back_content_description">رجوع</string>
+    <string name="review_back_content_description">رجوع</string>
     <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
     <string name="review_error_emoji">😔</string>
     <string name="review_retry_button">حاول مرة أخرى</string>

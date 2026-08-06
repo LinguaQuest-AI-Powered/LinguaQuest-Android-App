@@ -111,7 +111,9 @@ private val LightExtraColors = LinguaQuestColors(
     DailyRewardInactiveLine = AppColors.DailyRewardInactiveLine,
     DailyRewardInactiveText = AppColors.DailyRewardInactiveText,
     MindReaderBeige = AppColors.MindReaderBeige,
-    MindReaderCream = AppColors.MindReaderCream
+    MindReaderCream = AppColors.MindReaderCream,
+    CameraKnobCoral = AppColors.CameraKnobCoralLight,
+    CameraKnobCoralHighlight = AppColors.CameraKnobCoralHighlightLight
 )
 
 private val DarkExtraColors = LinguaQuestColors(
@@ -174,7 +176,9 @@ private val DarkExtraColors = LinguaQuestColors(
     DailyRewardInactiveLine = AppColors.DarkDailyRewardInactiveLine,
     DailyRewardInactiveText = AppColors.DarkDailyRewardInactiveText,
     MindReaderBeige = AppColors.DarkMindReaderBeige,
-    MindReaderCream = AppColors.DarkMindReaderCream
+    MindReaderCream = AppColors.DarkMindReaderCream,
+    CameraKnobCoral = AppColors.CameraKnobCoralDark,
+    CameraKnobCoralHighlight = AppColors.CameraKnobCoralHighlightDark
 )
 
 @Composable

@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
@@ -17,6 +18,7 @@ enum class BottomNavScreen(
 ) {
     Home(R.string.home_label, Icons.Default.Home, NestedScreen.Home),
     Gallery(R.string.gallery_label, Icons.Default.PhotoLibrary, NestedScreen.Gallery),
+    Lingos(R.string.lingos_label, Icons.Default.Star, NestedScreen.Lingos),
     Profile(R.string.profile_label, Icons.Default.Person, NestedScreen.Profile)
 }
 
@@ -104,6 +106,8 @@ sealed interface RootScreen : NavKey {
 sealed interface NestedScreen : NavKey {
     @Serializable
     data object Gallery : NestedScreen
+    @Serializable
+    data object Lingos : NestedScreen
     @Serializable
     data object Home : NestedScreen
     @Serializable
