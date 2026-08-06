@@ -17,4 +17,5 @@ local.properties
 
 *.jks
 *.keystore
+disposables/
 .kotlin/
