@@ -8,6 +8,7 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldDiffi
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.utils.toFlagEmoji
+import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 
 data class LanguageProgressUi(
     val languageName: UiText,
@@ -50,12 +51,12 @@ fun World.toUiWorldItem(): WorldItem = WorldItem(
     isCompleted = completedLevels >= totalLevels
 )
 
-fun HomeSummary.toContinueLevelUi(): com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi? {
+fun HomeSummary.toContinueLevelUi(): ContinueLevelUi? {
     val level = continueLevel ?: return null
     val matchingWorld = exploreWorlds.find { it.id == level.worldId }
     val totalLevels = matchingWorld?.totalLevels ?: 10
 
-    return com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi(
+    return ContinueLevelUi(
         worldId = level.worldId,
         levelId = level.levelId,
         worldName = UiText.DynamicString("${level.worldName} World"),
