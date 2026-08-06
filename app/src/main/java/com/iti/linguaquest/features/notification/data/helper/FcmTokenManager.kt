@@ -11,11 +11,8 @@ import javax.inject.Singleton
 class FcmTokenManager @Inject constructor() : FcmTokenProvider {
 
     override suspend fun getToken(): String? {
-        return try {
+        return runCatching {
             FirebaseMessaging.getInstance().token.await()
-        } catch (e: Exception) {
-            Timber.e(e, "Failed to fetch FCM token")
-            null
-        }
+        }.getOrNull()
     }
 }

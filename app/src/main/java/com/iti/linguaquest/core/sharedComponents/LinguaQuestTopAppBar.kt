@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -142,9 +144,22 @@ private fun NotificationBell(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier.size(24.dp),
-            contentAlignment = Alignment.Center
+        BadgedBox(
+            badge = {
+                if (unreadCount > 0) {
+                    val badgeText = if (unreadCount > 99) "+99" else "+$unreadCount"
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = LinguaQuestTheme.colors.whiteColor
+                    ) {
+                        Text(
+                            text = badgeText,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+            }
         ) {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
@@ -152,31 +167,6 @@ private fun NotificationBell(
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(24.dp)
             )
-
-            if (unreadCount > 0) {
-                val badgeText = if (unreadCount > 99) "+99" else "+$unreadCount"
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 2.dp, y = (-3).dp)
-                        .background(color = MaterialTheme.colorScheme.error, shape = RoundedCornerShape(10.dp))
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.background,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .padding(horizontal = 4.dp, vertical = 1.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = badgeText,
-                        color = LinguaQuestTheme.colors.whiteColor,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        maxLines = 1
-                    )
-                }
-            }
         }
     }
 }

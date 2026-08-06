@@ -12,5 +12,9 @@ enum class AppSound(val resId: Int, val volume: Float = 1.0f) {
     SWITCH(R.raw.switch_sound, 0.5f),
     AddedMoney(R.raw.coin_added, 0.5f),
     OPEN_MIC(R.raw.open_mic, 0.6f),
-    CLOSE_MIC(R.raw.close_mic, 0.6f)
+    CLOSE_MIC(R.raw.close_mic, 0.6f),
+
+    Notification(R.raw.notification, 0.6f),
+
+    NotificationDisappear(R.raw.notification_disappear, 0.6f)
 }

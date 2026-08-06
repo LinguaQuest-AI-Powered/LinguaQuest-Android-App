@@ -373,7 +373,8 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-        state.continueLevel?.let { level ->
+        if (state.continueLevel != null) {
+            val level = state.continueLevel
             WordCaptureCard(
                 worldName = level.worldName.asString(),
                 targetWord = level.targetWord.asString(),
@@ -385,8 +386,21 @@ fun HomeContent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+        } else {
+            WordCaptureCard(
+                buttonText = stringResource(R.string.start_hunting),
+                worldName = stringResource(R.string.mystery_world),
+                targetWord = "\uD83E\uDD14",
+                progressText = "\uD83E\uDD14 of 10",
+                onContinueClick = { rect ->
+                    onSeeMoreClick(rect)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (state.worlds.isNotEmpty()) {
             ExploreWorldsSection(
