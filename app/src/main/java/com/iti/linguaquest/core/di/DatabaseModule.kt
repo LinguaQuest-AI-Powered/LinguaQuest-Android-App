@@ -6,6 +6,7 @@ import com.iti.linguaquest.core.database.AppDatabase
 import com.iti.linguaquest.core.database.home.HomeDao
 import com.iti.linguaquest.core.database.profile.ProfileDao
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
+import com.iti.linguaquest.core.database.notification.NotificationDao
 import com.iti.linguaquest.core.database.word.WordDao
 import dagger.Module
 import dagger.Provides
@@ -52,6 +53,12 @@ object DatabaseModule {
     @Singleton
     fun provideHomeDao(appDatabase: AppDatabase): HomeDao {
         return appDatabase.homeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationDao(appDatabase: AppDatabase): NotificationDao {
+        return appDatabase.notificationDao()
     }
 }
 

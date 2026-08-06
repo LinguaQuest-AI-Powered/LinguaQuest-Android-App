@@ -101,7 +101,11 @@ sealed interface RootScreen : NavKey {
     
     @Serializable
     data class MindReader(val worldId: Int? = null) : RootScreen
+
+    @Serializable
+    data object Notification : RootScreen
 }
+
 @Serializable
 sealed interface NestedScreen : NavKey {
     @Serializable
