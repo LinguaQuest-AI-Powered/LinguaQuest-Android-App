@@ -20,6 +20,7 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
+import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -97,6 +98,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(isDailyRewardDialogVisible = false)
             }
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
+            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId))
         }
     }
 
@@ -110,6 +112,7 @@ class HomeViewModel @Inject constructor(
                         coins = summary.coins,
                         languageProgress = summary.toLanguageProgressUi(),
                         worlds = summary.exploreWorlds.map { it.toUiWorldItem() },
+                        continueLevel = summary.toContinueLevelUi(),
                         startVoicePractise = true
                     )
                 }

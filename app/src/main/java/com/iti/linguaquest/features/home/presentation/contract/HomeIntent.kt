@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.home.presentation.contract
 
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import androidx.compose.ui.geometry.Rect
 
 sealed interface HomeIntent {
     data object LoadHome : HomeIntent
@@ -15,4 +16,5 @@ sealed interface HomeIntent {
     data object DismissDailyRewardBanner : HomeIntent
     data object DismissDailyRewardDialog : HomeIntent
     data object ClaimDailyRewardClicked : HomeIntent
+    data class ContinueLevelClicked(val continueLevel: ContinueLevelUi, val rect: Rect) : HomeIntent
 }

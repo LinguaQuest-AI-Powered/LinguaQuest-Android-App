@@ -21,7 +21,7 @@ import com.iti.linguaquest.core.database.word.WordEntity
         HomeEntity::class,
         NotificationEntity::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

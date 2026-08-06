@@ -17,5 +17,6 @@ data class HomeEntity(
     val activeLanguageLevel: Int?,
     val activeLanguageProgressPercent: Int?,
     val activeLanguageIsActive: Boolean?,
-    val exploreWorldsJson: String
+    val exploreWorldsJson: String,
+    val continueLevelJson: String?
 )

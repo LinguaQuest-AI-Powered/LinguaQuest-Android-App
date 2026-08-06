@@ -59,6 +59,7 @@ import com.iti.linguaquest.features.home.presentation.languages.component.MyLang
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
@@ -143,6 +144,9 @@ fun HomeScreen(
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
+                is HomeEffect.NavigateToContinueLevel -> {
+
+                }
             }
         }
     }
@@ -193,6 +197,9 @@ fun HomeScreen(
                     },
                     onWorldClick = { world, anchor ->
                         guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                    },
+                    onContinueLevelClick = { level, anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
                     }
                 )
             }
@@ -343,6 +350,7 @@ fun HomeContent(
     state: HomeState,
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
+    onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -364,13 +372,20 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-        WordCaptureCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        state.continueLevel?.let { level ->
+            WordCaptureCard(
+                worldName = level.worldName.asString(),
+                targetWord = level.targetWord.asString(),
+                progressText = "${level.levelOrder} of ${level.totalLevels}",
+                onContinueClick = { rect ->
+                    onContinueLevelClick(level, rect)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
         if (state.worlds.isNotEmpty()) {
             ExploreWorldsSection(

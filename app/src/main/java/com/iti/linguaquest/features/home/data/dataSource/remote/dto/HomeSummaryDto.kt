@@ -11,7 +11,8 @@ data class HomeSummaryDto(
     val coins: Int? = null,
     val streakDays: Int? = null,
     val activeLanguage: ActiveLanguageDto? = null,
-    val exploreWorlds: ExploreWorldsContainerDto? = null
+    val exploreWorlds: ExploreWorldsContainerDto? = null,
+    val continueLevel: ContinueLevelDto? = null
 )
 
 data class ActiveLanguageDto(
@@ -23,6 +24,14 @@ data class ActiveLanguageDto(
     val isActive: Boolean? = null,
     val levelProgressPercent: Int? = null,
     val progressPercent: Int? = null
+)
+
+data class ContinueLevelDto(
+    val worldId: Int? = null,
+    val worldName: String? = null,
+    val levelId: Int? = null,
+    val levelOrder: Int? = null,
+    val word: String? = null
 )
 
 @JsonAdapter(ExploreWorldsDeserializer::class)
@@ -60,7 +69,8 @@ class ExploreWorldsDeserializer : JsonDeserializer<ExploreWorldsContainerDto> {
             ExploreWorldsContainerDto(totalCount = worldsList.size, worlds = worldsList)
         } else if (json.isJsonObject) {
             val obj = json.asJsonObject
-            val totalCount = if (obj.has("totalCount") && !obj.get("totalCount").isJsonNull) obj.get("totalCount").asInt else null
+            val totalCount =
+                if (obj.has("totalCount") && !obj.get("totalCount").isJsonNull) obj.get("totalCount").asInt else null
             val worldsList = mutableListOf<ExploreWorldDto>()
             if (obj.has("worlds") && obj.get("worlds").isJsonArray) {
                 obj.getAsJsonArray("worlds").forEach { elem ->
@@ -69,7 +79,10 @@ class ExploreWorldsDeserializer : JsonDeserializer<ExploreWorldsContainerDto> {
                     }
                 }
             }
-            ExploreWorldsContainerDto(totalCount = totalCount ?: worldsList.size, worlds = worldsList)
+            ExploreWorldsContainerDto(
+                totalCount = totalCount ?: worldsList.size,
+                worlds = worldsList
+            )
         } else {
             ExploreWorldsContainerDto()
         }
