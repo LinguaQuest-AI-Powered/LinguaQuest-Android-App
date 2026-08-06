@@ -8,6 +8,8 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.asEmptyDataResult
 import com.iti.linguaquest.core.result.map
 import com.iti.linguaquest.core.result.onSuccess
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthRemoteDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.OtpSendRequestDto
@@ -25,13 +27,15 @@ import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import com.iti.linguaquest.features.auth.data.datasource.remote.CompleteProfileRequestDto
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
     private val tokensLocalDataSource: TokensLocalDataSource,
     private val userPreferencesLocalDataSource: UserPreferencesLocalDataSource,
-    private val sessionManagerDataSource: SessionManagerDataSource
+    private val sessionManagerDataSource: SessionManagerDataSource,
+    private val sessionEventBus: SessionEventBus
 ) : AuthRepository {
 
     override suspend fun getAuthLanguages(): LinguaQuestResult<List<LanguageOption>, AuthError> {
@@ -151,7 +155,12 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun isLoggedIn(): Flow<Boolean> {
-        return sessionManagerDataSource.isLoggedIn
+        return combine(
+            sessionManagerDataSource.isLoggedIn,
+            tokensLocalDataSource.accessToken
+        ) { isLoggedIn, accessToken ->
+            isLoggedIn && !accessToken.isNullOrBlank()
+        }
     }
 
     override suspend fun logout(): LinguaQuestResult<Unit, AuthError> {
@@ -164,6 +173,7 @@ class AuthRepositoryImpl @Inject constructor(
         sessionManagerDataSource.saveFirstTime(true)
         sessionManagerDataSource.saveIsLoggedIn(false)
         sessionManagerDataSource.clearSessionData()
+        sessionEventBus.emit(SessionEvent.LoggedOut)
         
         return LinguaQuestResult.Success(Unit)
     }

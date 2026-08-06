@@ -4,12 +4,12 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.firebase.Firebase
-import com.google.firebase.appcheck.appCheck
-import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.initialize
 import com.iti.linguaquest.core.appicon.worker.AppIconWorkScheduler
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 import javax.inject.Inject
+
 @HiltAndroidApp
 class LinguaQuestApplication : Application(), Configuration.Provider {
 
@@ -22,13 +22,10 @@ class LinguaQuestApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         Firebase.initialize(context = this)
-        Firebase.appCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-        )
         appIconWorkScheduler.scheduleDailyRefresh()
 
         if (BuildConfig.DEBUG) {
-            timber.log.Timber.plant(timber.log.Timber.DebugTree())
+            Timber.plant(Timber.DebugTree())
         }
     }
 

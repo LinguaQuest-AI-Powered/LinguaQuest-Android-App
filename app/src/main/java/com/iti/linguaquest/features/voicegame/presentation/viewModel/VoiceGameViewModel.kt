@@ -6,6 +6,8 @@ import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.result.AppError
+import com.iti.linguaquest.core.domain.model.MiniGameReward
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -294,15 +296,17 @@ class VoiceGameViewModel @Inject constructor(
                             correctWords = evaluation.correctWords,
                             wrongWords = evaluation.wrongWords,
                             advice = evaluation.advice,
-                            coinsAwarded = if (passed) 10 else 0,
+                            coinsAwarded = if (passed) MiniGameReward.VOICE_GAME.coins else 0,
+                            xpAwarded = if (passed) MiniGameReward.VOICE_GAME.xp else 0,
                             isPassed = passed,
                             lessonId = lessonId,
                             sentence = _state.value.sentence,
-                            coinsBeforeAward = wallet.value.coins
+                            coinsBeforeAward = wallet.value.coins,
+                            xpBeforeAward = wallet.value.xp
                         )
 
                         sendEffect(VoiceGameEffect.NavigateToResult(voiceResult))
-                        onGameWon(coinsDelta = voiceResult.coinsAwarded)
+                        onGameWon(xpDelta = voiceResult.xpAwarded, coinsDelta = voiceResult.coinsAwarded)
                         resetToIdle(discardAudio = false)
                     }
 

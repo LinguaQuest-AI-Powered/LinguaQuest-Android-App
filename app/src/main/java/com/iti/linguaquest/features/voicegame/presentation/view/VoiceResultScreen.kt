@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -22,17 +21,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
+import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
 import com.iti.linguaquest.features.voicegame.presentation.view.components.FlyingCoinBadge
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceResultViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultTopBar
- import nl.dionsegijn.konfetti.compose.KonfettiView
-import nl.dionsegijn.konfetti.core.Party
-import nl.dionsegijn.konfetti.core.Position
-import nl.dionsegijn.konfetti.core.emitter.Emitter
-import java.util.concurrent.TimeUnit
+import com.iti.linguaquest.core.sharedComponents.AppConfettiView
+import com.iti.linguaquest.core.wallet.domain.model.Wallet
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun VoiceResultScreen(
@@ -46,10 +44,34 @@ fun VoiceResultScreen(
     val soundPlayer = LocalSoundPlayer.current
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
+
+    VoiceResultContent(
+        result = result,
+        isOnline = isOnline,
+        wallet = wallet,
+        soundPlayer = soundPlayer,
+        onContinue = onContinue,
+        onRetry = onRetry,
+        onHome = onHome,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun VoiceResultContent(
+    result: VoiceResultUi,
+    isOnline: Boolean,
+    wallet: Wallet,
+    soundPlayer: AppSoundPlayer,
+    onContinue: () -> Unit,
+    onRetry: () -> Unit,
+    onHome: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val awardsCoins = result.isPassed && result.coinsAwarded > 0
     val walletReady = wallet.coins >= result.coinsAwarded || !awardsCoins
 
-    var displayedCoins by remember {
+    var displayedCoins by remember(result.coinsBeforeAward) {
         mutableIntStateOf(result.coinsBeforeAward)
     }
 
@@ -63,26 +85,11 @@ fun VoiceResultScreen(
         soundPlayer.play(if (result.isPassed) AppSound.SUCCESS else AppSound.FAIL)
     }
 
-
     LaunchedEffect(sourceOffset, targetOffset, walletReady) {
         if (awardsCoins && !hasTriggeredFlight && walletReady && sourceOffset != null && targetOffset != null) {
             hasTriggeredFlight = true
             showFlyingCoin = true
         }
-    }
-
-    val confettiColors = listOf(
-        LinguaQuestTheme.colors.OrangeActive.toArgb(),
-        LinguaQuestTheme.colors.splashTopLeftColor.toArgb(),
-        LinguaQuestTheme.colors.whiteColor.toArgb()
-    )
-    val party = remember {
-        Party(
-            speed = 0f, maxSpeed = 30f, damping = 0.9f, spread = 360,
-            colors = confettiColors,
-            position = Position.Relative(0.5, 0.25),
-            emitter = Emitter(duration = 200, TimeUnit.MILLISECONDS).max(200)
-        )
     }
 
     Box(
@@ -91,7 +98,7 @@ fun VoiceResultScreen(
             .onGloballyPositioned { containerOrigin = it.positionInRoot() }
     ) {
         if (result.isPassed) {
-            KonfettiView(modifier = Modifier.fillMaxSize(), parties = listOf(party))
+            AppConfettiView()
         }
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -106,12 +113,9 @@ fun VoiceResultScreen(
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     if (result.isPassed) {
-                        KonfettiView(
-                            modifier = Modifier.fillMaxSize(),
-                            parties = listOf(party)
-                        )
+                        AppConfettiView()
                     }
-                       Column(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
@@ -126,6 +130,7 @@ fun VoiceResultScreen(
                             correctWords = result.correctWords,
                             wrongWords = result.wrongWords,
                             coinsAwarded = result.coinsAwarded,
+                            xpAwarded = result.xpAwarded,
                             hideCoinsBadge = hasTriggeredFlight,
                             onCoinsBadgePositioned = { sourceOffset = it },
                             onContinue = onContinue,
@@ -137,7 +142,6 @@ fun VoiceResultScreen(
                 }
 
                 if (showFlyingCoin && sourceOffset != null && targetOffset != null && containerOrigin != null) {
-
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             FlyingCoinBadge(
@@ -156,5 +160,33 @@ fun VoiceResultScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VoiceResultPreview() {
+    LinguaQuestTheme {
+        VoiceResultContent(
+            result = VoiceResultUi(
+                rating = 8,
+                correctWords = listOf("apple", "banana"),
+                wrongWords = listOf("cherry"),
+                advice = "Great pronunciation!",
+                coinsAwarded = 5,
+                xpAwarded = 10,
+                isPassed = true,
+                lessonId = 1,
+                sentence = "An apple a day",
+                coinsBeforeAward = 100,
+                xpBeforeAward = 500
+            ),
+            onContinue = {},
+            onRetry = {},
+            onHome = {},
+            isOnline = true,
+            wallet = Wallet(xp = 500, coins = 100),
+            soundPlayer = LocalSoundPlayer.current
+        )
     }
 }

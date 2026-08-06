@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.roleplay.presentation.contract
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
-import com.iti.linguaquest.features.roleplay.presentation.model.ChatMessage
+import com.iti.linguaquest.features.roleplay.domain.model.ChatMessage
 
 data class RoleplayState(
     val objectiveText: String = "",
@@ -12,6 +12,7 @@ data class RoleplayState(
     val isConnected: Boolean = false,
     val isUserSpeaking: Boolean = false,
     val isAiSpeaking: Boolean = false,
+    val isAiThinking: Boolean = false,
     val transcriptionHistory: List<ChatMessage> = emptyList(),
     val isObjectiveComplete: Boolean = false,
     val isEvaluating: Boolean = false,

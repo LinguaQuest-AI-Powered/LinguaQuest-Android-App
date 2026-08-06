@@ -6,6 +6,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ fun AppMascotGradientBox(
     modifier: Modifier = Modifier,
     mascotOverlapHeight: Dp = 70.dp,
     mascotSize: Dp = 180.dp,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
     onMascotClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -40,7 +43,7 @@ fun AppMascotGradientBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = mascotOverlapHeight + 8.dp)
-                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                    .padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 content()

@@ -611,7 +611,7 @@
     <string name="roleplay_stop_recording">Stop recording</string>
     <string name="roleplay_start_recording">Start recording</string>
     <string name="roleplay_victory">Victory!</string>
-    <string name="roleplay_next_world">Next World</string>
+    <string name="roleplay_next_world">Finish</string>
     <string name="roleplay_stage_failed">Stage Failed</string>
     <string name="roleplay_try_again">Try Again</string>
     <string name="roleplay_evaluating">Evaluating...</string>
@@ -627,6 +627,10 @@
     <string name="roleplay_not_connected">Not connected.</string>
     <string name="roleplay_tap_to_stop">Tap to Stop</string>
     <string name="roleplay_tap_to_speak">Tap to Speak</string>
+    <string name="roleplay_hold_to_speak">Hold to Speak</string>
+    <string name="roleplay_release_to_send">Release to Send</string>
+    <string name="roleplay_ai_thinking">AI is thinking...</string>
+    <string name="roleplay_ai_speaking">AI is speaking...</string>
     <string name="roleplay_finish_stage">Finish Stage</string>
     <string name="roleplay_meet_boss">Meet %1$s</string>
     <string name="roleplay_your_objective">Your Objective</string>
@@ -647,8 +651,23 @@
     <string name="roleplay_label">Roleplay</string>
     <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
+    <string name="roleplay_error_connection_lost">Connection lost. Please check your internet connection and try again.</string>
+    <string name="roleplay_error_failed_connect">Could not connect to the AI character. Please try again.</string>
+    <string name="roleplay_error_evaluation_failed">Failed to evaluate the conversation. Please try again.</string>
+    <string name="roleplay_error_session_ended">The roleplay session has ended. Please start again.</string>
+    <string name="roleplay_error_generic">Something went wrong. Please try again.</string>
     <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
+    <string name="roleplay_overall_fluency">Fluency</string>
+    <string name="roleplay_grammar">Grammar</string>
+    <string name="roleplay_vocabulary">Vocabulary</string>
+    <string name="roleplay_strengths">What went well</string>
+    <string name="roleplay_improvements">Areas to improve</string>
+    <string name="roleplay_stars_3">Outstanding!</string>
+    <string name="roleplay_stars_2">Great Job!</string>
+    <string name="roleplay_stars_1">Good Effort!</string>
+    <string name="roleplay_short_conversation">Conversation was too brief. Try to speak at least 2–3 sentences to complete the stage.</string>
     <!-- New profile strings -->
     <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
     <string name="offline_title">You\'re offline</string>

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.core.sharedComponents.AppRewardsRow
 
 @Composable
 fun DailyRewardCard(
@@ -54,7 +55,10 @@ fun DailyRewardCard(
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                RewardAmountBadge(rewardAmount = rewardAmount, rewardXp = rewardXp)
+                AppRewardsRow(
+                    coinsAmount = rewardAmount,
+                    xpAmount = rewardXp ?: 0
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 

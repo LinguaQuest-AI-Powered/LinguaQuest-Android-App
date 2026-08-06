@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppRewardsRow
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -26,6 +27,7 @@ fun VoiceResultHeader(
     correctWords: List<String>,
     wrongWords: List<String>,
     coinsAwarded: Int,
+    xpAwarded: Int,
     onContinue: () -> Unit,
     onRetry: () -> Unit,
     onHome: () -> Unit,
@@ -73,10 +75,9 @@ fun VoiceResultHeader(
                 )
             }
             Spacer(Modifier.height(16.dp))
-            Text(
-                "+$coinsAwarded ${stringResource(R.string.voice_result_coins_earned)}",
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+            AppRewardsRow(
+                coinsAmount = coinsAwarded,
+                xpAmount = xpAwarded
             )
         }
     }
