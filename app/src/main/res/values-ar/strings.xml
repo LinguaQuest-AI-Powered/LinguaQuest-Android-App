@@ -6,6 +6,7 @@
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
     <string name="loading">تحميل...</string>
+    <string name="new_password_min_length_hint">Minimum 6 characters</string>
     <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
@@ -36,7 +37,18 @@
     <string name="japanese_language_code">ja</string>
     <string name="english_language_code">en</string>
     <string name="germany_language_code">ge</string>
-
+    <string name="cd_xp">XP</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
+    <string name="not_enough_coins">Not enough coins!</string>
+    <string name="dummy_world_name">Kitchen World</string>
+    <string name="dummy_progress_text">4 of 10</string>
+    <string name="dummy_target_word">la taza</string>
+    <string name="lingos_label">Lingos</string>
+    <string name="current_quest_label">CURRENT QUEST</string>
+    <string name="find_and_capture_instruction">Find &amp; capture</string>
+    <string name="word_capture_continue_button">Continue</string>
+    <string name="mascot_camera_cd">Camera Mascot</string>
+    <string name="camera_icon_cd">Camera Icon</string>
     <string name="select_language">اختر اللغة</string>
     <string name="every_day">كل يوم</string>
     <string name="weekdays">أيام الأسبوع</string>
@@ -182,7 +194,7 @@
     <string name="hard">صعب</string>
 
     <!-- Review Screen -->
-     <string name="review_back_content_description">رجوع</string>
+    <string name="review_back_content_description">رجوع</string>
     <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
     <string name="review_error_emoji">😔</string>
     <string name="review_retry_button">حاول مرة أخرى</string>

@@ -8,6 +8,7 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldDiffi
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.utils.toFlagEmoji
+import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 
 data class LanguageProgressUi(
     val languageName: UiText,
@@ -38,7 +39,9 @@ fun HomeSummary.toLanguageProgressUi(): LanguageProgressUi? {
 fun World.toUiWorldItem(): WorldItem = WorldItem(
     id = id,
     title = UiText.DynamicString(name),
-    imageSource = if (imageUrl.isNotBlank() && (imageUrl.startsWith("http") || imageUrl.contains("/"))) imageUrl else localWorldImageFor(name),
+    imageSource = if (imageUrl.isNotBlank() && (imageUrl.startsWith("http") || imageUrl.contains("/"))) imageUrl else localWorldImageFor(
+        name
+    ),
     difficulty = when (difficulty) {
         DomainDifficulty.EASY -> UiDifficulty.EASY
         DomainDifficulty.MEDIUM -> UiDifficulty.MEDIUM
@@ -47,4 +50,19 @@ fun World.toUiWorldItem(): WorldItem = WorldItem(
     progress = progressPercent / 100f,
     isCompleted = completedLevels >= totalLevels
 )
+
+fun HomeSummary.toContinueLevelUi(): ContinueLevelUi? {
+    val level = continueLevel ?: return null
+    val matchingWorld = exploreWorlds.find { it.id == level.worldId }
+    val totalLevels = matchingWorld?.totalLevels ?: 10
+
+    return ContinueLevelUi(
+        worldId = level.worldId,
+        levelId = level.levelId,
+        worldName = UiText.DynamicString("${level.worldName} World"),
+        targetWord = UiText.DynamicString(level.word),
+        levelOrder = level.levelOrder,
+        totalLevels = totalLevels
+    )
+}
 

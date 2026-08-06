@@ -135,4 +135,9 @@ object AppColors {
     val MindReaderCream = Color(0xFFFFF3E6)
     val DarkMindReaderBeige = Color(0xFF334155)
     val DarkMindReaderCream = Color(0xFF1E293B)
+
+    val CameraKnobCoralLight = Color(0xFFEB9775)
+    val CameraKnobCoralDark = Color(0xFFD9846A)
+    val CameraKnobCoralHighlightLight = Color(0xFFF4C1AB)
+    val CameraKnobCoralHighlightDark = Color(0xFFE6A088)
 }

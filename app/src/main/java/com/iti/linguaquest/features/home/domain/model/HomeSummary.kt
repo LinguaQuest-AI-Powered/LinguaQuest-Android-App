@@ -7,7 +7,8 @@ data class HomeSummary(
     val coins: Int,
     val streakDays: Int,
     val activeLanguage: ActiveLanguage?,
-    val exploreWorlds: List<World>
+    val exploreWorlds: List<World>,
+    val continueLevel: ContinueLevel?
 )
 
 data class ActiveLanguage(
@@ -18,4 +19,12 @@ data class ActiveLanguage(
     val level: Int,
     val levelProgressPercent: Int,
     val isActive: Boolean = true
+)
+
+data class ContinueLevel(
+    val worldId: Int,
+    val worldName: String,
+    val levelId: Int,
+    val levelOrder: Int,
+    val word: String
 )

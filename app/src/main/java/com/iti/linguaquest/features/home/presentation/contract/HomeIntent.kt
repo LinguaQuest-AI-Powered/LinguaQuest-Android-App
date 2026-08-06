@@ -1,13 +1,13 @@
 package com.iti.linguaquest.features.home.presentation.contract
 
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
+import androidx.compose.ui.geometry.Rect
 
 sealed interface HomeIntent {
     data object LoadHome : HomeIntent
     data object Refresh : HomeIntent
     data object Retry : HomeIntent
     data class WorldClicked(val world: WorldItem) : HomeIntent
-    data object StartVoicePractiseClicked : HomeIntent
     data object SeeMoreWorldsClicked : HomeIntent
     data object FabClicked : HomeIntent
     data object DismissLanguageBottomSheet : HomeIntent
@@ -16,6 +16,5 @@ sealed interface HomeIntent {
     data object DismissDailyRewardBanner : HomeIntent
     data object DismissDailyRewardDialog : HomeIntent
     data object ClaimDailyRewardClicked : HomeIntent
-    data object RoleplayCardClicked : HomeIntent
-    data object MindReaderCardClicked : HomeIntent
+    data class ContinueLevelClicked(val continueLevel: ContinueLevelUi, val rect: Rect) : HomeIntent
 }
