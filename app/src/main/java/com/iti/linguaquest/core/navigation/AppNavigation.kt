@@ -9,7 +9,15 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -48,8 +56,10 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.core.sharedComponents.InAppNotificationBanner
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
@@ -174,12 +184,11 @@ fun AppNavigation(
             )
         }
     ) { innerPadding ->
-        NavDisplay(
-            backStack = rootBackStack,
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            onBack = { rootBackStack.removeLastOrNull() },
+        Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+            NavDisplay(
+                backStack = rootBackStack,
+                modifier = Modifier.fillMaxSize(),
+                onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
                     animationSpec = spring(
@@ -568,5 +577,40 @@ fun AppNavigation(
 
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
+
+            val notificationMessage by globalUiHostViewModel.notificationBannerController.notificationMessage.collectAsState()
+            
+            LaunchedEffect(notificationMessage) {
+                if (notificationMessage != null) {
+                    soundPlayer.play(AppSound.Notification)
+                    delay(4000)
+                    globalUiHostViewModel.notificationBannerController.showNotification(null)
+                }
+            }
+
+            AnimatedVisibility(
+                visible = notificationMessage != null,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(400, easing = FastOutSlowInEasing)
+                ) + fadeIn(tween(400)),
+                exit = slideOutVertically(
+                    targetOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(300, easing = FastOutSlowInEasing)
+                ) + fadeOut(tween(300)),
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                notificationMessage?.let { msg ->
+                    InAppNotificationBanner(
+                        message = msg,
+                        onClick = { globalUiHostViewModel.notificationBannerController.showNotification(null) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                    )
+                }
+            }
+        }
     }
 }

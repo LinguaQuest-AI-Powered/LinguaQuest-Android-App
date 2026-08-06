@@ -824,5 +824,7 @@
     <string name="notification_deleted_toast">Notification deleted.</string>
     <string name="notifications_all_deleted_toast">All notifications deleted.</string>
 
+    <string name="new_notification">New Notification</string>
+
 </resources>
 

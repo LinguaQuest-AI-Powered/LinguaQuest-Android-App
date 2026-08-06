@@ -19,14 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
@@ -76,69 +78,97 @@ internal fun CameraBody(
     progressText: String,
     targetWord: String,
     buttonText: String,
-    onContinueClick: () -> Unit
+    onContinueClick: () -> Unit,
+    ledgeHeight: Dp = 8.dp,
+    cornerRadius: Dp = 26.dp
 ) {
     val colors = LinguaQuestTheme.colors
+
+    val ledgeColor = colors.ProfileCardBorderColor.copy(alpha = 0.6f)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 14.dp,
-                shape = RoundedCornerShape(26.dp),
-                ambientColor = colors.blackColor.copy(alpha = 0.14f),
-                spotColor = colors.blackColor.copy(alpha = 0.27f)
-            )
-            .background(
-                color = colors.whiteColor,
-                shape = RoundedCornerShape(26.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = colors.ProfileCardBorderColor,
-                shape = RoundedCornerShape(26.dp)
-            )
-            .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 12.dp)
+            .padding(bottom = ledgeHeight)
     ) {
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
-            ) {
-                CameraInfoLeft(
-                    modifier = Modifier.weight(1f),
-                    questLabel = questLabel,
-                    worldName = worldName,
-                    instruction = instruction
-                )
 
-                CameraInfoRight(
-                    progressText = progressText,
-                    targetWord = targetWord
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .padding(top = ledgeHeight)
+                .background(
+                    color = ledgeColor,
+                    shape = RoundedCornerShape(cornerRadius)
+                )
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(cornerRadius),
+                    ambientColor = colors.blackColor.copy(alpha = 0.12f),
+                    spotColor = colors.blackColor.copy(alpha = 0.20f)
+                )
+                .background(
+                    color = colors.whiteColor,
+                    shape = RoundedCornerShape(cornerRadius)
+                )
+                .border(
+                    width = 2.dp,
+                    color = colors.ProfileCardBorderColor,
+                    shape = RoundedCornerShape(cornerRadius)
+                )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(topStart = cornerRadius, topEnd = cornerRadius))
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.8f),
+                                Color.White.copy(alpha = 0.0f)
+                            )
+                        )
+                    )
+            )
+
+            Column(
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 10.dp, bottom = 12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    CameraInfoLeft(
+                        modifier = Modifier.weight(1f),
+                        questLabel = questLabel,
+                        worldName = worldName,
+                        instruction = instruction
+                    )
+
+                    CameraInfoRight(
+                        progressText = progressText,
+                        targetWord = targetWord
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                AppButton3D(
+                    text = buttonText,
+                    onClick = onContinueClick,
+                    icon = painterResource(id = R.drawable.ic_camera),
+                    iconPosition = IconPosition.START,
+                    backgroundColorOverride = MaterialTheme.colorScheme.primary,
+                    ledgeColorOverride = LinguaQuestTheme.colors.ShadowOrange,
+                    contentColorOverride = LinguaQuestTheme.colors.whiteColor
                 )
             }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            AppButton3D(
-                text = buttonText,
-                onClick = onContinueClick,
-                icon = painterResource(id = R.drawable.ic_camera),
-                iconPosition = IconPosition.START,
-                backgroundColorOverride = MaterialTheme.colorScheme.primary,
-                ledgeColorOverride = LinguaQuestTheme.colors.ShadowOrange,
-                contentColorOverride = LinguaQuestTheme.colors.whiteColor
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WordCaptureCardPreview() {
-    LinguaQuestTheme {
-        Box(modifier = Modifier.padding(16.dp)) {
-            WordCaptureCard()
         }
     }
 }

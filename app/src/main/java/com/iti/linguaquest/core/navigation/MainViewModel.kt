@@ -16,11 +16,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+import com.iti.linguaquest.core.sharedComponents.NotificationBannerController
+import kotlinx.coroutines.flow.collectLatest
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
     getWalletUseCase: GetWalletUseCase,
     private val refreshWalletUseCase: RefreshWalletUseCase,
-    private val getUnreadNotificationCountUseCase: GetUnreadNotificationCountUseCase
+    private val getUnreadNotificationCountUseCase: GetUnreadNotificationCountUseCase,
+    private val notificationBannerController: NotificationBannerController
 ) : ViewModel() {
 
     val wallet: StateFlow<Wallet> = getWalletUseCase().stateIn(
@@ -39,6 +43,13 @@ class MainViewModel @Inject constructor(
     init {
         refreshWallet()
         refreshUnreadCount()
+        viewModelScope.launch {
+            notificationBannerController.notificationMessage.collectLatest { msg ->
+                if (msg != null) {
+                    refreshUnreadCount()
+                }
+            }
+        }
     }
 
     fun refreshWallet() {

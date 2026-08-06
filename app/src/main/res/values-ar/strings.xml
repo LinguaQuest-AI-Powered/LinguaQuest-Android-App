@@ -823,4 +823,5 @@
     <string name="notifications_load_error">تعذر تحميل الإشعارات. يرجى المحاولة مرة أخرى.</string>
     <string name="notification_deleted_toast">تم حذف الإشعار.</string>
     <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
+    <string name="new_notification">اشعار جديد</string>
 </resources>
