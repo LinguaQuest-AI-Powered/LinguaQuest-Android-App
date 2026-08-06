@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
+import com.iti.linguaquest.core.notification.domain.usecase.RegisterDeviceTokenUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
@@ -8,16 +9,25 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class SignInWithGoogleUseCaseTest {
 
-    private val authRepository: AuthRepository = mockk()
-    private val useCase = SignInWithGoogleUseCase(authRepository)
+    private lateinit var authRepository: AuthRepository
+    private lateinit var registerDeviceTokenUseCase: RegisterDeviceTokenUseCase
+    private lateinit var useCase: SignInWithGoogleUseCase
+
+    @Before
+    fun setUp() {
+        authRepository = mockk()
+        registerDeviceTokenUseCase = mockk(relaxed = true)
+        useCase = SignInWithGoogleUseCase(authRepository, registerDeviceTokenUseCase)
+    }
 
     @Test
-    fun invokeReturnsSuccessWhenRepositorySignInSucceeds() = runTest {
-        val idToken = "google-id-token"
+    fun invokeReturnsSuccessWhenGoogleSignInSucceeds() = runTest {
+        val idToken = "valid_token"
         coEvery { authRepository.signInWithGoogle(idToken) } returns LinguaQuestResult.Success(true)
 
         val result = useCase(idToken)
@@ -27,8 +37,8 @@ class SignInWithGoogleUseCaseTest {
     }
 
     @Test
-    fun invokeReturnsErrorWhenRepositorySignInFails() = runTest {
-        val idToken = "invalid-token"
+    fun invokeReturnsErrorWhenGoogleSignInFails() = runTest {
+        val idToken = "invalid_token"
         val error: AuthError = AuthError.InvalidIdToken
         coEvery { authRepository.signInWithGoogle(idToken) } returns LinguaQuestResult.Failure(error)
 

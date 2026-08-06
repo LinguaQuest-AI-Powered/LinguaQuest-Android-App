@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
+import com.iti.linguaquest.core.notification.domain.usecase.RegisterDeviceTokenUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
@@ -8,12 +9,21 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class LoginUserUseCaseTest {
 
-    private val authRepository: AuthRepository = mockk()
-    private val useCase = LoginUserUseCase(authRepository)
+    private lateinit var authRepository: AuthRepository
+    private lateinit var registerDeviceTokenUseCase: RegisterDeviceTokenUseCase
+    private lateinit var useCase: LoginUserUseCase
+
+    @Before
+    fun setUp() {
+        authRepository = mockk()
+        registerDeviceTokenUseCase = mockk(relaxed = true)
+        useCase = LoginUserUseCase(authRepository, registerDeviceTokenUseCase)
+    }
 
     @Test
     fun invokeReturnsSuccessWhenRepositoryLoginSucceeds() = runTest {
