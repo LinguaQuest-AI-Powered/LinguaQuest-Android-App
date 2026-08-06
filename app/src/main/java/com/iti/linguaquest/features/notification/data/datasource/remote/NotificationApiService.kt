@@ -36,19 +36,19 @@ interface NotificationApiService {
     ): Response<NotificationsPaginatedResponseDto>
 
     @GET("notifications/unread-count")
-    suspend fun getUnreadCount(): Response<UnreadCountResponseDto>
+    suspend fun getUnreadCount(): UnreadCountResponseDto
 
     @DELETE("notifications")
-    suspend fun deleteAllNotifications(): Response<StatusResponseDto>
+    suspend fun deleteAllNotifications(): StatusResponseDto
 
     @DELETE("notifications/{id}")
     suspend fun deleteNotification(
         @Path("id") id: Long
-    ): Response<StatusResponseDto>
+    ): StatusResponseDto
 
     @PATCH("notifications/{id}/read")
     suspend fun markAsRead(
         @Path("id") id: Long
-    ): Response<StatusResponseDto>
+    ): StatusResponseDto
 }
 
