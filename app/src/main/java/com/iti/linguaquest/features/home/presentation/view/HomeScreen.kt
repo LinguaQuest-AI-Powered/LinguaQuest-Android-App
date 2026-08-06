@@ -388,8 +388,8 @@ fun HomeContent(
             )
         } else {
             WordCaptureCard(
-                buttonText = "Start Hunting",
-                worldName = "Mystery World",
+                buttonText = stringResource(R.string.start_hunting),
+                worldName = stringResource(R.string.mystery_world),
                 targetWord = "\uD83E\uDD14",
                 progressText = "\uD83E\uDD14 of 10",
                 onContinueClick = { rect ->
