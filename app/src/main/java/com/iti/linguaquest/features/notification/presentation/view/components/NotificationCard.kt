@@ -21,20 +21,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.features.notification.domain.model.Notification
-
 
 @Composable
 fun NotificationCard(
     notification: Notification,
     modifier: Modifier = Modifier,
-    onCardClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onCardClick: (Rect) -> Unit = {},
+    onDeleteClick: (Rect) -> Unit = {}
 ) {
     val isUnread = !notification.isRead
     val badgeStyle = notification.getBadgeStyle()
@@ -47,6 +51,8 @@ fun NotificationCard(
         animationSpec = tween(durationMillis = 80),
         label = "cardPressOffset"
     )
+
+    var cardBounds by remember(notification.id) { mutableStateOf(Rect.Zero) }
 
     Box(modifier = modifier.fillMaxWidth()) {
 
@@ -71,10 +77,13 @@ fun NotificationCard(
                     color = cardColors.borderColor,
                     shape = RoundedCornerShape(24.dp)
                 )
+                .onGloballyPositioned { coordinates ->
+                    cardBounds = coordinates.boundsInRoot()
+                }
                 .clickable(
                     interactionSource = cardInteractionSource,
                     indication = null,
-                    onClick = onCardClick
+                    onClick = { onCardClick(cardBounds) }
                 )
                 .padding(18.dp)
         ) {

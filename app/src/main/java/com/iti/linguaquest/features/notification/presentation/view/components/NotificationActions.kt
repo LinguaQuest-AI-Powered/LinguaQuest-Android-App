@@ -23,19 +23,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
- fun NotificationActions(
+fun NotificationActions(
     isUnread: Boolean,
-    onDeleteClick: () -> Unit,
+    onDeleteClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val deleteInteractionSource = remember { MutableInteractionSource() }
@@ -45,6 +50,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
         animationSpec = tween(durationMillis = 80),
         label = "deleteOffset"
     )
+    var deleteBounds by remember { mutableStateOf(Rect.Zero) }
 
     Column(
         horizontalAlignment = Alignment.End,
@@ -68,10 +74,13 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
                     .offset(y = deleteOffset)
                     .clip(CircleShape)
                     .background(LinguaQuestTheme.colors.textFieldFill)
+                    .onGloballyPositioned { coordinates ->
+                        deleteBounds = coordinates.boundsInRoot()
+                    }
                     .clickable(
                         interactionSource = deleteInteractionSource,
                         indication = null,
-                        onClick = onDeleteClick
+                        onClick = { onDeleteClick(deleteBounds) }
                     ),
                 contentAlignment = Alignment.Center
             ) {

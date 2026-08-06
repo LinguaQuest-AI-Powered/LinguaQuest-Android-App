@@ -1,83 +1,77 @@
-# Feature Documentation: Notification System & Home Badge Integration
+# Feature Documentation: Offline-First Notification System & Badge Integration
 
 ## 1. High-Level Overview
-The Notification System provides LinguaQuest users with a central inbox for real-time alerts, daily vocabulary reminders, game updates, and achievement announcements. The feature is seamlessly integrated across the entire application:
-- **Top App Bar Integration:** Displays a live unread badge overlay indicator on the bell icon whenever unread notifications exist.
-- **Paginated Inbox:** Utilizes Jetpack Paging 3 to efficiently stream paginated notifications from the server with infinite scrolling.
-- **Optimistic Interactions:** Tapping unread items immediately marks them as read both locally and on the backend. Deleting items instantly animates them out of the list without triggering jumpy list refetches.
-- **Clean Architecture & MVI:** Strictly adheres to domain layer separation, custom `LinguaQuestResult` error handling, and unidirectional MVI state flow.
+The Notification System provides LinguaQuest users with a central inbox for real-time alerts, daily vocabulary reminders, game updates, and achievement announcements. The feature is implemented using a strict offline-first, reactive database-driven architecture:
+- **Offline-First Room Cache:** Displays cached notifications immediately upon opening the screen via a reactive Room database `Flow<List<Notification>>`, ordered by timestamp (`createdAt DESC`). Background syncing updates the cache seamlessly without visual jumps.
+- **Optimistic Local Mutations:** User interactions such as marking items as read or deleting notifications apply mutations directly to the Room local database first for instant UI responsiveness. Remote backend API requests are executed asynchronously with automatic database rollback if a network failure occurs.
+- **Offline Network Guarding:** Integrates `ObserveNetworkStatusUseCase` to monitor connectivity. When offline (`isOnline == false`), remote-mutating operations are safely short-circuited with contextual feedback via error Snackbars and visual alpha adjustment on interactive controls.
+- **Clean Architecture & MVI:** Strictly enforces separation of concerns across granular Data Sources (Local/Remote), domain UseCases, custom `LinguaQuestResult` wrappers, and unidirectional MVI state management without inline comments or qualified package names.
 
 ---
 
 ## 2. Architecture & Layer Separation
 
-### Remote Data Layer (`core/notification/data/`)
-- **`NotificationApiService`**: Retrofit service interfacing with backend endpoints:
-  - `GET /notifications`: Paginated retrieval (`NotificationsPaginatedResponseDto`)
-  - `GET /notifications/unread-count`: Returns `UnreadCountResponseDto`
-  - `DELETE /notifications`: Clears all user notifications
-  - `DELETE /notifications/{id}`: Deletes a specific notification
-  - `PATCH /notifications/{id}/read`: Marks a single item as read
-- **`NotificationPagingSource`**: Standard Paging 3 source extending `PagingSource<Int, Notification>`. Handles page indices, bounds checking, and converts remote network errors into domain exceptions (`NotificationPagingException`).
-- **`NotificationRepositoryImpl`**: Implements domain layer repository interface, managing remote interactions and exposing paginated streams via `Pager`.
+### Core Database Layer (`core/database/notification/`)
+- **`NotificationEntity`**: Room table `@Entity(tableName = "notifications")` storing notification records with timestamp ordering field `createdAt: Long`.
+- **`NotificationDao`**: Exposes reactive database stream `fun getNotifications(): Flow<List<NotificationEntity>>` ordered by `createdAt DESC`, along with helpers for atomic upserts, read-status mutations, and rollbacks.
+- **`AppDatabase` & `DatabaseModule`**: Integrated into database schema version 10 with Hilt singleton bindings.
 
-### Domain Layer (`core/notification/domain/`)
-All presentation interaction is strictly brokered via atomic Use Cases:
-1. `GetNotificationsUseCase`: Exposes `Flow<PagingData<Notification>>`
-2. `GetUnreadNotificationCountUseCase`: Retrieves integer unread count
-3. `MarkNotificationAsReadUseCase`: Updates read status
-4. `DeleteNotificationUseCase`: Removes individual notification by ID
-5. `DeleteAllNotificationsUseCase`: Clears all notifications
+### Data Layer & Data Sources (`features/notification/data/`)
+- **`NotificationLocalDataSource` & `NotificationLocalDataSourceImpl`**: Wraps `NotificationDao` operations and converts Room database entities into domain models.
+- **`NotificationRemoteDataSource` & `NotificationRemoteDataSourceImpl`**: Wraps `NotificationApiService` using `safeApiCall` to ensure type-safe domain error resolution (`LinguaQuestResult<T, LinguaQuestDataError>`).
+- **`NotificationRepositoryImpl`**: Implements the repository interface by combining local and remote data sources:
+  - Exposes `val notifications: Flow<List<Notification>> = localDataSource.getNotifications()`.
+  - Implements `refreshNotifications()`, which retrieves server notifications and syncs them directly into Room using non-destructive `upsertNotifications()`.
+  - Implements optimistic UI pattern with transaction backup/restore rollback on failure for deletion and read status changes.
+
+### Domain Layer (`features/notification/domain/`)
+All business logic is brokered exclusively through single-responsibility Use Cases:
+1. `GetNotificationsUseCase`: Exposes reactive `Flow<List<Notification>>` from local cache.
+2. `RefreshNotificationsUseCase`: Triggers asynchronous remote fetch and local database upsert.
+3. `GetUnreadNotificationCountUseCase`: Retrieves integer unread count.
+4. `MarkNotificationAsReadUseCase`: Executes optimistic read status mutation.
+5. `DeleteNotificationUseCase`: Removes individual notification with fallback rollback.
+6. `DeleteAllNotificationsUseCase`: Clears all notification records with backup restoration on network error.
 
 ---
 
-## 3. Presentation Layer & MVI Contract (`features/notification/`)
+## 3. Presentation Layer & MVI Contract (`features/notification/presentation/`)
 
-### MVI Contract (`presentation/contract/`)
-- **`NotificationState`**: Tracks optimistic mutations and active confirmation dialogs:
+### MVI Contract (`contract/`)
+- **`NotificationState`**: Holds screen state and connectivity status:
   ```kotlin
   data class NotificationState(
-      val deletedNotificationIds: Set<Long> = emptySet(),
-      val readNotificationIds: Set<Long> = emptySet(),
       val showDeleteAllDialog: Boolean = false,
       val notificationToDelete: Long? = null,
-      val isDeleting: Boolean = false
+      val isDeleting: Boolean = false,
+      val isOnline: Boolean = true
   )
   ```
-- **`NotificationIntent`**: Expresses user intent cleanly (`NotificationClicked`, `DeleteNotificationClicked`, `ConfirmDeleteNotification`, `DeleteAllClicked`, `ConfirmDeleteAll`, etc.).
-- **`NotificationEffect`**: Exposes one-off events such as `RefreshNotifications`. Toasts and snackbars are handled directly by injecting `SnackbarController` into the ViewModel.
+- **`NotificationIntent`**: Expresses user actions cleanly (`NotificationClicked`, `DeleteNotificationClicked`, `ConfirmDeleteNotification`, `DeleteAllClicked`, `ConfirmDeleteAll`, etc.).
+- **`NotificationEffect`**: Handles one-time events such as `RefreshNotifications`.
 
-### Reactive Optimistic Paging Filtering
-To prevent visual jumps and eliminate redundant network refetches during single-item deletion or mark-as-read actions, `NotificationViewModel` combines the cached `PagingData` stream with local state mutations:
+### Reactive Network Awareness in `NotificationViewModel`
+`NotificationViewModel` observes device network connectivity via `ObserveNetworkStatusUseCase`. When the user is offline, remote-dependent mutation intents are intercepted and blocked before initiating UseCase operations, emitting localized Snackbar feedback:
 ```kotlin
-val notifications: Flow<PagingData<Notification>> = getNotificationsUseCase()
-    .cachedIn(viewModelScope)
-    .combine(_state.map { it.deletedNotificationIds }.distinctUntilChanged()) { pagingData, deletedIds ->
-        pagingData.filter { it.id !in deletedIds }
-    }
-    .combine(_state.map { it.readNotificationIds }.distinctUntilChanged()) { pagingData, readIds ->
-        pagingData.map { item ->
-            if (item.id in readIds) item.copy(isRead = true) else item
-        }
-    }
+val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+    .stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(5_000), initialValue = true)
 ```
-If an API operation fails, local state mutations are seamlessly reverted and an error snackbar is dispatched via `SnackbarController`.
+Upon reconnection, the ViewModel automatically initiates `refreshNotificationsUseCase()` to ensure cache integrity and data consistency.
 
 ---
 
 ## 4. UI & Components (`presentation/view/`)
 
-- **Stateful Wrapper (`NotificationScreen`)**: Instantiates `NotificationViewModel` via Hilt, observes state flows and lifecycle effects, and passes clean event callbacks down to child composables.
-- **Stateless Content (`NotificationContent` & `NotificationCard`)**:
-  - Implements infinite scrolling using `LazyColumn` and `LazyPagingItems`.
-  - Integrates `ShareTopBar` with a custom trailing action button for "Delete All".
-  - Displays polished empty states (`no_notifications_found`) and error recovery screens with retry capabilities.
-  - Leverages reusable `AppDialog` components for delete confirmation dialogs.
+- **Stateful Wrapper (`NotificationScreen`)**: Instantiates `NotificationViewModel` via Hilt and observes reactive `notifications` and `state` streams using `collectAsStateWithLifecycle()`.
+- **Stateless Content (`NotificationContent` & `NotificationListContainer`)**:
+  - Renders standard Compose list structures (`LazyColumn`) fed directly by Room cache without legacy Paging overhead.
+  - Dynamically updates action button styles (e.g. "Delete All") based on network availability (`state.isOnline`).
+  - Employs reusable shared design components (`ShareTopBar`, `AppDialog`, `SnackbarController`).
 
 ---
 
 ## 5. Navigation 3 & Badge Synchronization
 
 - **Route Definition**: Defined under `@Serializable data object Notification : RootScreen` in `Screens.kt`.
-- **Top App Bar Integration**: `LinguaQuestTopAppBar` accepts `unreadCount: Int` and renders an intuitive red indicator overlay above the notifications bell icon whenever count exceeds zero.
-- **Automatic Return Sync**: In `NestedNavigation.kt` (`MainScreen`), an explicit state observer monitors the developer-owned `rootBackStack`. When navigation returns to `RootScreen.Main` from the notification inbox, `MainViewModel.refreshUnreadCount()` is invoked automatically to immediately extinguish or update the red unread badge indicator.
+- **Top App Bar Integration**: `LinguaQuestTopAppBar` renders a red indicator overlay above the notifications bell icon whenever unread notifications exist.
+- **Automatic Return Sync**: In `NestedNavigation.kt` (`MainScreen`), an explicit observer monitors the developer-owned `rootBackStack`. When returning to `RootScreen.Main` from the notification inbox, `MainViewModel.refreshUnreadCount()` is invoked automatically to reflect the latest unread indicator status.

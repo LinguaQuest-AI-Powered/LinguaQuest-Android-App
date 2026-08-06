@@ -1,6 +1,10 @@
 package com.iti.linguaquest.features.notification.di
 
+import com.iti.linguaquest.features.notification.data.datasource.local.NotificationLocalDataSource
+import com.iti.linguaquest.features.notification.data.datasource.local.NotificationLocalDataSourceImpl
 import com.iti.linguaquest.features.notification.data.datasource.remote.NotificationApiService
+import com.iti.linguaquest.features.notification.data.datasource.remote.NotificationRemoteDataSource
+import com.iti.linguaquest.features.notification.data.datasource.remote.NotificationRemoteDataSourceImpl
 import com.iti.linguaquest.features.notification.data.helper.FcmTokenManager
 import com.iti.linguaquest.features.notification.data.repository.NotificationRepositoryImpl
 import com.iti.linguaquest.features.notification.domain.provider.FcmTokenProvider
@@ -39,4 +43,16 @@ abstract class NotificationRepositoryBindings {
     abstract fun bindNotificationRepository(
         impl: NotificationRepositoryImpl
     ): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRemoteDataSource(
+        impl: NotificationRemoteDataSourceImpl
+    ): NotificationRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationLocalDataSource(
+        impl: NotificationLocalDataSourceImpl
+    ): NotificationLocalDataSource
 }

@@ -7,7 +7,6 @@ import com.iti.linguaquest.features.notification.data.datasource.remote.dto.Regi
 import com.iti.linguaquest.features.notification.data.datasource.remote.dto.StatusResponseDto
 import com.iti.linguaquest.features.notification.data.datasource.remote.dto.UnreadCountResponseDto
 import com.iti.linguaquest.features.notification.data.datasource.remote.dto.UnregisterDeviceRequestDto
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -31,9 +30,9 @@ interface NotificationApiService {
 
     @GET("notifications")
     suspend fun getNotifications(
-        @Query("page") page: Int,
-        @Query("size") size: Int
-    ): Response<NotificationsPaginatedResponseDto>
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 50
+    ): NotificationsPaginatedResponseDto
 
     @GET("notifications/unread-count")
     suspend fun getUnreadCount(): UnreadCountResponseDto

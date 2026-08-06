@@ -16,7 +16,7 @@ fun NotificationDialogs(
         AppDialog(
             title = stringResource(R.string.clear_all_notifications_title),
             message = stringResource(R.string.clear_all_notifications_message),
-            imageRes = R.drawable.lingo_error,
+            imageRes = R.drawable.lingo_delete_notification,
             primaryButtonText = stringResource(R.string.notification_delete_all_confirm),
             onPrimaryClick = { onIntent(NotificationIntent.ConfirmDeleteAll) },
             secondaryButtonText = stringResource(R.string.notification_dismiss),
@@ -30,7 +30,7 @@ fun NotificationDialogs(
         AppDialog(
             title = stringResource(R.string.delete_notification_title),
             message = stringResource(R.string.delete_notification_message),
-            imageRes = R.drawable.lingo,
+            imageRes = R.drawable.lingo_delete_notification,
             primaryButtonText = stringResource(R.string.notification_delete_confirm),
             onPrimaryClick = { onIntent(NotificationIntent.ConfirmDeleteNotification(notificationId)) },
             secondaryButtonText = stringResource(R.string.notification_dismiss),
