@@ -659,7 +659,7 @@
     <string name="roleplay_error_generic">Something went wrong. Please try again.</string>
     <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
-    <string name="roleplay_overall_fluency">Overall Fluency</string>
+    <string name="roleplay_overall_fluency">Fluency</string>
     <string name="roleplay_grammar">Grammar</string>
     <string name="roleplay_vocabulary">Vocabulary</string>
     <string name="roleplay_strengths">What went well</string>

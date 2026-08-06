@@ -7,8 +7,10 @@ data class VoiceResultUi(
     val wrongWords: List<String>,
     val advice: String,
     val coinsAwarded: Int,
+    val xpAwarded: Int,
     val isPassed: Boolean,
     val lessonId: Int,
     val sentence: String,
-    val coinsBeforeAward: Int
+    val coinsBeforeAward: Int,
+    val xpBeforeAward: Int
 )

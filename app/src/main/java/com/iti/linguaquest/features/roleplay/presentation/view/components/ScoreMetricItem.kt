@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +44,9 @@ fun ScoreMetricItem(
             style = AppTextStyles.DialogMessage,
             fontWeight = FontWeight.Medium,
             color = LinguaQuestTheme.colors.BrownText.copy(alpha = 0.8f),
-            fontSize = 11.sp
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

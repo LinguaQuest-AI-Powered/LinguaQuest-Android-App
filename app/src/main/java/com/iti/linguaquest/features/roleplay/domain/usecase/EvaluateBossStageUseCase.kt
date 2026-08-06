@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.roleplay.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
+import com.iti.linguaquest.core.domain.model.MiniGameReward
 import com.iti.linguaquest.core.utils.TranscriptSanitizer
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
@@ -53,9 +54,9 @@ class EvaluateBossStageUseCase @Inject constructor(
                 else -> 0
             }
             val (xpEarned, coinsEarned) = when (stars) {
-                3 -> Pair(200, 75)
-                2 -> Pair(150, 50)
-                1 -> Pair(100, 25)
+                3 -> Pair(MiniGameReward.ROLEPLAY_3_STARS.xp, MiniGameReward.ROLEPLAY_3_STARS.coins)
+                2 -> Pair(MiniGameReward.ROLEPLAY_2_STARS.xp, MiniGameReward.ROLEPLAY_2_STARS.coins)
+                1 -> Pair(MiniGameReward.ROLEPLAY_1_STAR.xp, MiniGameReward.ROLEPLAY_1_STAR.coins)
                 else -> Pair(0, 0)
             }
             val filteredImprovements = TranscriptSanitizer.filterImprovements(assessmentResult.improvements)
