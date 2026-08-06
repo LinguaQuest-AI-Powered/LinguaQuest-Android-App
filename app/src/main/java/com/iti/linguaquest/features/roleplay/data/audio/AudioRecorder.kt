@@ -16,8 +16,10 @@ import javax.inject.Singleton
 class AudioRecorder @Inject constructor() {
 
     private var audioRecord: AudioRecord? = null
+
     @Volatile
     private var isActive = false
+
     @Volatile
     private var isSending = false
 
@@ -26,7 +28,7 @@ class AudioRecorder @Inject constructor() {
 
     @SuppressLint("MissingPermission")
     fun startRecording(): Flow<ByteArray> = flow {
-        Timber.d("[AudioRecorder] startRecording() — initializing hardware")
+
         val sampleRate = 16000
         val minBufferSize = AudioRecord.getMinBufferSize(
             sampleRate,
@@ -56,7 +58,7 @@ class AudioRecorder @Inject constructor() {
         record.startRecording()
         isActive = true
         var emitCount = 0
-        Timber.d("[AudioRecorder] Hardware recording started (VOICE_RECOGNITION)")
+
 
         try {
             while (isActive) {
@@ -77,9 +79,6 @@ class AudioRecorder @Inject constructor() {
 
                             emit(chunk)
                             emitCount++
-                            if (emitCount <= 5 || emitCount % 100 == 0) {
-                                Timber.d("[AudioRecorder] Emitted chunk #%d — %d bytes", emitCount, read)
-                            }
                         } else {
                             synchronized(preBufferLock) {
                                 if (preBuffer.size >= 5) {
@@ -89,6 +88,7 @@ class AudioRecorder @Inject constructor() {
                             }
                         }
                     }
+
                     read == 0 -> if (!isActive) break
                     else -> break
                 }
@@ -108,12 +108,12 @@ class AudioRecorder @Inject constructor() {
     }.flowOn(Dispatchers.IO)
 
     fun resumeSending() {
-        Timber.d("[AudioRecorder] resumeSending() — mic open")
+
         isSending = true
     }
 
     fun pauseSending() {
-        Timber.d("[AudioRecorder] pauseSending() — mic closed")
+
         isSending = false
         synchronized(preBufferLock) {
             preBuffer.clear()
@@ -121,7 +121,7 @@ class AudioRecorder @Inject constructor() {
     }
 
     fun stopRecording() {
-        Timber.d("[AudioRecorder] stopRecording() — destroying hardware")
+
         isActive = false
         isSending = false
         synchronized(preBufferLock) {

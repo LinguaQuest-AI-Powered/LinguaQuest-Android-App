@@ -39,16 +39,15 @@ class RoleplayRepositoryImpl @Inject constructor(
     override val events: Flow<RoleplayLiveEvent> = _events
 
     override suspend fun connect(systemPrompt: String, voiceName: String) {
-        Timber.d("[Repo] connect() — opening live session")
+
         liveService.connect(systemPrompt, voiceName)
         audioPlayer.start()
         startContinuousRecording()
         listenForServerEvents()
-        Timber.d("[Repo] connect() — session active, recording started")
+
     }
 
     override suspend fun connectToBossStage(scenario: BossScenario) {
-        Timber.d("[Repo] connectToBossStage() — boss: %s", scenario.bossName)
         val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
         val systemPrompt = PromptFactory.createLiveSessionPrompt(
             bossName = scenario.bossName,
@@ -61,11 +60,11 @@ class RoleplayRepositoryImpl @Inject constructor(
         audioPlayer.start()
         startContinuousRecording()
         listenForServerEvents()
-        Timber.d("[Repo] connectToBossStage() — session active")
+
     }
 
     override suspend fun evaluateBossStage(transcript: List<String>, scenario: BossScenario): Result<BossEvaluationResult> {
-        Timber.d("[Repo] evaluateBossStage() — transcript lines: %d", transcript.size)
+
         return try {
             val nativeLanguage = userPreferences.nativeLanguageName.firstOrNull() ?: "English"
             val targetLanguage = userPreferences.targetLanguageName.firstOrNull() ?: "English"
@@ -77,7 +76,7 @@ class RoleplayRepositoryImpl @Inject constructor(
             )
             
             if (evaluationResult != null) {
-                Timber.d("[Repo] evaluateBossStage() — success, score: %d", evaluationResult.fluency_score)
+
                 Result.success(evaluationResult)
             } else {
                 Timber.w("[Repo] evaluateBossStage() — null result from Gemini")
@@ -90,18 +89,18 @@ class RoleplayRepositoryImpl @Inject constructor(
     }
     
     override fun startMicrophone() {
-        Timber.d("[Repo] startMicrophone() — resuming audio forwarding")
+
         audioRecorder.resumeSending()
     }
     
     override fun stopMicrophone() {
-        Timber.d("[Repo] stopMicrophone() — pausing audio forwarding, sending silence tail")
+
         audioRecorder.pauseSending()
         sendSilenceTail()
     }
 
     override suspend fun disconnect() {
-        Timber.d("[Repo] disconnect() — tearing down session")
+
         audioRecorder.pauseSending()
         recordingJob?.cancel()
         recordingJob = null
@@ -110,7 +109,7 @@ class RoleplayRepositoryImpl @Inject constructor(
         listeningJob = null
         audioPlayer.stop()
         liveService.close()
-        Timber.d("[Repo] disconnect() — complete")
+
     }
 
     private fun sendSilenceTail() {
@@ -130,34 +129,30 @@ class RoleplayRepositoryImpl @Inject constructor(
                 liveService.sendAudioChunk(chunk)
                 sent += currentChunkSize
             }
-            Timber.d("[Repo] Silence tail sent: %d bytes in %d chunks", totalBytes, (totalBytes + chunkSize - 1) / chunkSize)
+
         }
     }
 
     private fun startContinuousRecording() {
         recordingJob?.cancel()
         recordingJob = scope.launch {
-            Timber.d("[Repo] Continuous recording started")
+
             audioRecorder.startRecording().collect { chunk ->
                 liveService.sendAudioChunk(chunk)
             }
-            Timber.d("[Repo] Continuous recording ended")
+
         }
     }
 
     private fun listenForServerEvents() {
         listeningJob?.cancel()
         listeningJob = scope.launch {
-            Timber.d("[Repo] Server event listener started")
+
             liveService.observeServerEvents().collect { event ->
                 when (event) {
                     is RoleplayLiveEvent.AudioChunk -> audioPlayer.write(event.bytes)
-                    is RoleplayLiveEvent.Transcription -> Timber.d(
-                        "[Repo] Transcription [%s]: %s",
-                        if (event.isUser) "User" else "AI",
-                        event.text.take(100)
-                    )
-                    is RoleplayLiveEvent.TurnComplete -> Timber.d("[Repo] Turn complete")
+                    is RoleplayLiveEvent.Transcription -> {}
+                    is RoleplayLiveEvent.TurnComplete -> {}
                     is RoleplayLiveEvent.Error -> Timber.e("[Repo] Live error: %s", event.message)
                 }
                 _events.emit(event)
