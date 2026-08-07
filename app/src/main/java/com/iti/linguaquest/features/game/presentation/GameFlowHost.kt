@@ -22,7 +22,8 @@ import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 @Composable
 fun GameFlowHost(
     worldId: Int,
-    levelNumber: Int,
+    levelId: Int,
+    levelOrder: Int,
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
     sharedViewModel: GameSharedViewModel = hiltViewModel()
@@ -46,7 +47,8 @@ fun GameFlowHost(
             entry<GameFlowScreen.Level> {
                 LevelScreen(
                     worldId = worldId,
-                    levelNumber = levelNumber,
+                    levelId = levelId,
+                    levelOrder = levelOrder,
                     sharedViewModel = sharedViewModel,
                     onBack = { rootBackStack.removeLastOrNull() },
                     onStartCamera = {

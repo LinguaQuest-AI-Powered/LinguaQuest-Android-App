@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -66,10 +65,9 @@ fun HintsBottomSheet(
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_coin),
                         contentDescription = stringResource(id = R.string.coins),
-                        tint = LinguaQuestTheme.colors.OrangeActive,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -128,7 +126,7 @@ fun HintsBottomSheet(
 
             HintItem(
                 icon = Icons.Default.Info,
-                title = stringResource(id = R.string.game_result_hint_button),
+                title = stringResource(id = R.string.get_a_hint_title),
                 cost = 20,
                 isLoading = isLoading,
                 isEnabled = coinCount >= 20,
@@ -172,10 +170,9 @@ private fun HintItem(
                 fontWeight = FontWeight.Bold
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                Image(
+                    painter = painterResource(id = R.drawable.ic_coin),
                     contentDescription = stringResource(id = R.string.coins),
-                    tint = LinguaQuestTheme.colors.OrangeActive,
                     modifier = Modifier.size(12.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))

@@ -49,7 +49,7 @@ sealed interface RootScreen : NavKey {
     data object Main : RootScreen
 
     @Serializable
-    data class GameFlow(val worldId: Int, val levelNumber: Int) : RootScreen // UPDATED
+    data class GameFlow(val worldId: Int, val levelId: Int, val levelOrder: Int) : RootScreen // UPDATED
 
     @Serializable
     data class Map(val worldId: Int) : RootScreen

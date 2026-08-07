@@ -7,7 +7,7 @@ info:
     larger API that will be extended with additional resources over time.
 
 
-    ## Conventions
+    ## Conventionss
 
     - All request/response bodies use **camelCase** field names.
 
@@ -35,12 +35,6 @@ info:
       `/auth/forget-password/otp/verify` (password reset) remain two separate
       endpoints, since they return different data.
 
-
-    ## Open items / assumptions (flagged for confirmation, not yet approved)
-
-    - The achievements screen's "240" stat is assumed to be XP earned via
-      achievements specifically (`xpEarned`), not a count. Confirm against
-      the design.
 
   version: 1.1.0
   contact:
@@ -77,7 +71,12 @@ tags:
     description: Reading and adjusting the user's XP and coin balances.
   - name: Gallery
     description: Getting the words history of the user
-
+  - name: Devices
+    description: Register and remove FCM device tokens for push notifications.
+  - name: Notifications
+    description: In-app notification history, unread counts, and read status.
+  - name: Daily Mission
+    description: Getting the daily mission for the user and marking it as completed.
 
 paths:
   /auth/register:
@@ -1007,8 +1006,15 @@ paths:
       summary: Get the Home screen dashboard
       description: >
         Returns the composite payload needed to render the Home screen in a
-        single call: XP/coin balance, streak, the active target language card, and a short preview of Explore Worlds
-        (max 2). For the full, filterable World list ("See more"), use
+        single call: XP/coin balance, streak, the active target language card,
+        a short preview of Explore Worlds (maximum 2), and the next level the
+        user can continue from.
+
+        The `continueLevel` field is `null` when there is no available level to
+        continue (for example, if the user has completed all available content).
+
+        Within `continueLevel`, the `word` field is `null` when the next level
+        has no associated word.
       operationId: getHome
       security:
         - bearerAuth: []
@@ -1029,34 +1035,40 @@ paths:
                   value:
                     success: true
                     data:
-                      xp: 1250
-                      coins: 46
-                      streakDays: 7
+                      xp: 2780
+                      coins: 513
+                      streakDays: 2
                       activeLanguage:
                         id: 1
-                        name: Spanish
-                        code: es
-                        imageUrl: /media/languages/spanish.png
-                        level: 12
+                        name: English
+                        code: en
+                        imageUrl: https://cdn.linguaquest.com/languages/english.png
+                        level: 1
                         isActive: true
-                        progressPercent: 65
+                        progressPercent: 45
                       exploreWorlds:
                         totalCount: 2
                         worlds:
-                          - id: 10
-                            name: Kitchen World
-                            imageUrl: /media/worlds/kitchen.jpg
+                          - id: 1
+                            name: Kitchen
+                            imageUrl: kitchen.png
+                            difficulty: EASY
+                            progressPercent: 90
+                            totalLevels: 10
+                            completedLevels: 9
+                          - id: 2
+                            name: Park
+                            imageUrl: null
                             difficulty: EASY
                             progressPercent: 40
-                            totalLevels: 20
-                            completedLevels: 8
-                          - id: 11
-                            name: City World
-                            imageUrl: /media/worlds/city.jpg
-                            difficulty: MEDIUM
-                            progressPercent: 10
-                            totalLevels: 20
-                            completedLevels: 2
+                            totalLevels: 10
+                            completedLevels: 4
+                      continueLevel:
+                        worldId: 3
+                        worldName: Market
+                        levelId: 21
+                        levelOrder: 1
+                        word: Box
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -1656,6 +1668,55 @@ paths:
                       errorKey: HINT_ALREADY_USED
                       errorMessage: You have already used your hint for this level
                       errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /worlds/continue-level:
+    get:
+      tags: [Worlds]
+      summary: Get the next level to continue
+      description: >
+        Returns the next level the authenticated user should continue playing.
+
+        The `data` field is `null` when there is no available level to continue,
+        for example when the user has completed all available content.
+
+        Within the response, the `word` field is `null` when the level has no
+        associated word.
+      operationId: getContinueLevel
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Continue level retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/ContinueLevel'
+                        nullable: true
+              examples:
+                available:
+                  value:
+                    success: true
+                    data:
+                      worldId: 3
+                      worldName: Market
+                      levelId: 21
+                      levelOrder: 1
+                      word: Box
+
+                noAvailableLevel:
+                  value:
+                    success: true
+                    data: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -2846,6 +2907,514 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /devices:
+    post:
+      tags: [Devices]
+      summary: Register a device for push notifications
+      description: >
+        Registers or re-registers an FCM device token for the authenticated user.
+        If the token already exists (e.g. same physical device, different account
+        logged in), ownership is reassigned to the current user.
+      operationId: registerDevice
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+            examples:
+              default:
+                value:
+                  token: "fcm_device_token_abc123"
+                  platform: ANDROID
+      responses:
+        '200':
+          description: Device registered successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingToken:
+                  value:
+                    success: false
+                    errorKey: INVALID_DEVICE_TOKEN
+                    message: Device token must not be blank.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags: [Devices]
+      summary: Unregister a device from push notifications
+      description: >
+        Removes a device token, typically called on logout so push notifications
+        no longer target this device once the user signs out.
+      operationId: unregisterDevice
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnregisterDeviceRequest'
+            examples:
+              default:
+                value:
+                  token: "fcm_device_token_abc123"
+      responses:
+        '200':
+          description: Removes a device token, typically called on logout so push notifications no longer target this device once the user signs out.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications
+      description: >
+        Returns the authenticated user's notification history (in-app feed),
+        most recent first, paginated.
+      operationId: listNotifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/NotificationsListData'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      notifications:
+                        - id: 101
+                          type: ACHIEVEMENT_EARNED
+                          title: "Trophy earned: Wild Explorer"
+                          body: Complete 5 lessons in the Kitchen World
+                          isRead: false
+                          createdAt: "2026-08-02T10:15:00"
+                        - id: 100
+                          type: ACHIEVEMENT_EARNED
+                          title: "Trophy earned: Streak Master"
+                          body: Maintain a 30-day streak
+                          isRead: true
+                          createdAt: "2026-08-01T09:00:00"
+                      page: 0
+                      size: 20
+                      totalElements: 2
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags: [Notifications]
+      summary: Delete all notifications
+      description: Permanently clears the authenticated user's entire notification history.
+      operationId: deleteAllNotifications
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: All notifications deleted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/unread-count:
+    get:
+      tags: [Notifications]
+      summary: Get unread notification count
+      description: >
+        Returns the number of unread notifications for the authenticated user,
+        used for the notification bell badge.
+      operationId: getUnreadNotificationCount
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Unread count retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: integer
+                        format: int64
+              examples:
+                default:
+                  value:
+                    success: true
+                    data: 
+                      count: 3
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/{id}/read:
+    patch:
+      tags: [Notifications]
+      summary: Mark a notification as read
+      operationId: markNotificationRead
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Notification not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notificationNotFound:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/notifications/123/read
+                      errorCode: 404
+                      errorKey: NOTIFICATION_NOT_FOUND
+                      errorMessage: Notification not found for the current user.
+                      errorTime: "2026-08-03T16:30:00Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/{id}:
+    delete:
+      tags: [Notifications]
+      summary: Delete a notification
+      description: Permanently removes a single notification from the user's history.
+      operationId: deleteNotification
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Notification deleted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      status: success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Notification not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notificationNotFound:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/notifications/123
+                      errorCode: 404
+                      errorKey: NOTIFICATION_NOT_FOUND
+                      errorMessage: Notification not found for the current user.
+                      errorTime: "2026-08-03T16:30:00Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /missions:
+    get:
+      tags: [Missions]
+      summary: Get the current daily mission word
+      operationId: getDailyMission
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daily mission retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          word:
+                            type: string
+                            example: Flask
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      word: Flask
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Daily mission word is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/missions
+                      errorCode: 404
+                      errorKey: DAILY_MISSION_NOT_FOUND
+                      errorMessage: Daily mission word is not available
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /missions/verify:
+    post:
+      tags: [Missions]
+      summary: Verify a photo against the daily mission word
+      operationId: verifyDailyMission
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+                - word
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Photo to verify against the mission word
+                word:
+                  type: string
+                  description: The daily mission word
+                  example: Flask
+      responses:
+        '200':
+          description: Verification completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          isMatch:
+                            type: boolean
+                            example: true
+                          xpEarned:
+                            type: integer
+                            example: 50
+                          coinsEarned:
+                            type: integer
+                            example: 10
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      isMatch: true
+                      xpEarned: 50
+                      coinsEarned: 10
+        '400':
+          description: Uploaded image is empty or missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/missions/verify
+                      errorCode: 400
+                      errorKey: INVALID_IMAGE
+                      errorMessage: Uploaded image is empty or missing.
+                      errorTime: '2026-07-17T10:15:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Mission word not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/missions/verify
+                      errorCode: 404
+                      errorKey: WORD_NOT_FOUND
+                      errorMessage: Flask is not found
+                      errorTime: '2026-07-17T10:15:00Z'
+        '409':
+          description: Daily mission has already been solved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      apiPath: /api/v1/missions/verify
+                      errorCode: 409
+                      errorKey: DAILY_MISSION_ALREADY_SOLVED
+                      errorMessage: Daily mission solved already
+                      errorTime: '2026-07-17T10:15:00Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -2967,6 +3536,7 @@ components:
                 - ACHIEVEMENT_REWARD_ALREADY_CLAIMED
                 - INVALID_TOKEN
                 - PROFILE_ALREADY_COMPLETED
+                - NOTIFICATION_NOT_FOUND
               example: INVALID_CREDENTIALS
             errorMessage:
               type: string
@@ -3233,6 +3803,10 @@ components:
           $ref: '#/components/schemas/UserLanguage'
         exploreWorlds:
           $ref: '#/components/schemas/WorldSummary'
+        continueLevel:
+          allOf:
+            - $ref: '#/components/schemas/ContinueLevel'
+          nullable: true
 
     ActiveLanguageSummary:
       type: object
@@ -3776,3 +4350,89 @@ components:
             type: integer
           minItems: 1
           example: [3, 4]
+
+
+    RegisterDeviceRequest:
+      type: object
+      required: [token, platform]
+      properties:
+        token:
+          type: string
+          example: fcm_device_token_abc123
+        platform:
+          type: string
+          enum: [ANDROID, IOS]
+
+    UnregisterDeviceRequest:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+          example: fcm_device_token_abc123
+
+    NotificationData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+          enum: [ACHIEVEMENT_EARNED, STREAK_REMINDER, DAILY_REWARD_AVAILABLE]
+        title:
+          type: string
+        body:
+          type: string
+        isRead:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    NotificationsListData:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationData'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+
+    ContinueLevel:
+      type: object
+      description: The next level the user should continue playing.
+      properties:
+        worldId:
+          type: integer
+          format: int64
+          example: 3
+        worldName:
+          type: string
+          example: Market
+        levelId:
+          type: integer
+          format: int64
+          example: 21
+        levelOrder:
+          type: integer
+          example: 1
+        word:
+          type: string
+          nullable: true
+          description: >
+            The word associated with the next level. `null` if the level has
+            no associated word.
+          example: Box
+      required:
+        - worldId
+        - worldName
+        - levelId
+        - levelOrder
+        - word

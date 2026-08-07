@@ -83,7 +83,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
-    onNavigateToLevel: (worldId: Int, levelId: Int) -> Unit,
+    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit,
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
@@ -146,7 +146,7 @@ fun HomeScreen(
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
                 is HomeEffect.NavigateToContinueLevel -> {
-                    onNavigateToLevel(effect.worldId, effect.levelId)
+                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder)
                 }
             }
         }

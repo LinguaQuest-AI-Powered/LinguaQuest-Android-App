@@ -49,7 +49,8 @@ import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 @Composable
 fun LevelScreen(
     worldId: Int,
-    levelNumber: Int,
+    levelId: Int,
+    levelOrder: Int,
     sharedViewModel: GameSharedViewModel,
     onBack: () -> Unit,
     onStartCamera: () -> Unit,
@@ -77,8 +78,8 @@ fun LevelScreen(
         }
     }
 
-    LaunchedEffect(worldId, levelNumber) {
-        viewModel.loadLevelDetails(worldId, levelNumber)
+    LaunchedEffect(worldId, levelId) {
+        viewModel.loadLevelDetails(worldId, levelId, levelOrder)
     }
 
     LaunchedEffect(state.wordToGuess) {
@@ -92,7 +93,7 @@ fun LevelScreen(
             when (effect) {
                 LevelEffect.NavigateBack -> onBack()
                 LevelEffect.LaunchCamera -> {
-                    sharedViewModel.setWorldAndLevelId(worldId, levelNumber)
+                    sharedViewModel.setWorldAndLevelId(worldId, levelId)
                     sharedViewModel.setTargetWord(state.wordToGuess)
                     onStartCamera()
                 }
@@ -112,7 +113,7 @@ fun LevelScreen(
         AppDialog(
             title = stringResource(R.string.change_word_confirm_title),
             message = stringResource(R.string.change_word_confirm_message),
-            imageRes = R.drawable.lingo,
+            imageRes = R.drawable.lingo_on_coins,
             onDismissRequest = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
             primaryButtonText = stringResource(R.string.change_word_confirm_action),
             isPrimaryButtonEnabled = state.coinCount >= 50,
@@ -135,7 +136,7 @@ fun LevelScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LinguaQuestScreenTopBar(
-                    title = stringResource(id = R.string.level_title, state.levelNumber),
+                    title = stringResource(id = R.string.level_title, state.levelOrder),
                     onBackClicked = { viewModel.onIntent(LevelIntent.BackClicked) },
                     showDivider = true,
                     showCoins = true,
@@ -149,16 +150,21 @@ fun LevelScreen(
                     hintText = sharedState.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                     isLoading = state.isLoading,
                     isHintLoading = state.isHintLoading,
+                    isHintConsumed = sharedState.hintText != null,
                     onOpenCameraClick = { viewModel.onIntent(LevelIntent.OpenCameraClicked) },
                     onChangeWordClick = { viewModel.onIntent(LevelIntent.ChangeWordClicked) },
                     onSoundClick = { viewModel.onIntent(LevelIntent.SoundClicked) },
                     onMascotClick = {
-                        if (sharedState.hintText == null) {
-                            viewModel.onIntent(LevelIntent.MascotTapped)
+                        if (!state.isLoading && !state.isHintLoading) {
+                            if (sharedState.hintText == null) {
+                                viewModel.onIntent(LevelIntent.MascotTapped)
+                            } else {
+                                viewModel.onIntent(LevelIntent.ChangeWordClicked)
+                            }
                         }
                     },
                     isCameraEnabled = state.isLevelReady && !state.isLoading,
-                    isChangeWordEnabled = state.isLevelReady && !state.isLoading,
+                    isChangeWordEnabled = state.isLevelReady && !state.isLoading && !state.isHintLoading,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }

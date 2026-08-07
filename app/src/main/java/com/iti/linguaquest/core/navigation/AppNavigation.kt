@@ -392,11 +392,12 @@ fun AppNavigation(
                     MapScreen(
                         worldId = screen.worldId,
                         onBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLevel = { levelNum ->
+                        onNavigateToLevel = { levelId, levelOrder ->
                             rootBackStack.navigateSingleTop(
                                 RootScreen.GameFlow(
                                     worldId = screen.worldId,
-                                    levelNumber = levelNum
+                                    levelId = levelId,
+                                    levelOrder = levelOrder
                                 )
                             )
                         }
@@ -406,7 +407,8 @@ fun AppNavigation(
                 entry<RootScreen.GameFlow> { screen ->
                     GameFlowHost(
                         worldId = screen.worldId,
-                        levelNumber = screen.levelNumber,
+                        levelId = screen.levelId,
+                        levelOrder = screen.levelOrder,
                         rootBackStack = rootBackStack
                     )
                 }

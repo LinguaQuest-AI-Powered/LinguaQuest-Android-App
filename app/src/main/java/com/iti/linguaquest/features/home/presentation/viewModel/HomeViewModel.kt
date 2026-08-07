@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(isDailyRewardDialogVisible = false)
             }
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
-            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId))
+            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder))
         }
     }
 

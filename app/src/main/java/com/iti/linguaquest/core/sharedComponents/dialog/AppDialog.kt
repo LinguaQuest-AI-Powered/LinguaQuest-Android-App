@@ -6,9 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -224,8 +224,11 @@ fun PriceTagContent(price: Int) {
             .padding(horizontal = 24.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Coin icon placeholder
-        Text("🪙 ", fontSize = 18.sp)
+        Image(
+            painter = painterResource(id = R.drawable.ic_coin),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp).padding(end = 4.dp)
+        )
         Text(
             text = "$price",
             color = MaterialTheme.colorScheme.primary,

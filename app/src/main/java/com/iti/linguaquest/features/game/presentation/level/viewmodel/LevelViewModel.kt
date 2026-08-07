@@ -67,8 +67,8 @@ class LevelViewModel @Inject constructor(
         }
     }
 
-    fun loadLevelDetails(worldId: Int, levelNumber: Int) {
-        if (_state.value.worldId == worldId && _state.value.levelNumber == levelNumber && _state.value.isLevelReady) {
+    fun loadLevelDetails(worldId: Int, levelId: Int, levelOrder: Int) {
+        if (_state.value.worldId == worldId && _state.value.levelId == levelId && _state.value.isLevelReady) {
             return
         }
         
@@ -78,23 +78,25 @@ class LevelViewModel @Inject constructor(
                 it.copy(
                     isLoading = true,
                     worldId = worldId,
-                    levelNumber = levelNumber,
+                    levelId = levelId,
+                    levelOrder = levelOrder,
                     isLevelReady = false,
                     isChangeWordAvailable = false,
                     isChangeWordDialogVisible = false,
                     isChangeWordUsed = false
                 )
             }
-            when (val result = startLevelUseCase(worldId, levelNumber)) {
+            when (val result = startLevelUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
-                    val targetWord = result.data.ifEmpty { if (worldId == 1 && levelNumber == 3) "PAN" else "APPLE" }
+                    val targetWord = result.data.ifEmpty { if (worldId == 1 && levelOrder == 3) "PAN" else "APPLE" }
                     val languageCode = if (worldId == 1) "es" else "en"
 
                     _state.update {
                         it.copy(
                             isLoading = false,
                             worldId = worldId,
-                            levelNumber = levelNumber,
+                            levelId = levelId,
+                            levelOrder = levelOrder,
                             wordToGuess = targetWord,
                             languageCode = languageCode,
                             isLevelReady = true,
@@ -146,7 +148,7 @@ class LevelViewModel @Inject constructor(
                     languageCode = _state.value.languageCode
                 )
             )
-            LevelIntent.RetryClicked -> loadLevelDetails(_state.value.worldId, _state.value.levelNumber)
+            LevelIntent.RetryClicked -> loadLevelDetails(_state.value.worldId, _state.value.levelId, _state.value.levelOrder)
         }
     }
 
@@ -156,14 +158,14 @@ class LevelViewModel @Inject constructor(
 
     private fun changeCurrentWord(cost: Int, markAsUsed: Boolean) {
         val worldId = _state.value.worldId
-        val levelNumber = _state.value.levelNumber
+        val levelId = _state.value.levelId
 
         viewModelScope.launch {
             if (cost > 0) {
                 _state.update { it.copy(coinCount = maxOf(0, it.coinCount - cost)) }
             }
             _state.update { it.copy(isLoading = true) }
-            when (val result = changeWordUseCase(worldId, levelNumber)) {
+            when (val result = changeWordUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
                     val newWord = result.data.ifEmpty { "Platano" }
                     _state.update {
@@ -221,11 +223,11 @@ class LevelViewModel @Inject constructor(
 
     private fun buyHint() {
         val worldId = _state.value.worldId
-        val levelNumber = _state.value.levelNumber
+        val levelId = _state.value.levelId
 
         viewModelScope.launch {
             _state.update { it.copy(coinCount = maxOf(0, it.coinCount - 20), isHintLoading = true) }
-            when (val result = getHintUseCase(worldId, levelNumber)) {
+            when (val result = getHintUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
