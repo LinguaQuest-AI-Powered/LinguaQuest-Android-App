@@ -28,7 +28,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
 
 @Composable
-fun LeaderboardRow(entry: LeaderboardEntry) {
+fun LeaderboardRow(entry: LeaderboardEntry ,  modifier: Modifier = Modifier) {
 
     val borderColor = if (entry.isCurrentUser)
         MaterialTheme.colorScheme.tertiary

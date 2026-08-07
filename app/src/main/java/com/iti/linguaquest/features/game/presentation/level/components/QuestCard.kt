@@ -100,8 +100,15 @@ fun QuestCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(80.dp)
-                                .background(LinguaQuestTheme.colors.ProfileCardColor, RoundedCornerShape(16.dp))
-                                .border(1.dp, LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp)),
+                                .background(
+                                    LinguaQuestTheme.colors.ProfileCardColor,
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .border(
+                                    1.dp,
+                                    LinguaQuestTheme.colors.OrangeActive,
+                                    RoundedCornerShape(16.dp)
+                                ),
                             contentAlignment = Alignment.Center
                         ) {
                             if (isLoading) {
@@ -189,7 +196,11 @@ fun QuestCard(
                 modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(16.dp))
                     .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                    .border(1.dp, LinguaQuestTheme.colors.textFieldBorder, RoundedCornerShape(16.dp))
+                    .border(
+                        1.dp,
+                        LinguaQuestTheme.colors.textFieldBorder,
+                        RoundedCornerShape(16.dp)
+                    )
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(

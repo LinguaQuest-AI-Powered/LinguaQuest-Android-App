@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
@@ -90,7 +92,7 @@ fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUp
                             .background(Color.Black.copy(alpha = 0.35f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon(
+                        LingoSpinningIcon(
                             size = 28.dp
                         )
                     }
@@ -103,14 +105,15 @@ fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUp
                     .offset(x = (-6).dp, y = (-6).dp)
                     .clip(CircleShape)
                     .background(LinguaQuestTheme.colors.iconsColor)
-                    .border(2.dp, MaterialTheme.colorScheme.background, CircleShape)
+                    .border(2.dp, LinguaQuestTheme.colors.BrownText, CircleShape)
                     .clickable { onEditAvatarClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_edit_pen),
                     contentDescription = "edit",
-                    modifier = Modifier.size(14.dp)
+                    modifier = Modifier.size(14.dp),
+                    colorFilter = ColorFilter.tint(LinguaQuestTheme.colors.whiteColor)
                 )
             }
         }
