@@ -826,4 +826,7 @@
     <string name="new_notification">اشعار جديد</string>
     <string name="start_hunting">أبدا مغامرتك</string>
     <string name="mystery_world">عالم غامض</string>
+
+    <string name="updating_language_title">اضافة اللغه</string>
+    <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
 </resources>

@@ -828,5 +828,8 @@
     <string name="start_hunting">Start Hunting</string>
     <string name="mystery_world">Mystery World</string>
 
+    <string name="updating_language_title">Updating Language</string>
+    <string name="updating_language_desc">Please wait while we set up your new language…</string>
+
 </resources>
 

@@ -43,6 +43,7 @@ import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.AddLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.languages.component.LanguageSelectionCard
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
@@ -114,7 +115,8 @@ fun AddLanguagesContent(
                 AppButton3D(
                     text = stringResource(R.string.add_selected_format, state.selectedLanguageIds.size),
                     onClick = { onIntent(AddLanguagesIntent.AddSelectedClicked) },
-                    enabled = state.selectedLanguageIds.isNotEmpty()
+                    enabled = state.selectedLanguageIds.isNotEmpty(),
+                    isLoading = state.isLoading && state.selectedLanguageIds.isNotEmpty()
                 )
             }
         }
@@ -181,7 +183,14 @@ fun AddLanguagesContent(
                 it.name.contains(state.searchQuery, ignoreCase = true)
             }
 
-            if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
+            if (state.isLoading && state.availableLanguages.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LingoSpinningIcon(size = 36.dp)
+                }
+            } else if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
