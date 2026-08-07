@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -37,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -49,7 +47,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
-import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
@@ -60,7 +57,6 @@ import com.iti.linguaquest.features.home.presentation.languages.contract.MyLangu
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
-import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
 import com.iti.linguaquest.features.home.presentation.view.components.WordCaptureCard
@@ -74,7 +70,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
 
 import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
 import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,9 +102,6 @@ fun HomeScreen(
     fun guardOnline(anchor: Rect? = null, action: () -> Unit) {
         if (isOnline) {
             action()
-        } else {
-            offlinePopupAnchor = anchor
-            showOfflinePopup = true
         }
     }
 
@@ -119,8 +111,8 @@ fun HomeScreen(
 
 
 
-    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
-        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
+    LaunchedEffect(state.isDailyRewardBannerVisible) {
+        if (state.isDailyRewardBannerVisible) {
             soundPlayer.play(AppSound.AddedMoney)
             showCoinRain = true
             delay(3000.milliseconds)
@@ -128,8 +120,8 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
-        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
+    LaunchedEffect(state.isDailyRewardBannerVisible) {
+        if (state.isDailyRewardBannerVisible) {
             delay(6000.milliseconds)
             viewModel.onIntent(HomeIntent.DismissDailyRewardBanner)
         }
@@ -177,20 +169,18 @@ fun HomeScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
 
-        if (state.isLoading) {
-            LoadingView()
-        } else if (state.hasError) {
-            ErrorView(
-                message = stringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(HomeIntent.Retry) }
-            )
-        } else {
-
-            PullToRefreshBox(
-                isRefreshing = state.isRefreshing,
-                onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
-                modifier = Modifier.fillMaxSize()
-            ) {
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (state.hasError && state.worlds.isEmpty()) {
+                ErrorView(
+                    message = state.errorMessage ?: com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(R.string.error_generic),
+                    onRetry = { viewModel.onIntent(HomeIntent.Refresh) },
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
                 HomeContent(
                     state = state,
                     onSeeMoreClick = { anchor ->
@@ -225,7 +215,7 @@ fun HomeScreen(
         }
 
         AnimatedVisibility(
-            visible = state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError,
+            visible = state.isDailyRewardBannerVisible,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> -fullHeight },
                 animationSpec = tween(400, easing = FastOutSlowInEasing)
@@ -264,34 +254,6 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 )
             }
-        }
-
-        if (showOfflinePopup) {
-            val popupOffset = remember(
-                offlinePopupAnchor,
-                offlinePopupSize,
-                configuration.screenWidthDp,
-                configuration.screenHeightDp
-            ) {
-                calculatePopupOffset(
-                    anchor = offlinePopupAnchor,
-                    popupSize = offlinePopupSize,
-                    screenWidthDp = configuration.screenWidthDp,
-                    screenHeightDp = configuration.screenHeightDp,
-                    density = density
-                )
-            }
-
-            NoInternetMiniPopup(
-                isOnline = isOnline,
-                modifier = Modifier
-                    .offset { popupOffset }
-                    .onSizeChanged { offlinePopupSize = it },
-                onDismiss = {
-                    showOfflinePopup = false
-                    offlinePopupAnchor = null
-                }
-            )
         }
     }
 

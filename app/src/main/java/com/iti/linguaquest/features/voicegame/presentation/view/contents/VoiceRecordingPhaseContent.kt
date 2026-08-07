@@ -40,14 +40,14 @@ import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
-import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.voicegame.presentation.view.components.formatElapsed
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 
 @Composable
 fun RecordingPhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
     val soundPlayer = LocalSoundPlayer.current
-    SpeechBubble(if (state.isPaused) stringResource(R.string.voice_recording_paused) else stringResource(R.string.voice_recording_listening))
+    MessageBubble(title = if (state.isPaused) stringResource(R.string.voice_recording_paused) else stringResource(R.string.voice_recording_listening))
     Spacer(Modifier.height(8.dp))
     AppMascotGradientBox(
         imageRes = R.drawable.lingo_mic,

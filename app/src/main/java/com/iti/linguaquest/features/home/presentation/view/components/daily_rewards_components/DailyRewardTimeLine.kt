@@ -38,6 +38,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 
+import androidx.compose.ui.platform.LocalDensity
+
 @Composable
 fun DailyRewardTimeline(
     modifier: Modifier = Modifier,
@@ -45,15 +47,28 @@ fun DailyRewardTimeline(
     cycleLength: Int = 5
 ) {
     val totalNodes = cycleLength.coerceAtLeast(1)
+    val safeCurrentDay = currentDay.coerceIn(1, totalNodes)
     val activeColor = MaterialTheme.colorScheme.primary
     val inactiveColor = LinguaQuestTheme.colors.DailyRewardInactiveLine
 
     val displayedDays = (1..totalNodes).toList()
-    val activeNodesCount = (displayedDays.count { it < currentDay }).coerceAtMost(totalNodes - 1)
+    val activeNodesCount = (safeCurrentDay - 1).coerceIn(0, totalNodes - 1)
+
+    val scrollState = rememberScrollState()
+    val nodeWidth = 56.dp
+    val nodeSpacing = 16.dp
+    val density = LocalDensity.current
 
     var startAnimation by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(safeCurrentDay, totalNodes) {
         startAnimation = true
+        if (totalNodes > 1 && safeCurrentDay > 1) {
+            val itemWidthPx = with(density) { (nodeWidth + nodeSpacing).toPx() }
+            val targetPx = (safeCurrentDay - 1) * itemWidthPx
+            val halfViewportPx = with(density) { 140.dp.toPx() }
+            val scrollToPx = (targetPx - halfViewportPx + itemWidthPx / 2f).coerceAtLeast(0f)
+            scrollState.animateScrollTo(scrollToPx.toInt(), animationSpec = tween(800, easing = FastOutSlowInEasing))
+        }
     }
 
     val animatedLineProgress by animateFloatAsState(
@@ -61,10 +76,6 @@ fun DailyRewardTimeline(
         animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
         label = "lineProgress"
     )
-
-    val scrollState = rememberScrollState()
-    val nodeWidth = 56.dp
-    val nodeSpacing = 16.dp
     val totalWidth = if (totalNodes <= 1) nodeWidth else (nodeWidth * totalNodes + nodeSpacing * (totalNodes - 1))
 
     Box(
@@ -114,7 +125,7 @@ fun DailyRewardTimeline(
                 verticalAlignment = Alignment.Top
             ) {
                 for ((index, day) in displayedDays.withIndex()) {
-                    val isCompleted = day < currentDay
+                    val isCompleted = day < safeCurrentDay
 
                     val nodeScale by animateFloatAsState(
                         targetValue = if (startAnimation) 1f else 0f,
@@ -136,7 +147,7 @@ fun DailyRewardTimeline(
                         ) {
                             when {
                                 isCompleted -> CompletedDayNode()
-                                day == currentDay -> CurrentDayNode()
+                                day == safeCurrentDay -> CurrentDayNode()
                                 else -> LockedDayNode()
                             }
                         }
@@ -146,8 +157,8 @@ fun DailyRewardTimeline(
                         Text(
                             text = stringResource(id = R.string.day_format, day),
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color = if (day == currentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
-                                fontWeight = if (day == currentDay) FontWeight.Bold else FontWeight.Medium,
+                                color = if (day == safeCurrentDay) LinguaQuestTheme.colors.DailyRewardActiveText else LinguaQuestTheme.colors.DailyRewardInactiveText,
+                                fontWeight = if (day == safeCurrentDay) FontWeight.Bold else FontWeight.Medium,
                                 fontSize = 11.sp
                             )
                         )

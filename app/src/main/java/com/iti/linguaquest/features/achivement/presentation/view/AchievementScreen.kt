@@ -28,7 +28,7 @@ fun AchievementScreen(
         state.errorMessage != null && state.achievements.isEmpty() -> {
             ErrorView(
                 modifier = modifier,
-                message = state.errorMessage!!.asString(),
+                message = state.errorMessage!!,
                 onRetry = { viewModel.onIntent(AchievementIntent.LoadAchievements) }
             )
         }

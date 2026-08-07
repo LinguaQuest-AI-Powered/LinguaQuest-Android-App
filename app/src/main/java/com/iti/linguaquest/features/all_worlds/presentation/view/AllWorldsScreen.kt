@@ -10,9 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
@@ -50,7 +50,7 @@ fun AllWorldsScreen(
             LoadingView()
         } else if (state.hasError) {
             ErrorView(
-                message = state.errorMessage ?: stringResource(R.string.error_generic),
+                message = state.errorMessage ?: UiText.StringResource(R.string.error_generic),
                 onRetry = { viewModel.onIntent(AllWorldsIntent.OnRetry) }
             )
         } else {

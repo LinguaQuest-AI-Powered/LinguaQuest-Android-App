@@ -1,32 +1,34 @@
 package com.iti.linguaquest.features.mindreader.presentation.view
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderEffect
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
-import com.iti.linguaquest.features.mindreader.presentation.viewmodel.MindReaderViewModel
-import com.iti.linguaquest.features.mindreader.presentation.view.contents.AkinatorLobbyContent
 import com.iti.linguaquest.features.mindreader.presentation.view.contents.ActiveGameContent
-import com.iti.linguaquest.features.mindreader.presentation.view.contents.GuessRevealContent
-import com.iti.linguaquest.features.mindreader.presentation.view.contents.PopQuizContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.AkinatorLobbyContent
 import com.iti.linguaquest.features.mindreader.presentation.view.contents.AkinatorTrapContent
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.GuessRevealContent
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.features.mindreader.presentation.view.contents.PopQuizContent
 import com.iti.linguaquest.features.mindreader.presentation.view.contents.ResultContent
-import com.iti.linguaquest.features.mindreader.presentation.view.contents.LoadingGuessContent
+import com.iti.linguaquest.features.mindreader.presentation.viewmodel.MindReaderViewModel
 
 @Composable
 fun MindReaderScreen(
@@ -34,6 +36,7 @@ fun MindReaderScreen(
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val speechManager = remember { SpeechManager(context) }
 
@@ -61,12 +64,21 @@ fun MindReaderScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+    OfflineAwareContent(
+        isOnline = isOnline,
+        topBarTitle = stringResource(id = R.string.mind_reader_card_title),
+        onBackClicked = onNavigateBack,
+        showCoins = true,
+        coinsCount = state.coinBalance,
+        modifier = Modifier.fillMaxSize()
     ) {
-        Crossfade(targetState = state.currentPhase, label = "PhaseCrossfade") { phase ->
+        Crossfade(
+            targetState = state.currentPhase,
+            label = "PhaseCrossfade",
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) { phase ->
             when (phase) {
                 MindReaderPhase.LOBBY -> AkinatorLobbyContent(
                     state = state,
@@ -76,7 +88,10 @@ fun MindReaderScreen(
                     state = state,
                     onIntent = viewModel::onIntent
                 )
-                MindReaderPhase.GUESSING_LOADING -> LoadingGuessContent()
+                MindReaderPhase.GUESSING_LOADING -> LoadingView(
+                    message = stringResource(id = R.string.mind_reader_thinking),
+                    imageRes = R.drawable.lingo_mind_processing
+                )
                 MindReaderPhase.GUESS_REVEAL -> GuessRevealContent(
                     state = state,
                     onIntent = viewModel::onIntent

@@ -22,6 +22,9 @@ import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressU
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import timber.log.Timber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -122,47 +125,78 @@ class HomeViewModel @Inject constructor(
 
     private fun refreshFromRemote(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
-            val hasCache = state.value.xp > 0 || state.value.worlds.isNotEmpty()
-            if (!hasCache) {
-                _state.update { it.copy(isLoading = true, hasError = false) }
-            }
+            try {
+                val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
+                val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+                val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
 
-            val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
-            val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
-            val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
+                val homeSummaryResult = homeSummaryDeferred.await()
+                val dailyRewardResult = dailyRewardDeferred.await()
+                walletDeferred?.await()
 
-            val homeSummaryResult = homeSummaryDeferred.await()
-            val dailyRewardResult = dailyRewardDeferred.await()
-            walletDeferred?.await()
+                _state.update { it.copy(isRefreshing = false) }
 
-            _state.update { it.copy(isLoading = false, isRefreshing = false) }
+                if (homeSummaryResult is LinguaQuestResult.Success) {
+                    val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
+                    val shouldShowBanner = dailyRewardUi != null &&
+                            !dailyRewardUi.claimedToday &&
+                            !DailyRewardSessionState.hasAutoShownThisSession
 
-            if (homeSummaryResult is LinguaQuestResult.Success) {
-                val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
-                val shouldShowBanner = dailyRewardUi != null &&
-                        !dailyRewardUi.claimedToday &&
-                        !DailyRewardSessionState.hasAutoShownThisSession
+                    if (shouldShowBanner) DailyRewardSessionState.hasAutoShownThisSession = true
 
-                if (shouldShowBanner) DailyRewardSessionState.hasAutoShownThisSession = true
+                    _state.update {
+                        it.copy(
+                            hasError = false,
+                            errorMessage = null,
+                            dailyReward = dailyRewardUi,
+                            isDailyRewardBannerVisible = shouldShowBanner
+                        )
+                    }
+                } else {
+                    val dataError = (homeSummaryResult as? LinguaQuestResult.Failure)?.error as? LinguaQuestDataError
+                    val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
+                    val hasCache = _state.value.worlds.isNotEmpty() || _state.value.languageProgress != null
+                    val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
 
+                    _state.update {
+                        it.copy(
+                            hasError = !hasCache && !isNoInternet,
+                            errorMessage = if (!hasCache && !isNoInternet) errorUiText else null
+                        )
+                    }
+
+                    if (isPullToRefresh || hasCache) {
+                        if (hasCache && dataError == LinguaQuestDataError.Remote.NO_INTERNET) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    title = UiText.StringResource(R.string.offline_title),
+                                    message = UiText.StringResource(R.string.offline_msg),
+                                    type = SnackbarType.INFO
+                                )
+                            )
+                        } else {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { refreshFromRemote(isPullToRefresh = true) }
+                                )
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Error refreshing home data from remote")
+                val emptyWorlds = _state.value.worlds.isEmpty()
+                val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        hasError = false,
-                        dailyReward = dailyRewardUi,
-                        isDailyRewardBannerVisible = shouldShowBanner
+                        isRefreshing = false,
+                        hasError = emptyWorlds,
+                        errorMessage = if (emptyWorlds) errorUiText else null
                     )
                 }
-            } else {
-                val errorResult = homeSummaryResult as LinguaQuestResult.Failure
-                _state.update { it.copy(hasError = true) }
-                snackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = errorResult.error.toUiText(),
-                        type = SnackbarType.ERROR,
-                        actionLabel = UiText.DynamicString("Retry"),
-                        onAction = { refreshFromRemote() }
-                    )
-                )
             }
         }
     }
@@ -174,7 +208,10 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isDailyRewardDialogVisible = false,
-                            dailyReward = it.dailyReward?.copy(claimedToday = true),
+                            dailyReward = it.dailyReward?.copy(
+                                claimedToday = true,
+                                currentDay = result.data.nextDay
+                            ),
                             coins = result.data.newCoinsBalance,
                             xp = result.data.newXpBalance
                         )

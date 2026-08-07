@@ -3,7 +3,6 @@ package com.iti.linguaquest.features.map.presentation.viewmodel
 import com.iti.linguaquest.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.map.domain.usecase.GetMapLevelsUseCase
 import com.iti.linguaquest.features.map.presentation.components.LevelStatus
@@ -104,13 +103,13 @@ class MapViewModel @Inject constructor(
                 }
             }.onFailure { error ->
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()
-                    ?: UiText.StringResource(R.string.general_error)
+                    ?: UiText.StringResource(R.string.error_generic)
 
                 _state.update {
                     it.copy(
                         isLoading = false,
                         hasError = true,
-                        errorMessage = uiText.toString()
+                        errorMessage = uiText
                     )
                 }
 

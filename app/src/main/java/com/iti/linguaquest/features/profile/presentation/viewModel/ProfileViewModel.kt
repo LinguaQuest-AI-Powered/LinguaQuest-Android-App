@@ -4,7 +4,6 @@ package com.iti.linguaquest.features.profile.presentation.viewModel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -22,6 +21,7 @@ import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileUiState
 import com.iti.linguaquest.features.profile.presentation.mapper.toProfileState
+import timber.log.Timber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -109,55 +109,75 @@ class ProfileViewModel @Inject constructor(
 
     private fun refreshProfile(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
-            val hasCache = getCachedProfileUseCase().firstOrNull() != null
             _state.update {
                 it.copy(
-                    isLoading = !hasCache,
+                    isLoading = false,
                     hasError = false,
                     isOffline = false
                 )
             }
 
-            val profileDeferred = async { refreshProfileSummaryUseCase() }
-            val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
+            try {
+                val profileDeferred = async { refreshProfileSummaryUseCase() }
+                val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
 
-            val result = profileDeferred.await()
-            walletDeferred?.await()
+                val result = profileDeferred.await()
+                walletDeferred?.await()
 
-            when (result) {
-                is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false, isRefreshing = false, isOffline = false) }
+                when (result) {
+                    is LinguaQuestResult.Success -> {
+                        _state.update { it.copy(isLoading = false, isRefreshing = false, hasError = false, errorMessage = null, isOffline = false) }
+                    }
+
+                    is LinguaQuestResult.Failure -> {
+                        val stillHasCache = _state.value.profile.userName.isNotBlank() || getCachedProfileUseCase().firstOrNull() != null
+                        val dataError = result.error as? LinguaQuestDataError
+                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(com.iti.linguaquest.R.string.error_generic)
+                        val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
+
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isRefreshing = false,
+                                hasError = !stillHasCache && !isNoInternet,
+                                errorMessage = if (!stillHasCache && !isNoInternet) errorUiText else null,
+                                isOffline = stillHasCache && isNoInternet
+                            )
+                        }
+
+                        if (isPullToRefresh || stillHasCache) {
+                            if (stillHasCache && dataError == LinguaQuestDataError.Remote.NO_INTERNET) {
+                                snackbarController.sendEvent(
+                                    SnackbarEvent(
+                                        title = UiText.StringResource(com.iti.linguaquest.R.string.offline_title),
+                                        message = UiText.StringResource(com.iti.linguaquest.R.string.offline_msg),
+                                        type = SnackbarType.INFO
+                                    )
+                                )
+                            } else {
+                                snackbarController.sendEvent(
+                                    SnackbarEvent(
+                                        message = errorUiText,
+                                        type = SnackbarType.ERROR,
+                                        actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
+                                        onAction = { refreshProfile(isPullToRefresh = true) }
+                                    )
+                                )
+                            }
+                        }
+                    }
                 }
-
-                is LinguaQuestResult.Failure -> {
-                    val stillHasCache = getCachedProfileUseCase().firstOrNull() != null
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            hasError = !stillHasCache,
-                            isOffline = stillHasCache && result.error.isNoInternet()
-                        )
-                    }
-
-                    if (stillHasCache && result.error.isNoInternet()) {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(
-                                title = UiText.StringResource(com.iti.linguaquest.R.string.offline_title),
-                                message = UiText.StringResource(com.iti.linguaquest.R.string.offline_msg),
-                                type = SnackbarType.INFO
-                            )
-                        )
-                    } else {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(
-                                message = result.error.toUiText(),
-                                type = SnackbarType.ERROR,
-                                actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
-                                onAction = { refreshProfile() }
-                            )
-                        )
-                    }
+            } catch (e: Exception) {
+                Timber.e(e, "Error refreshing profile data")
+                val stillHasCache = _state.value.profile.userName.isNotBlank()
+                val errorUiText = UiText.StringResource(com.iti.linguaquest.R.string.error_generic)
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        hasError = !stillHasCache,
+                        errorMessage = if (!stillHasCache) errorUiText else null
+                    )
                 }
             }
         }

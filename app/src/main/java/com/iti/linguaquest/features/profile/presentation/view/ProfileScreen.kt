@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,14 +20,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
-import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 import com.iti.linguaquest.features.profile.presentation.view.components.*
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.profile.presentation.viewModel.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -46,9 +43,9 @@ fun ProfileScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    var showAvatarSheet by rememberSaveable { mutableStateOf(false) }
-    var pendingCameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var showOfflinePopup by rememberSaveable { mutableStateOf(false) }
+    var showAvatarSheet by remember { mutableStateOf(false) }
+    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
+    var showOfflinePopup by remember { mutableStateOf(false) }
 
     fun guardOnline(action: () -> Unit) {
         if (isOnline) {
@@ -58,15 +55,29 @@ fun ProfileScreen(
         }
     }
 
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) pendingCameraUri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
-    }
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) pendingCameraUri?.let { cameraLauncher.launch(it) }
-    }
     val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri -> uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) } }
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success: Boolean ->
+        if (success) {
+            pendingCameraUri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
+        }
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            val uri = createImageCaptureUri(context)
+            pendingCameraUri = uri
+            cameraLauncher.launch(uri)
+        }
+    }
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
@@ -83,20 +94,19 @@ fun ProfileScreen(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        if (uiState.isLoading) {
-            LoadingView()
-        } else if (uiState.hasError && !uiState.hasCachedData) {
-            ErrorView(
-                message = stringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(ProfileIntent.Retry) },
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            PullToRefreshBox(
-                isRefreshing = uiState.isRefreshing,
-                onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
-                modifier = Modifier.fillMaxSize()
-            ) {
+
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (uiState.hasError && uiState.profile.userName.isBlank()) {
+                ErrorView(
+                    message = uiState.errorMessage ?: UiText.StringResource(R.string.error_generic),
+                    onRetry = { viewModel.onIntent(ProfileIntent.Refresh) },
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
                 ProfileContent(
                     state = uiState.profile,
                     isAvatarUploading = uiState.isAvatarUploading,
@@ -107,16 +117,6 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-        }
-
-        if (showOfflinePopup) {
-            NoInternetMiniPopup(
-                isOnline = isOnline,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 16.dp, top = 16.dp),
-                onDismiss = { showOfflinePopup = false }
-            )
         }
     }
 

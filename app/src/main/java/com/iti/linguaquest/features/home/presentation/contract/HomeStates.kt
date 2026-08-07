@@ -15,13 +15,14 @@ data class ContinueLevelUi(
 )
 
 data class HomeState(
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val xp: Int = 0,
     val coins: Int = 0,
     val languageProgress: LanguageProgressUi? = null,
     val worlds: List<WorldItem> = emptyList(),
     val startVoicePractise: Boolean? = false,
     val hasError: Boolean = false,
+    val errorMessage: UiText? = null,
     val isLanguageBottomSheetVisible: Boolean = false,
     val dailyReward: DailyRewardUi? = null,
     val isDailyRewardDialogVisible: Boolean = false,

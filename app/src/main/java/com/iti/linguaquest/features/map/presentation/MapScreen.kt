@@ -1,30 +1,13 @@
 package com.iti.linguaquest.features.map.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -32,6 +15,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -75,7 +59,13 @@ fun MapScreen(
             }
         }
     }
-    OfflineAwareContent(isOnline = isOnline) {
+
+    OfflineAwareContent(
+        isOnline = isOnline,
+        topBarTitle = state.worldTitle.asString(),
+        onBackClicked = { viewModel.onIntent(MapIntent.BackClicked) },
+        onRetry = { viewModel.onIntent(MapIntent.Retry) }
+    ) {
         MapScreenContent(
             state = state,
             onLevelClick = { viewModel.onIntent(MapIntent.LevelClicked(it)) },
@@ -101,7 +91,7 @@ fun MapScreenContent(
             }
             state.hasError && state.levels.isEmpty() -> {
                 ErrorView(
-                    message = state.errorMessage ?: stringResource(R.string.error_generic),
+                    message = state.errorMessage ?: UiText.StringResource(R.string.error_generic),
                     onRetry = onRetry,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -115,39 +105,10 @@ fun MapScreenContent(
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            androidx.compose.material3.IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(LinguaQuestTheme.colors.whiteColor, CircleShape)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(16.dp))
-            
-            if (!state.isLoading) {
-                Text(
-                    text = state.worldTitle.asString(),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.whiteColor,
-                        fontSize = 22.sp
-                    )
-                )
-            }
-        }
+        LinguaQuestScreenTopBar(
+            title = state.worldTitle.asString(),
+            onBackClicked = onBackClick
+        )
     }
 }
 

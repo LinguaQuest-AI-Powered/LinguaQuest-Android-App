@@ -29,9 +29,9 @@ import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameIntent
 import com.iti.linguaquest.features.voicegame.presentation.contract.VoiceGameState
-import com.iti.linguaquest.features.voicegame.presentation.view.components.SpeechBubble
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 
 import androidx.compose.ui.text.font.FontStyle
@@ -42,7 +42,7 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 @Composable
 fun IdlePhaseContent(state: VoiceGameState, viewModel: VoiceGameViewModel) {
     val soundPlayer = LocalSoundPlayer.current
-    SpeechBubble(stringResource(R.string.voice_idle_yo_can_do_it))
+    MessageBubble(title = stringResource(R.string.voice_idle_yo_can_do_it))
     Spacer(Modifier.height(8.dp))
     AppMascotGradientBox(
         imageRes = R.drawable.lingo_initial_state_voice,

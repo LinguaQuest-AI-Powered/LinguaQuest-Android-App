@@ -17,5 +17,5 @@ data class MapState(
     val levels: List<MapLevelUiModel> = emptyList(),
     val currentLevelIndex: Int = -1,
     val hasError: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: UiText? = null
 )

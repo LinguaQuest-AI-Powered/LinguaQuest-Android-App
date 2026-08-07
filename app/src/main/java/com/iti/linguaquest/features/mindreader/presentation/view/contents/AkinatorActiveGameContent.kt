@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,10 +22,10 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderActionRow
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderAnswerButton
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderProgressBar
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
 @Composable
 fun ActiveGameContent(
@@ -60,8 +59,8 @@ fun ActiveGameContent(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MindReaderSpeechBubble(
-                text = state.currentQuestion?.uppercase() ?: ""
+            MessageBubble(
+                title = state.currentQuestion?.uppercase() ?: ""
             )
 
             MindReaderActionRow(

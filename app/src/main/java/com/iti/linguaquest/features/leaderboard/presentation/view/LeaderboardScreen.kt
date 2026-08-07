@@ -25,7 +25,7 @@ fun LeaderboardScreen(
 
         state.errorMessage != null -> {
             ErrorView(
-                message = state.errorMessage!!.asString(),
+                message = state.errorMessage!!,
                 onRetry = { viewModel.onIntent(LeaderboardIntent.LoadLeaderboard) }
             )
         }

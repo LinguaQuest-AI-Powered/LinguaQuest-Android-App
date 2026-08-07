@@ -10,6 +10,19 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import com.iti.linguaquest.LinguaQuestApplication
+
+fun isDeviceConnectedToInternet(): Boolean {
+    val context = runCatching { LinguaQuestApplication.instance }.getOrNull() ?: return true
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return true
+    val activeNet = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(activeNet) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}
+
 suspend inline fun <T> safeApiCall(
     noinline mapServerError: (errorKey: String, errorMessage: String) -> LinguaQuestDataError =
         { _, message -> LinguaQuestDataError.CustomServerMessage(message) },
@@ -18,15 +31,27 @@ suspend inline fun <T> safeApiCall(
     return try {
         LinguaQuestResult.Success(apiCall())
     } catch (e: UnknownHostException) {
-        LinguaQuestResult.Failure(LinguaQuestDataError.Remote.NO_INTERNET)
+        if (isDeviceConnectedToInternet()) {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERVER)
+        } else {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.NO_INTERNET)
+        }
     } catch (e: SocketTimeoutException) {
-        LinguaQuestResult.Failure(LinguaQuestDataError.Remote.REQUEST_TIMEOUT)
+        if (isDeviceConnectedToInternet()) {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.REQUEST_TIMEOUT)
+        } else {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.NO_INTERNET)
+        }
     } catch (e: HttpException) {
         LinguaQuestResult.Failure(e.toLinguaQuestDataError(mapServerError))
     } catch (e: JsonSyntaxException) {
         LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)
     } catch (e: IOException) {
-        LinguaQuestResult.Failure(LinguaQuestDataError.Remote.NO_INTERNET)
+        if (isDeviceConnectedToInternet()) {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERVER)
+        } else {
+            LinguaQuestResult.Failure(LinguaQuestDataError.Remote.NO_INTERNET)
+        }
     } catch (e: Exception) {
         LinguaQuestResult.Failure(LinguaQuestDataError.Remote.UNKNOWN)
     }

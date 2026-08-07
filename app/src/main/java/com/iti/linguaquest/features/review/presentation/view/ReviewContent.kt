@@ -80,11 +80,7 @@ fun ReviewStoryContent(
             when {
                 state.isLoading -> {
                     item {
-                        LoadingView(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(220.dp)
-                        )
+                        LoadingView()
                     }
                 }
 

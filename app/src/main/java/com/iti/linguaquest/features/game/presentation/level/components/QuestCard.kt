@@ -15,7 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -35,6 +35,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,7 +43,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
@@ -128,7 +128,7 @@ fun QuestCard(
                         ) {
                             IconButton(onClick = onSoundClick) {
                                 Icon(
-                                    painter = rememberVectorPainter(Icons.Default.VolumeUp),
+                                    painter = rememberVectorPainter(Icons.AutoMirrored.Filled.VolumeUp),
                                     contentDescription = stringResource(id = R.string.play_sound),
                                     tint = LinguaQuestTheme.colors.BrownText,
                                     modifier = Modifier.size(24.dp)
@@ -185,21 +185,9 @@ fun QuestCard(
                     onClick = onMascotClick
                 )
         ) {
-            Box(
-                modifier = Modifier
-                    .shadow(4.dp, RoundedCornerShape(16.dp))
-                    .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                    .border(1.dp, LinguaQuestTheme.colors.textFieldBorder, RoundedCornerShape(16.dp))
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.mascot_help_text),
-                    color = LinguaQuestTheme.colors.BrownText,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+            MessageBubble(
+                title = stringResource(id = R.string.mascot_help_text)
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.lingo),

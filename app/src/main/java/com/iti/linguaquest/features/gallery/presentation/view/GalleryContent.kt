@@ -14,7 +14,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
 import com.iti.linguaquest.features.gallery.presentation.view.comonents.CategoryChipsRow
@@ -41,12 +40,9 @@ fun GalleryContent(
         }
 
         when {
-            state.isLoading && state.words.isEmpty() -> {
-                LoadingView(modifier = Modifier.weight(1f))
-            }
-            state.errorRes != null && state.words.isEmpty() -> {
+            state.errorMessage != null && state.words.isEmpty() -> {
                 ErrorView(
-                    message = androidx.compose.ui.res.stringResource(state.errorRes),
+                    message = state.errorMessage!!,
                     onRetry = { onIntent(GalleryIntent.LoadWords) },
                     modifier = Modifier.weight(1f)
                 )

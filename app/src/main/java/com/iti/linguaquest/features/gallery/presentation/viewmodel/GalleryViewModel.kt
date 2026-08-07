@@ -7,6 +7,9 @@ import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.RefreshGalleryUseCase
@@ -54,6 +57,7 @@ class GalleryViewModel @Inject constructor(
     fun onIntent(intent: GalleryIntent) {
         when (intent) {
             GalleryIntent.LoadWords -> refreshWords()
+            GalleryIntent.RefreshWords -> refreshWords(isPullToRefresh = true)
             is GalleryIntent.CategorySelected -> filterByCategory(intent.category)
             is GalleryIntent.DeleteWordClicked -> deleteWord(intent.word)
             is GalleryIntent.WordItemClicked -> navigateToReview(intent.wordId)
@@ -72,12 +76,12 @@ class GalleryViewModel @Inject constructor(
 
                 _state.update { current ->
                     current.copy(
-                        isLoading = if (words.isNotEmpty()) false else current.isLoading,
+                        isLoading = false,
                         words = words,
                         filteredWords = filteredWords,
                         categories = categories,
                         selectedCategory = selectedCategory,
-                        errorRes = if (words.isNotEmpty()) null else current.errorRes
+                        errorMessage = if (words.isNotEmpty()) null else current.errorMessage
                     )
                 }
             }
@@ -93,35 +97,48 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    private fun refreshWords() {
+    private fun refreshWords(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
             val hasCache = _state.value.words.isNotEmpty()
-            if (!hasCache) {
-                _state.update { it.copy(isLoading = true, errorRes = null) }
+            _state.update {
+                it.copy(
+                    isRefreshing = isPullToRefresh,
+                    errorMessage = if (hasCache) null else it.errorMessage
+                )
             }
 
             when (val result = refreshGalleryUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false, errorRes = null) }
+                    _state.update { it.copy(isLoading = false, isRefreshing = false, errorMessage = null) }
                 }
 
                 is LinguaQuestResult.Failure -> {
+                    val dataError = result.error as? LinguaQuestDataError
                     val stillHasCache = _state.value.words.isNotEmpty()
+                    val isOfflineError = dataError == LinguaQuestDataError.Remote.NO_INTERNET
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            errorRes = if (stillHasCache) null else result.error.toErrorRes()
+                            isRefreshing = false,
+                            errorMessage = if (stillHasCache || isOfflineError) null else dataError?.toUiText()
                         )
                     }
 
-                      val isSilentOfflineWithCache =
-                        stillHasCache && result.error == LinguaQuestDataError.Remote.NO_INTERNET
-
-                    if (!isSilentOfflineWithCache) {
+                    if (isPullToRefresh && isOfflineError) {
                         sendEffect(
                             GalleryEffect.ShowError(
-                                message = result.error.toUiText(),
-                                type = com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType.ERROR,
+                                title = UiText.StringResource(R.string.offline_title),
+                                message = UiText.StringResource(R.string.offline_msg),
+                                type = SnackbarType.INFO,
+                                retryable = false
+                            )
+                        )
+                    } else if (!isOfflineError && !stillHasCache) {
+                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
+                        sendEffect(
+                            GalleryEffect.ShowError(
+                                message = errorUiText,
+                                type = SnackbarType.ERROR,
                                 retryable = true
                             )
                         )

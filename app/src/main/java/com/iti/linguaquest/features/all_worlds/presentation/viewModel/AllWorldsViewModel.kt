@@ -11,6 +11,8 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import com.iti.linguaquest.R
@@ -72,7 +74,8 @@ class AllWorldsViewModel @Inject constructor(
                         it.copy(
                             isLoading = false,
                             hasError = true,
-                            errorMessage = result.error.toString()
+                            errorMessage = (result.error as? LinguaQuestDataError)?.toUiText()
+                                ?: UiText.StringResource(R.string.error_generic)
                         )
                     }
                 }
