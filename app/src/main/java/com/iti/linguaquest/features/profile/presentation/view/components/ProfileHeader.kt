@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.profile.presentation.view.components
 
-
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,12 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.Card3DWrapper
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
-
 
 @Composable
 fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUploading: Boolean) {
@@ -127,31 +125,30 @@ fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUp
             )
         )
         Spacer(Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .background(
-                    color = LinguaQuestTheme.colors.BrownText,
-                    shape = RoundedCornerShape(50)
-                )
-                .padding(bottom = 3.dp)
-                .clip(RoundedCornerShape(50))
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(horizontal = 14.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Card3DWrapper(
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            borderColor = LinguaQuestTheme.colors.BrownText,
+            ledgeHeight = 3.dp,
+            cornerRadius = 50.dp,
+            borderWidth = 0.dp
         ) {
-            Image(
-                painter = painterResource(R.drawable.ic_profile_level),
-                contentDescription = null,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(
-                text = "${stringResource(R.string.level)} ${state.level}",
-                color = LinguaQuestTheme.colors.BrownText,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_profile_level),
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = "${stringResource(R.string.level)} ${state.level}",
+                    color = LinguaQuestTheme.colors.BrownText,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 
@@ -163,5 +160,3 @@ fun ProfileHeader(state: ProfileState, onEditAvatarClick: () -> Unit, isAvatarUp
         )
     }
 }
-
-
