@@ -17,5 +17,6 @@ local.properties
 
 *.jks
 *.keystore
+!app/keystore/ci-debug.keystore
 disposables/
 .kotlin/
