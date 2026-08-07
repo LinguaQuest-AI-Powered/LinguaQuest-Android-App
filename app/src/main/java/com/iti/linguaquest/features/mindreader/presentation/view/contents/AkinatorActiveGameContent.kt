@@ -82,9 +82,10 @@ fun ActiveGameContent(
                 if (state.showTranslation && state.translatedQuestion != null) {
                     Text(
                         text = state.translatedQuestion,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.8f),
-                        textAlign = TextAlign.Center
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
             }

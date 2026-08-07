@@ -1,18 +1,40 @@
 package com.iti.linguaquest.features.mindreader.data.datasource.remote
 
 import com.google.gson.Gson
-import com.iti.linguaquest.core.ai.GeminiAiService
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
+import com.google.ai.client.generativeai.type.generationConfig
+import com.iti.linguaquest.BuildConfig
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderHonestyResponse
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderNextStepResponse
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderQuizResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-
-
 open class MindReaderAiService @Inject constructor(
-    private val geminiAiService: GeminiAiService,
     private val gson: Gson
 ) {
+    private val generativeModel by lazy {
+        GenerativeModel(
+            modelName = "gemini-3.5-flash-lite",
+            apiKey = BuildConfig.GEMINI_API_KEY,
+            generationConfig = generationConfig {
+                temperature = 0.7f
+                responseMimeType = "application/json"
+            }
+        )
+    }
+
+    private suspend fun generateJson(prompt: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val response = generativeModel.generateContent(content { text(prompt) })
+            val rawText = response.text
+            rawText?.trim()?.removePrefix("```json")?.removePrefix("```")?.removeSuffix("```")?.trim()?.takeIf { it.isNotEmpty() }
+        } catch (e: Exception) {
+            null
+        }
+    }
     open suspend fun getNextTurn(
         categoryContext: String,
         targetLanguage: String,
@@ -57,7 +79,7 @@ open class MindReaderAiService @Inject constructor(
         }
         """.trimIndent()
 
-        val jsonString = geminiAiService.generateJson(prompt) ?: return null
+        val jsonString = generateJson(prompt) ?: return null
         return try {
             gson.fromJson(jsonString, MindReaderNextStepResponse::class.java)
         } catch(e: Exception) {
@@ -88,7 +110,7 @@ open class MindReaderAiService @Inject constructor(
         }
         """.trimIndent()
 
-        val jsonString = geminiAiService.generateJson(prompt) ?: return null
+        val jsonString = generateJson(prompt) ?: return null
         return try {
             gson.fromJson(jsonString, MindReaderQuizResponse::class.java)
         } catch(e: Exception) {
@@ -120,7 +142,7 @@ open class MindReaderAiService @Inject constructor(
         }
         """.trimIndent()
 
-        val jsonString = geminiAiService.generateJson(prompt) ?: return null
+        val jsonString = generateJson(prompt) ?: return null
         return try {
             gson.fromJson(jsonString, MindReaderHonestyResponse::class.java)
         } catch(e: Exception) {
