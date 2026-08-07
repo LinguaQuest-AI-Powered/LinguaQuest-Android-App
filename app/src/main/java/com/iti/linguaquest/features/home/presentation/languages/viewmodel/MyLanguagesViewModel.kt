@@ -87,6 +87,15 @@ class MyLanguagesViewModel @Inject constructor(
     private fun setActiveLanguage(languageId: Int) {
         viewModelScope.launch {
             _state.update { it.copy(isSettingActive = true) }
+            sendEffect(MyLanguagesEffect.Dismiss)
+            snackbarController.sendEvent(
+                SnackbarEvent(
+                    title = UiText.StringResource(R.string.updating_language_title),
+                    message = UiText.StringResource(R.string.updating_language_desc),
+                    type = SnackbarType.INFO,
+                    showCloseIcon = false
+                )
+            )
             when (val result = setActiveLanguageUseCase(languageId)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { currentState ->
@@ -97,7 +106,6 @@ class MyLanguagesViewModel @Inject constructor(
                             }
                         )
                     }
-                    sendEffect(MyLanguagesEffect.Dismiss)
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSettingActive = false) }
@@ -134,12 +142,13 @@ class MyLanguagesViewModel @Inject constructor(
     private fun confirmRemoveLanguage() {
         val targetLanguage = _state.value.languagePendingRemoval ?: return
         viewModelScope.launch {
-            _state.update { it.copy(isRemoving = true, languagePendingRemoval = null) }
+            _state.update { it.copy(isRemoving = true, removingLanguageId = targetLanguage.id, languagePendingRemoval = null) }
             when (val result = removeLanguagesUseCase(listOf(targetLanguage.id))) {
                 is LinguaQuestResult.Success -> {
                     _state.update { currentState ->
                         currentState.copy(
                             isRemoving = false,
+                            removingLanguageId = null,
                             languages = result.data.map { lang -> lang.toUiModel() }
                         )
                     }
@@ -151,7 +160,7 @@ class MyLanguagesViewModel @Inject constructor(
                     )
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isRemoving = false) }
+                    _state.update { it.copy(isRemoving = false, removingLanguageId = null) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),

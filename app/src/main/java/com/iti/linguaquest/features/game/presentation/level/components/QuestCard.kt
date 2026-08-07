@@ -200,7 +200,11 @@ fun QuestCard(
                 modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(16.dp))
                     .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                    .border(1.dp, LinguaQuestTheme.colors.textFieldBorder, RoundedCornerShape(16.dp))
+                    .border(
+                        1.dp,
+                        LinguaQuestTheme.colors.textFieldBorder,
+                        RoundedCornerShape(16.dp)
+                    )
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(

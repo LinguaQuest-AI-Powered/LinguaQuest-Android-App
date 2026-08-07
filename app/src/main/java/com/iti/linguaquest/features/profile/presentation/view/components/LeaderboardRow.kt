@@ -20,38 +20,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.Card3DWrapper
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.profile.presentation.model.LeaderboardEntry
 
 @Composable
-fun LeaderboardRow(entry: LeaderboardEntry) {
-
+fun LeaderboardRow(
+    entry: LeaderboardEntry,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    ledgeHeight: Dp = if (entry.isCurrentUser) 6.dp else 4.dp,
+    cornerRadius: Dp = 16.dp
+) {
     val borderColor = if (entry.isCurrentUser)
         MaterialTheme.colorScheme.tertiary
     else
         LinguaQuestTheme.colors.Sand
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = borderColor,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(bottom = if (entry.isCurrentUser) 6.dp else 4.dp)
-            .background(
-                color = LinguaQuestTheme.colors.whiteColor,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .border(
-                width = if (entry.isCurrentUser) 1.5.dp else 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(16.dp)
-            )
+    Card3DWrapper(
+        modifier = modifier.fillMaxWidth(),
+        backgroundColor = LinguaQuestTheme.colors.whiteColor,
+        borderColor = borderColor,
+        borderWidth = if (entry.isCurrentUser) 1.5.dp else 1.dp,
+        onClick = onClick,
+        ledgeHeight = ledgeHeight,
+        cornerRadius = cornerRadius
     ) {
         Row(
             modifier = Modifier
@@ -59,7 +57,6 @@ fun LeaderboardRow(entry: LeaderboardEntry) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
                 text = entry.rank.toString(),
                 color = if (entry.isCurrentUser)
@@ -69,6 +66,7 @@ fun LeaderboardRow(entry: LeaderboardEntry) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.width(28.dp)
             )
+
             AsyncImage(
                 model = entry.avatarUrl,
                 contentDescription = entry.name,
@@ -92,11 +90,9 @@ fun LeaderboardRow(entry: LeaderboardEntry) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Text(
                         text = entry.name,
                         color = if (entry.isCurrentUser)
@@ -108,9 +104,7 @@ fun LeaderboardRow(entry: LeaderboardEntry) {
                     )
 
                     if (entry.isCurrentUser) {
-
                         Spacer(modifier = Modifier.width(6.dp))
-
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50))
@@ -144,7 +138,6 @@ fun LeaderboardRow(entry: LeaderboardEntry) {
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-
                 Text(
                     text = "${entry.xp}",
                     color = if (entry.isCurrentUser)

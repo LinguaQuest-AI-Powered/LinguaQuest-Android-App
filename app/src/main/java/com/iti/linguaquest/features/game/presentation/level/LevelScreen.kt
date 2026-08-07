@@ -60,7 +60,7 @@ fun LevelScreen(
     val sharedState by sharedViewModel.sharedState.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
+
     val speechManager = remember { SpeechManager(context) }
 
     DisposableEffect(speechManager) {
@@ -97,12 +97,15 @@ fun LevelScreen(
                     sharedViewModel.setTargetWord(state.wordToGuess)
                     onStartCamera()
                 }
+
                 is LevelEffect.PlaySound -> {
                     speechManager.speak(effect.word, effect.languageCode)
                 }
+
                 is LevelEffect.HintRetrieved -> {
                     sharedViewModel.setHintText(effect.hint)
                 }
+
                 LevelEffect.SkipLevel -> {
                 }
             }
@@ -147,7 +150,8 @@ fun LevelScreen(
 
                 QuestCard(
                     wordToGuess = state.wordToGuess,
-                    hintText = sharedState.hintText ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
+                    hintText = sharedState.hintText
+                        ?: stringResource(id = R.string.scan_hint_format, state.wordToGuess),
                     isLoading = state.isLoading,
                     isHintLoading = state.isHintLoading,
                     isHintConsumed = sharedState.hintText != null,

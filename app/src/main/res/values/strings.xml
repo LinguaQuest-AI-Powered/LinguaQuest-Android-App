@@ -830,7 +830,8 @@
 
     <string name="get_a_hint_title">Get a hint</string>
     <string name="change_word_hint">You can change the word if you are stuck</string>
-
+    <string name="updating_language_title">Updating Language</string>
+    <string name="updating_language_desc">Please wait while we set up your new language…</string>
     <string name="game_processing_status_analyzing">Analyzing pixels...</string>
     <string name="game_processing_status_comparing">Comparing with dictionary...</string>
     <string name="game_processing_status_thinking">Thinking hard...</string>

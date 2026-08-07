@@ -157,7 +157,6 @@ fun HomeScreen(
             when (effect) {
                 MyLanguagesEffect.NavigateToAddLanguages -> {
                     guardOnline {
-                        viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
                         onNavigateToAddLanguages()
                     }
                 }
@@ -326,6 +325,7 @@ fun HomeScreen(
             isLoading = myLanguagesState.isLoading,
             isSettingActive = myLanguagesState.isSettingActive,
             languagePendingRemoval = myLanguagesState.languagePendingRemoval,
+            removingLanguageId = myLanguagesState.removingLanguageId,
             onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
             onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
             onLanguageSelect = { selectedId ->
