@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class AppViewModel @Inject constructor(
     userPreferencesRepository: UserPreferencesRepository,
     private val appIconService: AppIconService
 ) : ViewModel() {

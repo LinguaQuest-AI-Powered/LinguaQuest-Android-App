@@ -47,7 +47,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MindReaderViewModel @Inject constructor(
     private val startMindReaderGameUseCase: StartMindReaderGameUseCase,
-    private val getMindReaderNextTurnUseCase: com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderNextTurnUseCase,
+    private val getMindReaderNextTurnUseCase: GetMindReaderNextTurnUseCase,
     private val submitMindReaderAnswerUseCase: SubmitMindReaderAnswerUseCase,
     private val resolveMindReaderRewardUseCase: ResolveMindReaderRewardUseCase,
     private val buildMindReaderPopQuizQuestionUseCase: BuildMindReaderPopQuizQuestionUseCase,

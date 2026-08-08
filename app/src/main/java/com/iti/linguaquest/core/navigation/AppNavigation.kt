@@ -379,7 +379,7 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Main> {
-                    MainScreen(rootBackStack)
+                    MainScreen(rootBackStack, viewModel = mainViewModel)
                 }
 
                 entry<RootScreen.Notification> {
