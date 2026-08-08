@@ -67,7 +67,9 @@ data class LinguaQuestColors(
     val DailyRewardInactiveLine: Color,
     val DailyRewardInactiveText: Color,
     val MindReaderBeige: Color,
-    val MindReaderCream: Color
+    val MindReaderCream: Color,
+    val CameraKnobCoral: Color,
+    val CameraKnobCoralHighlight: Color
 )
 
 internal val LocalLinguaQuestColors =

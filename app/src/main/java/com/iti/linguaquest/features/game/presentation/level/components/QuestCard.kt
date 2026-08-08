@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -55,6 +57,7 @@ fun QuestCard(
     hintText: String,
     isLoading: Boolean,
     isHintLoading: Boolean,
+    isHintConsumed: Boolean,
     onOpenCameraClick: () -> Unit,
     onChangeWordClick: () -> Unit,
     onSoundClick: () -> Unit,
@@ -93,13 +96,13 @@ fun QuestCard(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(80.dp),
+                            .heightIn(min = 80.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(80.dp)
+                                .heightIn(min = 80.dp)
                                 .background(LinguaQuestTheme.colors.ProfileCardColor, RoundedCornerShape(16.dp))
                                 .border(1.dp, LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp)),
                             contentAlignment = Alignment.Center
@@ -109,12 +112,20 @@ fun QuestCard(
                                     modifier = Modifier.size(40.dp)
                                 )
                             } else {
-                                Text(
-                                    text = wordToGuess,
-                                    fontSize = 32.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = LinguaQuestTheme.colors.BrownText
-                                )
+                                AnimatedContent(
+                                    targetState = wordToGuess,
+                                    label = "wordAnimation"
+                                ) { targetWord ->
+                                    Text(
+                                        text = targetWord,
+                                        fontSize = 32.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = LinguaQuestTheme.colors.BrownText,
+                                        textAlign = TextAlign.Center,
+                                        lineHeight = 36.sp,
+                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                                    )
+                                }
                             }
                         }
 
@@ -189,11 +200,15 @@ fun QuestCard(
                 modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(16.dp))
                     .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                    .border(1.dp, LinguaQuestTheme.colors.textFieldBorder, RoundedCornerShape(16.dp))
+                    .border(
+                        1.dp,
+                        LinguaQuestTheme.colors.textFieldBorder,
+                        RoundedCornerShape(16.dp)
+                    )
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.mascot_help_text),
+                    text = if (isHintConsumed) stringResource(id = R.string.change_word_hint) else stringResource(id = R.string.mascot_help_text),
                     color = LinguaQuestTheme.colors.BrownText,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,

@@ -1,5 +1,7 @@
 package com.iti.linguaquest.core.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
@@ -7,13 +9,22 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
@@ -28,6 +39,7 @@ import com.iti.linguaquest.features.auth.presentation.login.view.LoginScreen
 import com.iti.linguaquest.features.auth.presentation.signup.view.SignUpScreen
 import com.iti.linguaquest.features.auth.presentation.forgetpassword.view.ForgetPasswordScreen
 import com.iti.linguaquest.features.auth.presentation.newpassword.view.NewPasswordScreen
+import com.iti.linguaquest.features.notification.presentation.view.NotificationScreen
 import kotlin.time.Duration.Companion.milliseconds
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -40,10 +52,16 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.iti.linguaquest.R
 import kotlinx.coroutines.flow.collectLatest
+import com.iti.linguaquest.core.session.SessionEvent
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.dialog.GlobalDialogHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarHost
 import com.iti.linguaquest.core.sharedComponents.snackbar.AppSnackbarVisuals
+import com.iti.linguaquest.core.sharedComponents.InAppNotificationBanner
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.achivement.presentation.view.AchievementScreen
@@ -61,6 +79,7 @@ import com.iti.linguaquest.features.profile.presentation.editprofile.view.EditPr
 import com.iti.linguaquest.features.review.presentation.view.ReviewScreen
 import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
 import com.iti.linguaquest.features.mindreader.presentation.view.MindReaderScreen
+import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
@@ -68,14 +87,16 @@ import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier,
     openHomeRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
     onOpenLockScreenWordHandled: () -> Unit = {},
-    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
+    modifier: Modifier = Modifier,
+    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val rootBackStack = rememberNavBackStack(RootScreen.Splash)
@@ -99,6 +120,31 @@ fun AppNavigation(
             navigateSingleTop(RootScreen.LockScreenWordDetail(wordId))
         }
         onOpenLockScreenWordHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        globalUiHostViewModel.sessionEventBus.events.collectLatest { event ->
+            when (event) {
+                is SessionEvent.SessionExpired -> {
+                    rootBackStack.apply {
+                        clear()
+                        navigateSingleTop(RootScreen.Login())
+                    }
+                    globalUiHostViewModel.snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.login_error_token_not_valid),
+                            type = SnackbarType.WARNING
+                        )
+                    )
+                }
+                is SessionEvent.LoggedOut -> {
+                    rootBackStack.apply {
+                        clear()
+                        navigateSingleTop(RootScreen.Onboarding)
+                    }
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -140,12 +186,11 @@ fun AppNavigation(
             )
         }
     ) { innerPadding ->
-        NavDisplay(
-            backStack = rootBackStack,
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            onBack = { rootBackStack.removeLastOrNull() },
+        Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+            NavDisplay(
+                backStack = rootBackStack,
+                modifier = Modifier.fillMaxSize(),
+                onBack = { rootBackStack.removeLastOrNull() },
             transitionSpec = {
                 slideInHorizontally(
                     animationSpec = spring(
@@ -184,7 +229,7 @@ fun AppNavigation(
             ),
             entryProvider = entryProvider {
                 entry<RootScreen.Splash> {
-                    val splashViewModel: com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel =
+                    val splashViewModel: SplashViewModel =
                         hiltViewModel()
                     val destination by splashViewModel.destination.collectAsState()
 
@@ -337,15 +382,23 @@ fun AppNavigation(
                     MainScreen(rootBackStack)
                 }
 
+                entry<RootScreen.Notification> {
+                    NotificationScreen(
+                        onBackClick = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
                 entry<RootScreen.Map> { screen ->
                     MapScreen(
                         worldId = screen.worldId,
                         onBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToLevel = { levelNum ->
+                        onNavigateToLevel = { levelId, levelOrder, targetWord ->
                             rootBackStack.navigateSingleTop(
                                 RootScreen.GameFlow(
                                     worldId = screen.worldId,
-                                    levelNumber = levelNum
+                                    levelId = levelId,
+                                    levelOrder = levelOrder,
+                                    targetWord = targetWord
                                 )
                             )
                         }
@@ -355,7 +408,9 @@ fun AppNavigation(
                 entry<RootScreen.GameFlow> { screen ->
                     GameFlowHost(
                         worldId = screen.worldId,
-                        levelNumber = screen.levelNumber,
+                        levelId = screen.levelId,
+                        levelOrder = screen.levelOrder,
+                        targetWord = screen.targetWord,
                         rootBackStack = rootBackStack
                     )
                 }
@@ -528,5 +583,53 @@ fun AppNavigation(
 
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
+
+            val notificationMessage by globalUiHostViewModel.notificationBannerController.notificationMessage.collectAsState()
+            var activeNotification by remember { androidx.compose.runtime.mutableStateOf<com.iti.linguaquest.core.sharedComponents.NotificationBannerState?>(null) }
+            
+            LaunchedEffect(notificationMessage) {
+                if (notificationMessage != null) {
+                    mainViewModel.refreshUnreadCount()
+                    activeNotification = notificationMessage
+                    soundPlayer.play(AppSound.Notification)
+                    delay(6000)
+                    soundPlayer.play(AppSound.NotificationDisappear)
+                    globalUiHostViewModel.notificationBannerController.hideNotification()
+                }
+            }
+
+            AnimatedVisibility(
+                visible = notificationMessage != null,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(400, easing = FastOutSlowInEasing)
+                ) + fadeIn(tween(400)),
+                exit = slideOutVertically(
+                    targetOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(300, easing = FastOutSlowInEasing)
+                ) + fadeOut(tween(300)),
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                activeNotification?.let { notif ->
+                    InAppNotificationBanner(
+                        title = notif.title,
+                        message = notif.message,
+                        onClick = {
+                            globalUiHostViewModel.notificationBannerController.hideNotification()
+                            val isAchievement = notif.type?.contains("ACHIEVEMENT", ignoreCase = true) == true ||
+                                                notif.title.contains("Achievement", ignoreCase = true) ||
+                                                notif.title.contains("Trophy", ignoreCase = true)
+                            if (isAchievement) {
+                                rootBackStack.navigateSingleTop(RootScreen.Achievement)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                    )
+                }
+            }
+        }
     }
 }

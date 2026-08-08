@@ -11,9 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -32,14 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
-import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
+import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
 
 
 @Composable
@@ -48,20 +42,23 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val nestedBackStack = rememberNavBackStack(NestedScreen.Home)
+    val nestedBackStack = if (viewModel.lastActiveTab == NestedScreen.Home) {
+        rememberNavBackStack(NestedScreen.Home)
+    } else {
+        rememberNavBackStack(NestedScreen.Home, viewModel.lastActiveTab)
+    }
     val currentScreen = nestedBackStack.lastOrNull()
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
-    val soundPlayer = LocalSoundPlayer.current
+    val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
 
 
-    var previousWallet by remember { mutableStateOf<Wallet?>(null) }
-    LaunchedEffect(wallet.xp, wallet.coins) {
-        val previous = previousWallet
-        if (previous != null && (wallet.xp != previous.xp || wallet.coins != previous.coins)) {
-            soundPlayer.play(AppSound.AddedMoney)
+    val currentRootScreen = rootBackStack.lastOrNull()
+    LaunchedEffect(currentRootScreen) {
+        if (currentRootScreen == RootScreen.Main) {
+            viewModel.refreshUnreadCount()
         }
-        previousWallet = wallet
     }
+
     DisposableEffect(Unit) {
         onDispose { SharedBottomBarState.heightPx = 0 }
     }
@@ -93,14 +90,20 @@ fun MainScreen(
             topBar = {
                 LinguaQuestTopAppBar(
                     xp = wallet.xp,
-                    coins = wallet.coins
+                    coins = wallet.coins,
+                    unreadCount = unreadCount,
+                    onBellClick = {
+                        rootBackStack.navigateSingleTop(RootScreen.Notification)
+                    }
                 )
             },
+
             bottomBar = {
                 GameBottomNavBar(
                     items = BottomNavScreen.entries,
                     currentRoute = currentScreen,
                     onItemClick = { bottomNavScreen ->
+                        viewModel.lastActiveTab = bottomNavScreen.route
                         nestedBackStack.apply {
                             clear()
                             navigateSingleTop(NestedScreen.Home)
@@ -128,15 +131,6 @@ fun MainScreen(
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
-                            onNavigateToVoiceGame = {
-                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
-                            },
-                            onNavigateToRoleplayList = {
-                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
-                            },
-                            onNavigateToMindReader = {
-                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
-                            },
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
@@ -145,6 +139,10 @@ fun MainScreen(
                             },
                             onNavigateToAddLanguages = {
                                 rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
+                            },
+                            onNavigateToLevel = { worldId, levelId, levelOrder, targetWord ->
+                                rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                                rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
                             }
                         )
                     }
@@ -153,6 +151,19 @@ fun MainScreen(
                             onNavigateToReview = { word ->
                                 SharedWordHolder.pendingWord = word
                                 rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                            }
+                        )
+                    }
+                    entry<NestedScreen.Lingos> {
+                        LingosScreen(
+                            onNavigateToVoiceGame = {
+                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
+                            },
+                            onNavigateToRoleplayList = {
+                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                            },
+                            onNavigateToMindReader = {
+                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
                             }
                         )
                     }

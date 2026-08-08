@@ -19,14 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.AppConfettiView
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
+import com.iti.linguaquest.core.sharedComponents.AppRewardsRow
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import nl.dionsegijn.konfetti.compose.KonfettiView
-import nl.dionsegijn.konfetti.core.Party
-import nl.dionsegijn.konfetti.core.Position
-import nl.dionsegijn.konfetti.core.emitter.Emitter
-import java.util.concurrent.TimeUnit
 
 @Composable
 fun GameSuccessView(
@@ -37,32 +34,13 @@ fun GameSuccessView(
     onNextLevelClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val confettiColors = listOf(
-        LinguaQuestTheme.colors.OrangeActive.toArgb(),
-        LinguaQuestTheme.colors.splashTopLeftColor.toArgb(),
-        LinguaQuestTheme.colors.whiteColor.toArgb()
-    )
-
-    val party = Party(
-        speed = 0f,
-        maxSpeed = 30f,
-        damping = 0.9f,
-        spread = 360,
-        colors = confettiColors,
-        position = Position.Relative(0.5, 0.25),
-        emitter = Emitter(duration = 200, TimeUnit.MILLISECONDS).max(200)
-    )
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        KonfettiView(
-            modifier = Modifier.fillMaxSize(),
-            parties = listOf(party)
-        )
+        AppConfettiView()
 
         AppMascotGradientBox(
             imageRes = R.drawable.lingo_success,
@@ -89,23 +67,10 @@ fun GameSuccessView(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                RewardPill(
-                    iconRes = R.drawable.ic_xp,
-                    amount = stringResource(R.string.game_result_xp_format, xpGained),
-                    label = stringResource(R.string.xp),
-                    modifier = Modifier.weight(1f)
-                )
-                RewardPill(
-                    iconRes = R.drawable.ic_coin,
-                    amount = stringResource(R.string.game_result_coins_format, coinsGained),
-                    label = stringResource(R.string.coins_label),
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            AppRewardsRow(
+                coinsAmount = coinsGained,
+                xpAmount = xpGained
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 

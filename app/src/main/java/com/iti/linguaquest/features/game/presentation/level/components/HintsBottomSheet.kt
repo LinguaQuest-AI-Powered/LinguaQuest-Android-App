@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,9 +25,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.Composable
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.domain.model.GameCost
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,10 +66,9 @@ fun HintsBottomSheet(
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_coin),
                         contentDescription = stringResource(id = R.string.coins),
-                        tint = LinguaQuestTheme.colors.OrangeActive,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -126,12 +125,14 @@ fun HintsBottomSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            val cost = GameCost.HINT.coins
+            val isAffordable = coinCount >= cost
             HintItem(
                 icon = Icons.Default.Info,
-                title = stringResource(id = R.string.game_result_hint_button),
-                cost = 20,
+                title = stringResource(id = R.string.get_a_hint_title),
+                cost = cost,
                 isLoading = isLoading,
-                isEnabled = coinCount >= 20,
+                isEnabled = isAffordable,
                 onClick = onBuyHint
             )
         }
@@ -172,10 +173,9 @@ private fun HintItem(
                 fontWeight = FontWeight.Bold
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.MonetizationOn),
+                Image(
+                    painter = painterResource(id = R.drawable.ic_coin),
                     contentDescription = stringResource(id = R.string.coins),
-                    tint = LinguaQuestTheme.colors.OrangeActive,
                     modifier = Modifier.size(12.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))

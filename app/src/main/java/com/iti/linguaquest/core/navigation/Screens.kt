@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
@@ -17,6 +18,7 @@ enum class BottomNavScreen(
 ) {
     Home(R.string.home_label, Icons.Default.Home, NestedScreen.Home),
     Gallery(R.string.gallery_label, Icons.Default.PhotoLibrary, NestedScreen.Gallery),
+    Lingos(R.string.lingos_label, Icons.Default.Star, NestedScreen.Lingos),
     Profile(R.string.profile_label, Icons.Default.Person, NestedScreen.Profile)
 }
 
@@ -47,7 +49,7 @@ sealed interface RootScreen : NavKey {
     data object Main : RootScreen
 
     @Serializable
-    data class GameFlow(val worldId: Int, val levelNumber: Int) : RootScreen // UPDATED
+    data class GameFlow(val worldId: Int, val levelId: Int, val levelOrder: Int, val targetWord: String? = null) : RootScreen // UPDATED
 
     @Serializable
     data class Map(val worldId: Int) : RootScreen
@@ -99,11 +101,17 @@ sealed interface RootScreen : NavKey {
     
     @Serializable
     data class MindReader(val worldId: Int? = null) : RootScreen
+
+    @Serializable
+    data object Notification : RootScreen
 }
+
 @Serializable
 sealed interface NestedScreen : NavKey {
     @Serializable
     data object Gallery : NestedScreen
+    @Serializable
+    data object Lingos : NestedScreen
     @Serializable
     data object Home : NestedScreen
     @Serializable

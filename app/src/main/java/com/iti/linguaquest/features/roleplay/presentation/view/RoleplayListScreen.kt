@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.roleplay.presentation.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -57,6 +58,10 @@ fun RoleplayListScreen(
     viewModel: RoleplayListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+   BackHandler {
+        onNavigateBack()
+    }
 
     Scaffold(
         topBar = {

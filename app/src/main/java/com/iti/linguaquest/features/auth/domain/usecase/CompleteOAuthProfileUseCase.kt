@@ -1,22 +1,45 @@
 package com.iti.linguaquest.features.auth.domain.usecase
 
+import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTokenUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import kotlinx.coroutines.withTimeoutOrNull
+import timber.log.Timber
 import javax.inject.Inject
 
 class CompleteOAuthProfileUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val registerDeviceTokenUseCase: RegisterDeviceTokenUseCase,
+    private val syncUserNativeLanguageUseCase: SyncUserNativeLanguageUseCase
 ) {
     suspend operator fun invoke(
         nativeLanguageId: Int,
         targetLanguageId: Int,
         username: String? = null
     ): LinguaQuestResult<Unit, AuthError> {
-        return authRepository.completeOAuthProfile(
+        val result = authRepository.completeOAuthProfile(
             nativeLanguageId = nativeLanguageId,
             targetLanguageId = targetLanguageId,
             username = username
         )
+        if (result is LinguaQuestResult.Success) {
+            try {
+                syncUserNativeLanguageUseCase(nativeLanguageId = nativeLanguageId)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to sync native language after completing OAuth profile")
+            }
+
+            try {
+                withTimeoutOrNull(3_000L) {
+                    registerDeviceTokenUseCase()
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to register device token after completing OAuth profile")
+            }
+        }
+        return result
     }
 }
+
+

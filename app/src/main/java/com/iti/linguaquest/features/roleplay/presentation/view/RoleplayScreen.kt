@@ -12,15 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import kotlinx.coroutines.flow.collectLatest
-
-import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 
 @Composable
 fun RoleplayScreen(
@@ -48,6 +47,9 @@ fun RoleplayScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RoleplayEffect.NavigateToHome -> onNavigateHome()
+                is RoleplayEffect.ShowSnackbarAndNavigateBack -> {
+                    onNavigateHome()
+                }
             }
         }
     }

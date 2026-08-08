@@ -31,7 +31,7 @@ fun BossEvaluatingView() {
         contentAlignment = Alignment.Center
     ) {
         AppMascotGradientBox(
-            imageRes = R.drawable.lingo,
+            imageRes = R.drawable.lingo_checking_pronounciation,
             mascotSize = 180.dp
         ) {
             Text(

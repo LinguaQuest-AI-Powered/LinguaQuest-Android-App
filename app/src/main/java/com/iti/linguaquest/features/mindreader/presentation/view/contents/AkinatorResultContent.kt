@@ -24,7 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.AppConfettiView
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
+import com.iti.linguaquest.core.sharedComponents.AppRewardsRow
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
@@ -34,13 +36,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderRewardRow
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
-import nl.dionsegijn.konfetti.compose.KonfettiView
-import nl.dionsegijn.konfetti.core.Party
-import nl.dionsegijn.konfetti.core.Position
-import nl.dionsegijn.konfetti.core.emitter.Emitter
-import java.util.concurrent.TimeUnit
 
 @Composable
 fun ResultContent(
@@ -59,31 +55,12 @@ fun ResultContent(
         }
     }
 
-    val confettiColors = listOf(
-        LinguaQuestTheme.colors.OrangeActive.toArgb(),
-        LinguaQuestTheme.colors.splashTopLeftColor.toArgb(),
-        LinguaQuestTheme.colors.whiteColor.toArgb()
-    )
-
-    val party = Party(
-        speed = 0f,
-        maxSpeed = 30f,
-        damping = 0.9f,
-        spread = 360,
-        colors = confettiColors,
-        position = Position.Relative(0.5, 0.25),
-        emitter = Emitter(duration = 200, TimeUnit.MILLISECONDS).max(200)
-    )
-
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if (resultInfo.isVictory) {
-            KonfettiView(
-                modifier = Modifier.fillMaxSize(),
-                parties = listOf(party)
-            )
+            AppConfettiView()
         }
 
         Column(
@@ -145,10 +122,9 @@ fun ResultContent(
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
-
-                    MindReaderRewardRow(
-                        xpEarned = resultInfo.xpEarned,
-                        coinsEarned = resultInfo.coinsEarned
+                    AppRewardsRow(
+                        xpAmount = resultInfo.xpEarned,
+                        coinsAmount = resultInfo.coinsEarned
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))

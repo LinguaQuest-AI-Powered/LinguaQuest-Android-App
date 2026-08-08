@@ -11,7 +11,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.translate
 
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -49,15 +50,27 @@ fun MapPath(nodePositions: List<Pair<Dp, Dp>>) {
             lineTo(points.last().x, points.last().y - extensionPx)
         }
 
+        // Path shadow to make it look raised (3D)
+        translate(top = 12.dp.toPx()) {
+            drawPath(
+                path = path,
+                color = Color.Black.copy(alpha = 0.25f),
+                style = Stroke(width = 62.dp.toPx(), cap = StrokeCap.Round)
+            )
+        }
+
+        // Outer border
         drawPath(
             path = path,
             color = outerColor,
-            style = Stroke(width = 36.dp.toPx(), cap = StrokeCap.Round)
+            style = Stroke(width = 48.dp.toPx(), cap = StrokeCap.Round)
         )
+        
+        // Inner fill
         drawPath(
             path = path,
             color = innerColor,
-            style = Stroke(width = 28.dp.toPx(), cap = StrokeCap.Round)
+            style = Stroke(width = 38.dp.toPx(), cap = StrokeCap.Round)
         )
         drawPath(
             path = path,

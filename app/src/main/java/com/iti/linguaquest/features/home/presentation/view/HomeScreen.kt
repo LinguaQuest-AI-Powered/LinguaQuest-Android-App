@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
@@ -59,10 +60,11 @@ import com.iti.linguaquest.features.home.presentation.languages.component.MyLang
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
 import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.view.components.VoicePractiseCard
+import com.iti.linguaquest.features.home.presentation.view.components.WordCaptureCard
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
@@ -80,11 +82,9 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToVoiceGame: () -> Unit,
-    onNavigateToRoleplayList: () -> Unit,
-    onNavigateToMindReader: () -> Unit,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
+    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, targetWord: String?) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit,
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
@@ -102,6 +102,7 @@ fun HomeScreen(
     var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+    val context = LocalContext.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
     var bannerHeightPx by remember { mutableFloatStateOf(0f) }
 
@@ -120,16 +121,17 @@ fun HomeScreen(
 
 
 
-    LaunchedEffect(state.isDailyRewardBannerVisible) {
-        if (state.isDailyRewardBannerVisible) {
+    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
+        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
+            soundPlayer.play(AppSound.AddedMoney)
             showCoinRain = true
             delay(3000.milliseconds)
             showCoinRain = false
         }
     }
 
-    LaunchedEffect(state.isDailyRewardBannerVisible) {
-        if (state.isDailyRewardBannerVisible) {
+    LaunchedEffect(state.isDailyRewardBannerVisible, state.isLoading, state.hasError) {
+        if (state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError) {
             delay(6000.milliseconds)
             viewModel.onIntent(HomeIntent.DismissDailyRewardBanner)
         }
@@ -142,12 +144,12 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToVoiceGame -> onNavigateToVoiceGame()
-                is HomeEffect.NavigateToRoleplayList -> onNavigateToRoleplayList()
-                is HomeEffect.NavigateToMindReader -> onNavigateToMindReader()
                 is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
+                is HomeEffect.NavigateToContinueLevel -> {
+                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.targetWord?.asString(context))
+                }
             }
         }
     }
@@ -157,7 +159,6 @@ fun HomeScreen(
             when (effect) {
                 MyLanguagesEffect.NavigateToAddLanguages -> {
                     guardOnline {
-                        viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
                         onNavigateToAddLanguages()
                     }
                 }
@@ -199,14 +200,8 @@ fun HomeScreen(
                     onWorldClick = { world, anchor ->
                         guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
                     },
-                    onStartVoiceClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.StartVoicePractiseClicked) }
-                    },
-                    onRoleplayClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.RoleplayCardClicked) }
-                    },
-                    onMindReaderClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.MindReaderCardClicked) }
+                    onContinueLevelClick = { level, anchor ->
+                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
                     }
                 )
             }
@@ -231,7 +226,7 @@ fun HomeScreen(
         }
 
         AnimatedVisibility(
-            visible = state.isDailyRewardBannerVisible,
+            visible = state.isDailyRewardBannerVisible && !state.isLoading && !state.hasError,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> -fullHeight },
                 animationSpec = tween(400, easing = FastOutSlowInEasing)
@@ -332,6 +327,7 @@ fun HomeScreen(
             isLoading = myLanguagesState.isLoading,
             isSettingActive = myLanguagesState.isSettingActive,
             languagePendingRemoval = myLanguagesState.languagePendingRemoval,
+            removingLanguageId = myLanguagesState.removingLanguageId,
             onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
             onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
             onLanguageSelect = { selectedId ->
@@ -357,9 +353,7 @@ fun HomeContent(
     state: HomeState,
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
-    onStartVoiceClick: (Rect) -> Unit,
-    onRoleplayClick: (Rect) -> Unit,
-    onMindReaderClick: (Rect) -> Unit,
+    onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -381,6 +375,35 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
+        if (state.continueLevel != null) {
+            val level = state.continueLevel
+            WordCaptureCard(
+                worldName = level.worldName.asString(),
+                targetWord = level.targetWord.asString(),
+                progressText = "${level.levelOrder} of ${level.totalLevels}",
+                onContinueClick = { rect ->
+                    onContinueLevelClick(level, rect)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        } else {
+            WordCaptureCard(
+                buttonText = stringResource(R.string.start_hunting),
+                worldName = stringResource(R.string.mystery_world),
+                targetWord = "\uD83E\uDD14",
+                progressText = "\uD83E\uDD14 of 10",
+                onContinueClick = { rect ->
+                    onSeeMoreClick(rect)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
         if (state.worlds.isNotEmpty()) {
             ExploreWorldsSection(
                 worlds = state.worlds,
@@ -390,32 +413,5 @@ fun HomeContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
-
-        VoicePractiseCard(
-            onStartClick = onStartVoiceClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        com.iti.linguaquest.features.home.presentation.view.components.RoleplayCard(
-            onStartClick = onRoleplayClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        com.iti.linguaquest.features.home.presentation.view.components.MindReaderCard(
-            onStartClick = onMindReaderClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }

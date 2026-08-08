@@ -6,14 +6,14 @@ import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.result.AppError
+import com.iti.linguaquest.core.domain.model.MiniGameReward
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
-import com.iti.linguaquest.core.sound.AppSound
-import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
@@ -45,8 +45,7 @@ class VoiceGameViewModel @Inject constructor(
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
-    private val snackbarController: SnackbarController,
-    private val soundPlayer: AppSoundPlayer
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -115,13 +114,11 @@ class VoiceGameViewModel @Inject constructor(
             }
 
             VoiceGameIntent.PauseClicked -> {
-                soundPlayer.play(AppSound.CLOSE_MIC)
                 recordAudioUseCase.pause()
                 _state.update { it.copy(isPaused = true) }
             }
 
             VoiceGameIntent.ResumeClicked -> {
-                soundPlayer.play(AppSound.OPEN_MIC)
                 recordAudioUseCase.resume()
                 _state.update { it.copy(isPaused = false) }
             }
@@ -188,7 +185,6 @@ class VoiceGameViewModel @Inject constructor(
     }
 
     private fun startRecording() {
-        soundPlayer.play(AppSound.OPEN_MIC)
         recordAudioUseCase.start()
         _state.update {
             it.copy(
@@ -300,15 +296,17 @@ class VoiceGameViewModel @Inject constructor(
                             correctWords = evaluation.correctWords,
                             wrongWords = evaluation.wrongWords,
                             advice = evaluation.advice,
-                            coinsAwarded = if (passed) 10 else 0,
+                            coinsAwarded = if (passed) MiniGameReward.VOICE_GAME.coins else 0,
+                            xpAwarded = if (passed) MiniGameReward.VOICE_GAME.xp else 0,
                             isPassed = passed,
                             lessonId = lessonId,
                             sentence = _state.value.sentence,
-                            coinsBeforeAward = wallet.value.coins
+                            coinsBeforeAward = wallet.value.coins,
+                            xpBeforeAward = wallet.value.xp
                         )
 
                         sendEffect(VoiceGameEffect.NavigateToResult(voiceResult))
-                        onGameWon(coinsDelta = voiceResult.coinsAwarded)
+                        onGameWon(xpDelta = voiceResult.xpAwarded, coinsDelta = voiceResult.coinsAwarded)
                         resetToIdle(discardAudio = false)
                     }
 

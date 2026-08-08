@@ -15,6 +15,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderEffect
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
@@ -35,6 +36,10 @@ fun MindReaderScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val speechManager = remember { SpeechManager(context) }
+
+    BackHandler {
+        onNavigateBack()
+    }
 
     DisposableEffect(Unit) {
         onDispose {

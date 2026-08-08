@@ -6,6 +6,7 @@
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
     <string name="loading">تحميل...</string>
+    <string name="new_password_min_length_hint">Minimum 6 characters</string>
     <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
@@ -36,7 +37,18 @@
     <string name="japanese_language_code">ja</string>
     <string name="english_language_code">en</string>
     <string name="germany_language_code">ge</string>
-
+    <string name="cd_xp">XP</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
+    <string name="not_enough_coins">Not enough coins!</string>
+    <string name="dummy_world_name">Kitchen World</string>
+    <string name="dummy_progress_text">4 of 10</string>
+    <string name="dummy_target_word">la taza</string>
+    <string name="lingos_label">Lingos</string>
+    <string name="current_quest_label">CURRENT QUEST</string>
+    <string name="find_and_capture_instruction">Find &amp; capture</string>
+    <string name="word_capture_continue_button">Continue</string>
+    <string name="mascot_camera_cd">Camera Mascot</string>
+    <string name="camera_icon_cd">Camera Icon</string>
     <string name="select_language">اختر اللغة</string>
     <string name="every_day">كل يوم</string>
     <string name="weekdays">أيام الأسبوع</string>
@@ -182,7 +194,7 @@
     <string name="hard">صعب</string>
 
     <!-- Review Screen -->
-     <string name="review_back_content_description">رجوع</string>
+    <string name="review_back_content_description">رجوع</string>
     <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
     <string name="review_error_emoji">😔</string>
     <string name="review_retry_button">حاول مرة أخرى</string>
@@ -585,7 +597,7 @@
     <string name="roleplay_stop_recording">إيقاف التسجيل</string>
     <string name="roleplay_start_recording">بدء التسجيل</string>
     <string name="roleplay_victory">انتصار!</string>
-    <string name="roleplay_next_world">العالم التالي</string>
+    <string name="roleplay_next_world">انهاء</string>
     <string name="roleplay_stage_failed">فشلت المرحلة</string>
     <string name="roleplay_try_again">حاول مرة أخرى</string>
     <string name="roleplay_evaluating">جاري التقييم...</string>
@@ -601,6 +613,10 @@
     <string name="roleplay_not_connected">غير متصل.</string>
     <string name="roleplay_tap_to_stop">انقر للإيقاف</string>
     <string name="roleplay_tap_to_speak">انقر للتحدث</string>
+    <string name="roleplay_hold_to_speak">اضغط مع الاستمرار للتحدث</string>
+    <string name="roleplay_release_to_send">اترك للإرسال</string>
+    <string name="roleplay_ai_thinking">الذكاء الاصطناعي يفكر...</string>
+    <string name="roleplay_ai_speaking">الذكاء الاصطناعي يتحدث...</string>
     <string name="roleplay_finish_stage">إنهاء المرحلة</string>
     <string name="roleplay_meet_boss">قابل %1$s</string>
     <string name="roleplay_your_objective">هدفك</string>
@@ -616,7 +632,22 @@
     <string name="roleplay_label">تبادل الأدوار</string>
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">تم الوصول إلى الحد الأقصى لخدمة الذكاء الاصطناعي. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_connection_lost">انقطع الاتصال. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
+    <string name="roleplay_error_failed_connect">تعذر الاتصال بشخصية الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_evaluation_failed">تعذر تقييم المحادثة. يرجى المحاولة مرة أخرى.</string>
+    <string name="roleplay_error_session_ended">انتهت جلسة تبادل الأدوار. يرجى البدء من جديد.</string>
+    <string name="roleplay_error_generic">حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.</string>
     <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
+    <string name="roleplay_overall_fluency">الطلاقة العامة</string>
+    <string name="roleplay_grammar">القواعد</string>
+    <string name="roleplay_vocabulary">المفردات</string>
+    <string name="roleplay_strengths">نقاط القوة</string>
+    <string name="roleplay_improvements">نقاط للتحسين</string>
+    <string name="roleplay_stars_3">متميز جداً!</string>
+    <string name="roleplay_stars_2">عمل رائع!</string>
+    <string name="roleplay_stars_1">محاولة جيدة!</string>
+    <string name="roleplay_short_conversation">المحادثة كانت قصيرة جداً. حاول التحدث بجملتين أو ثلاث على الأقل لإكمال المرحلة.</string>
     <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
     <string name="no_languages_available">لا توجد لغات متاحة</string>
     <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
@@ -777,4 +808,25 @@
     <string name="remove_language_title">حذف اللغة</string>
     <string name="remove_language_message">هل أنت متأكد من أنك تريد حذف %1$s من اللغات المستهدفة؟</string>
     <string name="remove">حذف</string>
+
+    <string name="delete_all">حذف الكل</string>
+    <string name="clear_all_notifications_title">حذف كافة الإشعارات؟</string>
+
+    <string name="clear_all_notifications_message">هل أنت متأكد من رغبتك في حذف كافة الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_notification_title">حذف الإشعار</string>
+    <string name="delete_notification_message">هل أنت متأكد من رغبتك في حذف هذا الإشعار؟</string>
+    <string name="no_notifications_found">لا توجد إشعارات حتى الآن!</string>
+    <string name="no_notifications_desc">عندما تتلقى تحديثات، تنبيهات أو مكافآت، ستظهر لك هنا مباشرة.</string>
+    <string name="notification_dismiss">إلغاء</string>
+    <string name="notification_delete_confirm">حذف</string>
+    <string name="notification_delete_all_confirm">حذف الكل</string>
+    <string name="notifications_load_error">تعذر تحميل الإشعارات. يرجى المحاولة مرة أخرى.</string>
+    <string name="notification_deleted_toast">تم حذف الإشعار.</string>
+    <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
+    <string name="new_notification">اشعار جديد</string>
+    <string name="start_hunting">أبدا مغامرتك</string>
+    <string name="mystery_world">عالم غامض</string>
+
+    <string name="updating_language_title">اضافة اللغه</string>
+    <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
 </resources>

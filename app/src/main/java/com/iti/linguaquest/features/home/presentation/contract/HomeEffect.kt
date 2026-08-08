@@ -1,10 +1,10 @@
 package com.iti.linguaquest.features.home.presentation.contract
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+
 sealed interface HomeEffect {
-    data object NavigateToVoiceGame : HomeEffect
     data class NavigateToWorld(val worldId: Int) : HomeEffect
     data object NavigateToAllWorlds : HomeEffect
     data object NavigateToAddLanguages : HomeEffect
-    data object NavigateToRoleplayList : HomeEffect
-    data object NavigateToMindReader : HomeEffect
+    data class NavigateToContinueLevel(val worldId: Int, val levelId: Int, val levelOrder: Int, val targetWord: UiText? = null) : HomeEffect
 }

@@ -17,9 +17,10 @@ fun LingoRoleplayAvatar(
     isUserSpeaking: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
+    isAiThinking: Boolean = false,
     size: Dp = 180.dp
 ) {
-    val imageRes = lingoImageForState(isAiSpeaking, isUserSpeaking, isLoading)
+    val imageRes = lingoImageForState(isAiSpeaking, isUserSpeaking, isLoading, isAiThinking)
 
     Image(
         painter = painterResource(imageRes),
@@ -30,11 +31,16 @@ fun LingoRoleplayAvatar(
     )
 }
 
-/** Returns the drawable resource for the given live states. */
-fun lingoImageForState(isAiSpeaking: Boolean, isUserSpeaking: Boolean, isLoading: Boolean): Int {
+fun lingoImageForState(
+    isAiSpeaking: Boolean,
+    isUserSpeaking: Boolean,
+    isLoading: Boolean,
+    isAiThinking: Boolean = false
+): Int {
     return when {
         isLoading -> R.drawable.lingo_checking_pronounciation
         isUserSpeaking -> R.drawable.lingo_mic
+        isAiThinking -> R.drawable.lingo_checking_pronounciation
         isAiSpeaking -> R.drawable.lingo_new_password
         else -> R.drawable.lingo_initial_state_voice
     }

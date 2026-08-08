@@ -43,8 +43,7 @@ class LoginViewModel @Inject constructor(
     private val getNativeLanguageUseCase: GetNativeLanguageUseCase,
     private val completeOAuthProfileUseCase: CompleteOAuthProfileUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -155,6 +154,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun completeOAuthProfile() {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             val targetLanguage = getTargetLanguageUseCase().first() ?: 1

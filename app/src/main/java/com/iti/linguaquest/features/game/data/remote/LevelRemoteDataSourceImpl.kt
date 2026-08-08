@@ -19,8 +19,8 @@ class LevelRemoteDataSourceImpl @Inject constructor(
     private val api: LevelApiService
 ) : LevelRemoteDataSource {
 
-    override suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<StartLevelDto, LinguaQuestDataError> {
-        val result = safeApiCall { api.startLevel(worldId, levelId) }
+    override suspend fun startLevel(worldId: Int, order: Int): LinguaQuestResult<StartLevelDto, LinguaQuestDataError> {
+        val result = safeApiCall { api.startLevel(worldId, order) }
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
             is LinguaQuestResult.Failure -> result
@@ -28,8 +28,8 @@ class LevelRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<StartLevelDto, LinguaQuestDataError> {
-        val result = safeApiCall { api.changeWord(worldId, levelId) }
+    override suspend fun changeWord(worldId: Int, order: Int): LinguaQuestResult<StartLevelDto, LinguaQuestDataError> {
+        val result = safeApiCall { api.changeWord(worldId, order) }
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
             is LinguaQuestResult.Failure -> result
@@ -38,7 +38,7 @@ class LevelRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun verifyLevel(
         worldId: Int,
-        levelId: Int,
+        order: Int,
         imageFile: File
     ): LinguaQuestResult<VerifyLevelDto, LinguaQuestDataError> {
         val compressedFile = withContext(Dispatchers.IO) {
@@ -53,7 +53,7 @@ class LevelRemoteDataSourceImpl @Inject constructor(
         val result = safeApiCall {
             api.verifyLevel(
                 worldId = worldId,
-                levelId = levelId,
+                order = order,
                 image = imagePart
             )
         }
@@ -65,9 +65,9 @@ class LevelRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getHint(
         worldId: Int,
-        levelId: Int
+        order: Int
     ): LinguaQuestResult<HintDto, LinguaQuestDataError> {
-        val result = safeApiCall { api.getHint(worldId, levelId) }
+        val result = safeApiCall { api.getHint(worldId, order) }
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)
             is LinguaQuestResult.Failure -> result

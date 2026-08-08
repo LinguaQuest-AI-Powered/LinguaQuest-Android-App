@@ -1,6 +1,8 @@
 package com.iti.linguaquest.features.auth.domain.repository
 
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.features.auth.domain.model.AuthUser
+import com.iti.linguaquest.features.auth.domain.model.GoogleSignInResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import kotlinx.coroutines.flow.Flow
@@ -18,11 +20,11 @@ interface AuthRepository {
     suspend fun login(
         email: String,
         password: String
-    ): LinguaQuestResult<Unit, AuthError>
+    ): LinguaQuestResult<AuthUser, AuthError>
 
     suspend fun signInWithGoogle(
         idToken: String
-    ): LinguaQuestResult<Boolean, AuthError>
+    ): LinguaQuestResult<GoogleSignInResult, AuthError>
 
     suspend fun completeOAuthProfile(
         nativeLanguageId: Int,

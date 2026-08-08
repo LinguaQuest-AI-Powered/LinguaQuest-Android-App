@@ -4,6 +4,8 @@ import androidx.room3.Database
 import androidx.room3.RoomDatabase
 import com.iti.linguaquest.core.database.home.HomeDao
 import com.iti.linguaquest.core.database.home.HomeEntity
+import com.iti.linguaquest.core.database.notification.NotificationDao
+import com.iti.linguaquest.core.database.notification.NotificationEntity
 import com.iti.linguaquest.core.database.profile.ProfileDao
 import com.iti.linguaquest.core.database.profile.ProfileEntity
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
@@ -16,9 +18,10 @@ import com.iti.linguaquest.core.database.word.WordEntity
         WordEntity::class,
         ProfileEntity::class,
         LockScreenWordEntity::class,
-        HomeEntity::class
+        HomeEntity::class,
+        NotificationEntity::class
     ],
-    version = 9,
+    version = 11,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -26,4 +29,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
     abstract fun lockScreenWordDao(): LockScreenWordDao
     abstract fun homeDao(): HomeDao
+    abstract fun notificationDao(): NotificationDao
 }

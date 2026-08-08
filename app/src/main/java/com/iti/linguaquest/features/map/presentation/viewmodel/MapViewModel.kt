@@ -83,11 +83,16 @@ class MapViewModel @Inject constructor(
                         levelNumber = level.order,
                         status = status,
                         stars = if (status == LevelStatus.COMPLETED) 3 else 0,
-                        levelId = level.id
+                        levelId = level.id,
+                        targetWord = level.word
                     )
                 }
 
-                val currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
+                var currentIndex = uiLevels.indexOfFirst { it.status == LevelStatus.CURRENT }
+                if (currentIndex == -1 && uiLevels.isNotEmpty()) {
+                    currentIndex = uiLevels.lastIndex
+                }
+                
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -125,7 +130,7 @@ class MapViewModel @Inject constructor(
     private fun handleLevelClicked(levelId: Int) {
         val level = _state.value.levels.find { it.levelId == levelId } ?: return
         if (level.status == LevelStatus.LOCKED) return
-        sendEffect(MapEffect.NavigateToLevel(levelId))
+        sendEffect(MapEffect.NavigateToLevel(levelId, level.levelNumber, level.targetWord))
     }
 
     private fun sendEffect(effect: MapEffect) {

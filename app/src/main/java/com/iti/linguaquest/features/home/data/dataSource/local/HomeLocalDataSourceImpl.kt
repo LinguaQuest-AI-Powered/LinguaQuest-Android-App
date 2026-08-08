@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.iti.linguaquest.core.database.home.HomeDao
 import com.iti.linguaquest.core.database.home.HomeEntity
 import com.iti.linguaquest.features.home.data.dataSource.remote.dto.ActiveLanguageDto
+import com.iti.linguaquest.features.home.data.dataSource.remote.dto.ContinueLevelDto
 import com.iti.linguaquest.features.home.data.dataSource.remote.dto.ExploreWorldsContainerDto
 import com.iti.linguaquest.features.home.data.dataSource.remote.dto.HomeSummaryDto
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +46,8 @@ private fun HomeSummaryDto.toEntity(gson: Gson): HomeEntity {
         activeLanguageLevel = lang?.level,
         activeLanguageProgressPercent = lang?.progressPercent ?: lang?.levelProgressPercent,
         activeLanguageIsActive = lang?.isActive,
-        exploreWorldsJson = worldsJson
+        exploreWorldsJson = worldsJson,
+        continueLevelJson = continueLevel?.let { gson.toJson(it) }
     )
 }
 
@@ -69,11 +71,20 @@ private fun HomeEntity.toDto(gson: Gson): HomeSummaryDto {
         null
     }
 
+    val continueLevelDto = continueLevelJson?.let {
+        try {
+            gson.fromJson(it, ContinueLevelDto::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     return HomeSummaryDto(
         xp = xp,
         coins = coins,
         streakDays = streakDays,
         activeLanguage = activeLanguageDto,
-        exploreWorlds = exploreWorlds
+        exploreWorlds = exploreWorlds,
+        continueLevel = continueLevelDto
     )
 }

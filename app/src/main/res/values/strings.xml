@@ -17,6 +17,10 @@
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
 
+    <string name="dummy_world_name">Kitchen World</string>
+    <string name="dummy_progress_text">4 of 10</string>
+    <string name="dummy_target_word">la taza</string>
+
     // Languages displayed name
     <string name="spanish_language_displayName">Spanish</string>
     <string name="japanese_language_displayName">Japanese</string>
@@ -611,7 +615,7 @@
     <string name="roleplay_stop_recording">Stop recording</string>
     <string name="roleplay_start_recording">Start recording</string>
     <string name="roleplay_victory">Victory!</string>
-    <string name="roleplay_next_world">Next World</string>
+    <string name="roleplay_next_world">Finish</string>
     <string name="roleplay_stage_failed">Stage Failed</string>
     <string name="roleplay_try_again">Try Again</string>
     <string name="roleplay_evaluating">Evaluating...</string>
@@ -627,6 +631,10 @@
     <string name="roleplay_not_connected">Not connected.</string>
     <string name="roleplay_tap_to_stop">Tap to Stop</string>
     <string name="roleplay_tap_to_speak">Tap to Speak</string>
+    <string name="roleplay_hold_to_speak">Hold to Speak</string>
+    <string name="roleplay_release_to_send">Release to Send</string>
+    <string name="roleplay_ai_thinking">AI is thinking...</string>
+    <string name="roleplay_ai_speaking">AI is speaking...</string>
     <string name="roleplay_finish_stage">Finish Stage</string>
     <string name="roleplay_meet_boss">Meet %1$s</string>
     <string name="roleplay_your_objective">Your Objective</string>
@@ -647,8 +655,23 @@
     <string name="roleplay_label">Roleplay</string>
     <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
+    <string name="roleplay_error_connection_lost">Connection lost. Please check your internet connection and try again.</string>
+    <string name="roleplay_error_failed_connect">Could not connect to the AI character. Please try again.</string>
+    <string name="roleplay_error_evaluation_failed">Failed to evaluate the conversation. Please try again.</string>
+    <string name="roleplay_error_session_ended">The roleplay session has ended. Please start again.</string>
+    <string name="roleplay_error_generic">Something went wrong. Please try again.</string>
     <string name="no_internet_short">No internet</string>
     <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
+    <string name="roleplay_overall_fluency">Fluency</string>
+    <string name="roleplay_grammar">Grammar</string>
+    <string name="roleplay_vocabulary">Vocabulary</string>
+    <string name="roleplay_strengths">What went well</string>
+    <string name="roleplay_improvements">Areas to improve</string>
+    <string name="roleplay_stars_3">Outstanding!</string>
+    <string name="roleplay_stars_2">Great Job!</string>
+    <string name="roleplay_stars_1">Good Effort!</string>
+    <string name="roleplay_short_conversation">Conversation was too brief. Try to speak at least 2–3 sentences to complete the stage.</string>
     <!-- New profile strings -->
     <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
     <string name="offline_title">You\'re offline</string>
@@ -777,4 +800,40 @@
     <string name="remove_language_title">Remove Language</string>
     <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
     <string name="remove">Remove</string>
+
+    <string name="lingos_label">Lingos</string>
+    <string name="current_quest_label">CURRENT QUEST</string>
+    <string name="find_and_capture_instruction">Find &amp; capture</string>
+    <string name="word_capture_continue_button">Continue</string>
+    <string name="mascot_camera_cd">Camera Mascot</string>
+    <string name="camera_icon_cd">Camera Icon</string>
+
+
+    <string name="delete_all">Delete All</string>
+    <string name="clear_all_notifications_title">Clear All Notifications?</string>
+
+    <string name="clear_all_notifications_message">Are you sure you want to delete all notifications? This action cannot be undone.</string>
+    <string name="delete_notification_title">Delete Notification</string>
+    <string name="delete_notification_message">Are you sure you want to remove this notification?</string>
+    <string name="no_notifications_found">No notifications yet!</string>
+    <string name="no_notifications_desc">When you get updates, reminders, or rewards, they will show up right here.</string>
+    <string name="notification_dismiss">Cancel</string>
+    <string name="notification_delete_confirm">Delete</string>
+    <string name="notification_delete_all_confirm">Delete All</string>
+    <string name="notifications_load_error">Could not load notifications. Please try again.</string>
+    <string name="notification_deleted_toast">Notification deleted.</string>
+    <string name="notifications_all_deleted_toast">All notifications deleted.</string>
+
+    <string name="new_notification">New Notification</string>
+    <string name="start_hunting">Start Hunting</string>
+    <string name="mystery_world">Mystery World</string>
+
+    <string name="get_a_hint_title">Get a hint</string>
+    <string name="change_word_hint">You can change the word if you are stuck</string>
+    <string name="updating_language_title">Updating Language</string>
+    <string name="updating_language_desc">Please wait while we set up your new language…</string>
+    <string name="game_processing_status_analyzing">Analyzing pixels...</string>
+    <string name="game_processing_status_comparing">Comparing with dictionary...</string>
+    <string name="game_processing_status_thinking">Thinking hard...</string>
+
 </resources>

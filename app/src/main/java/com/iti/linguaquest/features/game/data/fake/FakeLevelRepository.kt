@@ -11,19 +11,19 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 class FakeLevelRepository @Inject constructor() : LevelRepository {
-    override suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
+    override suspend fun startLevel(worldId: Int, order: Int): LinguaQuestResult<String, AppError> {
         delay(400.milliseconds)
         return LinguaQuestResult.Success("APPLE")
     }
 
-    override suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError> {
+    override suspend fun changeWord(worldId: Int, order: Int): LinguaQuestResult<String, AppError> {
         delay(400.milliseconds)
         return LinguaQuestResult.Success("ORANGE")
     }
 
     override suspend fun verifyLevel(
         worldId: Int,
-        levelId: Int,
+        order: Int,
         imageFile: File
     ): LinguaQuestResult<VerifyLevelResult, AppError> {
         delay(800.milliseconds)
@@ -38,7 +38,7 @@ class FakeLevelRepository @Inject constructor() : LevelRepository {
         )
     }
 
-    override suspend fun getHint(worldId: Int, levelId: Int): LinguaQuestResult<Hint, AppError> {
+    override suspend fun getHint(worldId: Int, order: Int): LinguaQuestResult<Hint, AppError> {
         delay(400.milliseconds)
         return LinguaQuestResult.Success(
             Hint(

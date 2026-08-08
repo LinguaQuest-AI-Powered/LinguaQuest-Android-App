@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.AudioTranscriptionConfig
@@ -23,6 +22,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.CancellationException
+import java.util.concurrent.CancellationException as ConcurrentCancellationException
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,11 +33,14 @@ import javax.inject.Singleton
 class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
 
     private var session: LiveSession? = null
+    private var sendChunkCount = 0
 
     override suspend fun connect(systemPrompt: String, voiceName: String) {
+
         val auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) auth.signInAnonymously().await()
         
+
         val liveModel = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
             modelName = "gemini-2.5-flash-native-audio-preview-12-2025",
             systemInstruction = content { text(systemPrompt) },
@@ -47,6 +52,8 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
             }
         )
         session = liveModel.connect()
+        sendChunkCount = 0
+
     }
 
     override suspend fun sendAudioChunk(chunk: ByteArray) {
@@ -54,7 +61,11 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
             session?.sendAudioRealtime(
                 InlineData(data = chunk, mimeType = "audio/pcm;rate=16000")
             )
+            sendChunkCount++
+        } catch (e: ConcurrentCancellationException) {
+        } catch (e: CancellationException) {
         } catch (e: Exception) {
+            Timber.e(e, "[LiveService] Failed to send audio chunk #%d", sendChunkCount)
         }
     }
 
@@ -80,6 +91,7 @@ class LiveRoleplayService @Inject constructor() : LiveRoleplayRemoteDataSource {
     }
 
     override suspend fun close() {
+
         session?.close()
         session = null
     }

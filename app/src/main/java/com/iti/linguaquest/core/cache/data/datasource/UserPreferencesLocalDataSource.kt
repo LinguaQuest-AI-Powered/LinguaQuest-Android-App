@@ -38,6 +38,7 @@ interface UserPreferencesLocalDataSource {
     suspend fun saveReminderEnabled(enabled: Boolean)
     suspend fun saveReminderTime(time: String)
     suspend fun saveReminderDays(days: String)
+    suspend fun clearTargetLanguage()
     suspend fun clearOnboardingPreferences()
 }
 
@@ -150,6 +151,13 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearTargetLanguage() {
+        dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE)
+            preferences.remove(PreferencesKeys.TARGET_LANGUAGE_NAME)
+        }
+    }
+
     override suspend fun clearOnboardingPreferences() {
         dataStore.edit { preferences ->
             preferences.remove(PreferencesKeys.TARGET_LANGUAGE)
@@ -159,6 +167,4 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
             preferences.remove(PreferencesKeys.PROFICIENCY_LEVEL)
         }
     }
-
-
 }
