@@ -17,4 +17,7 @@ sealed interface HomeIntent {
     data object DismissDailyRewardDialog : HomeIntent
     data object ClaimDailyRewardClicked : HomeIntent
     data class ContinueLevelClicked(val continueLevel: ContinueLevelUi, val rect: Rect) : HomeIntent
+    data object TriggerDailyMission : HomeIntent
+    data object DismissDailyMissionDialog : HomeIntent
+    data class StartDailyMissionCamera(val word: String) : HomeIntent
 }

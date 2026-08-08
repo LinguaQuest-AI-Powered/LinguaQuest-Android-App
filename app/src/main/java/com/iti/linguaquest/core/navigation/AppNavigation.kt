@@ -83,6 +83,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashView
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
+import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyMissionCameraScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
@@ -439,6 +440,14 @@ fun AppNavigation(
                 entry<RootScreen.MindReader> {
                     MindReaderScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.DailyMissionCamera> { screen ->
+                    DailyMissionCameraScreen(
+                        word = screen.word,
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        snackbarController = globalUiHostViewModel.snackbarController
                     )
                 }
 

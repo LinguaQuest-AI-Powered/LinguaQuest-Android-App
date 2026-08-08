@@ -16,6 +16,7 @@ class SoundManager @Inject constructor(
 ) : AppSoundPlayer {
 
     private val soundMap = mutableMapOf<AppSound, Int>()
+    private val activeStreams = mutableMapOf<AppSound, Int>()
     private var isSoundEnabled = true
 
     init {
@@ -35,7 +36,7 @@ class SoundManager @Inject constructor(
         if(!isSoundEnabled) return
 
         val soundId = soundMap[sound] ?: return
-        soundPool.play(
+        val streamId = soundPool.play(
             soundId,
             sound.volume,
             sound.volume,
@@ -43,5 +44,14 @@ class SoundManager @Inject constructor(
             0,
             1f
         )
+        if (streamId != 0) {
+            activeStreams[sound] = streamId
+        }
+    }
+
+    override fun stop(sound: AppSound) {
+        val streamId = activeStreams[sound] ?: return
+        soundPool.stop(streamId)
+        activeStreams.remove(sound)
     }
 }

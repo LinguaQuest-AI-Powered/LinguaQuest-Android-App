@@ -9,28 +9,19 @@ import com.iti.linguaquest.features.notification.presentation.model.Notification
 
 @Composable
 fun Notification.getBadgeStyle(): NotificationBadgeStyle {
-    val titleLower = title.lowercase()
     val isUnread = !isRead
 
-    return when {
-        type.equals("ACHIEVEMENT_EARNED", ignoreCase = true) ||
-                listOf("trophy", "mastery", "streak").any { titleLower.contains(it) } -> {
+    return when (type) {
+        "ACHIEVEMENT_EARNED", "STREAK_REMINDER" -> {
             NotificationBadgeStyle(
                 iconResId = R.drawable.ic_streak,
                 badgeBg = MaterialTheme.colorScheme.primary,
                 badgeShadow = LinguaQuestTheme.colors.ShadowOrange
             )
         }
-        listOf("practice", "time").any { titleLower.contains(it) } -> {
+        "DAILY_REWARD_AVAILABLE", "DAILY_MISSION_AVAILABLE" -> {
             NotificationBadgeStyle(
                 iconResId = R.drawable.ic_timer,
-                badgeBg = MaterialTheme.colorScheme.primary,
-                badgeShadow = LinguaQuestTheme.colors.ShadowOrange
-            )
-        }
-        listOf("level", "world").any { titleLower.contains(it) } -> {
-            NotificationBadgeStyle(
-                iconResId = R.drawable.ic_profile_world,
                 badgeBg = MaterialTheme.colorScheme.tertiary,
                 badgeShadow = LinguaQuestTheme.colors.splashBottomRightColor
             )

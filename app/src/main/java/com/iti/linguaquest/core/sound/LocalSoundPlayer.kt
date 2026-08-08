@@ -5,5 +5,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 val LocalSoundPlayer = staticCompositionLocalOf<AppSoundPlayer> {
     object : AppSoundPlayer {
         override fun play(sound: AppSound) {}
+        override fun stop(sound: AppSound) {}
     }
 }

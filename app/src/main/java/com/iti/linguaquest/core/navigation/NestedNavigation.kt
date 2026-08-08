@@ -143,6 +143,9 @@ fun MainScreen(
                             onNavigateToLevel = { worldId, levelId, levelOrder, targetWord ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
                                 rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
+                            },
+                            onNavigateToDailyMissionCamera = { word ->
+                                rootBackStack.navigateSingleTop(RootScreen.DailyMissionCamera(word))
                             }
                         )
                     }

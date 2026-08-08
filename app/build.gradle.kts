@@ -143,4 +143,5 @@ dependencies {
 
     implementation(libs.konfetti.compose)
     implementation(libs.timber)
+    implementation(libs.lottie.compose)
 }
