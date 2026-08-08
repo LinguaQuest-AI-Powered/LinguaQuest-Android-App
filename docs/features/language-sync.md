@@ -15,12 +15,15 @@ A dedicated DataStore named `auth_cache_prefs` is provisioned to store authentic
 
 ### 3. `SyncUserNativeLanguageUseCase`
 - Orchestrates the synchronization of the app's UI language with the user's `nativeLanguage`.
-- **Capabilities**: Can match the language either by `nativeLanguageName` (used during standard login/Google sign-in) or `nativeLanguageId` (used during OAuth profile completion).
-- **Process**:
+- **Capabilities**: Can match the language by extracting data directly from the `nativeLanguage` object (used during standard login/Google sign-in) or fallback to looking up by `nativeLanguageId` (used during OAuth profile completion).
+- **Process (Standard Login/Google Sign-In)**:
+  1. Instantly extracts the ID, Name, and Code from the `nativeLanguage` object returned in the auth response. **(No extra backend/cache fetch required!)**
+  2. Updates the `UserPreferencesRepository` with the Native Language ID, Name, and Target App Language (language code).
+  3. Triggers `LanguageManager.changeLanguage(code)` to immediately update the UI.
+- **Process (OAuth Profile Completion Fallback)**:
   1. Fetches available languages from the cache or backend (`GetAuthLanguagesUseCase`).
-  2. Finds the corresponding `AuthLanguageOptionDto` using the name or ID.
-  3. Updates the `UserPreferencesRepository` with the Native Language ID, Name, and Target App Language (language code).
-  4. Triggers `LanguageManager.changeLanguage(code)` to immediately update the UI.
+  2. Finds the corresponding language using the `nativeLanguageId`.
+  3. Saves the data and updates the `LanguageManager` as described above.
 
 ## OAuth Profile Completion Flow
 When a user signs in with Google for the first time without having selected their languages during onboarding, `signInWithGoogle` returns `profileComplete = false`.

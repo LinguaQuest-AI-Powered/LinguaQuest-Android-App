@@ -1,10 +1,11 @@
-package com.iti.linguaquest.features.roleplay.data.datasource.remote.model
+package com.iti.linguaquest.core.ai.network.model
 
 import com.google.gson.annotations.SerializedName
 
 data class GeminiRequestDto(
     @SerializedName("contents") val contents: List<GeminiContentDto>,
-    @SerializedName("generationConfig") val generationConfig: GeminiGenerationConfigDto? = null
+    @SerializedName("generationConfig") val generationConfig: GeminiGenerationConfigDto? = null,
+    @SerializedName("systemInstruction") val systemInstruction: GeminiContentDto? = null
 )
 
 data class GeminiContentDto(
@@ -12,7 +13,13 @@ data class GeminiContentDto(
 )
 
 data class GeminiPartDto(
-    @SerializedName("text") val text: String
+    @SerializedName("text") val text: String? = null,
+    @SerializedName("inlineData") val inlineData: GeminiInlineDataDto? = null
+)
+
+data class GeminiInlineDataDto(
+    @SerializedName("mimeType") val mimeType: String,
+    @SerializedName("data") val data: String
 )
 
 data class GeminiGenerationConfigDto(

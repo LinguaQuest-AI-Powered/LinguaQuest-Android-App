@@ -1,14 +1,20 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
+import android.util.Base64
 import com.google.gson.Gson
-import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.core.ai.network.GeminiRestClient
+import com.iti.linguaquest.core.ai.network.model.GeminiContentDto
+import com.iti.linguaquest.core.ai.network.model.GeminiGenerationConfigDto
+import com.iti.linguaquest.core.ai.network.model.GeminiInlineDataDto
+import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
+import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.voicegame.data.model.VoiceEvaluationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class VoiceEvaluationService @Inject constructor(
-    private val geminiAiService: GeminiAiService
+    private val geminiRestClient: GeminiRestClient
 ) {
 
     private val gson = Gson()
@@ -50,9 +56,31 @@ class VoiceEvaluationService @Inject constructor(
         """.trimIndent()
 
         val wavBytes = pcmToWav(audioBytes)
+        val base64Audio = Base64.encodeToString(wavBytes, Base64.NO_WRAP)
 
-        val rawText = geminiAiService.generateJsonFromAudio(promptText, wavBytes, "audio/wav")
+        val requestPayload = GeminiRequestDto(
+            contents = listOf(
+                GeminiContentDto(
+                    parts = listOf(
+                        GeminiPartDto(
+                            inlineData = GeminiInlineDataDto(
+                                mimeType = "audio/wav",
+                                data = base64Audio
+                            )
+                        ),
+                        GeminiPartDto(text = promptText)
+                    )
+                )
+            ),
+            generationConfig = GeminiGenerationConfigDto(
+                temperature = 0.1f,
+                responseMimeType = "application/json"
+            )
+        )
+
+        val rawText = geminiRestClient.executeGeminiRequest(requestPayload)
             ?: throw Exception("Empty or invalid response from model")
+
         val parsedResponse = try {
             gson.fromJson(rawText, VoiceEvaluationResponse::class.java)
         } catch (e: Exception) {
