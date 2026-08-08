@@ -76,7 +76,7 @@ fun QuestCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 110.dp),
+                .padding(top = 130.dp),
             shape = RoundedCornerShape(32.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent

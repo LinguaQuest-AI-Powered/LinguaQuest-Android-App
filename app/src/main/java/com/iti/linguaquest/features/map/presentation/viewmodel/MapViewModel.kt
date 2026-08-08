@@ -110,7 +110,7 @@ class MapViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         hasError = true,
-                        errorMessage = uiText.toString()
+                        errorMessage = uiText
                     )
                 }
 

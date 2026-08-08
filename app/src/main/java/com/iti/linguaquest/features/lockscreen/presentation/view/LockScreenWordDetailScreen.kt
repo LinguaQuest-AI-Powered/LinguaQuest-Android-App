@@ -172,9 +172,9 @@ fun LockScreenWordDetailScreen(
                                 }
                             }
 
-                            if (state.errorMessage != null) {
+                           state.errorMessage?.let { error ->
                                 ErrorCard(
-                                    message = state.errorMessage.orEmpty()
+                                    message = error.asString()
                                 )
                             }
 

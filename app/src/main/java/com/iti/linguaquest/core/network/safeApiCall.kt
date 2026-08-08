@@ -15,12 +15,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.iti.linguaquest.LinguaQuestApplication
 
-fun isDeviceConnectedToInternet(): Boolean {
-    val context = runCatching { LinguaQuestApplication.instance }.getOrNull() ?: return true
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return true
-    val activeNet = connectivityManager.activeNetwork ?: return false
-    val capabilities = connectivityManager.getNetworkCapabilities(activeNet) ?: return false
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+fun isDeviceConnectedToInternet(context: Context? = null): Boolean {
+    val appContext = (context ?: runCatching { LinguaQuestApplication.instance }.getOrNull())?.applicationContext ?: return true
+    val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return true
+    return runCatching {
+        val activeNet = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNet) ?: return false
+        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }.getOrDefault(false)
 }
 
 suspend inline fun <T> safeApiCall(

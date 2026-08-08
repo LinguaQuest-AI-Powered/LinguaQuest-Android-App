@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -107,7 +106,7 @@ fun MapScreenContent(
 
         if (state.hasError && state.levels.isEmpty()) {
             ErrorView(
-                message = state.errorMessage ?: stringResource(R.string.error_generic),
+                message = state.errorMessage ?: UiText.StringResource(R.string.error_generic),
                 onRetry = onRetry,
                 onDismissRequest = onBackClick
             )
