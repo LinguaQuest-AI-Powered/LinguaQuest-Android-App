@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -109,6 +110,7 @@ fun EditProfileScreenContent(
     Scaffold(
         modifier = modifier,
         containerColor = LinguaQuestTheme.colors.textFieldFill,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             Column(
                 modifier = Modifier
@@ -138,10 +140,9 @@ fun EditProfileScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(top = 8.dp, bottom = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.edit_profile_title),
                 onBackClicked = onBackClick,
@@ -154,7 +155,6 @@ fun EditProfileScreenContent(
                 ),
                 showDivider = true,
                 dividerSpacing = 16.dp,
-                applyStatusBarsPadding = false,
                 contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
                 backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
                 backButtonSize = 40.dp,
@@ -168,7 +168,7 @@ fun EditProfileScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),

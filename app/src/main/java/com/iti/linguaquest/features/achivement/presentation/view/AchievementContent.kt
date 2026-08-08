@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -95,7 +94,7 @@ fun AchievementContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .statusBarsPadding()
+                .padding(top = 8.dp)
         ) {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.achievements_title),
@@ -109,7 +108,6 @@ fun AchievementContent(
                 ),
                 showDivider = true,
                 dividerSpacing = 16.dp,
-                applyStatusBarsPadding = false,
                 contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
                 backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
                 backButtonSize = 40.dp,

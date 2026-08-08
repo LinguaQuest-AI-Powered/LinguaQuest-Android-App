@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -44,7 +43,7 @@ fun AboutAppContent(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
+            .padding(top = 8.dp, bottom = 24.dp)
     ) {
         LinguaQuestScreenTopBar(
             title = stringResource(id = R.string.about_app_title),
@@ -58,7 +57,6 @@ fun AboutAppContent(
             ),
             showDivider = true,
             dividerSpacing = 16.dp,
-            applyStatusBarsPadding = false,
             contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 22.dp, vertical = 0.dp),
             backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
             backButtonSize = 40.dp,
