@@ -30,9 +30,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderEntityDropdown
 
 @Composable
 fun AkinatorTrapContent(

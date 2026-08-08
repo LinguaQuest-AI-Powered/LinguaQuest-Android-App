@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
+import androidx.compose.ui.draw.shadow
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 

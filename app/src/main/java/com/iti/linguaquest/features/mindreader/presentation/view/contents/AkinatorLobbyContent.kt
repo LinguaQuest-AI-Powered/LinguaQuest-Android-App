@@ -33,9 +33,7 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderCategoryDropdown
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderCategoryBottomSheet
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
 @Composable
 fun AkinatorLobbyContent(
@@ -66,8 +64,8 @@ fun AkinatorLobbyContent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MindReaderSpeechBubble(
-                text = stringResource(id = R.string.mind_reader_think_of_a_word)
+            MessageBubble(
+                title = stringResource(id = R.string.mind_reader_think_of_a_word)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

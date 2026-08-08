@@ -35,6 +35,7 @@ fun MindReaderScreen(
     viewModel: MindReaderViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit
 ) {
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val speechManager = remember { SpeechManager(context) }
