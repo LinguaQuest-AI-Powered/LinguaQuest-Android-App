@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 private val LINGO_SPLASH_FRAMES = listOf(
     R.drawable.lingo_splash_1,
@@ -62,7 +63,7 @@ fun LingoLoadingAnimation(
     if (useSpriteAnimation) {
         LaunchedEffect(Unit) {
             while (true) {
-                delay(120L)
+                delay(120L.milliseconds)
                 frameIndex = (frameIndex + 1) % LINGO_SPLASH_FRAMES.size
             }
         }

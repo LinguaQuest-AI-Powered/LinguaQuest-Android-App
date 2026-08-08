@@ -4,29 +4,29 @@ import com.iti.linguaquest.features.mindreader.domain.model.LocalizedText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizChoice
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizQuestion
+import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
+import java.util.UUID
 import javax.inject.Inject
 
-class BuildMindReaderPopQuizQuestionUseCase @Inject constructor() {
+class BuildMindReaderPopQuizQuestionUseCase @Inject constructor(
+    private val repository: MindReaderRepository
+) {
 
-    operator fun invoke(
-        correctEntity: MindReaderEntity,
-        candidatePool: List<MindReaderEntity>
-    ): MindReaderPopQuizQuestion {
-        val pool = candidatePool.distinctBy { it.id }
-        require(pool.size >= 3) {
-            "Pop quiz requires at least 3 unique entities."
-        }
+    suspend operator fun invoke(
+        categoryContext: String,
+        targetLanguage: String,
+        nativeLanguage: String,
+        correctEntity: MindReaderEntity
+    ): MindReaderPopQuizQuestion? {
+        
+        val correctWordTarget = correctEntity.translations.resolve(targetLanguage)
 
-        val distractors = pool
-            .asSequence()
-            .filterNot { it.id == correctEntity.id }
-            .sortedBy { it.id }
-            .take(2)
-            .toList()
-
-        require(distractors.size == 2) {
-            "Pop quiz requires at least 2 distractors."
-        }
+        val aiResponse = repository.generateQuizChoices(
+            categoryContext = categoryContext,
+            correctWord = correctWordTarget,
+            nativeLanguage = nativeLanguage,
+            targetLanguage = targetLanguage
+        ) ?: return null
 
         val prompt = LocalizedText(
             mapOf(
@@ -40,15 +40,30 @@ class BuildMindReaderPopQuizQuestionUseCase @Inject constructor() {
             )
         )
 
-        val orderedChoices = buildList {
-            add(correctEntity)
-            addAll(distractors)
-        }.sortedBy { it.id }
+        val choices = aiResponse.map { choiceDto ->
+            if (choiceDto.isCorrect) {
+                MindReaderPopQuizChoice(entity = correctEntity)
+            } else {
+                val dummyEntity = MindReaderEntity(
+                    id = UUID.randomUUID().toString(),
+                    worldKey = categoryContext,
+                    translations = LocalizedText(
+                        mapOf(
+                            targetLanguage to choiceDto.translationText,
+                            nativeLanguage to ""
+                        )
+                    ),
+                    emoji = "🤔",
+                    positiveAttributes = emptySet()
+                )
+                MindReaderPopQuizChoice(entity = dummyEntity)
+            }
+        }.shuffled()
 
         return MindReaderPopQuizQuestion(
             prompt = prompt,
             correctEntity = correctEntity,
-            choices = orderedChoices.map { MindReaderPopQuizChoice(entity = it) }
+            choices = choices
         )
     }
 }

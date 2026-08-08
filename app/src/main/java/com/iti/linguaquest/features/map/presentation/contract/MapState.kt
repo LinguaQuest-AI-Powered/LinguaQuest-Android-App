@@ -7,7 +7,8 @@ data class MapLevelUiModel(
     val levelNumber: Int,
     val status: LevelStatus,
     val stars: Int,
-    val levelId: Int = 0
+    val levelId: Int = 0,
+    val targetWord: String? = null
 )
 
 data class MapState(

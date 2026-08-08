@@ -1,8 +1,10 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.contents
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -69,17 +71,23 @@ fun ActiveGameContent(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            if (state.showTranslation && state.translatedQuestion != null) {
-                Text(
-                    text = state.translatedQuestion,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+           Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .height(60.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (state.showTranslation && state.translatedQuestion != null) {
+                    Text(
+                        text = state.translatedQuestion,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             AppMascotGradientBox(
                 imageRes = R.drawable.lingo_mind_asking
@@ -87,35 +95,35 @@ fun ActiveGameContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.YES.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.YES.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.YES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.NO.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.NO.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.NO)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.SOMETIMES)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY_NOT)) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
-                    text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.nativeLanguageCode),
+                    text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.targetLanguageCode),
                     onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY)) }
                 )
             }

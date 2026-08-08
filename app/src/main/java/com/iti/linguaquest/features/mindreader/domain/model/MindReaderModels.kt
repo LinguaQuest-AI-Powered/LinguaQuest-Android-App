@@ -207,7 +207,8 @@ data class MindReaderContradictionResult(
     val details: List<MindReaderContradictionDetail>,
     val contradictionCount: Int,
     val matchedCount: Int,
-    val totalCount: Int
+    val totalCount: Int,
+    val reason: String? = null
 ) {
     val isHonest: Boolean get() = contradictionCount == 0
 }
@@ -234,16 +235,16 @@ data class MindReaderGameHistory(
 
 data class MindReaderQuestionCandidate(
     val attributeId: String,
-    val question: LocalizedText,
-    val informationGain: Double
+    val question: LocalizedText
 )
 
 data class MindReaderGameState(
     val worldKey: String? = null,
-    val candidates: List<MindReaderCandidateScore>,
+    val candidates: List<MindReaderCandidateScore> = emptyList(),
     val askedAttributes: Set<String> = emptySet(),
     val questionCount: Int = 0,
-    val history: MindReaderGameHistory = MindReaderGameHistory()
+    val history: MindReaderGameHistory = MindReaderGameHistory(),
+    val pendingGuess: MindReaderGuessResult? = null
 )
 
 data class MindReaderDataset(
@@ -257,6 +258,31 @@ data class MindReaderGameLaunch(
     val nativeLanguageCode: String = "en",
     val dataset: MindReaderDataset,
     val state: MindReaderGameState
+)
+
+sealed interface MindReaderAiNextTurn {
+    data class Question(
+        val targetText: String,
+        val nativeText: String
+    ) : MindReaderAiNextTurn
+    
+    data class Guess(
+        val word: String,
+        val translation: String,
+        val emoji: String
+    ) : MindReaderAiNextTurn
+    
+    data object Error : MindReaderAiNextTurn
+}
+
+data class MindReaderAiQuizChoice(
+    val translationText: String,
+    val isCorrect: Boolean
+)
+
+data class MindReaderAiHonestyResult(
+    val isHonest: Boolean,
+    val explanation: String
 )
 
 sealed interface MindReaderRewardChallenge {

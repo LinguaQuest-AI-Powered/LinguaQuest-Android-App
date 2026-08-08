@@ -17,8 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.Card3DWrapper
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.ImageWrapper
 import com.iti.linguaquest.features.profile.presentation.model.Achievement
@@ -26,16 +29,21 @@ import com.iti.linguaquest.features.profile.presentation.model.Achievement
 @Composable
 fun AchievementCard(
     achievement: Achievement,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    ledgeHeight: Dp = 4.dp,
+    cornerRadius: Dp = 16.dp
 ) {
-    Column(
-        modifier = modifier
-            .width(380.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(LinguaQuestTheme.colors.ProfileCardColor)
-            .padding(14.dp)
+    Card3DWrapper(
+        modifier = modifier,
+        backgroundColor = LinguaQuestTheme.colors.ProfileCardColor,
+        borderColor = LinguaQuestTheme.colors.ProfileCardBorderColor,
+        onClick = onClick,
+        ledgeHeight = ledgeHeight,
+        cornerRadius = cornerRadius
     ) {
         Row(
+            modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -46,7 +54,7 @@ fun AchievementCard(
                 contentAlignment = Alignment.Center
             ) {
                 ImageWrapper(
-                    model = achievement.icon,
+                    model = R.drawable.ic_cup,
                     contentDescription = achievement.title,
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit

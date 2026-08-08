@@ -19,6 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -79,14 +85,26 @@ fun GameFailView(
             Spacer(modifier = Modifier.height(32.dp))
 
             if (!isHintUsed) {
-                AppButton3D(
-                    text = stringResource(R.string.game_result_hint_button),
-                    onClick = onBuyHint,
-                    variant = ButtonVariant.SECONDARY,
-                    contentColorOverride = LinguaQuestTheme.colors.BrownText,
-                    icon = rememberVectorPainter(Icons.Default.Lightbulb),
-                    iconPosition = IconPosition.END
-                )
+                Box(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp))
+                        .padding(12.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Lightbulb,
+                            contentDescription = null,
+                            tint = LinguaQuestTheme.colors.OrangeActive
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.game_result_hint_button),
+                            color = LinguaQuestTheme.colors.BrownText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
             }
 

@@ -54,6 +54,7 @@ fun MyLanguagesBottomSheet(
     isLoading: Boolean = false,
     isSettingActive: Boolean = false,
     languagePendingRemoval: MyLanguageUiModel? = null,
+    removingLanguageId: Int? = null,
     onDismiss: () -> Unit,
     onAddNewLanguageClick: () -> Unit,
     onLanguageSelect: (Int) -> Unit,
@@ -137,6 +138,7 @@ fun MyLanguagesBottomSheet(
                         MyLanguageItem(
                             language = language,
                             enabled = !isSettingActive,
+                            isRemoving = removingLanguageId == language.id,
                             onClick = { onLanguageSelect(language.id) },
                             onRemoveClick = if (onRemoveLanguageClick != null && !language.isCurrent) {
                                 { onRemoveLanguageClick(language) }
@@ -151,7 +153,6 @@ fun MyLanguagesBottomSheet(
             AppButton3D(
                 text = stringResource(R.string.add_new_language),
                 onClick = {
-                    onDismiss()
                     onAddNewLanguageClick()
                 },
                 modifier = Modifier
@@ -167,6 +168,7 @@ fun MyLanguageItem(
     onClick: () -> Unit,
     onRemoveClick: (() -> Unit)? = null,
     enabled: Boolean = true,
+    isRemoving: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = if (language.isCurrent) LinguaQuestTheme.colors.ChipBackground else Color.Transparent
@@ -222,6 +224,8 @@ fun MyLanguageItem(
                 tint = LinguaQuestTheme.colors.SuccessAccent,
                 modifier = Modifier.size(24.dp)
             )
+        } else if (isRemoving) {
+            LingoSpinningIcon(size = 24.dp)
         } else if (onRemoveClick != null) {
             IconButton(onClick = onRemoveClick) {
                 Icon(

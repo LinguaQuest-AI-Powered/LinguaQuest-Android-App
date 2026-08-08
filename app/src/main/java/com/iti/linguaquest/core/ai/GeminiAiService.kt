@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GeminiAiService @Inject constructor() {
+open class GeminiAiService @Inject constructor() {
 
     private val jsonTextModel by lazy {
         Firebase.ai(backend = GenerativeBackend.googleAI())
@@ -36,7 +36,7 @@ class GeminiAiService @Inject constructor() {
             )
     }
 
-    suspend fun generateJson(prompt: String): String? = withContext(Dispatchers.IO) {
+    open suspend fun generateJson(prompt: String): String? = withContext(Dispatchers.IO) {
         try {
             val response = jsonTextModel.generateContent(content { text(prompt) })
             cleanJson(response.text)
@@ -47,7 +47,7 @@ class GeminiAiService @Inject constructor() {
         }
     }
 
-    suspend fun generateJsonFromAudio(
+    open suspend fun generateJsonFromAudio(
         prompt: String,
         audioBytes: ByteArray,
         mimeType: String = "audio/wav"

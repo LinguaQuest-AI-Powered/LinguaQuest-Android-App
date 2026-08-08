@@ -26,8 +26,11 @@ import kotlinx.coroutines.delay
 fun ProcessingStatusText(modifier: Modifier = Modifier) {
     val phrases = listOf(
         stringResource(id = R.string.game_processing_status_inspecting),
+        stringResource(id = R.string.game_processing_status_analyzing),
         stringResource(id = R.string.game_processing_status_consulting),
+        stringResource(id = R.string.game_processing_status_comparing),
         stringResource(id = R.string.game_processing_status_squinting),
+        stringResource(id = R.string.game_processing_status_thinking),
         stringResource(id = R.string.game_processing_status_evaluating),
         stringResource(id = R.string.game_processing_status_almost_there)
     )

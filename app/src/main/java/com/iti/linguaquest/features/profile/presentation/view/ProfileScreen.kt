@@ -55,29 +55,20 @@ fun ProfileScreen(
         }
     }
 
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) pendingCameraUri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
+        }
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) pendingCameraUri?.let { cameraLauncher.launch(it) }
+        }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
     }
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success: Boolean ->
-        if (success) {
-            pendingCameraUri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
-        }
-    }
-
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            val uri = createImageCaptureUri(context)
-            pendingCameraUri = uri
-            cameraLauncher.launch(uri)
-        }
-    }
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
@@ -151,18 +142,50 @@ fun ProfileContent(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        item { ProfileHeader(state, onEditAvatarClick, isAvatarUploading) }
-        item { StatsGrid(state) }
-        item { LearningProgressCard(state) }
-        item { SettingsRow(onClick = onSettingsClick) }
-        if (state.achievements.isNotEmpty()){
-            item { SectionHeader(stringResource(R.string.achievements_title), onViewAllAchievementsClick) }
+        item {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                ProfileHeader(state, onEditAvatarClick, isAvatarUploading)
+            }
+        }
+        item {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                StatsGrid(state)
+            }
+        }
+        item {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                LearningProgressCard(state)
+            }
+        }
+        item {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                SettingsRow(onClick = onSettingsClick)
+            }
+        }
+
+        if (state.achievements.isNotEmpty()) {
             item {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(state.achievements, key = { it.id }) { AchievementCard(it) }
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    SectionHeader(
+                        stringResource(R.string.achievements_title),
+                        onViewAllAchievementsClick
+                    )
+                }
+            }
+            item {
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(state.achievements, key = { it.id }) { achievement ->
+                        AchievementCard(
+                            achievement = achievement,
+                            modifier = Modifier.fillParentMaxWidth(0.85f)
+                        )
+                    }
                 }
             }
         }

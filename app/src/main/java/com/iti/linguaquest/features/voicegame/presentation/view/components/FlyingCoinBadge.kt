@@ -8,9 +8,7 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlin.math.roundToInt
 
@@ -78,7 +78,11 @@ fun FlyingCoinBadge(
             .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+        Image(
+            painter = painterResource(id = R.drawable.ic_coin),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp)
+        )
         Spacer(Modifier.width(4.dp))
         Text("+$coinsAwarded", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, maxLines = 1, softWrap = false)
     }

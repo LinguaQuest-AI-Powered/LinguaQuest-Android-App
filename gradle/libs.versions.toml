@@ -11,7 +11,9 @@ kotlin = "2.2.10"
 composeBom = "2026.06.01"
 timber = "5.0.1"
 mockk = "1.13.17"
+coroutinesTest = "1.8.1"
 turbine = "1.2.0"
+coreTesting = "2.2.0"
 
 ksp = "2.3.9"
 hilt = "2.60.1"
@@ -45,7 +47,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -115,6 +117,7 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWorkVersion" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 
+androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

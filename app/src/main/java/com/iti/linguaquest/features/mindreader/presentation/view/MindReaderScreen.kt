@@ -36,7 +36,6 @@ fun MindReaderScreen(
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val speechManager = remember { SpeechManager(context) }
 
@@ -88,6 +87,7 @@ fun MindReaderScreen(
                     state = state,
                     onIntent = viewModel::onIntent
                 )
+                MindReaderPhase.THINKING,
                 MindReaderPhase.GUESSING_LOADING -> LoadingView(
                     message = stringResource(id = R.string.mind_reader_thinking),
                     imageRes = R.drawable.lingo_mind_processing

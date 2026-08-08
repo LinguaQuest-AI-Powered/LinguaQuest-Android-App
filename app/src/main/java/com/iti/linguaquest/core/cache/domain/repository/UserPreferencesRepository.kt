@@ -27,4 +27,6 @@ interface UserPreferencesRepository {
     suspend fun saveReminderTime(time: String)
     suspend fun saveReminderDays(days: String)
     suspend fun clearTargetLanguage()
+    suspend fun clearOnboardingPreferences()
 }
+

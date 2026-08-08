@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,9 +28,9 @@ import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderEntityDropdown
 
@@ -41,9 +40,6 @@ fun AkinatorTrapContent(
     state: MindReaderState,
     onIntent: (MindReaderIntent) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedEntity by remember { mutableStateOf<MindReaderEntity?>(null) }
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -87,14 +83,26 @@ fun AkinatorTrapContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                MindReaderEntityDropdown(
-                    selectedEntity = selectedEntity,
-                    entities = state.stumpCandidates ?: emptyList(),
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    onEntitySelected = { selectedEntity = it },
-                    targetLanguageCode = state.targetLanguageCode,
-                    nativeLanguageCode = state.nativeLanguageCode
+                OutlinedTextField(
+                    value = state.stumpInputValue,
+                    onValueChange = { onIntent(MindReaderIntent.StumpInputValueChanged(it)) },
+                    placeholder = {
+                        Text(
+                            text = "Type the word you thought of...",
+                            color = LinguaQuestTheme.colors.textFieldPlaceholder,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = LinguaQuestTheme.colors.OrangeActive,
+                        unfocusedBorderColor = LinguaQuestTheme.colors.textFieldBorder,
+                        focusedContainerColor = LinguaQuestTheme.colors.whiteColor,
+                        unfocusedContainerColor = LinguaQuestTheme.colors.whiteColor
+                    ),
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = LinguaQuestTheme.colors.blackColor)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -102,10 +110,10 @@ fun AkinatorTrapContent(
                 AppButton3D(
                     text = stringResource(id = R.string.mind_reader_trap_submit),
                     onClick = {
-                        selectedEntity?.let { onIntent(MindReaderIntent.StumpWordSelected(it)) }
+                        onIntent(MindReaderIntent.StumpSubmitClicked)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = selectedEntity != null
+                    enabled = state.stumpInputValue.isNotBlank()
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

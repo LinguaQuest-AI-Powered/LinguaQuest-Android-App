@@ -32,7 +32,7 @@ import com.iti.linguaquest.features.map.presentation.viewmodel.MapViewModel
 fun MapScreen(
     worldId: Int,
     onBack: () -> Unit = {},
-    onNavigateToLevel: (Int) -> Unit = {},
+    onNavigateToLevel: (Int, Int, String?) -> Unit = { _, _, _ -> },
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,7 +55,7 @@ fun MapScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 MapEffect.NavigateBack -> onBack()
-                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelId)
+                is MapEffect.NavigateToLevel -> onNavigateToLevel(effect.levelId, effect.levelOrder, effect.targetWord)
             }
         }
     }

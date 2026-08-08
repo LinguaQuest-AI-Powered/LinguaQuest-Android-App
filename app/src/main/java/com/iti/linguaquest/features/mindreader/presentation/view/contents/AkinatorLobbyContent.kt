@@ -34,6 +34,8 @@ import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderI
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderCategoryDropdown
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderCategoryBottomSheet
+import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
 
 @Composable
 fun AkinatorLobbyContent(
@@ -64,8 +66,8 @@ fun AkinatorLobbyContent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MessageBubble(
-                title = stringResource(id = R.string.mind_reader_think_of_a_word)
+            MindReaderSpeechBubble(
+                text = stringResource(id = R.string.mind_reader_think_of_a_word)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -94,11 +96,12 @@ fun AkinatorLobbyContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                MindReaderCategoryDropdown(
+                MindReaderCategoryBottomSheet(
                     selectedCategory = state.selectedCategory,
                     availableCategories = state.availableCategories,
-                    expanded = showCategoryDropdown,
-                    onExpandedChange = { showCategoryDropdown = it },
+                    showBottomSheet = showCategoryDropdown,
+                    onRequestShowBottomSheet = { showCategoryDropdown = true },
+                    onDismissRequest = { showCategoryDropdown = false },
                     onCategorySelected = { onIntent(MindReaderIntent.CategorySelected(it)) }
                 )
 
