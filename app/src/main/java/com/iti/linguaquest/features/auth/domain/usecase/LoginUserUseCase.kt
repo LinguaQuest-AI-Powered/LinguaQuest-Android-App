@@ -21,7 +21,7 @@ class LoginUserUseCase @Inject constructor(
         val result = authRepository.login(email, password)
         if (result is LinguaQuestResult.Success) {
             try {
-                syncUserNativeLanguageUseCase(result.data.nativeLanguage)
+                syncUserNativeLanguageUseCase(nativeLanguage = result.data.nativeLanguage)
             } catch (e: Exception) {
                 Timber.e(e, "Failed to sync native language")
             }

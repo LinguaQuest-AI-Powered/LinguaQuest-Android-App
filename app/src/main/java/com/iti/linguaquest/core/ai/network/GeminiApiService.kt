@@ -1,8 +1,8 @@
-package com.iti.linguaquest.features.roleplay.data.datasource.remote
+package com.iti.linguaquest.core.ai.network
 
 import com.iti.linguaquest.core.network.NoAuth
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiRequestDto
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiResponseDto
+import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
+import com.iti.linguaquest.core.ai.network.model.GeminiResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

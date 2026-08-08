@@ -134,9 +134,9 @@ dependencies {
 
     implementation(libs.firebase.ai)
     debugImplementation(libs.firebase.appcheck.debug)
-    implementation(libs.generativeai)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
+
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.firebase.messaging)

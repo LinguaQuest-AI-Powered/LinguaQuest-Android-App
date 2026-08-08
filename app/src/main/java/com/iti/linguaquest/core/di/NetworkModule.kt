@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.iti.linguaquest.core.network.AuthInterceptor
 import com.iti.linguaquest.core.network.TokenAuthenticator
+import com.iti.linguaquest.core.ai.network.GeminiApiService
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthApiService
 import dagger.Module
 import dagger.Provides
@@ -80,5 +81,17 @@ object NetworkModule {
         retrofit: Retrofit
     ): AuthApiService {
         return retrofit.create(AuthApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeminiApiService(
+        gson: Gson
+    ): GeminiApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://generativelanguage.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(GeminiApiService::class.java)
     }
 }

@@ -5,7 +5,7 @@ data class UserDto(
     val id: Int,
     val username: String?,
     val photo: String?,
-    val nativeLanguage: String?,
+    val nativeLanguage: TargetLanguageDto?,
     val isVerified: Boolean,
     val targetLanguages: List<String>
 )
@@ -13,7 +13,8 @@ data class UserDto(
 data class TargetLanguageDto(
     val id: Int,
     val name: String,
-    val code: String
+    val code: String,
+    val imageUrl: String? = null
 )
 
 data class AuthLanguageOptionDto(
@@ -41,7 +42,7 @@ data class RegisterResponseDataDto(
     val id: Int,
     val email: String,
     val username: String,
-    val nativeLanguage: String,
+    val nativeLanguage: TargetLanguageDto?,
     val targetLanguage: String,
     val isVerified: Boolean
 )

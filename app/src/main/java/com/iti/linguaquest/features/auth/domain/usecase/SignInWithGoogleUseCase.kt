@@ -18,7 +18,7 @@ class SignInWithGoogleUseCase @Inject constructor(
         val result = authRepository.signInWithGoogle(idToken)
         if (result is LinguaQuestResult.Success && result.data.profileComplete) {
             try {
-                syncUserNativeLanguageUseCase(result.data.user.nativeLanguage)
+                syncUserNativeLanguageUseCase(nativeLanguage = result.data.user.nativeLanguage)
             } catch (e: Exception) {
                 Timber.e(e, "Failed to sync native language")
             }

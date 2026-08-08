@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+  workflow_dispatch:
 
 jobs:
   build:
@@ -40,3 +41,19 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Send notification to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            echo "Discord webhook secret is not set. Skipping notification."
+            exit 0
+          fi
+          
+          # Send the GitHub Actions run link to Discord where the artifact is hosted
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          curl -H "Content-Type: application/json" \
+               -d "{\"content\": \"New Debug APK built successfully! :rocket:\n**Download here (Under Artifacts):** $RUN_URL\"}" \
+               $DISCORD_WEBHOOK
