@@ -1,11 +1,6 @@
 package com.iti.linguaquest.core.sharedComponents.offline
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,11 +37,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -99,20 +92,7 @@ fun NoInternetMiniPopup(
         }
     }
 
-    val borderTransition = rememberInfiniteTransition(label = "mini_bubble_border")
-    val borderShift by borderTransition.animateFloat(
-        initialValue = -1f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2400, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "border_shift"
-    )
-
-    val borderColorA = LinguaQuestTheme.colors.splashTopLeftColor
-    val borderColorB = LinguaQuestTheme.colors.OrangeActive
-    val borderColorC = LinguaQuestTheme.colors.ShadowOrange
+    val borderColor = LinguaQuestTheme.colors.OrangeActive
 
     val bubbleShape = TailBubbleShape(
         cornerRadius = 16.dp,
@@ -167,7 +147,7 @@ fun NoInternetMiniPopup(
                             val cornerPx = 16.dp.toPx()
                             val tailWPx = 8.dp.toPx()
                             val tailHPx = 10.dp.toPx()
-                            val strokePx = 2.5.dp.toPx()
+                            val strokePx = 3.dp.toPx()
 
                             val bubblePath = buildTailBubblePath(
                                 size = size,
@@ -178,18 +158,9 @@ fun NoInternetMiniPopup(
                                 isRtl = layoutDirection == LayoutDirection.Rtl
                             )
 
-                            val span = size.width + size.height
-                            val travel = borderShift * span
-                            val start = Offset(travel - span, 0f)
-                            val end = Offset(travel, size.height)
-
                             drawPath(
                                 path = bubblePath,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(borderColorA, borderColorB, borderColorC, borderColorB, borderColorA),
-                                    start = start,
-                                    end = end
-                                ),
+                                color = borderColor,
                                 style = Stroke(
                                     width = strokePx,
                                     cap = StrokeCap.Round,
