@@ -45,12 +45,14 @@ import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.core.utils.formatCompact
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
+import com.iti.linguaquest.core.domain.model.GameCost
 
 @Composable
 fun LevelScreen(
     worldId: Int,
     levelId: Int,
     levelOrder: Int,
+    targetWord: String? = null,
     sharedViewModel: GameSharedViewModel,
     onBack: () -> Unit,
     onStartCamera: () -> Unit,
@@ -79,7 +81,7 @@ fun LevelScreen(
     }
 
     LaunchedEffect(worldId, levelId) {
-        viewModel.loadLevelDetails(worldId, levelId, levelOrder)
+        viewModel.loadLevelDetails(worldId, levelId, levelOrder, targetWord)
     }
 
     LaunchedEffect(state.wordToGuess) {
@@ -119,11 +121,11 @@ fun LevelScreen(
             imageRes = R.drawable.lingo_on_coins,
             onDismissRequest = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
             primaryButtonText = stringResource(R.string.change_word_confirm_action),
-            isPrimaryButtonEnabled = state.coinCount >= 50,
+            isPrimaryButtonEnabled = state.coinCount >= GameCost.CHANGE_WORD.coins,
             onPrimaryClick = { viewModel.onIntent(LevelIntent.ConfirmChangeWordClicked) },
             secondaryButtonText = stringResource(R.string.change_word_cancel_action),
             onSecondaryClick = { viewModel.onIntent(LevelIntent.CancelChangeWordClicked) },
-            customContent = { PriceTagContent(-50) }
+            customContent = { PriceTagContent(-GameCost.CHANGE_WORD.coins) }
         )
     }
 

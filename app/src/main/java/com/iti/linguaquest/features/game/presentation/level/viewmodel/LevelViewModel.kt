@@ -32,6 +32,7 @@ import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import com.iti.linguaquest.core.domain.model.GameCost
 import com.iti.linguaquest.features.game.domain.usecase.StartLevelUseCase
 
 @HiltViewModel
@@ -67,12 +68,38 @@ class LevelViewModel @Inject constructor(
         }
     }
 
-    fun loadLevelDetails(worldId: Int, levelId: Int, levelOrder: Int) {
+    fun loadLevelDetails(worldId: Int, levelId: Int, levelOrder: Int, targetWord: String? = null) {
         if (_state.value.worldId == worldId && _state.value.levelId == levelId && _state.value.isLevelReady) {
             return
         }
-        
+
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    worldId = worldId,
+                    levelId = levelId,
+                    levelOrder = levelOrder,
+                    isLoading = true,
+                    isHintLoading = false
+                )
+            }
+
+            if (!targetWord.isNullOrEmpty()) {
+                _state.update {
+                    it.copy(
+                        wordToGuess = targetWord,
+                        isLoading = false,
+                        isLevelReady = true,
+                        isChangeWordAvailable = true
+                    )
+                }
+                return@launch
+            }
+
+            if (_state.value.coinCount < GameCost.CHANGE_WORD.coins) {
+                _state.update { it.copy(isChangeWordAvailable = false) }
+            }
+
             refreshWalletUseCase()
             _state.update {
                 it.copy(
@@ -81,14 +108,14 @@ class LevelViewModel @Inject constructor(
                     levelId = levelId,
                     levelOrder = levelOrder,
                     isLevelReady = false,
-                    isChangeWordAvailable = false,
+                    isChangeWordAvailable = _state.value.coinCount >= GameCost.CHANGE_WORD.coins,
                     isChangeWordDialogVisible = false,
                     isChangeWordUsed = false
                 )
             }
             when (val result = startLevelUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
-                    val targetWord = result.data.ifEmpty { if (worldId == 1 && levelOrder == 3) "PAN" else "APPLE" }
+                    val targetWordResult = result.data.ifEmpty { if (worldId == 1 && levelOrder == 3) "PAN" else "APPLE" }
                     val languageCode = if (worldId == 1) "es" else "en"
 
                     _state.update {
@@ -97,10 +124,10 @@ class LevelViewModel @Inject constructor(
                             worldId = worldId,
                             levelId = levelId,
                             levelOrder = levelOrder,
-                            wordToGuess = targetWord,
+                            wordToGuess = targetWordResult,
                             languageCode = languageCode,
                             isLevelReady = true,
-                            isChangeWordAvailable = true,
+                            isChangeWordAvailable = _state.value.coinCount >= GameCost.CHANGE_WORD.coins,
                             isChangeWordDialogVisible = false
                         )
                     }
@@ -212,13 +239,13 @@ class LevelViewModel @Inject constructor(
 
     private fun confirmChangeWord() {
         val current = _state.value
-        if (current.isLoading || !current.isLevelReady || current.coinCount < 50) {
+        if (current.isLoading || !current.isLevelReady || current.coinCount < GameCost.CHANGE_WORD.coins) {
             _state.update { it.copy(isChangeWordDialogVisible = false) }
             return
         }
 
         _state.update { it.copy(isChangeWordDialogVisible = false) }
-        changeCurrentWord(cost = 50, markAsUsed = true)
+        changeCurrentWord(cost = GameCost.CHANGE_WORD.coins, markAsUsed = true)
     }
 
     private fun buyHint() {
@@ -226,7 +253,7 @@ class LevelViewModel @Inject constructor(
         val levelId = _state.value.levelId
 
         viewModelScope.launch {
-            _state.update { it.copy(coinCount = maxOf(0, it.coinCount - 20), isHintLoading = true) }
+            _state.update { it.copy(coinCount = maxOf(0, it.coinCount - GameCost.HINT.coins), isHintLoading = true) }
             when (val result = getHintUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
@@ -242,7 +269,7 @@ class LevelViewModel @Inject constructor(
                 }
                 is LinguaQuestResult.Failure -> {
                     refreshWalletUseCase()
-                    _state.update { it.copy(coinCount = it.coinCount + 20, isHintLoading = false, isBottomSheetVisible = false) }
+                    _state.update { it.copy(isHintLoading = false, coinCount = it.coinCount + GameCost.HINT.coins, isBottomSheetVisible = false) }
                     val uiText = (result.error as? LinguaQuestDataError)?.toUiText()
                         ?: UiText.StringResource(R.string.general_error)
 

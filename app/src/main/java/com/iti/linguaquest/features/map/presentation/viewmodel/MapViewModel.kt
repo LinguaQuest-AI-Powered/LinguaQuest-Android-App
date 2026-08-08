@@ -83,7 +83,8 @@ class MapViewModel @Inject constructor(
                         levelNumber = level.order,
                         status = status,
                         stars = if (status == LevelStatus.COMPLETED) 3 else 0,
-                        levelId = level.id
+                        levelId = level.id,
+                        targetWord = level.word
                     )
                 }
 
@@ -129,7 +130,7 @@ class MapViewModel @Inject constructor(
     private fun handleLevelClicked(levelId: Int) {
         val level = _state.value.levels.find { it.levelId == levelId } ?: return
         if (level.status == LevelStatus.LOCKED) return
-        sendEffect(MapEffect.NavigateToLevel(levelId, level.levelNumber))
+        sendEffect(MapEffect.NavigateToLevel(levelId, level.levelNumber, level.targetWord))
     }
 
     private fun sendEffect(effect: MapEffect) {

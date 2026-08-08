@@ -25,9 +25,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.Composable
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.core.domain.model.GameCost
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -124,12 +125,14 @@ fun HintsBottomSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            val cost = GameCost.HINT.coins
+            val isAffordable = coinCount >= cost
             HintItem(
                 icon = Icons.Default.Info,
                 title = stringResource(id = R.string.get_a_hint_title),
-                cost = 20,
+                cost = cost,
                 isLoading = isLoading,
-                isEnabled = coinCount >= 20,
+                isEnabled = isAffordable,
                 onClick = onBuyHint
             )
         }

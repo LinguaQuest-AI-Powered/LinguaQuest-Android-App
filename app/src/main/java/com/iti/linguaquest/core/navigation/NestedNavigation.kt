@@ -140,9 +140,9 @@ fun MainScreen(
                             onNavigateToAddLanguages = {
                                 rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
                             },
-                            onNavigateToLevel = { worldId, levelId, levelOrder ->
+                            onNavigateToLevel = { worldId, levelId, levelOrder, targetWord ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
-                                rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder))
+                                rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
                             }
                         )
                     }

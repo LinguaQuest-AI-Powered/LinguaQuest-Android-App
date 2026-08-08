@@ -24,6 +24,7 @@ fun GameFlowHost(
     worldId: Int,
     levelId: Int,
     levelOrder: Int,
+    targetWord: String? = null,
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
     sharedViewModel: GameSharedViewModel = hiltViewModel()
@@ -49,6 +50,7 @@ fun GameFlowHost(
                     worldId = worldId,
                     levelId = levelId,
                     levelOrder = levelOrder,
+                    targetWord = targetWord,
                     sharedViewModel = sharedViewModel,
                     onBack = { rootBackStack.removeLastOrNull() },
                     onStartCamera = {
