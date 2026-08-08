@@ -206,7 +206,11 @@ paths:
                         id: 1234
                         username: adham_a
                         photo: /u1/ahaeaw.jpg
-                        nativeLanguage: Arabic
+                        nativeLanguage:
+                          id: 10
+                          name: Arabic
+                          code: ar
+                          imageUrl: https://cdn.linguaquest.com/languages/arabic.png
                         isVerified: true
                         targetLanguages: [Spanish, English]
         '400':
@@ -3760,9 +3764,7 @@ components:
           nullable: true
           example: /u1/ahaeaw.jpg
         nativeLanguage:
-          type: string
-          nullable: true
-          example: Arabic
+          $ref: '#/components/schemas/TargetLanguage'
         isVerified:
           type: boolean
           example: true
