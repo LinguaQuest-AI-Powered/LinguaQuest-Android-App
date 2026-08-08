@@ -37,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
@@ -146,7 +145,6 @@ fun LockScreenWordDetailScreen(
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            // Header
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()

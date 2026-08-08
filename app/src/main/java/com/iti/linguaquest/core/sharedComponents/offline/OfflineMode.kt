@@ -12,6 +12,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
@@ -91,14 +92,16 @@ fun OfflineStateView(
         label = "pulse"
     )
 
-    Box(
+    Column(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(
             visible = visible,
             enter = fadeIn(animationSpec = tween(400)) +
-                    scaleIn(initialScale = 0.9f, animationSpec = tween(400, easing = FastOutSlowInEasing))
+                    scaleIn(initialScale = 0.9f, animationSpec = tween(400, easing = FastOutSlowInEasing)),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Column(
                 modifier = Modifier
@@ -234,4 +237,12 @@ fun OfflineAwareContent(
     }
 }
 
-
+@Preview(showBackground = true)
+@Composable
+private fun OfflineStateViewPreview() {
+    LinguaQuestTheme {
+        OfflineStateView(
+            onRetry = {}
+        )
+    }
+}
