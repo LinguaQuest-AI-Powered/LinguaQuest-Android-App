@@ -3,12 +3,14 @@ package com.iti.linguaquest.features.all_worlds.presentation.contract
 import com.iti.linguaquest.features.home.presentation.view.components.WorldDifficulty
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+
 data class AllWorldsState(
     val isLoading: Boolean = false,
     val selectedFilter: WorldDifficulty? = null,
     val worlds: List<WorldItem> = emptyList(),
     val hasError: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: UiText? = null
 ) {
     val filteredWorlds: List<WorldItem>
         get() = if (selectedFilter == null) {

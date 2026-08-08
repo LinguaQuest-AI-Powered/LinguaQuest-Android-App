@@ -1,11 +1,6 @@
 package com.iti.linguaquest.core.sharedComponents.offline
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,6 +18,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,11 +37,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -94,20 +92,7 @@ fun NoInternetMiniPopup(
         }
     }
 
-    val borderTransition = rememberInfiniteTransition(label = "mini_bubble_border")
-    val borderShift by borderTransition.animateFloat(
-        initialValue = -1f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2400, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "border_shift"
-    )
-
-    val borderColorA = LinguaQuestTheme.colors.splashTopLeftColor
-    val borderColorB = LinguaQuestTheme.colors.OrangeActive
-    val borderColorC = LinguaQuestTheme.colors.ShadowOrange
+    val borderColor = LinguaQuestTheme.colors.OrangeActive
 
     val bubbleShape = TailBubbleShape(
         cornerRadius = 16.dp,
@@ -162,7 +147,7 @@ fun NoInternetMiniPopup(
                             val cornerPx = 16.dp.toPx()
                             val tailWPx = 8.dp.toPx()
                             val tailHPx = 10.dp.toPx()
-                            val strokePx = 2.5.dp.toPx()
+                            val strokePx = 3.dp.toPx()
 
                             val bubblePath = buildTailBubblePath(
                                 size = size,
@@ -173,18 +158,9 @@ fun NoInternetMiniPopup(
                                 isRtl = layoutDirection == LayoutDirection.Rtl
                             )
 
-                            val span = size.width + size.height
-                            val travel = borderShift * span
-                            val start = Offset(travel - span, 0f)
-                            val end = Offset(travel, size.height)
-
                             drawPath(
                                 path = bubblePath,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(borderColorA, borderColorB, borderColorC, borderColorB, borderColorA),
-                                    start = start,
-                                    end = end
-                                ),
+                                color = borderColor,
                                 style = Stroke(
                                     width = strokePx,
                                     cap = StrokeCap.Round,
@@ -199,12 +175,24 @@ fun NoInternetMiniPopup(
                             bottom = 12.dp
                         )
                 ) {
-                    Text(
-                        text = resolvedMessage,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.WifiOff,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = resolvedMessage,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }

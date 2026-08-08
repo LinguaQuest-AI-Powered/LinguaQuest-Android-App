@@ -21,6 +21,7 @@ class LinguaQuestApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         Firebase.initialize(context = this)
         appIconWorkScheduler.scheduleDailyRefresh()
 
@@ -33,4 +34,9 @@ class LinguaQuestApplication : Application(), Configuration.Provider {
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
+
+    companion object {
+        lateinit var instance: LinguaQuestApplication
+            private set
+    }
 }

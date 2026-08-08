@@ -2,11 +2,13 @@ package com.iti.linguaquest.features.review.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.review.domain.usecase.GetAIReviewUseCase
 import com.iti.linguaquest.features.review.presentation.contract.ReviewEffect
 import com.iti.linguaquest.features.review.presentation.contract.ReviewIntent
@@ -59,11 +61,8 @@ class ReviewViewModel @Inject constructor(
                     _state.update { it.copy(isLoading = false, aiResponse = result.data) }
                 }
                 is LinguaQuestResult.Failure -> {
-                    val msg = if (result.error is LinguaQuestDataError.CustomServerMessage) {
-                        (result.error as  LinguaQuestDataError.CustomServerMessage).message
-                    } else {
-                        "Couldn't get AI review. Please try again."
-                    }
+                    val msg = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.error_generic)
                     _state.update {
                         it.copy(
                             isLoading = false,

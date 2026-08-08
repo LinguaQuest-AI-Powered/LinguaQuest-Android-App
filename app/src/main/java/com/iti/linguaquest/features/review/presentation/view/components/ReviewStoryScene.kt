@@ -1,9 +1,12 @@
 package com.iti.linguaquest.features.review.presentation.view.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +16,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,7 +53,7 @@ fun ReviewStoryScene(
     isSpeaking: Boolean = false,
     onSpeak: (() -> Unit)? = null
 ) {
-    androidx.compose.animation.AnimatedVisibility(
+    AnimatedVisibility(
         visible = visible,
         enter = fadeIn(tween(420)) + slideInHorizontally(
             animationSpec = tween(620),
@@ -71,22 +72,22 @@ fun ReviewStoryScene(
                     title = title,
                     message = message,
                     accentColor = accentColor,
-                    tailOnStart = true,
                     contentStyle = contentStyle,
                     showSpeakButton = showSpeakButton,
                     isSpeaking = isSpeaking,
-                    onSpeak = onSpeak
+                    onSpeak = onSpeak,
+                    modifier = Modifier.weight(1f)
                 )
             } else {
                 StoryBubble(
                     title = title,
                     message = message,
                     accentColor = accentColor,
-                    tailOnStart = false,
                     contentStyle = contentStyle,
                     showSpeakButton = showSpeakButton,
                     isSpeaking = isSpeaking,
-                    onSpeak = onSpeak
+                    onSpeak = onSpeak,
+                    modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 StoryMascot(mascotRes = mascotRes, accentColor = accentColor)
@@ -103,22 +104,22 @@ private fun StoryMascot(
 ) {
     Box(
         modifier = modifier
-            .size(118.dp)
+            .size(76.dp)
             .background(
                 color = accentColor.copy(alpha = 0.08f),
-                shape = RoundedCornerShape(30.dp)
+                shape = RoundedCornerShape(20.dp)
             )
             .border(
                 width = 1.dp,
                 color = accentColor.copy(alpha = 0.08f),
-                shape = RoundedCornerShape(30.dp)
+                shape = RoundedCornerShape(20.dp)
             ),
         contentAlignment = Alignment.Center
     ) {
-        androidx.compose.foundation.Image(
+        Image(
             painter = painterResource(id = mascotRes),
             contentDescription = null,
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier.size(60.dp),
             contentScale = ContentScale.Fit
         )
     }
@@ -129,21 +130,20 @@ private fun StoryBubble(
     title: String,
     message: String,
     accentColor: Color,
-    tailOnStart: Boolean,
     showSpeakButton: Boolean,
     isSpeaking: Boolean,
     onSpeak: (() -> Unit)?,
     contentStyle: FontStyle,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(modifier = modifier) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(28.dp),
             color = MaterialTheme.colorScheme.surface,
             shadowElevation = 6.dp,
             tonalElevation = 0.dp,
-            border = androidx.compose.foundation.BorderStroke(
+            border = BorderStroke(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
             )
@@ -190,24 +190,6 @@ private fun StoryBubble(
                 )
             }
         }
-
-        Box(
-            modifier = Modifier
-                .align(
-                    if (tailOnStart) Alignment.BottomStart else Alignment.BottomEnd
-                )
-                .offset(
-                    x = if (tailOnStart) (-8).dp else 8.dp,
-                    y = 6.dp
-                )
-                .size(18.dp)
-                .rotate(45f)
-                .background(MaterialTheme.colorScheme.surface)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
-                )
-        )
     }
 }
 
