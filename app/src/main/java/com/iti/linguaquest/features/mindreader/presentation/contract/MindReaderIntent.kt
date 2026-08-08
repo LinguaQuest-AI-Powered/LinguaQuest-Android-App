@@ -13,7 +13,8 @@ sealed interface MindReaderIntent {
     data object GuessVerifiedCorrect : MindReaderIntent
     data object GuessVerifiedIncorrect : MindReaderIntent
     data class PopQuizAnswered(val choice: MindReaderPopQuizChoice) : MindReaderIntent
-    data class StumpWordSelected(val entity: MindReaderEntity) : MindReaderIntent
+    data class StumpInputValueChanged(val value: String) : MindReaderIntent
+    data object StumpSubmitClicked : MindReaderIntent
     data object PlayAudioClicked : MindReaderIntent
     data object PlayGuessAudioClicked : MindReaderIntent
     data object TryAgainClicked : MindReaderIntent

@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
      @Inject
     lateinit var soundPlayer: AppSoundPlayer
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: AppViewModel by viewModels()
 
     private var openHomeRequested by mutableStateOf(false)
     private var openLockScreenWordId by mutableStateOf<Int?>(null)

@@ -21,12 +21,11 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderRewardChallenge
 import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderCategoriesUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.BuildMindReaderPopQuizQuestionUseCase
-import com.iti.linguaquest.features.mindreader.domain.usecase.CheckMindReaderContradictionsUseCase
-import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderCurrentResultUseCase
-import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderNextQuestionUseCase
+import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderNextTurnUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.ResolveMindReaderRewardUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.StartMindReaderGameUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.SubmitMindReaderAnswerUseCase
+import com.iti.linguaquest.features.mindreader.domain.usecase.VerifyMindReaderHonestyUseCase
 import com.iti.linguaquest.features.mindreader.presentation.contract.LingoEmotion
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderEffect
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
@@ -48,12 +47,11 @@ import javax.inject.Inject
 @HiltViewModel
 class MindReaderViewModel @Inject constructor(
     private val startMindReaderGameUseCase: StartMindReaderGameUseCase,
-    private val getMindReaderNextQuestionUseCase: GetMindReaderNextQuestionUseCase,
+    private val getMindReaderNextTurnUseCase: GetMindReaderNextTurnUseCase,
     private val submitMindReaderAnswerUseCase: SubmitMindReaderAnswerUseCase,
-    private val getMindReaderCurrentResultUseCase: GetMindReaderCurrentResultUseCase,
     private val resolveMindReaderRewardUseCase: ResolveMindReaderRewardUseCase,
-    private val checkMindReaderContradictionsUseCase: CheckMindReaderContradictionsUseCase,
     private val buildMindReaderPopQuizQuestionUseCase: BuildMindReaderPopQuizQuestionUseCase,
+    private val verifyMindReaderHonestyUseCase: VerifyMindReaderHonestyUseCase,
     private val getMindReaderCategoriesUseCase: GetMindReaderCategoriesUseCase,
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
@@ -110,10 +108,15 @@ class MindReaderViewModel @Inject constructor(
             is MindReaderIntent.GuessVerifiedCorrect -> handleGuessVerification(true)
             is MindReaderIntent.GuessVerifiedIncorrect -> handleGuessVerification(false)
             is MindReaderIntent.PopQuizAnswered -> handlePopQuizAnswer(intent.choice)
-            is MindReaderIntent.StumpWordSelected -> handleStumpSelection(intent.entity)
+            is MindReaderIntent.StumpInputValueChanged -> {
+                _state.update { it.copy(stumpInputValue = intent.value) }
+            }
+            is MindReaderIntent.StumpSubmitClicked -> handleStumpSubmit()
             is MindReaderIntent.PlayAudioClicked -> playAudio(isGuess = false)
             is MindReaderIntent.PlayGuessAudioClicked -> playAudio(isGuess = true)
-            is MindReaderIntent.TryAgainClicked -> startGame()
+            is MindReaderIntent.TryAgainClicked -> {
+                _state.update { it.copy(currentPhase = MindReaderPhase.LOBBY) }
+            }
             is MindReaderIntent.ReturnToHomeClicked -> {
                 viewModelScope.launch { _effect.emit(MindReaderEffect.NavigateBack) }
             }
@@ -147,14 +150,12 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun submitAnswer(answer: MindReaderAnswerOption) {
-        val currentDs = dataset ?: return
         val currentState = domainState ?: return
-        val attributeId = getMindReaderNextQuestionUseCase(currentDs, currentState)?.attributeId ?: return
+        val questionCandidate = _state.value.currentQuestionCandidate ?: return
 
         domainState = submitMindReaderAnswerUseCase(
-            dataset = currentDs,
             state = currentState,
-            attributeId = attributeId,
+            question = questionCandidate,
             answer = answer
         )
 
@@ -165,121 +166,117 @@ class MindReaderViewModel @Inject constructor(
         val currentDs = dataset ?: return
         val currentState = domainState ?: return
 
-        val result = getMindReaderCurrentResultUseCase(currentDs, currentState)
-        
-        when (result) {
-            is MindReaderResult.Playing -> {
-                val nextQuestion = getMindReaderNextQuestionUseCase(currentDs, currentState)
-                if (nextQuestion != null) {
+        if (currentState.questionCount >= currentDs.config.maxQuestions) {
+            _state.update {
+                it.copy(
+                    currentPhase = MindReaderPhase.RESULT,
+                    resultInfo = MindReaderResultInfo(
+                        isVictory = false,
+                        xpEarned = 0,
+                        coinsEarned = 0,
+                        reason = "I couldn't guess it in ${currentDs.config.maxQuestions} questions!"
+                    ),
+                    lingoEmotion = LingoEmotion.ANGRY
+                )
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            _state.update { it.copy(currentPhase = MindReaderPhase.THINKING, lingoEmotion = LingoEmotion.THINKING) }
+            
+            val nextTurn = getMindReaderNextTurnUseCase(
+                category = _state.value.selectedCategory?.id ?: "",
+                targetLanguage = _state.value.targetLanguageCode,
+                nativeLanguage = _state.value.nativeLanguageCode,
+                state = currentState
+            )
+
+            when (nextTurn) {
+                is com.iti.linguaquest.features.mindreader.domain.usecase.MindReaderNextTurn.Question -> {
                     _state.update {
                         it.copy(
                             currentPhase = MindReaderPhase.PLAYING,
-                            currentQuestion = nextQuestion.question.resolve(it.targetLanguageCode),
-                            translatedQuestion = nextQuestion.question.resolve(it.nativeLanguageCode),
+                            currentQuestionCandidate = nextTurn.question,
+                            currentQuestion = nextTurn.question.question.resolve(it.targetLanguageCode),
+                            translatedQuestion = nextTurn.question.question.resolve(it.nativeLanguageCode),
                             showTranslation = false,
                             currentQuestionNumber = currentState.questionCount + 1,
-                            lingoEmotion = determineLingoEmotion(currentState.candidates.size)
+                            lingoEmotion = LingoEmotion.PUZZLED
                         )
                     }
                 }
-            }
-            is MindReaderResult.Guessing -> {
-                viewModelScope.launch {
-                    _state.update { it.copy(currentPhase = MindReaderPhase.GUESSING_LOADING, lingoEmotion = LingoEmotion.DETECTIVE) }
+                is com.iti.linguaquest.features.mindreader.domain.usecase.MindReaderNextTurn.Guess -> {
+                    _state.update { 
+                        it.copy(
+                            currentPhase = MindReaderPhase.GUESSING_LOADING, 
+                            lingoEmotion = LingoEmotion.DETECTIVE
+                        ) 
+                    }
                     delay(2500)
                     _state.update {
                         it.copy(
                             currentPhase = MindReaderPhase.GUESS_REVEAL,
-                            guessResult = result.guess,
+                            guessResult = nextTurn.guess,
                             lingoEmotion = LingoEmotion.EXCITED
                         )
                     }
                 }
-            }
-            is MindReaderResult.PopQuiz -> {
-                _state.update {
-                    it.copy(
-                        currentPhase = MindReaderPhase.POP_QUIZ,
-                        popQuizQuestion = result.question,
-                        guessResult = result.originalGuess
-                    )
-                }
-            }
-            is MindReaderResult.Stump -> {
-                _state.update {
-                    it.copy(
-                        currentPhase = MindReaderPhase.STUMP,
-                        stumpCandidates = result.candidates,
-                        guessResult = result.originalGuess
-                    )
-                }
-            }
-            is MindReaderResult.Victory -> {
-                awardRewards(xp = result.rewardXp, coins = result.rewardCoins)
-                _state.update {
-                    it.copy(
-                        currentPhase = MindReaderPhase.RESULT,
-                        resultInfo = MindReaderResultInfo(
-                            isVictory = true,
-                            xpEarned = result.rewardXp,
-                            coinsEarned = result.rewardCoins
-                        ),
-                        lingoEmotion = LingoEmotion.CELEBRATING
-                    )
-                }
-            }
-            is MindReaderResult.Busted -> {
-                _state.update {
-                    it.copy(
-                        currentPhase = MindReaderPhase.RESULT,
-                        resultInfo = MindReaderResultInfo(
-                            isVictory = false,
-                            xpEarned = 0,
-                            coinsEarned = 0,
-                            reason = result.reason
-                        ),
-                        lingoEmotion = LingoEmotion.ANGRY
-                    )
-                }
-            }
-            is MindReaderResult.Timeout -> {
-                _state.update {
-                    it.copy(
-                        currentPhase = MindReaderPhase.RESULT,
-                        resultInfo = MindReaderResultInfo(
-                            isVictory = false,
-                            xpEarned = 0,
-                            coinsEarned = 0,
-                            reason = "Too many questions!"
-                        ),
-                        lingoEmotion = LingoEmotion.ANGRY
-                    )
+                is com.iti.linguaquest.features.mindreader.domain.usecase.MindReaderNextTurn.Error -> {
+                    _state.update {
+                        it.copy(
+                            currentPhase = MindReaderPhase.RESULT,
+                            resultInfo = MindReaderResultInfo(
+                                isVictory = false,
+                                xpEarned = 0,
+                                coinsEarned = 0,
+                                reason = "My connection dropped! Let's try again."
+                            ),
+                            lingoEmotion = LingoEmotion.ANGRY
+                        )
+                    }
                 }
             }
         }
     }
 
     private fun handleGuessVerification(isCorrect: Boolean) {
-        val currentDs = dataset ?: return
-        val currentState = domainState ?: return
         val guess = _state.value.guessResult ?: return
+        val currentDs = dataset ?: return
         
         if (isCorrect) {
-            val popQuizQuestion = buildMindReaderPopQuizQuestionUseCase(
-                correctEntity = guess.entity,
-                candidatePool = currentDs.entities
-            )
-            _state.update {
-                it.copy(
-                    currentPhase = MindReaderPhase.POP_QUIZ,
-                    popQuizQuestion = popQuizQuestion
+            viewModelScope.launch {
+                _state.update { it.copy(currentPhase = MindReaderPhase.GUESSING_LOADING, lingoEmotion = LingoEmotion.DETECTIVE) }
+                val popQuizQuestion = buildMindReaderPopQuizQuestionUseCase(
+                    categoryContext = _state.value.selectedCategory?.id ?: "",
+                    targetLanguage = _state.value.targetLanguageCode,
+                    nativeLanguage = _state.value.nativeLanguageCode,
+                    correctEntity = guess.entity
                 )
+                if (popQuizQuestion != null) {
+                    _state.update {
+                        it.copy(
+                            currentPhase = MindReaderPhase.POP_QUIZ,
+                            popQuizQuestion = popQuizQuestion
+                        )
+                    }
+                } else {
+                    // Fallback to victory if pop quiz generation fails
+                    val history = domainState?.history ?: return@launch
+                    val result = MindReaderResult.Victory(
+                        guess = guess,
+                        history = history,
+                        rewardCoins = currentDs.config.correctRewardCoins,
+                        rewardXp = currentDs.config.correctRewardXp
+                    )
+                    handleResolution(result)
+                }
             }
         } else {
             _state.update {
                 it.copy(
                     currentPhase = MindReaderPhase.STUMP,
-                    stumpCandidates = currentDs.entities
+                    stumpInputValue = ""
                 )
             }
         }
@@ -288,48 +285,70 @@ class MindReaderViewModel @Inject constructor(
     private fun handlePopQuizAnswer(choice: MindReaderPopQuizChoice) {
         val currentDs = dataset ?: return
         val currentState = domainState ?: return
-        val challenge = MindReaderRewardChallenge.PopQuiz(
-            correctEntity = _state.value.guessResult!!.entity,
-            selectedEntity = choice.entity
-        )
-        
-        val contradiction = checkMindReaderContradictionsUseCase(
-            history = currentState.history,
-            evaluatedEntity = challenge.correctEntity,
-            attributes = currentDs.attributes
-        )
-        
-        val result = resolveMindReaderRewardUseCase(
-            challenge = challenge,
-            contradictionResult = contradiction,
-            config = currentDs.config,
-            history = currentState.history
-        )
-        
-        handleResolution(result)
+        val categoryId = _state.value.selectedCategory?.id ?: ""
+        val targetLang = _state.value.targetLanguageCode
+
+        viewModelScope.launch {
+            _state.update { it.copy(currentPhase = MindReaderPhase.THINKING, lingoEmotion = LingoEmotion.DETECTIVE) }
+
+            val challenge = MindReaderRewardChallenge.PopQuiz(
+                correctEntity = _state.value.guessResult!!.entity,
+                selectedEntity = choice.entity
+            )
+            
+            val contradiction = verifyMindReaderHonestyUseCase(
+                categoryContext = categoryId,
+                targetLanguage = targetLang,
+                feedbackLanguage = _state.value.nativeLanguageCode,
+                history = currentState.history,
+                claimedWord = challenge.correctEntity.resolveTranslation(targetLang)
+            )
+            
+            val result = resolveMindReaderRewardUseCase(
+                challenge = challenge,
+                contradictionResult = contradiction,
+                config = currentDs.config,
+                history = currentState.history
+            )
+            
+            handleResolution(result)
+        }
     }
 
-    private fun handleStumpSelection(entity: MindReaderEntity) {
+    private fun handleStumpSubmit() {
         val currentDs = dataset ?: return
         val currentState = domainState ?: return
-        val challenge = MindReaderRewardChallenge.Stump(
-            selectedEntity = entity
-        )
-        
-        val contradiction = checkMindReaderContradictionsUseCase(
-            history = currentState.history,
-            evaluatedEntity = challenge.selectedEntity,
-            attributes = currentDs.attributes
-        )
-        
-        val result = resolveMindReaderRewardUseCase(
-            challenge = challenge,
-            contradictionResult = contradiction,
-            config = currentDs.config,
-            history = currentState.history
-        )
-        
-        handleResolution(result)
+        val categoryId = _state.value.selectedCategory?.id ?: ""
+        val targetLang = _state.value.targetLanguageCode
+        val nativeLang = _state.value.nativeLanguageCode
+        val inputValue = _state.value.stumpInputValue
+
+        if (inputValue.isBlank()) return
+
+        viewModelScope.launch {
+            _state.update { it.copy(currentPhase = MindReaderPhase.THINKING, lingoEmotion = LingoEmotion.DETECTIVE) }
+
+            val contradiction = verifyMindReaderHonestyUseCase(
+                categoryContext = categoryId,
+                targetLanguage = targetLang,
+                feedbackLanguage = nativeLang,
+                history = currentState.history,
+                claimedWord = inputValue
+            )
+
+            val challenge = MindReaderRewardChallenge.Stump(
+                selectedEntity = contradiction.evaluatedEntity
+            )
+            
+            val result = resolveMindReaderRewardUseCase(
+                challenge = challenge,
+                contradictionResult = contradiction,
+                config = currentDs.config,
+                history = currentState.history
+            )
+            
+            handleResolution(result)
+        }
     }
     
     private fun handleResolution(result: MindReaderResult) {

@@ -836,4 +836,5 @@
     <string name="game_processing_status_comparing">Comparing with dictionary...</string>
     <string name="game_processing_status_thinking">Thinking hard...</string>
 
+    <string name="mind_reader_choose_category">Choose Category</string>
 </resources>

@@ -20,6 +20,17 @@ android {
     namespace = "com.iti.linguaquest"
     compileSdk = 37
 
+    configurations.all {
+        resolutionStrategy {
+            force("io.ktor:ktor-client-core:2.3.12")
+            force("io.ktor:ktor-client-android:2.3.12")
+            force("io.ktor:ktor-client-okhttp:2.3.12")
+            force("io.ktor:ktor-client-content-negotiation:2.3.12")
+            force("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+            force("io.ktor:ktor-client-logging:2.3.12")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.iti.linguaquest"
         minSdk = 24
@@ -114,6 +125,9 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -128,6 +142,11 @@ dependencies {
 
     implementation(libs.firebase.ai)
     debugImplementation(libs.firebase.appcheck.debug)
+    implementation(libs.generativeai)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.firebase.messaging)
 
     implementation(libs.konfetti.compose)

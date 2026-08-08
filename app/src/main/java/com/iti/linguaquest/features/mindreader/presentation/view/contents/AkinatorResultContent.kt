@@ -91,7 +91,7 @@ fun ResultContent(
 
                 MindReaderSpeechBubble(text = speechText)
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 val imageRes = if (resultInfo.isVictory) {
                     R.drawable.lingo_mind_win

@@ -76,6 +76,7 @@ fun MindReaderScreen(
                     state = state,
                     onIntent = viewModel::onIntent
                 )
+                MindReaderPhase.THINKING,
                 MindReaderPhase.GUESSING_LOADING -> LoadingGuessContent()
                 MindReaderPhase.GUESS_REVEAL -> GuessRevealContent(
                     state = state,

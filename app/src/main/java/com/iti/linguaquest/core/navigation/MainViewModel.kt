@@ -11,6 +11,7 @@ import com.iti.linguaquest.features.auth.domain.usecase.CheckUserLoggedInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,10 +42,11 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            checkUserLoggedInUseCase().collectLatest { isLoggedIn ->
+            checkUserLoggedInUseCase()
+                .distinctUntilChanged()
+                .collectLatest { isLoggedIn ->
                 if (isLoggedIn) {
                     refreshWallet()
-                    refreshUnreadCount()
                 }
             }
         }
