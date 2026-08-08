@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -77,130 +75,122 @@ fun ReviewStoryContent(
                 )
             }
 
-            when {
-                state.isLoading -> {
-                    item {
-                        LoadingView()
-                    }
+            if (state.aiResponse != null && state.word != null) {
+                val word = state.word
+                val response = state.aiResponse
+
+                item {
+                    ReviewStoryScene(
+                        mascotRes = R.drawable.lingo_hello_review,
+                        title = stringResource(R.string.review_section_welcome_label),
+                        message = stringResource(
+                            R.string.review_section_welcome_message,
+                            word.sourceWord
+                        ),
+                        accentColor = MaterialTheme.colorScheme.tertiary,
+                        flipped = false,
+                        visible = revealedScenes >= 1,
+                        showSpeakButton = false
+                    )
                 }
 
-                state.errorMessage != null -> {
-                    item {
-                        ErrorView(
-                            message = state.errorMessage,
-                            onRetry = { onIntent(ReviewIntent.RetryClicked) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 24.dp)
-                        )
-                    }
+                item {
+                    ReviewStoryScene(
+                        mascotRes = R.drawable.lingo_sentenc_review,
+                        title = stringResource(R.string.review_section_sentence_label),
+                        message = response.exampleSentence,
+                        accentColor = MaterialTheme.colorScheme.primary,
+                        flipped = false,
+                        visible = revealedScenes >= 2,
+                        onSpeak = {
+                            onIntent(
+                                ReviewIntent.SpeakSection(
+                                    text = response.exampleSentence,
+                                    language = word.sourceLanguage,
+                                    sectionId = ReviewSectionIds.SENTENCE
+                                )
+                            )
+                        }
+                    )
                 }
 
-                state.aiResponse != null && state.word != null -> {
-                    val word = state.word
-                    val response = state.aiResponse
-
-                    item {
-                        ReviewStoryScene(
-                            mascotRes = R.drawable.lingo_hello_review,
-                            title = stringResource(R.string.review_section_welcome_label),
-                            message = stringResource(
-                                R.string.review_section_welcome_message,
-                                word.sourceWord
-                            ),
-                            accentColor = MaterialTheme.colorScheme.tertiary,
-                            flipped = false,
-                            visible = revealedScenes >= 1,
-                            showSpeakButton = false
-                        )
-                    }
-
-                    item {
-                        ReviewStoryScene(
-                            mascotRes = R.drawable.lingo_sentenc_review,
-                            title = stringResource(R.string.review_section_sentence_label),
-                            message = response.exampleSentence,
-                            accentColor = MaterialTheme.colorScheme.primary,
-                            flipped = false,
-                            visible = revealedScenes >= 2,
-                            onSpeak = {
-                                onIntent(
-                                    ReviewIntent.SpeakSection(
-                                        text = response.exampleSentence,
-                                        language = word.sourceLanguage,
-                                        sectionId = ReviewSectionIds.SENTENCE
-                                    )
+                item {
+                    ReviewStoryScene(
+                        mascotRes = R.drawable.lingo_translation_review,
+                        title = stringResource(R.string.review_section_translation_label),
+                        message = response.sentenceTranslation,
+                        accentColor = MaterialTheme.colorScheme.primary,
+                        flipped = true,
+                        visible = revealedScenes >= 3,
+                        contentStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                        onSpeak = {
+                            onIntent(
+                                ReviewIntent.SpeakSection(
+                                    text = response.sentenceTranslation,
+                                    language = word.targetLanguage,
+                                    sectionId = ReviewSectionIds.TRANSLATION
                                 )
-                            }
-                        )
-                    }
+                            )
+                        }
+                    )
+                }
 
-                    item {
-                        ReviewStoryScene(
-                            mascotRes = R.drawable.lingo_translation_review,
-                            title = stringResource(R.string.review_section_translation_label),
-                            message = response.sentenceTranslation,
-                            accentColor = MaterialTheme.colorScheme.primary,
-                            flipped = true,
-                            visible = revealedScenes >= 3,
-                            contentStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                            onSpeak = {
-                                onIntent(
-                                    ReviewIntent.SpeakSection(
-                                        text = response.sentenceTranslation,
-                                        language = word.targetLanguage,
-                                        sectionId = ReviewSectionIds.TRANSLATION
-                                    )
+                item {
+                    ReviewStoryScene(
+                        mascotRes = R.drawable.lingo_memory_review,
+                        title = stringResource(R.string.review_section_memory_label),
+                        message = response.memoryTip,
+                        accentColor = MaterialTheme.colorScheme.tertiary,
+                        flipped = false,
+                        visible = revealedScenes >= 4,
+                        onSpeak = {
+                            onIntent(
+                                ReviewIntent.SpeakSection(
+                                    text = response.memoryTip,
+                                    language = word.sourceLanguage,
+                                    sectionId = ReviewSectionIds.MEMORY
                                 )
-                            }
-                        )
-                    }
+                            )
+                        }
+                    )
+                }
 
-                    item {
-                        ReviewStoryScene(
-                            mascotRes = R.drawable.lingo_memory_review,
-                            title = stringResource(R.string.review_section_memory_label),
-                            message = response.memoryTip,
-                            accentColor = MaterialTheme.colorScheme.tertiary,
-                            flipped = false,
-                            visible = revealedScenes >= 4,
-                            onSpeak = {
-                                onIntent(
-                                    ReviewIntent.SpeakSection(
-                                        text = response.memoryTip,
-                                        language = word.sourceLanguage,
-                                        sectionId = ReviewSectionIds.MEMORY
-                                    )
+                item {
+                    ReviewStoryScene(
+                        mascotRes = R.drawable.lingo_did_you_review,
+                        title = stringResource(R.string.review_section_fun_label),
+                        message = response.funFact,
+                        accentColor = MaterialTheme.colorScheme.primary,
+                        flipped = true,
+                        visible = revealedScenes >= 5,
+                        onSpeak = {
+                            onIntent(
+                                ReviewIntent.SpeakSection(
+                                    text = response.funFact,
+                                    language = word.sourceLanguage,
+                                    sectionId = ReviewSectionIds.FUN_FACT
                                 )
-                            }
-                        )
-                    }
-
-                    item {
-                        ReviewStoryScene(
-                            mascotRes = R.drawable.lingo_did_you_review,
-                            title = stringResource(R.string.review_section_fun_label),
-                            message = response.funFact,
-                            accentColor = MaterialTheme.colorScheme.primary,
-                            flipped = true,
-                            visible = revealedScenes >= 5,
-                            onSpeak = {
-                                onIntent(
-                                    ReviewIntent.SpeakSection(
-                                        text = response.funFact,
-                                        language = word.sourceLanguage,
-                                        sectionId = ReviewSectionIds.FUN_FACT
-                                    )
-                                )
-                            }
-                        )
-                    }
+                            )
+                        }
+                    )
                 }
             }
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
             }
+        }
+
+        if (state.isLoading) {
+            LoadingView(onDismissRequest = { onIntent(ReviewIntent.BackClicked) })
+        }
+
+        if (state.errorMessage != null) {
+            ErrorView(
+                message = state.errorMessage,
+                onRetry = { onIntent(ReviewIntent.RetryClicked) },
+                onDismissRequest = { onIntent(ReviewIntent.BackClicked) }
+            )
         }
     }
 }

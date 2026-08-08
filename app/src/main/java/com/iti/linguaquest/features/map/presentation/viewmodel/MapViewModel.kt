@@ -104,13 +104,13 @@ class MapViewModel @Inject constructor(
                 }
             }.onFailure { error ->
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()
-                    ?: UiText.StringResource(R.string.error_generic)
+                    ?: UiText.StringResource(R.string.general_error)
 
                 _state.update {
                     it.copy(
                         isLoading = false,
                         hasError = true,
-                        errorMessage = uiText
+                        errorMessage = uiText.toString()
                     )
                 }
 

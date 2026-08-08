@@ -48,7 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
-import androidx.compose.ui.draw.shadow
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 
@@ -198,27 +197,8 @@ fun QuestCard(
                 )
         ) {
             MessageBubble(
-                title = stringResource(id = R.string.mascot_help_text)
+                title = if (isHintConsumed) stringResource(id = R.string.change_word_hint) else stringResource(id = R.string.mascot_help_text)
             )
-            Box(
-                modifier = Modifier
-                    .shadow(4.dp, RoundedCornerShape(16.dp))
-                    .background(LinguaQuestTheme.colors.whiteColor, RoundedCornerShape(16.dp))
-                    .border(
-                        1.dp,
-                        LinguaQuestTheme.colors.textFieldBorder,
-                        RoundedCornerShape(16.dp)
-                    )
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = if (isHintConsumed) stringResource(id = R.string.change_word_hint) else stringResource(id = R.string.mascot_help_text),
-                    color = LinguaQuestTheme.colors.BrownText,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
             Spacer(modifier = Modifier.height(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.lingo),

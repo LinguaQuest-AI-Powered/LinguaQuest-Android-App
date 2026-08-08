@@ -175,26 +175,25 @@ fun HomeScreen(
             onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
             modifier = Modifier.fillMaxSize()
         ) {
-            if (state.hasError && state.worlds.isEmpty()) {
-                ErrorView(
-                    message = state.errorMessage ?: com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(R.string.error_generic),
-                    onRetry = { viewModel.onIntent(HomeIntent.Refresh) },
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                HomeContent(
-                    state = state,
-                    onSeeMoreClick = { anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
-                    },
-                    onWorldClick = { world, anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
-                    },
-                    onContinueLevelClick = { level, anchor ->
-                        guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                    }
-                )
-            }
+            HomeContent(
+                state = state,
+                onSeeMoreClick = { anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
+                },
+                onWorldClick = { world, anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                },
+                onContinueLevelClick = { level, anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
+                }
+            )
+        }
+
+        if (state.hasError && state.worlds.isEmpty() && state.languageProgress == null) {
+            ErrorView(
+                message = state.errorMessage ?: com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(HomeIntent.Refresh) }
+            )
         }
 
         FloatingActionButton(

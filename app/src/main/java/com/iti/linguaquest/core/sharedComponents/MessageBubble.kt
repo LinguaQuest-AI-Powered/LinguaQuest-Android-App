@@ -1,11 +1,5 @@
 package com.iti.linguaquest.core.sharedComponents
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +10,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,20 +47,7 @@ fun MessageBubble(
     subtitle: String? = null,
     tailPosition: Float = BUBBLE_TAIL_POSITION
 ) {
-    val borderTransition = rememberInfiniteTransition(label = "bubble_border")
-    val borderShift by borderTransition.animateFloat(
-        initialValue = -1f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2400, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "border_shift"
-    )
-
-    val borderColorA = LinguaQuestTheme.colors.splashTopLeftColor
-    val borderColorB = LinguaQuestTheme.colors.OrangeActive
-    val borderColorC = LinguaQuestTheme.colors.ShadowOrange
+    val borderColor = LinguaQuestTheme.colors.OrangeActive
 
     Box(
         modifier = modifier
@@ -96,18 +76,10 @@ fun MessageBubble(
                     tailHeightPx = tailHPx,
                     tailPosition = tailPosition
                 )
-                val span = size.width + size.height
-                val travel = borderShift * span
-                val start = Offset(travel - span, 0f)
-                val end = Offset(travel, size.height)
 
                 drawPath(
                     path = bubblePath,
-                    brush = Brush.linearGradient(
-                        colors = listOf(borderColorA, borderColorB, borderColorC, borderColorB, borderColorA),
-                        start = start,
-                        end = end
-                    ),
+                    color = borderColor,
                     style = Stroke(
                         width = strokePx,
                         cap = StrokeCap.Round,

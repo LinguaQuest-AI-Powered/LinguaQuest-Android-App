@@ -28,14 +28,16 @@ fun ErrorView(
     onRetry: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     title: String? = null,
-    retryText: String = stringResource(R.string.retry)
+    retryText: String = stringResource(R.string.retry),
+    onDismissRequest: (() -> Unit)? = null
 ) {
     ErrorView(
         message = message.asString(),
         onRetry = onRetry,
         modifier = modifier,
         title = title,
-        retryText = retryText
+        retryText = retryText,
+        onDismissRequest = onDismissRequest
     )
 }
 
@@ -45,12 +47,13 @@ fun ErrorView(
     onRetry: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     title: String? = null,
-    retryText: String = stringResource(R.string.retry)
+    retryText: String = stringResource(R.string.retry),
+    onDismissRequest: (() -> Unit)? = null
 ) {
     Dialog(
-        onDismissRequest = {},
+        onDismissRequest = { onDismissRequest?.invoke() },
         properties = DialogProperties(
-            dismissOnBackPress = false,
+            dismissOnBackPress = onDismissRequest != null,
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false
         )

@@ -39,7 +39,8 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 fun LoadingView(
     modifier: Modifier = Modifier,
     message: String? = null,
-    imageRes: Int = R.drawable.lingo_searching
+    imageRes: Int = R.drawable.lingo_searching,
+    onDismissRequest: (() -> Unit)? = null
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "loading_pop")
 
@@ -64,9 +65,9 @@ fun LoadingView(
     )
 
     Dialog(
-        onDismissRequest = {},
+        onDismissRequest = { onDismissRequest?.invoke() },
         properties = DialogProperties(
-            dismissOnBackPress = false,
+            dismissOnBackPress = onDismissRequest != null,
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false
         )

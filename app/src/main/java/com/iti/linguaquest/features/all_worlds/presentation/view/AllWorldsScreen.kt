@@ -46,20 +46,23 @@ fun AllWorldsScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        OfflineAwareContent(isOnline = isOnline) {
+            AllWorldsContent(
+                state = state,
+                onIntent = viewModel::onIntent
+            )
+        }
+
         if (state.isLoading) {
-            LoadingView()
-        } else if (state.hasError) {
+            LoadingView(onDismissRequest = onNavigateBack)
+        }
+
+        if (state.hasError) {
             ErrorView(
                 message = state.errorMessage ?: UiText.StringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(AllWorldsIntent.OnRetry) }
+                onRetry = { viewModel.onIntent(AllWorldsIntent.OnRetry) },
+                onDismissRequest = onNavigateBack
             )
-        } else {
-            OfflineAwareContent(isOnline = isOnline) {
-                AllWorldsContent(
-                    state = state,
-                    onIntent = viewModel::onIntent
-                )
-            }
         }
     }
 }

@@ -10,6 +10,10 @@ import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
 import com.iti.linguaquest.features.leaderboard.presentation.viewmodel.LeaderboardViewModel
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+
 @Composable
 fun LeaderboardScreen(
     onBack: () -> Unit,
@@ -18,19 +22,8 @@ fun LeaderboardScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    when {
-        state.isLoading -> {
-            LoadingView()
-        }
-
-        state.errorMessage != null -> {
-            ErrorView(
-                message = state.errorMessage!!,
-                onRetry = { viewModel.onIntent(LeaderboardIntent.LoadLeaderboard) }
-            )
-        }
-
-        state.leaderboard != null -> {
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (state.leaderboard != null) {
             OfflineAwareContent(isOnline = isOnline) {
                 LeaderboardContent(
                     leaderboard = state.leaderboard!!,
@@ -40,6 +33,18 @@ fun LeaderboardScreen(
                     endReached = state.endReached
                 )
             }
+        }
+
+        if (state.isLoading) {
+            LoadingView(onDismissRequest = onBack)
+        }
+
+        if (state.errorMessage != null) {
+            ErrorView(
+                message = state.errorMessage!!,
+                onRetry = { viewModel.onIntent(LeaderboardIntent.LoadLeaderboard) },
+                onDismissRequest = onBack
+            )
         }
     }
 }

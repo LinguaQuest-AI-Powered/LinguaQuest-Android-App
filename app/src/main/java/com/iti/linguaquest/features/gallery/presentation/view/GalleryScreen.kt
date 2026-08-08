@@ -41,7 +41,6 @@ import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
@@ -144,6 +143,7 @@ fun GalleryScreen(
 
                 GalleryContent(
                     state = state,
+                    isOnline = isOnline,
                     onIntent = viewModel::onIntent,
                     onWordClick = { wordId: Int, anchor: Rect ->
                         guardOnline(anchor) {

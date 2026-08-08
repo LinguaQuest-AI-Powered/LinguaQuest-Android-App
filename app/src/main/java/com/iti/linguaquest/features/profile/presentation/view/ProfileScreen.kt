@@ -91,23 +91,22 @@ fun ProfileScreen(
             onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
             modifier = Modifier.fillMaxSize()
         ) {
-            if (uiState.hasError && uiState.profile.userName.isBlank()) {
-                ErrorView(
-                    message = uiState.errorMessage ?: UiText.StringResource(R.string.error_generic),
-                    onRetry = { viewModel.onIntent(ProfileIntent.Refresh) },
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                ProfileContent(
-                    state = uiState.profile,
-                    isAvatarUploading = uiState.isAvatarUploading,
-                    onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                    onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
-                    onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
-                    onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            ProfileContent(
+                state = uiState.profile,
+                isAvatarUploading = uiState.isAvatarUploading,
+                onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
+                onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
+                onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
+                onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        if (uiState.hasError && uiState.profile.userName.isBlank()) {
+            ErrorView(
+                message = uiState.errorMessage ?: UiText.StringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(ProfileIntent.Refresh) }
+            )
         }
     }
 
