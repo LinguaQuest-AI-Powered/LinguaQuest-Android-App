@@ -167,6 +167,4 @@ class UserPreferencesLocalDataSourceImpl @Inject constructor(
             preferences.remove(PreferencesKeys.PROFICIENCY_LEVEL)
         }
     }
-
-
 }

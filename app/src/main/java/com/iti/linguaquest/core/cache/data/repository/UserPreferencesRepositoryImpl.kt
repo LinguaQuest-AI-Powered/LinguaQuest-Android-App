@@ -69,4 +69,8 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override suspend fun clearTargetLanguage() {
         localDataSource.clearTargetLanguage()
     }
+
+    override suspend fun clearOnboardingPreferences() {
+        localDataSource.clearOnboardingPreferences()
+    }
 }

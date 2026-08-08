@@ -1,11 +1,11 @@
-package com.iti.linguaquest.features.setting.data.manager
+package com.iti.linguaquest.core.language.data.manager
 
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import com.iti.linguaquest.core.utils.LocaleUtils
-import com.iti.linguaquest.features.setting.domain.manager.LanguageManager
+import com.iti.linguaquest.core.language.domain.manager.LanguageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject

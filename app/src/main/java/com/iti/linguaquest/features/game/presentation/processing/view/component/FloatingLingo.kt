@@ -44,6 +44,20 @@ fun FloatingLingo(
     val posY = remember { Animatable(0f) }
     val scaleX = remember { Animatable(1f) }
 
+    val images = listOf(
+        R.drawable.lingo_checking_pronounciation,
+        R.drawable.lingo_camera,
+        R.drawable.lingo_searching
+    )
+    var currentImageIndex by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1500)
+            currentImageIndex = (currentImageIndex + 1) % images.size
+        }
+    }
+
     val infiniteTransition = rememberInfiniteTransition(label = "Popping")
     val popY by infiniteTransition.animateFloat(
         initialValue = -15f,
@@ -72,7 +86,7 @@ fun FloatingLingo(
     }
 
     Image(
-        painter = painterResource(id = R.drawable.lingo_searching),
+        painter = painterResource(id = images[currentImageIndex]),
         contentDescription = stringResource(id = R.string.game_processing_catchable_lingo_desc),
         modifier = modifier
             .offset {

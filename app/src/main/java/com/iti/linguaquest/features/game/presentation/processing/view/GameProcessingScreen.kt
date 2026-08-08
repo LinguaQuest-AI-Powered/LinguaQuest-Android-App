@@ -110,6 +110,7 @@ fun GameProcessingScreen(
                     )
                 } else {
                     GameProcessingView(
+                        targetWord = sharedState.targetWord.asString(),
                         imageUri = sharedState.capturedImageUri,
                         onStartGameClicked = { whackViewModel.onIntent(GameWhackIntent.StartGame) },
                         modifier = Modifier.fillMaxSize()

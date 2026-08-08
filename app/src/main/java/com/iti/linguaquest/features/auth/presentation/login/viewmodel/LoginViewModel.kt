@@ -154,6 +154,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun completeOAuthProfile() {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             val targetLanguage = getTargetLanguageUseCase().first() ?: 1

@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
@@ -83,7 +84,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
-    onNavigateToLevel: (worldId: Int, levelId: Int) -> Unit,
+    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, targetWord: String?) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit,
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
@@ -101,6 +102,7 @@ fun HomeScreen(
     var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+    val context = LocalContext.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
     var bannerHeightPx by remember { mutableFloatStateOf(0f) }
 
@@ -146,7 +148,7 @@ fun HomeScreen(
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
                 is HomeEffect.NavigateToContinueLevel -> {
-                    onNavigateToLevel(effect.worldId, effect.levelId)
+                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.targetWord?.asString(context))
                 }
             }
         }

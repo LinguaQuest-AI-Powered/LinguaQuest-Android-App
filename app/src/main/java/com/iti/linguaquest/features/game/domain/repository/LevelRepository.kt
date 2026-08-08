@@ -7,8 +7,8 @@ import com.iti.linguaquest.features.game.domain.model.VerifyLevelResult
 import java.io.File
 
 interface LevelRepository {
-    suspend fun startLevel(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError>
-    suspend fun changeWord(worldId: Int, levelId: Int): LinguaQuestResult<String, AppError>
-    suspend fun verifyLevel(worldId: Int, levelId: Int, imageFile: File): LinguaQuestResult<VerifyLevelResult, AppError>
-    suspend fun getHint(worldId: Int, levelId: Int): LinguaQuestResult<com.iti.linguaquest.features.game.domain.model.Hint, AppError>
+    suspend fun startLevel(worldId: Int, order: Int): LinguaQuestResult<String, AppError>
+    suspend fun changeWord(worldId: Int, order: Int): LinguaQuestResult<String, AppError>
+    suspend fun verifyLevel(worldId: Int, order: Int, imageFile: File): LinguaQuestResult<VerifyLevelResult, AppError>
+    suspend fun getHint(worldId: Int, order: Int): LinguaQuestResult<com.iti.linguaquest.features.game.domain.model.Hint, AppError>
 }

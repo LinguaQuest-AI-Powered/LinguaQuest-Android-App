@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -66,26 +68,38 @@ fun CameraPreviewContent(
                 .systemBarsPadding()
                 .padding(top = 16.dp)
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    append(stringResource(R.string.find_label))
-                    append("\n")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = MaterialTheme.typography.headlineSmall.fontSize
-                        )
-                    ) {
-                        append(targetWord)
-                    }
-                },
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                ),
-                color = LinguaQuestTheme.colors.whiteColor,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = 32.dp, vertical = 12.dp)
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(R.string.search_icon),
+                    tint = LinguaQuestTheme.colors.whiteColor
+                )
+                
+                Spacer(modifier = Modifier.size(8.dp))
+
+                Text(
+                    text = buildAnnotatedString {
+                        append(stringResource(R.string.find_label))
+                        append("\n")
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.headlineSmall.fontSize
+                            )
+                        ) {
+                            append(targetWord)
+                        }
+                    },
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    ),
+                    color = LinguaQuestTheme.colors.whiteColor
+                )
+            }
         }
 
         Row(

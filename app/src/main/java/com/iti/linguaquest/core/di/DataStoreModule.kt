@@ -34,9 +34,14 @@ annotation class SessionDataStore
 @Retention(AnnotationRetention.BINARY)
 annotation class WalletDataStore
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AuthCacheDataStore
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_settings")
 val Context.sessionDataStore: DataStore<Preferences> by preferencesDataStore(name = "session_manager")
 val Context.walletDataStore: DataStore<Preferences> by preferencesDataStore(name = "wallet")
+val Context.authCacheDataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_cache_prefs")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -61,6 +66,13 @@ object DataStoreModule {
     @Singleton
     fun provideWalletDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.walletDataStore
+    }
+
+    @AuthCacheDataStore
+    @Provides
+    @Singleton
+    fun provideAuthCacheDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.authCacheDataStore
     }
 }
 
