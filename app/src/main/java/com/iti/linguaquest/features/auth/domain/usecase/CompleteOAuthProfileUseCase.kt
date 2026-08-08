@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 class CompleteOAuthProfileUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    private val registerDeviceTokenUseCase: RegisterDeviceTokenUseCase
+    private val registerDeviceTokenUseCase: RegisterDeviceTokenUseCase,
+    private val syncUserNativeLanguageUseCase: SyncUserNativeLanguageUseCase
 ) {
     suspend operator fun invoke(
         nativeLanguageId: Int,
@@ -23,6 +24,12 @@ class CompleteOAuthProfileUseCase @Inject constructor(
             username = username
         )
         if (result is LinguaQuestResult.Success) {
+            try {
+                syncUserNativeLanguageUseCase(nativeLanguageId = nativeLanguageId)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to sync native language after completing OAuth profile")
+            }
+
             try {
                 withTimeoutOrNull(3_000L) {
                     registerDeviceTokenUseCase()
