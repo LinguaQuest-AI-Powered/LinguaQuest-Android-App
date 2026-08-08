@@ -1,40 +1,35 @@
 package com.iti.linguaquest.features.mindreader.data.datasource.remote
 
 import com.google.gson.Gson
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.content
-import com.google.ai.client.generativeai.type.generationConfig
-import com.iti.linguaquest.BuildConfig
+import com.iti.linguaquest.core.ai.network.GeminiRestClient
+import com.iti.linguaquest.core.ai.network.model.GeminiContentDto
+import com.iti.linguaquest.core.ai.network.model.GeminiGenerationConfigDto
+import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
+import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderHonestyResponse
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderNextStepResponse
 import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderQuizResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 open class MindReaderAiService @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
+    private val geminiRestClient: GeminiRestClient
 ) {
-    private val generativeModel by lazy {
-        GenerativeModel(
-            modelName = "gemini-3.5-flash-lite",
-            apiKey = BuildConfig.GEMINI_API_KEY,
-            generationConfig = generationConfig {
-                temperature = 0.7f
+    private suspend fun generateJson(prompt: String): String? {
+        val requestPayload = GeminiRequestDto(
+            contents = listOf(
+                GeminiContentDto(
+                    parts = listOf(GeminiPartDto(text = prompt))
+                )
+            ),
+            generationConfig = GeminiGenerationConfigDto(
+                temperature = 0.5f,
                 responseMimeType = "application/json"
-            }
+            )
         )
+        return geminiRestClient.executeGeminiRequest(requestPayload)
     }
 
-    private suspend fun generateJson(prompt: String): String? = withContext(Dispatchers.IO) {
-        try {
-            val response = generativeModel.generateContent(content { text(prompt) })
-            val rawText = response.text
-            rawText?.trim()?.removePrefix("```json")?.removePrefix("```")?.removeSuffix("```")?.trim()?.takeIf { it.isNotEmpty() }
-        } catch (e: Exception) {
-            null
-        }
-    }
     open suspend fun getNextTurn(
         categoryContext: String,
         targetLanguage: String,
