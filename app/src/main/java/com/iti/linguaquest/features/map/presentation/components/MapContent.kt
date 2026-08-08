@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -81,8 +79,8 @@ fun MapContent(
             val nodePositions = remember(state.levels.size, leftX, rightX) {
                 computeNodePositions(state.levels.size, leftX, rightX)
             }
-            val mapHeight = remember(state.levels.size) {
-                computeMapHeight(state.levels.size)
+            val mapHeight = remember(state.levels.size, maxHeight) {
+                computeMapHeight(state.levels.size).coerceAtLeast(maxHeight)
             }
 
             LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {

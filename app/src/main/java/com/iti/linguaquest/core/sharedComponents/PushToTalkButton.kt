@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.roleplay.presentation.view.components
+package com.iti.linguaquest.core.sharedComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -126,4 +126,3 @@ fun PushToTalkButton(
         )
     }
 }
-

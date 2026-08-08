@@ -78,7 +78,7 @@ fun LanguageSelectionBottomSheet(
 
             when {
                 languagesState.isLoading -> {
-                    LoadingView(modifier = Modifier.height(200.dp))
+                    LoadingView()
                 }
                 languagesState.isError -> {
                     ErrorView(

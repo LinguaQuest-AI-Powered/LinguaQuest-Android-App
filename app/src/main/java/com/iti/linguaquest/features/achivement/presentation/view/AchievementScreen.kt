@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.achivement.presentation.view
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,31 +22,29 @@ fun AchievementScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    when {
-        state.isLoading && state.achievements.isEmpty() -> {
-            LoadingView(modifier = modifier)
-        }
-
-        state.errorMessage != null && state.achievements.isEmpty() -> {
-            ErrorView(
-                modifier = modifier,
-                message = state.errorMessage!!.asString(),
-                onRetry = { viewModel.onIntent(AchievementIntent.LoadAchievements) }
+    Box(modifier = modifier.fillMaxSize()) {
+        OfflineAwareContent(isOnline = isOnline) {
+            AchievementContent(
+                modifier = Modifier.fillMaxSize(),
+                achievements = state.achievements,
+                earnedCount = state.earnedCount,
+                inProgressCount = state.inProgressCount,
+                xpGained = state.xpEarned,
+                onBackClick = onBackClick,
+                onClaimClick = { /* Handle claim */ }
             )
         }
 
-        else -> {
-            OfflineAwareContent(isOnline = isOnline) {
-                AchievementContent(
-                    modifier = modifier,
-                    achievements = state.achievements,
-                    earnedCount = state.earnedCount,
-                    inProgressCount = state.inProgressCount,
-                    xpGained = state.xpEarned,
-                    onBackClick = onBackClick,
-                    onClaimClick = { /* Handle claim */ }
-                )
-            }
+        if (state.isLoading && state.achievements.isEmpty()) {
+            LoadingView(onDismissRequest = onBackClick)
+        }
+
+        if (state.errorMessage != null && state.achievements.isEmpty()) {
+            ErrorView(
+                message = state.errorMessage!!,
+                onRetry = { viewModel.onIntent(AchievementIntent.LoadAchievements) },
+                onDismissRequest = onBackClick
+            )
         }
     }
 }

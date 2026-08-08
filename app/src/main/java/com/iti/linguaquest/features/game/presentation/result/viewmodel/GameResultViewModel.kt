@@ -4,7 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.appicon.usecase.LessonCompletedUseCase
+import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
+import com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultEffect
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultIntent
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
@@ -20,8 +28,9 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class GameResultViewModel @Inject constructor(
     private val lessonCompletedUseCase: LessonCompletedUseCase,
-    private val getHintUseCase: com.iti.linguaquest.features.game.domain.usecase.GetHintUseCase,
-    private val refreshWalletUseCase: com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
+    private val getHintUseCase: GetHintUseCase,
+    private val refreshWalletUseCase: RefreshWalletUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<GameResultUiState>(GameResultUiState.Error(UiText.StringResource(R.string.game_result_loading)))
@@ -55,12 +64,19 @@ class GameResultViewModel @Inject constructor(
     private fun buyHint(worldId: Int, levelId: Int) {
         viewModelScope.launch {
             when (val result = getHintUseCase(worldId, levelId)) {
-                is com.iti.linguaquest.core.result.LinguaQuestResult.Success -> {
+                is LinguaQuestResult.Success -> {
                     sendEffect(GameResultEffect.ApplyHintAndRetry(result.data.hint))
                     refreshWalletUseCase()
                 }
-                is com.iti.linguaquest.core.result.LinguaQuestResult.Failure -> {
-                    // Optionally handle failure (e.g. show snackbar). For now, do nothing if it fails on result screen.
+                is LinguaQuestResult.Failure -> {
+                    val errorUiText = (result.error as? LinguaQuestDataError)?.toUiText()
+                        ?: UiText.StringResource(R.string.error_generic)
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = errorUiText,
+                            type = SnackbarType.ERROR
+                        )
+                    )
                 }
             }
         }

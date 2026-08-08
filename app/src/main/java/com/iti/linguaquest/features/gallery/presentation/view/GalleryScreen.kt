@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,15 +38,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
-import com.iti.linguaquest.core.navigation.SharedBackgroundState.showBackground
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
-import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
-import com.iti.linguaquest.features.home.utils.calculatePopupOffset
+import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
+import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -94,69 +93,74 @@ fun GalleryScreen(
         }
     }
 
-    val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorRes == null
+    val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
 
     LaunchedEffect(isEmpty) {
-        showBackground = true
+        SharedBackgroundState.showBackground = true
     }
 
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+            modifier = Modifier.fillMaxSize()
         ) {
-            
-             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lingo_gellary_icon),
-                    contentDescription = "Avatar",
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                )
-                
-                Spacer(modifier = Modifier.width(16.dp))
-                
-                Column {
-                    Text(
-                        text = stringResource(R.string.my_captures),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = if (isEmpty) stringResource(R.string.captures_so_far) else stringResource(R.string.objects_collected, state.words.size),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            GalleryContent(
-                state = state,
-                onIntent = viewModel::onIntent,
-                onWordClick = { wordId, anchor ->
-                    guardOnline(anchor) {
-                        viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
-                    }
-                },
+            Column(
                 modifier = Modifier.fillMaxSize()
-            )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.lingo_gellary_icon),
+                        contentDescription = "Avatar",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    )
+                    
+                    Spacer(modifier = Modifier.width(16.dp))
+                    
+                    Column {
+                        Text(
+                            text = stringResource(R.string.my_captures),
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = if (isEmpty) stringResource(R.string.captures_so_far) else stringResource(R.string.objects_collected, state.words.size),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                GalleryContent(
+                    state = state,
+                    isOnline = isOnline,
+                    onIntent = viewModel::onIntent,
+                    onWordClick = { wordId: Int, anchor: Rect ->
+                        guardOnline(anchor) {
+                            viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
 
         if (showOfflinePopup) {
             val popupOffset = remember(
                 offlinePopupAnchor,
                 offlinePopupSize,
-                configuration.screenWidthDp,
-                configuration.screenHeightDp
+                configuration,
+                density
             ) {
                 calculatePopupOffset(
                     anchor = offlinePopupAnchor,

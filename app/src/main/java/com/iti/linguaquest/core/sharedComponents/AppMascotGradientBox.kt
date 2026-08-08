@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +27,7 @@ fun AppMascotGradientBox(
     mascotOverlapHeight: Dp = 70.dp,
     mascotSize: Dp = 180.dp,
     contentPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
+    extraImageOffset: Dp = 0.dp,
     onMascotClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -38,6 +39,7 @@ fun AppMascotGradientBox(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = mascotOverlapHeight)
+                .heightIn(min = mascotSize - mascotOverlapHeight + 24.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -51,7 +53,7 @@ fun AppMascotGradientBox(
         }
 
         val baseImageModifier = Modifier
-            .offset(y = (-20).dp)
+            .offset(y = extraImageOffset)
             .size(mascotSize)
         val finalImageModifier = if (onMascotClick != null) {
             baseImageModifier.clickable(

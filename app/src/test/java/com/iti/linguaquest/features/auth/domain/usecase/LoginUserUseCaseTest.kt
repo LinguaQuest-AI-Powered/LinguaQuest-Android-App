@@ -4,6 +4,7 @@ import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTo
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTokenUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
