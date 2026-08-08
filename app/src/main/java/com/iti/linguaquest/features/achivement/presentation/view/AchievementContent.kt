@@ -32,10 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementBottomBar
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementDetailBottomSheet
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementGridItem
@@ -92,9 +97,25 @@ fun AchievementContent(
                 .background(MaterialTheme.colorScheme.background)
                 .statusBarsPadding()
         ) {
-            ShareTopBar(
-                title = R.string.achievements_title,
-                onBackClick = onBackClick
+            LinguaQuestScreenTopBar(
+                title = stringResource(id = R.string.achievements_title),
+                onBackClicked = onBackClick,
+                isTitleCentered = true,
+                containerColor = Color.Transparent,
+                titleColor = LocalLinguaQuestColors.current.BrownText,
+                titleTextStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 20.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                ),
+                showDivider = true,
+                dividerSpacing = 16.dp,
+                applyStatusBarsPadding = false,
+                contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
+                backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
+                backButtonSize = 40.dp,
+                backButtonBackgroundColor = LocalLinguaQuestColors.current.whiteColor,
+                backButtonContentColor = LocalLinguaQuestColors.current.OrangeActive,
+                backButtonIconSize = 18.dp
             )
 
             Box(modifier = Modifier.weight(1f)) {

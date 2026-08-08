@@ -43,9 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
-import com.iti.linguaquest.core.utils.ShareTopBar
 
 
 @Composable
@@ -66,9 +67,25 @@ fun HelpSupportContent(
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
     ) {
-        ShareTopBar(
-            title = R.string.settings_help_support,
-            onBackClick = onBackClick
+        LinguaQuestScreenTopBar(
+            title = stringResource(id = R.string.settings_help_support),
+            onBackClicked = onBackClick,
+            isTitleCentered = true,
+            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            titleColor = LocalLinguaQuestColors.current.BrownText,
+            titleTextStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 20.sp,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            ),
+            showDivider = true,
+            dividerSpacing = 16.dp,
+            applyStatusBarsPadding = false,
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 22.dp, vertical = 0.dp),
+            backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
+            backButtonSize = 40.dp,
+            backButtonBackgroundColor = LocalLinguaQuestColors.current.whiteColor,
+            backButtonContentColor = LocalLinguaQuestColors.current.OrangeActive,
+            backButtonIconSize = 18.dp
         )
 
         Column(

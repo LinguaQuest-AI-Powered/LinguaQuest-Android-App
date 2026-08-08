@@ -34,12 +34,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.profile.presentation.editprofile.contract.EditProfileTab
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.FieldError
 import com.iti.linguaquest.features.profile.presentation.editprofile.view.component.ChangePasswordCard
@@ -134,119 +139,145 @@ fun EditProfileScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
-            ShareTopBar(title = R.string.edit_profile_title, onBackClick = onBackClick)
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                EditableAvatar(
-                    avatarModel = avatarModel,
-                    onEditClick = { showAvatarSheet = true },
-                    isAvatarUploading = isLoading,
-                    avatarContentDescription = stringResource(R.string.change_photo),
-                    editButtonContentDescription = stringResource(R.string.change_photo)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                ChangePhotoButton(
-                    text = stringResource(R.string.change_photo),
-                    onClick = { showAvatarSheet = true }
-                )
-            }
-
             Spacer(modifier = Modifier.height(24.dp))
 
-            val tabs = listOf(
-                EditProfileTab.PERSONAL_INFO to stringResource(R.string.personal_info),
-                EditProfileTab.SECURITY to stringResource(R.string.security)
+            LinguaQuestScreenTopBar(
+                title = stringResource(id = R.string.edit_profile_title),
+                onBackClicked = onBackClick,
+                isTitleCentered = true,
+                containerColor = Color.Transparent,
+                titleColor = LocalLinguaQuestColors.current.BrownText,
+                titleTextStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                showDivider = true,
+                dividerSpacing = 16.dp,
+                applyStatusBarsPadding = false,
+                contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
+                backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
+                backButtonSize = 40.dp,
+                backButtonBackgroundColor = LocalLinguaQuestColors.current.whiteColor,
+                backButtonContentColor = LocalLinguaQuestColors.current.OrangeActive,
+                backButtonIconSize = 18.dp
             )
 
-            TabRow(
-                selectedTabIndex = selectedTab.ordinal,
-                containerColor = Color.Transparent,
-                contentColor = LinguaQuestTheme.colors.BrownText,
-                indicator = { tabPositions ->
-                    if (selectedTab.ordinal < tabPositions.size) {
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
-                            color = AppColors.OrangeActive,
-                            height = 2.dp
-                        )
-                    }
-                },
-                divider = {
-                    HorizontalDivider(color = LinguaQuestTheme.colors.textFieldBorder.copy(alpha = 0.4f))
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
             ) {
-                tabs.forEach { (tab, title) ->
-                    Tab(
-                        selected = selectedTab == tab,
-                        onClick = { onTabChange(tab) },
-                        text = {
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = if (selectedTab == tab) LinguaQuestTheme.colors.BrownText else LinguaQuestTheme.colors.iconsColor
-                            )
-                        }
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    EditableAvatar(
+                        avatarModel = avatarModel,
+                        onEditClick = { showAvatarSheet = true },
+                        isAvatarUploading = isLoading,
+                        avatarContentDescription = stringResource(R.string.change_photo),
+                        editButtonContentDescription = stringResource(R.string.change_photo)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    ChangePhotoButton(
+                        text = stringResource(R.string.change_photo),
+                        onClick = { showAvatarSheet = true }
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            AnimatedContent(targetState = selectedTab, label = "Tab Content") { targetTab ->
-                when (targetTab) {
-                    EditProfileTab.PERSONAL_INFO -> {
-                        Column {
-                            ProfileInputCard(
-                                label = stringResource(R.string.display_name_label),
-                                value = displayName,
-                                onValueChange = onDisplayNameChange,
-                                singleLine = true,
-                                trailingIcon = { DisplayNameTrailingIcon() },
-                                fieldError = displayNameError
+                val tabs = listOf(
+                    EditProfileTab.PERSONAL_INFO to stringResource(R.string.personal_info),
+                    EditProfileTab.SECURITY to stringResource(R.string.security)
+                )
+
+                TabRow(
+                    selectedTabIndex = selectedTab.ordinal,
+                    containerColor = Color.Transparent,
+                    contentColor = LinguaQuestTheme.colors.BrownText,
+                    indicator = { tabPositions ->
+                        if (selectedTab.ordinal < tabPositions.size) {
+                            TabRowDefaults.SecondaryIndicator(
+                                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
+                                color = AppColors.OrangeActive,
+                                height = 2.dp
                             )
-
-                            Spacer(modifier = Modifier.height(32.dp))
-
-                            Image(
-                                painter = painterResource(id = R.drawable.lingo_change_name),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
-                                contentScale = ContentScale.Fit
-                            )
-
-                          }
+                        }
+                    },
+                    divider = {
+                        HorizontalDivider(color = LinguaQuestTheme.colors.textFieldBorder.copy(alpha = 0.4f))
                     }
-                    EditProfileTab.SECURITY -> {
-                        Column {
-                            ChangePasswordCard(
-                                label = stringResource(R.string.change_password_label),
-                                oldPassword = oldPassword,
-                                onOldPasswordChange = onOldPasswordChange,
-                                oldPasswordPlaceholder = stringResource(R.string.old_password_placeholder),
-                                newPassword = newPassword,
-                                onNewPasswordChange = onNewPasswordChange,
-                                newPasswordPlaceholder = stringResource(R.string.new_password_placeholder),
-                                oldPasswordError = oldPasswordError,
-                                newPasswordError = newPasswordError,
-                                newPasswordHelperText = stringResource(R.string.new_password_min_length_hint)
-                            )
+                ) {
+                    tabs.forEach { (tab, title) ->
+                        Tab(
+                            selected = selectedTab == tab,
+                            onClick = { onTabChange(tab) },
+                            text = {
+                                Text(
+                                    text = title,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = if (selectedTab == tab) LinguaQuestTheme.colors.BrownText else LinguaQuestTheme.colors.iconsColor
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                AnimatedContent(targetState = selectedTab, label = "Tab Content") { targetTab ->
+                    when (targetTab) {
+                        EditProfileTab.PERSONAL_INFO -> {
+                            Column {
+                                ProfileInputCard(
+                                    label = stringResource(R.string.display_name_label),
+                                    value = displayName,
+                                    onValueChange = onDisplayNameChange,
+                                    singleLine = true,
+                                    trailingIcon = { DisplayNameTrailingIcon() },
+                                    fieldError = displayNameError
+                                )
+
+                                Spacer(modifier = Modifier.height(32.dp))
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.lingo_change_name),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+
+                              }
+                        }
+                        EditProfileTab.SECURITY -> {
+                            Column {
+                                ChangePasswordCard(
+                                    label = stringResource(R.string.change_password_label),
+                                    oldPassword = oldPassword,
+                                    onOldPasswordChange = onOldPasswordChange,
+                                    oldPasswordPlaceholder = stringResource(R.string.old_password_placeholder),
+                                    newPassword = newPassword,
+                                    onNewPasswordChange = onNewPasswordChange,
+                                    newPasswordPlaceholder = stringResource(R.string.new_password_placeholder),
+                                    oldPasswordError = oldPasswordError,
+                                    newPasswordError = newPasswordError,
+                                    newPasswordHelperText = stringResource(R.string.new_password_min_length_hint)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
 
         if (showAvatarSheet) {
