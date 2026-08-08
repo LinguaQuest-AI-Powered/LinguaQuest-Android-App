@@ -12,9 +12,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-open class MindReaderAiService @Inject constructor(
+interface MindReaderAiService {
+    suspend fun getNextTurn(
+        categoryContext: String,
+        targetLanguage: String,
+        nativeLanguage: String,
+        historyPrompt: String
+    ): MindReaderNextStepResponse?
+
+    suspend fun generateQuizChoices(
+        categoryContext: String,
+        correctWord: String,
+        nativeLanguage: String,
+        targetLanguage: String
+    ): MindReaderQuizResponse?
+
+    suspend fun verifyUserWord(
+        categoryContext: String,
+        historyPrompt: String,
+        claimedWord: String,
+        feedbackLanguage: String
+    ): MindReaderHonestyResponse?
+}
+
+class MindReaderAiServiceImpl @Inject constructor(
     private val gson: Gson
-) {
+) : MindReaderAiService {
     private val generativeModel by lazy {
         GenerativeModel(
             modelName = "gemini-3.5-flash-lite",
@@ -35,7 +58,7 @@ open class MindReaderAiService @Inject constructor(
             null
         }
     }
-    open suspend fun getNextTurn(
+    override suspend fun getNextTurn(
         categoryContext: String,
         targetLanguage: String,
         nativeLanguage: String,
@@ -87,7 +110,7 @@ open class MindReaderAiService @Inject constructor(
         }
     }
 
-    open suspend fun generateQuizChoices(
+    override suspend fun generateQuizChoices(
         categoryContext: String,
         correctWord: String,
         nativeLanguage: String,
@@ -118,7 +141,7 @@ open class MindReaderAiService @Inject constructor(
         }
     }
 
-    open suspend fun verifyUserWord(
+    override suspend fun verifyUserWord(
         categoryContext: String,
         historyPrompt: String,
         claimedWord: String,
