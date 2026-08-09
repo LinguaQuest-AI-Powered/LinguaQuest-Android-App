@@ -29,5 +29,12 @@ data class HomeState(
     val isDailyRewardBannerVisible: Boolean = false,
     val isRefreshing: Boolean = false,
     val continueLevel: ContinueLevelUi? = null,
-    val isClaimingReward: Boolean = false
+    val isClaimingReward: Boolean = false,
+    val dailyMissionState: DailyMissionDialogState = DailyMissionDialogState.Hidden
 )
+
+sealed interface DailyMissionDialogState {
+    data object Hidden : DailyMissionDialogState
+    data object Loading : DailyMissionDialogState
+    data class Success(val word: String) : DailyMissionDialogState
+}

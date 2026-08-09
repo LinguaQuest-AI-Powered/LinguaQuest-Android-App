@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,10 +31,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.utils.ShareTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementBottomBar
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementDetailBottomSheet
 import com.iti.linguaquest.features.achivement.presentation.view.components.AchievementGridItem
@@ -88,11 +91,11 @@ fun AchievementContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .statusBarsPadding()
+                .padding(top = 8.dp)
         ) {
-            ShareTopBar(
-                title = R.string.achievements_title,
-                onBackClick = onBackClick
+            LinguaQuestScreenTopBar(
+                title = stringResource(id = R.string.achievements_title),
+                onBackClicked = onBackClick
             )
 
             Box(modifier = Modifier.weight(1f)) {

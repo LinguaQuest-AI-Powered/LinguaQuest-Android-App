@@ -54,6 +54,7 @@ import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLang
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardBannerWrapper
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardDialog
+import com.iti.linguaquest.features.home.presentation.view.components.DailyMissionDialog
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -67,9 +68,12 @@ import com.iti.linguaquest.core.sharedComponents.LoadingView
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    openDailyMissionRequested: Boolean = false,
+    onOpenDailyMissionHandled: () -> Unit = {},
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int, Int) -> Unit = { _, _ -> },
     onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, totalLevels: Int, targetWord: String?) -> Unit,
+    onNavigateToDailyMissionCamera: (String) -> Unit,
     onWorldMapClick: () -> Unit = {},
     onNavigateToAddLanguages: () -> Unit = {},
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
@@ -99,6 +103,13 @@ fun HomeScreen(
 
     LaunchedEffect(state.xp, state.coins) {
         onHeaderDataChanged(state.xp, state.coins)
+    }
+
+    LaunchedEffect(openDailyMissionRequested, isOnline) {
+        if (openDailyMissionRequested && isOnline) {
+            viewModel.onIntent(HomeIntent.TriggerDailyMission)
+            onOpenDailyMissionHandled()
+        }
     }
 
 
@@ -131,6 +142,9 @@ fun HomeScreen(
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
                 is HomeEffect.NavigateToContinueLevel -> {
                     onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.totalLevels, effect.targetWord?.asString(context))
+                }
+                is HomeEffect.NavigateToDailyMissionCamera -> {
+                    onNavigateToDailyMissionCamera(effect.word)
                 }
             }
         }
@@ -203,22 +217,41 @@ fun HomeScreen(
             )
         }
 
-        FloatingActionButton(
-            onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.FabClicked) } },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.tertiary,
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(20.dp)
-                .onGloballyPositioned { coordinates ->
-                    fabBounds = coordinates.boundsInRoot()
-                }
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(R.drawable.world_home_icon),
-                contentDescription = "world_map_content_description",
-                modifier = Modifier.size(28.dp)
-            )
+            FloatingActionButton(
+                onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.background
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_streak),
+                    contentDescription = "daily_mission_content_description",
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FloatingActionButton(
+                onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.FabClicked) } },
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier
+                    .onGloballyPositioned { coordinates ->
+                        fabBounds = coordinates.boundsInRoot()
+                    }
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.world_home_icon),
+                    contentDescription = "world_map_content_description",
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
 
         HomeDailyRewardBannerWrapper(
@@ -260,6 +293,12 @@ fun HomeScreen(
             }
         )
     }
+
+    DailyMissionDialog(
+        state = state.dailyMissionState,
+        onDismissRequest = { viewModel.onIntent(HomeIntent.DismissDailyMissionDialog) },
+        onStartCamera = { word -> viewModel.onIntent(HomeIntent.StartDailyMissionCamera(word)) }
+    )
 }
 
 

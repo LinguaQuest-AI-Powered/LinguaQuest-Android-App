@@ -40,6 +40,8 @@ import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
 fun MainScreen(
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
+    openDailyMissionRequested: Boolean = false,
+    onOpenDailyMissionHandled: () -> Unit = {},
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val nestedBackStack = if (viewModel.lastActiveTab == NestedScreen.Home) {
@@ -125,6 +127,8 @@ fun MainScreen(
                 entryProvider = entryProvider {
                     entry<NestedScreen.Home> {
                         HomeScreen(
+                            openDailyMissionRequested = openDailyMissionRequested,
+                            onOpenDailyMissionHandled = onOpenDailyMissionHandled,
                             onNavigateToAllWorlds = {
                                 rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                             },
@@ -137,6 +141,9 @@ fun MainScreen(
                             onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
                                 rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
                                 rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
+                            },
+                            onNavigateToDailyMissionCamera = { word ->
+                                rootBackStack.navigateSingleTop(RootScreen.DailyMissionCamera(word))
                             }
                         )
                     }

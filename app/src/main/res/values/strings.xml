@@ -340,6 +340,9 @@
     <string name="contact_intro_title">Let\'s solve it together</string>
     <string name="contact_intro_subtitle">Send us a quick message and include what happened, so we can help you faster.</string>
     <string name="contact_email_label">EMAIL US</string>
+    <string name="help_support_coming_soon_title">Coming Soon</string>
+    <string name="help_support_coming_soon_message">This support feature will be available soon.</string>
+    <string name="help_support_coming_soon_action">OK</string>
     <string name="contact_section_1_title">App issues</string>
     <string name="contact_section_1_desc">If something crashes, freezes, or won\'t load, tell us what you were doing before it happened.</string>
     <string name="contact_section_2_title">Account &amp; progress</string>
@@ -657,6 +660,8 @@
     <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
     <string name="roleplay_browse_roleplays">Browse Roleplays</string>
     <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
+    <string name="daily_mission_wrong_word">That doesn\'t match the word. Try again!</string>
+    <string name="daily_mission_completed">Mission completed! You earned %1$d XP and %2$d Coins.</string>
     <string name="roleplay_no_roleplays_available">No roleplays available.</string>
     <string name="roleplay_objective">Objective</string>
     <string name="roleplay_label">Roleplay</string>
@@ -845,4 +850,13 @@
     <string name="game_processing_status_thinking">Thinking hard...</string>
 
     <string name="mind_reader_choose_category">Choose Category</string>
+
+    <!-- Daily Mission Dialog Strings -->
+    <string name="daily_mission_title_success">Daily Mission!</string>
+    <string name="daily_mission_title_loading">Decrypting…</string>
+    <string name="daily_mission_message_success">Your target for today is:</string>
+    <string name="daily_mission_message_loading">Stand by while we fetch today\'s secret word…</string>
+    <string name="daily_mission_button_start_camera">Start Camera</string>
+    <string name="daily_mission_button_loading">Loading…</string>
+    <string name="daily_mission_button_later">Later</string>
 </resources>

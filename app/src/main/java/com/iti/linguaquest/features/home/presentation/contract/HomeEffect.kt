@@ -6,5 +6,10 @@ sealed interface HomeEffect {
     data class NavigateToWorld(val worldId: Int, val totalLevels: Int) : HomeEffect
     data object NavigateToAllWorlds : HomeEffect
     data object NavigateToAddLanguages : HomeEffect
+<<<<<<< HEAD
     data class NavigateToContinueLevel(val worldId: Int, val levelId: Int, val levelOrder: Int, val totalLevels: Int, val targetWord: UiText? = null) : HomeEffect
+=======
+    data class NavigateToContinueLevel(val worldId: Int, val levelId: Int, val levelOrder: Int, val targetWord: UiText? = null) : HomeEffect
+    data class NavigateToDailyMissionCamera(val word: String) : HomeEffect
+>>>>>>> origin/dev
 }

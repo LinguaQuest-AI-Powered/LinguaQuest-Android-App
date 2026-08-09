@@ -54,6 +54,7 @@ fun GameProcessingView(
                 .align(Alignment.TopCenter)
                 .systemBarsPadding()
                 .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

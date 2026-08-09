@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.map.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -117,39 +120,27 @@ fun MapScreenContent(
             )
         }
 
-        Row(
+        LinguaQuestScreenTopBar(
+            title = state.worldTitle.asString(),
+            onBackClicked = onBackClick,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            androidx.compose.material3.IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(LinguaQuestTheme.colors.whiteColor, CircleShape)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(16.dp))
-            
-            if (!state.isLoading) {
-                Text(
-                    text = state.worldTitle.asString(),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = LinguaQuestTheme.colors.whiteColor,
-                        fontSize = 22.sp
-                    )
-                )
-            }
-        }
+                .align(Alignment.TopCenter)
+                .fillMaxWidth(),
+            isTitleCentered = false,
+            titleColor = LinguaQuestTheme.colors.whiteColor,
+            titleTextStyle = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold,
+                color = LinguaQuestTheme.colors.whiteColor,
+                fontSize = 22.sp
+            ),
+            showDivider = false,
+            applyStatusBarsPadding = false,
+            contentPadding = PaddingValues(start = 16.dp, top = 40.dp, end = 16.dp, bottom = 16.dp),
+            backButtonSize = 44.dp,
+            backButtonBackgroundColor = LinguaQuestTheme.colors.whiteColor,
+            backButtonContentColor = MaterialTheme.colorScheme.primary,
+            backButtonIconSize = 24.dp
+        )
     }
 }
 

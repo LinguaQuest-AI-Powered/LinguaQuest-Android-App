@@ -11,7 +11,7 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.utils.DailyRewardSessionState
 import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
-import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
+import com.iti.linguaquest.features.dailymission.domain.usecase.GetDailyMissionWordUseCase
 import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
@@ -22,6 +22,7 @@ import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressU
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
+import com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import timber.log.Timber
@@ -42,7 +43,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getHomeSummaryUseCase: GetHomeSummaryUseCase,
-    private val getWorldsUseCase: GetWorldsUseCase,
+    private val getDailyMissionWordUseCase: GetDailyMissionWordUseCase,
     private val getDailyRewardStatusUseCase: GetDailyRewardStatusUseCase,
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController,
@@ -102,6 +103,33 @@ class HomeViewModel @Inject constructor(
             }
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
             is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.totalLevels, intent.continueLevel.targetWord))
+            HomeIntent.TriggerDailyMission -> triggerDailyMission()
+            HomeIntent.DismissDailyMissionDialog -> _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
+            is HomeIntent.StartDailyMissionCamera -> {
+                _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
+                sendEffect(HomeEffect.NavigateToDailyMissionCamera(intent.word))
+            }
+        }
+    }
+
+    private fun triggerDailyMission() {
+        viewModelScope.launch {
+            _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Loading) }
+            
+            when (val result = getDailyMissionWordUseCase()) {
+                is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word)) }
+                }
+                is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.error.toUiText(),
+                            type = SnackbarType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 

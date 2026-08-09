@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsIntent
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsState
@@ -30,10 +31,9 @@ fun AllWorldsContent(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar(
+        LinguaQuestScreenTopBar(
             title = stringResource(R.string.app_name),
-            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) },
-            isTitleCentered = true
+            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

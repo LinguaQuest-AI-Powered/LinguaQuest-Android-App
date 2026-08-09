@@ -103,6 +103,9 @@ sealed interface RootScreen : NavKey {
     data class MindReader(val worldId: Int? = null) : RootScreen
 
     @Serializable
+    data class DailyMissionCamera(val word: String) : RootScreen
+
+    @Serializable
     data object Notification : RootScreen
 }
 
