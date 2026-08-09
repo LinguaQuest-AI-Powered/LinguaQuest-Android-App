@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
   fun HeroBubble(
@@ -39,11 +38,9 @@ import com.iti.linguaquest.core.theme.AppTextStyles
         ) {
             Text(
                 text = text,
-                style = AppTextStyles.LessonTitle.copy(
-                    fontSize = 18.sp,
-                    lineHeight = 24.sp,
-                    fontWeight = FontWeight.Normal
-                ),
+                fontSize = 16.sp,
+                lineHeight = 22.sp,
+                fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
