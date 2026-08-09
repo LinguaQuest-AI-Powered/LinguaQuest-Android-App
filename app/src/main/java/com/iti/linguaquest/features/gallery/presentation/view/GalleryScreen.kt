@@ -1,30 +1,36 @@
 package com.iti.linguaquest.features.gallery.presentation.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -37,8 +43,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
-import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
+import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -47,6 +53,11 @@ import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
 import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import kotlinx.coroutines.flow.collectLatest
+
+private enum class GalleryTab {
+    CAPTURES,
+    WORDS
+}
 
 @Composable
 fun GalleryScreen(
@@ -59,6 +70,7 @@ fun GalleryScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+    var selectedTab by rememberSaveable { mutableStateOf(GalleryTab.CAPTURES) }
     var showOfflinePopup by remember { mutableStateOf(false) }
     var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
     var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
@@ -93,65 +105,118 @@ fun GalleryScreen(
         }
     }
 
-    val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
+    val isEmptyCaptures = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
 
-    LaunchedEffect(isEmpty) {
+    LaunchedEffect(isEmptyCaptures) {
         SharedBackgroundState.showBackground = true
+    }
+
+    val headerTitle = when (selectedTab) {
+        GalleryTab.CAPTURES -> stringResource(R.string.my_captures)
+        GalleryTab.WORDS -> stringResource(R.string.lockscreen_vocabulary_vault_title)
+    }
+
+    val headerSubtitle = when (selectedTab) {
+        GalleryTab.CAPTURES -> {
+            if (state.words.isEmpty()) {
+                stringResource(R.string.captures_so_far)
+            } else {
+                stringResource(R.string.objects_collected, state.words.size)
+            }
+        }
+
+        GalleryTab.WORDS -> {
+            if (state.lockScreenWords.isEmpty()) {
+                stringResource(R.string.lockscreen_vocabulary_vault_empty_subtitle)
+            } else {
+                stringResource(
+                    R.string.lockscreen_vocabulary_words_collected,
+                    state.lockScreenWords.size
+                )
+            }
+        }
     }
 
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
-            onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
+                Image(
+                    painter = painterResource(id = R.drawable.lingo_gellary_icon),
+                    contentDescription = "Avatar",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.lingo_gellary_icon),
-                        contentDescription = "Avatar",
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
+                        .size(56.dp)
+                        .clip(CircleShape)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Text(
+                        text = headerTitle,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    Column {
-                        Text(
-                            text = stringResource(R.string.my_captures),
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = if (isEmpty) stringResource(R.string.captures_so_far) else stringResource(R.string.objects_collected, state.words.size),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    Text(
+                        text = headerSubtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            GalleryTabsRow(
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            when (selectedTab) {
+                GalleryTab.CAPTURES -> {
+                    PullToRefreshBox(
+                        isRefreshing = state.isRefreshing,
+                        onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        GalleryContent(
+                            state = state,
+                            isOnline = isOnline,
+                            onIntent = viewModel::onIntent,
+                            onWordClick = { wordId: Int, anchor: Rect ->
+                                guardOnline(anchor) {
+                                    viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                                }
+                            },
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }
 
-                GalleryContent(
-                    state = state,
-                    isOnline = isOnline,
-                    onIntent = viewModel::onIntent,
-                    onWordClick = { wordId: Int, anchor: Rect ->
-                        guardOnline(anchor) {
-                            viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
+                GalleryTab.WORDS -> {
+                    LockScreenWordsContent(
+                        state = state,
+                        onIntent = viewModel::onIntent,
+                        onWordClick = { wordId: Int, anchor: Rect ->
+                            guardOnline(anchor) {
+                                viewModel.onIntent(GalleryIntent.LockScreenWordItemClicked(wordId))
+                            }
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
 
@@ -182,5 +247,63 @@ fun GalleryScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun GalleryTabsRow(
+    selectedTab: GalleryTab,
+    onTabSelected: (GalleryTab) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        GalleryTabPill(
+            label = stringResource(R.string.gallery_game_captures_tab),
+            selected = selectedTab == GalleryTab.CAPTURES,
+            onClick = { onTabSelected(GalleryTab.CAPTURES) },
+            modifier = Modifier.weight(1f)
+        )
+        GalleryTabPill(
+            label = stringResource(R.string.gallery_my_words_tab),
+            selected = selectedTab == GalleryTab.WORDS,
+            onClick = { onTabSelected(GalleryTab.WORDS) },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun GalleryTabPill(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(999.dp))
+            .clickable(onClick = onClick)
+            .background(
+                if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+                }
+            )
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            color = if (selected) {
+                MaterialTheme.colorScheme.onPrimary
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

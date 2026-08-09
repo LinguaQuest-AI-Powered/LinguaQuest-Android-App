@@ -14,6 +14,7 @@ import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificati
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 class VocabularyWorkSchedulerImpl @Inject constructor(
     @ApplicationContext private val context: Context
@@ -25,7 +26,8 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     override fun scheduleImmediateNotification() {
         scheduleAlarm(
             delayMillis = 5000L,
-            requestCode = IMMEDIATE_ALARM_REQUEST_CODE
+            requestCode = IMMEDIATE_ALARM_REQUEST_CODE,
+            forceShow = true
         )
     }
 
@@ -49,15 +51,25 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        if (delayMillis <= 15000L) {
+            Timber.d("VocabularyWorkScheduler: Using Handler for short delay: $delayMillis ms (forceShow=$forceShow)")
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                context.sendBroadcast(intent)
+            }, delayMillis)
+            return
+        }
+
         val triggerAt = System.currentTimeMillis() + delayMillis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            Timber.d("VocabularyWorkScheduler: Scheduling inexact alarm for $delayMillis ms (forceShow=$forceShow)")
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAt,
                 pendingIntent
             )
         } else {
+            Timber.d("VocabularyWorkScheduler: Scheduling exact alarm for $delayMillis ms (forceShow=$forceShow)")
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAt,
@@ -105,6 +117,7 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     override fun testNotification(delaySeconds: Long) {
         scheduleAlarm(
             delayMillis = delaySeconds * 1000L,
+            requestCode = TEST_ALARM_REQUEST_CODE,
             forceShow = true
         )
     }
@@ -113,5 +126,6 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
         const val WORK_NAME_GENERATION = "lockscreen_vocabulary_generation_work"
         const val ALARM_REQUEST_CODE = 3000
         const val IMMEDIATE_ALARM_REQUEST_CODE = 3001
+        const val TEST_ALARM_REQUEST_CODE = 3002
     }
 }

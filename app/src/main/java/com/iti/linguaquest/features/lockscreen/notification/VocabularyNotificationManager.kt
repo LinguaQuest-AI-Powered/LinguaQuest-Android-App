@@ -17,6 +17,9 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import com.iti.linguaquest.MainActivity
 import com.iti.linguaquest.R
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
+import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItReceiver.Companion.ACTION_GOT_IT
+import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItReceiver.Companion.EXTRA_NOTIFICATION_ID
+import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItReceiver.Companion.EXTRA_WORD_ID
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -72,8 +75,14 @@ class VocabularyNotificationManager @Inject constructor(
         }
 
         createChannel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = notificationManager.getNotificationChannel(CHANNEL_ID)
+            if (channel?.importance == NotificationManager.IMPORTANCE_NONE) {
+                return false
+            }
+        }
 
-         val openIntent = Intent(context, MainActivity::class.java).apply {
+        val openIntent = Intent(context, MainActivity::class.java).apply {
             putExtra(EXTRA_LOCKSCREEN_WORD_ID, word.id)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
@@ -85,28 +94,35 @@ class VocabularyNotificationManager @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-         val goIntent = PendingIntent.getActivity(
+        val gotItIntent = PendingIntent.getBroadcast(
             context,
             word.id + 10_000,
-            openIntent,
+            Intent(context, VocabularyGotItReceiver::class.java).apply {
+                action = ACTION_GOT_IT
+                putExtra(EXTRA_WORD_ID, word.id)
+                putExtra(EXTRA_NOTIFICATION_ID, NOTIFICATION_ID_BASE)
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+
+        val compactView = buildCompactView(word, contentIntent, gotItIntent)
+        val expandedView = buildExpandedView(word, contentIntent, gotItIntent)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_bell_icon)
             .setContentTitle(word.word)
             .setContentText(word.translation)
-             .setStyle(NotificationCompat.BigTextStyle().bigText(word.translation))
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(compactView)
+            .setCustomBigContentView(expandedView)
+            .setCustomHeadsUpContentView(expandedView)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
             .setContentIntent(contentIntent)
-            .addAction(
-                R.drawable.ic_learning_language,
-                context.getString(R.string.lockscreen_notification_action_go),
-                goIntent
-            )
+            .setDeleteIntent(gotItIntent)
             .setSound(reminderSoundUri())
             .build()
 
@@ -120,6 +136,39 @@ class VocabularyNotificationManager @Inject constructor(
 
     fun cancelAll() {
         notificationManager.cancelAll()
+    }
+
+    private fun buildCompactView(
+        word: LockScreenWord,
+        openIntent: PendingIntent,
+        gotItIntent: PendingIntent
+    ): RemoteViews {
+        return RemoteViews(context.packageName, R.layout.layout_lockscreen_notification).apply {
+            setTextViewText(R.id.tv_app_name, context.getString(R.string.app_name))
+            setTextViewText(R.id.tv_now, context.getString(R.string.lockscreen_notification_now))
+            setTextViewText(R.id.tv_word_title, word.word)
+            setTextViewText(R.id.tv_word_definition, word.meaning.ifBlank { word.translation })
+            setTextViewText(R.id.tv_word_meta, "${word.targetLanguage} - ${word.difficulty}")
+            setTextViewText(R.id.btn_action, context.getString(R.string.lockscreen_notification_got_it))
+            setOnClickPendingIntent(R.id.root, openIntent)
+            setOnClickPendingIntent(R.id.btn_action, gotItIntent)
+        }
+    }
+
+    private fun buildExpandedView(
+        word: LockScreenWord,
+        openIntent: PendingIntent,
+        gotItIntent: PendingIntent
+    ): RemoteViews {
+        return RemoteViews(context.packageName, R.layout.notification_lockscreen_expanded).apply {
+            setTextViewText(R.id.tvWord, word.word)
+            setTextViewText(R.id.tvExample, context.getString(R.string.lockscreen_notification_example_label, word.exampleSentence))
+            setTextViewText(R.id.tvTranslation, context.getString(R.string.lockscreen_notification_translation_label, word.translation))
+            setTextViewText(R.id.tvHint, context.getString(R.string.lockscreen_notification_tap_to_open))
+            setTextViewText(R.id.btn_action, context.getString(R.string.lockscreen_notification_got_it))
+            setOnClickPendingIntent(R.id.root_expanded, openIntent)
+            setOnClickPendingIntent(R.id.btn_action, gotItIntent)
+        }
     }
 
     private fun reminderSoundUri(): Uri {

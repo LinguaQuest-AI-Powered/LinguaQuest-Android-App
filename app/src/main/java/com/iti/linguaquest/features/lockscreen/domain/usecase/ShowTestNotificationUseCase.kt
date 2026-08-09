@@ -1,37 +1,40 @@
 package com.iti.linguaquest.features.lockscreen.domain.usecase
 
-import com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
+import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 class ShowTestNotificationUseCase @Inject constructor(
-    private val observePendingOnceUseCase: ObserveLockScreenPendingOnceUseCase,
+    private val repository: LockScreenRepository,
     private val notificationManager: VocabularyNotificationManager
 ) {
-    suspend operator fun invoke() {
-        delay(5000.milliseconds)
+    suspend operator fun invoke(): Boolean {
+        val storedWord = repository.observePendingOnce()
+            ?: repository.postedOrOpenedWordsReplaySafe()
+            ?: return false
 
-        val pendingWord = observePendingOnceUseCase()
-        if (pendingWord != null) {
-            notificationManager.show(pendingWord)
-        } else {
-            val testWord = LockScreenWord(
-                id = 9999,
-                word = "Test Word",
-                translation = "كلمة اختبار",
-                exampleSentence = "This is a test sentence.",
-                status = LockScreenWordStatus.PENDING,
-                createdAt = System.currentTimeMillis(),
-                postedAt = null,
-                openedAt = null,
-                nativeLanguage = "Arabic",
-                targetLanguage = "English",
-                proficiencyLevel = "Beginner"
-            )
-            notificationManager.show(testWord)
+        delay(5.seconds)
+
+        val shown = notificationManager.show(storedWord)
+        if (shown) {
+            repository.markPosted(storedWord.id)
+        }
+        return shown
+    }
+
+    private suspend fun LockScreenRepository.postedOrOpenedWordsReplaySafe(): LockScreenWord? {
+        return postedOrOpenedWords.firstOrNullSafe()
+    }
+
+    private suspend fun kotlinx.coroutines.flow.Flow<List<LockScreenWord>>.firstOrNullSafe(): LockScreenWord? {
+        return withTimeoutOrNull(500.milliseconds) {
+            firstOrNull()?.firstOrNull()
         }
     }
 }

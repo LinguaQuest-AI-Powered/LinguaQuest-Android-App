@@ -96,7 +96,8 @@ fun AppNavigation(
     onOpenLockScreenWordHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    mainViewModel: MainViewModel = hiltViewModel(),
+    lockScreenReviewLauncherViewModel: LockScreenReviewLauncherViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val rootBackStack = rememberNavBackStack(RootScreen.Splash)
@@ -115,9 +116,14 @@ fun AppNavigation(
 
     LaunchedEffect(openLockScreenWordId) {
         val wordId = openLockScreenWordId ?: return@LaunchedEffect
+        val reviewWord = lockScreenReviewLauncherViewModel.prepareReviewWord(wordId)
         rootBackStack.apply {
             clear()
-            navigateSingleTop(RootScreen.LockScreenWordDetail(wordId))
+            navigateSingleTop(RootScreen.Main)
+            if (reviewWord != null) {
+                SharedWordHolder.pendingWord = reviewWord
+                navigateSingleTop(RootScreen.Review(wordId))
+            }
         }
         onOpenLockScreenWordHandled()
     }

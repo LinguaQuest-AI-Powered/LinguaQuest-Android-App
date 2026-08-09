@@ -10,6 +10,8 @@ fun LockScreenWordEntity.toDomain(): LockScreenWord {
         word = word,
         translation = translation,
         exampleSentence = exampleSentence,
+        difficulty = difficulty,
+        meaning = meaning.ifBlank { translation },
         status = runCatching { com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.valueOf(status) }
             .getOrDefault(com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.PENDING),
         createdAt = createdAt,
@@ -30,6 +32,8 @@ fun GeneratedVocabularyWord.toEntity(
         word = word,
         translation = translation,
         exampleSentence = exampleSentence,
+        difficulty = difficulty,
+        meaning = meaning.ifBlank { translation },
         nativeLanguage = nativeLanguage,
         targetLanguage = targetLanguage,
         proficiencyLevel = proficiencyLevel

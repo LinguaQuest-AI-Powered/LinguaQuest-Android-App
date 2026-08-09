@@ -10,6 +10,8 @@ data class LockScreenWordEntity(
     val word: String,
     val translation: String,
     val exampleSentence: String,
+    val difficulty: String = "Medium",
+    val meaning: String = "",
     val status: String = LockScreenWordStatus.PENDING.name,
     val createdAt: Long = System.currentTimeMillis(),
     val postedAt: Long? = null,

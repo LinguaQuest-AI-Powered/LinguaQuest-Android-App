@@ -57,7 +57,7 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
     private val enqueueGenerationWorkUseCase: EnqueueGenerationWorkUseCase,
     private val scheduleNotificationUseCase: ScheduleVocabularyNotificationUseCase,
-    private val showTestNotificationUseCase: ShowTestNotificationUseCase,
+    private val vocabularyWorkScheduler: com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -302,6 +302,7 @@ class LockScreenSettingsViewModel @Inject constructor(
 
             when (val enableResult = enableUseCase(operationId)) {
                 is LinguaQuestResult.Success -> {
+                    sendEffect(LockScreenEffect.PlayCoinDeductedSound)
                     when (val generationResult = generateUseCase()) {
                         is LinguaQuestResult.Success -> {
                             updateMetadataUseCase(
@@ -320,7 +321,10 @@ class LockScreenSettingsViewModel @Inject constructor(
                                     errorMessage = null
                                 )
                             }
-                            showMessage(UiText.StringResource(R.string.lockscreen_vocabulary_enabled))
+                            showMessage(
+                                UiText.StringResource(R.string.lockscreen_vocabulary_enabled),
+                                SnackbarType.SUCCESS
+                            )
                         }
 
                         is LinguaQuestResult.Failure -> {
@@ -444,7 +448,7 @@ class LockScreenSettingsViewModel @Inject constructor(
     private fun testNotification() {
         viewModelScope.launch {
             showMessage(UiText.StringResource(R.string.lockscreen_test_notification_scheduled))
-            showTestNotificationUseCase()
+            vocabularyWorkScheduler.testNotification(5)
         }
     }
 

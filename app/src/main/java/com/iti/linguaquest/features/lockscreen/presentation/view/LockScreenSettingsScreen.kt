@@ -37,6 +37,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
@@ -56,6 +58,7 @@ fun LockScreenSettingsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val soundPlayer = LocalSoundPlayer.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -85,6 +88,9 @@ fun LockScreenSettingsScreen(
                         viewModel.onIntent(LockScreenIntent.NotificationPermissionResult(true))
                     }
                 }
+                LockScreenEffect.PlayCoinDeductedSound -> {
+                    soundPlayer.play(AppSound.COIN)
+                }
             }
         }
     }
@@ -95,7 +101,10 @@ fun LockScreenSettingsScreen(
             title = { Text(stringResource(R.string.lockscreen_vocabulary_enable_title)) },
             text = { Text(stringResource(R.string.lockscreen_vocabulary_enable_message)) },
             confirmButton = {
-                Button(onClick = { viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked) }) {
+                Button(onClick = {
+                    soundPlayer.play(AppSound.SWITCH)
+                    viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked)
+                }) {
                     Text(stringResource(R.string.lockscreen_vocabulary_enable_action))
                 }
             },
@@ -142,6 +151,7 @@ fun LockScreenSettingsScreen(
             ) {
                 HeroCard(state = state)
                 ToggleCard(state = state, onToggle = {
+                    soundPlayer.play(AppSound.SWITCH)
                     viewModel.onIntent(LockScreenIntent.ToggleFeatureClicked(it))
                 })
                 StatsCard(state = state)
@@ -160,6 +170,7 @@ fun LockScreenSettingsScreen(
 
                 Button(
                     onClick = {
+                        soundPlayer.play(AppSound.SWITCH)
                         if (state.featureState == LockScreenFeatureState.DISABLED) {
                             viewModel.onIntent(LockScreenIntent.ToggleFeatureClicked(true))
                         } else {
@@ -177,7 +188,10 @@ fun LockScreenSettingsScreen(
                 }
 
                 OutlinedButton(
-                    onClick = { viewModel.onIntent(LockScreenIntent.DisableClicked) },
+                    onClick = {
+                        soundPlayer.play(AppSound.SWITCH)
+                        viewModel.onIntent(LockScreenIntent.DisableClicked)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = state.featureState != LockScreenFeatureState.DISABLED,
                     shape = RoundedCornerShape(18.dp)
@@ -187,7 +201,10 @@ fun LockScreenSettingsScreen(
 
                 if (state.featureState == LockScreenFeatureState.ACTIVE) {
                     OutlinedButton(
-                        onClick = { viewModel.onIntent(LockScreenIntent.TestNotificationClicked) },
+                        onClick = {
+                            soundPlayer.play(AppSound.POP)
+                            viewModel.onIntent(LockScreenIntent.TestNotificationClicked)
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp)
                     ) {

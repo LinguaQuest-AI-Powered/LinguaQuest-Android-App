@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import kotlinx.coroutines.flow.collectLatest
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,6 +46,7 @@ fun SettingScreen(
 
     val lockScreenState by lockScreenViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val soundPlayer = LocalSoundPlayer.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -76,6 +79,9 @@ fun SettingScreen(
                             )
                         )
                     }
+                }
+                LockScreenEffect.PlayCoinDeductedSound -> {
+                    soundPlayer.play(AppSound.COIN)
                 }
             }
         }
