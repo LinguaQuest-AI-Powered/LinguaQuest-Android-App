@@ -15,6 +15,9 @@
     <string name="popular_choices">خيارات شائعة</string>
     <string name="continue_button">متابعة</string>
     <string name="start_button">ابدأ</string>
+    <string name="help_support_coming_soon_title">قريبًا</string>
+    <string name="help_support_coming_soon_message">ستتوفر ميزة الدعم هذه قريبً.</string>
+    <string name="help_support_coming_soon_action">حسنًا</string>
     <string name="What_is_your_level">ما هو مستواك؟</string>
     <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
     <string name="daily_reminder">التذكير اليومي</string>

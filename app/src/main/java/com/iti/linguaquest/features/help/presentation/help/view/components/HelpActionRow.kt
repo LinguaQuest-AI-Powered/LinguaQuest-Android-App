@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.core.theme.AppTextStyles
 
 @Composable
 fun HelpActionRow(
@@ -65,10 +64,8 @@ fun HelpActionRow(
 
         Text(
             text = title,
-            style = AppTextStyles.LessonTitle.copy(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal
-            ),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )

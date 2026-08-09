@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,15 +43,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
-import com.iti.linguaquest.core.utils.ShareTopBar
+import androidx.core.net.toUri
 
 
 @Composable
 fun HelpSupportContent(
     onBackClick: () -> Unit,
-    onSendMessage: (subject: String, message: String) -> Unit = { _, _ -> },
+    onComingSoonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isDark = LinguaQuestTheme.colors.isDark
@@ -64,18 +65,18 @@ fun HelpSupportContent(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
+            .padding(top = 8.dp, bottom = 24.dp)
     ) {
-        ShareTopBar(
-            title = R.string.settings_help_support,
-            onBackClick = onBackClick
+        LinguaQuestScreenTopBar(
+            title = stringResource(id = R.string.settings_help_support),
+            onBackClicked = onBackClick
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 20.dp)
+            .padding(horizontal = 20.dp, vertical = 20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -83,18 +84,18 @@ fun HelpSupportContent(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = stringResource(id = R.string.contact_us_banner_title),
-                        fontSize = 28.sp,
+                        text = stringResource(id = R.string.help_hero_title),
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = LocalLinguaQuestColors.current.titleAndCationsColor
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = stringResource(id = R.string.contact_us_banner_subtitle),
+                        text = stringResource(id = R.string.help_hero_subtitle),
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = LocalLinguaQuestColors.current.BrownText
                     )
                 }
 
@@ -117,7 +118,7 @@ fun HelpSupportContent(
                     .border(1.5.dp, if (isDark) Color(0xFF1B4E57) else Color(0xFF99F6E4), RoundedCornerShape(20.dp))
                     .clickable {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto:support@linguaquest.com")
+                            data = "mailto:support@linguaquest.com".toUri()
                         }
                         context.startActivity(intent)
                     }
@@ -143,16 +144,16 @@ fun HelpSupportContent(
 
                 Column {
                     Text(
-                        text = stringResource(id = R.string.contact_us_email_card_title),
+                        text = stringResource(id = R.string.contact_email_label),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isDark) Color(0xFF2DD4BF) else Color(0xFF0D9488)
                     )
 
                     Text(
-                        text = stringResource(id = R.string.contact_us_email_card_sub),
+                        text = stringResource(id = R.string.help_contact_detail),
                         fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = LocalLinguaQuestColors.current.BrownText
                     )
                 }
             }
@@ -221,11 +222,7 @@ fun HelpSupportContent(
             AppButton3D(
                 text = stringResource(id = R.string.contact_us_send_button),
                 onClick = {
-                    if (subjectText.isNotBlank() || messageText.isNotBlank()) {
-                        onSendMessage(subjectText, messageText)
-                        subjectText = ""
-                        messageText = ""
-                    }
+                    onComingSoonClick()
                 },
                 textColor = Color.Black,
                 modifier = Modifier.fillMaxWidth()
@@ -238,7 +235,10 @@ fun HelpSupportContent(
 @Composable
 fun HelpSupportContentLightPreview() {
     LinguaQuestTheme(darkTheme = false) {
-        HelpSupportContent(onBackClick = {})
+        HelpSupportContent(
+            onBackClick = {},
+            onComingSoonClick = {}
+        )
     }
 }
 
@@ -246,6 +246,9 @@ fun HelpSupportContentLightPreview() {
 @Composable
 fun HelpSupportContentDarkPreview() {
     LinguaQuestTheme(darkTheme = true) {
-        HelpSupportContent(onBackClick = {})
+        HelpSupportContent(
+            onBackClick = {},
+            onComingSoonClick = {}
+        )
     }
 }

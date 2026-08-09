@@ -25,10 +25,10 @@ fun SettingProfileHeader(
         ImageWrapper(
             model = R.drawable.lingo_stting,
             contentDescription = null,
-            modifier = Modifier.size(130.dp),
+            modifier = Modifier.size(160.dp),
             contentScale = ContentScale.Fit
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(id = R.string.settings_customize_journey),
             fontSize = 14.sp,
