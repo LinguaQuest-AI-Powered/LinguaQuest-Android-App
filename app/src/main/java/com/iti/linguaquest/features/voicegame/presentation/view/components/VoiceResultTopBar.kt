@@ -36,7 +36,6 @@ fun VoiceResultTopBar(
         title = null,
         onBackClicked = {},
         modifier = Modifier.fillMaxWidth(),
-        containerColor = Color.Transparent,
         showDivider = false,
         showBackButton = false,
         contentPadding = PaddingValues(start = 20.dp, top = 16.dp, end = 20.dp, bottom = 12.dp),

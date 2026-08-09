@@ -24,21 +24,7 @@ fun ReviewTopBar(
     LinguaQuestScreenTopBar(
         title = title,
         onBackClicked = onBack,
-        modifier = modifier,
-        isTitleCentered = true,
-        containerColor = Color.Transparent,
-        titleColor = LinguaQuestTheme.colors.BrownText,
-        titleTextStyle = MaterialTheme.typography.titleLarge.copy(
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        ),
-        showDivider = true,
-        dividerSpacing = 16.dp,
-        contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
-        backButtonSize = 40.dp,
-        backButtonBackgroundColor = LinguaQuestTheme.colors.whiteColor,
-        backButtonContentColor = LinguaQuestTheme.colors.OrangeActive,
-        backButtonIconSize = 18.dp
+        modifier = modifier
     )
 }
 

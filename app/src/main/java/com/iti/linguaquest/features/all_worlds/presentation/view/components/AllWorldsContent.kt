@@ -33,8 +33,7 @@ fun AllWorldsContent(
 
         LinguaQuestScreenTopBar(
             title = stringResource(R.string.app_name),
-            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) },
-            isTitleCentered = true
+            onBackClicked = { onIntent(AllWorldsIntent.OnBackClicked) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

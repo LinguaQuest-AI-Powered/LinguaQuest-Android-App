@@ -122,7 +122,6 @@ fun MapScreenContent(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth(),
             isTitleCentered = false,
-            containerColor = Color.Transparent,
             titleColor = LinguaQuestTheme.colors.whiteColor,
             titleTextStyle = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold,

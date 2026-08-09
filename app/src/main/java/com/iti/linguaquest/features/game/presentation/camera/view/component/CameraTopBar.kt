@@ -37,7 +37,6 @@ fun CameraTopBar(
         title = null,
         onBackClicked = onBackClicked,
         modifier = modifier,
-        containerColor = Color.Transparent,
         showDivider = false,
         contentPadding = PaddingValues(0.dp),
         backButtonSize = 44.dp,
