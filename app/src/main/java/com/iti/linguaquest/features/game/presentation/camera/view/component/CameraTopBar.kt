@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -52,7 +53,7 @@ fun CameraTopBar(
                 ),
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                androidx.compose.foundation.layout.Row(
+                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
@@ -61,7 +62,7 @@ fun CameraTopBar(
                         contentDescription = stringResource(R.string.search_icon),
                         tint = LinguaQuestTheme.colors.whiteColor
                     )
-                    androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(8.dp))
+                   Spacer(modifier = Modifier.size(8.dp))
 
                     Text(
                         text = buildAnnotatedString {
