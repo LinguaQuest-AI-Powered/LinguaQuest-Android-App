@@ -15,29 +15,28 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
+import com.iti.linguaquest.core.utils.toTempFile
+
 class VerifyDailyMissionUseCase @Inject constructor(
     private val repository: DailyMissionRepository,
     @ApplicationContext private val context: Context
 ) {
-    suspend operator fun invoke(imageUri: Uri, word: String): LinguaQuestResult<VerifyMissionResult, LinguaQuestDataError> {
-        val file = getFileFromUri(imageUri)
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
-        
-        val wordRequestBody = word.toRequestBody("text/plain".toMediaTypeOrNull())
-        
-        return repository.verifyMission(imagePart, wordRequestBody)
-    }
-
-    private fun getFileFromUri(uri: Uri): File {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val tempFile = File.createTempFile("daily_mission_", ".jpg", context.cacheDir)
-        val outputStream = FileOutputStream(tempFile)
-        inputStream?.use { input ->
-            outputStream.use { output ->
-                input.copyTo(output)
-            }
+    suspend operator fun invoke(
+        imageUri: Uri,
+        word: String
+    ): LinguaQuestResult<VerifyMissionResult, LinguaQuestDataError> {
+        val file = imageUri.toTempFile(context, "daily_mission_") 
+            ?: return LinguaQuestResult.Failure(LinguaQuestDataError.Local.DISK_FULL)
+            
+        val compressedFile = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            com.iti.linguaquest.features.game.data.remote.util.ImageCompressor.compress(file)
         }
-        return tempFile
+            
+        val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val imagePart = MultipartBody.Part.createFormData("image", compressedFile.name, requestFile)
+
+        val wordRequestBody = word.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        return repository.verifyMission(imagePart, wordRequestBody)
     }
 }

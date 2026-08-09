@@ -78,6 +78,8 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    openDailyMissionRequested: Boolean = false,
+    onOpenDailyMissionHandled: () -> Unit = {},
     onNavigateToAllWorlds: () -> Unit,
     onNavigateToWorldMap: (Int) -> Unit,
     onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, targetWord: String?) -> Unit,
@@ -111,6 +113,13 @@ fun HomeScreen(
 
     LaunchedEffect(state.xp, state.coins) {
         onHeaderDataChanged(state.xp, state.coins)
+    }
+
+    LaunchedEffect(openDailyMissionRequested, isOnline) {
+        if (openDailyMissionRequested && isOnline) {
+            viewModel.onIntent(HomeIntent.TriggerDailyMission)
+            onOpenDailyMissionHandled()
+        }
     }
 
 
@@ -210,10 +219,10 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
                 shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.background
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_cup),
+                    painter = painterResource(R.drawable.ic_streak),
                     contentDescription = "daily_mission_content_description",
                     modifier = Modifier.size(28.dp)
                 )

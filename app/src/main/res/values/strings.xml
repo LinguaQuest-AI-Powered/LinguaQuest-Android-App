@@ -844,4 +844,13 @@
     <string name="game_processing_status_thinking">Thinking hard...</string>
 
     <string name="mind_reader_choose_category">Choose Category</string>
+
+    <!-- Daily Mission Dialog Strings -->
+    <string name="daily_mission_title_success">Daily Mission!</string>
+    <string name="daily_mission_title_loading">Decrypting…</string>
+    <string name="daily_mission_message_success">Your target for today is:</string>
+    <string name="daily_mission_message_loading">Stand by while we fetch today\'s secret word…</string>
+    <string name="daily_mission_button_start_camera">Start Camera</string>
+    <string name="daily_mission_button_loading">Loading…</string>
+    <string name="daily_mission_button_later">Later</string>
 </resources>

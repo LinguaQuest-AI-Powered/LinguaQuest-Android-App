@@ -64,11 +64,16 @@ fun CameraTopBar(
                 containerColor = LinguaQuestTheme.colors.blackColor.copy(alpha = 0.6f),
                 contentColor = LinguaQuestTheme.colors.whiteColor
             ),
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .weight(1f)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,

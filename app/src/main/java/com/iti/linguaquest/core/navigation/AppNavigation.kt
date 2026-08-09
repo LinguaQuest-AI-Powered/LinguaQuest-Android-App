@@ -92,8 +92,10 @@ import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScree
 @Composable
 fun AppNavigation(
     openHomeRequested: Boolean = false,
+    openDailyMissionRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
+    onOpenDailyMissionHandled: () -> Unit = {},
     onOpenLockScreenWordHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
@@ -380,7 +382,12 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Main> {
-                    MainScreen(rootBackStack, viewModel = mainViewModel)
+                    MainScreen(
+                        rootBackStack = rootBackStack,
+                        openDailyMissionRequested = openDailyMissionRequested,
+                        onOpenDailyMissionHandled = onOpenDailyMissionHandled,
+                        viewModel = mainViewModel
+                    )
                 }
 
                 entry<RootScreen.Notification> {

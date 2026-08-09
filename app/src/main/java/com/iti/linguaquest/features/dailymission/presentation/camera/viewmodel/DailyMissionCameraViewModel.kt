@@ -38,14 +38,13 @@ class DailyMissionCameraViewModel @Inject constructor(
             is DailyMissionCameraIntent.InitWord -> _state.update { it.copy(word = intent.word) }
             DailyMissionCameraIntent.BackClicked -> sendEffect(DailyMissionCameraEffect.NavigateBack)
             is DailyMissionCameraIntent.CapturePhoto -> _state.update { it.copy(capturedUri = intent.uri) }
-            DailyMissionCameraIntent.GrantPermissionClicked -> {
-                // Should trigger permission request from view
-            }
+            DailyMissionCameraIntent.GrantPermissionClicked -> {}
             is DailyMissionCameraIntent.PermissionResult -> {
                 _state.update {
                     it.copy(permissionStatus = if (intent.isGranted) PermissionStatus.GRANTED else PermissionStatus.DENIED)
                 }
             }
+
             DailyMissionCameraIntent.RetryCapture -> _state.update { it.copy(capturedUri = null) }
             DailyMissionCameraIntent.SubmitPhoto -> submitPhoto()
             DailyMissionCameraIntent.ToggleCameraLens -> _state.update { it.copy(isFrontCamera = !it.isFrontCamera) }
@@ -72,6 +71,7 @@ class DailyMissionCameraViewModel @Inject constructor(
                         _state.update { it.copy(capturedUri = null) }
                     }
                 }
+
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSubmitting = false, capturedUri = null) }
                     sendEffect(DailyMissionCameraEffect.ShowSnackbar(result.error.toUiText()))

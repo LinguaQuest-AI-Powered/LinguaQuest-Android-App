@@ -31,7 +31,7 @@ class SoundManager @Inject constructor(
         }
     }
 
-    override fun play(sound: AppSound) {
+    override fun play(sound: AppSound, loop: Boolean) {
 
         if(!isSoundEnabled) return
 
@@ -41,7 +41,7 @@ class SoundManager @Inject constructor(
             sound.volume,
             sound.volume,
             1,
-            0,
+            if (loop) -1 else 0,
             1f
         )
         if (streamId != 0) {

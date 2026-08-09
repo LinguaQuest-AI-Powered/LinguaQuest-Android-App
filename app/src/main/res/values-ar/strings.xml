@@ -829,4 +829,12 @@
 
     <string name="updating_language_title">اضافة اللغه</string>
     <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
+    <!-- أسماء نصوص المهمة اليومية -->
+    <string name="daily_mission_title_success">المهمة اليومية!</string>
+    <string name="daily_mission_title_loading">جاري التفكيك…</string>
+    <string name="daily_mission_message_success">هدف اليوم هو:</string>
+    <string name="daily_mission_message_loading">انتظر قليلاً بينما نجلب الكلمة السرية لليوم…</string>
+    <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
+    <string name="daily_mission_button_loading">جاري التحميل…</string>
+    <string name="daily_mission_button_later">لاحقاً</string>
 </resources>

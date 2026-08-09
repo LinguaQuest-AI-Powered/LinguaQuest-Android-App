@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.ActivityCompat
@@ -42,6 +44,7 @@ import com.iti.linguaquest.features.game.presentation.camera.view.CameraContent
 import com.iti.linguaquest.features.game.presentation.camera.view.CameraPreviewContent
 import com.iti.linguaquest.features.game.presentation.camera.view.component.CameraPermissionView
 import com.iti.linguaquest.features.game.presentation.camera.view.component.takePhoto
+import com.iti.linguaquest.features.game.presentation.processing.view.component.GameProcessingView
 
 @Composable
 fun DailyMissionCameraScreen(
@@ -91,7 +94,10 @@ fun DailyMissionCameraScreen(
     }
 
     LaunchedEffect(Unit) {
-        val isAlreadyGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val isAlreadyGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
         if (isAlreadyGranted) {
             viewModel.onIntent(DailyMissionCameraIntent.PermissionResult(true))
         } else {
@@ -124,7 +130,12 @@ fun DailyMissionCameraScreen(
             when (effect) {
                 DailyMissionCameraEffect.NavigateBack -> onBack()
                 is DailyMissionCameraEffect.ShowSnackbar -> {
-                    snackbarController.sendEvent(SnackbarEvent(message = effect.message, type = SnackbarType.INFO))
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = effect.message,
+                            type = SnackbarType.INFO
+                        )
+                    )
                 }
             }
         }
@@ -133,7 +144,7 @@ fun DailyMissionCameraScreen(
     if (state.permissionStatus != PermissionStatus.GRANTED) {
         CameraPermissionView(
             status = state.permissionStatus,
-            onGrantClicked = { 
+            onGrantClicked = {
                 viewModel.onIntent(DailyMissionCameraIntent.GrantPermissionClicked)
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     data = Uri.fromParts("package", context.packageName, null)
@@ -167,9 +178,14 @@ fun DailyMissionCameraScreen(
                 onRetryClicked = { viewModel.onIntent(DailyMissionCameraIntent.RetryCapture) },
                 onSubmitClicked = { viewModel.onIntent(DailyMissionCameraIntent.SubmitPhoto) }
             )
-            
+
             if (state.isSubmitting) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                GameProcessingView(
+                    targetWord = state.word,
+                    imageUri = state.capturedUri,
+                    onStartGameClicked = {},
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
