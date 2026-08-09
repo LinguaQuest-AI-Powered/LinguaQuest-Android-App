@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -66,22 +65,32 @@ class AudioRecorderController @Inject constructor() {
 
     fun stopAndGetPcmData(): ByteArray {
         isRecording.set(false)
-        runBlocking {
-            recordingJob?.join()
+        try {
+            audioRecord?.stop()
+        } catch (e: Exception) {
         }
-        audioRecord?.stop()
-        audioRecord?.release()
+        recordingJob?.cancel()
+        recordingJob = null
+        try {
+            audioRecord?.release()
+        } catch (e: Exception) {
+        }
         audioRecord = null
         return synchronized(outputStream) { outputStream.toByteArray() }
     }
 
     fun discard() {
         isRecording.set(false)
-        runBlocking {
-            recordingJob?.join()
+        try {
+            audioRecord?.stop()
+        } catch (e: Exception) {
         }
-        audioRecord?.stop()
-        audioRecord?.release()
+        recordingJob?.cancel()
+        recordingJob = null
+        try {
+            audioRecord?.release()
+        } catch (e: Exception) {
+        }
         audioRecord = null
         synchronized(outputStream) { outputStream.reset() }
     }

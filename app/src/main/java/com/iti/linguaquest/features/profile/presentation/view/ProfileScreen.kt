@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,14 +20,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
-import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 import com.iti.linguaquest.features.profile.presentation.view.components.*
+import com.iti.linguaquest.core.sharedComponents.ErrorView
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.profile.presentation.viewModel.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -46,9 +43,9 @@ fun ProfileScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    var showAvatarSheet by rememberSaveable { mutableStateOf(false) }
-    var pendingCameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var showOfflinePopup by rememberSaveable { mutableStateOf(false) }
+    var showAvatarSheet by remember { mutableStateOf(false) }
+    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
+    var showOfflinePopup by remember { mutableStateOf(false) }
 
     fun guardOnline(action: () -> Unit) {
         if (isOnline) {
@@ -67,8 +64,11 @@ fun ProfileScreen(
             if (granted) pendingCameraUri?.let { cameraLauncher.launch(it) }
         }
     val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri -> uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) } }
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.onIntent(ProfileIntent.AvatarPicked(it)) }
+    }
+
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
@@ -85,39 +85,27 @@ fun ProfileScreen(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        if (uiState.isLoading) {
-            LoadingView()
-        } else if (uiState.hasError && !uiState.hasCachedData) {
-            ErrorView(
-                message = stringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(ProfileIntent.Retry) },
+
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ProfileContent(
+                state = uiState.profile,
+                isAvatarUploading = uiState.isAvatarUploading,
+                onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
+                onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
+                onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
+                onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
                 modifier = Modifier.fillMaxSize()
             )
-        } else {
-            PullToRefreshBox(
-                isRefreshing = uiState.isRefreshing,
-                onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                ProfileContent(
-                    state = uiState.profile,
-                    isAvatarUploading = uiState.isAvatarUploading,
-                    onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                    onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
-                    onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
-                    onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
         }
 
-        if (showOfflinePopup) {
-            NoInternetMiniPopup(
-                isOnline = isOnline,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 16.dp, top = 16.dp),
-                onDismiss = { showOfflinePopup = false }
+        if (uiState.hasError && uiState.profile.userName.isBlank()) {
+            ErrorView(
+                message = uiState.errorMessage ?: UiText.StringResource(R.string.error_generic),
+                onRetry = { viewModel.onIntent(ProfileIntent.Refresh) }
             )
         }
     }
@@ -200,22 +188,10 @@ fun ProfileContent(
                 }
             }
         }
-
         if (state.nearbyLeaderboard.isNotEmpty()) {
-            item {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    SectionHeader(
-                        stringResource(R.string.leaderboard_title),
-                        onViewAllLeaderboardClick
-                    )
-                }
-            }
-            items(state.nearbyLeaderboard, key = { it.rank }) { item ->
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    LeaderboardRow(item)
-                }
-            }
+            item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
+            items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
         }
     }
-}
 
+}

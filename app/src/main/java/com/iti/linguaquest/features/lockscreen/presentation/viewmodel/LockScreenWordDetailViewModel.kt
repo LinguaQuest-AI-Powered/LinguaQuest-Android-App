@@ -2,7 +2,6 @@ package com.iti.linguaquest.features.lockscreen.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
@@ -14,6 +13,8 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenP
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenWordDetailState
+import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -108,7 +109,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
                     is LinguaQuestResult.Failure -> {
                         _state.update {
                             it.copy(
-                                errorMessage = com.iti.linguaquest.R.string.lockscreen_milestone_reward_error.toString()
+                                errorMessage = UiText.StringResource(R.string.lockscreen_milestone_reward_error)
                             )
                         }
                     }
@@ -135,14 +136,14 @@ class LockScreenWordDetailViewModel @Inject constructor(
                         setHighlightedWordId(newlyGeneratedWord.id)
                     } else {
                         _state.update {
-                            it.copy(isLoading = false, errorMessage = com.iti.linguaquest.R.string.lockscreen_error_generate_failed.toString())
+                            it.copy(isLoading = false, errorMessage = UiText.StringResource(R.string.lockscreen_error_generate_failed))
                         }
                     }
                 } else {
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = com.iti.linguaquest.R.string.lockscreen_error_generate_failed.toString()
+                            errorMessage = UiText.StringResource(R.string.lockscreen_error_generate_failed)
                         )
                     }
                 }

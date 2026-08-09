@@ -1,11 +1,11 @@
 package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
 import com.google.gson.Gson
-import com.iti.linguaquest.BuildConfig
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiContentDto
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiGenerationConfigDto
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiPartDto
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.model.GeminiRequestDto
+import com.iti.linguaquest.core.ai.network.GeminiRestClient
+import com.iti.linguaquest.core.ai.network.model.GeminiContentDto
+import com.iti.linguaquest.core.ai.network.model.GeminiGenerationConfigDto
+import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
+import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.prompt.PromptFactory
 import kotlinx.coroutines.Dispatchers
@@ -16,16 +16,9 @@ import javax.inject.Singleton
 
 @Singleton
 class GeminiRoleplayService @Inject constructor(
-    private val apiService: GeminiApiService,
+    private val geminiRestClient: GeminiRestClient,
     private val gson: Gson
 ) : GeminiRoleplayRemoteDataSource {
-
-    private val candidateModels = listOf(
-        "gemini-3.5-flash-lite",
-        "gemini-flash-latest",
-        "gemini-3.1-flash-lite",
-        "gemini-3.5-flash"
-    )
 
     override suspend fun generateRoleplayTurn(
         systemPrompt: String,
@@ -68,12 +61,6 @@ class GeminiRoleplayService @Inject constructor(
     }
 
     private suspend fun executeGeminiRequest(promptText: String): String? {
-        val apiKey = BuildConfig.GEMINI_API_KEY
-        if (apiKey.isBlank()) {
-            Timber.e("GEMINI_API_KEY is empty in BuildConfig")
-            return null
-        }
-
         val requestPayload = GeminiRequestDto(
             contents = listOf(
                 GeminiContentDto(
@@ -85,41 +72,7 @@ class GeminiRoleplayService @Inject constructor(
                 responseMimeType = "application/json"
             )
         )
-
-        var lastException: Throwable? = null
-        var lastHttpCode: Int? = null
-
-        for (model in candidateModels) {
-            try {
-                val response = apiService.generateContent(
-                    model = model,
-                    apiKey = apiKey,
-                    request = requestPayload
-                )
-
-                if (response.isSuccessful) {
-                    val resultText = response.body()?.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
-                    if (!resultText.isNullOrBlank()) {
-                        return resultText
-                    }
-                } else {
-                    lastHttpCode = response.code()
-                    Timber.w("Model $model returned HTTP ${response.code()}. Trying fallback...")
-                }
-            } catch (e: Exception) {
-                lastException = e
-                Timber.w(e, "Request to $model failed. Trying fallback...")
-            }
-        }
-
-        Timber.e("All candidate Gemini models failed to generate evaluation")
-        if (lastHttpCode == 429 || lastException?.message?.contains("429") == true || lastException?.message?.contains("quota", ignoreCase = true) == true) {
-            throw IllegalStateException("HTTP 429: Quota exceeded for Gemini AI service", lastException)
-        }
-        if (lastException != null) {
-            throw lastException
-        }
-        return null
+        return geminiRestClient.executeGeminiRequest(requestPayload)
     }
 
     private fun cleanJson(rawText: String?): String? {

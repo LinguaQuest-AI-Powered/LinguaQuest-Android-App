@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppRewardsRow
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -34,7 +35,7 @@ fun VoiceResultHeader(
     hideCoinsBadge: Boolean = false,
     onCoinsBadgePositioned: (Offset) -> Unit = {}
 ) {
-    SpeechBubble(advice)
+    MessageBubble(title = advice)
     Spacer(Modifier.height(8.dp))
 
     AppMascotGradientBox(

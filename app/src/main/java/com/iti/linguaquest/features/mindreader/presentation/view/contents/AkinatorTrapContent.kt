@@ -30,7 +30,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
-import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderSpeechBubble
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 
 @Composable
 fun AkinatorTrapContent(
@@ -58,8 +58,8 @@ fun AkinatorTrapContent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MindReaderSpeechBubble(
-                text = stringResource(id = R.string.mind_reader_trap_speech)
+            MessageBubble(
+                title = stringResource(id = R.string.mind_reader_trap_speech)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

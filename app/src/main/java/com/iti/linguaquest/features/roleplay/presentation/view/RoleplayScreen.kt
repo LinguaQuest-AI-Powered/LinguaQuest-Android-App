@@ -14,6 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.features.roleplay.domain.model.ScenarioId
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayEffect
@@ -68,6 +70,10 @@ fun RoleplayScreen(
 
     OfflineAwareContent(
         isOnline = isOnline,
+        topBarTitle = stringResource(R.string.roleplay_boss_level),
+        onBackClicked = { viewModel.onIntent(RoleplayIntent.ReturnHomeClicked) },
+        showCoins = true,
+        coinsCount = wallet.coins,
         modifier = modifier.fillMaxSize()
     ) {
         RoleplayContent(

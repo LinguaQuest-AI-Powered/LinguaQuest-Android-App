@@ -38,6 +38,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -86,19 +87,29 @@ fun RoleplayCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Box(
-                modifier = Modifier
-                    .offset(y = (-12).dp)
-                    .size(76.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(LinguaQuestTheme.colors.IconBoxBackground),
-                contentAlignment = Alignment.Center
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lingo_writing),
-                    contentDescription = null,
-                    modifier = Modifier.size(70.dp)
+                MessageBubble(
+                    title = stringResource(id = R.string.roleplay_label)
                 )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Box(
+                    modifier = Modifier
+                        .offset(y = (-12).dp)
+                        .size(76.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(LinguaQuestTheme.colors.IconBoxBackground),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.lingo_writing),
+                        contentDescription = null,
+                        modifier = Modifier.size(70.dp)
+                    )
+                }
             }
         }
 

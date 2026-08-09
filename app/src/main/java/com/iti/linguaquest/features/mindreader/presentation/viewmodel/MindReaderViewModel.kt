@@ -44,6 +44,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+
 @HiltViewModel
 class MindReaderViewModel @Inject constructor(
     private val startMindReaderGameUseCase: StartMindReaderGameUseCase,
@@ -56,8 +60,16 @@ class MindReaderViewModel @Inject constructor(
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
     private val snackbarController: SnackbarController,
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true
+        )
 
     private val _state = MutableStateFlow(MindReaderState())
     val state: StateFlow<MindReaderState> = _state.asStateFlow()
