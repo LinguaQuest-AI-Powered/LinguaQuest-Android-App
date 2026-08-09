@@ -2,21 +2,10 @@ package com.iti.linguaquest.features.home.presentation.view
 
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,16 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
@@ -46,23 +28,22 @@ import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
-import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
+import com.iti.linguaquest.features.home.presentation.contract.HomeDataStatus
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
+import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs
+import com.iti.linguaquest.features.home.presentation.view.components.HomeOverlays
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardBannerWrapper
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardDialog
-import com.iti.linguaquest.features.home.presentation.view.components.DailyMissionDialog
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
-
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,12 +66,7 @@ fun HomeScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
     var showCoinRain by remember { mutableStateOf(false) }
-    var showOfflinePopup by remember { mutableStateOf(false) }
-    var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
-    var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
-    var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
     val context = LocalContext.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
     var bannerHeightPx by remember { mutableFloatStateOf(0f) }
@@ -174,84 +150,67 @@ fun HomeScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
 
+        val layoutTarget = when (state.dataStatus) {
+            is HomeDataStatus.Loading -> 0
+            is HomeDataStatus.Error -> 1
+            is HomeDataStatus.Loaded, is HomeDataStatus.Refreshing -> 2
+        }
+
         Crossfade(
-            targetState = state.isLoading,
-            label = "HomeLoadingCrossfade",
+            targetState = layoutTarget,
+            label = "HomeDataStatusCrossfade",
             modifier = Modifier.fillMaxSize()
-        ) { isLoading ->
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LoadingView(
-                        message = stringResource(R.string.loading)
-                    )
-                }
-            } else {
-                PullToRefreshBox(
-                    isRefreshing = state.isRefreshing,
-                    onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    HomeContent(
-                        state = state,
-                        onSeeMoreClick = { anchor ->
-                            guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
-                        },
-                        onWorldClick = { world, anchor ->
-                            guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
-                        },
-                        onContinueLevelClick = { level, anchor ->
-                            guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                        }
-                    )
-                }
-            }
-        }
-
-        if (state.hasError && state.worlds.isEmpty() && state.languageProgress == null) {
-            ErrorView(
-                message = state.errorMessage ?: com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(HomeIntent.Refresh) }
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FloatingActionButton(
-                onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.background
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_streak),
-                    contentDescription = "daily_mission_content_description",
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-
-            FloatingActionButton(
-                onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.FabClicked) } },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier
-                    .onGloballyPositioned { coordinates ->
-                        fabBounds = coordinates.boundsInRoot()
+        ) { target ->
+            when (target) {
+                0 -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        LoadingView(
+                            message = stringResource(R.string.loading)
+                        )
                     }
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.world_home_icon),
-                    contentDescription = "world_map_content_description",
-                    modifier = Modifier.size(28.dp)
-                )
+                }
+                1 -> {
+                    val message = (state.dataStatus as? HomeDataStatus.Error)?.message 
+                        ?: UiText.StringResource(R.string.error_generic)
+                    ErrorView(
+                        message = message,
+                        onRetry = { viewModel.onIntent(HomeIntent.Retry) }
+                    )
+                }
+                2 -> {
+                    PullToRefreshBox(
+                        isRefreshing = state.dataStatus is HomeDataStatus.Refreshing,
+                        onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        HomeContent(
+                            state = state,
+                            onSeeMoreClick = { anchor ->
+                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
+                            },
+                            onWorldClick = { world, anchor ->
+                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                            },
+                            onContinueLevelClick = { level, anchor ->
+                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
+                            }
+                        )
+                    }
+                }
             }
+        }
+
+        if (state.dataStatus is HomeDataStatus.Loaded || state.dataStatus is HomeDataStatus.Refreshing) {
+            HomeFabs(
+                onDailyMissionClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
+                onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp)
+            )
         }
 
         HomeDailyRewardBannerWrapper(
@@ -264,40 +223,11 @@ fun HomeScreen(
         )
     }
 
-    HomeDailyRewardDialog(
+    HomeOverlays(
         state = state,
-        onDismissRequest = { viewModel.onIntent(HomeIntent.DismissDailyRewardDialog) },
-        onClaimClick = { viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked) }
-    )
-
-    if (state.isLanguageBottomSheetVisible) {
-        MyLanguagesBottomSheet(
-            languages = myLanguagesState.languages,
-            isLoading = myLanguagesState.isLoading,
-            isSettingActive = myLanguagesState.isSettingActive,
-            languagePendingRemoval = myLanguagesState.languagePendingRemoval,
-            removingLanguageId = myLanguagesState.removingLanguageId,
-            onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
-            onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
-            onLanguageSelect = { selectedId ->
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.SetActiveLanguage(selectedId))
-            },
-            onRemoveLanguageClick = { lang ->
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.RequestRemoveLanguage(lang))
-            },
-            onConfirmRemoveLanguage = {
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.ConfirmRemoveLanguage)
-            },
-            onDismissRemoveDialog = {
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.DismissRemoveDialog)
-            }
-        )
-    }
-
-    DailyMissionDialog(
-        state = state.dailyMissionState,
-        onDismissRequest = { viewModel.onIntent(HomeIntent.DismissDailyMissionDialog) },
-        onStartCamera = { word -> viewModel.onIntent(HomeIntent.StartDailyMissionCamera(word)) }
+        myLanguagesState = myLanguagesState,
+        onHomeIntent = viewModel::onIntent,
+        onMyLanguagesIntent = myLanguagesViewModel::onIntent
     )
 }
 

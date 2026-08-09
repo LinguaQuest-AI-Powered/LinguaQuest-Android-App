@@ -5,6 +5,13 @@ import com.iti.linguaquest.features.home.presentation.mapper.LanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 
+sealed interface HomeDataStatus {
+    data object Loading : HomeDataStatus
+    data object Loaded : HomeDataStatus
+    data object Refreshing : HomeDataStatus
+    data class Error(val message: UiText) : HomeDataStatus
+}
+
 data class ContinueLevelUi(
     val worldId: Int,
     val levelId: Int,
@@ -15,23 +22,22 @@ data class ContinueLevelUi(
 )
 
 data class HomeState(
-    val isLoading: Boolean = true,
+    val dataStatus: HomeDataStatus = HomeDataStatus.Loading,
     val xp: Int = 0,
     val coins: Int = 0,
     val languageProgress: LanguageProgressUi? = null,
     val worlds: List<WorldItem> = emptyList(),
     val startVoicePractise: Boolean? = false,
-    val hasError: Boolean = false,
-    val errorMessage: UiText? = null,
     val isLanguageBottomSheetVisible: Boolean = false,
     val dailyReward: DailyRewardUi? = null,
     val isDailyRewardDialogVisible: Boolean = false,
     val isDailyRewardBannerVisible: Boolean = false,
-    val isRefreshing: Boolean = false,
     val continueLevel: ContinueLevelUi? = null,
     val isClaimingReward: Boolean = false,
     val dailyMissionState: DailyMissionDialogState = DailyMissionDialogState.Hidden
-)
+) {
+    val hasData: Boolean get() = worlds.isNotEmpty() || languageProgress != null
+}
 
 sealed interface DailyMissionDialogState {
     data object Hidden : DailyMissionDialogState

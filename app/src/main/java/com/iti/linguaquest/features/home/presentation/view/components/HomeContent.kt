@@ -10,17 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
+import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
+import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import kotlinx.coroutines.delay
@@ -33,20 +30,7 @@ fun HomeContent(
     onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showLanguage by rememberSaveable { mutableStateOf(false) }
-    var showCamera by rememberSaveable { mutableStateOf(false) }
-    var showWorlds by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        if (!showLanguage) {
-            delay(80)
-            showLanguage = true
-            delay(120)
-            showCamera = true
-            delay(120)
-            showWorlds = true
-        }
-    }
+    val animationState = rememberStaggeredAnimationState(count = 3)
 
     Column(
         modifier = modifier
@@ -56,8 +40,9 @@ fun HomeContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         state.languageProgress?.let { progress ->
-            AnimatedVisibility(
-                visible = showLanguage, 
+            StaggeredAnimatedItem(
+                index = 0,
+                state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = -60)
             ) {
                 LanguageProgressCard(
@@ -72,8 +57,9 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-        AnimatedVisibility(
-            visible = showCamera, 
+        StaggeredAnimatedItem(
+            index = 1,
+            state = animationState,
             enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
         ) {
             if (state.continueLevel != null) {
@@ -107,8 +93,9 @@ fun HomeContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.worlds.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showWorlds, 
+            StaggeredAnimatedItem(
+                index = 2,
+                state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = 60)
             ) {
                 ExploreWorldsSection(

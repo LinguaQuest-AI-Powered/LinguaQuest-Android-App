@@ -18,6 +18,7 @@ import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
+import com.iti.linguaquest.features.home.presentation.contract.HomeDataStatus
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
@@ -73,15 +74,17 @@ class HomeViewModel @Inject constructor(
 
     fun onIntent(intent: HomeIntent) {
         when (intent) {
-            HomeIntent.LoadHome, HomeIntent.Retry -> refreshFromRemote()
+            HomeIntent.LoadHome -> refreshFromRemote()
+            HomeIntent.Retry -> {
+                _state.update { it.copy(dataStatus = HomeDataStatus.Loading) }
+                refreshFromRemote()
+            }
             HomeIntent.Refresh -> {
                 val now = System.currentTimeMillis()
-                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && !state.value.isRefreshing) {
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus != HomeDataStatus.Refreshing) {
                     lastRefreshTime = now
-                    _state.update { it.copy(isRefreshing = true) }
+                    _state.update { it.copy(dataStatus = HomeDataStatus.Refreshing) }
                     refreshFromRemote(isPullToRefresh = true)
-                } else {
-                    _state.update { it.copy(isRefreshing = false) }
                 }
             }
             is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id, intent.world.totalLevels))
@@ -137,12 +140,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getHomeSummaryUseCase.observe().collect { summary ->
                 if (summary == null) {
-                    _state.update { it.copy(isLoading = false) }
                     return@collect
                 }
                 _state.update { current ->
                     current.copy(
-                        isLoading = false,
+                        dataStatus = HomeDataStatus.Loaded,
                         xp = summary.xp,
                         coins = summary.coins,
                         languageProgress = summary.toLanguageProgressUi(),
@@ -166,8 +168,6 @@ class HomeViewModel @Inject constructor(
                 val dailyRewardResult = dailyRewardDeferred.await()
                 walletDeferred?.await()
 
-                _state.update { it.copy(isRefreshing = false, isLoading = false) }
-
                 if (homeSummaryResult is LinguaQuestResult.Success) {
                     val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                     val shouldShowBanner = dailyRewardUi != null &&
@@ -178,8 +178,7 @@ class HomeViewModel @Inject constructor(
 
                     _state.update {
                         it.copy(
-                            hasError = false,
-                            errorMessage = null,
+                            dataStatus = HomeDataStatus.Loaded,
                             dailyReward = dailyRewardUi,
                             isDailyRewardBannerVisible = shouldShowBanner
                         )
@@ -187,47 +186,42 @@ class HomeViewModel @Inject constructor(
                 } else {
                     val dataError = (homeSummaryResult as? LinguaQuestResult.Failure)?.error as? LinguaQuestDataError
                     val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
-                    val hasCache = _state.value.worlds.isNotEmpty() || _state.value.languageProgress != null
-                    val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
+                    val hasCache = _state.value.hasData
 
                     _state.update {
                         it.copy(
-                            hasError = !hasCache && !isNoInternet,
-                            errorMessage = if (!hasCache && !isNoInternet) errorUiText else null
+                            dataStatus = if (hasCache) HomeDataStatus.Loaded else HomeDataStatus.Error(errorUiText)
                         )
                     }
 
-                    if (isPullToRefresh || hasCache) {
-                        if (hasCache && dataError == LinguaQuestDataError.Remote.NO_INTERNET) {
-                            snackbarController.sendEvent(
-                                SnackbarEvent(
-                                    title = UiText.StringResource(R.string.offline_title),
-                                    message = UiText.StringResource(R.string.offline_msg),
-                                    type = SnackbarType.INFO
-                                )
+                    if (hasCache) {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = errorUiText,
+                                type = SnackbarType.ERROR,
+                                actionLabel = UiText.StringResource(R.string.retry),
+                                onAction = { refreshFromRemote(isPullToRefresh = true) }
                             )
-                        } else {
-                            snackbarController.sendEvent(
-                                SnackbarEvent(
-                                    message = errorUiText,
-                                    type = SnackbarType.ERROR,
-                                    actionLabel = UiText.StringResource(R.string.retry),
-                                    onAction = { refreshFromRemote(isPullToRefresh = true) }
-                                )
-                            )
-                        }
+                        )
                     }
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Error refreshing home data from remote")
-                val emptyWorlds = _state.value.worlds.isEmpty()
+                val hasCache = _state.value.hasData
                 val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        isRefreshing = false,
-                        isLoading = false,
-                        hasError = emptyWorlds,
-                        errorMessage = if (emptyWorlds) errorUiText else null
+                        dataStatus = if (hasCache) HomeDataStatus.Loaded else HomeDataStatus.Error(errorUiText)
+                    )
+                }
+                if (hasCache) {
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = errorUiText,
+                            type = SnackbarType.ERROR,
+                            actionLabel = UiText.StringResource(R.string.retry),
+                            onAction = { refreshFromRemote(isPullToRefresh = true) }
+                        )
                     )
                 }
             }
