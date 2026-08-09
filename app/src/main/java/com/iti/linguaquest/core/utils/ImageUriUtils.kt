@@ -1,5 +1,7 @@
 package com.iti.linguaquest.core.utils
 
+import timber.log.Timber
+
 
 import android.content.Context
 import android.net.Uri
@@ -25,7 +27,7 @@ fun Uri.toTempFile(context: Context, prefix: String = "upload_"): File? {
             tempFile
         }
     } catch (e: Exception) {
-        timber.log.Timber.e(e, "Failed to convert Uri to File")
+        Timber.e(e, "Failed to convert Uri to File")
         null
     }
 }

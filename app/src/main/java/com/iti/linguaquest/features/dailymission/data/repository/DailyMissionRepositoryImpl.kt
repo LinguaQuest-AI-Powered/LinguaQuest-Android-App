@@ -9,6 +9,13 @@ import com.iti.linguaquest.features.dailymission.domain.model.VerifyMissionResul
 import com.iti.linguaquest.features.dailymission.domain.repository.DailyMissionRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import com.iti.linguaquest.features.game.data.remote.util.ImageCompressor
 import javax.inject.Inject
 
 class DailyMissionRepositoryImpl @Inject constructor(
@@ -22,10 +29,19 @@ class DailyMissionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun verifyMission(
-        image: MultipartBody.Part,
-        word: RequestBody
+        imageFile: File,
+        word: String
     ): LinguaQuestResult<VerifyMissionResult, LinguaQuestDataError> {
-        return when (val result = safeApiCall { remoteDataSource.verifyMission(image, word) }) {
+        val compressedFile = withContext(Dispatchers.IO) {
+            ImageCompressor.compress(imageFile)
+        }
+            
+        val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val imagePart = MultipartBody.Part.createFormData("image", compressedFile.name, requestFile)
+
+        val wordRequestBody = word.toRequestBody("text/plain".toMediaTypeOrNull())
+        
+        return when (val result = safeApiCall { remoteDataSource.verifyMission(imagePart, wordRequestBody) }) {
             is LinguaQuestResult.Success -> {
                 LinguaQuestResult.Success(
                     VerifyMissionResult(

@@ -2,6 +2,7 @@ package com.iti.linguaquest.features.dailymission.presentation.camera.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
@@ -24,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyMissionCameraViewModel @Inject constructor(
-    private val verifyDailyMissionUseCase: VerifyDailyMissionUseCase
+    private val verifyDailyMissionUseCase: VerifyDailyMissionUseCase,
+    private val fileHelper: com.iti.linguaquest.core.utils.FileHelper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DailyMissionCameraState())
@@ -57,17 +59,25 @@ class DailyMissionCameraViewModel @Inject constructor(
         val uri = currentState.capturedUri ?: return
         val word = currentState.word
         if (word.isBlank()) return
+        val file = fileHelper.uriToFile(uri) ?: return
 
         _state.update { it.copy(isSubmitting = true) }
         viewModelScope.launch {
-            when (val result = verifyDailyMissionUseCase(uri, word)) {
+            when (val result = verifyDailyMissionUseCase(file, word)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isSubmitting = false) }
                     if (result.data.isMatch) {
-                        sendEffect(DailyMissionCameraEffect.ShowSnackbar(UiText.DynamicString("Mission completed! You earned ${result.data.xpEarned} XP and ${result.data.coinsEarned} Coins.")))
+                        sendEffect(
+                            DailyMissionCameraEffect.ShowSnackbar(
+                                UiText.StringResource(
+                                    R.string.daily_mission_completed,
+                                    listOf(result.data.xpEarned, result.data.coinsEarned)
+                                )
+                            )
+                        )
                         sendEffect(DailyMissionCameraEffect.NavigateBack)
                     } else {
-                        sendEffect(DailyMissionCameraEffect.ShowSnackbar(UiText.DynamicString("That doesn't match the word. Try again!")))
+                        sendEffect(DailyMissionCameraEffect.ShowSnackbar(UiText.StringResource(R.string.daily_mission_wrong_word)))
                         _state.update { it.copy(capturedUri = null) }
                     }
                 }

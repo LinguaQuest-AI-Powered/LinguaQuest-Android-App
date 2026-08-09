@@ -22,6 +22,7 @@ import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressU
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
+import com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import timber.log.Timber
@@ -103,9 +104,9 @@ class HomeViewModel @Inject constructor(
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
             is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.targetWord))
             HomeIntent.TriggerDailyMission -> triggerDailyMission()
-            HomeIntent.DismissDailyMissionDialog -> _state.update { it.copy(dailyMissionState = com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState.Hidden) }
+            HomeIntent.DismissDailyMissionDialog -> _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
             is HomeIntent.StartDailyMissionCamera -> {
-                _state.update { it.copy(dailyMissionState = com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState.Hidden) }
+                _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
                 sendEffect(HomeEffect.NavigateToDailyMissionCamera(intent.word))
             }
         }
@@ -117,10 +118,10 @@ class HomeViewModel @Inject constructor(
             
             when (val result = getDailyMissionWordUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(dailyMissionState = com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState.Success(result.data.word)) }
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word)) }
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(dailyMissionState = com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState.Hidden) }
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),
