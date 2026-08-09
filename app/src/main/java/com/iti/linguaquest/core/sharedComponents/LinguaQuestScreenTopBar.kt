@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -67,6 +68,9 @@ fun LinguaQuestScreenTopBar(
     coinsCount: Int = 0,
     showXp: Boolean = false,
     xpCount: Int = 0,
+    showBackButton: Boolean = true,
+    startContent: (@Composable RowScope.() -> Unit)? = null,
+    centerContent: (@Composable BoxScope.() -> Unit)? = null,
     trailingContent: @Composable RowScope.() -> Unit = {},
     applyStatusBarsPadding: Boolean? = null,
     contentPadding: PaddingValues? = null,
@@ -114,17 +118,38 @@ fun LinguaQuestScreenTopBar(
                 modifier = paddedModifier,
                 contentAlignment = Alignment.Center
             ) {
-                BackButton(
-                    onBackClicked = onBackClicked,
-                    style = effectiveBackButtonStyle,
-                    size = backButtonSize,
-                    backgroundColor = effectiveBackButtonBackgroundColor,
-                    contentColor = effectiveBackButtonContentColor,
-                    iconSize = backButtonIconSize,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
+                if (showBackButton || startContent != null) {
+                    Row(
+                        modifier = Modifier.align(Alignment.CenterStart),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (showBackButton) {
+                            BackButton(
+                                onBackClicked = onBackClicked,
+                                style = effectiveBackButtonStyle,
+                                size = backButtonSize,
+                                backgroundColor = effectiveBackButtonBackgroundColor,
+                                contentColor = effectiveBackButtonContentColor,
+                                iconSize = backButtonIconSize
+                            )
+                        }
 
-                if (title != null) {
+                        if (startContent != null) {
+                            if (showBackButton) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            startContent()
+                        }
+                    }
+                }
+
+                if (centerContent != null) {
+                    Box(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        centerContent()
+                    }
+                } else if (title != null) {
                     Text(
                         text = title,
                         style = effectiveTitleTextStyle,
@@ -151,14 +176,20 @@ fun LinguaQuestScreenTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                BackButton(
-                    onBackClicked = onBackClicked,
-                    style = effectiveBackButtonStyle,
-                    size = backButtonSize,
-                    backgroundColor = effectiveBackButtonBackgroundColor,
-                    contentColor = effectiveBackButtonContentColor,
-                    iconSize = backButtonIconSize
-                )
+                if (showBackButton) {
+                    BackButton(
+                        onBackClicked = onBackClicked,
+                        style = effectiveBackButtonStyle,
+                        size = backButtonSize,
+                        backgroundColor = effectiveBackButtonBackgroundColor,
+                        contentColor = effectiveBackButtonContentColor,
+                        iconSize = backButtonIconSize
+                    )
+                }
+
+                if (startContent != null) {
+                    startContent()
+                }
 
                 if (title != null) {
                     Text(
