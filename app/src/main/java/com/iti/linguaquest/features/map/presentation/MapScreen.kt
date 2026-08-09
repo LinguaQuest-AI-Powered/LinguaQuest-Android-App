@@ -132,7 +132,6 @@ fun MapScreenContent(
             showDivider = false,
             applyStatusBarsPadding = false,
             contentPadding = PaddingValues(start = 16.dp, top = 40.dp, end = 16.dp, bottom = 16.dp),
-            backButtonStyle = com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle.Circular,
             backButtonSize = 44.dp,
             backButtonBackgroundColor = LinguaQuestTheme.colors.whiteColor,
             backButtonContentColor = MaterialTheme.colorScheme.primary,

@@ -27,16 +27,7 @@ fun HelpScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 HelpEffect.NavigateBack -> onBack()
-                HelpEffect.NavigateToContactSupport -> {
-                    globalUiHostViewModel.dialogController.show(
-                        DialogUiState(
-                            title = UiText.StringResource(R.string.help_support_coming_soon_title),
-                            message = UiText.StringResource(R.string.help_support_coming_soon_message),
-                            confirmText = UiText.StringResource(R.string.help_support_coming_soon_action)
-                        )
-                    )
-                }
-                HelpEffect.NavigateToReportBug -> {
+                HelpEffect.NavigateToContactSupport, HelpEffect.NavigateToReportBug -> {
                     globalUiHostViewModel.dialogController.show(
                         DialogUiState(
                             title = UiText.StringResource(R.string.help_support_coming_soon_title),

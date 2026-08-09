@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
-import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
@@ -82,22 +81,7 @@ fun LeaderboardContent(
     ) {
         LinguaQuestScreenTopBar(
             title = stringResource(id = R.string.leaderboard_title),
-            onBackClicked = onBack,
-            isTitleCentered = true,
-            containerColor = Color.Transparent,
-            titleColor = LocalLinguaQuestColors.current.BrownText,
-            titleTextStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            showDivider = true,
-            dividerSpacing = 16.dp,
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 22.dp, vertical = 0.dp),
-            backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
-            backButtonSize = 40.dp,
-            backButtonBackgroundColor = LocalLinguaQuestColors.current.whiteColor,
-            backButtonContentColor = LocalLinguaQuestColors.current.OrangeActive,
-            backButtonIconSize = 18.dp
+            onBackClicked = onBack
         )
 
         LazyColumn(

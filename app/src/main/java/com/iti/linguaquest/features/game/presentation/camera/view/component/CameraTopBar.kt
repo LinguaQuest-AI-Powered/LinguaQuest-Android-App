@@ -24,7 +24,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
-import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
@@ -41,7 +40,6 @@ fun CameraTopBar(
         containerColor = Color.Transparent,
         showDivider = false,
         contentPadding = PaddingValues(0.dp),
-        backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
         backButtonSize = 44.dp,
         backButtonBackgroundColor = LinguaQuestTheme.colors.blackColor.copy(alpha = 0.5f),
         backButtonContentColor = LinguaQuestTheme.colors.whiteColor,

@@ -35,7 +35,6 @@ fun ReviewTopBar(
         showDivider = true,
         dividerSpacing = 16.dp,
         contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
-        backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
         backButtonSize = 40.dp,
         backButtonBackgroundColor = LinguaQuestTheme.colors.whiteColor,
         backButtonContentColor = LinguaQuestTheme.colors.OrangeActive,

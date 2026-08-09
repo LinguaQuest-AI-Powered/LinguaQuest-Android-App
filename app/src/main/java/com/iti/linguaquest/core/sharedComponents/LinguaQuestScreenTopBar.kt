@@ -56,14 +56,17 @@ fun LinguaQuestScreenTopBar(
     title: String? = null,
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    isTitleCentered: Boolean? = null,
-    containerColor: Color = Color.Unspecified,
-    titleColor: Color = Color.Unspecified,
-    titleTextStyle: TextStyle? = null,
-    showDivider: Boolean? = null,
-    dividerColor: Color = Color.Unspecified,
+    isTitleCentered: Boolean = true,
+    containerColor: Color = Color.Transparent,
+    titleColor: Color = LocalLinguaQuestColors.current.BrownText,
+    titleTextStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    ),
+    showDivider: Boolean = true,
+    dividerColor: Color = LinguaQuestTheme.colors.ProfileCardBorderColor,
     dividerThickness: Dp = 1.dp,
-    dividerSpacing: Dp? = null,
+    dividerSpacing: Dp = 16.dp,
     showCoins: Boolean = false,
     coinsCount: Int = 0,
     showXp: Boolean = false,
@@ -72,48 +75,30 @@ fun LinguaQuestScreenTopBar(
     startContent: (@Composable RowScope.() -> Unit)? = null,
     centerContent: (@Composable BoxScope.() -> Unit)? = null,
     trailingContent: @Composable RowScope.() -> Unit = {},
-    applyStatusBarsPadding: Boolean? = null,
-    contentPadding: PaddingValues? = null,
-    backButtonStyle: LinguaQuestScreenTopBarBackButtonStyle? = null,
-    backButtonSize: Dp = 44.dp,
-    backButtonBackgroundColor: Color = Color.Unspecified,
-    backButtonContentColor: Color = Color.Unspecified,
-    backButtonIconSize: Dp = 24.dp
+    applyStatusBarsPadding: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
+    backButtonStyle: LinguaQuestScreenTopBarBackButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
+    backButtonSize: Dp = 40.dp,
+    backButtonBackgroundColor: Color = LocalLinguaQuestColors.current.whiteColor,
+    backButtonContentColor: Color = LocalLinguaQuestColors.current.OrangeActive,
+    backButtonIconSize: Dp = 18.dp
 ) {
-    val colors = LocalLinguaQuestColors.current
-    val effectiveTitleCentered = isTitleCentered ?: true
-    val effectiveContainerColor = if (containerColor == Color.Unspecified) Color.Transparent else containerColor
-    val effectiveTitleColor = if (titleColor == Color.Unspecified) colors.BrownText else titleColor
-    val effectiveTitleTextStyle = titleTextStyle
-        ?: MaterialTheme.typography.titleLarge.copy(
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
-        )
-    val effectiveShowDivider = showDivider ?: true
-    val effectiveDividerColor = if (dividerColor == Color.Unspecified) LinguaQuestTheme.colors.ProfileCardBorderColor else dividerColor
-    val effectiveDividerSpacing = dividerSpacing ?: 16.dp
-    val effectiveApplyStatusBarsPadding = applyStatusBarsPadding ?: true
-    val effectiveContentPadding = contentPadding ?: PaddingValues(horizontal = 22.dp, vertical = 0.dp)
-    val effectiveBackButtonStyle = backButtonStyle ?: LinguaQuestScreenTopBarBackButtonStyle.Circular
-    val effectiveBackButtonBackgroundColor = if (backButtonBackgroundColor == Color.Unspecified) colors.whiteColor else backButtonBackgroundColor
-    val effectiveBackButtonContentColor = if (backButtonContentColor == Color.Unspecified) colors.OrangeActive else backButtonContentColor
-
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(effectiveContainerColor)
+            .background(containerColor)
     ) {
         val barModifier = Modifier
             .fillMaxWidth()
-            .background(effectiveContainerColor)
+            .background(containerColor)
 
-        val paddedModifier = if (effectiveApplyStatusBarsPadding) {
-            barModifier.statusBarsPadding().padding(effectiveContentPadding)
+        val paddedModifier = if (applyStatusBarsPadding) {
+            barModifier.statusBarsPadding().padding(contentPadding)
         } else {
-            barModifier.padding(effectiveContentPadding)
+            barModifier.padding(contentPadding)
         }
 
-        if (effectiveTitleCentered) {
+        if (isTitleCentered) {
             Box(
                 modifier = paddedModifier,
                 contentAlignment = Alignment.Center
@@ -126,10 +111,10 @@ fun LinguaQuestScreenTopBar(
                         if (showBackButton) {
                             BackButton(
                                 onBackClicked = onBackClicked,
-                                style = effectiveBackButtonStyle,
+                                style = backButtonStyle,
                                 size = backButtonSize,
-                                backgroundColor = effectiveBackButtonBackgroundColor,
-                                contentColor = effectiveBackButtonContentColor,
+                                backgroundColor = backButtonBackgroundColor,
+                                contentColor = backButtonContentColor,
                                 iconSize = backButtonIconSize
                             )
                         }
@@ -152,8 +137,8 @@ fun LinguaQuestScreenTopBar(
                 } else if (title != null) {
                     Text(
                         text = title,
-                        style = effectiveTitleTextStyle,
-                        color = effectiveTitleColor,
+                        style = titleTextStyle,
+                        color = titleColor,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -179,10 +164,10 @@ fun LinguaQuestScreenTopBar(
                 if (showBackButton) {
                     BackButton(
                         onBackClicked = onBackClicked,
-                        style = effectiveBackButtonStyle,
+                        style = backButtonStyle,
                         size = backButtonSize,
-                        backgroundColor = effectiveBackButtonBackgroundColor,
-                        contentColor = effectiveBackButtonContentColor,
+                        backgroundColor = backButtonBackgroundColor,
+                        contentColor = backButtonContentColor,
                         iconSize = backButtonIconSize
                     )
                 }
@@ -194,8 +179,8 @@ fun LinguaQuestScreenTopBar(
                 if (title != null) {
                     Text(
                         text = title,
-                        style = effectiveTitleTextStyle,
-                        color = effectiveTitleColor,
+                        style = titleTextStyle,
+                        color = titleColor,
                         textAlign = TextAlign.Start,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -215,10 +200,10 @@ fun LinguaQuestScreenTopBar(
             }
         }
 
-        if (effectiveShowDivider) {
-            Spacer(modifier = Modifier.height(effectiveDividerSpacing))
+        if (showDivider) {
+            Spacer(modifier = Modifier.height(dividerSpacing))
             HorizontalDivider(
-                color = effectiveDividerColor,
+                color = dividerColor,
                 thickness = dividerThickness
             )
         }

@@ -36,7 +36,6 @@ import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
-import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
@@ -140,22 +139,7 @@ fun SettingContent(
         ) {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.settings_label),
-                onBackClicked = onBackClick,
-                isTitleCentered = true,
-                containerColor = Color.Transparent,
-                titleColor = LocalLinguaQuestColors.current.BrownText,
-                titleTextStyle = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                showDivider = true,
-                dividerSpacing = 16.dp,
-                contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
-                backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
-                backButtonSize = 40.dp,
-                backButtonBackgroundColor = LocalLinguaQuestColors.current.whiteColor,
-                backButtonContentColor = LocalLinguaQuestColors.current.OrangeActive,
-                backButtonIconSize = 18.dp
+                onBackClicked = onBackClick
             )
 
             Spacer(modifier = Modifier.height(10.dp))
