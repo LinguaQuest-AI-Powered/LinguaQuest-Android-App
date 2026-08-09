@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
                     _state.update { it.copy(isRefreshing = false) }
                 }
             }
-            is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
+            is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id, intent.world.totalLevels))
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
             HomeIntent.FabClicked -> _state.update { it.copy(isLanguageBottomSheetVisible = true) }
             HomeIntent.DismissLanguageBottomSheet -> _state.update { it.copy(isLanguageBottomSheetVisible = false) }
@@ -101,7 +101,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(isDailyRewardDialogVisible = false)
             }
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
-            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.targetWord))
+            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.totalLevels, intent.continueLevel.targetWord))
         }
     }
 

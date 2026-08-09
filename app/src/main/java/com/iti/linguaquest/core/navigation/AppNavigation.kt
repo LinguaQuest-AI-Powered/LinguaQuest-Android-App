@@ -397,6 +397,7 @@ fun AppNavigation(
                 entry<RootScreen.Map> { screen ->
                     MapScreen(
                         worldId = screen.worldId,
+                        totalLevels = screen.totalLevels,
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelId, levelOrder, targetWord ->
                             rootBackStack.navigateSingleTop(
@@ -544,8 +545,8 @@ fun AppNavigation(
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { worldId ->
-                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                        onNavigateToWorldDetails = { worldId, totalLevels ->
+                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
                         }
                     )
                 }

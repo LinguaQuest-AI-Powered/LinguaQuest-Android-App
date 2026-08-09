@@ -83,7 +83,7 @@ fun MapContent(
                 computeMapHeight(state.levels.size).coerceAtLeast(maxHeight)
             }
 
-            LaunchedEffect(state.currentLevelIndex, viewportHeightPx) {
+            LaunchedEffect(state.currentLevelIndex, viewportHeightPx, state.isRevealed) {
                 if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
                     val nodeTopYDp = nodePositions[state.currentLevelIndex].second
                     val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
@@ -93,7 +93,11 @@ fun MapContent(
                         .coerceAtLeast(0f)
                         .toInt()
 
-                    scrollState.animateScrollTo(scrollTarget)
+                    if (state.isRevealed) {
+                        scrollState.animateScrollTo(scrollTarget)
+                    }
+                } else if (!state.isRevealed && viewportHeightPx > 0) {
+                    scrollState.scrollTo(scrollState.maxValue)
                 }
             }
 
@@ -134,6 +138,8 @@ fun MapContent(
                                 offsetX = x,
                                 offsetY = y,
                                 isLastLevel = index == state.levels.lastIndex,
+                                isRevealed = state.isRevealed,
+                                index = index,
                                 onClick = { onLevelClick(level.levelId) }
                             )
                         }
@@ -141,7 +147,7 @@ fun MapContent(
                         // Add snow effect falling over the map
                         SnowEffect(modifier = Modifier.fillMaxSize())
 
-                        if (state.currentLevelIndex in nodePositions.indices) {
+                        if (state.isRevealed && state.currentLevelIndex in nodePositions.indices) {
                             val isLastLevel = state.currentLevelIndex == state.levels.lastIndex
                             val isLastLevelCompleted = isLastLevel && state.levels.getOrNull(state.currentLevelIndex)?.status == LevelStatus.COMPLETED
 

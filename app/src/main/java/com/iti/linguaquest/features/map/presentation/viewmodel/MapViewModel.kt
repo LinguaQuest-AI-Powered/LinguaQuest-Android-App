@@ -26,6 +26,7 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.onSuccess
 import com.iti.linguaquest.core.result.onFailure
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -58,6 +59,18 @@ class MapViewModel @Inject constructor(
             MapIntent.BackClicked -> sendEffect(MapEffect.NavigateBack)
             MapIntent.Retry -> loadLevels(_state.value.worldId, force = true)
         }
+    }
+
+    fun initPlaceholders(totalLevels: Int) {
+        if (_state.value.levels.isNotEmpty()) return
+        val placeholders = (1..totalLevels).map {
+            MapLevelUiModel(
+                levelNumber = it,
+                status = LevelStatus.PLACEHOLDER,
+                stars = 0
+            )
+        }
+        _state.update { it.copy(levels = placeholders, totalLevels = totalLevels) }
     }
 
     fun loadLevels(worldId: Int, force: Boolean = false) {
@@ -102,6 +115,9 @@ class MapViewModel @Inject constructor(
                         errorMessage = null
                     )
                 }
+                
+                delay(100)
+                _state.update { it.copy(isRevealed = true) }
             }.onFailure { error ->
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()
                     ?: UiText.StringResource(R.string.general_error)
@@ -122,6 +138,8 @@ class MapViewModel @Inject constructor(
                         onAction = { loadLevels(worldId, force = true) }
                     )
                 )
+
+                sendEffect(MapEffect.NavigateBack)
             }
         }
     }

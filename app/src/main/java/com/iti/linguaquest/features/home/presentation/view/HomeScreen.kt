@@ -78,10 +78,10 @@ import androidx.compose.ui.res.stringResource
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAllWorlds: () -> Unit,
-    onNavigateToWorldMap: (Int) -> Unit,
-    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, targetWord: String?) -> Unit,
+    onNavigateToWorldMap: (Int, Int) -> Unit = { _, _ -> },
+    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, totalLevels: Int, targetWord: String?) -> Unit,
     onWorldMapClick: () -> Unit = {},
-    onNavigateToAddLanguages: () -> Unit,
+    onNavigateToAddLanguages: () -> Unit = {},
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel(),
     myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
@@ -136,11 +136,11 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
+                is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId, effect.totalLevels)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
                 is HomeEffect.NavigateToContinueLevel -> {
-                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.targetWord?.asString(context))
+                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.totalLevels, effect.targetWord?.asString(context))
                 }
             }
         }

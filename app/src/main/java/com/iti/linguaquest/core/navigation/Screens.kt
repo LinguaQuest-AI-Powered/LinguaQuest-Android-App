@@ -52,7 +52,7 @@ sealed interface RootScreen : NavKey {
     data class GameFlow(val worldId: Int, val levelId: Int, val levelOrder: Int, val targetWord: String? = null) : RootScreen // UPDATED
 
     @Serializable
-    data class Map(val worldId: Int) : RootScreen
+    data class Map(val worldId: Int, val totalLevels: Int) : RootScreen
 
     @Serializable
     data class Details(val id: Int) : RootScreen

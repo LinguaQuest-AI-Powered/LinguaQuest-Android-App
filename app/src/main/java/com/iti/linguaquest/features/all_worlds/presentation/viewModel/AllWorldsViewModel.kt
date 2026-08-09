@@ -96,6 +96,7 @@ class AllWorldsViewModel @Inject constructor(
             },
             progress = (progressPercent ?: 0) / 100f,
             isCompleted = (completedLevels > 0 && completedLevels >= totalLevels) || (progressPercent ?: 0) >= 100,
+            totalLevels = totalLevels,
             unlockLevel = null
         )
     }
@@ -107,7 +108,7 @@ class AllWorldsViewModel @Inject constructor(
             }
 
             is AllWorldsIntent.OnWorldClicked -> {
-                emitEffect(AllWorldsEffect.NavigateToWorldDetails(intent.world.id))
+                emitEffect(AllWorldsEffect.NavigateToWorldDetails(intent.world.id, intent.world.totalLevels))
             }
 
             AllWorldsIntent.OnBackClicked -> {

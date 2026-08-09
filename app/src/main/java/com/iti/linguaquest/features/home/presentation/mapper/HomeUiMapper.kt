@@ -48,7 +48,8 @@ fun World.toUiWorldItem(): WorldItem = WorldItem(
         DomainDifficulty.HARD -> UiDifficulty.HARD
     },
     progress = progressPercent / 100f,
-    isCompleted = completedLevels >= totalLevels
+    isCompleted = completedLevels >= totalLevels,
+    totalLevels = totalLevels
 )
 
 fun HomeSummary.toContinueLevelUi(): ContinueLevelUi? {
