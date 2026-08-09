@@ -15,7 +15,7 @@ data class ContinueLevelUi(
 )
 
 data class HomeState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val xp: Int = 0,
     val coins: Int = 0,
     val languageProgress: LanguageProgressUi? = null,

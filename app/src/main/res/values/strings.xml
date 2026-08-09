@@ -834,6 +834,7 @@
     <string name="new_notification">New Notification</string>
     <string name="start_hunting">Start Hunting</string>
     <string name="mystery_world">Mystery World</string>
+    <string name="word_capture_progress_format">%1$s of %2$s</string>
 
     <string name="get_a_hint_title">Get a hint</string>
     <string name="change_word_hint">You can change the word if you are stuck</string>

@@ -55,8 +55,6 @@ fun AchievementContent(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var selectedAchievement by remember { mutableStateOf<AchievementItem?>(null) }
-    val animatedItemIds = remember { mutableSetOf<Int>() }
-
     val gridState = rememberLazyGridState()
 
     val filteredAchievements = when (selectedTab) {
@@ -138,7 +136,6 @@ fun AchievementContent(
                             item = item,
                             index = index,
                             onClick = { selectedAchievement = item },
-                            animatedIds = animatedItemIds,
                             modifier = Modifier.padding(
                                 start = if (index % 2 == 0) 16.dp else 0.dp,
                                 end = if (index % 2 == 1) 16.dp else 0.dp

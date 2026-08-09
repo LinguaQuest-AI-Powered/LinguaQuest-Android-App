@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -34,7 +35,7 @@ fun AllWorldsGrid(
                 world = world,
                 onClick = { onWorldClick(world) },
                 imageShape = RoundedCornerShape(percent = 50),
-                modifier = Modifier.width(240.dp).height(220.dp)
+                modifier = Modifier.width(240.dp).heightIn(min = 220.dp)
             )
         }
     }

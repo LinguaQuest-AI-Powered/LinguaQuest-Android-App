@@ -108,9 +108,13 @@ class HomeViewModel @Inject constructor(
     private fun observeLocalCache() {
         viewModelScope.launch {
             getHomeSummaryUseCase.observe().collect { summary ->
-                summary ?: return@collect
+                if (summary == null) {
+                    _state.update { it.copy(isLoading = false) }
+                    return@collect
+                }
                 _state.update { current ->
                     current.copy(
+                        isLoading = false,
                         xp = summary.xp,
                         coins = summary.coins,
                         languageProgress = summary.toLanguageProgressUi(),
@@ -134,7 +138,7 @@ class HomeViewModel @Inject constructor(
                 val dailyRewardResult = dailyRewardDeferred.await()
                 walletDeferred?.await()
 
-                _state.update { it.copy(isRefreshing = false) }
+                _state.update { it.copy(isRefreshing = false, isLoading = false) }
 
                 if (homeSummaryResult is LinguaQuestResult.Success) {
                     val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
@@ -193,6 +197,7 @@ class HomeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isRefreshing = false,
+                        isLoading = false,
                         hasError = emptyWorlds,
                         errorMessage = if (emptyWorlds) errorUiText else null
                     )
