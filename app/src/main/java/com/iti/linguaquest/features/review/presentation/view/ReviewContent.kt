@@ -17,19 +17,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBarBackButtonStyle
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.review.presentation.contract.ReviewIntent
 import com.iti.linguaquest.features.review.presentation.contract.ReviewState
-import com.iti.linguaquest.features.review.presentation.view.components.ReviewTopBar
 import com.iti.linguaquest.features.review.presentation.view.components.ReviewStoryScene
 import com.iti.linguaquest.features.review.presentation.view.model.ReviewSectionIds
 import kotlin.time.Duration.Companion.milliseconds
@@ -72,9 +76,24 @@ fun ReviewStoryContent(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
-                ReviewTopBar(
+                LinguaQuestScreenTopBar(
                     title = stringResource(R.string.review_screen_title),
-                    onBack = { onIntent(ReviewIntent.BackClicked) }
+                    onBackClicked = { onIntent(ReviewIntent.BackClicked) },
+                    isTitleCentered = true,
+                    containerColor = Color.Transparent,
+                    titleColor = LinguaQuestTheme.colors.BrownText,
+                    titleTextStyle = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    showDivider = true,
+                    dividerSpacing = 16.dp,
+                    contentPadding = PaddingValues(horizontal = 22.dp, vertical = 0.dp),
+                    backButtonStyle = LinguaQuestScreenTopBarBackButtonStyle.Circular,
+                    backButtonSize = 40.dp,
+                    backButtonBackgroundColor = LinguaQuestTheme.colors.whiteColor,
+                    backButtonContentColor = LinguaQuestTheme.colors.OrangeActive,
+                    backButtonIconSize = 18.dp
                 )
             }
         ) { paddingValues ->

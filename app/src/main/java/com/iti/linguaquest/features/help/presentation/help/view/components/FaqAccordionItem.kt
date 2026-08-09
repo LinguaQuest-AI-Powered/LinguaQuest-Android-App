@@ -27,8 +27,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.help.presentation.help.contract.FaqItem
 
@@ -76,9 +76,8 @@ fun FaqAccordionItem(
             ) {
                 Text(
                     text = question,
-                    style = AppTextStyles.LessonTitle.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
@@ -94,7 +93,8 @@ fun FaqAccordionItem(
             if (isExpanded) {
                 Text(
                     text = answer,
-                    style = AppTextStyles.Definition,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
                     modifier = Modifier.padding(top = 10.dp, end = 24.dp)
                 )

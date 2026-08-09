@@ -340,6 +340,9 @@
     <string name="contact_intro_title">Let\'s solve it together</string>
     <string name="contact_intro_subtitle">Send us a quick message and include what happened, so we can help you faster.</string>
     <string name="contact_email_label">EMAIL US</string>
+    <string name="help_support_coming_soon_title">Coming Soon</string>
+    <string name="help_support_coming_soon_message">This support feature will be available soon.</string>
+    <string name="help_support_coming_soon_action">OK</string>
     <string name="contact_section_1_title">App issues</string>
     <string name="contact_section_1_desc">If something crashes, freezes, or won\'t load, tell us what you were doing before it happened.</string>
     <string name="contact_section_2_title">Account &amp; progress</string>
