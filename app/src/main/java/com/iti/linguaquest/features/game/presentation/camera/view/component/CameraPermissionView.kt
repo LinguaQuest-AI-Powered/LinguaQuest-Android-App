@@ -69,7 +69,9 @@ fun CameraPermissionView(
         Spacer(modifier = Modifier.height(32.dp))
 
         AppButton3D(
-            text = if (status == PermissionStatus.PERMANENTLY_DENIED) stringResource(id = R.string.open_settings) else stringResource(id = R.string.grant_permission),
+            text = if (status == PermissionStatus.PERMANENTLY_DENIED) stringResource(id = R.string.open_settings) else stringResource(
+                id = R.string.grant_permission
+            ),
             onClick = onGrantClicked,
             variant = ButtonVariant.PRIMARY,
             modifier = Modifier.padding(horizontal = 32.dp)

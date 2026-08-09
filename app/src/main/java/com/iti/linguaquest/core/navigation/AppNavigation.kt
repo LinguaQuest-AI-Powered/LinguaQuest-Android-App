@@ -83,6 +83,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashView
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
+import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyMissionCameraScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
@@ -91,8 +92,10 @@ import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScree
 @Composable
 fun AppNavigation(
     openHomeRequested: Boolean = false,
+    openDailyMissionRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
+    onOpenDailyMissionHandled: () -> Unit = {},
     onOpenLockScreenWordHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
@@ -379,7 +382,12 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Main> {
-                    MainScreen(rootBackStack, viewModel = mainViewModel)
+                    MainScreen(
+                        rootBackStack = rootBackStack,
+                        openDailyMissionRequested = openDailyMissionRequested,
+                        onOpenDailyMissionHandled = onOpenDailyMissionHandled,
+                        viewModel = mainViewModel
+                    )
                 }
 
                 entry<RootScreen.Notification> {
@@ -439,6 +447,14 @@ fun AppNavigation(
                 entry<RootScreen.MindReader> {
                     MindReaderScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() }
+                    )
+                }
+
+                entry<RootScreen.DailyMissionCamera> { screen ->
+                    DailyMissionCameraScreen(
+                        word = screen.word,
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        snackbarController = globalUiHostViewModel.snackbarController
                     )
                 }
 

@@ -188,10 +188,22 @@ fun ProfileContent(
                 }
             }
         }
+
         if (state.nearbyLeaderboard.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.leaderboard_title), onViewAllLeaderboardClick) }
-            items(state.nearbyLeaderboard, key = { it.rank }) { LeaderboardRow(it) }
+            item {
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    SectionHeader(
+                        title = stringResource(R.string.leaderboard_title),
+                        onViewAllClick = onViewAllLeaderboardClick
+                    )
+                }
+            }
+            items(state.nearbyLeaderboard, key = { it.rank }) { entry ->
+                LeaderboardRow(
+                    entry = entry,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }
     }
-
 }

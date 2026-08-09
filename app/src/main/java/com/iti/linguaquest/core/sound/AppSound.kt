@@ -16,5 +16,7 @@ enum class AppSound(val resId: Int, val volume: Float = 1.0f) {
 
     Notification(R.raw.notification, 0.6f),
 
-    NotificationDisappear(R.raw.notification_disappear, 0.6f)
+    NotificationDisappear(R.raw.notification_disappear, 0.6f),
+    GettingWord(R.raw.waiting_word, 0.6f),
+    FoundWord(R.raw.getting_word, 0.6f)
 }
