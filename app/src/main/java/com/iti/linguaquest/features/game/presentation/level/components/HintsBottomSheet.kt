@@ -24,7 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.CircularProgressIndicator
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.domain.model.GameCost
 import androidx.compose.material3.MaterialTheme
@@ -195,10 +195,8 @@ private fun HintItem(
             contentAlignment = Alignment.Center
         ) {
             if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    color = LinguaQuestTheme.colors.whiteColor,
-                    strokeWidth = 2.dp
+                LingoSpinningIcon(
+                    size = 16.dp
                 )
             } else {
                 Text(

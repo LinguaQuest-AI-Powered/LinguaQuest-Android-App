@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,9 +80,8 @@ fun RoleplayListScreen(
                 .padding(paddingValues)
         ) {
             if (state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary
+                LingoSpinningIcon(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             } else if (state.scenarios.isEmpty()) {
                 Text(

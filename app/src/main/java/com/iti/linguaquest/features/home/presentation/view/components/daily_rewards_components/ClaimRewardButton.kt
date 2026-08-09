@@ -12,7 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CardGiftcard
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,10 +52,8 @@ fun ClaimRewardButton(isClaiming: Boolean = false, onClaimClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             if (isClaiming) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = LinguaQuestTheme.colors.whiteColor,
-                    strokeWidth = 2.dp
+                LingoSpinningIcon(
+                    size = 20.dp
                 )
             } else {
                 Icon(
