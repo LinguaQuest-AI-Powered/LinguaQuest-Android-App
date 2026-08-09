@@ -47,6 +47,7 @@ class MainViewModel @Inject constructor(
                 .collectLatest { isLoggedIn ->
                 if (isLoggedIn) {
                     refreshWallet()
+                    refreshUnreadCount()
                 }
             }
         }

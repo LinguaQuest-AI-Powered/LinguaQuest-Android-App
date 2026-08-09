@@ -273,6 +273,7 @@ fun HomeScreen(
                     cycleLength = state.dailyReward?.cycleLength ?: 5,
                     rewardAmount = state.dailyReward?.rewardCoins ?: 0,
                     rewardXp = state.dailyReward?.rewardXp,
+                    isClaiming = state.isClaimingReward,
                     onClaimClick = {
                         soundPlayer.play(AppSound.COIN)
                         viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked)

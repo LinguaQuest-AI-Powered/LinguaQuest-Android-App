@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Alignment
@@ -59,13 +60,14 @@ fun DailyRewardTimeline(
     val nodeSpacing = 16.dp
     val density = LocalDensity.current
 
+    var containerWidth by remember { mutableStateOf(0) }
     var startAnimation by remember { mutableStateOf(false) }
-    LaunchedEffect(safeCurrentDay, totalNodes) {
+    LaunchedEffect(safeCurrentDay, totalNodes, containerWidth) {
         startAnimation = true
-        if (totalNodes > 1 && safeCurrentDay > 1) {
+        if (totalNodes > 1 && safeCurrentDay > 1 && containerWidth > 0) {
             val itemWidthPx = with(density) { (nodeWidth + nodeSpacing).toPx() }
             val targetPx = (safeCurrentDay - 1) * itemWidthPx
-            val halfViewportPx = with(density) { 140.dp.toPx() }
+            val halfViewportPx = containerWidth / 2f
             val scrollToPx = (targetPx - halfViewportPx + itemWidthPx / 2f).coerceAtLeast(0f)
             scrollState.animateScrollTo(scrollToPx.toInt(), animationSpec = tween(800, easing = FastOutSlowInEasing))
         }
@@ -81,6 +83,7 @@ fun DailyRewardTimeline(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .onSizeChanged { containerWidth = it.width }
             .horizontalScroll(scrollState),
         contentAlignment = Alignment.TopStart
     ) {

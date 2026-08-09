@@ -20,6 +20,7 @@ fun DailyRewardCard(
     cycleLength: Int = 5,
     rewardAmount: Int = 50,
     rewardXp: Int? = null,
+    isClaiming: Boolean = false,
     onClaimClick: () -> Unit = {}
 ) {
     val gradientBrush = Brush.verticalGradient(
@@ -62,7 +63,7 @@ fun DailyRewardCard(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                ClaimRewardButton(onClaimClick = onClaimClick)
+                ClaimRewardButton(isClaiming = isClaiming, onClaimClick = onClaimClick)
             }
         }
     }

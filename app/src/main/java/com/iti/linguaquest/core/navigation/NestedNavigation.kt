@@ -52,12 +52,6 @@ fun MainScreen(
     val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
 
 
-    val currentRootScreen = rootBackStack.lastOrNull()
-    LaunchedEffect(currentRootScreen) {
-        if (currentRootScreen == RootScreen.Main) {
-            viewModel.refreshUnreadCount()
-        }
-    }
 
     DisposableEffect(Unit) {
         onDispose { SharedBottomBarState.heightPx = 0 }

@@ -140,7 +140,7 @@ class HomeViewModel @Inject constructor(
                     val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                     val shouldShowBanner = dailyRewardUi != null &&
                             !dailyRewardUi.claimedToday &&
-                            !DailyRewardSessionState.hasAutoShownThisSession
+                            (!DailyRewardSessionState.hasAutoShownThisSession || isPullToRefresh)
 
                     if (shouldShowBanner) DailyRewardSessionState.hasAutoShownThisSession = true
 
@@ -203,10 +203,12 @@ class HomeViewModel @Inject constructor(
 
     private fun claimDailyReward() {
         viewModelScope.launch {
+            _state.update { it.copy(isClaimingReward = true) }
             when (val result = claimDailyRewardUseCase()) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
+                            isClaimingReward = false,
                             isDailyRewardDialogVisible = false,
                             dailyReward = it.dailyReward?.copy(
                                 claimedToday = true,
@@ -225,7 +227,7 @@ class HomeViewModel @Inject constructor(
                     refreshWalletUseCase()
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isDailyRewardDialogVisible = false) }
+                    _state.update { it.copy(isDailyRewardDialogVisible = false, isClaimingReward = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(message = result.error.toUiText(), type = SnackbarType.ERROR)
                     )

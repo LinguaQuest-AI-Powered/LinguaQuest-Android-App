@@ -28,5 +28,6 @@ data class HomeState(
     val isDailyRewardDialogVisible: Boolean = false,
     val isDailyRewardBannerVisible: Boolean = false,
     val isRefreshing: Boolean = false,
-    val continueLevel: ContinueLevelUi? = null
+    val continueLevel: ContinueLevelUi? = null,
+    val isClaimingReward: Boolean = false
 )
