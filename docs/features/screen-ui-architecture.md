@@ -48,9 +48,10 @@ LinguaQuest features a custom animation utility built to eliminate boilerplate w
 In your content composable, initialize the animation state with the total number of items you plan to animate.
 ```kotlin
 // count = number of items to stagger
-val animationState = rememberStaggeredAnimationState(count = 3)
+val animationState = rememberStaggeredAnimationState(count = items.size)
 ```
 > **Note:** `rememberStaggeredAnimationState` uses `rememberSaveable` under the hood. This ensures animations only play on the *initial* mount and will not annoyingly replay if the user rotates their phone.
+> **Dynamic Lists:** The state scales dynamically. If your list size increases (e.g., after a pull-to-refresh), the new items will automatically trigger their stagger animation while existing items remain visible.
 
 **2. Wrap Items in `StaggeredAnimatedItem`:**
 Wrap each distinct UI element in the `StaggeredAnimatedItem` wrapper. Provide it an `index` (0, 1, 2...) and specify the entrance animation type from `LingoEntranceAnimations`.
@@ -72,38 +73,22 @@ StaggeredAnimatedItem(
 }
 ```
 
----
-
 ## 3. Resolving Crossfade Recomposition Issues (The "Double Animation" Bug)
 
 When managing Pull-to-Refresh with a `Crossfade`, a common bug occurs where staggered animations replay when a background refresh completes. 
 
 **The Cause:** `Crossfade` rebuilds its internal composition from scratch whenever the `targetState` object changes, causing states like `rememberStaggeredAnimationState` to reset.
 
-**The Solution:** You must group `Loaded` and `Refreshing` under the exact same target state identifier so `Crossfade` does not trigger a transition.
+**The Solution:** The `StatefulContentContainer` shared component abstracts this away completely. Under the hood, it groups `Loaded` and `Refreshing` under the exact same target state identifier so `Crossfade` does not trigger a transition.
 
 **Correct Implementation:**
+Use `StatefulContentContainer` which inherently handles this fix:
 ```kotlin
-// Map DataStatus to an integer or simple Enum where Loaded and Refreshing share the same value
-val layoutTarget = when (state.dataStatus) {
-    is DataStatus.Loading -> 0
-    is DataStatus.Error -> 1
-    is DataStatus.Loaded, is DataStatus.Refreshing -> 2
-}
-
-Crossfade(targetState = layoutTarget) { target ->
-    when (target) {
-        0 -> LoadingView(...)
-        1 -> ErrorView(...) // Extract error message explicitly
-        2 -> {
-            PullToRefreshBox(
-                // Read isRefreshing directly from parent state, NOT the target!
-                isRefreshing = state.dataStatus is DataStatus.Refreshing,
-                ...
-            ) {
-                MainContent(...)
-            }
-        }
-    }
+StatefulContentContainer(
+    dataStatus = state.dataStatus,
+    onRetry = { ... },
+    onRefresh = { ... }
+) {
+    MainContent(...)
 }
 ```

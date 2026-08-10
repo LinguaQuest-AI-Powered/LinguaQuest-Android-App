@@ -13,6 +13,7 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.RefreshGalleryUseCase
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
@@ -76,12 +77,11 @@ class GalleryViewModel @Inject constructor(
 
                 _state.update { current ->
                     current.copy(
-                        isLoading = false,
+                        dataStatus = if (words.isNotEmpty() && current.dataStatus is DataStatus.Loading) DataStatus.Loaded else current.dataStatus,
                         words = words,
                         filteredWords = filteredWords,
                         categories = categories,
-                        selectedCategory = selectedCategory,
-                        errorMessage = if (words.isNotEmpty()) null else current.errorMessage
+                        selectedCategory = selectedCategory
                     )
                 }
             }
@@ -100,27 +100,27 @@ class GalleryViewModel @Inject constructor(
     private fun refreshWords(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
             val hasCache = _state.value.words.isNotEmpty()
+            
             _state.update {
                 it.copy(
-                    isRefreshing = isPullToRefresh,
-                    errorMessage = if (hasCache) null else it.errorMessage
+                    dataStatus = if (isPullToRefresh) DataStatus.Refreshing else if (hasCache) DataStatus.Loaded else DataStatus.Loading
                 )
             }
 
             when (val result = refreshGalleryUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false, isRefreshing = false, errorMessage = null) }
+                    _state.update { it.copy(dataStatus = DataStatus.Loaded) }
                 }
 
                 is LinguaQuestResult.Failure -> {
                     val dataError = result.error as? LinguaQuestDataError
                     val stillHasCache = _state.value.words.isNotEmpty()
                     val isOfflineError = dataError == LinguaQuestDataError.Remote.NO_INTERNET
+                    val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
+                    
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            errorMessage = if (stillHasCache || isOfflineError) null else dataError?.toUiText()
+                            dataStatus = if (stillHasCache || isOfflineError) DataStatus.Loaded else DataStatus.Error(errorUiText)
                         )
                     }
 
@@ -134,7 +134,6 @@ class GalleryViewModel @Inject constructor(
                             )
                         )
                     } else if (!isOfflineError && !stillHasCache) {
-                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
                         sendEffect(
                             GalleryEffect.ShowError(
                                 message = errorUiText,

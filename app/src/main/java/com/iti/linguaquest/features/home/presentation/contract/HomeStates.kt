@@ -5,12 +5,7 @@ import com.iti.linguaquest.features.home.presentation.mapper.LanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 
-sealed interface HomeDataStatus {
-    data object Loading : HomeDataStatus
-    data object Loaded : HomeDataStatus
-    data object Refreshing : HomeDataStatus
-    data class Error(val message: UiText) : HomeDataStatus
-}
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 
 data class ContinueLevelUi(
     val worldId: Int,
@@ -22,7 +17,7 @@ data class ContinueLevelUi(
 )
 
 data class HomeState(
-    val dataStatus: HomeDataStatus = HomeDataStatus.Loading,
+    val dataStatus: DataStatus = DataStatus.Loading,
     val xp: Int = 0,
     val coins: Int = 0,
     val languageProgress: LanguageProgressUi? = null,

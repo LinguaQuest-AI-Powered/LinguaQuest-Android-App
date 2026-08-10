@@ -18,7 +18,7 @@ import com.iti.linguaquest.features.profile.domain.usecase.RefreshProfileSummary
 import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UploadAvatarUseCase
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.profile.presentation.contract.ProfileDataStatus
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileUiState
@@ -80,7 +80,7 @@ class ProfileViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             profile = cached.toProfileState(),
-                            dataStatus = if (it.dataStatus is ProfileDataStatus.Loading) ProfileDataStatus.Loaded else it.dataStatus
+                            dataStatus = if (it.dataStatus is DataStatus.Loading) DataStatus.Loaded else it.dataStatus
                         )
                     }
                 }
@@ -93,9 +93,9 @@ class ProfileViewModel @Inject constructor(
             ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
             ProfileIntent.Refresh -> {
                 val now = System.currentTimeMillis()
-                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus !is ProfileDataStatus.Refreshing) {
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus !is DataStatus.Refreshing) {
                     lastRefreshTime = now
-                    _state.update { it.copy(dataStatus = ProfileDataStatus.Refreshing) }
+                    _state.update { it.copy(dataStatus = DataStatus.Refreshing) }
                     refreshProfile(isPullToRefresh = true)
                 }
             }
@@ -111,7 +111,7 @@ class ProfileViewModel @Inject constructor(
             if (!isPullToRefresh) {
                 val hasCachedData = _state.value.hasData || getCachedProfileUseCase().firstOrNull() != null
                 _state.update {
-                    it.copy(dataStatus = if (hasCachedData) ProfileDataStatus.Loaded else ProfileDataStatus.Loading)
+                    it.copy(dataStatus = if (hasCachedData) DataStatus.Loaded else DataStatus.Loading)
                 }
             }
 
@@ -124,7 +124,7 @@ class ProfileViewModel @Inject constructor(
 
                 when (result) {
                     is LinguaQuestResult.Success -> {
-                        _state.update { it.copy(dataStatus = ProfileDataStatus.Loaded) }
+                        _state.update { it.copy(dataStatus = DataStatus.Loaded) }
                     }
 
                     is LinguaQuestResult.Failure -> {
@@ -135,7 +135,7 @@ class ProfileViewModel @Inject constructor(
 
                         _state.update {
                             it.copy(
-                                dataStatus = if (stillHasCache) ProfileDataStatus.Loaded else ProfileDataStatus.Error(errorUiText)
+                                dataStatus = if (stillHasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
                             )
                         }
 
@@ -167,7 +167,7 @@ class ProfileViewModel @Inject constructor(
                 val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        dataStatus = if (stillHasCache) ProfileDataStatus.Loaded else ProfileDataStatus.Error(errorUiText)
+                        dataStatus = if (stillHasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
                     )
                 }
             }

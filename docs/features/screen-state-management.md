@@ -1,6 +1,6 @@
 # Screen State Management (DataStatus Pattern)
 
-This document outlines the standard pattern used in LinguaQuest for managing the data-fetching and UI state of a screen. This pattern was pioneered on the Home screen and serves as the architectural standard for all complex data-driven screens going forward.
+This document outlines the standard pattern used in LinguaQuest for managing the data-fetching and UI state of a screen. This pattern was pioneered on the Home screen and serves as the architectural standard for all complex data-driven screens going forward, including Home, Gallery, and Profile tabs.
 
 ## The Problem with Booleans
 
@@ -15,7 +15,7 @@ To solve this, we model the screen's fundamental data-fetching status using a si
 
 ### 1. The Sealed Interface
 
-Define a dedicated status interface in your feature's contract file (e.g., `HomeStates.kt`).
+Define a dedicated status interface. It is located at `core/sharedComponents/state/DataStatus.kt`.
 
 ```kotlin
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -82,42 +82,22 @@ The ViewModel no longer toggles boolean flags. Instead, it transitions explicitl
 }
 ```
 
-### 4. UI Layer (`when` statements)
+### 4. UI Layer (`StatefulContentContainer`)
 
 The Jetpack Compose UI code becomes completely declarative and mutually exclusive. You no longer need to check `!hasError`. 
 
-The root of your screen uses a `Crossfade` (or `AnimatedContent`) driven by `state.dataStatus`, branching with a `when` statement:
+The root of your screen uses the unified `StatefulContentContainer` which abstracts away the `Crossfade`, `LoadingView`, `ErrorView`, and `PullToRefreshBox` boilerplate:
 
 ```kotlin
-Crossfade(
-    targetState = state.dataStatus,
+StatefulContentContainer(
+    dataStatus = state.dataStatus,
+    onRetry = { viewModel.onIntent(Intent.Retry) },
+    onRefresh = { viewModel.onIntent(Intent.Refresh) },
     modifier = Modifier.fillMaxSize()
-) { dataStatus ->
-    when (dataStatus) {
-        // 1. Full Screen Loading
-        is DataStatus.Loading -> {
-            LoadingView(...)
-        }
-        
-        // 2. Full Screen Error (No Cache)
-        is DataStatus.Error -> {
-            ErrorView(
-                message = dataStatus.message,
-                onRetry = { viewModel.onIntent(Intent.Retry) }
-            )
-        }
-        
-        // 3. Content is visible (either fully loaded or refreshing in background)
-        is DataStatus.Loaded, is DataStatus.Refreshing -> {
-            PullToRefreshBox(
-                isRefreshing = dataStatus is DataStatus.Refreshing,
-                onRefresh = { viewModel.onIntent(Intent.Refresh) }
-            ) {
-                // Main Screen Content Composable
-                MainContent(state = state)
-            }
-        }
-    }
+) {
+    // Main Screen Content Composable
+    // This block is only executed for DataStatus.Loaded or DataStatus.Refreshing
+    MainContent(state = state)
 }
 
 // Any Floating Action Buttons or overlays should explicitly check the status:

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +41,7 @@ import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
@@ -93,7 +93,7 @@ fun GalleryScreen(
         }
     }
 
-    val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
+    val isEmpty = !state.hasData
 
     LaunchedEffect(isEmpty) {
         SharedBackgroundState.showBackground = true
@@ -102,8 +102,9 @@ fun GalleryScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
+        StatefulContentContainer(
+            dataStatus = state.dataStatus,
+            onRetry = { viewModel.onIntent(GalleryIntent.LoadWords) },
             onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
             modifier = Modifier.fillMaxSize()
         ) {
@@ -143,7 +144,6 @@ fun GalleryScreen(
 
                 GalleryContent(
                     state = state,
-                    isOnline = isOnline,
                     onIntent = viewModel::onIntent,
                     onWordClick = { wordId: Int, anchor: Rect ->
                         guardOnline(anchor) {

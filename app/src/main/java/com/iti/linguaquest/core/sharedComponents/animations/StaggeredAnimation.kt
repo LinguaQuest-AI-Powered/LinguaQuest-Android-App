@@ -13,14 +13,22 @@ import kotlinx.coroutines.delay
 
 @Stable
 class StaggeredAnimationState(initialVisibleState: List<Boolean>) {
-    private val visibilityStates = initialVisibleState.map { mutableStateOf(it) }
+    private val visibilityStates = initialVisibleState.map { mutableStateOf(it) }.toMutableList()
     
     fun isVisible(index: Int): Boolean {
-        return visibilityStates.getOrNull(index)?.value ?: false
+        ensureCapacity(index)
+        return visibilityStates[index].value
     }
     
     internal fun setVisible(index: Int, visible: Boolean) {
-        visibilityStates.getOrNull(index)?.value = visible
+        ensureCapacity(index)
+        visibilityStates[index].value = visible
+    }
+
+    private fun ensureCapacity(index: Int) {
+        while (visibilityStates.size <= index) {
+            visibilityStates.add(mutableStateOf(false))
+        }
     }
 
     internal fun getStates(): List<Boolean> = visibilityStates.map { it.value }
@@ -44,13 +52,22 @@ fun rememberStaggeredAnimationState(
     }
 
     LaunchedEffect(count, initialDelayMs, staggerDelayMs) {
-        if (state.getStates().all { it }) return@LaunchedEffect
+        var allVisible = true
+        for (i in 0 until count) {
+            if (!state.isVisible(i)) {
+                allVisible = false
+                break
+            }
+        }
+        if (allVisible) return@LaunchedEffect
 
         delay(initialDelayMs)
         for (i in 0 until count) {
-            state.setVisible(i, true)
-            if (i < count - 1) {
-                delay(staggerDelayMs)
+            if (!state.isVisible(i)) {
+                state.setVisible(i, true)
+                if (i < count - 1) {
+                    delay(staggerDelayMs)
+                }
             }
         }
     }

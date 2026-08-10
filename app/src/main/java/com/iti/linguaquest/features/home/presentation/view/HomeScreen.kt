@@ -28,7 +28,8 @@ import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
-import com.iti.linguaquest.features.home.presentation.contract.HomeDataStatus
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
@@ -150,60 +151,37 @@ fun HomeScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
 
-        val layoutTarget = when (state.dataStatus) {
-            is HomeDataStatus.Loading -> 0
-            is HomeDataStatus.Error -> 1
-            is HomeDataStatus.Loaded, is HomeDataStatus.Refreshing -> 2
-        }
-
-        Crossfade(
-            targetState = layoutTarget,
-            label = "HomeDataStatusCrossfade",
-            modifier = Modifier.fillMaxSize()
-        ) { target ->
-            when (target) {
-                0 -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        LoadingView(
-                            message = stringResource(R.string.loading)
-                        )
-                    }
-                }
-                1 -> {
-                    val message = (state.dataStatus as? HomeDataStatus.Error)?.message 
-                        ?: UiText.StringResource(R.string.error_generic)
-                    ErrorView(
-                        message = message,
-                        onRetry = { viewModel.onIntent(HomeIntent.Retry) }
+        StatefulContentContainer(
+            dataStatus = state.dataStatus,
+            onRetry = { viewModel.onIntent(HomeIntent.Retry) },
+            onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
+            modifier = Modifier.fillMaxSize(),
+            loadingContent = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LoadingView(
+                        message = stringResource(R.string.loading)
                     )
                 }
-                2 -> {
-                    PullToRefreshBox(
-                        isRefreshing = state.dataStatus is HomeDataStatus.Refreshing,
-                        onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        HomeContent(
-                            state = state,
-                            onSeeMoreClick = { anchor ->
-                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
-                            },
-                            onWorldClick = { world, anchor ->
-                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
-                            },
-                            onContinueLevelClick = { level, anchor ->
-                                guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                            }
-                        )
-                    }
-                }
             }
+        ) {
+            HomeContent(
+                state = state,
+                onSeeMoreClick = { anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.SeeMoreWorldsClicked) }
+                },
+                onWorldClick = { world, anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.WorldClicked(world)) }
+                },
+                onContinueLevelClick = { level, anchor ->
+                    guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
+                }
+            )
         }
 
-        if (state.dataStatus is HomeDataStatus.Loaded || state.dataStatus is HomeDataStatus.Refreshing) {
+        if (state.dataStatus is DataStatus.Loaded || state.dataStatus is DataStatus.Refreshing) {
             HomeFabs(
                 onDailyMissionClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
                 onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },

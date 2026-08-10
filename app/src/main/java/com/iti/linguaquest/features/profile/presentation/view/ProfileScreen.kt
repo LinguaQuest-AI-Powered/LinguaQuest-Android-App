@@ -28,7 +28,8 @@ import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.utils.createImageCaptureUri
-import com.iti.linguaquest.features.profile.presentation.contract.ProfileDataStatus
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.view.components.ProfileContent
@@ -89,54 +90,31 @@ fun ProfileScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
 
-        val layoutTarget = when (uiState.dataStatus) {
-            is ProfileDataStatus.Loading -> 0
-            is ProfileDataStatus.Error -> 1
-            is ProfileDataStatus.Loaded, is ProfileDataStatus.Refreshing -> 2
-        }
-
-        Crossfade(
-            targetState = layoutTarget,
-            label = "ProfileDataStatusCrossfade",
-            modifier = Modifier.fillMaxSize()
-        ) { target ->
-            when (target) {
-                0 -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        LoadingView(
-                            message = stringResource(R.string.loading)
-                        )
-                    }
-                }
-                1 -> {
-                    val message = (uiState.dataStatus as? ProfileDataStatus.Error)?.message 
-                        ?: UiText.StringResource(R.string.error_generic)
-                    ErrorView(
-                        message = message,
-                        onRetry = { viewModel.onIntent(ProfileIntent.Refresh) }
+        StatefulContentContainer(
+            dataStatus = uiState.dataStatus,
+            onRetry = { viewModel.onIntent(ProfileIntent.Refresh) },
+            onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
+            modifier = Modifier.fillMaxSize(),
+            loadingContent = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LoadingView(
+                        message = stringResource(R.string.loading)
                     )
                 }
-                2 -> {
-                    PullToRefreshBox(
-                        isRefreshing = uiState.dataStatus is ProfileDataStatus.Refreshing,
-                        onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        ProfileContent(
-                            state = uiState.profile,
-                            isAvatarUploading = uiState.isAvatarUploading,
-                            onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
-                            onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
-                            onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
-                            onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
             }
+        ) {
+            ProfileContent(
+                state = uiState.profile,
+                isAvatarUploading = uiState.isAvatarUploading,
+                onSettingsClick = { viewModel.onIntent(ProfileIntent.SettingsClicked) },
+                onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
+                onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
+                onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 

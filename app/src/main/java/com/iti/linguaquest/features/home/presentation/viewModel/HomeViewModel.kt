@@ -18,7 +18,7 @@ import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import com.iti.linguaquest.features.home.presentation.contract.HomeDataStatus
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
@@ -77,14 +77,14 @@ class HomeViewModel @Inject constructor(
         when (intent) {
             HomeIntent.LoadHome -> refreshFromRemote()
             HomeIntent.Retry -> {
-                _state.update { it.copy(dataStatus = HomeDataStatus.Loading) }
+                _state.update { it.copy(dataStatus = DataStatus.Loading) }
                 refreshFromRemote()
             }
             HomeIntent.Refresh -> {
                 val now = System.currentTimeMillis()
-                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus != HomeDataStatus.Refreshing) {
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus != DataStatus.Refreshing) {
                     lastRefreshTime = now
-                    _state.update { it.copy(dataStatus = HomeDataStatus.Refreshing) }
+                    _state.update { it.copy(dataStatus = DataStatus.Refreshing) }
                     refreshFromRemote(isPullToRefresh = true)
                 }
             }
@@ -145,7 +145,7 @@ class HomeViewModel @Inject constructor(
                 }
                 _state.update { current ->
                     current.copy(
-                        dataStatus = HomeDataStatus.Loaded,
+                        dataStatus = DataStatus.Loaded,
                         xp = summary.xp,
                         coins = summary.coins,
                         languageProgress = summary.toLanguageProgressUi(),
@@ -179,7 +179,7 @@ class HomeViewModel @Inject constructor(
 
                     _state.update {
                         it.copy(
-                            dataStatus = HomeDataStatus.Loaded,
+                            dataStatus = DataStatus.Loaded,
                             dailyReward = dailyRewardUi,
                             isDailyRewardBannerVisible = shouldShowBanner
                         )
@@ -191,7 +191,7 @@ class HomeViewModel @Inject constructor(
 
                     _state.update {
                         it.copy(
-                            dataStatus = if (hasCache) HomeDataStatus.Loaded else HomeDataStatus.Error(errorUiText)
+                            dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
                         )
                     }
 
@@ -212,7 +212,7 @@ class HomeViewModel @Inject constructor(
                 val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        dataStatus = if (hasCache) HomeDataStatus.Loaded else HomeDataStatus.Error(errorUiText)
+                        dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
                     )
                 }
                 if (hasCache) {
