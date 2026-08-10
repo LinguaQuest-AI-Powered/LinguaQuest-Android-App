@@ -12,6 +12,7 @@ import com.iti.linguaquest.features.achivement.domain.usecase.GetAchievementsUse
 import com.iti.linguaquest.features.achivement.presentation.contract.AchievementIntent
 import com.iti.linguaquest.features.achivement.presentation.contract.AchievementState
 import com.iti.linguaquest.features.achivement.presentation.mapper.toUiModel
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,13 +58,13 @@ class AchievementViewModel @Inject constructor(
 
     private fun loadAchievements(filter: AchievementFilter = _state.value.filter) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            _state.update { it.copy(dataStatus = DataStatus.Loading) }
 
             getAchievementsUseCase(filter)
                 .onSuccess { data ->
                     _state.update {
                         it.copy(
-                            isLoading = false,
+                            dataStatus = DataStatus.Loaded,
                             earnedCount = data.earnedCount,
                             inProgressCount = data.inProgressCount,
                             xpEarned = data.xpEarned,
@@ -74,8 +75,7 @@ class AchievementViewModel @Inject constructor(
                 .onFailure { error ->
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            errorMessage = error.toUiText()
+                            dataStatus = DataStatus.Error(error.toUiText())
                         )
                     }
                 }

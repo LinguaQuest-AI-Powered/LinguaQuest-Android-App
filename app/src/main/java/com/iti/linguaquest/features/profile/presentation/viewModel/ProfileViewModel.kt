@@ -58,6 +58,8 @@ class ProfileViewModel @Inject constructor(
 
     private var lastRefreshTime = 0L
     private val REFRESH_COOLDOWN_MS = 5000L
+    
+    private var refreshJob: kotlinx.coroutines.Job? = null
 
     private val _effect = MutableSharedFlow<ProfileEffect>()
     val effect: SharedFlow<ProfileEffect> = _effect.asSharedFlow()
@@ -107,7 +109,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun refreshProfile(isPullToRefresh: Boolean = false) {
-        viewModelScope.launch {
+        if (refreshJob?.isActive == true) return
+        
+        refreshJob = viewModelScope.launch {
             if (!isPullToRefresh) {
                 val hasCachedData = _state.value.hasData || getCachedProfileUseCase().firstOrNull() != null
                 _state.update {
@@ -133,14 +137,15 @@ class ProfileViewModel @Inject constructor(
                         val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
                         val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
 
-                        _state.update {
-                            it.copy(
-                                dataStatus = if (stillHasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
-                            )
-                        }
-
-                        if (isPullToRefresh || stillHasCache) {
-                            if (stillHasCache && isNoInternet) {
+                        if (!stillHasCache) {
+                            _state.update {
+                                it.copy(dataStatus = DataStatus.Error(errorUiText))
+                            }
+                        } else {
+                            _state.update {
+                                it.copy(dataStatus = DataStatus.Loaded)
+                            }
+                            if (isNoInternet) {
                                 snackbarController.sendEvent(
                                     SnackbarEvent(
                                         title = UiText.StringResource(R.string.offline_title),
@@ -165,10 +170,14 @@ class ProfileViewModel @Inject constructor(
                 Timber.e(e, "Error refreshing profile data")
                 val stillHasCache = _state.value.hasData
                 val errorUiText = UiText.StringResource(R.string.error_generic)
-                _state.update {
-                    it.copy(
-                        dataStatus = if (stillHasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
-                    )
+                if (!stillHasCache) {
+                    _state.update {
+                        it.copy(dataStatus = DataStatus.Error(errorUiText))
+                    }
+                } else {
+                    _state.update {
+                        it.copy(dataStatus = DataStatus.Loaded)
+                    }
                 }
             }
         }

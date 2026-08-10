@@ -138,6 +138,9 @@ fun MainScreen(
                                 onNavigateToReview = { word ->
                                     SharedWordHolder.pendingWord = word
                                     rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                                },
+                                onNavigateHome = {
+                                    currentTab = BottomNavScreen.Home
                                 }
                             )
                         }
@@ -164,6 +167,9 @@ fun MainScreen(
                                 },
                                 onViewAllAchievementsClick = {
                                     rootBackStack.navigateSingleTop(RootScreen.Achievement)
+                                },
+                                onNavigateHome = {
+                                    currentTab = BottomNavScreen.Home
                                 }
                             )
                         }

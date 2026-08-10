@@ -12,6 +12,7 @@ import com.iti.linguaquest.features.all_worlds.domain.usecase.GetWorldsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
@@ -56,14 +57,13 @@ class AllWorldsViewModel @Inject constructor(
 
     private fun loadWorlds() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, hasError = false, errorMessage = null) }
+            _state.update { it.copy(dataStatus = DataStatus.Loading) }
 
             when (val result = getWorldsUseCase()) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            hasError = false,
+                            dataStatus = DataStatus.Loaded,
                             worlds = result.data.worlds.map { world -> world.toWorldItem() }
                         )
                     }
@@ -71,11 +71,10 @@ class AllWorldsViewModel @Inject constructor(
 
                 is LinguaQuestResult.Failure -> {
                     _state.update {
+                        val errorMessage = (result.error as? LinguaQuestDataError)?.toUiText()
+                            ?: UiText.StringResource(R.string.error_generic)
                         it.copy(
-                            isLoading = false,
-                            hasError = true,
-                            errorMessage = (result.error as? LinguaQuestDataError)?.toUiText()
-                                ?: UiText.StringResource(R.string.error_generic)
+                            dataStatus = DataStatus.Error(errorMessage)
                         )
                     }
                 }

@@ -5,12 +5,12 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+
 data class AllWorldsState(
-    val isLoading: Boolean = false,
+    val dataStatus: DataStatus = DataStatus.Loading,
     val selectedFilter: WorldDifficulty? = null,
-    val worlds: List<WorldItem> = emptyList(),
-    val hasError: Boolean = false,
-    val errorMessage: UiText? = null
+    val worlds: List<WorldItem> = emptyList()
 ) {
     val filteredWorlds: List<WorldItem>
         get() = if (selectedFilter == null) {

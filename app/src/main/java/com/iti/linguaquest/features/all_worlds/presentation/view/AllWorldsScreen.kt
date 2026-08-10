@@ -22,6 +22,8 @@ import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsEffect
 import com.iti.linguaquest.features.all_worlds.presentation.contract.AllWorldsIntent
 import com.iti.linguaquest.features.all_worlds.presentation.view.components.AllWorldsContent
@@ -65,22 +67,17 @@ fun AllWorldsScreen(
         )
 
         OfflineAwareContent(isOnline = isOnline) {
-            AllWorldsContent(
-                state = state,
-                onIntent = viewModel::onIntent
-            )
-        }
-
-        if (state.isLoading) {
-            LoadingView(onDismissRequest = onNavigateBack)
-        }
-
-        if (state.hasError) {
-            ErrorView(
-                message = state.errorMessage ?: UiText.StringResource(R.string.error_generic),
+            StatefulContentContainer(
+                dataStatus = state.dataStatus,
                 onRetry = { viewModel.onIntent(AllWorldsIntent.OnRetry) },
-                onDismissRequest = onNavigateBack
-            )
+                onErrorDismiss = onNavigateBack,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                AllWorldsContent(
+                    state = state,
+                    onIntent = viewModel::onIntent
+                )
+            }
         }
     }
 }

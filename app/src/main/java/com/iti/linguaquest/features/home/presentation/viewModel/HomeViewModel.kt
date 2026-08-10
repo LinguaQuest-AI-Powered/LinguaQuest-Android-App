@@ -187,6 +187,7 @@ class HomeViewModel @Inject constructor(
                 } else {
                     val dataError = (homeSummaryResult as? LinguaQuestResult.Failure)?.error as? LinguaQuestDataError
                     val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
+                    val isOffline = dataError == LinguaQuestDataError.Remote.NO_INTERNET
                     val hasCache = _state.value.hasData || getHomeSummaryUseCase.observe().firstOrNull() != null
 
                     _state.update {
@@ -196,14 +197,24 @@ class HomeViewModel @Inject constructor(
                     }
 
                     if (hasCache) {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(
-                                message = errorUiText,
-                                type = SnackbarType.ERROR,
-                                actionLabel = UiText.StringResource(R.string.retry),
-                                onAction = { refreshFromRemote(isPullToRefresh = true) }
+                        if (isOffline) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    title = UiText.StringResource(R.string.offline_title),
+                                    message = UiText.StringResource(R.string.offline_msg),
+                                    type = SnackbarType.INFO
+                                )
                             )
-                        )
+                        } else {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { refreshFromRemote(isPullToRefresh = true) }
+                                )
+                            )
+                        }
                     }
                 }
             } catch (e: Exception) {

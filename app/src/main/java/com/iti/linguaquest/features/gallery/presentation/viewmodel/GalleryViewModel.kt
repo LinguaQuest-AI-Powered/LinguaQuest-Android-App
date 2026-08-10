@@ -17,6 +17,8 @@ import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +37,8 @@ class GalleryViewModel @Inject constructor(
     private val getWordsWithImagesUseCase: GetWordsWithImagesUseCase,
     private val refreshGalleryUseCase: RefreshGalleryUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
-    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GalleryState())
@@ -117,30 +120,33 @@ class GalleryViewModel @Inject constructor(
                     val stillHasCache = _state.value.words.isNotEmpty()
                     val isOfflineError = dataError == LinguaQuestDataError.Remote.NO_INTERNET
                     val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
-                    
-                    _state.update {
-                        it.copy(
-                            dataStatus = if (stillHasCache || isOfflineError) DataStatus.Loaded else DataStatus.Error(errorUiText)
-                        )
-                    }
 
-                    if (isPullToRefresh && isOfflineError) {
-                        sendEffect(
-                            GalleryEffect.ShowError(
-                                title = UiText.StringResource(R.string.offline_title),
-                                message = UiText.StringResource(R.string.offline_msg),
-                                type = SnackbarType.INFO,
-                                retryable = false
+                    if (!stillHasCache) {
+                        _state.update {
+                            it.copy(dataStatus = DataStatus.Error(errorUiText))
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(dataStatus = DataStatus.Loaded)
+                        }
+                        if (isOfflineError) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    title = UiText.StringResource(R.string.offline_title),
+                                    message = UiText.StringResource(R.string.offline_msg),
+                                    type = SnackbarType.INFO
+                                )
                             )
-                        )
-                    } else if (!isOfflineError && !stillHasCache) {
-                        sendEffect(
-                            GalleryEffect.ShowError(
-                                message = errorUiText,
-                                type = SnackbarType.ERROR,
-                                retryable = true
+                        } else {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { refreshWords(isPullToRefresh = true) }
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

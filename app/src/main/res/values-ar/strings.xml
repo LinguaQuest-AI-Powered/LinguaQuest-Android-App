@@ -844,4 +844,11 @@
     <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
     <string name="daily_mission_button_loading">جاري التحميل…</string>
     <string name="daily_mission_button_later">لاحقاً</string>
+
+    <!-- Loading View -->
+    <string name="loading_quests">جاري تحميل المهام...</string>
+    <string name="preparing_adventure">نجهز مغامرتك...</string>
+    <string name="waking_up_lingo">نوقظ لينجو...</string>
+    <string name="translating_worlds">نترجم العوالم...</string>
+    <string name="almost_there">على وشك الانتهاء...</string>
 </resources>

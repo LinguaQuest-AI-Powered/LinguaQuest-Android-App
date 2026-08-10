@@ -44,6 +44,7 @@ fun ProfileScreen(
     onSettingsClick: () -> Unit = {},
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
+    onNavigateHome: () -> Unit = {},
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -79,11 +80,18 @@ fun ProfileScreen(
     }
 
     LaunchedEffect(Unit) {
+        if (!uiState.hasData && uiState.dataStatus is DataStatus.Loading) {
+            viewModel.onIntent(ProfileIntent.Retry)
+        }
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 ProfileEffect.NavigateToSettings -> onSettingsClick()
                 ProfileEffect.NavigateToAllAchievements -> onViewAllAchievementsClick()
                 ProfileEffect.NavigateToAllLeaderboard -> onViewAllLeaderboardClick()
+                ProfileEffect.NavigateToHome -> onNavigateHome()
             }
         }
     }
@@ -94,6 +102,7 @@ fun ProfileScreen(
             dataStatus = uiState.dataStatus,
             onRetry = { viewModel.onIntent(ProfileIntent.Refresh) },
             onRefresh = { viewModel.onIntent(ProfileIntent.Refresh) },
+            onErrorDismiss = onNavigateHome,
             modifier = Modifier.fillMaxSize(),
             loadingContent = {
                 Box(

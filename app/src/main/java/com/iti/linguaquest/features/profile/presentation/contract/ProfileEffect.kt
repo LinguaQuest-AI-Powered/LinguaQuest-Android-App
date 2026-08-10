@@ -5,4 +5,5 @@ sealed interface ProfileEffect {
     data object NavigateToSettings : ProfileEffect
     data object NavigateToAllAchievements : ProfileEffect
     data object NavigateToAllLeaderboard : ProfileEffect
+    data object NavigateToHome : ProfileEffect
 }

@@ -6,6 +6,11 @@
     <string name="get_started">Get Started</string>
     <string name="already_have_an_account">I already have an account</string>
     <string name="loading">Loading...</string>
+    <string name="loading_message_1">Preparing your quest...</string>
+    <string name="loading_message_2">Warming up the parrot...</string>
+    <string name="loading_message_3">Almost there...</string>
+    <string name="loading_message_4">Packing your bags...</string>
+    <string name="loading_message_5">Consulting the maps...</string>
 
     <string name="choose_your_languages">Choose your languages</string>
     <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>

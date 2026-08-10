@@ -16,6 +16,7 @@ fun StatefulContentContainer(
     dataStatus: DataStatus,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    onErrorDismiss: (() -> Unit)? = null,
     onRefresh: (() -> Unit)? = null,
     loadingContent: @Composable () -> Unit = {
         Box(
@@ -25,10 +26,11 @@ fun StatefulContentContainer(
             LoadingView()
         }
     },
-    errorContent: @Composable (UiText) -> Unit = { message ->
+    errorContent: @Composable (UiText, (() -> Unit)?) -> Unit = { message, onDismiss ->
         ErrorView(
             message = message,
             onRetry = onRetry,
+            onDismissRequest = onDismiss,
             modifier = Modifier.fillMaxSize()
         )
     },
@@ -49,7 +51,7 @@ fun StatefulContentContainer(
             0 -> loadingContent()
             1 -> {
                 val message = (dataStatus as? DataStatus.Error)?.message ?: UiText.DynamicString("Error")
-                errorContent(message)
+                errorContent(message, onErrorDismiss)
             }
             2 -> {
                 if (onRefresh != null) {
