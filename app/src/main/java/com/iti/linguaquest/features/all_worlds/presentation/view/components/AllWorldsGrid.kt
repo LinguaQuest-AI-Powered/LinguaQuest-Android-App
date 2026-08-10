@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -15,9 +16,15 @@ import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 
+import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
+import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
+import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimationState
+
 @Composable
 fun AllWorldsGrid(
     worlds: List<WorldItem>,
+    animationState: StaggeredAnimationState,
+    startIndex: Int,
     onWorldClick: (WorldItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -30,12 +37,18 @@ fun AllWorldsGrid(
     ) {
         items(worlds.size, key = { index -> "${worlds[index].id}_$index" }) { index ->
             val world = worlds[index]
-            WorldCard(
-                world = world,
-                onClick = { onWorldClick(world) },
-                imageShape = RoundedCornerShape(percent = 50),
-                modifier = Modifier.width(240.dp).height(220.dp)
-            )
+            StaggeredAnimatedItem(
+                index = startIndex + index,
+                state = animationState,
+                enter = LingoEntranceAnimations.popUpVertically()
+            ) {
+                WorldCard(
+                    world = world,
+                    onClick = { onWorldClick(world) },
+                    imageShape = RoundedCornerShape(percent = 50),
+                    modifier = Modifier.width(240.dp).heightIn(min = 220.dp)
+                )
+            }
         }
     }
 }

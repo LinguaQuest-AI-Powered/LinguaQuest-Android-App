@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,13 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun AchievementHeader(modifier: Modifier = Modifier) {
-    var visible by remember { mutableStateOf(false) }
+    var visible by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(100.milliseconds)
-        visible = true
+        if (!visible) {
+            delay(100.milliseconds)
+            visible = true
+        }
     }
 
     AnimatedVisibility(

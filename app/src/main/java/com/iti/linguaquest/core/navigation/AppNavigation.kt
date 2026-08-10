@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -110,7 +111,7 @@ fun AppNavigation(
         if (openHomeRequested) {
             rootBackStack.apply {
                 clear()
-                navigateSingleTop(RootScreen.Main)
+                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
             }
             onOpenHomeHandled()
         }
@@ -312,7 +313,7 @@ fun AppNavigation(
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         }
                     )
@@ -325,7 +326,7 @@ fun AppNavigation(
                         onNavigateToMain = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         onOAuthLanguageSelection = {
@@ -374,7 +375,7 @@ fun AppNavigation(
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         resetToken = screen.resetToken
@@ -391,6 +392,11 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Notification> {
+                    DisposableEffect(Unit) {
+                        onDispose {
+                            mainViewModel.refreshUnreadCount()
+                        }
+                    }
                     NotificationScreen(
                         onBackClick = { rootBackStack.removeLastOrNull() }
                     )
@@ -399,6 +405,7 @@ fun AppNavigation(
                 entry<RootScreen.Map> { screen ->
                     MapScreen(
                         worldId = screen.worldId,
+                        totalLevels = screen.totalLevels,
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelId, levelOrder, targetWord ->
                             rootBackStack.navigateSingleTop(
@@ -474,7 +481,7 @@ fun AppNavigation(
                             },
                             onHome = {
                                 SharedVoiceResultHolder.pendingResult = null
-                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main(System.currentTimeMillis())) }
                             }
                         )
                     } else {
@@ -554,8 +561,8 @@ fun AppNavigation(
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { worldId ->
-                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                        onNavigateToWorldDetails = { worldId, totalLevels ->
+                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
                         }
                     )
                 }

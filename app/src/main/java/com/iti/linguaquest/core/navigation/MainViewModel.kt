@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
     )
 
 
-    var lastActiveTab: NestedScreen = NestedScreen.Home
+
 
     private val _unreadNotificationCount = MutableStateFlow(0)
     val unreadNotificationCount: StateFlow<Int> = _unreadNotificationCount.asStateFlow()
@@ -47,6 +47,7 @@ class MainViewModel @Inject constructor(
                 .collectLatest { isLoggedIn ->
                 if (isLoggedIn) {
                     refreshWallet()
+                    refreshUnreadCount()
                 }
             }
         }

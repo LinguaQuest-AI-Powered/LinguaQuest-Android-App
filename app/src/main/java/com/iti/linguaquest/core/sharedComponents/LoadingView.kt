@@ -20,6 +20,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,9 +46,40 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 fun LoadingView(
     modifier: Modifier = Modifier,
     message: String? = null,
-    imageRes: Int = R.drawable.lingo_searching,
+    imageRes: Int? = null,
     onDismissRequest: (() -> Unit)? = null
 ) {
+    var visible by remember { mutableStateOf(false) }
+    
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
+    val currentImageRes = remember(imageRes) {
+        imageRes ?: listOf(
+            R.drawable.lingo_searching,
+            R.drawable.lingo_mind_thinking,
+            R.drawable.lingo_mind_processing,
+            R.drawable.lingo_checking_pronounciation,
+            R.drawable.lingo_help,
+            R.drawable.lingo_did_you_know,
+            R.drawable.lingo_hint,
+            R.drawable.lingo_memory_track
+        ).random()
+    }
+
+    val randomMessageRes = remember {
+        listOf(
+            R.string.loading_message_1,
+            R.string.loading_message_2,
+            R.string.loading_message_3,
+            R.string.loading_message_4,
+            R.string.loading_message_5
+        ).random()
+    }
+    
+    val currentMessage = message ?: stringResource(randomMessageRes)
+
     val infiniteTransition = rememberInfiniteTransition(label = "loading_pop")
 
     val translateY by infiniteTransition.animateFloat(
@@ -78,7 +116,12 @@ fun LoadingView(
                 .padding(20.dp),
             contentAlignment = Alignment.Center
         ) {
-            AppGradientBackgroundBox(
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn(animationSpec = tween(400)) + 
+                        scaleIn(initialScale = 0.85f, animationSpec = tween(400, easing = FastOutSlowInEasing))
+            ) {
+                AppGradientBackgroundBox(
                 modifier = Modifier.fillMaxWidth(),
                 gradientColors = listOf(
                     LinguaQuestTheme.colors.DialogGradientTopRight,
@@ -100,7 +143,7 @@ fun LoadingView(
                             .background(LinguaQuestTheme.colors.MindReaderBeige)
                     ) {
                         Image(
-                            painter = painterResource(id = imageRes),
+                            painter = painterResource(id = currentImageRes),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(130.dp)
@@ -115,7 +158,7 @@ fun LoadingView(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        text = message ?: stringResource(R.string.loading),
+                        text = currentMessage,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = LinguaQuestTheme.colors.BrownText,
@@ -129,11 +172,11 @@ fun LoadingView(
                         dotColor = LinguaQuestTheme.colors.BrownText
                     )
                 }
+                }
             }
         }
     }
 }
-
 @Preview
 @Composable
 fun LoadingViewPreview() {
@@ -144,4 +187,4 @@ fun LoadingViewPreview() {
     }
 }
 
-
+

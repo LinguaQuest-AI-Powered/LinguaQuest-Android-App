@@ -18,6 +18,7 @@ import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.home.presentation.mapper.toLanguageProgressUi
 import com.iti.linguaquest.features.home.presentation.mapper.toUi
 import com.iti.linguaquest.features.home.presentation.mapper.toContinueLevelUi
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -73,18 +75,20 @@ class HomeViewModel @Inject constructor(
 
     fun onIntent(intent: HomeIntent) {
         when (intent) {
-            HomeIntent.LoadHome, HomeIntent.Retry -> refreshFromRemote()
+            HomeIntent.LoadHome -> refreshFromRemote()
+            HomeIntent.Retry -> {
+                _state.update { it.copy(dataStatus = DataStatus.Loading) }
+                refreshFromRemote()
+            }
             HomeIntent.Refresh -> {
                 val now = System.currentTimeMillis()
-                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && !state.value.isRefreshing) {
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus != DataStatus.Refreshing) {
                     lastRefreshTime = now
-                    _state.update { it.copy(isRefreshing = true) }
+                    _state.update { it.copy(dataStatus = DataStatus.Refreshing) }
                     refreshFromRemote(isPullToRefresh = true)
-                } else {
-                    _state.update { it.copy(isRefreshing = false) }
                 }
             }
-            is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id))
+            is HomeIntent.WorldClicked -> sendEffect(HomeEffect.NavigateToWorld(intent.world.id, intent.world.totalLevels))
             HomeIntent.SeeMoreWorldsClicked -> sendEffect(HomeEffect.NavigateToAllWorlds)
             HomeIntent.FabClicked -> _state.update { it.copy(isLanguageBottomSheetVisible = true) }
             HomeIntent.DismissLanguageBottomSheet -> _state.update { it.copy(isLanguageBottomSheetVisible = false) }
@@ -102,7 +106,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(isDailyRewardDialogVisible = false)
             }
             HomeIntent.ClaimDailyRewardClicked -> claimDailyReward()
-            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.targetWord))
+            is HomeIntent.ContinueLevelClicked -> sendEffect(HomeEffect.NavigateToContinueLevel(intent.continueLevel.worldId, intent.continueLevel.levelId, intent.continueLevel.levelOrder, intent.continueLevel.totalLevels, intent.continueLevel.targetWord))
             HomeIntent.TriggerDailyMission -> triggerDailyMission()
             HomeIntent.DismissDailyMissionDialog -> _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
             is HomeIntent.StartDailyMissionCamera -> {
@@ -114,7 +118,7 @@ class HomeViewModel @Inject constructor(
 
     private fun triggerDailyMission() {
         viewModelScope.launch {
-            _state.update { it.copy(dailyMissionState = com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState.Loading) }
+            _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Loading) }
             
             when (val result = getDailyMissionWordUseCase()) {
                 is LinguaQuestResult.Success -> {
@@ -136,9 +140,12 @@ class HomeViewModel @Inject constructor(
     private fun observeLocalCache() {
         viewModelScope.launch {
             getHomeSummaryUseCase.observe().collect { summary ->
-                summary ?: return@collect
+                if (summary == null) {
+                    return@collect
+                }
                 _state.update { current ->
                     current.copy(
+                        dataStatus = DataStatus.Loaded,
                         xp = summary.xp,
                         coins = summary.coins,
                         languageProgress = summary.toLanguageProgressUi(),
@@ -162,20 +169,17 @@ class HomeViewModel @Inject constructor(
                 val dailyRewardResult = dailyRewardDeferred.await()
                 walletDeferred?.await()
 
-                _state.update { it.copy(isRefreshing = false) }
-
                 if (homeSummaryResult is LinguaQuestResult.Success) {
                     val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()
                     val shouldShowBanner = dailyRewardUi != null &&
                             !dailyRewardUi.claimedToday &&
-                            !DailyRewardSessionState.hasAutoShownThisSession
+                            (!DailyRewardSessionState.hasAutoShownThisSession || isPullToRefresh)
 
                     if (shouldShowBanner) DailyRewardSessionState.hasAutoShownThisSession = true
 
                     _state.update {
                         it.copy(
-                            hasError = false,
-                            errorMessage = null,
+                            dataStatus = DataStatus.Loaded,
                             dailyReward = dailyRewardUi,
                             isDailyRewardBannerVisible = shouldShowBanner
                         )
@@ -183,18 +187,17 @@ class HomeViewModel @Inject constructor(
                 } else {
                     val dataError = (homeSummaryResult as? LinguaQuestResult.Failure)?.error as? LinguaQuestDataError
                     val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
-                    val hasCache = _state.value.worlds.isNotEmpty() || _state.value.languageProgress != null
-                    val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
+                    val isOffline = dataError == LinguaQuestDataError.Remote.NO_INTERNET
+                    val hasCache = _state.value.hasData || getHomeSummaryUseCase.observe().firstOrNull() != null
 
                     _state.update {
                         it.copy(
-                            hasError = !hasCache && !isNoInternet,
-                            errorMessage = if (!hasCache && !isNoInternet) errorUiText else null
+                            dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
                         )
                     }
 
-                    if (isPullToRefresh || hasCache) {
-                        if (hasCache && dataError == LinguaQuestDataError.Remote.NO_INTERNET) {
+                    if (hasCache) {
+                        if (isOffline) {
                             snackbarController.sendEvent(
                                 SnackbarEvent(
                                     title = UiText.StringResource(R.string.offline_title),
@@ -216,13 +219,21 @@ class HomeViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Error refreshing home data from remote")
-                val emptyWorlds = _state.value.worlds.isEmpty()
+                val hasCache = _state.value.hasData || getHomeSummaryUseCase.observe().firstOrNull() != null
                 val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        isRefreshing = false,
-                        hasError = emptyWorlds,
-                        errorMessage = if (emptyWorlds) errorUiText else null
+                        dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
+                    )
+                }
+                if (hasCache) {
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = errorUiText,
+                            type = SnackbarType.ERROR,
+                            actionLabel = UiText.StringResource(R.string.retry),
+                            onAction = { refreshFromRemote(isPullToRefresh = true) }
+                        )
                     )
                 }
             }
@@ -231,10 +242,12 @@ class HomeViewModel @Inject constructor(
 
     private fun claimDailyReward() {
         viewModelScope.launch {
+            _state.update { it.copy(isClaimingReward = true) }
             when (val result = claimDailyRewardUseCase()) {
                 is LinguaQuestResult.Success -> {
                     _state.update {
                         it.copy(
+                            isClaimingReward = false,
                             isDailyRewardDialogVisible = false,
                             dailyReward = it.dailyReward?.copy(
                                 claimedToday = true,
@@ -253,7 +266,7 @@ class HomeViewModel @Inject constructor(
                     refreshWalletUseCase()
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isDailyRewardDialogVisible = false) }
+                    _state.update { it.copy(isDailyRewardDialogVisible = false, isClaimingReward = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(message = result.error.toUiText(), type = SnackbarType.ERROR)
                     )

@@ -4,9 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.iti.linguaquest.core.sharedComponents.ErrorView
-import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
 import com.iti.linguaquest.features.leaderboard.presentation.viewmodel.LeaderboardViewModel
 
@@ -23,28 +22,23 @@ fun LeaderboardScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (state.leaderboard != null) {
-            OfflineAwareContent(isOnline = isOnline) {
-                LeaderboardContent(
-                    leaderboard = state.leaderboard!!,
-                    onBack = onBack,
-                    onLoadMore = { viewModel.onIntent(LeaderboardIntent.LoadMore) },
-                    isLoadingMore = state.isLoadingMore,
-                    endReached = state.endReached
-                )
-            }
-        }
-
-        if (state.isLoading) {
-            LoadingView(onDismissRequest = onBack)
-        }
-
-        if (state.errorMessage != null) {
-            ErrorView(
-                message = state.errorMessage!!,
+        OfflineAwareContent(isOnline = isOnline) {
+            StatefulContentContainer(
+                dataStatus = state.dataStatus,
                 onRetry = { viewModel.onIntent(LeaderboardIntent.LoadLeaderboard) },
-                onDismissRequest = onBack
-            )
+                onErrorDismiss = onBack,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (state.leaderboard != null) {
+                    LeaderboardContent(
+                        leaderboard = state.leaderboard!!,
+                        onBack = onBack,
+                        onLoadMore = { viewModel.onIntent(LeaderboardIntent.LoadMore) },
+                        isLoadingMore = state.isLoadingMore,
+                        endReached = state.endReached
+                    )
+                }
+            }
         }
     }
 }

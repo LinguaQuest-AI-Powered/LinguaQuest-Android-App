@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,11 +36,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
-import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
-import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
-import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
+import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
@@ -51,9 +48,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun GalleryScreen(
     onNavigateToReview: (WordEntity) -> Unit,
+    onNavigateHome: () -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: GalleryViewModel = hiltViewModel(),
-    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
+    viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
@@ -76,24 +73,11 @@ fun GalleryScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
-                is GalleryEffect.ShowError -> globalUiHostViewModel.snackbarController.sendEvent(
-                    SnackbarEvent(
-                        title = effect.title,
-                        message = effect.message,
-                        type = effect.type,
-                        actionLabel = if (effect.retryable) UiText.StringResource(R.string.retry) else null,
-                        onAction = if (effect.retryable) {
-                            { viewModel.onIntent(GalleryIntent.LoadWords) }
-                        } else {
-                            null
-                        }
-                    )
-                )
             }
         }
     }
 
-    val isEmpty = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
+    val isEmpty = !state.hasData
 
     LaunchedEffect(isEmpty) {
         SharedBackgroundState.showBackground = true
@@ -102,9 +86,11 @@ fun GalleryScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
+        StatefulContentContainer(
+            dataStatus = state.dataStatus,
+            onRetry = { viewModel.onIntent(GalleryIntent.LoadWords) },
             onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+            onErrorDismiss = onNavigateHome,
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
@@ -143,7 +129,6 @@ fun GalleryScreen(
 
                 GalleryContent(
                     state = state,
-                    isOnline = isOnline,
                     onIntent = viewModel::onIntent,
                     onWordClick = { wordId: Int, anchor: Rect ->
                         guardOnline(anchor) {

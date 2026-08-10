@@ -49,6 +49,7 @@ import com.iti.linguaquest.features.map.presentation.viewmodel.MapViewModel
 @Composable
 fun MapScreen(
     worldId: Int,
+    totalLevels: Int,
     onBack: () -> Unit = {},
     onNavigateToLevel: (Int, Int, String?) -> Unit = { _, _, _ -> },
     viewModel: MapViewModel = hiltViewModel()
@@ -67,6 +68,10 @@ fun MapScreen(
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
+    }
+
+    LaunchedEffect(totalLevels) {
+        viewModel.initPlaceholders(totalLevels)
     }
 
     LaunchedEffect(viewModel) {
@@ -103,7 +108,7 @@ fun MapScreenContent(
             modifier = Modifier.fillMaxSize()
         )
 
-        if (state.isLoading && state.levels.isEmpty()) {
+        if (state.isLoading) {
             LoadingView(onDismissRequest = onBackClick)
         }
 

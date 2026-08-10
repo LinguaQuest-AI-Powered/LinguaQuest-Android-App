@@ -42,16 +42,16 @@
     <string name="germany_language_code">ge</string>
     <string name="cd_xp">XP</string>
     <string name="daily_reward_xp_format">+%1$d XP</string>
-    <string name="not_enough_coins">Not enough coins!</string>
-    <string name="dummy_world_name">Kitchen World</string>
-    <string name="dummy_progress_text">4 of 10</string>
+    <string name="not_enough_coins">عملات غير كافية!</string>
+    <string name="dummy_world_name">عالم المطبخ</string>
+    <string name="dummy_progress_text">4 من 10</string>
     <string name="dummy_target_word">la taza</string>
-    <string name="lingos_label">Lingos</string>
-    <string name="current_quest_label">CURRENT QUEST</string>
-    <string name="find_and_capture_instruction">Find &amp; capture</string>
-    <string name="word_capture_continue_button">Continue</string>
-    <string name="mascot_camera_cd">Camera Mascot</string>
-    <string name="camera_icon_cd">Camera Icon</string>
+    <string name="lingos_label">لينجوز</string>
+    <string name="current_quest_label">المهمة الحالية</string>
+    <string name="find_and_capture_instruction">ابحث والتقط</string>
+    <string name="word_capture_continue_button">متابعة</string>
+    <string name="mascot_camera_cd">تميمة الكاميرا</string>
+    <string name="camera_icon_cd">أيقونة الكاميرا</string>
     <string name="select_language">اختر اللغة</string>
     <string name="every_day">كل يوم</string>
     <string name="weekdays">أيام الأسبوع</string>
@@ -406,7 +406,9 @@
     <string name="game_processing_status_squinting">ينظر بدقة شديدة...</string>
     <string name="game_processing_status_evaluating">يقيم مهارات التصوير الفوتوغرافي لديك...</string>
     <string name="game_processing_status_almost_there">أوشك على الانتهاء...</string>
-
+    <string name="game_processing_status_analyzing">يقوم بتحليل البيكسلات...</string>
+    <string name="game_processing_status_comparing">يقارن مع القاموس...</string>
+    <string name="game_processing_status_thinking">يفكر بعمق...</string>
     <!-- Achievements Screen -->
     <string name="achievement_tab_all">الكل</string>
     <string name="achievement_tab_earned">المكتسبة</string>
@@ -829,6 +831,7 @@
     <string name="new_notification">اشعار جديد</string>
     <string name="start_hunting">أبدا مغامرتك</string>
     <string name="mystery_world">عالم غامض</string>
+    <string name="word_capture_progress_format">%1$s من %2$s</string>
     <string name="daily_mission_wrong_word">هذه لا تطابق الصوره. حاول مجددا</string>
     <string name="daily_mission_completed">Mission completed! You earned %1$d XP and %2$d Coins.</string>
     <string name="updating_language_title">اضافة اللغه</string>
@@ -841,4 +844,11 @@
     <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
     <string name="daily_mission_button_loading">جاري التحميل…</string>
     <string name="daily_mission_button_later">لاحقاً</string>
+
+    <!-- Loading View -->
+    <string name="loading_quests">جاري تحميل المهام...</string>
+    <string name="preparing_adventure">نجهز مغامرتك...</string>
+    <string name="waking_up_lingo">نوقظ لينجو...</string>
+    <string name="translating_worlds">نترجم العوالم...</string>
+    <string name="almost_there">على وشك الانتهاء...</string>
 </resources>

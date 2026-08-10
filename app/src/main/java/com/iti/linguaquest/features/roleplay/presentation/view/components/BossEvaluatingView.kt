@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,9 +45,8 @@ fun BossEvaluatingView() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            CircularProgressIndicator(
-                modifier = Modifier.padding(16.dp),
-                color = LinguaQuestTheme.colors.OrangeActive
+            LingoSpinningIcon(
+                modifier = Modifier.padding(16.dp)
             )
             
             Spacer(modifier = Modifier.height(16.dp))

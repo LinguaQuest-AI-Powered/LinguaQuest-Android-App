@@ -96,9 +96,7 @@ class LevelViewModel @Inject constructor(
                 return@launch
             }
 
-            if (_state.value.coinCount < GameCost.CHANGE_WORD.coins) {
-                _state.update { it.copy(isChangeWordAvailable = false) }
-            }
+            // _state.update { it.copy(isChangeWordAvailable = false) }
 
             refreshWalletUseCase()
             _state.update {
@@ -108,7 +106,7 @@ class LevelViewModel @Inject constructor(
                     levelId = levelId,
                     levelOrder = levelOrder,
                     isLevelReady = false,
-                    isChangeWordAvailable = _state.value.coinCount >= GameCost.CHANGE_WORD.coins,
+                    isChangeWordAvailable = true,
                     isChangeWordDialogVisible = false,
                     isChangeWordUsed = false
                 )
@@ -127,7 +125,7 @@ class LevelViewModel @Inject constructor(
                             wordToGuess = targetWordResult,
                             languageCode = languageCode,
                             isLevelReady = true,
-                            isChangeWordAvailable = _state.value.coinCount >= GameCost.CHANGE_WORD.coins,
+                            isChangeWordAvailable = true,
                             isChangeWordDialogVisible = false
                         )
                     }

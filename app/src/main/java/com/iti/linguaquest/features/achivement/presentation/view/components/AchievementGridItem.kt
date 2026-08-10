@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,20 +50,17 @@ fun AchievementGridItem(
     item: AchievementItem,
     index: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    animatedIds: MutableSet<Int>? = null
+    modifier: Modifier = Modifier
 ) {
-    val alreadyAnimated = remember(item.id) { animatedIds?.contains(item.id) == true }
-    var visible by remember(item.id) { mutableStateOf(alreadyAnimated) }
+    var visible by rememberSaveable(item.id) { mutableStateOf(false) }
 
     LaunchedEffect(item.id) {
-        if (!alreadyAnimated) {
+        if (!visible) {
             val itemDelay = (index.coerceAtMost(6) * 15L)
             if (itemDelay > 0) {
                 delay(itemDelay.milliseconds)
             }
             visible = true
-            animatedIds?.add(item.id)
         }
     }
 

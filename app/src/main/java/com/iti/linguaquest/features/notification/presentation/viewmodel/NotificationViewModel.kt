@@ -23,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -71,7 +72,9 @@ class NotificationViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            observeNetworkStatusUseCase().collect { online ->
+            observeNetworkStatusUseCase()
+                .distinctUntilChanged()
+                .collect { online ->
                 _state.update { it.copy(isOnline = online) }
                 if (online) {
                     refreshNotifications()

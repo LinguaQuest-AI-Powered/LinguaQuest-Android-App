@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.features.roleplay.presentation.contract.RoleplayIntent
@@ -99,7 +100,7 @@ fun RoleplayContent(
                     }
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-                        androidx.compose.material3.CircularProgressIndicator(color = com.iti.linguaquest.core.theme.LinguaQuestTheme.colors.OrangeActive)
+                        LingoSpinningIcon()
                     }
                 }
             }
