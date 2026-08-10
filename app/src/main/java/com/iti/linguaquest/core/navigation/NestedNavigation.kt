@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,6 +30,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
@@ -122,20 +122,42 @@ fun MainScreen(
                                     rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                                 },
                                 onNavigateToWorldMap = { worldId, totalLevels ->
-                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.Map(
+                                            worldId,
+                                            totalLevels
+                                        )
+                                    )
                                 },
                                 onNavigateToAddLanguages = {
                                     rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
                                 },
                                 onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
-                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
-                                    rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.Map(
+                                            worldId,
+                                            totalLevels
+                                        )
+                                    )
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.GameFlow(
+                                            worldId = worldId,
+                                            levelId = levelId,
+                                            levelOrder = levelOrder,
+                                            targetWord = targetWord
+                                        )
+                                    )
                                 },
                                 onNavigateToDailyMissionCamera = { word ->
-                                    rootBackStack.navigateSingleTop(RootScreen.DailyMissionCamera(word))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.DailyMissionCamera(
+                                            word
+                                        )
+                                    )
                                 }
                             )
                         }
+
                         BottomNavScreen.Gallery -> {
                             GalleryScreen(
                                 onNavigateToReview = { word ->
@@ -144,9 +166,13 @@ fun MainScreen(
                                 },
                                 onNavigateHome = {
                                     currentTab = BottomNavScreen.Home
+                                },
+                                onShowLockScreenWordDialog = { wordId ->
+                                    viewModel.showLockScreenWordDialog(wordId)
                                 }
                             )
                         }
+
                         BottomNavScreen.Lingos -> {
                             LingosScreen(
                                 onNavigateToVoiceGame = {
@@ -160,6 +186,7 @@ fun MainScreen(
                                 }
                             )
                         }
+
                         BottomNavScreen.Profile -> {
                             ProfileScreen(
                                 onSettingsClick = {
@@ -177,85 +204,37 @@ fun MainScreen(
                             )
                         }
                     }
-                    entry<NestedScreen.Gallery> {
-                        GalleryScreen(
-                            onNavigateToReview = { word ->
-                                SharedWordHolder.pendingWord = word
-                                rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
-                            },
-                            onNavigateHome = {
-                                currentTab = BottomNavScreen.Home
-                            }
-                        )
-                    }
-                    entry<NestedScreen.Lingos> {
-                        LingosScreen(
-                            onNavigateToVoiceGame = {
-                                rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
-                            },
-                            onNavigateToRoleplayList = {
-                                rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
-                            },
-                            onNavigateToMindReader = {
-                                rootBackStack.navigateSingleTop(RootScreen.MindReader())
-                            }
-                        )
-                    }
-                    entry<NestedScreen.Profile> {
-                        ProfileScreen(
-                            onSettingsClick = {
-                                rootBackStack.navigateSingleTop(RootScreen.Settings)
-                            },
-                            onViewAllLeaderboardClick = {
-                                rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
-                            },
-                            onViewAllAchievementsClick = {
-                                rootBackStack.navigateSingleTop(RootScreen.Achievement)
-                            }
-                        )
-                    }
                 }
             }
-        }
 
-        val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
-        
-        LaunchedEffect(showLockScreenWordDialogId) {
+            val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
+
             if (showLockScreenWordDialogId != null) {
-                if (nestedBackStack.lastOrNull() != NestedScreen.Gallery) {
-                    viewModel.lastActiveTab = NestedScreen.Gallery
-                    nestedBackStack.apply {
-                        clear()
-                        navigateSingleTop(NestedScreen.Home)
-                        navigateSingleTop(NestedScreen.Gallery)
-                    }
+                Dialog(
+                    onDismissRequest = { viewModel.hideLockScreenWordDialog() },
+                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    LockScreenWordDetailScreen(
+                        wordId = showLockScreenWordDialogId!!,
+                        onBack = { viewModel.hideLockScreenWordDialog() },
+                        onNavigateToReview = { lockScreenWord ->
+                            viewModel.hideLockScreenWordDialog()
+                            SharedWordHolder.pendingWord = WordEntity(
+                                id = lockScreenWord.id,
+                                sourceWord = lockScreenWord.word,
+                                translatedWord = lockScreenWord.translation,
+                                sourceLanguage = lockScreenWord.targetLanguage,
+                                targetLanguage = lockScreenWord.nativeLanguage,
+                                category = lockScreenWord.proficiencyLevel,
+                                imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
+                            )
+                            rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
+                        }
+                    )
                 }
             }
         }
 
-        if (showLockScreenWordDialogId != null) {
-            Dialog(
-                onDismissRequest = { viewModel.hideLockScreenWordDialog() },
-                properties = DialogProperties(usePlatformDefaultWidth = false)
-            ) {
-                LockScreenWordDetailScreen(
-                    wordId = showLockScreenWordDialogId!!,
-                    onBack = { viewModel.hideLockScreenWordDialog() },
-                    onNavigateToReview = { lockScreenWord ->
-                        viewModel.hideLockScreenWordDialog()
-                        SharedWordHolder.pendingWord = com.iti.linguaquest.core.database.word.WordEntity(
-                            id = lockScreenWord.id,
-                            sourceWord = lockScreenWord.word,
-                            translatedWord = lockScreenWord.translation,
-                            sourceLanguage = lockScreenWord.targetLanguage,
-                            targetLanguage = lockScreenWord.nativeLanguage,
-                            category = lockScreenWord.proficiencyLevel,
-                            imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
-                        )
-                        rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
-                    }
-                )
-            }
-        }
+
     }
 }

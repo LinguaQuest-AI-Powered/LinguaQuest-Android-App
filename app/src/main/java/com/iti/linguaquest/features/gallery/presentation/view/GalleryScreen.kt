@@ -61,6 +61,7 @@ private enum class GalleryTab {
 fun GalleryScreen(
     onNavigateToReview: (WordEntity) -> Unit,
     onNavigateHome: () -> Unit = {},
+    onShowLockScreenWordDialog: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
@@ -86,6 +87,7 @@ fun GalleryScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
+                is GalleryEffect.ShowLockScreenWordDialog -> onShowLockScreenWordDialog(effect.wordId)
             }
         }
     }
@@ -178,7 +180,7 @@ fun GalleryScreen(
                 when (selectedTab) {
                     GalleryTab.CAPTURES -> {
                         PullToRefreshBox(
-                            isRefreshing = state.dataStatus.isRefreshing(),
+                            isRefreshing = state.dataStatus is com.iti.linguaquest.core.sharedComponents.state.DataStatus.Refreshing,
                             onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
                             modifier = Modifier.fillMaxSize()
                         ) {

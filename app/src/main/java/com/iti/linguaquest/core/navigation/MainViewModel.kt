@@ -43,7 +43,6 @@ class MainViewModel @Inject constructor(
     val showLockScreenWordDialogId: StateFlow<Int?> = _showLockScreenWordDialogId.asStateFlow()
 
     fun showLockScreenWordDialog(wordId: Int) {
-        lastActiveTab = NestedScreen.Gallery
         _showLockScreenWordDialogId.value = wordId
     }
 

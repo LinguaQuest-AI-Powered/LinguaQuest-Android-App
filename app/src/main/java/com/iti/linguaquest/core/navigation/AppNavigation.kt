@@ -122,7 +122,7 @@ fun AppNavigation(
         val wordId = openLockScreenWordId ?: return@LaunchedEffect
         rootBackStack.apply {
             clear()
-            navigateSingleTop(RootScreen.Main)
+            navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
         }
         mainViewModel.showLockScreenWordDialog(wordId)
         onOpenLockScreenWordHandled()
