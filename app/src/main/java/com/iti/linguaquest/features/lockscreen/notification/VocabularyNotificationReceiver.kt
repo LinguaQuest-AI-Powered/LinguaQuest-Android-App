@@ -45,13 +45,11 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                     return@launch
                 }
                 val forceShow = intent.getBooleanExtra(EXTRA_FORCE_SHOW, false)
-                Timber.d("VocabularyNotificationReceiver: forceShow=$forceShow")
 
                 val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
                 val isLocked = keyguardManager.isKeyguardLocked
 
                 if (!forceShow && !isLocked) {
-                    Timber.d("VocabularyNotificationReceiver: Screen unlocked. Rescheduling next check.")
                     scheduler.scheduleScreenOffNotification()
                     return@launch
                 }
@@ -67,7 +65,6 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                 } else {
                     Timber.d("VocabularyNotificationReceiver: Attempting to show notification for word ID: ${wordToShow.id}")
                     val shown = notificationManager.show(wordToShow)
-                    Timber.d("VocabularyNotificationReceiver: Notification shown success=$shown")
 
                     if (shown && word != null) {
                         repository.markPosted(word.id)

@@ -108,8 +108,8 @@ fun LockScreenWordDetailScreen(
                         viewModel.onIntent(LockScreenWordDetailIntent.RequestNewWord)
                         showListMode = false
                     },
-                    containerColor = Color(0xFF915900),
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     shape = CircleShape
                 ) {
                     Icon(

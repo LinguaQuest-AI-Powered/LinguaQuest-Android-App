@@ -22,12 +22,12 @@ import java.io.File
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
-import com.iti.linguaquest.core.utils.VaultImageStorageManager
+import com.iti.linguaquest.features.game.domain.usecase.SaveVaultImageUseCase
 
 @HiltViewModel
 class GameProcessingViewModel @Inject constructor(
     private val verifyLevelUseCase: VerifyLevelUseCase,
-    private val vaultImageStorageManager: VaultImageStorageManager
+    private val saveVaultImageUseCase: SaveVaultImageUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameProcessingState())
@@ -46,7 +46,7 @@ class GameProcessingViewModel @Inject constructor(
                 is LinguaQuestResult.Success -> {
                     val data = result.data
                     if (data.isMatch) {
-                        vaultImageStorageManager.saveVaultImage(targetWord, imageFile)
+                        saveVaultImageUseCase(targetWord, imageFile)
                         sendEffect(
                             GameProcessingEffect.NavigateToSuccess(
                                 xp = data.xpEarned,

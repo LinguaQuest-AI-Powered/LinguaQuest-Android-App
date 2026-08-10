@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun CategoryChipsRow(
@@ -68,9 +69,9 @@ fun CategoryChipsRow(
             }
             
             val dotColor = when (lowerCategory) {
-                "beginner", "easy", "سهل" -> Color(0xFF4CAF50)
-                "intermediate", "medium", "متوسط" -> Color(0xFFFFC107)
-                "advanced", "hard", "صعب" -> Color(0xFFF44336)
+                "beginner", "easy", "سهل" -> LinguaQuestTheme.colors.SuccessAccent
+                "intermediate", "medium", "متوسط" -> LinguaQuestTheme.colors.Amber
+                "advanced", "hard", "صعب" -> LinguaQuestTheme.colors.ErrorAccent
                 else -> Color.Transparent
             }
             
