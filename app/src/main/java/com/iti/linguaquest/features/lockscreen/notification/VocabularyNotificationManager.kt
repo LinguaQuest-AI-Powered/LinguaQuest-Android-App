@@ -32,7 +32,6 @@ class VocabularyNotificationManager @Inject constructor(
 
     companion object {
         const val CHANNEL_ID = "lockscreen_vocabulary_channel_v3"
-        const val CHANNEL_NAME = "Vocabulary Reminder"
         const val NOTIFICATION_ID_BASE = 2000
         const val EXTRA_LOCKSCREEN_WORD_ID = "extra_lockscreen_word_id"
     }
@@ -45,7 +44,7 @@ class VocabularyNotificationManager @Inject constructor(
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            CHANNEL_NAME,
+            context.getString(R.string.lockscreen_notification_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = context.getString(R.string.lockscreen_notification_channel_description)
@@ -145,7 +144,7 @@ class VocabularyNotificationManager @Inject constructor(
         locContext: Context
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.layout_lockscreen_notification).apply {
-            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { "العربية" })
+            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { locContext.getString(R.string.arabic_language) })
             setTextViewText(R.id.tv_word_title, word.word)
             setTextViewText(R.id.tv_word_definition, word.meaning.ifBlank { word.translation })
             
@@ -168,7 +167,7 @@ class VocabularyNotificationManager @Inject constructor(
         locContext: Context
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.notification_lockscreen_expanded).apply {
-            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { "العربية" })
+            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { locContext.getString(R.string.arabic_language) })
             setTextViewText(R.id.tvWord, word.word)
             setTextViewText(R.id.tvTranslation, word.meaning.ifBlank { word.translation })
             

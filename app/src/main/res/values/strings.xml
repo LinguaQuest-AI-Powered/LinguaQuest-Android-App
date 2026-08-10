@@ -875,4 +875,11 @@
     <string name="daily_mission_button_start_camera">Start Camera</string>
     <string name="daily_mission_button_loading">Loading…</string>
     <string name="daily_mission_button_later">Later</string>
+    <string name="gallery_category_all">All Items</string>
+    <string name="gallery_difficulty_easy">Easy</string>
+    <string name="gallery_difficulty_medium">Medium</string>
+    <string name="gallery_difficulty_hard">Hard</string>
+    <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
+    <string name="arabic_language">arabic</string>
+    <string name="cd_avatar">Avatar</string>
 </resources>

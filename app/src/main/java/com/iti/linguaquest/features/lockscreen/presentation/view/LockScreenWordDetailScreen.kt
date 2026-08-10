@@ -92,7 +92,7 @@ fun LockScreenWordDetailScreen(
     }
 
     LaunchedEffect(wordId) {
-        viewModel.setHighlightedWordId(wordId.takeIf { it > 0 })
+        viewModel.onIntent(LockScreenWordDetailIntent.SetHighlightedWordId(wordId.takeIf { it > 0 }))
     }
 
     Scaffold(
@@ -105,7 +105,7 @@ fun LockScreenWordDetailScreen(
             if (showListMode) {
                 FloatingActionButton(
                     onClick = {
-                        viewModel.requestNewWord()
+                        viewModel.onIntent(LockScreenWordDetailIntent.RequestNewWord)
                         showListMode = false
                     },
                     containerColor = Color(0xFF915900),

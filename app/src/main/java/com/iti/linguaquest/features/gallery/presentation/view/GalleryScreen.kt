@@ -45,6 +45,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
@@ -59,6 +60,8 @@ private enum class GalleryTab {
 
 @Composable
 fun GalleryScreen(
+    openVaultTab: Boolean = false,
+    onOpenVaultTabHandled: () -> Unit = {},
     onNavigateToReview: (WordEntity) -> Unit,
     onNavigateHome: () -> Unit = {},
     onShowLockScreenWordDialog: (Int) -> Unit = {},
@@ -73,6 +76,13 @@ fun GalleryScreen(
     var showOfflinePopup by remember { mutableStateOf(false) }
     var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
     var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
+
+    LaunchedEffect(openVaultTab) {
+        if (openVaultTab) {
+            selectedTab = GalleryTab.WORDS
+            onOpenVaultTabHandled()
+        }
+    }
 
     fun guardOnline(anchor: Rect? = null, action: () -> Unit) {
         if (isOnline) {
@@ -144,7 +154,7 @@ fun GalleryScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.lingo_gellary_icon),
-                        contentDescription = "Avatar",
+                        contentDescription = stringResource(R.string.cd_avatar),
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
@@ -180,7 +190,7 @@ fun GalleryScreen(
                 when (selectedTab) {
                     GalleryTab.CAPTURES -> {
                         PullToRefreshBox(
-                            isRefreshing = state.dataStatus is com.iti.linguaquest.core.sharedComponents.state.DataStatus.Refreshing,
+                            isRefreshing = state.dataStatus is DataStatus.Refreshing,
                             onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
                             modifier = Modifier.fillMaxSize()
                         ) {

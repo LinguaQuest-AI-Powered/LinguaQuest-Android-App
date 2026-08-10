@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +52,15 @@ fun MainScreen(
 
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
+    val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
+    var openVaultTab by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(showLockScreenWordDialogId) {
+        if (showLockScreenWordDialogId != null) {
+            currentTab = BottomNavScreen.Gallery
+            openVaultTab = true
+        }
+    }
 
     BackHandler(enabled = currentTab != BottomNavScreen.Home) {
         currentTab = BottomNavScreen.Home
@@ -160,6 +170,8 @@ fun MainScreen(
 
                         BottomNavScreen.Gallery -> {
                             GalleryScreen(
+                                openVaultTab = openVaultTab,
+                                onOpenVaultTabHandled = { openVaultTab = false },
                                 onNavigateToReview = { word ->
                                     SharedWordHolder.pendingWord = word
                                     rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
@@ -206,8 +218,6 @@ fun MainScreen(
                     }
                 }
             }
-
-            val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
 
             if (showLockScreenWordDialogId != null) {
                 Dialog(

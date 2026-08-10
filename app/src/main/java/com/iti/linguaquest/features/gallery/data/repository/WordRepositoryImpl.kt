@@ -63,10 +63,7 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteWord(
-        word: WordEntity
-    ): EmptyResult<LinguaQuestDataError.Local> =
-        localDataSource.deleteWord(word)
+
 
     override suspend fun deleteWordById(
         wordId: Int

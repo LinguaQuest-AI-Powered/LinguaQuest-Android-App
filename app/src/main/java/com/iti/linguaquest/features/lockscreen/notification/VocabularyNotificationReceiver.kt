@@ -51,7 +51,8 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                 val isLocked = keyguardManager.isKeyguardLocked
 
                 if (!forceShow && !isLocked) {
-                    Timber.d("VocabularyNotificationReceiver: Screen unlocked. Stopping the cycle.")
+                    Timber.d("VocabularyNotificationReceiver: Screen unlocked. Rescheduling next check.")
+                    scheduler.scheduleScreenOffNotification()
                     return@launch
                 }
 

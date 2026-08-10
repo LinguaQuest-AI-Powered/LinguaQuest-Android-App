@@ -68,7 +68,7 @@ class GalleryViewModel @Inject constructor(
             GalleryIntent.RefreshWords -> refreshWords(isPullToRefresh = true)
             is GalleryIntent.CategorySelected -> filterByCategory(intent.category)
             is GalleryIntent.LockScreenCategorySelected -> filterLockScreenByCategory(intent.category)
-            is GalleryIntent.DeleteWordClicked -> deleteWord(intent.word)
+            is GalleryIntent.DeleteWordClicked -> deleteWord(intent.wordId)
             is GalleryIntent.WordItemClicked -> navigateToReview(intent.wordId)
             is GalleryIntent.LockScreenWordItemClicked -> navigateToLockScreenReview(intent.wordId)
         }
@@ -192,9 +192,9 @@ class GalleryViewModel @Inject constructor(
 
 
 
-    private fun deleteWord(word: WordEntity) {
+    private fun deleteWord(wordId: Int) {
         viewModelScope.launch {
-            deleteWordUseCase(word)
+            deleteWordUseCase(wordId)
         }
     }
 
@@ -208,7 +208,7 @@ class GalleryViewModel @Inject constructor(
     private fun navigateToLockScreenReview(wordId: Int) {
         viewModelScope.launch {
             val lockScreenWord = _state.value.lockScreenWords.find { it.id == wordId } ?: return@launch
-            _effects.send(GalleryEffect.NavigateToReview(lockScreenWord.toReviewWordEntity()))
+            _effects.send(GalleryEffect.ShowLockScreenWordDialog(wordId))
         }
     }
 
@@ -267,14 +267,3 @@ class GalleryViewModel @Inject constructor(
     }
 }
 
-private fun LockScreenWord.toReviewWordEntity(): WordEntity {
-    return WordEntity(
-        id = id,
-        sourceWord = word,
-        translatedWord = translation,
-        sourceLanguage = targetLanguage,
-        targetLanguage = nativeLanguage,
-        category = proficiencyLevel,
-        imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
-    )
-}

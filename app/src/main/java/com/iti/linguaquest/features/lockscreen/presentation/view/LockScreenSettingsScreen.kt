@@ -61,6 +61,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun LockScreenSettingsScreen(
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LockScreenSettingsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -136,6 +137,7 @@ fun LockScreenSettingsScreen(
     )
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             LinguaQuestScreenTopBar(
                 title = stringResource(R.string.lockscreen_vocabulary_title),
@@ -193,8 +195,8 @@ fun LockScreenSettingsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = AppColors.OrangeActive,
-                        contentColor = AppColors.White
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(primaryLabel, fontWeight = FontWeight.SemiBold)
