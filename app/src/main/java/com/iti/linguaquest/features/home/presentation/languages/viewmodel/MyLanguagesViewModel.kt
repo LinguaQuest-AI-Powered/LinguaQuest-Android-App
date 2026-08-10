@@ -9,6 +9,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,69 +45,88 @@ class MyLanguagesViewModel @Inject constructor(
     val effect: SharedFlow<MyLanguagesEffect> = _effect.asSharedFlow()
 
     init {
+        loadMyLanguages()
     }
 
     fun onIntent(intent: MyLanguagesIntent) {
         when (intent) {
-            MyLanguagesIntent.LoadMyLanguages -> loadMyLanguages()
-            is MyLanguagesIntent.SetActiveLanguage -> setActiveLanguage(intent.languageId)
+            is MyLanguagesIntent.RequestSetActiveLanguage -> requestSetActiveLanguage(intent.language)
+            MyLanguagesIntent.ConfirmSetActiveLanguage -> confirmSetActiveLanguage()
+            MyLanguagesIntent.DismissSetActiveDialog -> dismissSetActiveDialog()
             is MyLanguagesIntent.RequestRemoveLanguage -> requestRemoveLanguage(intent.language)
             MyLanguagesIntent.ConfirmRemoveLanguage -> confirmRemoveLanguage()
             MyLanguagesIntent.DismissRemoveDialog -> dismissRemoveDialog()
             MyLanguagesIntent.AddNewLanguageClicked -> sendEffect(MyLanguagesEffect.NavigateToAddLanguages)
-            MyLanguagesIntent.Dismiss -> sendEffect(MyLanguagesEffect.Dismiss)
+            MyLanguagesIntent.Dismiss -> sendEffect(MyLanguagesEffect.DismissSheet)
         }
     }
 
     private fun loadMyLanguages() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
-            when (val result = getMyLanguagesUseCase()) {
-                is LinguaQuestResult.Success -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            languages = result.data.map { lang -> lang.toUiModel() }
-                        )
+            _state.update { it.copy(dataStatus = DataStatus.Loading) }
+            getMyLanguagesUseCase().collectLatest { result ->
+                when (result) {
+                    is LinguaQuestResult.Success -> {
+                        _state.update {
+                            it.copy(
+                                dataStatus = DataStatus.Loaded,
+                                languages = result.data.map { lang -> lang.toUiModel() }
+                            )
+                        }
                     }
-                }
-                is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
-                    snackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = result.error.toUiText(),
-                            type = SnackbarType.ERROR,
-                            actionLabel = UiText.StringResource(R.string.retry),
-                            onAction = { loadMyLanguages() }
-                        )
-                    )
+                    is LinguaQuestResult.Failure -> {
+                        val hasCache = _state.value.hasData
+                        val errorUiText = result.error.toUiText()
+                        
+                        _state.update {
+                            it.copy(
+                                dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
+                            )
+                        }
+                        
+                        if (hasCache) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { loadMyLanguages() }
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun setActiveLanguage(languageId: Int) {
+    private fun requestSetActiveLanguage(language: MyLanguageUiModel) {
+        if (language.isCurrent) return
+        _state.update { it.copy(languagePendingActivation = language) }
+    }
+
+    private fun dismissSetActiveDialog() {
+        _state.update { it.copy(languagePendingActivation = null) }
+    }
+
+    private fun confirmSetActiveLanguage() {
+        val language = _state.value.languagePendingActivation ?: return
+        _state.update { it.copy(languagePendingActivation = null, isSettingActive = true) }
+        
+        sendEffect(MyLanguagesEffect.SwitchingLanguage)
+
         viewModelScope.launch {
-            _state.update { it.copy(isSettingActive = true) }
-            sendEffect(MyLanguagesEffect.Dismiss)
-            snackbarController.sendEvent(
-                SnackbarEvent(
-                    title = UiText.StringResource(R.string.updating_language_title),
-                    message = UiText.StringResource(R.string.updating_language_desc),
-                    type = SnackbarType.INFO,
-                    showCloseIcon = false
-                )
-            )
-            when (val result = setActiveLanguageUseCase(languageId)) {
+            when (val result = setActiveLanguageUseCase(language.id)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { currentState ->
                         currentState.copy(
                             isSettingActive = false,
                             languages = currentState.languages.map { lang ->
-                                lang.copy(isCurrent = lang.id == languageId)
+                                lang.copy(isCurrent = lang.id == language.id)
                             }
                         )
                     }
+                    sendEffect(MyLanguagesEffect.LanguageSwitched)
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSettingActive = false) }
@@ -115,6 +136,7 @@ class MyLanguagesViewModel @Inject constructor(
                             type = SnackbarType.ERROR
                         )
                     )
+                    sendEffect(MyLanguagesEffect.LanguageSwitchFailed(result.error.toUiText()))
                 }
             }
         }

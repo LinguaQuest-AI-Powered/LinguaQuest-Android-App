@@ -43,7 +43,6 @@ import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
-import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.AddLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.languages.component.LanguageSelectionCard
 import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
@@ -56,6 +55,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.layout.ContentScale
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 
 @Composable
 fun AddLanguagesScreen(
@@ -72,6 +73,18 @@ fun AddLanguagesScreen(
         }
     }
 
+    if (state.languagePendingRemoval != null) {
+        AppDialog(
+            title = stringResource(R.string.remove_language_title),
+            message = stringResource(R.string.remove_language_message, state.languagePendingRemoval!!.name),
+            onDismissRequest = { viewModel.onIntent(AddLanguagesIntent.DismissRemoveDialog) },
+            primaryButtonText = stringResource(R.string.remove),
+            onPrimaryClick = { viewModel.onIntent(AddLanguagesIntent.ConfirmRemoveLanguage) },
+            secondaryButtonText = stringResource(R.string.cancel),
+            onSecondaryClick = { viewModel.onIntent(AddLanguagesIntent.DismissRemoveDialog) }
+        )
+    }
+
     AddLanguagesContent(
         state = state,
         onIntent = viewModel::onIntent
@@ -81,23 +94,13 @@ fun AddLanguagesScreen(
 @Composable
 fun AddLanguagesContent(
     state: AddLanguagesState,
-    onIntent: (AddLanguagesIntent) -> Unit
+    onIntent: (AddLanguagesIntent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
 
-    if (state.languagePendingRemoval != null) {
-        AppDialog(
-            title = stringResource(R.string.remove_language_title),
-            message = stringResource(R.string.remove_language_message, state.languagePendingRemoval.name),
-            onDismissRequest = { onIntent(AddLanguagesIntent.DismissRemoveDialog) },
-            primaryButtonText = stringResource(R.string.remove),
-            onPrimaryClick = { onIntent(AddLanguagesIntent.ConfirmRemoveLanguage) },
-            secondaryButtonText = stringResource(R.string.cancel),
-            onSecondaryClick = { onIntent(AddLanguagesIntent.DismissRemoveDialog) }
-        )
-    }
-
     Scaffold(
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LinguaQuestScreenTopBar(
@@ -116,7 +119,7 @@ fun AddLanguagesContent(
                     text = stringResource(R.string.add_selected_format, state.selectedLanguageIds.size),
                     onClick = { onIntent(AddLanguagesIntent.AddSelectedClicked) },
                     enabled = state.selectedLanguageIds.isNotEmpty(),
-                    isLoading = state.isLoading && state.selectedLanguageIds.isNotEmpty()
+                    isLoading = state.isAdding && state.selectedLanguageIds.isNotEmpty()
                 )
             }
         }
@@ -179,64 +182,63 @@ fun AddLanguagesContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            val filteredLanguages = state.availableLanguages.filter {
-                it.name.contains(state.searchQuery, ignoreCase = true)
-            }
+            StatefulContentContainer(
+                dataStatus = state.dataStatus,
+                onRetry = { /* Retry logic goes here, or we can trigger a refresh intent */ },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val filteredLanguages = state.availableLanguages.filter {
+                    it.name.contains(state.searchQuery, ignoreCase = true)
+                }
 
-            if (state.isLoading && state.availableLanguages.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LingoSpinningIcon(size = 36.dp)
-                }
-            } else if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(bottom = 64.dp)
+                if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.lingo_empty),
-                            contentDescription = null,
-                            modifier = Modifier.size(350.dp),
-                            contentScale = androidx.compose.ui.layout.ContentScale.Fit
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = stringResource(R.string.add_languages_no_results),
-                            style = AppTextStyles.ScreenTitle.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = LinguaQuestTheme.colors.titleAndCationsColor,
-                                textAlign = TextAlign.Center
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(bottom = 64.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.lingo_empty),
+                                contentDescription = null,
+                                modifier = Modifier.size(350.dp),
+                                contentScale = ContentScale.Fit
                             )
-                        )
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Text(
+                                text = stringResource(R.string.add_languages_no_results),
+                                style = AppTextStyles.ScreenTitle.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = LinguaQuestTheme.colors.titleAndCationsColor,
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
                     }
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(
-                        items = filteredLanguages,
-                        key = { it.id }
-                    ) { language ->
-                        LanguageSelectionCard(
-                            language = language,
-                            isSelected = state.selectedLanguageIds.contains(language.id),
-                            onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
-                            onRemoveClick = if (language.isAdded) {
-                                { onIntent(AddLanguagesIntent.RequestRemoveLanguage(language)) }
-                            } else null,
-                            modifier = Modifier.height(180.dp)
-                        )
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(
+                            items = filteredLanguages,
+                            key = { it.id }
+                        ) { language ->
+                            LanguageSelectionCard(
+                                language = language,
+                                isSelected = state.selectedLanguageIds.contains(language.id),
+                                onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                                onRemoveClick = if (language.isAdded) {
+                                    { onIntent(AddLanguagesIntent.RequestRemoveLanguage(language)) }
+                                } else null,
+                                modifier = Modifier.height(180.dp)
+                            )
+                        }
                     }
                 }
             }

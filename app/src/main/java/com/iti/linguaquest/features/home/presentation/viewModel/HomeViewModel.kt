@@ -113,6 +113,26 @@ class HomeViewModel @Inject constructor(
                 _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
                 sendEffect(HomeEffect.NavigateToDailyMissionCamera(intent.word))
             }
+            HomeIntent.PrepareLanguageSwitch -> {
+                _state.update { it.copy(dataStatus = DataStatus.Loading) }
+            }
+            HomeIntent.ReloadLanguageSwitch -> {
+                viewModelScope.launch {
+                    val result = getHomeSummaryUseCase.refresh()
+                    if (result is LinguaQuestResult.Failure) {
+                        val hasCache = _state.value.hasData
+                        val errorUiText = (result.error as? LinguaQuestDataError)?.toUiText() ?: UiText.StringResource(R.string.error_generic)
+                        _state.update { it.copy(dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)) }
+                        if (hasCache) {
+                            snackbarController.sendEvent(SnackbarEvent(message = errorUiText, type = SnackbarType.ERROR))
+                        }
+                    }
+                }
+            }
+            HomeIntent.CancelLanguageSwitch -> {
+                val hasCache = _state.value.hasData
+                _state.update { it.copy(dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(UiText.StringResource(R.string.error_generic))) }
+            }
         }
     }
 

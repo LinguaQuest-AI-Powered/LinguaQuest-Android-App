@@ -45,24 +45,41 @@ import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import androidx.compose.animation.Crossfade
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyLanguagesBottomSheet(
     modifier: Modifier = Modifier,
     languages: List<MyLanguageUiModel>,
-    isLoading: Boolean = false,
+    dataStatus: DataStatus = DataStatus.Loading,
     isSettingActive: Boolean = false,
     languagePendingRemoval: MyLanguageUiModel? = null,
     removingLanguageId: Int? = null,
+    languagePendingActivation: MyLanguageUiModel? = null,
     onDismiss: () -> Unit,
     onAddNewLanguageClick: () -> Unit,
-    onLanguageSelect: (Int) -> Unit,
+    onLanguageSelect: (MyLanguageUiModel) -> Unit,
+    onConfirmSetActiveLanguage: (() -> Unit)? = null,
+    onDismissSetActiveDialog: (() -> Unit)? = null,
     onRemoveLanguageClick: ((MyLanguageUiModel) -> Unit)? = null,
     onConfirmRemoveLanguage: (() -> Unit)? = null,
     onDismissRemoveDialog: (() -> Unit)? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    if (languagePendingActivation != null && onConfirmSetActiveLanguage != null && onDismissSetActiveDialog != null) {
+        AppDialog(
+            title = stringResource(R.string.change_language_title),
+            message = stringResource(R.string.change_language_message, languagePendingActivation.name),
+            onDismissRequest = onDismissSetActiveDialog,
+            primaryButtonText = stringResource(R.string.confirm),
+            onPrimaryClick = onConfirmSetActiveLanguage,
+            secondaryButtonText = stringResource(R.string.cancel),
+            onSecondaryClick = onDismissSetActiveDialog
+        )
+    }
 
     if (languagePendingRemoval != null && onConfirmRemoveLanguage != null && onDismissRemoveDialog != null) {
         AppDialog(
@@ -120,30 +137,53 @@ fun MyLanguagesBottomSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LingoSpinningIcon(size = 36.dp)
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f, fill = false),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(languages) { language ->
-                        MyLanguageItem(
-                            language = language,
-                            enabled = !isSettingActive,
-                            isRemoving = removingLanguageId == language.id,
-                            onClick = { onLanguageSelect(language.id) },
-                            onRemoveClick = if (onRemoveLanguageClick != null && !language.isCurrent) {
-                                { onRemoveLanguageClick(language) }
-                            } else null
-                        )
+            Crossfade(
+                targetState = dataStatus,
+                label = "MyLanguagesBottomSheetCrossfade",
+                modifier = Modifier.weight(1f, fill = false)
+            ) { targetStatus ->
+                when (targetStatus) {
+                    is DataStatus.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LingoSpinningIcon(size = 36.dp)
+                        }
+                    }
+                    is DataStatus.Loaded, is DataStatus.Refreshing -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(languages) { language ->
+                                MyLanguageItem(
+                                    language = language,
+                                    enabled = !isSettingActive,
+                                    isRemoving = removingLanguageId == language.id,
+                                    onClick = { onLanguageSelect(language) },
+                                    onRemoveClick = if (onRemoveLanguageClick != null && !language.isCurrent) {
+                                        { onRemoveLanguageClick(language) }
+                                    } else null
+                                )
+                            }
+                        }
+                    }
+                    is DataStatus.Error -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = targetStatus.message.asString(),
+                                style = AppTextStyles.Translation,
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }

@@ -165,7 +165,9 @@
     <string name="settings_label">Settings</string>
     <string name="view_all_label">VIEW ALL</string>
     <string name="you_label">You</string>
-
+    <string name="change_language_title">Change Language</string>
+    <string name="change_language_message">Are you sure you want to switch to %1$s?</string>
+    <string name="confirm">Confirm</string>
     <string name="practice_pronunciation">Practice your\npronunciation</string>
     <!-- WorldDifficulty -->
     <string name="medium">MEDIUM</string>

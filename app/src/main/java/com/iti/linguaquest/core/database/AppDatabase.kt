@@ -12,6 +12,8 @@ import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordEntity
 import com.iti.linguaquest.core.database.word.WordDao
 import com.iti.linguaquest.core.database.word.WordEntity
+import com.iti.linguaquest.core.database.languages.LanguagesDao
+import com.iti.linguaquest.core.database.languages.UserLanguageEntity
 
 @Database(
     entities = [
@@ -19,9 +21,10 @@ import com.iti.linguaquest.core.database.word.WordEntity
         ProfileEntity::class,
         LockScreenWordEntity::class,
         HomeEntity::class,
-        NotificationEntity::class
+        NotificationEntity::class,
+        UserLanguageEntity::class
     ],
-    version = 11,
+    version = 12,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -30,4 +33,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun lockScreenWordDao(): LockScreenWordDao
     abstract fun homeDao(): HomeDao
     abstract fun notificationDao(): NotificationDao
+    abstract fun languagesDao(): LanguagesDao
 }

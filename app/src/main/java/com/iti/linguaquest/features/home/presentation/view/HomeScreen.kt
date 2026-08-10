@@ -135,19 +135,24 @@ fun HomeScreen(
                         onNavigateToAddLanguages()
                     }
                 }
-                MyLanguagesEffect.Dismiss -> {
+                MyLanguagesEffect.DismissSheet -> {
                     viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
-                    viewModel.onIntent(HomeIntent.Retry)
+                }
+                MyLanguagesEffect.SwitchingLanguage -> {
+                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                    viewModel.onIntent(HomeIntent.PrepareLanguageSwitch)
+                }
+                MyLanguagesEffect.LanguageSwitched -> {
+                    viewModel.onIntent(HomeIntent.ReloadLanguageSwitch)
+                }
+                is MyLanguagesEffect.LanguageSwitchFailed -> {
+                    viewModel.onIntent(HomeIntent.CancelLanguageSwitch)
                 }
             }
         }
     }
 
-    LaunchedEffect(state.isLanguageBottomSheetVisible) {
-        if (state.isLanguageBottomSheetVisible) {
-            myLanguagesViewModel.onIntent(MyLanguagesIntent.LoadMyLanguages)
-        }
-    }
+
 
     Box(modifier = modifier.fillMaxSize()) {
 
