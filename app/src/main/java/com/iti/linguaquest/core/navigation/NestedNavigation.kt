@@ -1,5 +1,6 @@
 package com.iti.linguaquest.core.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -21,13 +26,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
@@ -38,28 +38,22 @@ import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
 
-
 @Composable
 fun MainScreen(
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
+    openDailyMissionRequested: Boolean = false,
+    onOpenDailyMissionHandled: () -> Unit = {},
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val nestedBackStack = if (viewModel.lastActiveTab == NestedScreen.Home) {
-        rememberNavBackStack(NestedScreen.Home)
-    } else {
-        rememberNavBackStack(NestedScreen.Home, viewModel.lastActiveTab)
-    }
-    val currentScreen = nestedBackStack.lastOrNull()
+    var currentTab by rememberSaveable { mutableStateOf(BottomNavScreen.Home) }
+    val saveableStateHolder = rememberSaveableStateHolder()
+
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
 
-
-    val currentRootScreen = rootBackStack.lastOrNull()
-    LaunchedEffect(currentRootScreen) {
-        if (currentRootScreen == RootScreen.Main) {
-            viewModel.refreshUnreadCount()
-        }
+    BackHandler(enabled = currentTab != BottomNavScreen.Home) {
+        currentTab = BottomNavScreen.Home
     }
 
     DisposableEffect(Unit) {
@@ -100,20 +94,12 @@ fun MainScreen(
                     }
                 )
             },
-
             bottomBar = {
                 GameBottomNavBar(
                     items = BottomNavScreen.entries,
-                    currentRoute = currentScreen,
+                    currentRoute = currentTab.route,
                     onItemClick = { bottomNavScreen ->
-                        viewModel.lastActiveTab = bottomNavScreen.route
-                        nestedBackStack.apply {
-                            clear()
-                            navigateSingleTop(NestedScreen.Home)
-                            if (bottomNavScreen.route != NestedScreen.Home) {
-                                navigateSingleTop(bottomNavScreen.route)
-                            }
-                        }
+                        currentTab = bottomNavScreen
                     },
                     modifier = Modifier.onGloballyPositioned { coordinates ->
                         SharedBottomBarState.heightPx = coordinates.size.height
@@ -121,33 +107,75 @@ fun MainScreen(
                 )
             }
         ) { innerPadding ->
-            NavDisplay(
-                backStack = nestedBackStack,
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                onBack = { nestedBackStack.removeLastOrNull() },
-                entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator()
-                ),
-                entryProvider = entryProvider {
-                    entry<NestedScreen.Home> {
-                        HomeScreen(
-                            onNavigateToAllWorlds = {
-                                rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
-                            },
-                            onNavigateToWorldMap = { worldId ->
-                                rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
-                            },
-                            onNavigateToAddLanguages = {
-                                rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
-                            },
-                            onNavigateToLevel = { worldId, levelId, levelOrder, targetWord ->
-                                rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
-                                rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
-                            }
-                        )
+                    .padding(innerPadding)
+            ) {
+                saveableStateHolder.SaveableStateProvider(key = currentTab) {
+                    when (currentTab) {
+                        BottomNavScreen.Home -> {
+                            HomeScreen(
+                                openDailyMissionRequested = openDailyMissionRequested,
+                                onOpenDailyMissionHandled = onOpenDailyMissionHandled,
+                                onNavigateToAllWorlds = {
+                                    rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
+                                },
+                                onNavigateToWorldMap = { worldId, totalLevels ->
+                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
+                                },
+                                onNavigateToAddLanguages = {
+                                    rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
+                                },
+                                onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
+                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
+                                    rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
+                                },
+                                onNavigateToDailyMissionCamera = { word ->
+                                    rootBackStack.navigateSingleTop(RootScreen.DailyMissionCamera(word))
+                                }
+                            )
+                        }
+                        BottomNavScreen.Gallery -> {
+                            GalleryScreen(
+                                onNavigateToReview = { word ->
+                                    SharedWordHolder.pendingWord = word
+                                    rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                                },
+                                onNavigateHome = {
+                                    currentTab = BottomNavScreen.Home
+                                }
+                            )
+                        }
+                        BottomNavScreen.Lingos -> {
+                            LingosScreen(
+                                onNavigateToVoiceGame = {
+                                    rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
+                                },
+                                onNavigateToRoleplayList = {
+                                    rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                                },
+                                onNavigateToMindReader = {
+                                    rootBackStack.navigateSingleTop(RootScreen.MindReader())
+                                }
+                            )
+                        }
+                        BottomNavScreen.Profile -> {
+                            ProfileScreen(
+                                onSettingsClick = {
+                                    rootBackStack.navigateSingleTop(RootScreen.Settings)
+                                },
+                                onViewAllLeaderboardClick = {
+                                    rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
+                                },
+                                onViewAllAchievementsClick = {
+                                    rootBackStack.navigateSingleTop(RootScreen.Achievement)
+                                },
+                                onNavigateHome = {
+                                    currentTab = BottomNavScreen.Home
+                                }
+                            )
+                        }
                     }
                     entry<NestedScreen.Gallery> {
                         GalleryScreen(
@@ -155,8 +183,8 @@ fun MainScreen(
                                 SharedWordHolder.pendingWord = word
                                 rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
                             },
-                            onShowLockScreenWordDialog = { wordId ->
-                                viewModel.showLockScreenWordDialog(wordId)
+                            onNavigateHome = {
+                                currentTab = BottomNavScreen.Home
                             }
                         )
                     }
@@ -186,9 +214,8 @@ fun MainScreen(
                             }
                         )
                     }
-
                 }
-            )
+            }
         }
 
         val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()

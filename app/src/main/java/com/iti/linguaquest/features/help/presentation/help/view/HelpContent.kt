@@ -3,13 +3,13 @@ package com.iti.linguaquest.features.help.presentation.help.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -21,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
 import com.iti.linguaquest.core.utils.ImageWrapper
-import com.iti.linguaquest.core.utils.ShareTopBar
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpIntent
 import com.iti.linguaquest.features.help.presentation.help.contract.HelpState
 import com.iti.linguaquest.features.help.presentation.help.view.components.FaqAccordionItem
@@ -44,14 +44,13 @@ fun HelpContent(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
+            .padding(top = 8.dp, bottom = 24.dp)
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 24.dp)
     ) {
 
-        ShareTopBar(
-            title = R.string.help_support_title,
-            onBackClick = { onIntent(HelpIntent.OnBackClicked) }
+        LinguaQuestScreenTopBar(
+            title = stringResource(id = R.string.help_support_title),
+            onBackClicked = { onIntent(HelpIntent.OnBackClicked) }
         )
 
 
@@ -81,7 +80,8 @@ fun HelpContent(
 
             Text(
                 text = stringResource(id = R.string.help_faq_section_title),
-                style = AppTextStyles.SectionTitle.copy(fontWeight = FontWeight.Bold),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
@@ -101,7 +101,8 @@ fun HelpContent(
 
             Text(
                 text = stringResource(id = R.string.help_still_need_help_title),
-                style = AppTextStyles.SectionTitle.copy(fontWeight = FontWeight.Bold),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
@@ -116,7 +117,8 @@ fun HelpContent(
 
             Text(
                 text = stringResource(id = R.string.help_reply_footer),
-                style = AppTextStyles.Caption,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center

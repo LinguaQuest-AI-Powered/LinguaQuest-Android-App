@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -89,12 +89,8 @@ fun LearningProgressCard(
                     modifier = Modifier.size(40.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
-                        progress = { progress },
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        trackColor = LinguaQuestTheme.colors.progressTrackRemainedColor,
-                        strokeWidth = 3.dp
+                    LingoSpinningIcon(
+                        modifier = Modifier.fillMaxSize()
                     )
                     Text(
                         text = "${(progress * 100).toInt()}%",

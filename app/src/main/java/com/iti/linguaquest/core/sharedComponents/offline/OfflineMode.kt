@@ -207,6 +207,15 @@ fun OfflineAwareContent(
     onRetry: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            onRetry?.invoke()
+        }
+        wasOffline = !isOnline
+    }
+
     Crossfade(
         targetState = isOnline,
         animationSpec = tween(400),

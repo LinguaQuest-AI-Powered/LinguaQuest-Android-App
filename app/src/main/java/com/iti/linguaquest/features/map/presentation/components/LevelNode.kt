@@ -36,6 +36,8 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.launch
@@ -53,6 +55,8 @@ fun LevelNode(
     offsetX: Dp,
     offsetY: Dp,
     isLastLevel: Boolean = false,
+    isRevealed: Boolean = true,
+    index: Int = 0,
     onClick: () -> Unit = {}
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
@@ -73,18 +77,40 @@ fun LevelNode(
 
     var currentFrame by remember { androidx.compose.runtime.mutableIntStateOf(0) }
 
-    var showIntro by remember { androidx.compose.runtime.mutableStateOf(!isLastLevel) }
+    var showIntro by remember { androidx.compose.runtime.mutableStateOf(!isRevealed) }
     val introScale = remember { Animatable(0.9f) }
 
-    LaunchedEffect(Unit) {
-        launch {
+    LaunchedEffect(isRevealed) {
+        if (!isRevealed) {
+            showIntro = true
+        } else {
+            delay((index * 40).toLong())
+            showIntro = false
+        }
+    }
+
+    LaunchedEffect(showIntro) {
+        if (showIntro) {
             introScale.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
             )
         }
-        delay(INTRO_DURATION.toLong().milliseconds)
-        showIntro = false
+    }
+
+    val revealScale = remember { Animatable(0f) }
+    LaunchedEffect(showIntro) {
+        if (!showIntro) {
+            revealScale.animateTo(
+                targetValue = 1f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+        } else {
+            revealScale.snapTo(0f)
+        }
     }
 
     LaunchedEffect(isLastLevel, status) {
@@ -193,7 +219,7 @@ fun LevelNode(
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
                 )
             )
-            LevelStatus.LOCKED -> Brush.linearGradient(
+            LevelStatus.LOCKED, LevelStatus.PLACEHOLDER -> Brush.linearGradient(
                 colors = listOf(
                     LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.4f),
                     LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.1f)
@@ -214,6 +240,7 @@ fun LevelNode(
             modifier = Modifier
                 .align(Alignment.Center)
                 .alpha(if (showIntro) 0f else 1f)
+                .scale(if (!showIntro) revealScale.value else 1f)
         ) {
             if (status == LevelStatus.CURRENT) {
                 val haloSize = if (isLastLevel) 220.dp else 120.dp
@@ -260,7 +287,7 @@ fun LevelNode(
                         .then(borderModifier),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (status == LevelStatus.LOCKED) {
+                    if (status == LevelStatus.LOCKED || status == LevelStatus.PLACEHOLDER) {
                         Icon(
                             painter = painterResource(id = R.drawable.lock),
                             contentDescription = "Locked",

@@ -44,10 +44,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
-import com.iti.linguaquest.core.sharedComponents.GlobalUiHostViewModel
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
-import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
-import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
@@ -62,10 +60,9 @@ private enum class GalleryTab {
 @Composable
 fun GalleryScreen(
     onNavigateToReview: (WordEntity) -> Unit,
-    onShowLockScreenWordDialog: (Int) -> Unit = {},
+    onNavigateHome: () -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: GalleryViewModel = hiltViewModel(),
-    globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
+    viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
@@ -89,27 +86,13 @@ fun GalleryScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
-                is GalleryEffect.ShowLockScreenWordDialog -> onShowLockScreenWordDialog(effect.wordId)
-                is GalleryEffect.ShowError -> globalUiHostViewModel.snackbarController.sendEvent(
-                    SnackbarEvent(
-                        title = effect.title,
-                        message = effect.message,
-                        type = effect.type,
-                        actionLabel = if (effect.retryable) UiText.StringResource(R.string.retry) else null,
-                        onAction = if (effect.retryable) {
-                            { viewModel.onIntent(GalleryIntent.LoadWords) }
-                        } else {
-                            null
-                        }
-                    )
-                )
             }
         }
     }
 
-    val isEmptyCaptures = state.words.isEmpty() && !state.isLoading && state.errorMessage == null
+    val isEmpty = !state.hasData
 
-    LaunchedEffect(isEmptyCaptures) {
+    LaunchedEffect(isEmpty) {
         SharedBackgroundState.showBackground = true
     }
 
@@ -126,7 +109,6 @@ fun GalleryScreen(
                 stringResource(R.string.objects_collected, state.words.size)
             }
         }
-
         GalleryTab.WORDS -> {
             if (state.lockScreenWords.isEmpty()) {
                 stringResource(R.string.lockscreen_vocabulary_vault_empty_subtitle)
@@ -142,82 +124,89 @@ fun GalleryScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Column(
+        StatefulContentContainer(
+            dataStatus = state.dataStatus,
+            onRetry = { viewModel.onIntent(GalleryIntent.LoadWords) },
+            onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+            onErrorDismiss = onNavigateHome,
             modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lingo_gellary_icon),
-                    contentDescription = "Avatar",
+                Row(
                     modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.lingo_gellary_icon),
+                        contentDescription = "Avatar",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Column {
+                        Text(
+                            text = headerTitle,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = headerSubtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                GalleryTabsRow(
+                    selectedTab = selectedTab,
+                    onTabSelected = { selectedTab = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                Column {
-                    Text(
-                        text = headerTitle,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = headerSubtitle,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+                when (selectedTab) {
+                    GalleryTab.CAPTURES -> {
+                        PullToRefreshBox(
+                            isRefreshing = state.dataStatus.isRefreshing(),
+                            onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            GalleryContent(
+                                state = state,
+                                onIntent = viewModel::onIntent,
+                                onWordClick = { wordId: Int, anchor: Rect ->
+                                    guardOnline(anchor) {
+                                        viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
 
-            GalleryTabsRow(
-                selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            when (selectedTab) {
-                GalleryTab.CAPTURES -> {
-                    PullToRefreshBox(
-                        isRefreshing = state.isRefreshing,
-                        onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        GalleryContent(
+                    GalleryTab.WORDS -> {
+                        LockScreenWordsContent(
                             state = state,
-                            isOnline = isOnline,
                             onIntent = viewModel::onIntent,
                             onWordClick = { wordId: Int, anchor: Rect ->
                                 guardOnline(anchor) {
-                                    viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                                    viewModel.onIntent(GalleryIntent.LockScreenWordItemClicked(wordId))
                                 }
                             },
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-                }
-
-                GalleryTab.WORDS -> {
-                    LockScreenWordsContent(
-                        state = state,
-                        onIntent = viewModel::onIntent,
-                        onWordClick = { wordId: Int, anchor: Rect ->
-                            guardOnline(anchor) {
-                                viewModel.onIntent(GalleryIntent.LockScreenWordItemClicked(wordId))
-                            }
-                        },
-                        modifier = Modifier.fillMaxSize()
-                    )
                 }
             }
         }

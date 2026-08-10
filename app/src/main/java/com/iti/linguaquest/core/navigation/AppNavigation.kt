@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -83,6 +84,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashView
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
+import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyMissionCameraScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 
@@ -91,8 +93,10 @@ import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScree
 @Composable
 fun AppNavigation(
     openHomeRequested: Boolean = false,
+    openDailyMissionRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
     onOpenHomeHandled: () -> Unit = {},
+    onOpenDailyMissionHandled: () -> Unit = {},
     onOpenLockScreenWordHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel(),
@@ -108,7 +112,7 @@ fun AppNavigation(
         if (openHomeRequested) {
             rootBackStack.apply {
                 clear()
-                navigateSingleTop(RootScreen.Main)
+                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
             }
             onOpenHomeHandled()
         }
@@ -311,7 +315,7 @@ fun AppNavigation(
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         }
                     )
@@ -324,7 +328,7 @@ fun AppNavigation(
                         onNavigateToMain = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         onOAuthLanguageSelection = {
@@ -373,7 +377,7 @@ fun AppNavigation(
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         resetToken = screen.resetToken
@@ -381,10 +385,20 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.Main> {
-                    MainScreen(rootBackStack, viewModel = mainViewModel)
+                    MainScreen(
+                        rootBackStack = rootBackStack,
+                        openDailyMissionRequested = openDailyMissionRequested,
+                        onOpenDailyMissionHandled = onOpenDailyMissionHandled,
+                        viewModel = mainViewModel
+                    )
                 }
 
                 entry<RootScreen.Notification> {
+                    DisposableEffect(Unit) {
+                        onDispose {
+                            mainViewModel.refreshUnreadCount()
+                        }
+                    }
                     NotificationScreen(
                         onBackClick = { rootBackStack.removeLastOrNull() }
                     )
@@ -393,6 +407,7 @@ fun AppNavigation(
                 entry<RootScreen.Map> { screen ->
                     MapScreen(
                         worldId = screen.worldId,
+                        totalLevels = screen.totalLevels,
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToLevel = { levelId, levelOrder, targetWord ->
                             rootBackStack.navigateSingleTop(
@@ -444,6 +459,14 @@ fun AppNavigation(
                     )
                 }
 
+                entry<RootScreen.DailyMissionCamera> { screen ->
+                    DailyMissionCameraScreen(
+                        word = screen.word,
+                        onBack = { rootBackStack.removeLastOrNull() },
+                        snackbarController = globalUiHostViewModel.snackbarController
+                    )
+                }
+
                 entry<RootScreen.VoiceResult> {
                     val result = SharedVoiceResultHolder.pendingResult
                     if (result != null) {
@@ -460,7 +483,7 @@ fun AppNavigation(
                             },
                             onHome = {
                                 SharedVoiceResultHolder.pendingResult = null
-                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main(System.currentTimeMillis())) }
                             }
                         )
                     } else {
@@ -540,8 +563,8 @@ fun AppNavigation(
                 entry<RootScreen.AllWorlds> {
                     AllWorldsScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
-                        onNavigateToWorldDetails = { worldId ->
-                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId))
+                        onNavigateToWorldDetails = { worldId, totalLevels ->
+                            rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
                         }
                     )
                 }

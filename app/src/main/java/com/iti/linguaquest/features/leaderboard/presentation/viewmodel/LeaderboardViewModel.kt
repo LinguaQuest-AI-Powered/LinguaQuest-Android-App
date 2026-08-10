@@ -10,6 +10,7 @@ import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 import com.iti.linguaquest.features.leaderboard.domain.usecase.GetLeaderboardUseCase
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardIntent
 import com.iti.linguaquest.features.leaderboard.presentation.contract.LeaderboardState
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,10 +21,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
+
 @HiltViewModel
 class LeaderboardViewModel @Inject constructor(
     private val getLeaderboardUseCase: GetLeaderboardUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     companion object {
@@ -70,8 +76,7 @@ class LeaderboardViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    isLoading = true,
-                    errorMessage = null,
+                    dataStatus = DataStatus.Loading,
                     currentPage = FIRST_PAGE,
                     endReached = false
                 )
@@ -86,7 +91,7 @@ class LeaderboardViewModel @Inject constructor(
                 .onSuccess { leaderboard ->
                     _state.update {
                         it.copy(
-                            isLoading = false,
+                            dataStatus = DataStatus.Loaded,
                             leaderboard = leaderboard,
                             currentPage = FIRST_PAGE,
                             endReached = leaderboard.entries.size < PAGE_SIZE
@@ -96,8 +101,7 @@ class LeaderboardViewModel @Inject constructor(
                 .onFailure { error ->
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            errorMessage = error.toUiText()
+                            dataStatus = DataStatus.Error(error.toUiText())
                         )
                     }
                 }
@@ -107,7 +111,7 @@ class LeaderboardViewModel @Inject constructor(
     private fun loadMore() {
         val current = _state.value
 
-        if (current.isLoading || current.isLoadingMore || current.endReached || current.leaderboard == null) {
+        if (current.dataStatus is DataStatus.Loading || current.isLoadingMore || current.endReached || current.leaderboard == null) {
             return
         }
 
@@ -136,10 +140,15 @@ class LeaderboardViewModel @Inject constructor(
                 .onFailure { error ->
                     _state.update {
                         it.copy(
-                            isLoadingMore = false,
-                            errorMessage = error.toUiText()
+                            isLoadingMore = false
                         )
                     }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = error.toUiText(),
+                            type = SnackbarType.ERROR
+                        )
+                    )
                 }
         }
     }

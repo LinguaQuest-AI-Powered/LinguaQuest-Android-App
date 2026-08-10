@@ -1,28 +1,11 @@
 package com.iti.linguaquest.features.home.presentation.view
 
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,16 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
@@ -52,36 +28,36 @@ import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
-import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
 import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
-import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
-import com.iti.linguaquest.features.home.presentation.view.components.ExploreWorldsSection
-import com.iti.linguaquest.features.home.presentation.view.components.LanguageProgressCard
-import com.iti.linguaquest.features.home.presentation.view.components.WordCaptureCard
-import com.iti.linguaquest.features.home.presentation.view.components.WorldItem
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyRewardCard
-import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.DailyStreakBonusBanner
+import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
+import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs
+import com.iti.linguaquest.features.home.presentation.view.components.HomeOverlays
+import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardBannerWrapper
 import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
-
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    openDailyMissionRequested: Boolean = false,
+    onOpenDailyMissionHandled: () -> Unit = {},
     onNavigateToAllWorlds: () -> Unit,
-    onNavigateToWorldMap: (Int) -> Unit,
-    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, targetWord: String?) -> Unit,
+    onNavigateToWorldMap: (Int, Int) -> Unit = { _, _ -> },
+    onNavigateToLevel: (worldId: Int, levelId: Int, levelOrder: Int, totalLevels: Int, targetWord: String?) -> Unit,
+    onNavigateToDailyMissionCamera: (String) -> Unit,
     onWorldMapClick: () -> Unit = {},
-    onNavigateToAddLanguages: () -> Unit,
+    onNavigateToAddLanguages: () -> Unit = {},
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel(),
     myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
@@ -91,12 +67,7 @@ fun HomeScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
     var showCoinRain by remember { mutableStateOf(false) }
-    var showOfflinePopup by remember { mutableStateOf(false) }
-    var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
-    var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
-    var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
     val context = LocalContext.current
     val fallZoneHeight = (configuration.screenHeightDp / 2).dp
     var bannerHeightPx by remember { mutableFloatStateOf(0f) }
@@ -109,6 +80,13 @@ fun HomeScreen(
 
     LaunchedEffect(state.xp, state.coins) {
         onHeaderDataChanged(state.xp, state.coins)
+    }
+
+    LaunchedEffect(openDailyMissionRequested, isOnline) {
+        if (openDailyMissionRequested && isOnline) {
+            viewModel.onIntent(HomeIntent.TriggerDailyMission)
+            onOpenDailyMissionHandled()
+        }
     }
 
 
@@ -136,11 +114,14 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId)
+                is HomeEffect.NavigateToWorld -> onNavigateToWorldMap(effect.worldId, effect.totalLevels)
                 HomeEffect.NavigateToAllWorlds -> onNavigateToAllWorlds()
                 is HomeEffect.NavigateToAddLanguages -> onNavigateToAddLanguages()
                 is HomeEffect.NavigateToContinueLevel -> {
-                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.targetWord?.asString(context))
+                    onNavigateToLevel(effect.worldId, effect.levelId, effect.levelOrder, effect.totalLevels, effect.targetWord?.asString(context))
+                }
+                is HomeEffect.NavigateToDailyMissionCamera -> {
+                    onNavigateToDailyMissionCamera(effect.word)
                 }
             }
         }
@@ -170,10 +151,21 @@ fun HomeScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
 
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
+        StatefulContentContainer(
+            dataStatus = state.dataStatus,
+            onRetry = { viewModel.onIntent(HomeIntent.Retry) },
             onRefresh = { viewModel.onIntent(HomeIntent.Refresh) },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            loadingContent = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LoadingView(
+                        message = stringResource(R.string.loading)
+                    )
+                }
+            }
         ) {
             HomeContent(
                 state = state,
@@ -189,190 +181,32 @@ fun HomeScreen(
             )
         }
 
-        if (state.hasError && state.worlds.isEmpty() && state.languageProgress == null) {
-            ErrorView(
-                message = state.errorMessage ?: com.iti.linguaquest.core.sharedComponents.text.UiText.StringResource(R.string.error_generic),
-                onRetry = { viewModel.onIntent(HomeIntent.Refresh) }
+        if (state.dataStatus is DataStatus.Loaded || state.dataStatus is DataStatus.Refreshing) {
+            HomeFabs(
+                onDailyMissionClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
+                onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp)
             )
         }
 
-        FloatingActionButton(
-            onClick = { guardOnline(fabBounds) { viewModel.onIntent(HomeIntent.FabClicked) } },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.tertiary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp)
-                .onGloballyPositioned { coordinates ->
-                    fabBounds = coordinates.boundsInRoot()
-                }
-        ) {
-            Image(
-                painter = painterResource(R.drawable.world_home_icon),
-                contentDescription = "world_map_content_description",
-                modifier = Modifier.size(28.dp)
-            )
-        }
-
-        AnimatedVisibility(
-            visible = state.isDailyRewardBannerVisible,
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> -fullHeight },
-                animationSpec = tween(400, easing = FastOutSlowInEasing)
-            ) + fadeIn(tween(400)),
-            exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> -fullHeight },
-                animationSpec = tween(300, easing = FastOutSlowInEasing)
-            ) + fadeOut(tween(300)),
+        HomeDailyRewardBannerWrapper(
+            isVisible = state.isDailyRewardBannerVisible,
+            showCoinRain = showCoinRain,
+            fallZoneHeight = fallZoneHeight,
+            bannerHeightPx = bannerHeightPx,
+            onBannerClick = { viewModel.onIntent(HomeIntent.DailyRewardBannerClicked) },
             modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(fallZoneHeight)
-            ) {
-                AnimatedVisibility(
-                    visible = showCoinRain,
-                    enter = fadeIn(tween(200)),
-                    exit = fadeOut(tween(800)),
-                    modifier = Modifier.matchParentSize()
-                ) {
-                    CoinRainOverlay(
-                        modifier = Modifier.fillMaxSize(),
-                        coinCount = 30,
-                        startYPx = bannerHeightPx
-                    )
-                }
-
-                DailyStreakBonusBanner(
-                    onClick = {
-                        soundPlayer.play(AppSound.DAILY_REWARD)
-                        viewModel.onIntent(HomeIntent.DailyRewardBannerClicked)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-            }
-        }
-    }
-
-    if (state.isDailyRewardDialogVisible) {
-        Dialog(
-            onDismissRequest = { viewModel.onIntent(HomeIntent.DismissDailyRewardDialog) },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                DailyRewardCard(
-                    currentDay = state.dailyReward?.currentDay ?: 1,
-                    cycleLength = state.dailyReward?.cycleLength ?: 5,
-                    rewardAmount = state.dailyReward?.rewardCoins ?: 0,
-                    rewardXp = state.dailyReward?.rewardXp,
-                    onClaimClick = {
-                        soundPlayer.play(AppSound.COIN)
-                        viewModel.onIntent(HomeIntent.ClaimDailyRewardClicked)
-                    }
-                )
-            }
-        }
-    }
-
-    if (state.isLanguageBottomSheetVisible) {
-        MyLanguagesBottomSheet(
-            languages = myLanguagesState.languages,
-            isLoading = myLanguagesState.isLoading,
-            isSettingActive = myLanguagesState.isSettingActive,
-            languagePendingRemoval = myLanguagesState.languagePendingRemoval,
-            removingLanguageId = myLanguagesState.removingLanguageId,
-            onDismiss = { myLanguagesViewModel.onIntent(MyLanguagesIntent.Dismiss) },
-            onAddNewLanguageClick = { myLanguagesViewModel.onIntent(MyLanguagesIntent.AddNewLanguageClicked) },
-            onLanguageSelect = { selectedId ->
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.SetActiveLanguage(selectedId))
-            },
-            onRemoveLanguageClick = { lang ->
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.RequestRemoveLanguage(lang))
-            },
-            onConfirmRemoveLanguage = {
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.ConfirmRemoveLanguage)
-            },
-            onDismissRemoveDialog = {
-                myLanguagesViewModel.onIntent(MyLanguagesIntent.DismissRemoveDialog)
-            }
         )
     }
+
+    HomeOverlays(
+        state = state,
+        myLanguagesState = myLanguagesState,
+        onHomeIntent = viewModel::onIntent,
+        onMyLanguagesIntent = myLanguagesViewModel::onIntent
+    )
 }
 
 
-
-@Composable
-fun HomeContent(
-    state: HomeState,
-    onSeeMoreClick: (Rect) -> Unit,
-    onWorldClick: (WorldItem, Rect) -> Unit,
-    onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        Spacer(modifier = Modifier.height(20.dp))
-
-        state.languageProgress?.let { progress ->
-            LanguageProgressCard(
-                languageName = progress.languageName,
-                level = progress.level,
-                streakDays = progress.streakDays,
-                progress = progress.progress,
-                flagSource = progress.flagSource,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-
-        if (state.continueLevel != null) {
-            val level = state.continueLevel
-            WordCaptureCard(
-                worldName = level.worldName.asString(),
-                targetWord = level.targetWord.asString(),
-                progressText = "${level.levelOrder} of ${level.totalLevels}",
-                onContinueClick = { rect ->
-                    onContinueLevelClick(level, rect)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        } else {
-            WordCaptureCard(
-                buttonText = stringResource(R.string.start_hunting),
-                worldName = stringResource(R.string.mystery_world),
-                targetWord = "\uD83E\uDD14",
-                progressText = "\uD83E\uDD14 of 10",
-                onContinueClick = { rect ->
-                    onSeeMoreClick(rect)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (state.worlds.isNotEmpty()) {
-            ExploreWorldsSection(
-                worlds = state.worlds,
-                onSeeMoreClick = onSeeMoreClick,
-                onWorldClick = onWorldClick,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-    }
-}

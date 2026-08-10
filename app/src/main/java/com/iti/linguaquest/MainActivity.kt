@@ -6,6 +6,7 @@ import android.content.Intent
 
 import android.content.res.Configuration
 import android.media.AudioManager
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O_MR1
 import android.os.Build.VERSION_CODES.TIRAMISU
@@ -16,6 +17,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -50,8 +52,10 @@ class MainActivity : ComponentActivity() {
     private val viewModel: AppViewModel by viewModels()
 
     private var openHomeRequested by mutableStateOf(false)
+    private var openDailyMissionRequested by mutableStateOf(false)
     private var openLockScreenWordId by mutableStateOf<Int?>(null)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         volumeControlStream = AudioManager.STREAM_MUSIC
         super.onCreate(savedInstanceState)
@@ -74,8 +78,10 @@ class MainActivity : ComponentActivity() {
                 LinguaQuestTheme(darkTheme = isDarkTheme) {
                     AppNavigation(
                         openHomeRequested = openHomeRequested,
+                        openDailyMissionRequested = openDailyMissionRequested,
                         openLockScreenWordId = openLockScreenWordId,
                         onOpenHomeHandled = { openHomeRequested = false },
+                        onOpenDailyMissionHandled = { openDailyMissionRequested = false },
                         onOpenLockScreenWordHandled = { openLockScreenWordId = null }
                     )
                 }
@@ -95,6 +101,7 @@ class MainActivity : ComponentActivity() {
 
      private fun handleIntent(intent: Intent?) {
         openHomeRequested = intent?.getBooleanExtra(NotificationHelper.EXTRA_OPEN_HOME, false) ?: false
+        openDailyMissionRequested = intent?.getStringExtra("type") == "DAILY_MISSION_AVAILABLE"
         openLockScreenWordId = intent?.getIntExtra(VocabularyNotificationManager.EXTRA_LOCKSCREEN_WORD_ID, -1)
             ?.takeIf { it > 0 }
 

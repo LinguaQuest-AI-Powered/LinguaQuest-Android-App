@@ -1,7 +1,6 @@
 package com.iti.linguaquest.features.game.presentation.processing.view
 
-import android.content.Context
-import android.net.Uri
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -28,7 +27,7 @@ import com.iti.linguaquest.features.game.presentation.processing.viewmodel.GameP
 import com.iti.linguaquest.features.game.presentation.processing.viewmodel.GameWhackViewModel
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 import com.iti.linguaquest.features.game.presentation.shared.VerificationOutcome
-import java.io.File
+import com.iti.linguaquest.core.utils.toTempFile
 
 @Composable
 fun GameProcessingScreen(
@@ -57,13 +56,22 @@ fun GameProcessingScreen(
             )
             onNavigateToResult()
         } else if (uri != null) {
-            val file = uriToFile(context, uri)
-            processingViewModel.verifyImage(
-                worldId = sharedState.worldId,
-                levelId = sharedState.levelId,
-                targetWord = (sharedState.targetWord as? UiText.DynamicString)?.value ?: "",
-                imageFile = file
-            )
+            val file = uri.toTempFile(context, "verify_upload_")
+            if (file != null) {
+                processingViewModel.verifyImage(
+                    worldId = sharedState.worldId,
+                    levelId = sharedState.levelId,
+                    targetWord = (sharedState.targetWord as? UiText.DynamicString)?.value ?: "",
+                    imageFile = file
+                )
+            } else {
+                sharedViewModel.setVerificationOutcome(
+                    VerificationOutcome.Error(
+                        errorMessage = UiText.StringResource(R.string.error_generic)
+                    )
+                )
+                onNavigateToResult()
+            }
         } else {
             processingViewModel.onIntent(GameProcessingIntent.StartProcessing)
         }
@@ -119,22 +127,5 @@ fun GameProcessingScreen(
                 }
             }
         }
-    }
-}
-
-private fun uriToFile(context: Context, uri: Uri): File? {
-    return try {
-        if (uri.scheme == "file" && !uri.path.isNullOrEmpty()) {
-            File(uri.path!!)
-        } else {
-            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-            val tempFile = File(context.cacheDir, "verify_upload_${System.currentTimeMillis()}.jpg")
-            tempFile.outputStream().use { output ->
-                inputStream.copyTo(output)
-            }
-            tempFile
-        }
-    } catch (e: Exception) {
-        null
     }
 }

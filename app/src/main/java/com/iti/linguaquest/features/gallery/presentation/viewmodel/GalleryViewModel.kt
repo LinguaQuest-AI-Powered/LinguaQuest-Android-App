@@ -15,9 +15,12 @@ import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUse
 import com.iti.linguaquest.features.gallery.domain.usecase.RefreshGalleryUseCase
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
+import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,7 +40,8 @@ class GalleryViewModel @Inject constructor(
     private val refreshGalleryUseCase: RefreshGalleryUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
     private val getLockScreenPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
-    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val snackbarController: SnackbarController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GalleryState())
@@ -82,12 +86,11 @@ class GalleryViewModel @Inject constructor(
 
                 _state.update { current ->
                     current.copy(
-                        isLoading = false,
+                        dataStatus = if (words.isNotEmpty() && current.dataStatus is DataStatus.Loading) DataStatus.Loaded else current.dataStatus,
                         words = words,
                         filteredWords = filteredWords,
                         categories = categories,
-                        selectedCategory = selectedCategory,
-                        errorMessage = if (words.isNotEmpty()) null else current.errorMessage
+                        selectedCategory = selectedCategory
                     )
                 }
             }
@@ -137,48 +140,50 @@ class GalleryViewModel @Inject constructor(
     private fun refreshWords(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
             val hasCache = _state.value.words.isNotEmpty()
+            
             _state.update {
                 it.copy(
-                    isRefreshing = isPullToRefresh,
-                    errorMessage = if (hasCache) null else it.errorMessage
+                    dataStatus = if (isPullToRefresh) DataStatus.Refreshing else if (hasCache) DataStatus.Loaded else DataStatus.Loading
                 )
             }
 
             when (val result = refreshGalleryUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false, isRefreshing = false, errorMessage = null) }
+                    _state.update { it.copy(dataStatus = DataStatus.Loaded) }
                 }
 
                 is LinguaQuestResult.Failure -> {
                     val dataError = result.error as? LinguaQuestDataError
                     val stillHasCache = _state.value.words.isNotEmpty()
                     val isOfflineError = dataError == LinguaQuestDataError.Remote.NO_INTERNET
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            errorMessage = if (stillHasCache || isOfflineError) null else dataError?.toUiText()
-                        )
-                    }
+                    val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
 
-                    if (isPullToRefresh && isOfflineError) {
-                        sendEffect(
-                            GalleryEffect.ShowError(
-                                title = UiText.StringResource(R.string.offline_title),
-                                message = UiText.StringResource(R.string.offline_msg),
-                                type = SnackbarType.INFO,
-                                retryable = false
+                    if (!stillHasCache) {
+                        _state.update {
+                            it.copy(dataStatus = DataStatus.Error(errorUiText))
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(dataStatus = DataStatus.Loaded)
+                        }
+                        if (isOfflineError) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    title = UiText.StringResource(R.string.offline_title),
+                                    message = UiText.StringResource(R.string.offline_msg),
+                                    type = SnackbarType.INFO
+                                )
                             )
-                        )
-                    } else if (!isOfflineError && !stillHasCache) {
-                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
-                        sendEffect(
-                            GalleryEffect.ShowError(
-                                message = errorUiText,
-                                type = SnackbarType.ERROR,
-                                retryable = true
+                        } else {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { refreshWords(isPullToRefresh = true) }
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

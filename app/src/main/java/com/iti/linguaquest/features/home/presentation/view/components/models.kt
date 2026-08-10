@@ -18,6 +18,7 @@ data class WorldItem(
     val difficulty: WorldDifficulty,
     val progress: Float,
     val isCompleted: Boolean = false,
+    val totalLevels: Int = 0,
     val unlockLevel: Int? = null
 )
 

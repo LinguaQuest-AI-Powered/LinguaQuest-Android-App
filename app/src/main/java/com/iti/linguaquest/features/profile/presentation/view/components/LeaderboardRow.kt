@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,56 +43,64 @@ fun LeaderboardRow(
     else
         LinguaQuestTheme.colors.Sand
 
-    Card3DWrapper(
-        modifier = modifier.fillMaxWidth(),
-        backgroundColor = LinguaQuestTheme.colors.whiteColor,
-        borderColor = borderColor,
-        borderWidth = if (entry.isCurrentUser) 1.5.dp else 1.dp,
-        onClick = onClick,
-        ledgeHeight = ledgeHeight,
-        cornerRadius = cornerRadius
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = if (entry.isCurrentUser) 8.dp else 0.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Card3DWrapper(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = LinguaQuestTheme.colors.whiteColor,
+            borderColor = borderColor,
+            borderWidth = if (entry.isCurrentUser) 1.5.dp else 1.dp,
+            onClick = onClick,
+            ledgeHeight = ledgeHeight,
+            cornerRadius = cornerRadius
         ) {
-            Text(
-                text = entry.rank.toString(),
-                color = if (entry.isCurrentUser)
-                    MaterialTheme.colorScheme.tertiary
-                else
-                    LinguaQuestTheme.colors.iconsColor,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.width(28.dp)
-            )
-
-            AsyncImage(
-                model = entry.avatarUrl,
-                contentDescription = entry.name,
+            Row(
                 modifier = Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .let {
-                        if (entry.isCurrentUser)
-                            it.border(
-                                2.dp,
-                                MaterialTheme.colorScheme.tertiary,
-                                CircleShape
-                            )
-                        else
-                            it
-                    }
-            )
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column(
-                modifier = Modifier.weight(1f)
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = entry.rank.toString(),
+                    color = if (entry.isCurrentUser)
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        LinguaQuestTheme.colors.iconsColor,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.width(28.dp)
+                )
+
+                AsyncImage(
+                    model = entry.avatarUrl,
+                    contentDescription = entry.name,
+                    modifier = Modifier
+                        .size(38.dp)
+                        .then(
+                            if (entry.isCurrentUser) {
+                                Modifier
+                                    .border(2.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
+                                    .padding(3.dp)
+                                    .clip(CircleShape)
+                            } else {
+                                Modifier
+                                    .border(
+                                        1.5.dp,
+                                        LinguaQuestTheme.colors.ProfileCardBorderColor,
+                                        CircleShape
+                                    )
+                                    .padding(2.5.dp)
+                                    .clip(CircleShape)
+                            }
+                        )
+                )
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(
                         text = entry.name,
@@ -103,57 +112,55 @@ fun LeaderboardRow(
                         fontSize = 14.sp
                     )
 
-                    if (entry.isCurrentUser) {
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(50))
-                                .background(MaterialTheme.colorScheme.tertiary)
-                                .padding(
-                                    horizontal = 8.dp,
-                                    vertical = 2.dp
-                                )
-                        ) {
-                            Text(
-                                text = stringResource(R.string.you_label),
-                                color = LinguaQuestTheme.colors.whiteColor,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                    Text(
+                        text = entry.title,
+                        color = if (entry.isCurrentUser)
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            LinguaQuestTheme.colors.iconsColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
 
-                Text(
-                    text = entry.title,
-                    color = if (entry.isCurrentUser)
-                        MaterialTheme.colorScheme.tertiary
-                    else
-                        LinguaQuestTheme.colors.iconsColor,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = "${entry.xp}",
+                        color = if (entry.isCurrentUser)
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            LinguaQuestTheme.colors.blackColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
 
-            Column(
-                horizontalAlignment = Alignment.End
+                    Text(
+                        text = stringResource(R.string.xp),
+                        color = if (entry.isCurrentUser)
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            LinguaQuestTheme.colors.iconsColor,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        if (entry.isCurrentUser) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-16).dp, y = (-8).dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(MaterialTheme.colorScheme.tertiary)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
             ) {
                 Text(
-                    text = "${entry.xp}",
-                    color = if (entry.isCurrentUser)
-                        MaterialTheme.colorScheme.tertiary
-                    else
-                        LinguaQuestTheme.colors.blackColor,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-
-                Text(
-                    text = stringResource(R.string.xp),
-                    color = if (entry.isCurrentUser)
-                        MaterialTheme.colorScheme.tertiary
-                    else
-                        LinguaQuestTheme.colors.iconsColor,
+                    text = stringResource(R.string.you_label),
+                    color = LinguaQuestTheme.colors.whiteColor,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )

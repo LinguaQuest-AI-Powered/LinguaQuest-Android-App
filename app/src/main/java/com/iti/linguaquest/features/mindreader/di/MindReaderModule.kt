@@ -2,6 +2,8 @@ package com.iti.linguaquest.features.mindreader.di
 
 import com.iti.linguaquest.features.mindreader.data.datasource.MindReaderDataSource
 import com.iti.linguaquest.features.mindreader.data.datasource.MindReaderJsonDataSourceImpl
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.MindReaderAiService
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.MindReaderAiServiceImpl
 import com.iti.linguaquest.features.mindreader.data.repository.MindReaderRepositoryImpl
 import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
 import dagger.Binds
@@ -19,6 +21,12 @@ abstract class MindReaderModule {
     abstract fun bindMindReaderDataSource(
         impl: MindReaderJsonDataSourceImpl
     ): MindReaderDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindMindReaderAiService(
+        impl: MindReaderAiServiceImpl
+    ): MindReaderAiService
 
     @Binds
     @Singleton

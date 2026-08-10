@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CardGiftcard
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,9 +27,10 @@ import com.iti.linguaquest.R
 
 
 @Composable
-fun ClaimRewardButton(onClaimClick: () -> Unit) {
+fun ClaimRewardButton(isClaiming: Boolean = false, onClaimClick: () -> Unit) {
     Button(
         onClick = onClaimClick,
+        enabled = !isClaiming,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -49,12 +51,18 @@ fun ClaimRewardButton(onClaimClick: () -> Unit) {
                 )
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Outlined.CardGiftcard,
-                contentDescription = stringResource(id = R.string.cd_gift),
-                tint = LinguaQuestTheme.colors.whiteColor,
-                modifier = Modifier.size(20.dp)
-            )
+            if (isClaiming) {
+                LingoSpinningIcon(
+                    size = 20.dp
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.CardGiftcard,
+                    contentDescription = stringResource(id = R.string.cd_gift),
+                    tint = LinguaQuestTheme.colors.whiteColor,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
     }
 }
