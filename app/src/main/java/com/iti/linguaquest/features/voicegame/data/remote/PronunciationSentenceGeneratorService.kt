@@ -40,18 +40,33 @@ class PronunciationSentenceGeneratorService @Inject constructor(
         targetLanguage: String = "English",
         level: String = "Beginner",
         topic: String = "General Conversation",
+        wordOfTheDay: String? = null,
+        excludeSentences: List<String> = emptyList(),
         count: Int = 5
     ): List<GeneratedSentence> {
         return try {
+            val wordInstruction = if (!wordOfTheDay.isNullOrBlank()) {
+                "You MUST include the word \"$wordOfTheDay\" naturally in every sentence."
+            } else {
+                "Topic context: $topic."
+            }
+
+            val excludeInstruction = if (excludeSentences.isNotEmpty()) {
+                "You MUST NOT generate any of the following sentences (avoid them completely): ${excludeSentences.joinToString { "\"$it\"" }}."
+            } else {
+                ""
+            }
+
             val prompt = """
                 You are a supportive language tutor for beginner language learners.
                 Generate $count short, simple, and easy-to-pronounce practice sentences in $targetLanguage.
-                Topic context: $topic.
+                $wordInstruction
+                $excludeInstruction
 
                 EASY SENTENCE RULES:
                 1. Sentences MUST be short, simple, and very easy to pronounce.
-                2. Sentence length MUST be between 3 and 6 words max.
-                3. Use common everyday words (e.g. greetings, simple feelings, daily actions).
+                2. Sentence length MUST be between 3 and 8 words max.
+                3. Use common everyday words.
                 4. NO tongue twisters, complex grammar, or difficult multi-syllable words.
                 5. Include simple phonetic transcription (IPA) and translation.
 
@@ -70,7 +85,7 @@ class PronunciationSentenceGeneratorService @Inject constructor(
 
             val rawText = geminiAiService.generateJson(prompt)
             if (rawText == null) {
-                return getRandomFallback(targetLanguage, count)
+                return getRandomFallback(targetLanguage, count, excludeSentences)
             }
 
 
@@ -102,14 +117,18 @@ class PronunciationSentenceGeneratorService @Inject constructor(
             }
 
             results.ifEmpty {
-                getRandomFallback(targetLanguage, count)
+                getRandomFallback(targetLanguage, count, excludeSentences)
             }
         } catch (e: Exception) {
-            getRandomFallback(targetLanguage, count)
+            getRandomFallback(targetLanguage, count, excludeSentences)
         }
     }
 
-    private fun getRandomFallback(targetLanguage: String, count: Int): List<GeneratedSentence> {
+    private fun getRandomFallback(
+        targetLanguage: String,
+        count: Int,
+        excludeSentences: List<String> = emptyList()
+    ): List<GeneratedSentence> {
         val list = when (targetLanguage.trim().lowercase()) {
             "spanish", "es" -> listOf(
                 GeneratedSentence("Hola, ¿cómo estás hoy?", "Easy", "/ˈo.la ˈko.mo esˈtas oi/", "Hello, how are you today?"),
@@ -143,10 +162,10 @@ class PronunciationSentenceGeneratorService @Inject constructor(
             )
             else -> fallbackSentences
         }
-        return list.shuffled().take(count)
+        val normalizedExcludes = excludeSentences.map { it.trim().lowercase() }
+        val filtered = list.filter { it.sentence.trim().lowercase() !in normalizedExcludes }
+        val finalPool = if (filtered.isEmpty()) list else filtered
+        return finalPool.shuffled().take(count)
     }
 
-    private companion object {
-        const val TAG = "GEMINI_DEBUG"
-    }
 }
