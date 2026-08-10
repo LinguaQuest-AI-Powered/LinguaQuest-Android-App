@@ -225,10 +225,11 @@ class GalleryViewModel @Inject constructor(
     }
 
     private fun filterWords(words: List<WordEntity>, category: String): List<WordEntity> {
+        val reversedWords = words.reversed()
         return if (category == ALL_ITEMS_CATEGORY) {
-            words
+            reversedWords
         } else {
-            words.filter { 
+            reversedWords.filter { 
                 it.category.equals(category, ignoreCase = true) 
             }
         }
