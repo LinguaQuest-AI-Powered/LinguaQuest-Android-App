@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -186,7 +187,7 @@ class HomeViewModel @Inject constructor(
                 } else {
                     val dataError = (homeSummaryResult as? LinguaQuestResult.Failure)?.error as? LinguaQuestDataError
                     val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
-                    val hasCache = _state.value.hasData
+                    val hasCache = _state.value.hasData || getHomeSummaryUseCase.observe().firstOrNull() != null
 
                     _state.update {
                         it.copy(
@@ -207,7 +208,7 @@ class HomeViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Error refreshing home data from remote")
-                val hasCache = _state.value.hasData
+                val hasCache = _state.value.hasData || getHomeSummaryUseCase.observe().firstOrNull() != null
                 val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(

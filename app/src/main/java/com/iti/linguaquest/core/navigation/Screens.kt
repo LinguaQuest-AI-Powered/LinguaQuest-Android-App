@@ -46,7 +46,7 @@ sealed interface RootScreen : NavKey {
     @Serializable
     data class NewPassword(val resetToken: String) : RootScreen
     @Serializable
-    data object Main : RootScreen
+    data class Main(val sessionId: Long) : RootScreen
 
     @Serializable
     data class GameFlow(val worldId: Int, val levelId: Int, val levelOrder: Int, val targetWord: String? = null) : RootScreen // UPDATED

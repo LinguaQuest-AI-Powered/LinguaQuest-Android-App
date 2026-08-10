@@ -3,14 +3,17 @@ package com.iti.linguaquest.features.profile.presentation.contract
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 
-data class ProfileUiState(
+sealed interface ProfileDataStatus {
+    data object Loading : ProfileDataStatus
+    data object Loaded : ProfileDataStatus
+    data object Refreshing : ProfileDataStatus
+    data class Error(val message: UiText) : ProfileDataStatus
+}
 
-    val isLoading: Boolean = false,
+data class ProfileUiState(
+    val dataStatus: ProfileDataStatus = ProfileDataStatus.Loading,
     val profile: ProfileState = ProfileState(),
-    val hasCachedData: Boolean = false,
-    val hasError: Boolean = false,
-    val errorMessage: UiText? = null,
-    val isAvatarUploading: Boolean = false,
-    val isOffline: Boolean = false,
-    val isRefreshing: Boolean = false
-)
+    val isAvatarUploading: Boolean = false
+) {
+    val hasData: Boolean get() = profile.userName.isNotBlank()
+}

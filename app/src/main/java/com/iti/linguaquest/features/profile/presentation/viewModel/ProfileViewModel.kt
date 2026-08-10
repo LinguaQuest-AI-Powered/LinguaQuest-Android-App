@@ -17,10 +17,13 @@ import com.iti.linguaquest.features.profile.domain.usecase.GetCachedProfileUseCa
 import com.iti.linguaquest.features.profile.domain.usecase.RefreshProfileSummaryUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.PreloadImageUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UploadAvatarUseCase
+import com.iti.linguaquest.R
+import com.iti.linguaquest.features.profile.presentation.contract.ProfileDataStatus
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileEffect
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileIntent
 import com.iti.linguaquest.features.profile.presentation.contract.ProfileUiState
 import com.iti.linguaquest.features.profile.presentation.mapper.toProfileState
+import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 import timber.log.Timber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -77,9 +80,7 @@ class ProfileViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             profile = cached.toProfileState(),
-                            hasCachedData = true,
-                            isLoading = false,
-                            hasError = false
+                            dataStatus = if (it.dataStatus is ProfileDataStatus.Loading) ProfileDataStatus.Loaded else it.dataStatus
                         )
                     }
                 }
@@ -92,12 +93,10 @@ class ProfileViewModel @Inject constructor(
             ProfileIntent.LoadProfile, ProfileIntent.Retry -> refreshProfile()
             ProfileIntent.Refresh -> {
                 val now = System.currentTimeMillis()
-                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && !state.value.isRefreshing) {
+                if (now - lastRefreshTime > REFRESH_COOLDOWN_MS && state.value.dataStatus !is ProfileDataStatus.Refreshing) {
                     lastRefreshTime = now
-                    _state.update { it.copy(isRefreshing = true) }
+                    _state.update { it.copy(dataStatus = ProfileDataStatus.Refreshing) }
                     refreshProfile(isPullToRefresh = true)
-                } else {
-                    _state.update { it.copy(isRefreshing = false) }
                 }
             }
             ProfileIntent.SettingsClicked -> sendEffect(ProfileEffect.NavigateToSettings)
@@ -109,12 +108,11 @@ class ProfileViewModel @Inject constructor(
 
     private fun refreshProfile(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    hasError = false,
-                    isOffline = false
-                )
+            if (!isPullToRefresh) {
+                val hasCachedData = _state.value.hasData || getCachedProfileUseCase().firstOrNull() != null
+                _state.update {
+                    it.copy(dataStatus = if (hasCachedData) ProfileDataStatus.Loaded else ProfileDataStatus.Loading)
+                }
             }
 
             try {
@@ -126,31 +124,27 @@ class ProfileViewModel @Inject constructor(
 
                 when (result) {
                     is LinguaQuestResult.Success -> {
-                        _state.update { it.copy(isLoading = false, isRefreshing = false, hasError = false, errorMessage = null, isOffline = false) }
+                        _state.update { it.copy(dataStatus = ProfileDataStatus.Loaded) }
                     }
 
                     is LinguaQuestResult.Failure -> {
-                        val stillHasCache = _state.value.profile.userName.isNotBlank() || getCachedProfileUseCase().firstOrNull() != null
+                        val stillHasCache = _state.value.hasData || getCachedProfileUseCase().firstOrNull() != null
                         val dataError = result.error as? LinguaQuestDataError
-                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(com.iti.linguaquest.R.string.error_generic)
+                        val errorUiText = dataError?.toUiText() ?: UiText.StringResource(R.string.error_generic)
                         val isNoInternet = dataError == LinguaQuestDataError.Remote.NO_INTERNET
 
                         _state.update {
                             it.copy(
-                                isLoading = false,
-                                isRefreshing = false,
-                                hasError = !stillHasCache && !isNoInternet,
-                                errorMessage = if (!stillHasCache && !isNoInternet) errorUiText else null,
-                                isOffline = stillHasCache && isNoInternet
+                                dataStatus = if (stillHasCache) ProfileDataStatus.Loaded else ProfileDataStatus.Error(errorUiText)
                             )
                         }
 
                         if (isPullToRefresh || stillHasCache) {
-                            if (stillHasCache && dataError == LinguaQuestDataError.Remote.NO_INTERNET) {
+                            if (stillHasCache && isNoInternet) {
                                 snackbarController.sendEvent(
                                     SnackbarEvent(
-                                        title = UiText.StringResource(com.iti.linguaquest.R.string.offline_title),
-                                        message = UiText.StringResource(com.iti.linguaquest.R.string.offline_msg),
+                                        title = UiText.StringResource(R.string.offline_title),
+                                        message = UiText.StringResource(R.string.offline_msg),
                                         type = SnackbarType.INFO
                                     )
                                 )
@@ -159,7 +153,7 @@ class ProfileViewModel @Inject constructor(
                                     SnackbarEvent(
                                         message = errorUiText,
                                         type = SnackbarType.ERROR,
-                                        actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
+                                        actionLabel = UiText.StringResource(R.string.retry),
                                         onAction = { refreshProfile(isPullToRefresh = true) }
                                     )
                                 )
@@ -169,14 +163,11 @@ class ProfileViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Error refreshing profile data")
-                val stillHasCache = _state.value.profile.userName.isNotBlank()
-                val errorUiText = UiText.StringResource(com.iti.linguaquest.R.string.error_generic)
+                val stillHasCache = _state.value.hasData
+                val errorUiText = UiText.StringResource(R.string.error_generic)
                 _state.update {
                     it.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        hasError = !stillHasCache,
-                        errorMessage = if (!stillHasCache) errorUiText else null
+                        dataStatus = if (stillHasCache) ProfileDataStatus.Loaded else ProfileDataStatus.Error(errorUiText)
                     )
                 }
             }
@@ -195,7 +186,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             snackbarController.sendEvent(
                 SnackbarEvent(
-                    message = UiText.StringResource(com.iti.linguaquest.R.string.uploading_photo_msg),
+                    message = UiText.StringResource(R.string.uploading_photo_msg),
                     type = SnackbarType.INFO
                 )
             )
@@ -206,8 +197,8 @@ class ProfileViewModel @Inject constructor(
                     _state.update { it.copy(isAvatarUploading = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            title = UiText.StringResource(com.iti.linguaquest.R.string.congrates),
-                            message = UiText.StringResource(com.iti.linguaquest.R.string.profile_photo_updated_successfully),
+                            title = UiText.StringResource(R.string.congrates),
+                            message = UiText.StringResource(R.string.profile_photo_updated_successfully),
                             type = SnackbarType.SUCCESS
                         )
                     )
@@ -224,7 +215,7 @@ class ProfileViewModel @Inject constructor(
                         SnackbarEvent(
                             message = result.error.toUiText(),
                             type = SnackbarType.ERROR,
-                            actionLabel = UiText.StringResource(com.iti.linguaquest.R.string.retry),
+                            actionLabel = UiText.StringResource(R.string.retry),
                             onAction = { uploadAvatar(uri) }
                         )
                     )

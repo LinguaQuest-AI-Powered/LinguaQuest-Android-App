@@ -111,7 +111,7 @@ fun AppNavigation(
         if (openHomeRequested) {
             rootBackStack.apply {
                 clear()
-                navigateSingleTop(RootScreen.Main)
+                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
             }
             onOpenHomeHandled()
         }
@@ -313,7 +313,7 @@ fun AppNavigation(
                         onLoginSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         }
                     )
@@ -326,7 +326,7 @@ fun AppNavigation(
                         onNavigateToMain = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         onOAuthLanguageSelection = {
@@ -375,7 +375,7 @@ fun AppNavigation(
                         onResetSuccess = {
                             rootBackStack.apply {
                                 clear()
-                                navigateSingleTop(RootScreen.Main)
+                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                             }
                         },
                         resetToken = screen.resetToken
@@ -481,7 +481,7 @@ fun AppNavigation(
                             },
                             onHome = {
                                 SharedVoiceResultHolder.pendingResult = null
-                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main) }
+                                rootBackStack.apply { clear(); navigateSingleTop(RootScreen.Main(System.currentTimeMillis())) }
                             }
                         )
                     } else {

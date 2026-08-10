@@ -23,7 +23,7 @@ class SplashViewModel @Inject constructor(
         checkUserLoggedInUseCase()
     ) { isFirstTime, isLoggedIn ->
         when {
-            isLoggedIn -> RootScreen.Main
+            isLoggedIn -> RootScreen.Main(System.currentTimeMillis())
             isFirstTime -> RootScreen.Onboarding
             else -> RootScreen.Login()
         }
