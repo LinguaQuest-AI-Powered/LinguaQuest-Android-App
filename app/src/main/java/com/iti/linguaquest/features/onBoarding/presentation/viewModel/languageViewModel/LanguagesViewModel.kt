@@ -2,14 +2,13 @@ package com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageV
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveNativeLanguageUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.SaveTargetLanguageUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
-import com.iti.linguaquest.features.auth.domain.usecase.GetAuthLanguagesUseCase
+import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesState
@@ -35,7 +34,7 @@ class LanguagesViewModel @Inject constructor(
     private val getTargetLanguageUseCase: GetTargetLanguageUseCase,
     private val saveNativeLanguageUseCase: SaveNativeLanguageUseCase,
     private val saveTargetLanguageUseCase: SaveTargetLanguageUseCase,
-    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
+    private val getSupportedLanguagesUseCase: GetSupportedLanguagesUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
 ) : ViewModel() {
 
@@ -58,7 +57,7 @@ class LanguagesViewModel @Inject constructor(
     private fun loadSavedLanguages() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = getAuthLanguagesUseCase()
+            val result = getSupportedLanguagesUseCase()
             if (result is LinguaQuestResult.Success) {
                 val available = result.data
                 _state.update { it.copy(availableLanguages = available, isLoading = false) }

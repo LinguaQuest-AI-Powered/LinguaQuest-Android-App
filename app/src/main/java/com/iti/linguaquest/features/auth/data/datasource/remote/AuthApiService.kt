@@ -10,10 +10,6 @@ import retrofit2.http.POST
 interface AuthApiService {
 
     @NoAuth
-    @GET("auth/languages")
-    suspend fun getAuthLanguages(): SuccessResponseDto<AuthLanguagesResponseDataDto>
-
-    @NoAuth
     @POST("auth/register")
     suspend fun register(
         @Body body: RegisterRequestDto

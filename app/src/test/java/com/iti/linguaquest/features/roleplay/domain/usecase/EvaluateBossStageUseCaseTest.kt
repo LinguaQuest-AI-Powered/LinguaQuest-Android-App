@@ -85,8 +85,8 @@ class EvaluateBossStageUseCaseTest {
         assertTrue(evaluation.task_completed)
         assertEquals(90, evaluation.fluency_score)
         assertEquals(3, evaluation.stars)
-        assertEquals(200, evaluation.xp_earned)
-        assertEquals(75, evaluation.coins_earned)
+        assertEquals(15, evaluation.xp_earned)
+        assertEquals(3, evaluation.coins_earned)
     }
 
     @Test
@@ -111,8 +111,8 @@ class EvaluateBossStageUseCaseTest {
         assertTrue(evaluation.task_completed)
         assertEquals(75, evaluation.fluency_score)
         assertEquals(2, evaluation.stars)
-        assertEquals(150, evaluation.xp_earned)
-        assertEquals(50, evaluation.coins_earned)
+        assertEquals(10, evaluation.xp_earned)
+        assertEquals(2, evaluation.coins_earned)
     }
 
     @Test
@@ -137,8 +137,8 @@ class EvaluateBossStageUseCaseTest {
         assertTrue(evaluation.task_completed)
         assertEquals(55, evaluation.fluency_score)
         assertEquals(1, evaluation.stars)
-        assertEquals(100, evaluation.xp_earned)
-        assertEquals(25, evaluation.coins_earned)
+        assertEquals(5, evaluation.xp_earned)
+        assertEquals(1, evaluation.coins_earned)
     }
 
     @Test

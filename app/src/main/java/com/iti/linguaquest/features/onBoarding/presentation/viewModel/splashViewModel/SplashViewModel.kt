@@ -5,18 +5,27 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.navigation.RootScreen
 import com.iti.linguaquest.features.auth.domain.usecase.CheckUserLoggedInUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.CheckIsFirstTimeUseCase
+import com.iti.linguaquest.core.language.domain.usecase.PrefetchSupportedLanguagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val checkIsFirstTimeUseCase: CheckIsFirstTimeUseCase,
-    private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase
+    private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase,
+    private val prefetchSupportedLanguagesUseCase: PrefetchSupportedLanguagesUseCase
 ) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            prefetchSupportedLanguagesUseCase()
+        }
+    }
 
     val destination: StateFlow<RootScreen?> = combine(
         checkIsFirstTimeUseCase(),

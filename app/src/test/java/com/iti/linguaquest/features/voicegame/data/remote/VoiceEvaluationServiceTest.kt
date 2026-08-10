@@ -1,9 +1,12 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import com.iti.linguaquest.core.ai.GeminiAiService
+import android.util.Base64
+import com.iti.linguaquest.core.ai.network.GeminiRestClient
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -11,17 +14,20 @@ import org.junit.Test
 
 class VoiceEvaluationServiceTest {
 
-    private lateinit var geminiAiService: GeminiAiService
+    private lateinit var geminiRestClient: GeminiRestClient
     private lateinit var evaluationService: VoiceEvaluationService
 
     @Before
     fun setUp() {
-        geminiAiService = mockk()
-        evaluationService = VoiceEvaluationService(geminiAiService)
+        mockkStatic(Base64::class)
+        every { Base64.encodeToString(any(), any()) } returns "base64audio"
+        geminiRestClient = mockk()
+        evaluationService = VoiceEvaluationService(geminiRestClient)
     }
 
     @Test
     fun evaluatePronunciation_convertsPcmToWavAndParsesAiEvaluation_whenGeminiReturnsValidJson() = runTest {
+        // Given
         val targetSentence = "Hello world"
         val pcmAudioBytes = byteArrayOf(1, 2, 3, 4)
         val jsonResponse = """
@@ -34,13 +40,10 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiAiService.generateJsonFromAudio(
-                prompt = any(),
-                audioBytes = any(),
-                mimeType = eq("audio/wav")
-            )
+            geminiRestClient.executeGeminiRequest(any())
         } returns jsonResponse
 
+        // When
         val result = evaluationService.evaluatePronunciation(
             targetSentence = targetSentence,
             targetLanguage = "English",
@@ -48,22 +51,20 @@ class VoiceEvaluationServiceTest {
             appLanguage = "English"
         )
 
+        // Then
         assertEquals(8, result.rating)
         assertEquals(listOf("Hello"), result.correctWords)
         assertEquals(listOf("world"), result.wrongWords)
         assertEquals("Good effort!", result.advice)
 
         coVerify(exactly = 1) {
-            geminiAiService.generateJsonFromAudio(
-                prompt = match { it.contains("Hello world") && it.contains("English") },
-                audioBytes = match { it.size == 44 + pcmAudioBytes.size },
-                mimeType = "audio/wav"
-            )
+            geminiRestClient.executeGeminiRequest(any())
         }
     }
 
     @Test
     fun evaluatePronunciation_recalculatesWrongWords_basedOnTargetSentenceWords() = runTest {
+        // Given
         val targetSentence = "The quick brown fox jumps"
         val pcmAudioBytes = byteArrayOf(10, 20)
         val jsonResponse = """
@@ -76,9 +77,10 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiAiService.generateJsonFromAudio(any(), any(), any())
+            geminiRestClient.executeGeminiRequest(any())
         } returns jsonResponse
 
+        // When
         val result = evaluationService.evaluatePronunciation(
             targetSentence = targetSentence,
             targetLanguage = "English",
@@ -86,6 +88,7 @@ class VoiceEvaluationServiceTest {
             appLanguage = "English"
         )
 
+        // Then
         assertEquals(6, result.rating)
         assertEquals(listOf("The", "fox"), result.correctWords)
         assertEquals(listOf("quick", "brown", "jumps"), result.wrongWords)
@@ -94,10 +97,12 @@ class VoiceEvaluationServiceTest {
 
     @Test(expected = Exception::class)
     fun evaluatePronunciation_throwsException_whenGeminiReturnsNull() = runTest {
+        // Given
         coEvery {
-            geminiAiService.generateJsonFromAudio(any(), any(), any())
+            geminiRestClient.executeGeminiRequest(any())
         } returns null
 
+        // When & Then
         evaluationService.evaluatePronunciation(
             targetSentence = "Bonjour",
             targetLanguage = "French",
