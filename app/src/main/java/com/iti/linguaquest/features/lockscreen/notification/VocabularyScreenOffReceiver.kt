@@ -8,31 +8,38 @@ import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class VocabularyScreenOffReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var repository: LockScreenRepository
-
-    @Inject
     lateinit var scheduler: VocabularyWorkScheduler
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    @Inject
+    lateinit var repository: LockScreenRepository
 
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_SCREEN_OFF) return
+    private val scope = CoroutineScope(Dispatchers.Default)
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent?.action != Intent.ACTION_SCREEN_OFF) return
+        
         val pendingResult = goAsync()
         scope.launch {
             try {
-                if (repository.featureEnabled.first()) {
-                    scheduler.scheduleImmediateNotification()
+                val isEnabled = repository.featureEnabled.first()
+                if (!isEnabled) {
+                    Timber.d("VocabularyScreenOffReceiver: Feature disabled, ignoring.")
+                    return@launch
                 }
+
+                Timber.d("VocabularyScreenOffReceiver: Screen turned off. Starting 15-minute cycle.")
+                scheduler.scheduleScreenOffNotification()
+            } catch (e: Exception) {
+                Timber.e(e, "Error processing screen off event")
             } finally {
                 pendingResult.finish()
             }

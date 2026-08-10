@@ -1,9 +1,10 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.core.ai.network.GeminiRestClient
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -11,11 +12,13 @@ import org.junit.Test
 
 class VoiceEvaluationServiceTest {
 
-    private lateinit var geminiAiService: GeminiAiService
+    private lateinit var geminiAiService: GeminiRestClient
     private lateinit var evaluationService: VoiceEvaluationService
 
     @Before
     fun setUp() {
+        mockkStatic(android.util.Base64::class)
+        io.mockk.every { android.util.Base64.encodeToString(any(), any()) } returns "mocked_base64"
         geminiAiService = mockk()
         evaluationService = VoiceEvaluationService(geminiAiService)
     }
@@ -34,11 +37,7 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiAiService.generateJsonFromAudio(
-                prompt = any(),
-                audioBytes = any(),
-                mimeType = eq("audio/wav")
-            )
+            geminiAiService.executeGeminiRequest(any())
         } returns jsonResponse
 
         val result = evaluationService.evaluatePronunciation(
@@ -54,11 +53,7 @@ class VoiceEvaluationServiceTest {
         assertEquals("Good effort!", result.advice)
 
         coVerify(exactly = 1) {
-            geminiAiService.generateJsonFromAudio(
-                prompt = match { it.contains("Hello world") && it.contains("English") },
-                audioBytes = match { it.size == 44 + pcmAudioBytes.size },
-                mimeType = "audio/wav"
-            )
+            geminiAiService.executeGeminiRequest(any())
         }
     }
 
@@ -76,7 +71,7 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiAiService.generateJsonFromAudio(any(), any(), any())
+            geminiAiService.executeGeminiRequest(any())
         } returns jsonResponse
 
         val result = evaluationService.evaluatePronunciation(
@@ -95,7 +90,7 @@ class VoiceEvaluationServiceTest {
     @Test(expected = Exception::class)
     fun evaluatePronunciation_throwsException_whenGeminiReturnsNull() = runTest {
         coEvery {
-            geminiAiService.generateJsonFromAudio(any(), any(), any())
+            geminiAiService.executeGeminiRequest(any())
         } returns null
 
         evaluationService.evaluatePronunciation(

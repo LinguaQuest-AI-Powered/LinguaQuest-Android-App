@@ -4,7 +4,7 @@ import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTo
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
-import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTokenUseCase
+import com.iti.linguaquest.features.auth.domain.model.AuthUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -17,20 +17,23 @@ class LoginUserUseCaseTest {
 
     private lateinit var authRepository: AuthRepository
     private lateinit var registerDeviceTokenUseCase: RegisterDeviceTokenUseCase
+    private lateinit var syncUserNativeLanguageUseCase: SyncUserNativeLanguageUseCase
     private lateinit var useCase: LoginUserUseCase
 
     @Before
     fun setUp() {
         authRepository = mockk()
         registerDeviceTokenUseCase = mockk(relaxed = true)
-        useCase = LoginUserUseCase(authRepository, registerDeviceTokenUseCase)
+        syncUserNativeLanguageUseCase = mockk(relaxed = true)
+        useCase = LoginUserUseCase(authRepository, registerDeviceTokenUseCase, syncUserNativeLanguageUseCase)
     }
 
     @Test
     fun invokeReturnsSuccessWhenRepositoryLoginSucceeds() = runTest {
         val email = "test@example.com"
         val password = "password123"
-        coEvery { authRepository.login(email, password) } returns LinguaQuestResult.Success(Unit)
+        val authUser = AuthUser(1, "test", null, null, true, emptyList())
+        coEvery { authRepository.login(email, password) } returns LinguaQuestResult.Success(authUser)
 
         val result = useCase(email, password)
 

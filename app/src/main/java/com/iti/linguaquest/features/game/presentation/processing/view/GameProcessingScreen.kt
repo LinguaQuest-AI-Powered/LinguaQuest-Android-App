@@ -61,6 +61,7 @@ fun GameProcessingScreen(
                 processingViewModel.verifyImage(
                     worldId = sharedState.worldId,
                     levelId = sharedState.levelId,
+                    targetWord = (sharedState.targetWord as? UiText.DynamicString)?.value ?: "",
                     imageFile = file
                 )
             } else {

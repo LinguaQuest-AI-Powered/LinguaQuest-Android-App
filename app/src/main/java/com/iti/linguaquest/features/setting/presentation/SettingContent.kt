@@ -35,6 +35,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
@@ -93,6 +95,7 @@ fun SettingContent(
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     val density = LocalDensity.current
+    val soundPlayer = LocalSoundPlayer.current
 
     fun guardOnline(clickedYInPx: Float, action: () -> Unit) {
         if (isOnline) {
@@ -106,8 +109,14 @@ fun SettingContent(
     if (lockScreenState.isConfirmDialogVisible) {
         EnableLockScreenDialog(
             coinCost = 50,
-            onConfirm = { onLockScreenIntent(LockScreenIntent.ConfirmEnableClicked) },
-            onCancel = { onLockScreenIntent(LockScreenIntent.CancelEnableClicked) }
+            onConfirm = {
+                soundPlayer.play(AppSound.SWITCH)
+                onLockScreenIntent(LockScreenIntent.ConfirmEnableClicked)
+            },
+            onCancel = {
+                soundPlayer.play(AppSound.SWITCH)
+                onLockScreenIntent(LockScreenIntent.CancelEnableClicked)
+            }
         )
     }
 
@@ -169,6 +178,7 @@ fun SettingContent(
                         lockScreenState.featureState == LockScreenFeatureState.ENABLING,
                     onCheckedChange = { isChecked ->
                         guardOnline(lockScreenY) {
+                            soundPlayer.play(AppSound.SWITCH)
                             onLockScreenIntent(LockScreenIntent.ToggleFeatureClicked(isChecked))
                         }
                     }

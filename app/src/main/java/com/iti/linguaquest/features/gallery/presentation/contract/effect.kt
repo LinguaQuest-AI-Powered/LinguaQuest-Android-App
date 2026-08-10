@@ -6,4 +6,5 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 sealed interface GalleryEffect {
     data class NavigateToReview(val word: WordEntity) : GalleryEffect
+    data class ShowLockScreenWordDialog(val wordId: Int) : GalleryEffect
 }

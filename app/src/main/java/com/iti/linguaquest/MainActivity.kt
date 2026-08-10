@@ -3,6 +3,7 @@ package com.iti.linguaquest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build
@@ -23,12 +24,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+
 import com.iti.linguaquest.core.navigation.AppNavigation
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.LocaleUtils
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
+
+import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -38,8 +42,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-     @Inject
+    @Inject
     lateinit var soundPlayer: AppSoundPlayer
+
+    @Inject
+    lateinit var vocabularyWorkScheduler: VocabularyWorkScheduler
+
 
     private val viewModel: AppViewModel by viewModels()
 
@@ -52,7 +60,7 @@ class MainActivity : ComponentActivity() {
         volumeControlStream = AudioManager.STREAM_MUSIC
         super.onCreate(savedInstanceState)
 
-         handleIntent(intent)
+        handleIntent(intent)
 
         enableEdgeToEdge()
         setContent {
@@ -79,6 +87,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {
