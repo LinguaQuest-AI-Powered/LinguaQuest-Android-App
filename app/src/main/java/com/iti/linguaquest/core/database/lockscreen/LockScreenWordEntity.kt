@@ -18,5 +18,6 @@ data class LockScreenWordEntity(
     val openedAt: Long? = null,
     val nativeLanguage: String,
     val targetLanguage: String,
-    val proficiencyLevel: String
+    val proficiencyLevel: String,
+    val userId: Int
 )

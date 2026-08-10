@@ -13,7 +13,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.DisposableEffect
+import com.iti.linguaquest.core.utils.SpeechManager
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryState
 import com.iti.linguaquest.features.gallery.presentation.view.comonents.CategoryChipsRow
@@ -27,6 +31,13 @@ fun LockScreenWordsContent(
     onWordClick: (Int, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val speechManager = remember { SpeechManager(context) }
+    
+    DisposableEffect(Unit) {
+        onDispose { speechManager.shutdown() }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -54,7 +65,10 @@ fun LockScreenWordsContent(
                     ) { word ->
                         LockScreenWordCard(
                             word = word,
-                            onWordClick = onWordClick
+                            onWordClick = onWordClick,
+                            onSpeakClick = {
+                                speechManager.speak(word.word, languageCode = word.targetLanguage)
+                            }
                         )
                     }
                 }

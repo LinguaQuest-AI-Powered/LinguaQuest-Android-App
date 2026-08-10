@@ -24,6 +24,7 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenU
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ScheduleVocabularyNotificationUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ShowTestNotificationUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.UpdateLockScreenMetadataUseCase
+import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
@@ -57,7 +58,8 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val getPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
     private val enqueueGenerationWorkUseCase: EnqueueGenerationWorkUseCase,
     private val scheduleNotificationUseCase: ScheduleVocabularyNotificationUseCase,
-    private val vocabularyWorkScheduler: com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler,
+    private val showTestNotificationUseCase: ShowTestNotificationUseCase,
+    private val vocabularyWorkScheduler: VocabularyWorkScheduler,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -448,7 +450,13 @@ class LockScreenSettingsViewModel @Inject constructor(
     private fun testNotification() {
         viewModelScope.launch {
             showMessage(UiText.StringResource(R.string.lockscreen_test_notification_scheduled))
-            vocabularyWorkScheduler.testNotification(5)
+            val shown = showTestNotificationUseCase()
+            if (!shown) {
+                showMessage(
+                    UiText.StringResource(R.string.lockscreen_test_notification_failed),
+                    SnackbarType.ERROR
+                )
+            }
         }
     }
 

@@ -208,7 +208,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     private fun extractCategories(words: List<WordEntity>): List<String> {
-        val uniqueCategories = words.map { it.category }.distinct().filter { it.isNotBlank() }
+        val uniqueCategories = words.map { it.category }.distinct().sorted()
         return listOf(ALL_ITEMS_CATEGORY) + uniqueCategories
     }
 
@@ -223,23 +223,32 @@ class GalleryViewModel @Inject constructor(
         return if (category == ALL_ITEMS_CATEGORY) {
             words
         } else {
-            words.filter { it.category.equals(category, ignoreCase = true) }
+            words.filter { 
+                it.category.equals(category, ignoreCase = true) 
+            }
         }
     }
 
     private fun extractLockScreenCategories(words: List<LockScreenWord>): List<String> {
-        val uniqueCategories = words
-            .map { it.proficiencyLevel }
-            .distinct()
-            .filter { it.isNotBlank() }
-        return listOf(ALL_ITEMS_CATEGORY) + uniqueCategories
+        return listOf(ALL_ITEMS_CATEGORY, "Easy", "Medium", "Hard")
     }
 
     private fun filterLockScreenWords(words: List<LockScreenWord>, category: String): List<LockScreenWord> {
         return if (category == ALL_ITEMS_CATEGORY) {
             words
         } else {
-            words.filter { it.proficiencyLevel.equals(category, ignoreCase = true) }
+            words.filter { 
+                mapRawCategoryToBucket(it.difficulty).equals(category, ignoreCase = true) 
+            }
+        }
+    }
+
+    private fun mapRawCategoryToBucket(rawCategory: String): String {
+        return when (rawCategory.trim().lowercase()) {
+            "beginner", "easy", "سهل", "مبتدئ" -> "Easy"
+            "intermediate", "medium", "متوسط" -> "Medium"
+            "advanced", "hard", "صعب", "متقدم" -> "Hard"
+            else -> "Easy"
         }
     }
 

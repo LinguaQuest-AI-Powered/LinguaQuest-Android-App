@@ -531,6 +531,9 @@
     <string name="error_fetch_generated_word">Failed to fetch newly generated word.</string>
     <string name="error_generate_words">Failed to generate new words. Please try again.</string>
     <string name="lockscreen_vocabulary_test_notification">Test Notification Now</string>
+    <string name="lockscreen_fullscreen_intent_title">Lock Screen Permission Required</string>
+    <string name="lockscreen_fullscreen_intent_message">To show vocabulary notifications on your lock screen, grant the \"Display over lock screen\" permission in your device settings.</string>
+    <string name="lockscreen_fullscreen_intent_action">Open Settings</string>
     <string name="lockscreen_vocabulary_dash">—</string>
     <string name="cd_add">Add</string>
     <string name="cd_pronounce">Pronounce</string>

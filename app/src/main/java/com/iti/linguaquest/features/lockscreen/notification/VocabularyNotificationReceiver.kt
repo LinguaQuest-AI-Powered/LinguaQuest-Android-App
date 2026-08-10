@@ -45,12 +45,13 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                     return@launch
                 }
                 val forceShow = intent.getBooleanExtra(EXTRA_FORCE_SHOW, false)
+                Timber.d("VocabularyNotificationReceiver: forceShow=$forceShow")
+
                 val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
                 val isLocked = keyguardManager.isKeyguardLocked
-                Timber.d("VocabularyNotificationReceiver: forceShow=$forceShow, isLocked=$isLocked")
+
                 if (!forceShow && !isLocked) {
-                    Timber.d("VocabularyNotificationReceiver: Screen not locked and not forced, rescheduling...")
-                    scheduler.scheduleNotificationWork()
+                    Timber.d("VocabularyNotificationReceiver: Screen unlocked. Stopping the cycle.")
                     return@launch
                 }
 
@@ -71,15 +72,16 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                         repository.markPosted(word.id)
                     }
                     val pendingCount = repository.pendingCountOnce()
+                    
+                    if (!forceShow) {
+                        Timber.d("VocabularyNotificationReceiver: Scheduling next cycle in 15 mins.")
+                        scheduler.scheduleScreenOffNotification()
+                    }
+
                     if (pendingCount < MIN_PENDING_WORDS) {
                         Timber.d("VocabularyNotificationReceiver: Pending words ($pendingCount) < $MIN_PENDING_WORDS, enqueuing generation...")
                         scheduler.enqueueGenerationWork()
                     }
-                }
-                
-                if (!forceShow) {
-                    Timber.d("VocabularyNotificationReceiver: Rescheduling next 15-minute periodic alarm")
-                    scheduler.scheduleNotificationWork()
                 }
             } catch (e: Exception) {
                 Timber.e(e, "LockScreen notification failed")

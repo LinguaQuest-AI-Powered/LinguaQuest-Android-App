@@ -39,6 +39,17 @@ class MainViewModel @Inject constructor(
     private val _unreadNotificationCount = MutableStateFlow(0)
     val unreadNotificationCount: StateFlow<Int> = _unreadNotificationCount.asStateFlow()
 
+    private val _showLockScreenWordDialogId = MutableStateFlow<Int?>(null)
+    val showLockScreenWordDialogId: StateFlow<Int?> = _showLockScreenWordDialogId.asStateFlow()
+
+    fun showLockScreenWordDialog(wordId: Int) {
+        lastActiveTab = NestedScreen.Gallery
+        _showLockScreenWordDialogId.value = wordId
+    }
+
+    fun hideLockScreenWordDialog() {
+        _showLockScreenWordDialogId.value = null
+    }
 
     init {
         viewModelScope.launch {

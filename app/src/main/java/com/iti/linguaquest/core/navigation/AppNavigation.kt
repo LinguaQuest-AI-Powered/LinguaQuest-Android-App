@@ -116,15 +116,11 @@ fun AppNavigation(
 
     LaunchedEffect(openLockScreenWordId) {
         val wordId = openLockScreenWordId ?: return@LaunchedEffect
-        val reviewWord = lockScreenReviewLauncherViewModel.prepareReviewWord(wordId)
         rootBackStack.apply {
             clear()
             navigateSingleTop(RootScreen.Main)
-            if (reviewWord != null) {
-                SharedWordHolder.pendingWord = reviewWord
-                navigateSingleTop(RootScreen.Review(wordId))
-            }
         }
+        mainViewModel.showLockScreenWordDialog(wordId)
         onOpenLockScreenWordHandled()
     }
 

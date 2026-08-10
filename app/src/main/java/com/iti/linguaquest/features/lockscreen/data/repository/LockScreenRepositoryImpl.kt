@@ -12,13 +12,16 @@ import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParam
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
 
 class LockScreenRepositoryImpl @Inject constructor(
     private val remoteDataSource: LockScreenRemoteDataSource,
-    private val localDataSource: LockScreenLocalDataSource
+    private val localDataSource: LockScreenLocalDataSource,
+    private val sessionManagerDataSource: SessionManagerDataSource
 ) : LockScreenRepository {
 
     override val featureEnabled: Flow<Boolean> = localDataSource.featureEnabled
@@ -30,10 +33,10 @@ class LockScreenRepositoryImpl @Inject constructor(
     override val lastProficiencyLevel: Flow<String?> = localDataSource.lastProficiencyLevel
     override val pendingOperationId: Flow<String?> = localDataSource.pendingOperationId
     override val lastRewardedMilestoneCount: Flow<Int?> = localDataSource.lastRewardedMilestoneCount
-    override val pendingCount: Flow<Int> = localDataSource.pendingCount
-    override val allWords: Flow<List<LockScreenWord>> = localDataSource.allWords().map { list -> list.map { it.toDomain() } }
-    override val pendingWord: Flow<LockScreenWord?> = localDataSource.pendingWord().map { it?.toDomain() }
-    override val postedOrOpenedWords: Flow<List<LockScreenWord>> = localDataSource.postedOrOpenedWords().map { list -> list.map { it.toDomain() } }
+    override val pendingCount: Flow<Int> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.pendingCount(userId ?: -1) }
+    override val allWords: Flow<List<LockScreenWord>> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.allWords(userId ?: -1) }.map { list -> list.map { it.toDomain() } }
+    override val pendingWord: Flow<LockScreenWord?> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.pendingWord(userId ?: -1) }.map { it?.toDomain() }
+    override val postedOrOpenedWords: Flow<List<LockScreenWord>> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.postedOrOpenedWords(userId ?: -1) }.map { list -> list.map { it.toDomain() } }
 
     override suspend fun enable() {
         localDataSource.saveFeatureEnabled(true)
@@ -41,7 +44,6 @@ class LockScreenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun disable() {
-        localDataSource.clearAll()
         localDataSource.clearFeatureMetadata()
     }
 
@@ -55,8 +57,9 @@ class LockScreenRepositoryImpl @Inject constructor(
         words: List<GeneratedVocabularyWord>,
         params: VocabularyBatchParams
     ): LinguaQuestResult<Int, LinguaQuestDataError> {
+        val userId = sessionManagerDataSource.getCurrentUserId()
         val entities = words.distinctBy { it.word.lowercase() }
-            .map { it.toEntity(params.nativeLanguage, params.targetLanguage, params.proficiencyLevel) }
+            .map { it.toEntity(params.nativeLanguage, params.targetLanguage, params.proficiencyLevel, userId) }
         return try {
             localDataSource.insertBatch(entities)
             localDataSource.saveFeatureEnabled(true)
@@ -115,7 +118,8 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun clearWords(): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return try {
-            localDataSource.clearAll()
+            val userId = sessionManagerDataSource.getCurrentUserId()
+            localDataSource.clearAll(userId)
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
              LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
@@ -124,7 +128,8 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun clearWordsForLanguage(targetLanguage: String): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return try {
-            localDataSource.clearByTargetLanguage(targetLanguage)
+            val userId = sessionManagerDataSource.getCurrentUserId()
+            localDataSource.clearByTargetLanguage(userId, targetLanguage)
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
              LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
@@ -136,7 +141,8 @@ class LockScreenRepositoryImpl @Inject constructor(
         proficiencyLevel: String
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return try {
-            localDataSource.clearByTargetLanguageAndLevel(targetLanguage, proficiencyLevel)
+            val userId = sessionManagerDataSource.getCurrentUserId()
+            localDataSource.clearByTargetLanguageAndLevel(userId, targetLanguage, proficiencyLevel)
             LinguaQuestResult.Success(Unit)
         } catch (e: Exception) {
              LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
@@ -159,15 +165,18 @@ class LockScreenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun recentGeneratedWords(limit: Int): List<String> {
-        return localDataSource.getRecentWords(limit)
+        val userId = sessionManagerDataSource.getCurrentUserId()
+        return localDataSource.getRecentWords(userId, limit)
     }
 
     override suspend fun pendingCountOnce(): Int {
-        return localDataSource.pendingCountOnce()
+        val userId = sessionManagerDataSource.getCurrentUserId()
+        return localDataSource.pendingCountOnce(userId)
     }
 
     override suspend fun observePendingOnce(): LockScreenWord? {
-        return localDataSource.getRandomPendingWordOnce()?.toDomain()
+        val userId = sessionManagerDataSource.getCurrentUserId()
+        return localDataSource.getRandomPendingWordOnce(userId)?.toDomain()
     }
 
     private fun buildFallbackVocabulary(

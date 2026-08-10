@@ -62,6 +62,7 @@ private enum class GalleryTab {
 @Composable
 fun GalleryScreen(
     onNavigateToReview: (WordEntity) -> Unit,
+    onShowLockScreenWordDialog: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel(),
     globalUiHostViewModel: GlobalUiHostViewModel = hiltViewModel()
@@ -88,6 +89,7 @@ fun GalleryScreen(
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is GalleryEffect.NavigateToReview -> onNavigateToReview(effect.word)
+                is GalleryEffect.ShowLockScreenWordDialog -> onShowLockScreenWordDialog(effect.wordId)
                 is GalleryEffect.ShowError -> globalUiHostViewModel.snackbarController.sendEvent(
                     SnackbarEvent(
                         title = effect.title,

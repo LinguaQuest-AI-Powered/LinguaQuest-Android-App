@@ -109,6 +109,12 @@ class AuthRepositoryImpl @Inject constructor(
         val request = LoginRequestDto(email, password)
         return remoteDataSource.login(request)
             .onSuccess { response ->
+                val lastId = sessionManagerDataSource.lastLoggedInUserId.first()
+                if (lastId != null && lastId != response.user.id) {
+                    sessionManagerDataSource.clearLocalGeneratedData()
+                }
+                sessionManagerDataSource.saveLastLoggedInUserId(response.user.id)
+                
                 userPreferencesLocalDataSource.clearTargetLanguage()
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 sessionManagerDataSource.saveIsLoggedIn(true)
@@ -122,6 +128,12 @@ class AuthRepositoryImpl @Inject constructor(
         val request = OAuthGoogleRequestDto(idToken)
         return remoteDataSource.loginWithGoogle(request)
             .onSuccess { response ->
+                val lastId = sessionManagerDataSource.lastLoggedInUserId.first()
+                if (lastId != null && lastId != response.user.id) {
+                    sessionManagerDataSource.clearLocalGeneratedData()
+                }
+                sessionManagerDataSource.saveLastLoggedInUserId(response.user.id)
+                
                 tokensLocalDataSource.saveTokens(response.accessToken, response.refreshToken)
                 if (response.profileComplete) {
                     userPreferencesLocalDataSource.clearTargetLanguage()

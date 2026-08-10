@@ -12,7 +12,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -25,10 +24,14 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
 
     override fun scheduleImmediateNotification() {
         scheduleAlarm(
-            delayMillis = 5000L,
+            delayMillis = 30000L,
             requestCode = IMMEDIATE_ALARM_REQUEST_CODE,
-            forceShow = true
+            forceShow = false
         )
+    }
+
+    override fun scheduleScreenOffNotification() {
+        scheduleScreenOffAlarm(15 * 60 * 1000L) // 15 minutes
     }
 
     override fun scheduleNotificationWork() {
@@ -51,14 +54,6 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        if (delayMillis <= 15000L) {
-            Timber.d("VocabularyWorkScheduler: Using Handler for short delay: $delayMillis ms (forceShow=$forceShow)")
-            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                context.sendBroadcast(intent)
-            }, delayMillis)
-            return
-        }
-
         val triggerAt = System.currentTimeMillis() + delayMillis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
@@ -75,6 +70,27 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
                 triggerAt,
                 pendingIntent
             )
+        }
+    }
+
+    private fun scheduleScreenOffAlarm(delayMillis: Long) {
+        val intent = Intent(context, VocabularyNotificationReceiver::class.java).apply {
+            action = VocabularyNotificationReceiver.ACTION_VOCAB_REMINDER
+            putExtra(VocabularyNotificationReceiver.EXTRA_FORCE_SHOW, false)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            SCREEN_OFF_ALARM_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val triggerAt = System.currentTimeMillis() + delayMillis
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            Timber.d("VocabularyWorkScheduler: Scheduling inexact screen-off alarm for $delayMillis ms")
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)
+        } else {
+            Timber.d("VocabularyWorkScheduler: Scheduling exact screen-off alarm for $delayMillis ms")
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)
         }
     }
 
@@ -109,8 +125,22 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        val screenOffPendingIntent = PendingIntent.getBroadcast(
+            context,
+            SCREEN_OFF_ALARM_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val testPendingIntent = PendingIntent.getBroadcast(
+            context,
+            TEST_ALARM_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         alarmManager.cancel(pendingIntent)
         alarmManager.cancel(immediatePendingIntent)
+        alarmManager.cancel(screenOffPendingIntent)
+        alarmManager.cancel(testPendingIntent)
         workManager.cancelUniqueWork(WORK_NAME_GENERATION)
     }
 
@@ -123,9 +153,10 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
     }
 
     companion object {
-        const val WORK_NAME_GENERATION = "lockscreen_vocabulary_generation_work"
+        const val WORK_NAME_GENERATION = "vocabulary_generation_work"
         const val ALARM_REQUEST_CODE = 3000
         const val IMMEDIATE_ALARM_REQUEST_CODE = 3001
         const val TEST_ALARM_REQUEST_CODE = 3002
+        const val SCREEN_OFF_ALARM_REQUEST_CODE = 3003
     }
 }

@@ -21,6 +21,7 @@ import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItRecei
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItReceiver.Companion.EXTRA_NOTIFICATION_ID
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyGotItReceiver.Companion.EXTRA_WORD_ID
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.iti.linguaquest.core.utils.LocaleUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -105,28 +106,27 @@ class VocabularyNotificationManager @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val compactView = buildCompactView(word, contentIntent, gotItIntent)
-        val expandedView = buildExpandedView(word, contentIntent, gotItIntent)
+        val locContext = LocaleUtils.wrapContext(context)
+        val compactView = buildCompactView(word, contentIntent, gotItIntent, locContext)
+        val expandedView = buildExpandedView(word, contentIntent, gotItIntent, locContext)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_bell_icon)
             .setContentTitle(word.word)
             .setContentText(word.translation)
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(compactView)
             .setCustomBigContentView(expandedView)
             .setCustomHeadsUpContentView(expandedView)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
-            .setOnlyAlertOnce(true)
             .setContentIntent(contentIntent)
             .setDeleteIntent(gotItIntent)
             .setSound(reminderSoundUri())
-            .build()
 
-        notificationManager.notify(NOTIFICATION_ID_BASE, notification)
+        notificationManager.cancel(NOTIFICATION_ID_BASE)
+        notificationManager.notify(NOTIFICATION_ID_BASE, builder.build())
         return true
     }
 
@@ -141,33 +141,55 @@ class VocabularyNotificationManager @Inject constructor(
     private fun buildCompactView(
         word: LockScreenWord,
         openIntent: PendingIntent,
-        gotItIntent: PendingIntent
+        gotItIntent: PendingIntent,
+        locContext: Context
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.layout_lockscreen_notification).apply {
-            setTextViewText(R.id.tv_app_name, context.getString(R.string.app_name))
-            setTextViewText(R.id.tv_now, context.getString(R.string.lockscreen_notification_now))
+            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { "العربية" })
             setTextViewText(R.id.tv_word_title, word.word)
             setTextViewText(R.id.tv_word_definition, word.meaning.ifBlank { word.translation })
-            setTextViewText(R.id.tv_word_meta, "${word.targetLanguage} - ${word.difficulty}")
-            setTextViewText(R.id.btn_action, context.getString(R.string.lockscreen_notification_got_it))
+            
+            val difficultyStr = when (word.difficulty.lowercase()) {
+                "beginner", "easy", "سهل", "مبتدئ" -> locContext.getString(R.string.easy)
+                "intermediate", "medium", "متوسط" -> locContext.getString(R.string.medium)
+                "advanced", "hard", "صعب", "متقدم" -> locContext.getString(R.string.hard)
+                else -> word.difficulty
+            }
+            setTextViewText(R.id.btn_action, difficultyStr)
+            
             setOnClickPendingIntent(R.id.root, openIntent)
-            setOnClickPendingIntent(R.id.btn_action, gotItIntent)
         }
     }
 
     private fun buildExpandedView(
         word: LockScreenWord,
         openIntent: PendingIntent,
-        gotItIntent: PendingIntent
+        gotItIntent: PendingIntent,
+        locContext: Context
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.notification_lockscreen_expanded).apply {
+            setTextViewText(R.id.tv_language, word.nativeLanguage.ifBlank { "العربية" })
             setTextViewText(R.id.tvWord, word.word)
-            setTextViewText(R.id.tvExample, context.getString(R.string.lockscreen_notification_example_label, word.exampleSentence))
-            setTextViewText(R.id.tvTranslation, context.getString(R.string.lockscreen_notification_translation_label, word.translation))
-            setTextViewText(R.id.tvHint, context.getString(R.string.lockscreen_notification_tap_to_open))
-            setTextViewText(R.id.btn_action, context.getString(R.string.lockscreen_notification_got_it))
+            setTextViewText(R.id.tvTranslation, word.meaning.ifBlank { word.translation })
+            
+            if (word.exampleSentence.isNotBlank()) {
+                setTextViewText(R.id.tvExample, locContext.getString(R.string.lockscreen_notification_example_label, word.exampleSentence))
+            } else {
+                setTextViewText(R.id.tvExample, "")
+            }
+            
+            val difficultyStr = when (word.difficulty.lowercase()) {
+                "beginner", "easy", "سهل", "مبتدئ" -> locContext.getString(R.string.easy)
+                "intermediate", "medium", "متوسط" -> locContext.getString(R.string.medium)
+                "advanced", "hard", "صعب", "متقدم" -> locContext.getString(R.string.hard)
+                else -> word.difficulty
+            }
+            setTextViewText(R.id.btn_action, difficultyStr)
+            
+            setTextViewText(R.id.tv_app_name, locContext.getString(R.string.app_name))
+            setTextViewText(R.id.tvHint, locContext.getString(R.string.lockscreen_notification_tap_to_open))
+            
             setOnClickPendingIntent(R.id.root_expanded, openIntent)
-            setOnClickPendingIntent(R.id.btn_action, gotItIntent)
         }
     }
 

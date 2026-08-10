@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.lockscreen.presentation.view
 
-import android.speech.tts.TextToSpeech
+import com.iti.linguaquest.core.utils.SpeechManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,11 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -68,7 +70,7 @@ fun LockScreenWordDetailScreen(
     var showListMode by remember { mutableStateOf(wordId <= 0) }
     var searchQuery by remember { mutableStateOf("") }
     var showMilestoneDialog by remember { mutableStateOf(false) }
-    var lastMilestoneCount by remember { mutableStateOf(0) }
+    var lastMilestoneCount by remember { mutableIntStateOf(0) }
 
      LaunchedEffect(state.words.size) {
         val count = state.words.size
@@ -81,14 +83,11 @@ fun LockScreenWordDetailScreen(
     }
 
     val context = LocalContext.current
-    var tts by remember { mutableStateOf<TextToSpeech?>(null) }
+    val speechManager = remember { SpeechManager(context) }
 
-    DisposableEffect(context) {
-        val engine = TextToSpeech(context) { _ -> }
-        tts = engine
+    DisposableEffect(speechManager) {
         onDispose {
-            engine.stop()
-            engine.shutdown()
+            speechManager.shutdown()
         }
     }
 
@@ -98,29 +97,33 @@ fun LockScreenWordDetailScreen(
 
     Scaffold(
         topBar = {
-            CustomTopBar(coins = wallet.coins)
+            if (showListMode) {
+                CustomTopBar(coins = wallet.coins)
+            }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.requestNewWord()
-                    showListMode = false
-                },
-                containerColor = Color(0xFF915900),
-                contentColor = Color.White,
-                shape = CircleShape
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.cd_add)
-                )
+            if (showListMode) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.requestNewWord()
+                        showListMode = false
+                    },
+                    containerColor = Color(0xFF915900),
+                    contentColor = Color.White,
+                    shape = CircleShape
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.cd_add)
+                    )
+                }
             }
         }
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(if (showListMode) MaterialTheme.colorScheme.background else Color.Transparent)
                 .padding(innerPadding)
         ) {
             when {
@@ -145,30 +148,32 @@ fun LockScreenWordDetailScreen(
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column {
-                                    Text(
-                                        text = stringResource(R.string.lockscreen_vocabulary_vault_title),
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        color = LinguaQuestTheme.colors.titleAndCationsColor
-                                    )
-                                    Text(
-                                        text = stringResource(
-                                            R.string.lockscreen_vocabulary_words_collected,
-                                            state.words.size
-                                        ),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = LinguaQuestTheme.colors.titleAndCationsColor.copy(
-                                            alpha = 0.7f
+                            if (showListMode) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = stringResource(R.string.lockscreen_vocabulary_vault_title),
+                                            style = MaterialTheme.typography.headlineSmall,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = LinguaQuestTheme.colors.titleAndCationsColor
                                         )
-                                    )
+                                        Text(
+                                            text = stringResource(
+                                                R.string.lockscreen_vocabulary_words_collected,
+                                                state.words.size
+                                            ),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = LinguaQuestTheme.colors.titleAndCationsColor.copy(
+                                                alpha = 0.7f
+                                            )
+                                        )
+                                    }
                                 }
                             }
 
@@ -186,12 +191,17 @@ fun LockScreenWordDetailScreen(
                                 if (currentWord != null) {
                                     Box(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 32.dp)
+                                            .fillMaxSize()
+                                            .padding(horizontal = 16.dp),
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         LargeWordCard(
                                             word = currentWord,
-                                            onGotItClick = { showListMode = true }
+                                            onGotItClick = { onBack() },
+                                            onWordClick = { onNavigateToReview(currentWord) },
+                                            onSpeakClick = { 
+                                                speechManager.speak(currentWord.word, languageCode = currentWord.targetLanguage) 
+                                            }
                                         )
                                     }
                                 } else {
@@ -203,7 +213,7 @@ fun LockScreenWordDetailScreen(
                                     searchQuery = searchQuery,
                                     onSearchQueryChange = { searchQuery = it },
                                     onNavigateToReview = onNavigateToReview,
-                                    tts = tts
+                                    speechManager = speechManager
                                 )
                             }
                         }

@@ -12,6 +12,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -151,6 +154,9 @@ fun MainScreen(
                             onNavigateToReview = { word ->
                                 SharedWordHolder.pendingWord = word
                                 rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                            },
+                            onShowLockScreenWordDialog = { wordId ->
+                                viewModel.showLockScreenWordDialog(wordId)
                             }
                         )
                     }
@@ -183,6 +189,46 @@ fun MainScreen(
 
                 }
             )
+        }
+
+        val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
+        
+        LaunchedEffect(showLockScreenWordDialogId) {
+            if (showLockScreenWordDialogId != null) {
+                if (nestedBackStack.lastOrNull() != NestedScreen.Gallery) {
+                    viewModel.lastActiveTab = NestedScreen.Gallery
+                    nestedBackStack.apply {
+                        clear()
+                        navigateSingleTop(NestedScreen.Home)
+                        navigateSingleTop(NestedScreen.Gallery)
+                    }
+                }
+            }
+        }
+
+        if (showLockScreenWordDialogId != null) {
+            Dialog(
+                onDismissRequest = { viewModel.hideLockScreenWordDialog() },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                LockScreenWordDetailScreen(
+                    wordId = showLockScreenWordDialogId!!,
+                    onBack = { viewModel.hideLockScreenWordDialog() },
+                    onNavigateToReview = { lockScreenWord ->
+                        viewModel.hideLockScreenWordDialog()
+                        SharedWordHolder.pendingWord = com.iti.linguaquest.core.database.word.WordEntity(
+                            id = lockScreenWord.id,
+                            sourceWord = lockScreenWord.word,
+                            translatedWord = lockScreenWord.translation,
+                            sourceLanguage = lockScreenWord.targetLanguage,
+                            targetLanguage = lockScreenWord.nativeLanguage,
+                            category = lockScreenWord.proficiencyLevel,
+                            imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
+                        )
+                        rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
+                    }
+                )
+            }
         }
     }
 }

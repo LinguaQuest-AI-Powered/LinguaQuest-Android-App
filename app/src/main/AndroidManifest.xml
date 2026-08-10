@@ -138,13 +138,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".features.lockscreen.notification.VocabularyScreenOffReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.SCREEN_OFF" />
-            </intent-filter>
-        </receiver>
+
 
         <!-- Foreground FCM Messaging Service -->
         <service

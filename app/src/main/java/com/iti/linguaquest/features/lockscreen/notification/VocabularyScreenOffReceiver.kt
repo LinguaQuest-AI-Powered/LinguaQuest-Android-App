@@ -5,47 +5,41 @@ import android.content.Context
 import android.content.Intent
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
 import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class VocabularyScreenOffReceiver : BroadcastReceiver() {
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface ScreenOffEntryPoint {
-        fun lockScreenRepository(): LockScreenRepository
-        fun vocabularyWorkScheduler(): VocabularyWorkScheduler
-    }
+    @Inject
+    lateinit var scheduler: VocabularyWorkScheduler
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    @Inject
+    lateinit var repository: LockScreenRepository
 
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_SCREEN_OFF) return
+    private val scope = CoroutineScope(Dispatchers.Default)
 
-        val entryPoint = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            ScreenOffEntryPoint::class.java
-        )
-        val repository = entryPoint.lockScreenRepository()
-        val scheduler = entryPoint.vocabularyWorkScheduler()
-
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent?.action != Intent.ACTION_SCREEN_OFF) return
+        
         val pendingResult = goAsync()
         scope.launch {
             try {
                 val isEnabled = repository.featureEnabled.first()
-                Timber.d("VocabularyScreenOffReceiver: onReceive SCREEN_OFF. featureEnabled=$isEnabled")
-                if (isEnabled) {
-                    Timber.d("VocabularyScreenOffReceiver: Scheduling immediate notification")
-                    scheduler.scheduleImmediateNotification()
+                if (!isEnabled) {
+                    Timber.d("VocabularyScreenOffReceiver: Feature disabled, ignoring.")
+                    return@launch
                 }
+
+                Timber.d("VocabularyScreenOffReceiver: Screen turned off. Starting 15-minute cycle.")
+                scheduler.scheduleScreenOffNotification()
+            } catch (e: Exception) {
+                Timber.e(e, "Error processing screen off event")
             } finally {
                 pendingResult.finish()
             }

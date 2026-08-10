@@ -3,7 +3,7 @@ package com.iti.linguaquest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build.VERSION.SDK_INT
@@ -22,14 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
+
 import com.iti.linguaquest.core.navigation.AppNavigation
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.LocaleUtils
 import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificationManager
-import com.iti.linguaquest.features.lockscreen.notification.VocabularyScreenOffReceiver
+
 import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var vocabularyWorkScheduler: VocabularyWorkScheduler
 
-    private val screenOffReceiver = VocabularyScreenOffReceiver()
 
     private val viewModel: AppViewModel by viewModels()
 
@@ -56,13 +55,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         volumeControlStream = AudioManager.STREAM_MUSIC
         super.onCreate(savedInstanceState)
-
-        ContextCompat.registerReceiver(
-            this,
-            screenOffReceiver,
-            IntentFilter(Intent.ACTION_SCREEN_OFF),
-            ContextCompat.RECEIVER_EXPORTED
-        )
 
         handleIntent(intent)
 
@@ -93,7 +85,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        runCatching { unregisterReceiver(screenOffReceiver) }
     }
 
     override fun onNewIntent(intent: Intent) {

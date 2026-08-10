@@ -26,7 +26,8 @@ fun LockScreenWordEntity.toDomain(): LockScreenWord {
 fun GeneratedVocabularyWord.toEntity(
     nativeLanguage: String,
     targetLanguage: String,
-    proficiencyLevel: String
+    proficiencyLevel: String,
+    userId: Int
 ): LockScreenWordEntity {
     return LockScreenWordEntity(
         word = word,
@@ -36,6 +37,7 @@ fun GeneratedVocabularyWord.toEntity(
         meaning = meaning.ifBlank { translation },
         nativeLanguage = nativeLanguage,
         targetLanguage = targetLanguage,
-        proficiencyLevel = proficiencyLevel
+        proficiencyLevel = proficiencyLevel,
+        userId = userId
     )
 }

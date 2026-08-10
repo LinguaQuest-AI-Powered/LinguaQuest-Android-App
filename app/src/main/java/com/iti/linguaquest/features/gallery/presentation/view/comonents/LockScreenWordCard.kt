@@ -13,9 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +35,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +46,7 @@ import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 fun LockScreenWordCard(
     word: LockScreenWord,
     onWordClick: (Int, Rect) -> Unit,
+    onSpeakClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var cardBounds by remember(word.id) { mutableStateOf(Rect.Zero) }
@@ -73,11 +80,17 @@ fun LockScreenWordCard(
                     containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     textColor = MaterialTheme.colorScheme.primary
                 )
-                StatusPill(
-                    text = word.status.name,
-                    containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.12f),
-                    textColor = MaterialTheme.colorScheme.tertiary
-                )
+                
+                IconButton(
+                    onClick = onSpeakClick,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.VolumeUp,
+                        contentDescription = "Speak",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -87,6 +100,8 @@ fun LockScreenWordCard(
                 color = LinguaQuestTheme.colors.blackColor,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -98,6 +113,8 @@ fun LockScreenWordCard(
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -105,9 +122,11 @@ fun LockScreenWordCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "${word.translation} - ${word.exampleSentence}",
+                text = word.exampleSentence,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )

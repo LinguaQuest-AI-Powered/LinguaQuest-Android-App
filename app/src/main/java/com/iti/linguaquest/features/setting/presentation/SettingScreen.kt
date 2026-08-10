@@ -13,6 +13,9 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -83,6 +86,7 @@ fun SettingScreen(
                 LockScreenEffect.PlayCoinDeductedSound -> {
                     soundPlayer.play(AppSound.COIN)
                 }
+
             }
         }
     }

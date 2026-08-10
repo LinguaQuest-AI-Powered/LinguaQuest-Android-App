@@ -12,4 +12,5 @@ sealed interface GalleryEffect {
         val retryable: Boolean = false
     ) : GalleryEffect
     data class NavigateToReview(val word: WordEntity) : GalleryEffect
+    data class ShowLockScreenWordDialog(val wordId: Int) : GalleryEffect
 }

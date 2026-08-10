@@ -16,26 +16,26 @@ interface LockScreenWordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(word: LockScreenWordEntity)
 
-    @Query("SELECT * FROM lock_screen_words WHERE status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
-    fun getPendingWord(): Flow<LockScreenWordEntity?>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
+    fun getPendingWord(userId: Int): Flow<LockScreenWordEntity?>
 
-    @Query("SELECT * FROM lock_screen_words WHERE status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
-    suspend fun getPendingWordOnce(): LockScreenWordEntity?
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
+    suspend fun getPendingWordOnce(userId: Int): LockScreenWordEntity?
 
-    @Query("SELECT * FROM lock_screen_words WHERE status = 'PENDING' ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomPendingWordOnce(): LockScreenWordEntity?
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomPendingWordOnce(userId: Int): LockScreenWordEntity?
 
-    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE status = 'PENDING'")
-    fun pendingCount(): Flow<Int>
+    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING'")
+    fun pendingCount(userId: Int): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE status = 'PENDING'")
-    suspend fun pendingCountOnce(): Int
+    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING'")
+    suspend fun pendingCountOnce(userId: Int): Int
 
-    @Query("SELECT * FROM lock_screen_words ORDER BY createdAt DESC")
-    fun allWords(): Flow<List<LockScreenWordEntity>>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId ORDER BY createdAt DESC")
+    fun allWords(userId: Int): Flow<List<LockScreenWordEntity>>
 
-    @Query("SELECT * FROM lock_screen_words ORDER BY createdAt DESC")
-    suspend fun allWordsOnce(): List<LockScreenWordEntity>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId ORDER BY createdAt DESC")
+    suspend fun allWordsOnce(userId: Int): List<LockScreenWordEntity>
 
     @Query("SELECT * FROM lock_screen_words WHERE id = :wordId LIMIT 1")
     suspend fun getById(wordId: Int): LockScreenWordEntity?
@@ -43,14 +43,14 @@ interface LockScreenWordDao {
     @Query("SELECT * FROM lock_screen_words WHERE id = :wordId LIMIT 1")
     fun observeById(wordId: Int): Flow<LockScreenWordEntity?>
 
-    @Query("SELECT word FROM lock_screen_words ORDER BY createdAt DESC LIMIT :limit")
-    suspend fun getRecentWords(limit: Int): List<String>
+    @Query("SELECT word FROM lock_screen_words WHERE userId = :userId ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getRecentWords(userId: Int, limit: Int): List<String>
 
-    @Query("SELECT * FROM lock_screen_words WHERE status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
-    fun getPostedOrOpenedWords(): Flow<List<LockScreenWordEntity>>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
+    fun getPostedOrOpenedWords(userId: Int): Flow<List<LockScreenWordEntity>>
 
-    @Query("SELECT * FROM lock_screen_words WHERE status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
-    suspend fun getPostedOrOpenedWordsOnce(): List<LockScreenWordEntity>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status IN ('POSTED', 'OPENED') ORDER BY postedAt DESC")
+    suspend fun getPostedOrOpenedWordsOnce(userId: Int): List<LockScreenWordEntity>
 
     @Query(
         "UPDATE lock_screen_words SET status = :status, postedAt = COALESCE(:postedAt, postedAt), openedAt = COALESCE(:openedAt, openedAt) WHERE id = :wordId"
@@ -62,16 +62,17 @@ interface LockScreenWordDao {
         openedAt: Long? = null
     )
 
-    @Query("DELETE FROM lock_screen_words")
-    suspend fun clearAll()
+    @Query("DELETE FROM lock_screen_words WHERE userId = :userId")
+    suspend fun clearAll(userId: Int)
 
-    @Query("DELETE FROM lock_screen_words WHERE targetLanguage = :targetLanguage")
-    suspend fun clearByTargetLanguage(targetLanguage: String)
+    @Query("DELETE FROM lock_screen_words WHERE userId = :userId AND targetLanguage = :targetLanguage")
+    suspend fun clearByTargetLanguage(userId: Int, targetLanguage: String)
 
     @Query(
-        "DELETE FROM lock_screen_words WHERE targetLanguage = :targetLanguage AND proficiencyLevel = :proficiencyLevel"
+        "DELETE FROM lock_screen_words WHERE userId = :userId AND targetLanguage = :targetLanguage AND proficiencyLevel = :proficiencyLevel"
     )
     suspend fun clearByTargetLanguageAndLevel(
+        userId: Int,
         targetLanguage: String,
         proficiencyLevel: String
     )
