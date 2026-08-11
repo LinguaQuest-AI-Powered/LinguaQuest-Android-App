@@ -65,17 +65,12 @@ fun NotificationContent(
         ) {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.notifications_title),
+                isTitleCentered = false,
                 onBackClicked = onBackClick,
                 trailingContent = {
                     if (notifications.isNotEmpty()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Spacer(modifier = Modifier.width(24.dp))
-                            if (state.isDeleting) {
-                                LingoSpinningIcon(
-                                    size = 16.dp,
-                                    modifier = Modifier.padding(end = 4.dp)
-                                )
-                            }
+                           // Spacer(modifier = Modifier.width(24.dp))
                             Text(
                                 text = stringResource(R.string.delete_all),
                                 style = MaterialTheme.typography.titleMedium,
@@ -100,6 +95,7 @@ fun NotificationContent(
             NotificationListContainer(
                 notifications = notifications,
                 isLoading = state.isLoading,
+                isDeleting = state.isDeleting,
                 deletingNotificationId = state.deletingNotificationId,
                 onCardClick = onCardClick,
                 onDeleteClick = onDeleteNotificationClick
