@@ -3,8 +3,8 @@ package com.iti.linguaquest.features.home.presentation.mapper
 import com.iti.linguaquest.core.utils.toFlagEmoji
 import com.iti.linguaquest.features.home.domain.model.UserLanguage
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
-import com.iti.linguaquest.features.home.presentation.languages.contract.LanguageUiItem
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.LanguageUiItem
 
 fun UserLanguage.toUiModel(): MyLanguageUiModel = MyLanguageUiModel(
     id = id,

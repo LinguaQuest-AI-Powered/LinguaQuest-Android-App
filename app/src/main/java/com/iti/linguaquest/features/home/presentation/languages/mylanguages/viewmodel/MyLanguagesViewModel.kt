@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.viewmodel
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +12,10 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesState
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesState
 import com.iti.linguaquest.features.home.presentation.mapper.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,9 +41,6 @@ class MyLanguagesViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<MyLanguagesEffect>()
     val effect: SharedFlow<MyLanguagesEffect> = _effect.asSharedFlow()
-
-    init {
-    }
 
     fun onIntent(intent: MyLanguagesIntent) {
         when (intent) {

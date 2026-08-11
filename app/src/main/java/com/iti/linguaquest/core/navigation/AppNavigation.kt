@@ -71,7 +71,7 @@ import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
-import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
