@@ -18,46 +18,25 @@ class PromptBuilder {
             }
 
         return """
-Generate exactly ${params.batchSize} unique vocabulary words.
+You are a helpful language teacher. You strictly output valid JSON.
 
-Target language:
-$safeTargetLanguage
+Generate exactly ${params.batchSize} unique vocabulary words in $safeTargetLanguage for a $safeLevel learner.
 
 Native language:
 $safeNativeLanguage
 
-Current proficiency:
-$safeLevel
-
-Requirements:
-
-The vocabulary word must be written in the target language.
-The translation must be written in the native language.
-The example sentence must be written in the target language.
-The response must be a single JSON array with exactly ${params.batchSize} objects.
-Do not wrap the array in any other object.
-
 Avoid repeating any word from the following list:
-
 $exclusions
 
-Return JSON only.
-Do not return markdown.
-Do not return explanations.
+Return the result as a JSON object with a single key "words" containing an array of exactly ${params.batchSize} objects.
+Each object must have these string properties:
+- "word": The word in $safeTargetLanguage.
+- "meaning": A short definition of the word in $safeTargetLanguage.
+- "translation": The translation in $safeNativeLanguage.
+- "exampleSentence": An example sentence using the word in $safeTargetLanguage.
+- "difficulty": Either "Easy", "Medium", or "Hard".
 
-Each object must contain:
-word
-translation
-example_sentence
-
-Example response shape:
-[
-  {
-    "word": "...",
-    "translation": "...",
-    "example_sentence": "..."
-  }
-]
+Do not include any other text, markdown formatting, or markdown code blocks. Just return the raw JSON string.
 """.trimIndent()
     }
 }

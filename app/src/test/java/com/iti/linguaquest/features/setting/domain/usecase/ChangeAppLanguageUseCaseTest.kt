@@ -2,7 +2,7 @@ package com.iti.linguaquest.features.setting.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.features.home.domain.repository.LanguagesRepo
-import com.iti.linguaquest.features.setting.domain.manager.LanguageManager
+import com.iti.linguaquest.core.language.domain.manager.LanguageManager
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

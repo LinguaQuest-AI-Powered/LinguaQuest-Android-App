@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.lockscreen.presentation.view.component
 
-import android.speech.tts.TextToSpeech
+import com.iti.linguaquest.core.utils.SpeechManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,7 +36,7 @@ fun VaultListMode(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onNavigateToReview: (LockScreenWord) -> Unit,
-    tts: TextToSpeech?
+    speechManager: SpeechManager?
 ) {
     val filteredWords = words.filter {
         it.word.contains(searchQuery, ignoreCase = true) ||
@@ -101,7 +101,7 @@ fun VaultListMode(
                     VaultListItem(
                         word = word,
                         onSpeakClick = {
-                            tts?.speak(word.word, TextToSpeech.QUEUE_FLUSH, null, "lockscreen_tts")
+                            speechManager?.speak(word.word, languageCode = word.targetLanguage)
                         },
                         onReviewClick = {
                             onNavigateToReview(word)

@@ -24,6 +24,7 @@ import com.iti.linguaquest.features.lockscreen.domain.usecase.ObserveLockScreenU
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ScheduleVocabularyNotificationUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.ShowTestNotificationUseCase
 import com.iti.linguaquest.features.lockscreen.domain.usecase.UpdateLockScreenMetadataUseCase
+import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
@@ -58,6 +59,7 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val enqueueGenerationWorkUseCase: EnqueueGenerationWorkUseCase,
     private val scheduleNotificationUseCase: ScheduleVocabularyNotificationUseCase,
     private val showTestNotificationUseCase: ShowTestNotificationUseCase,
+    private val vocabularyWorkScheduler: VocabularyWorkScheduler,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 
@@ -302,6 +304,7 @@ class LockScreenSettingsViewModel @Inject constructor(
 
             when (val enableResult = enableUseCase(operationId)) {
                 is LinguaQuestResult.Success -> {
+                    sendEffect(LockScreenEffect.PlayCoinDeductedSound)
                     when (val generationResult = generateUseCase()) {
                         is LinguaQuestResult.Success -> {
                             updateMetadataUseCase(
@@ -320,7 +323,10 @@ class LockScreenSettingsViewModel @Inject constructor(
                                     errorMessage = null
                                 )
                             }
-                            showMessage(UiText.StringResource(R.string.lockscreen_vocabulary_enabled))
+                            showMessage(
+                                UiText.StringResource(R.string.lockscreen_vocabulary_enabled),
+                                SnackbarType.SUCCESS
+                            )
                         }
 
                         is LinguaQuestResult.Failure -> {
@@ -444,7 +450,13 @@ class LockScreenSettingsViewModel @Inject constructor(
     private fun testNotification() {
         viewModelScope.launch {
             showMessage(UiText.StringResource(R.string.lockscreen_test_notification_scheduled))
-            showTestNotificationUseCase()
+            val shown = showTestNotificationUseCase()
+            if (!shown) {
+                showMessage(
+                    UiText.StringResource(R.string.lockscreen_test_notification_failed),
+                    SnackbarType.ERROR
+                )
+            }
         }
     }
 

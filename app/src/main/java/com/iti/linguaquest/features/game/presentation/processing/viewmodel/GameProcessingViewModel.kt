@@ -22,10 +22,12 @@ import java.io.File
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.features.game.domain.usecase.SaveVaultImageUseCase
 
 @HiltViewModel
 class GameProcessingViewModel @Inject constructor(
-    private val verifyLevelUseCase: VerifyLevelUseCase
+    private val verifyLevelUseCase: VerifyLevelUseCase,
+    private val saveVaultImageUseCase: SaveVaultImageUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameProcessingState())
@@ -34,7 +36,7 @@ class GameProcessingViewModel @Inject constructor(
     private val _effect = Channel<GameProcessingEffect>()
     val effect = _effect.receiveAsFlow()
 
-    fun verifyImage(worldId: Int, levelId: Int, imageFile: File?) {
+    fun verifyImage(worldId: Int, levelId: Int, targetWord: String, imageFile: File?) {
         if (imageFile == null || !imageFile.exists()) {
             sendEffect(GameProcessingEffect.NavigateToError(UiText.StringResource(R.string.game_processing_simulate_error_message)))
             return
@@ -44,6 +46,7 @@ class GameProcessingViewModel @Inject constructor(
                 is LinguaQuestResult.Success -> {
                     val data = result.data
                     if (data.isMatch) {
+                        saveVaultImageUseCase(targetWord, imageFile)
                         sendEffect(
                             GameProcessingEffect.NavigateToSuccess(
                                 xp = data.xpEarned,

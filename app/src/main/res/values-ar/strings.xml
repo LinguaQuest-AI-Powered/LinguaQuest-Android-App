@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LinguaQuest</string>
+    <string name="app_name">لينجوا كويست</string>
     <string name="app_logo_description">شعار LinguaQuest</string>
     <string name="onboarding_title_p1">تعلم اللغات من خلال استكشاف </string>
     <string name="onboarding_title_p2">العالم الحقيقي!</string>
@@ -161,6 +161,8 @@
     <string name="flip_camera">قلب الكاميرا</string>
     <string name="camera_alt">الكاميرا</string>
     <string name="gallery_label">المعرض</string>
+    <string name="gallery_game_captures_tab">التقاطات اللعبة</string>
+    <string name="gallery_my_words_tab">مذكرتي</string>
     <string name="Add_New">إضافة جديد</string>
 
     <string name="my_captures">التقاطاتي</string>
@@ -298,6 +300,12 @@
     <!-- Notification -->
     <string name="lockscreen_notification_channel_description">تذكيرات دورية بالمفردات على شاشة القفل</string>
     <string name="lockscreen_notification_action_go">فتح</string>
+
+    <string name="lockscreen_notification_now">الآن</string>
+    <string name="lockscreen_notification_got_it">تم</string>
+    <string name="lockscreen_notification_tap_to_open">اضغط في أي مكان للفتح</string>
+    <string name="lockscreen_notification_translation_label">الترجمة: %1$s</string>
+    <string name="lockscreen_notification_example_label">المثال: %1$s</string>
 
     <!-- Daily Rewards -->
     <string name="daily_reward_title">المكافأة\nاليومية!</string>
@@ -525,7 +533,8 @@
     <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
     <string name="lockscreen_notification_permission_required">إذن الإشعارات مطلوب لتفعيل الميزة.</string>
     <string name="lockscreen_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
-    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن! سيظهر الإشعار خلال 5 ثوانٍ.</string>
+    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن. سيظهر إشعار الاختبار خلال 5 ثوانٍ.</string>
+    <string name="lockscreen_test_notification_failed">تعذر عرض إشعار الاختبار. تأكد من تفعيل الإشعارات ووجود كلمة محفوظة للوك سكرين.</string>
     <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
     <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
     <string name="error_insufficient_balance">رصيدك غير كافٍ.</string>
@@ -760,7 +769,6 @@
     <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
 
 
-
     <!-- Mind Reader Game Strings -->
     <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
     <string name="mind_reader_lobby_subtitle">\"سأحاول تخمين كلمتك في 20 سؤالاً... جهّز عقلك!\"</string>
@@ -853,5 +861,31 @@
     <string name="waking_up_lingo">نوقظ لينجو...</string>
     <string name="translating_worlds">نترجم العوالم...</string>
     <string name="almost_there">على وشك الانتهاء...</string>
+
+    <string name="gallery_category_all">كل العناصر</string>
+    <string name="gallery_difficulty_easy">سهل</string>
+    <string name="gallery_difficulty_medium">متوسط</string>
+    <string name="gallery_difficulty_hard">صعب</string>
+    <string name="lockscreen_notification_channel_name">تذكير بالكلمات</string>
+    <string name="arabic_language">العربية</string>
+    <string name="cd_avatar">الصورة الشخصية</string>
+    <string name="mind_reader_choose_category">اختر الفئة</string>
+    <string name="get_a_hint_title">احصل على تلميح</string>
+    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقًا</string>
+    <string name="lockscreen_fullscreen_intent_title">مطلوب إذن شاشة القفل</string>
+    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات الكلمات على شاشة القفل، يرجى تفعيل إذن \"الظهور فوق شاشة القفل\" من إعدادات جهازك.</string>
+    <string name="lockscreen_fullscreen_intent_action">افتح الإعدادات</string>
+    <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
+    <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
+    <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
+    <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
+    <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
+    <string name="error_email_not_found">لم يتم العثور على حساب بهذا البريد الإلكتروني.</string>
+    <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
+    <string name="loading_message_1">نجهز مهمتك...</string>
+    <string name="loading_message_2">نُهيّئ الببغاء...</string>
+    <string name="loading_message_3">على وشك الانتهاء...</string>
+    <string name="loading_message_4">نحزم حقائبك...</string>
+    <string name="loading_message_5">نتحقق من الخرائط...</string>
 
 </resources>

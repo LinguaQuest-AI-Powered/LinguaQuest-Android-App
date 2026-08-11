@@ -13,6 +13,8 @@ import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.gallery.domain.usecase.DeleteWordUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.GetWordsWithImagesUseCase
 import com.iti.linguaquest.features.gallery.domain.usecase.RefreshGalleryUseCase
+import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
+import com.iti.linguaquest.features.lockscreen.domain.usecase.GetLockScreenPostedOrOpenedWordsUseCase
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
@@ -37,6 +39,7 @@ class GalleryViewModel @Inject constructor(
     private val getWordsWithImagesUseCase: GetWordsWithImagesUseCase,
     private val refreshGalleryUseCase: RefreshGalleryUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
+    private val getLockScreenPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
@@ -55,6 +58,7 @@ class GalleryViewModel @Inject constructor(
 
     init {
         observeWords()
+        observeLockScreenWords()
         refreshWords()
     }
 
@@ -63,8 +67,10 @@ class GalleryViewModel @Inject constructor(
             GalleryIntent.LoadWords -> refreshWords()
             GalleryIntent.RefreshWords -> refreshWords(isPullToRefresh = true)
             is GalleryIntent.CategorySelected -> filterByCategory(intent.category)
-            is GalleryIntent.DeleteWordClicked -> deleteWord(intent.word)
+            is GalleryIntent.LockScreenCategorySelected -> filterLockScreenByCategory(intent.category)
+            is GalleryIntent.DeleteWordClicked -> deleteWord(intent.wordId)
             is GalleryIntent.WordItemClicked -> navigateToReview(intent.wordId)
+            is GalleryIntent.LockScreenWordItemClicked -> navigateToLockScreenReview(intent.wordId)
         }
     }
 
@@ -91,11 +97,42 @@ class GalleryViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private fun observeLockScreenWords() {
+        getLockScreenPostedOrOpenedWordsUseCase()
+            .onEach { words ->
+                val categories = extractLockScreenCategories(words)
+                val selectedCategory = resolveSelectedCategory(
+                    selectedCategory = _state.value.selectedLockScreenCategory,
+                    categories = categories
+                )
+                val filteredWords = filterLockScreenWords(words, selectedCategory)
+
+                _state.update { current ->
+                    current.copy(
+                        lockScreenWords = words,
+                        filteredLockScreenWords = filteredWords,
+                        lockScreenCategories = categories,
+                        selectedLockScreenCategory = selectedCategory
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     private fun filterByCategory(category: String) {
         _state.update {
             it.copy(
                 selectedCategory = category,
                 filteredWords = filterWords(it.words, category)
+            )
+        }
+    }
+
+    private fun filterLockScreenByCategory(category: String) {
+        _state.update {
+            it.copy(
+                selectedLockScreenCategory = category,
+                filteredLockScreenWords = filterLockScreenWords(it.lockScreenWords, category)
             )
         }
     }
@@ -155,9 +192,9 @@ class GalleryViewModel @Inject constructor(
 
 
 
-    private fun deleteWord(word: WordEntity) {
+    private fun deleteWord(wordId: Int) {
         viewModelScope.launch {
-            deleteWordUseCase(word)
+            deleteWordUseCase(wordId)
         }
     }
 
@@ -168,8 +205,15 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    private fun navigateToLockScreenReview(wordId: Int) {
+        viewModelScope.launch {
+            val lockScreenWord = _state.value.lockScreenWords.find { it.id == wordId } ?: return@launch
+            _effects.send(GalleryEffect.ShowLockScreenWordDialog(wordId))
+        }
+    }
+
     private fun extractCategories(words: List<WordEntity>): List<String> {
-        val uniqueCategories = words.map { it.category }.distinct().filter { it.isNotBlank() }
+        val uniqueCategories = words.map { it.category }.distinct().sorted()
         return listOf(ALL_ITEMS_CATEGORY) + uniqueCategories
     }
 
@@ -181,10 +225,36 @@ class GalleryViewModel @Inject constructor(
     }
 
     private fun filterWords(words: List<WordEntity>, category: String): List<WordEntity> {
+        val reversedWords = words.reversed()
+        return if (category == ALL_ITEMS_CATEGORY) {
+            reversedWords
+        } else {
+            reversedWords.filter { 
+                it.category.equals(category, ignoreCase = true) 
+            }
+        }
+    }
+
+    private fun extractLockScreenCategories(words: List<LockScreenWord>): List<String> {
+        return listOf(ALL_ITEMS_CATEGORY, "Easy", "Medium", "Hard")
+    }
+
+    private fun filterLockScreenWords(words: List<LockScreenWord>, category: String): List<LockScreenWord> {
         return if (category == ALL_ITEMS_CATEGORY) {
             words
         } else {
-            words.filter { it.category.equals(category, ignoreCase = true) }
+            words.filter { 
+                mapRawCategoryToBucket(it.difficulty).equals(category, ignoreCase = true) 
+            }
+        }
+    }
+
+    private fun mapRawCategoryToBucket(rawCategory: String): String {
+        return when (rawCategory.trim().lowercase()) {
+            "beginner", "easy", "سهل", "مبتدئ" -> "Easy"
+            "intermediate", "medium", "متوسط" -> "Medium"
+            "advanced", "hard", "صعب", "متقدم" -> "Hard"
+            else -> "Easy"
         }
     }
 
@@ -197,3 +267,4 @@ class GalleryViewModel @Inject constructor(
         const val ALL_ITEMS_CATEGORY = "All Items"
     }
 }
+
