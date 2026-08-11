@@ -22,9 +22,22 @@ fun InAppNotificationBanner(
     modifier: Modifier = Modifier,
     type: String? = null
 ) {
-    val notificationType = runCatching {
-        if (type != null) NotificationType.valueOf(type) else NotificationType.SYSTEM
-    }.getOrDefault(NotificationType.SYSTEM)
+    var notificationType = type?.let { t ->
+        NotificationType.values().firstOrNull { 
+            it.name.contains(t, ignoreCase = true) || t.contains(it.name, ignoreCase = true) 
+        }
+    } ?: NotificationType.SYSTEM
+
+    if (notificationType == NotificationType.SYSTEM) {
+        val lowerTitle = title.lowercase()
+        notificationType = when {
+            lowerTitle.contains("trophy") || lowerTitle.contains("achievement") -> NotificationType.ACHIEVEMENT_EARNED
+            lowerTitle.contains("streak") -> NotificationType.STREAK_REMINDER
+            lowerTitle.contains("mission") -> NotificationType.DAILY_MISSION_AVAILABLE
+            lowerTitle.contains("reward") || lowerTitle.contains("bonus") -> NotificationType.DAILY_REWARD_AVAILABLE
+            else -> NotificationType.SYSTEM
+        }
+    }
 
     NotificationCard(
         type = notificationType,
@@ -36,6 +49,7 @@ fun InAppNotificationBanner(
             val iconRes = when (notificationType) {
                 NotificationType.ACHIEVEMENT_EARNED -> R.drawable.ic_cup
                 NotificationType.STREAK_REMINDER -> R.drawable.ic_streak
+                NotificationType.DAILY_MISSION_AVAILABLE -> R.drawable.ic_prefix_mission
                 else -> R.drawable.ic_bell_icon
             }
             Box(
@@ -51,6 +65,23 @@ fun InAppNotificationBanner(
                     tint = Color.Unspecified
                 )
             }
-        }
+        },
+        suffixIcon = if (notificationType != NotificationType.SYSTEM) {
+            {
+                val suffixIconRes = when (notificationType) {
+                    NotificationType.ACHIEVEMENT_EARNED -> R.drawable.ic_check
+                    NotificationType.STREAK_REMINDER -> R.drawable.ic_spark
+                    NotificationType.DAILY_MISSION_AVAILABLE -> R.drawable.ic_new_mission
+                    NotificationType.DAILY_REWARD_AVAILABLE -> R.drawable.ic_daily_bouns
+                    else -> R.drawable.ic_bell_icon
+                }
+                Icon(
+                    painter = painterResource(id = suffixIconRes),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        } else null
     )
 }
