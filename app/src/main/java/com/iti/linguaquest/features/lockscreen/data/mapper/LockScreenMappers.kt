@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.lockscreen.data.mapper
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordEntity
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
+import com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus
 
 fun LockScreenWordEntity.toDomain(): LockScreenWord {
     return LockScreenWord(
@@ -10,8 +11,10 @@ fun LockScreenWordEntity.toDomain(): LockScreenWord {
         word = word,
         translation = translation,
         exampleSentence = exampleSentence,
-        status = runCatching { com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.valueOf(status) }
-            .getOrDefault(com.iti.linguaquest.core.database.lockscreen.LockScreenWordStatus.PENDING),
+        difficulty = difficulty,
+        meaning = meaning.ifBlank { translation },
+        status = runCatching { LockScreenWordStatus.valueOf(status) }
+            .getOrDefault(LockScreenWordStatus.PENDING),
         createdAt = createdAt,
         postedAt = postedAt,
         openedAt = openedAt,
@@ -24,14 +27,18 @@ fun LockScreenWordEntity.toDomain(): LockScreenWord {
 fun GeneratedVocabularyWord.toEntity(
     nativeLanguage: String,
     targetLanguage: String,
-    proficiencyLevel: String
+    proficiencyLevel: String,
+    userId: Int
 ): LockScreenWordEntity {
     return LockScreenWordEntity(
         word = word,
         translation = translation,
         exampleSentence = exampleSentence,
+        difficulty = difficulty,
+        meaning = meaning.ifBlank { translation },
         nativeLanguage = nativeLanguage,
         targetLanguage = targetLanguage,
-        proficiencyLevel = proficiencyLevel
+        proficiencyLevel = proficiencyLevel,
+        userId = userId
     )
 }

@@ -3,9 +3,10 @@ package com.iti.linguaquest.features.auth.domain.usecase
 import com.iti.linguaquest.features.notification.domain.usecase.RegisterDeviceTokenUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.auth.domain.model.AuthError
-import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
 import com.iti.linguaquest.features.auth.domain.model.AuthUser
 import com.iti.linguaquest.features.auth.domain.model.GoogleSignInResult
+import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+
 import com.iti.linguaquest.features.auth.domain.usecase.SyncUserNativeLanguageUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify

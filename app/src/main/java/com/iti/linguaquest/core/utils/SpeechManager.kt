@@ -25,7 +25,20 @@ class SpeechManager(context: Context) {
 
     fun speak(word: String, languageCode: String) {
         if (isReady) {
-            tts?.language = Locale.forLanguageTag(languageCode)
+            val locale = when (languageCode.trim().lowercase()) {
+                "arabic", "ar" -> Locale.forLanguageTag("ar")
+                "spanish", "español", "es" -> Locale.forLanguageTag("es")
+                "japanese", "日本語", "ja" -> Locale.JAPANESE
+                "german", "deutsch", "de" -> Locale.GERMAN
+                "french", "français", "fr" -> Locale.FRENCH
+                "chinese", "中文", "zh" -> Locale.CHINESE
+                "italian", "italiano", "it" -> Locale.ITALIAN
+                "portuguese", "português", "pt" -> Locale.forLanguageTag("pt")
+                "korean", "한국어", "ko" -> Locale.KOREAN
+                "english", "en" -> Locale.ENGLISH
+                else -> Locale.forLanguageTag(languageCode)
+            }
+            tts?.language = locale
             tts?.speak(word, TextToSpeech.QUEUE_FLUSH, null, null)
             // Clear queue
             queuedWord = null

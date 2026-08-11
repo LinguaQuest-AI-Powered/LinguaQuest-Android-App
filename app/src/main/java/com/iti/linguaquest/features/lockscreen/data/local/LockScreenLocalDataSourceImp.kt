@@ -12,7 +12,7 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
     private val preferences: LockScreenPreferencesLocalDataSource
 ) : LockScreenLocalDataSource {
 
-    override val pendingCount: Flow<Int> = wordDao.pendingCount()
+    override fun pendingCount(userId: Int): Flow<Int> = wordDao.pendingCount(userId)
     override val featureEnabled: Flow<Boolean> = preferences.featureEnabled
     override val pendingGeneration: Flow<Boolean> = preferences.pendingGeneration
     override val batchSize: Flow<Int> = preferences.batchSize
@@ -23,13 +23,13 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
     override val pendingOperationId: Flow<String?> = preferences.pendingOperationId
     override val lastRewardedMilestoneCount: Flow<Int?> = preferences.lastRewardedMilestoneCount
 
-    override fun allWords(): Flow<List<LockScreenWordEntity>> = wordDao.allWords()
+    override fun allWords(userId: Int): Flow<List<LockScreenWordEntity>> = wordDao.allWords(userId)
 
-    override fun pendingWord(): Flow<LockScreenWordEntity?> = wordDao.getPendingWord()
+    override fun pendingWord(userId: Int): Flow<LockScreenWordEntity?> = wordDao.getPendingWord(userId)
 
     override fun observeWord(wordId: Int): Flow<LockScreenWordEntity?> = wordDao.observeById(wordId)
 
-    override fun postedOrOpenedWords(): Flow<List<LockScreenWordEntity>> = wordDao.getPostedOrOpenedWords()
+    override fun postedOrOpenedWords(userId: Int): Flow<List<LockScreenWordEntity>> = wordDao.getPostedOrOpenedWords(userId)
 
     override suspend fun insertBatch(words: List<LockScreenWordEntity>) {
         wordDao.insertBatch(words)
@@ -37,13 +37,13 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getWord(wordId: Int): LockScreenWordEntity? = wordDao.getById(wordId)
 
-    override suspend fun getPendingWordOnce(): LockScreenWordEntity? = wordDao.getPendingWordOnce()
+    override suspend fun getPendingWordOnce(userId: Int): LockScreenWordEntity? = wordDao.getPendingWordOnce(userId)
 
-    override suspend fun getRandomPendingWordOnce(): LockScreenWordEntity? = wordDao.getRandomPendingWordOnce()
+    override suspend fun getRandomPendingWordOnce(userId: Int): LockScreenWordEntity? = wordDao.getRandomPendingWordOnce(userId)
 
-    override suspend fun pendingCountOnce(): Int = wordDao.pendingCountOnce()
+    override suspend fun pendingCountOnce(userId: Int): Int = wordDao.pendingCountOnce(userId)
 
-    override suspend fun getRecentWords(limit: Int): List<String> = wordDao.getRecentWords(limit)
+    override suspend fun getRecentWords(userId: Int, limit: Int): List<String> = wordDao.getRecentWords(userId, limit)
 
     override suspend fun updateStatus(
         wordId: Int,
@@ -54,16 +54,16 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
         wordDao.updateStatus(wordId, status, postedAt, openedAt)
     }
 
-    override suspend fun clearAll() {
-        wordDao.clearAll()
+    override suspend fun clearAll(userId: Int) {
+        wordDao.clearAll(userId)
     }
 
-    override suspend fun clearByTargetLanguage(targetLanguage: String) {
-        wordDao.clearByTargetLanguage(targetLanguage)
+    override suspend fun clearByTargetLanguage(userId: Int, targetLanguage: String) {
+        wordDao.clearByTargetLanguage(userId, targetLanguage)
     }
 
-    override suspend fun clearByTargetLanguageAndLevel(targetLanguage: String, proficiencyLevel: String) {
-        wordDao.clearByTargetLanguageAndLevel(targetLanguage, proficiencyLevel)
+    override suspend fun clearByTargetLanguageAndLevel(userId: Int, targetLanguage: String, proficiencyLevel: String) {
+        wordDao.clearByTargetLanguageAndLevel(userId, targetLanguage, proficiencyLevel)
     }
 
     override suspend fun saveFeatureEnabled(enabled: Boolean) {

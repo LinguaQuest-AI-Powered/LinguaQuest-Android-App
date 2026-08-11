@@ -62,7 +62,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
 
 
 
-    fun setHighlightedWordId(wordId: Int?) {
+    private fun setHighlightedWordId(wordId: Int?) {
         _state.update { it.copy(highlightedWordId = wordId) }
         if (wordId != null) {
             viewModelScope.launch {
@@ -75,6 +75,8 @@ class LockScreenWordDetailViewModel @Inject constructor(
         when (intent) {
             LockScreenWordDetailIntent.Load -> observeWords()
             LockScreenWordDetailIntent.Retry -> observeWords()
+            is LockScreenWordDetailIntent.SetHighlightedWordId -> setHighlightedWordId(intent.wordId)
+            LockScreenWordDetailIntent.RequestNewWord -> requestNewWord()
         }
     }
 
@@ -120,7 +122,7 @@ class LockScreenWordDetailViewModel @Inject constructor(
         }
     }
 
-    fun requestNewWord() {
+    private fun requestNewWord() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             val pendingWord = observePendingOnceUseCase()

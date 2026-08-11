@@ -115,6 +115,14 @@ fun HomeScreen(
         SharedBackgroundState.showBackground = true
     }
 
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            viewModel.onIntent(HomeIntent.Refresh)
+        }
+        wasOffline = !isOnline
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {

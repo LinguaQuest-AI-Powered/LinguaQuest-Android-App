@@ -135,6 +135,8 @@
     <string name="flip_camera">Flip Camera</string>
     <string name="camera_alt">Camera</string>
     <string name="gallery_label">Gallery</string>
+    <string name="gallery_game_captures_tab">Game Captures</string>
+    <string name="gallery_my_words_tab">My Journal</string>
     <string name="Add_New">Add New</string>
 
     <string name="my_captures">My Captures</string>
@@ -281,6 +283,11 @@
     <!-- Notification -->
     <string name="lockscreen_notification_channel_description">Periodic lock screen vocabulary reminders</string>
     <string name="lockscreen_notification_action_go">Go</string>
+    <string name="lockscreen_notification_now">Now</string>
+    <string name="lockscreen_notification_got_it">Got it</string>
+    <string name="lockscreen_notification_tap_to_open">Tap anywhere to open</string>
+    <string name="lockscreen_notification_translation_label">Translation: %1$s</string>
+    <string name="lockscreen_notification_example_label">Example: %1$s</string>
 
     <!-- Daily Rewards -->
     <string name="daily_reward_title">Daily\nReward!</string>
@@ -534,6 +541,9 @@
     <string name="error_fetch_generated_word">Failed to fetch newly generated word.</string>
     <string name="error_generate_words">Failed to generate new words. Please try again.</string>
     <string name="lockscreen_vocabulary_test_notification">Test Notification Now</string>
+    <string name="lockscreen_fullscreen_intent_title">Lock Screen Permission Required</string>
+    <string name="lockscreen_fullscreen_intent_message">To show vocabulary notifications on your lock screen, grant the \"Display over lock screen\" permission in your device settings.</string>
+    <string name="lockscreen_fullscreen_intent_action">Open Settings</string>
     <string name="lockscreen_vocabulary_dash">—</string>
     <string name="cd_add">Add</string>
     <string name="cd_pronounce">Pronounce</string>
@@ -551,7 +561,8 @@
     <string name="lockscreen_sample_coins">1,250</string>
     <string name="lockscreen_notification_permission_required">Notification permission is required to enable the feature.</string>
     <string name="lockscreen_notifications_scheduled">Vocabulary notifications scheduled.</string>
-    <string name="lockscreen_test_notification_scheduled">Lock the screen now! The notification will appear in 5 seconds..</string>
+    <string name="lockscreen_test_notification_scheduled">Lock the screen now. The test notification will appear in 5 seconds.</string>
+    <string name="lockscreen_test_notification_failed">Test notification could not be shown. Make sure notifications are enabled and at least one lock screen word is saved.</string>
     <string name="lockscreen_required_inputs_error">Select a target language and proficiency level before enabling lock screen vocabulary.</string>
     <string name="lockscreen_enable_error">Could not enable lock screen vocabulary.</string>
     <string name="lockscreen_error_no_internet_retry">We could not generate words right now. We will retry automatically.</string>
@@ -867,4 +878,11 @@
     <string name="daily_mission_button_start_camera">Start Camera</string>
     <string name="daily_mission_button_loading">Loading…</string>
     <string name="daily_mission_button_later">Later</string>
+    <string name="gallery_category_all">All Items</string>
+    <string name="gallery_difficulty_easy">Easy</string>
+    <string name="gallery_difficulty_medium">Medium</string>
+    <string name="gallery_difficulty_hard">Hard</string>
+    <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
+    <string name="arabic_language">arabic</string>
+    <string name="cd_avatar">Avatar</string>
 </resources>

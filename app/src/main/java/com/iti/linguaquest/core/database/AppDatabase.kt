@@ -24,7 +24,7 @@ import com.iti.linguaquest.core.database.languages.UserLanguageEntity
         NotificationEntity::class,
         UserLanguageEntity::class
     ],
-    version = 12,
+    version = 14,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

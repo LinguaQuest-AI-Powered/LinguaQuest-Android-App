@@ -7,6 +7,8 @@ data class LockScreenWord(
     val word: String,
     val translation: String,
     val exampleSentence: String,
+    val difficulty: String,
+    val meaning: String,
     val status: LockScreenWordStatus,
     val createdAt: Long,
     val postedAt: Long?,

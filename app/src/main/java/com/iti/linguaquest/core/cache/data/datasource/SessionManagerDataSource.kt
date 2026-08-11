@@ -9,15 +9,20 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 interface SessionManagerDataSource {
     val isLoggedIn: Flow<Boolean>
     val firstTime: Flow<Boolean>
+    val lastLoggedInUserId: Flow<Int?>
 
     suspend fun saveIsLoggedIn(isLoggedIn: Boolean)
     suspend fun saveFirstTime(firstTime: Boolean)
+    suspend fun saveLastLoggedInUserId(userId: Int)
+    suspend fun getCurrentUserId(): Int
     suspend fun clearSessionData()
+    suspend fun clearLocalGeneratedData()
 }
 
 class SessionManagerDataSourceImpl @Inject constructor(
@@ -28,6 +33,8 @@ class SessionManagerDataSourceImpl @Inject constructor(
     override val isLoggedIn: Flow<Boolean> = dataStore.data.map { it[SessionKeys.IS_LOGGED_IN] ?: false }
 
     override val firstTime: Flow<Boolean> = dataStore.data.map { it[SessionKeys.FIRST_TIME] ?: true }
+
+    override val lastLoggedInUserId: Flow<Int?> = dataStore.data.map { it[SessionKeys.LAST_LOGGED_IN_USER_ID] }
 
     override suspend fun saveIsLoggedIn(isLoggedIn: Boolean) {
         dataStore.edit { preferences ->
@@ -41,9 +48,28 @@ class SessionManagerDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveLastLoggedInUserId(userId: Int) {
+        dataStore.edit { preferences ->
+            preferences[SessionKeys.LAST_LOGGED_IN_USER_ID] = userId
+        }
+    }
+
+    override suspend fun getCurrentUserId(): Int {
+        return lastLoggedInUserId.first() ?: -1
+    }
+
     override suspend fun clearSessionData() {
         withContext(Dispatchers.IO) {
-            appDatabase.clearAllTables()
+            appDatabase.wordDao().clearWords()
+            appDatabase.profileDao().clearProfile()
+            appDatabase.homeDao().clearHomeSummary()
+            appDatabase.notificationDao().deleteAllNotifications()
+        }
+    }
+
+    override suspend fun clearLocalGeneratedData() {
+        withContext(Dispatchers.IO) {
+            appDatabase.wordDao().clearWords()
         }
     }
 }

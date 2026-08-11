@@ -17,6 +17,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -28,6 +31,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestTopAppBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.HomeScreen
@@ -48,6 +52,15 @@ fun MainScreen(
 
     val wallet by viewModel.wallet.collectAsStateWithLifecycle()
     val unreadCount by viewModel.unreadNotificationCount.collectAsStateWithLifecycle()
+    val showLockScreenWordDialogId by viewModel.showLockScreenWordDialogId.collectAsStateWithLifecycle()
+    var openVaultTab by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(showLockScreenWordDialogId) {
+        if (showLockScreenWordDialogId != null) {
+            currentTab = BottomNavScreen.Gallery
+            openVaultTab = true
+        }
+    }
 
     BackHandler(enabled = currentTab != BottomNavScreen.Home) {
         currentTab = BottomNavScreen.Home
@@ -119,31 +132,59 @@ fun MainScreen(
                                     rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
                                 },
                                 onNavigateToWorldMap = { worldId, totalLevels ->
-                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.Map(
+                                            worldId,
+                                            totalLevels
+                                        )
+                                    )
                                 },
                                 onNavigateToAddLanguages = {
                                     rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
                                 },
                                 onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
-                                    rootBackStack.navigateSingleTop(RootScreen.Map(worldId, totalLevels))
-                                    rootBackStack.navigateSingleTop(RootScreen.GameFlow(worldId = worldId, levelId = levelId, levelOrder = levelOrder, targetWord = targetWord))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.Map(
+                                            worldId,
+                                            totalLevels
+                                        )
+                                    )
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.GameFlow(
+                                            worldId = worldId,
+                                            levelId = levelId,
+                                            levelOrder = levelOrder,
+                                            targetWord = targetWord
+                                        )
+                                    )
                                 },
                                 onNavigateToDailyMissionCamera = { word ->
-                                    rootBackStack.navigateSingleTop(RootScreen.DailyMissionCamera(word))
+                                    rootBackStack.navigateSingleTop(
+                                        RootScreen.DailyMissionCamera(
+                                            word
+                                        )
+                                    )
                                 }
                             )
                         }
+
                         BottomNavScreen.Gallery -> {
                             GalleryScreen(
+                                openVaultTab = openVaultTab,
+                                onOpenVaultTabHandled = { openVaultTab = false },
                                 onNavigateToReview = { word ->
                                     SharedWordHolder.pendingWord = word
                                     rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
                                 },
                                 onNavigateHome = {
                                     currentTab = BottomNavScreen.Home
+                                },
+                                onShowLockScreenWordDialog = { wordId ->
+                                    viewModel.showLockScreenWordDialog(wordId)
                                 }
                             )
                         }
+
                         BottomNavScreen.Lingos -> {
                             LingosScreen(
                                 onNavigateToVoiceGame = {
@@ -157,6 +198,7 @@ fun MainScreen(
                                 }
                             )
                         }
+
                         BottomNavScreen.Profile -> {
                             ProfileScreen(
                                 onSettingsClick = {
@@ -176,6 +218,33 @@ fun MainScreen(
                     }
                 }
             }
+
+            if (showLockScreenWordDialogId != null) {
+                Dialog(
+                    onDismissRequest = { viewModel.hideLockScreenWordDialog() },
+                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    LockScreenWordDetailScreen(
+                        wordId = showLockScreenWordDialogId!!,
+                        onBack = { viewModel.hideLockScreenWordDialog() },
+                        onNavigateToReview = { lockScreenWord ->
+                            viewModel.hideLockScreenWordDialog()
+                            SharedWordHolder.pendingWord = WordEntity(
+                                id = lockScreenWord.id,
+                                sourceWord = lockScreenWord.word,
+                                translatedWord = lockScreenWord.translation,
+                                sourceLanguage = lockScreenWord.targetLanguage,
+                                targetLanguage = lockScreenWord.nativeLanguage,
+                                category = lockScreenWord.proficiencyLevel,
+                                imagePath = "android.resource://com.iti.linguaquest/${R.drawable.lingo_searching}"
+                            )
+                            rootBackStack.navigateSingleTop(RootScreen.Review(lockScreenWord.id))
+                        }
+                    )
+                }
+            }
         }
+
+
     }
 }
