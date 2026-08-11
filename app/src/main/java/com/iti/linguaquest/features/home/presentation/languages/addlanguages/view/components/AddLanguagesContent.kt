@@ -1,7 +1,8 @@
-package com.iti.linguaquest.features.home.presentation.languages.view
+package com.iti.linguaquest.features.home.presentation.languages.addlanguages.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,72 +13,51 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.foundation.layout.statusBarsPadding
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.AppButton3D
-import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
-import com.iti.linguaquest.core.theme.AppTextStyles
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
-import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
-import com.iti.linguaquest.features.home.presentation.languages.viewmodel.AddLanguagesViewModel
-import com.iti.linguaquest.features.home.presentation.languages.component.LanguageSelectionCard
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesState
-import kotlinx.coroutines.flow.collectLatest
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
+import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
+import com.iti.linguaquest.core.theme.AppTextStyles
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesState
 
-@Composable
-fun AddLanguagesScreen(
-    onNavigateBack: () -> Unit,
-    viewModel: AddLanguagesViewModel = hiltViewModel()
-) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                AddLanguagesEffect.NavigateBack -> onNavigateBack()
-            }
-        }
-    }
-
-    AddLanguagesContent(
-        state = state,
-        onIntent = viewModel::onIntent
-    )
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddLanguagesContent(
     state: AddLanguagesState,
@@ -228,15 +208,65 @@ fun AddLanguagesContent(
                         items = filteredLanguages,
                         key = { it.id }
                     ) { language ->
-                        LanguageSelectionCard(
-                            language = language,
-                            isSelected = state.selectedLanguageIds.contains(language.id),
-                            onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
-                            onRemoveClick = if (language.isAdded) {
-                                { onIntent(AddLanguagesIntent.RequestRemoveLanguage(language)) }
-                            } else null,
-                            modifier = Modifier.height(180.dp)
-                        )
+                        if (language.isAdded) {
+                            val dismissState = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { dismissValue ->
+                                    if (dismissValue == SwipeToDismissBoxValue.EndToStart || dismissValue == SwipeToDismissBoxValue.StartToEnd) {
+                                        onIntent(AddLanguagesIntent.RequestRemoveLanguage(language))
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
+                            )
+
+                            LaunchedEffect(state.languagePendingRemoval) {
+                                if (state.languagePendingRemoval == null && dismissState.currentValue != SwipeToDismissBoxValue.Settled) {
+                                    dismissState.snapTo(SwipeToDismissBoxValue.Settled)
+                                }
+                            }
+
+                            SwipeToDismissBox(
+                                state = dismissState,
+                                modifier = Modifier
+                                    .height(180.dp)
+                                    .animateItem(),
+                                backgroundContent = {
+                                    val color = MaterialTheme.colorScheme.error
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .clip(RoundedCornerShape(24.dp))
+                                            .background(color),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(R.string.remove),
+                                            tint = Color.White,
+                                            modifier = Modifier.size(32.dp)
+                                        )
+                                    }
+                                },
+                                content = {
+                                    LanguageSelectionCard(
+                                        language = language,
+                                        isSelected = state.selectedLanguageIds.contains(language.id),
+                                        onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                            )
+                        } else {
+                            LanguageSelectionCard(
+                                language = language,
+                                isSelected = state.selectedLanguageIds.contains(language.id),
+                                onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                                modifier = Modifier
+                                    .height(180.dp)
+                                    .animateItem()
+                            )
+                        }
                     }
                 }
             }
