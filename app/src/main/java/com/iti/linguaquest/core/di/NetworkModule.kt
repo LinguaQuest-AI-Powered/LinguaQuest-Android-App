@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.iti.linguaquest.core.network.AuthInterceptor
 import com.iti.linguaquest.core.network.TokenAuthenticator
 import com.iti.linguaquest.core.ai.network.GeminiApiService
+import com.iti.linguaquest.core.language.data.datasource.remote.LanguageApiService
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthApiService
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -42,13 +44,12 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor {
                 it.proceed(
                     it.request().newBuilder()
-//                      .addHeader("Prefer", "code=200")
                         .build()
                 )
             }
@@ -85,11 +86,21 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideLanguageApiService(
+        retrofit: Retrofit
+    ): LanguageApiService {
+        return retrofit.create(LanguageApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideGeminiApiService(
+        okHttpClient: OkHttpClient,
         gson: Gson
     ): GeminiApiService {
         return Retrofit.Builder()
             .baseUrl("https://generativelanguage.googleapis.com/")
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(GeminiApiService::class.java)

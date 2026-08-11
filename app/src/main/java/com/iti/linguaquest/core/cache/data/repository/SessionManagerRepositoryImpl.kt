@@ -20,4 +20,8 @@ class SessionManagerRepositoryImpl @Inject constructor(
     override suspend fun saveFirstTime(firstTime: Boolean) {
         sessionManagerDataSource.saveFirstTime(firstTime)
     }
+
+    override suspend fun clearLanguageDependentData() {
+        sessionManagerDataSource.clearLanguageDependentData()
+    }
 }

@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -32,7 +31,7 @@ import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderState
 import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
 import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
-import com.iti.linguaquest.features.auth.domain.usecase.GetAuthLanguagesUseCase
+import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.setting.presentation.utils.parseDays
@@ -65,7 +64,7 @@ class SettingViewModel @Inject constructor(
     private val toggleSoundUseCase: ToggleSoundUseCase,
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
     private val logoutUserUseCase: LogoutUserUseCase,
-    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
+    private val getSupportedLanguagesUseCase: GetSupportedLanguagesUseCase,
     private val getReminderEnabledUseCase: GetReminderEnabledUseCase,
     private val getReminderTimeUseCase: GetReminderTimeUseCase,
     private val getReminderDaysUseCase: GetReminderDaysUseCase,
@@ -116,7 +115,7 @@ class SettingViewModel @Inject constructor(
     private fun loadLanguages() {
         viewModelScope.launch {
             _availableLanguages.update { it.copy(isLoading = true, isError = false) }
-            val result = getAuthLanguagesUseCase()
+            val result = getSupportedLanguagesUseCase()
             if (result is LinguaQuestResult.Success) {
                 _availableLanguages.update { it.copy(isLoading = false, languages = result.data, isError = false) }
             } else {

@@ -8,4 +8,5 @@ interface SessionManagerRepository {
 
     suspend fun saveIsLoggedIn(isLoggedIn: Boolean)
     suspend fun saveFirstTime(firstTime: Boolean)
+    suspend fun clearLanguageDependentData()
 }

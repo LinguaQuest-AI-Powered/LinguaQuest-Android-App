@@ -133,6 +133,14 @@ fun GalleryScreen(
         }
     }
 
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            viewModel.onIntent(GalleryIntent.RefreshWords)
+        }
+        wasOffline = !isOnline
+    }
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {

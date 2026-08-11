@@ -8,6 +8,7 @@ import com.iti.linguaquest.core.database.profile.ProfileDao
 import com.iti.linguaquest.core.database.lockscreen.LockScreenWordDao
 import com.iti.linguaquest.core.database.notification.NotificationDao
 import com.iti.linguaquest.core.database.word.WordDao
+import com.iti.linguaquest.core.database.languages.LanguagesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,6 +60,12 @@ object DatabaseModule {
     @Singleton
     fun provideNotificationDao(appDatabase: AppDatabase): NotificationDao {
         return appDatabase.notificationDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLanguagesDao(appDatabase: AppDatabase): LanguagesDao {
+        return appDatabase.languagesDao()
     }
 }
 

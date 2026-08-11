@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.lockscreen.data.remote
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.GenerativeModel
 import com.google.firebase.ai.ai

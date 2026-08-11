@@ -15,6 +15,7 @@ import com.iti.linguaquest.features.dailymission.domain.usecase.GetDailyMissionW
 import com.iti.linguaquest.features.home.domain.usecase.ClaimDailyRewardUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetDailyRewardStatusUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetHomeSummaryUseCase
+import com.iti.linguaquest.features.home.domain.usecase.RefreshMyLanguagesUseCase
 import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
@@ -50,7 +51,8 @@ class HomeViewModel @Inject constructor(
     private val claimDailyRewardUseCase: ClaimDailyRewardUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val refreshWalletUseCase: RefreshWalletUseCase
+    private val refreshWalletUseCase: RefreshWalletUseCase,
+    private val refreshMyLanguagesUseCase: RefreshMyLanguagesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -93,7 +95,7 @@ class HomeViewModel @Inject constructor(
             HomeIntent.FabClicked -> _state.update { it.copy(isLanguageBottomSheetVisible = true) }
             HomeIntent.DismissLanguageBottomSheet -> _state.update { it.copy(isLanguageBottomSheetVisible = false) }
             HomeIntent.AddNewLanguageClicked -> {
-                _state.update { it.copy(isLanguageBottomSheetVisible = false) }
+                _state.update { it.copy(isLanguageBottomSheetVisible = false, restoreLanguageBottomSheet = true) }
                 sendEffect(HomeEffect.NavigateToAddLanguages)
             }
             HomeIntent.DailyRewardBannerClicked -> _state.update {
@@ -112,6 +114,23 @@ class HomeViewModel @Inject constructor(
             is HomeIntent.StartDailyMissionCamera -> {
                 _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
                 sendEffect(HomeEffect.NavigateToDailyMissionCamera(intent.word))
+            }
+            HomeIntent.PrepareLanguageSwitch -> {
+                _state.update { it.copy(dataStatus = DataStatus.Loading) }
+            }
+            HomeIntent.CancelLanguageSwitch -> {
+                val hasCache = _state.value.hasData
+                _state.update { it.copy(dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(UiText.StringResource(R.string.error_generic))) }
+            }
+            HomeIntent.ScreenResumed -> {
+                if (_state.value.restoreLanguageBottomSheet) {
+                    _state.update {
+                        it.copy(
+                            isLanguageBottomSheetVisible = true,
+                            restoreLanguageBottomSheet = false
+                        )
+                    }
+                }
             }
         }
     }
@@ -164,10 +183,12 @@ class HomeViewModel @Inject constructor(
                 val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
                 val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
                 val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
+                val languagesDeferred = if (isPullToRefresh) async { refreshMyLanguagesUseCase() } else null
 
                 val homeSummaryResult = homeSummaryDeferred.await()
                 val dailyRewardResult = dailyRewardDeferred.await()
                 walletDeferred?.await()
+                languagesDeferred?.await()
 
                 if (homeSummaryResult is LinguaQuestResult.Success) {
                     val dailyRewardUi = (dailyRewardResult as? LinguaQuestResult.Success)?.data?.toUi()

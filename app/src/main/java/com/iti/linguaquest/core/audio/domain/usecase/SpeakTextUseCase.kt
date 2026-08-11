@@ -9,4 +9,8 @@ class SpeakTextUseCase @Inject constructor(
     operator fun invoke(text: String) {
         textToSpeechController.speak(text)
     }
+
+    fun stop() {
+        textToSpeechController.stop()
+    }
 }

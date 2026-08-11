@@ -8,6 +8,14 @@
     "voiceName": "KORE"
   },
   {
+    "id": "scenario_artist_01",
+    "worldId": "world_2",
+    "bossName": "Seddiqa",
+    "roleDescription": "A street artist who draws quick portraits for people. She is very slow and very chatty.",
+    "objective": "Ask her to draw a small portrait of you as a gift for your friend, and get her to finish it in under five minutes before your bus leaves.",
+    "voiceName": "AOEDE"
+  },
+  {
     "id": "scenario_cafe_01",
     "worldId": "world_1",
     "bossName": "Noura",

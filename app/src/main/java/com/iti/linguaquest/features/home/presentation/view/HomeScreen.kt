@@ -1,16 +1,18 @@
 package com.iti.linguaquest.features.home.presentation.view
 
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.DisposableEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,9 +35,9 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
 import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs
 import com.iti.linguaquest.features.home.presentation.view.components.HomeOverlays
@@ -44,10 +46,8 @@ import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
-import com.iti.linguaquest.core.sharedComponents.ErrorView
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +69,7 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
-    
+
     val scrollState = rememberScrollState()
     var previousScrollOffset by remember { mutableIntStateOf(0) }
     var isFabVisible by remember { mutableStateOf(true) }
@@ -86,7 +86,7 @@ fun HomeScreen(
                 previousScrollOffset = currentScrollOffset
             }
     }
-    
+
     var showCoinRain by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
@@ -132,6 +132,14 @@ fun HomeScreen(
         SharedBackgroundState.showBackground = true
     }
 
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            viewModel.onIntent(HomeIntent.Refresh)
+        }
+        wasOffline = !isOnline
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -153,20 +161,35 @@ fun HomeScreen(
             when (effect) {
                 MyLanguagesEffect.NavigateToAddLanguages -> {
                     guardOnline {
-                        onNavigateToAddLanguages()
+                        viewModel.onIntent(HomeIntent.AddNewLanguageClicked)
                     }
                 }
-                MyLanguagesEffect.Dismiss -> {
+                MyLanguagesEffect.DismissSheet -> {
                     viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
-                    viewModel.onIntent(HomeIntent.Retry)
+                }
+                MyLanguagesEffect.SwitchingLanguage -> {
+                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                    viewModel.onIntent(HomeIntent.PrepareLanguageSwitch)
+                }
+                is MyLanguagesEffect.LanguageSwitchFailed -> {
+                    viewModel.onIntent(HomeIntent.CancelLanguageSwitch)
                 }
             }
         }
     }
 
-    LaunchedEffect(state.isLanguageBottomSheetVisible) {
-        if (state.isLanguageBottomSheetVisible) {
-            myLanguagesViewModel.onIntent(MyLanguagesIntent.LoadMyLanguages)
+
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onIntent(HomeIntent.ScreenResumed)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 

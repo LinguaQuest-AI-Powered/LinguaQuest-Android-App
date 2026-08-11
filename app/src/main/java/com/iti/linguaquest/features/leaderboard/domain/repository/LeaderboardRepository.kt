@@ -1,10 +1,10 @@
 package com.iti.linguaquest.features.leaderboard.domain.repository
 
 
- import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
- import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
- import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
+import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
+import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 
 interface LeaderboardRepository {
 

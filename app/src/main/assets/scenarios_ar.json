@@ -8,6 +8,14 @@
     "voiceName": "KORE"
   },
   {
+    "id": "scenario_artist_01",
+    "worldId": "world_2",
+    "bossName": "صديقة",
+    "roleDescription": "فنانة شوارع ترسم البورتريهات للناس بسرعة. هي بطيئة جداً وتحب الكلام.",
+    "objective": "اطلب منها ترسم بورتريه صغير ليك هدية لصديقك، وخليها تخلصه في أقل من خمس دقائق قبل ما الأتوبيس يمشي.",
+    "voiceName": "AOEDE"
+  },
+  {
     "id": "scenario_cafe_01",
     "worldId": "world_1",
     "bossName": "نورا",

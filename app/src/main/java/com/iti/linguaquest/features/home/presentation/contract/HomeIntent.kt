@@ -20,4 +20,7 @@ sealed interface HomeIntent {
     data object TriggerDailyMission : HomeIntent
     data object DismissDailyMissionDialog : HomeIntent
     data class StartDailyMissionCamera(val word: String) : HomeIntent
+    data object PrepareLanguageSwitch : HomeIntent
+    data object CancelLanguageSwitch : HomeIntent
+    data object ScreenResumed : HomeIntent
 }

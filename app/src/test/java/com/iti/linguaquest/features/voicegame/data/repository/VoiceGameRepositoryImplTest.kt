@@ -4,9 +4,10 @@ import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepositor
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.voicegame.data.model.VoiceEvaluationResponse
-import com.iti.linguaquest.features.voicegame.data.remote.GeneratedSentence
-import com.iti.linguaquest.features.voicegame.data.remote.PronunciationSentenceGeneratorService
-import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.GeneratedSentence
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.PronunciationSentenceGeneratorService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
+import com.iti.linguaquest.features.voicegame.domain.repository.VoiceGameRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -22,7 +23,7 @@ class VoiceGameRepositoryImplTest {
     private lateinit var evaluationService: VoiceEvaluationService
     private lateinit var generatorService: PronunciationSentenceGeneratorService
     private lateinit var userPreferencesRepository: UserPreferencesRepository
-    private lateinit var repository: VoiceGameRepositoryImpl
+    private lateinit var repository: VoiceGameRepository
 
     @Before
     fun setUp() {

@@ -6,9 +6,11 @@ import com.iti.linguaquest.features.home.domain.model.UserLanguage
 import com.iti.linguaquest.features.home.domain.repository.LanguagesRepo
 import javax.inject.Inject
 
+import kotlinx.coroutines.flow.Flow
+
 class GetMyLanguagesUseCase @Inject constructor(
     private val languagesRepo: LanguagesRepo
 ) {
-    suspend operator fun invoke(): LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError> =
+    operator fun invoke(): Flow<LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError>> =
         languagesRepo.getMyLanguages()
 }

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.utils.FileHelper
 import com.iti.linguaquest.features.dailymission.domain.usecase.VerifyDailyMissionUseCase
 import com.iti.linguaquest.features.dailymission.presentation.camera.contract.DailyMissionCameraEffect
 import com.iti.linguaquest.features.dailymission.presentation.camera.contract.DailyMissionCameraIntent
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DailyMissionCameraViewModel @Inject constructor(
     private val verifyDailyMissionUseCase: VerifyDailyMissionUseCase,
-    private val fileHelper: com.iti.linguaquest.core.utils.FileHelper
+    private val fileHelper: FileHelper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DailyMissionCameraState())

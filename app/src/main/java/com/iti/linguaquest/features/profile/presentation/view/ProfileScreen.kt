@@ -79,6 +79,14 @@ fun ProfileScreen(
         SharedBackgroundState.showBackground = true
     }
 
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            viewModel.onIntent(ProfileIntent.Refresh)
+        }
+        wasOffline = !isOnline
+    }
+
     LaunchedEffect(Unit) {
         if (!uiState.hasData && uiState.dataStatus is DataStatus.Loading) {
             viewModel.onIntent(ProfileIntent.Retry)
