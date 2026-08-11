@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.data.remote
+package com.iti.linguaquest.features.voicegame.data.datasource.remote
 
 import android.util.Base64
 import com.google.gson.Gson
@@ -9,6 +9,7 @@ import com.iti.linguaquest.core.ai.network.model.GeminiInlineDataDto
 import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
 import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.voicegame.data.model.VoiceEvaluationResponse
+import com.iti.linguaquest.features.voicegame.domain.prompt.VoiceGamePromptFactory
 import java.text.Normalizer
 import kotlin.math.roundToInt
 import javax.inject.Inject
@@ -27,43 +28,11 @@ class VoiceEvaluationService @Inject constructor(
         audioBytes: ByteArray,
         appLanguage: String = "English"
     ): VoiceEvaluationResponse {
-        val promptText = """
-            AUDIO TRANSCRIPTION & PRONUNCIATION SCORING INSTRUCTIONS:
-            
-            STEP 1 - TRANSCRIBE THE AUDIO:
-            Listen to the provided audio file carefully.
-            Write down the EXACT words spoken in the audio file in the 'transcription' field of the JSON.
-            - Transcribe ONLY what you hear in the audio file.
-            - DO NOT guess, assume, or hallucinate words that were not spoken in the audio file.
-            - If only a few words (e.g., 2 words out of 4) are spoken in the audio file, the 'transcription' field MUST contain ONLY those spoken words.
-            - If the audio contains only background noise, silence, or no recognizable words, set 'transcription' to "".
-            
-            STEP 2 - EVALUATE AGAINST REFERENCE SENTENCE:
-            Reference Sentence for practice: "$targetSentence"
-            Target Language: $targetLanguage
-            User's Application Language: $appLanguage
-            
-            Compare the 'transcription' from STEP 1 against the Reference Sentence:
-            - A word from the Reference Sentence goes into 'correct_words' ONLY if it is present in 'transcription' AND clearly, correctly pronounced.
-            - A word from the Reference Sentence goes into 'wrong_words' if it is missing from 'transcription' (omitted), mispronounced, or substituted.
-            - EVERY single word from the Reference Sentence MUST be placed in either 'correct_words' or 'wrong_words'.
-            - Do NOT include punctuation marks in 'correct_words' or 'wrong_words'.
-            
-            STEP 3 - RATING & ADVICE:
-            - Calculate the score out of 10 based ONLY on the number of correct words spoken vs total reference words.
-            - If 2 out of 4 reference words are in 'transcription', the rating MUST be 5 out of 10. Do NOT give 10/10 when words are missing.
-            - If the audio is completely silent or no speech is heard, set rating to 0, 'transcription' to "", 'correct_words' to [], put ALL reference words into 'wrong_words', and give encouraging advice in $appLanguage.
-            - Provide a short, encouraging piece of advice (max 2 sentences) written in $appLanguage.
-            
-            Return STRICTLY raw JSON (no markdown, no backticks):
-            {
-                "transcription": "exact spoken words from audio",
-                "rating": <integer score between 0 and 10>,
-                "correct_words": ["word1"],
-                "wrong_words": ["word2"],
-                "advice": "short tip in $appLanguage"
-            }
-        """.trimIndent()
+        val promptText = VoiceGamePromptFactory.createEvaluationPrompt(
+            targetSentence = targetSentence,
+            targetLanguage = targetLanguage,
+            appLanguage = appLanguage
+        )
 
         val wavBytes = pcmToWav(audioBytes)
         val base64Audio = Base64.encodeToString(wavBytes, Base64.NO_WRAP)

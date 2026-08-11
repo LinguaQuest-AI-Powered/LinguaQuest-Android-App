@@ -52,7 +52,7 @@ fun EvaluatingPhaseContent() {
                 Spacer(Modifier.height(16.dp))
                 Text(
                     stringResource(R.string.voice_evaluating),
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),
                     color = LinguaQuestTheme.colors.iconsColor
                 )
                 Spacer(Modifier.height(8.dp))
