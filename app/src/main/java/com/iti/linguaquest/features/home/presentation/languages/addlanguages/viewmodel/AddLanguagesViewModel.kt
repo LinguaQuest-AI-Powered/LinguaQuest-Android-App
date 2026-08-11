@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.viewmodel
+package com.iti.linguaquest.features.home.presentation.languages.addlanguages.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +12,10 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.features.home.domain.usecase.GetAvailableLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.AddLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.contract.AddLanguagesState
-import com.iti.linguaquest.features.home.presentation.languages.contract.LanguageUiItem
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesState
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.LanguageUiItem
 import com.iti.linguaquest.features.home.presentation.mapper.toUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

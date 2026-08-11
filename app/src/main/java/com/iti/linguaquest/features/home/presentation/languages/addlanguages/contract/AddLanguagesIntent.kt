@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.contract
+package com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract
 
 sealed interface AddLanguagesIntent {
     data object BackClicked : AddLanguagesIntent

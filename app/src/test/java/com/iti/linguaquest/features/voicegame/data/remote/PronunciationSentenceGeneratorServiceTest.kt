@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
 import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.PronunciationSentenceGeneratorService
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

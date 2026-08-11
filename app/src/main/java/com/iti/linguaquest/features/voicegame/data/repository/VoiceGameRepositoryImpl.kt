@@ -3,13 +3,14 @@ package com.iti.linguaquest.features.voicegame.data.repository
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.voicegame.data.remote.PronunciationSentenceGeneratorService
-import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.PronunciationSentenceGeneratorService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import com.iti.linguaquest.features.voicegame.domain.model.PronunciationSentence
 import com.iti.linguaquest.features.voicegame.domain.model.VoiceEvaluation
 import com.iti.linguaquest.features.voicegame.domain.repository.VoiceGameRepository
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
+import timber.log.Timber
 import javax.inject.Inject
 
 class VoiceGameRepositoryImpl @Inject constructor(
@@ -39,6 +40,8 @@ class VoiceGameRepositoryImpl @Inject constructor(
                 audioBytes = audioBytes,
                 appLanguage = resolvedAppLanguage
             )
+            Timber.d("Voice evaluation response: rating=%d, correct=%s, wrong=%s, advice=%s, transcription=%s",
+                response.rating, response.correctWords, response.wrongWords, response.advice, response.transcription)
             val domainModel = VoiceEvaluation(
                 rating = response.rating,
                 correctWords = response.correctWords,
@@ -78,11 +81,21 @@ class VoiceGameRepositoryImpl @Inject constructor(
     override suspend fun generatePronunciationSentence(
         targetLanguage: String,
         level: String,
-        topic: String
+        topic: String,
+        wordOfTheDay: String?,
+        excludeSentences: List<String>
     ): LinguaQuestResult<PronunciationSentence, LinguaQuestDataError> {
         return try {
-            val sentences = generatorService.generateSentences(targetLanguage, level, topic, count = 1)
-            val generated = sentences.shuffled().firstOrNull()
+            val count = if (excludeSentences.isEmpty()) 1 else (excludeSentences.size + 2)
+            val sentences = generatorService.generateSentences(
+                targetLanguage = targetLanguage,
+                level = level,
+                topic = topic,
+                count = count,
+                wordOfTheDay = wordOfTheDay
+            )
+            val generated = sentences.shuffled().firstOrNull { it.sentence !in excludeSentences }
+                ?: sentences.shuffled().firstOrNull()
                 ?: throw IllegalStateException("No sentence generated from AI")
             LinguaQuestResult.Success(
                 PronunciationSentence(

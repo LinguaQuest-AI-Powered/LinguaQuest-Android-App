@@ -13,6 +13,7 @@ import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
+import com.iti.linguaquest.features.dailymission.domain.usecase.GetDailyMissionWordUseCase
 import com.iti.linguaquest.features.voicegame.domain.model.PronunciationSentence
 import com.iti.linguaquest.features.voicegame.domain.model.VoiceEvaluation
 import com.iti.linguaquest.features.voicegame.domain.usecase.EvaluatePronunciationUseCase
@@ -47,6 +48,7 @@ class VoiceGameViewModelTest {
     private lateinit var playAudioPreviewUseCase: PlayAudioPreviewUseCase
     private lateinit var evaluatePronunciationUseCase: EvaluatePronunciationUseCase
     private lateinit var generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase
+    private lateinit var getDailyMissionWordUseCase: GetDailyMissionWordUseCase
     private lateinit var getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase
     private lateinit var observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
     private lateinit var getWalletUseCase: GetWalletUseCase
@@ -62,12 +64,14 @@ class VoiceGameViewModelTest {
         playAudioPreviewUseCase = mockk(relaxed = true)
         evaluatePronunciationUseCase = mockk()
         generatePronunciationSentenceUseCase = mockk()
+        getDailyMissionWordUseCase = mockk()
         getTargetLanguageNameUseCase = mockk()
         observeNetworkStatusUseCase = mockk()
         getWalletUseCase = mockk()
         adjustWalletUseCase = mockk()
         snackbarController = mockk(relaxed = true)
 
+        coEvery { getDailyMissionWordUseCase() } returns LinguaQuestResult.Failure(LinguaQuestDataError.Local.UNKNOWN)
         every { getTargetLanguageNameUseCase() } returns flowOf("Spanish")
         every { observeNetworkStatusUseCase() } returns flowOf(true)
         every { getWalletUseCase() } returns flowOf(Wallet(xp = 100, coins = 50))
@@ -78,6 +82,7 @@ class VoiceGameViewModelTest {
             playAudioPreviewUseCase = playAudioPreviewUseCase,
             evaluatePronunciationUseCase = evaluatePronunciationUseCase,
             generatePronunciationSentenceUseCase = generatePronunciationSentenceUseCase,
+            getDailyMissionWordUseCase = getDailyMissionWordUseCase,
             getTargetLanguageNameUseCase = getTargetLanguageNameUseCase,
             observeNetworkStatusUseCase = observeNetworkStatusUseCase,
             getWalletUseCase = getWalletUseCase,

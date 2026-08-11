@@ -25,4 +25,8 @@ class TextToSpeechController @Inject constructor(
     fun speak(text: String) {
         if (isReady) tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "voicegame_sentence")
     }
+
+    fun stop() {
+        if (isReady) tts?.stop()
+    }
 }

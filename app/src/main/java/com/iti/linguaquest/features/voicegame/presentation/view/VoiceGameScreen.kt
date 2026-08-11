@@ -38,6 +38,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.iti.linguaquest.features.voicegame.presentation.view.components.EvaluatingPhaseContent
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -49,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import com.iti.linguaquest.core.sharedComponents.PushToTalkButton
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -58,7 +62,6 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.view.components.formatElapsed
-import com.iti.linguaquest.features.voicegame.presentation.view.contents.EvaluatingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -137,11 +140,16 @@ fun VoiceGameScreen(
             ) {
                 Spacer(Modifier.height(16.dp))
 
-                if (state.phase == VoiceGamePhase.EVALUATING) {
-                    EvaluatingPhaseContent()
-                } else {
-                    VoiceGameMainContent(state, viewModel)
-                }
+                VoiceGameMainContent(state, viewModel)
+            }
+        }
+
+        if (state.phase == VoiceGamePhase.EVALUATING) {
+            Dialog(
+                onDismissRequest = {},
+                properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
+                EvaluatingPhaseContent()
             }
         }
 
@@ -162,6 +170,7 @@ fun VoiceGameMainContent(
     state: VoiceGameState,
     viewModel: VoiceGameViewModel
 ) {
+    val context = LocalContext.current
     val isRecording = state.phase == VoiceGamePhase.RECORDING
 
     val resolvedTitle = when {
@@ -192,9 +201,19 @@ fun VoiceGameMainContent(
         if (state.isLoadingSentence) {
             LingoSpinningIcon(size = 32.dp)
         } else {
+            val isArabic = state.sentence.any {
+                it in '\u0600'..'\u06FF' ||
+                it in '\u0750'..'\u077F' ||
+                it in '\u08A0'..'\u08FF' ||
+                it in '\uFB50'..'\uFDFF' ||
+                it in '\uFE70'..'\uFEFF'
+            }
             Text(
                 text = state.sentence,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    textDirection = if (isArabic) TextDirection.Rtl else TextDirection.ContentOrLtr
+                ),
                 textAlign = TextAlign.Center,
                 color = LinguaQuestTheme.colors.blackColor
             )
@@ -267,7 +286,16 @@ fun VoiceGameMainContent(
         isRecording = isRecording,
         isEnabled = !state.isLoadingSentence && state.sentence.isNotBlank(),
         onPressStart = {
-            viewModel.onIntent(VoiceGameIntent.RecordClicked)
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (hasPermission) {
+                viewModel.onIntent(VoiceGameIntent.MicPermissionGranted)
+            } else {
+                viewModel.onIntent(VoiceGameIntent.RecordClicked)
+            }
         },
         onPressEnd = {
             viewModel.onIntent(VoiceGameIntent.DoneClicked)

@@ -16,6 +16,8 @@ interface VoiceGameRepository {
     suspend fun generatePronunciationSentence(
         targetLanguage: String = "English",
         level: String = "Beginner",
-        topic: String = "General Conversation"
+        topic: String = "General Conversation",
+        wordOfTheDay: String? = null,
+        excludeSentences: List<String> = emptyList()
     ): LinguaQuestResult<PronunciationSentence, LinguaQuestDataError>
 }

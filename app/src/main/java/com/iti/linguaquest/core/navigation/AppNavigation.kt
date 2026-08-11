@@ -71,7 +71,7 @@ import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
 import com.iti.linguaquest.features.game.presentation.GameFlowHost
 import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
-import com.iti.linguaquest.features.home.presentation.languages.view.AddLanguagesScreen
+import com.iti.linguaquest.features.home.presentation.languages.addlanguages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenSettingsScreen
 import com.iti.linguaquest.features.lockscreen.presentation.view.LockScreenWordDetailScreen
@@ -82,11 +82,11 @@ import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
 import com.iti.linguaquest.features.mindreader.presentation.view.MindReaderScreen
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
-import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyMissionCameraScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)

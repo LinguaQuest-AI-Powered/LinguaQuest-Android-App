@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.contract
+package com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract
 
 data class AddLanguagesState(
     val isLoading: Boolean = false,

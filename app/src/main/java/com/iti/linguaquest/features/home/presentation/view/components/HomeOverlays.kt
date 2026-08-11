@@ -3,9 +3,9 @@ package com.iti.linguaquest.features.home.presentation.view.components
 import androidx.compose.runtime.Composable
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import com.iti.linguaquest.features.home.presentation.languages.component.MyLanguagesBottomSheet
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesState
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.view.components.MyLanguagesBottomSheet
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesState
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.HomeDailyRewardDialog
 
 @Composable
