@@ -12,8 +12,10 @@ class GeneratePronunciationSentenceUseCase @Inject constructor(
     suspend operator fun invoke(
         targetLanguage: String = "English",
         level: String = "Beginner",
-        topic: String = "General Conversation"
+        topic: String = "General Conversation",
+        wordOfTheDay: String? = null,
+        excludeSentences: List<String> = emptyList()
     ): LinguaQuestResult<PronunciationSentence, LinguaQuestDataError> {
-        return repository.generatePronunciationSentence(targetLanguage, level, topic)
+        return repository.generatePronunciationSentence(targetLanguage, level, topic, wordOfTheDay, excludeSentences)
     }
 }

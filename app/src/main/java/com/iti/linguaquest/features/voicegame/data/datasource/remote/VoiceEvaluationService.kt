@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.data.remote
+package com.iti.linguaquest.features.voicegame.data.datasource.remote
 
 import android.util.Base64
 import com.google.gson.Gson
@@ -9,6 +9,9 @@ import com.iti.linguaquest.core.ai.network.model.GeminiInlineDataDto
 import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
 import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.voicegame.data.model.VoiceEvaluationResponse
+import com.iti.linguaquest.features.voicegame.domain.prompt.VoiceGamePromptFactory
+import java.text.Normalizer
+import kotlin.math.roundToInt
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,35 +28,11 @@ class VoiceEvaluationService @Inject constructor(
         audioBytes: ByteArray,
         appLanguage: String = "English"
     ): VoiceEvaluationResponse {
-        val promptText = """
-            You are a supportive language coach. The user is practicing speaking a sentence.
-            Target Sentence: "$targetSentence"
-            Target Language: $targetLanguage
-            User's Application Language: $appLanguage
-            
-            Analyze the provided audio recording.
-            1. Compare what they actually said against the Target Sentence word by word.
-            2. Identify correctly pronounced words and put them in `correct_words`.
-            3. Identify words from the Target Sentence that were mispronounced, omitted, or substituted and put them in `wrong_words`.
-            
-            CRITICAL WORD-MATCHING RULES:
-            - EVERY word in the Target Sentence MUST be categorized into EITHER `correct_words` OR `wrong_words`.
-            - `correct_words` and `wrong_words` MUST contain ONLY words present in the Target Sentence.
-            - Do NOT include punctuation marks (like '.', '?', ',', '!') attached to any word in `correct_words` or `wrong_words`.
-            - A word belongs in `correct_words` ONLY if it was clearly spoken and recognizable.
-            - If the audio is completely silent, incomprehensible, or you cannot hear any speech, set rating to 0, `correct_words` to [], put ALL words from the Target Sentence into `wrong_words`, and provide encouraging advice written in $appLanguage explaining that you couldn't hear them clearly and asking them to try speaking again.
-            
-            4. Provide a score out of 10 based on how many target words were spoken correctly.
-            5. Provide a short, encouraging piece of advice (max 2 sentences) WRITTEN ENTIRELY IN THE USER'S APPLICATION LANGUAGE ($appLanguage).
-            
-            Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
-            {
-                "rating": <integer score between 0 and 10>,
-                "correct_words": ["word1", "word2"],
-                "wrong_words": ["word3"],
-                "advice": "a short, encouraging tip for improvement written in $appLanguage"
-            }
-        """.trimIndent()
+        val promptText = VoiceGamePromptFactory.createEvaluationPrompt(
+            targetSentence = targetSentence,
+            targetLanguage = targetLanguage,
+            appLanguage = appLanguage
+        )
 
         val wavBytes = pcmToWav(audioBytes)
         val base64Audio = Base64.encodeToString(wavBytes, Base64.NO_WRAP)
@@ -88,29 +67,44 @@ class VoiceEvaluationService @Inject constructor(
         }
 
         val cleanTargetWords = targetSentence.split("\\s+".toRegex())
-            .map { it.replace("[^a-zA-Z0-9'-]".toRegex(), "") }
+            .map { cleanWord(it) }
             .filter { it.isNotBlank() }
 
         val cleanCorrect = parsedResponse.correctWords
-            .map { it.replace("[^a-zA-Z0-9'-]".toRegex(), "") }
+            .map { cleanWord(it) }
             .filter { it.isNotBlank() }
 
-        val correctLowerSet = cleanCorrect.map { it.lowercase() }.toSet()
+        val correctLowerSet = cleanCorrect.toSet()
 
         val finalWrongWords = cleanTargetWords.filter { targetWord ->
-            !correctLowerSet.contains(targetWord.lowercase())
+            !correctLowerSet.contains(cleanWord(targetWord))
         }
 
         val finalCorrectWords = cleanTargetWords.filter { targetWord ->
-            correctLowerSet.contains(targetWord.lowercase())
+            correctLowerSet.contains(cleanWord(targetWord))
         }
 
+        val calculatedRating = if (cleanTargetWords.isEmpty()) 0 else {
+            val ratio = finalCorrectWords.size.toFloat() / cleanTargetWords.size.toFloat()
+            (ratio * 10).roundToInt()
+        }
+        val finalRating = minOf(parsedResponse.rating, calculatedRating)
+
         return VoiceEvaluationResponse(
-            rating = parsedResponse.rating,
+            rating = finalRating,
             correctWords = finalCorrectWords,
             wrongWords = finalWrongWords,
-            advice = parsedResponse.advice
+            advice = parsedResponse.advice,
+            transcription = parsedResponse.transcription
         )
+    }
+
+    private fun cleanWord(word: String): String {
+        val normalized = Normalizer.normalize(word, Normalizer.Form.NFD)
+        val withoutDiacritics = normalized.replace("\\p{M}".toRegex(), "")
+        return withoutDiacritics
+            .replace("[^\\p{L}\\p{N}'-]".toRegex(), "")
+            .lowercase()
     }
 
     private fun pcmToWav(pcmData: ByteArray, sampleRate: Int = 16000, channels: Int = 1, bitsPerSample: Int = 16): ByteArray {

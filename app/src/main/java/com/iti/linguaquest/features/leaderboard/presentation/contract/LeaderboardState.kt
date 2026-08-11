@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.leaderboard.presentation.contract
 
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.leaderboard.domain.model.Leaderboard
 import com.iti.linguaquest.features.leaderboard.domain.model.LeaderboardScope
 

@@ -2,11 +2,11 @@ package com.iti.linguaquest.features.voicegame.data.remote
 
 import android.util.Base64
 import com.iti.linguaquest.core.ai.network.GeminiRestClient
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -23,6 +23,8 @@ class VoiceEvaluationServiceTest {
         every { Base64.encodeToString(any(), any()) } returns "base64audio"
         geminiRestClient = mockk()
         evaluationService = VoiceEvaluationService(geminiRestClient)
+        geminiRestClient = mockk()
+        evaluationService = VoiceEvaluationService(geminiRestClient)
     }
 
     @Test
@@ -35,7 +37,8 @@ class VoiceEvaluationServiceTest {
               "rating": 8,
               "correct_words": ["hello"],
               "wrong_words": ["world"],
-              "advice": "Good effort!"
+              "advice": "Good effort!",
+              "transcription": "hello"
             }
         """.trimIndent()
 
@@ -52,13 +55,18 @@ class VoiceEvaluationServiceTest {
         )
 
         // Then
-        assertEquals(8, result.rating)
+        assertEquals(5, result.rating)
         assertEquals(listOf("Hello"), result.correctWords)
         assertEquals(listOf("world"), result.wrongWords)
         assertEquals("Good effort!", result.advice)
 
         coVerify(exactly = 1) {
-            geminiRestClient.executeGeminiRequest(any())
+            geminiRestClient.executeGeminiRequest(
+                match { request ->
+                    val prompt = request.contents.firstOrNull()?.parts?.getOrNull(1)?.text ?: ""
+                    prompt.contains("Hello world") && prompt.contains("English")
+                }
+            )
         }
     }
 
@@ -72,7 +80,8 @@ class VoiceEvaluationServiceTest {
               "rating": 6,
               "correct_words": ["The", "fox"],
               "wrong_words": ["quick", "brown"],
-              "advice": "Practice quick and brown."
+              "advice": "Practice quick and brown.",
+              "transcription": "The fox"
             }
         """.trimIndent()
 
@@ -89,7 +98,7 @@ class VoiceEvaluationServiceTest {
         )
 
         // Then
-        assertEquals(6, result.rating)
+        assertEquals(4, result.rating)
         assertEquals(listOf("The", "fox"), result.correctWords)
         assertEquals(listOf("quick", "brown", "jumps"), result.wrongWords)
         assertEquals("Practice quick and brown.", result.advice)
@@ -102,7 +111,7 @@ class VoiceEvaluationServiceTest {
             geminiRestClient.executeGeminiRequest(any())
         } returns null
 
-        // When & Then
+        // When
         evaluationService.evaluatePronunciation(
             targetSentence = "Bonjour",
             targetLanguage = "French",

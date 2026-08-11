@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.viewmodel
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,10 +15,10 @@ import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesState
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesState
 import com.iti.linguaquest.features.home.presentation.mapper.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -48,11 +48,12 @@ class MyLanguagesViewModel @Inject constructor(
     val effect: SharedFlow<MyLanguagesEffect> = _effect.asSharedFlow()
 
     init {
-        loadMyLanguages()
+        onIntent(MyLanguagesIntent.LoadMyLanguages)
     }
 
     fun onIntent(intent: MyLanguagesIntent) {
         when (intent) {
+            MyLanguagesIntent.LoadMyLanguages -> loadMyLanguages()
             is MyLanguagesIntent.RequestSetActiveLanguage -> requestSetActiveLanguage(intent.language)
             MyLanguagesIntent.ConfirmSetActiveLanguage -> confirmSetActiveLanguage()
             MyLanguagesIntent.DismissSetActiveDialog -> dismissSetActiveDialog()
@@ -60,7 +61,6 @@ class MyLanguagesViewModel @Inject constructor(
             MyLanguagesIntent.ConfirmRemoveLanguage -> confirmRemoveLanguage()
             MyLanguagesIntent.DismissRemoveDialog -> dismissRemoveDialog()
             MyLanguagesIntent.AddNewLanguageClicked -> sendEffect(MyLanguagesEffect.NavigateToAddLanguages)
-            MyLanguagesIntent.ToggleEditMode -> toggleEditMode()
             MyLanguagesIntent.Dismiss -> sendEffect(MyLanguagesEffect.DismissSheet)
         }
     }
@@ -75,8 +75,7 @@ class MyLanguagesViewModel @Inject constructor(
                             val newLanguages = result.data.map { lang -> lang.toUiModel() }
                             it.copy(
                                 dataStatus = DataStatus.Loaded,
-                                languages = newLanguages,
-                                isEditMode = if (newLanguages.size <= 1) false else it.isEditMode
+                                languages = newLanguages
                             )
                         }
                     }
@@ -178,8 +177,7 @@ class MyLanguagesViewModel @Inject constructor(
                         currentState.copy(
                             isRemoving = false,
                             removingLanguageId = null,
-                            languages = newLanguages,
-                            isEditMode = if (newLanguages.size <= 1) false else currentState.isEditMode
+                            languages = newLanguages
                         )
                     }
                     snackbarController.sendEvent(
@@ -204,14 +202,5 @@ class MyLanguagesViewModel @Inject constructor(
 
     private fun sendEffect(effect: MyLanguagesEffect) {
         viewModelScope.launch { _effect.emit(effect) }
-    }
-
-    private fun toggleEditMode() {
-        val hasMultiple = _state.value.languages.size > 1
-        if (hasMultiple) {
-            _state.update { it.copy(isEditMode = !it.isEditMode) }
-        } else {
-            _state.update { it.copy(isEditMode = false) }
-        }
     }
 }

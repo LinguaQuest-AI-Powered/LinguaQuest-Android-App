@@ -1,6 +1,7 @@
-package com.iti.linguaquest.features.home.presentation.languages.contract
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract
 
 sealed interface MyLanguagesIntent {
+    data object LoadMyLanguages : MyLanguagesIntent
     data class RequestSetActiveLanguage(val language: MyLanguageUiModel) : MyLanguagesIntent
     data object ConfirmSetActiveLanguage : MyLanguagesIntent
     data object DismissSetActiveDialog : MyLanguagesIntent
@@ -8,6 +9,5 @@ sealed interface MyLanguagesIntent {
     data object ConfirmRemoveLanguage : MyLanguagesIntent
     data object DismissRemoveDialog : MyLanguagesIntent
     data object AddNewLanguageClicked : MyLanguagesIntent
-    data object ToggleEditMode : MyLanguagesIntent
     data object Dismiss : MyLanguagesIntent
 }

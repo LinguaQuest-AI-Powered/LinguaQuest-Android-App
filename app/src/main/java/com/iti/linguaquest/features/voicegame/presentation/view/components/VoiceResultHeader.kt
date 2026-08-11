@@ -29,6 +29,7 @@ fun VoiceResultHeader(
     wrongWords: List<String>,
     coinsAwarded: Int,
     xpAwarded: Int,
+    sentence: String,
     onContinue: () -> Unit,
     onRetry: () -> Unit,
     onHome: () -> Unit,
@@ -57,7 +58,7 @@ fun VoiceResultHeader(
             color = LinguaQuestTheme.colors.blackColor
         )
         Spacer(Modifier.height(10.dp))
-        WordChipsRow(correctWords, wrongWords)
+        WordChipsRow(sentence, correctWords, wrongWords)
 
         if (isPassed && coinsAwarded > 0) {
             Spacer(Modifier.height(16.dp))

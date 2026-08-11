@@ -1,9 +1,10 @@
-package com.iti.linguaquest.features.voicegame.data.remote
+package com.iti.linguaquest.features.voicegame.data.datasource.remote
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
 import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.features.voicegame.domain.prompt.VoiceGamePromptFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,33 +41,17 @@ class PronunciationSentenceGeneratorService @Inject constructor(
         targetLanguage: String = "English",
         level: String = "Beginner",
         topic: String = "General Conversation",
-        count: Int = 5
+        count: Int = 5,
+        wordOfTheDay: String? = null
     ): List<GeneratedSentence> {
         return try {
-            val prompt = """
-                You are a supportive language tutor for beginner language learners.
-                Generate $count short, simple, and easy-to-pronounce practice sentences in $targetLanguage.
-                Topic context: $topic.
-
-                EASY SENTENCE RULES:
-                1. Sentences MUST be short, simple, and very easy to pronounce.
-                2. Sentence length MUST be between 3 and 6 words max.
-                3. Use common everyday words (e.g. greetings, simple feelings, daily actions).
-                4. NO tongue twisters, complex grammar, or difficult multi-syllable words.
-                5. Include simple phonetic transcription (IPA) and translation.
-
-                Return STRICTLY a JSON object with NO markdown code fences following this schema:
-                {
-                  "sentences": [
-                    {
-                      "sentence": "Hello, how are you?",
-                      "difficulty": "Easy",
-                      "phonetic": "/həˈloʊ haʊ ɑːr juː/",
-                      "translation": "Hello, how are you?"
-                    }
-                  ]
-                }
-            """.trimIndent()
+            val prompt = VoiceGamePromptFactory.createSentenceGeneratorPrompt(
+                targetLanguage = targetLanguage,
+                level = level,
+                topic = topic,
+                count = count,
+                wordOfTheDay = wordOfTheDay
+            )
 
             val rawText = geminiAiService.generateJson(prompt)
             if (rawText == null) {

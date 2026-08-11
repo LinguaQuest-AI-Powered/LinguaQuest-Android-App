@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.contract
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract
 
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 

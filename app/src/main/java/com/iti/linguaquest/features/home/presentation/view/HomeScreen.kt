@@ -1,12 +1,10 @@
 package com.iti.linguaquest.features.home.presentation.view
 
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
@@ -34,9 +32,9 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeEffect
 import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguagesIntent
-import com.iti.linguaquest.features.home.presentation.languages.viewmodel.MyLanguagesViewModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
 import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs
 import com.iti.linguaquest.features.home.presentation.view.components.HomeOverlays
@@ -45,10 +43,8 @@ import com.iti.linguaquest.features.home.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
-import com.iti.linguaquest.core.sharedComponents.ErrorView
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

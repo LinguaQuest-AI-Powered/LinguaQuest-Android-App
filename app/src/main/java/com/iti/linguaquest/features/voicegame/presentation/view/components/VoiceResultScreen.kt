@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.presentation.view
+package com.iti.linguaquest.features.voicegame.presentation.view.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,10 +24,7 @@ import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.model.VoiceResultUi
-import com.iti.linguaquest.features.voicegame.presentation.view.components.FlyingCoinBadge
-import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultHeader
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceResultViewModel
-import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultTopBar
 import com.iti.linguaquest.core.sharedComponents.AppConfettiView
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import androidx.compose.ui.tooling.preview.Preview
@@ -131,6 +128,7 @@ fun VoiceResultContent(
                             wrongWords = result.wrongWords,
                             coinsAwarded = result.coinsAwarded,
                             xpAwarded = result.xpAwarded,
+                            sentence = result.sentence,
                             hideCoinsBadge = hasTriggeredFlight,
                             onCoinsBadgePositioned = { sourceOffset = it },
                             onContinue = onContinue,

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.component
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.view.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +28,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -50,7 +53,7 @@ import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.rememberCoroutineScope
@@ -68,8 +71,6 @@ fun MyLanguagesBottomSheet(
     languagePendingRemoval: MyLanguageUiModel? = null,
     removingLanguageId: Int? = null,
     languagePendingActivation: MyLanguageUiModel? = null,
-    isEditMode: Boolean = false,
-    onToggleEditMode: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     onAddNewLanguageClick: () -> Unit,
     onLanguageSelect: (MyLanguageUiModel) -> Unit,
@@ -155,21 +156,6 @@ fun MyLanguagesBottomSheet(
                     ),
                     modifier = Modifier.weight(1f)
                 )
-                
-                if (languages.size > 1 && onToggleEditMode != null) {
-                    Text(
-                        text = if (isEditMode) stringResource(R.string.done) else stringResource(R.string.edit),
-                        style = AppTextStyles.Button.copy(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold),
-                        modifier = Modifier
-                            .clickable(onClick = {
-                                soundPlayer.play(AppSound.SWITCH)
-                                if (onToggleEditMode != null) {
-                                    onToggleEditMode()
-                                }
-                            })
-                            .padding(end = 16.dp, top = 8.dp, bottom = 8.dp)
-                    )
-                }
 
                 IconButton(onClick = onDismiss) {
                     Icon(
@@ -206,30 +192,73 @@ fun MyLanguagesBottomSheet(
                                 items = languages,
                                 key = { it.id }
                             ) { language ->
-                                MyLanguageItem(
-                                    modifier = Modifier.animateItem(),
-                                    language = language,
-                                    enabled = !isSettingActive,
-                                    isRemoving = removingLanguageId == language.id,
-                                    isEditMode = isEditMode,
-                                    onClick = { 
-                                        if (isEditMode && !language.isCurrent) {
-                                            if (onRemoveLanguageClick != null) {
-                                                soundPlayer.play(AppSound.POP)
-                                                onRemoveLanguageClick(language)
+                                if (!language.isCurrent) {
+                                    val dismissState = rememberSwipeToDismissBoxState(
+                                        confirmValueChange = { dismissValue ->
+                                            if (dismissValue == SwipeToDismissBoxValue.EndToStart || dismissValue == SwipeToDismissBoxValue.StartToEnd) {
+                                                if (onRemoveLanguageClick != null) {
+                                                    onRemoveLanguageClick(language)
+                                                    true
+                                                } else {
+                                                    false
+                                                }
+                                            } else {
+                                                false
                                             }
-                                        } else if (!isEditMode) {
+                                        }
+                                    )
+
+                                    LaunchedEffect(languagePendingRemoval) {
+                                        if (languagePendingRemoval == null && dismissState.currentValue != SwipeToDismissBoxValue.Settled) {
+                                            dismissState.snapTo(SwipeToDismissBoxValue.Settled)
+                                        }
+                                    }
+
+                                    SwipeToDismissBox(
+                                        state = dismissState,
+                                        modifier = Modifier.animateItem(),
+                                        backgroundContent = {
+                                            val color = MaterialTheme.colorScheme.error
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(72.dp)
+                                                    .clip(RoundedCornerShape(32.dp))
+                                                    .background(color),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Delete,
+                                                    contentDescription = stringResource(R.string.remove),
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(32.dp)
+                                                )
+                                            }
+                                        },
+                                        content = {
+                                            MyLanguageItem(
+                                                language = language,
+                                                enabled = !isSettingActive,
+                                                isRemoving = removingLanguageId == language.id,
+                                                onClick = { 
+                                                    soundPlayer.play(AppSound.SWITCH)
+                                                    onLanguageSelect(language) 
+                                                }
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    MyLanguageItem(
+                                        modifier = Modifier.animateItem(),
+                                        language = language,
+                                        enabled = !isSettingActive,
+                                        isRemoving = removingLanguageId == language.id,
+                                        onClick = { 
                                             soundPlayer.play(AppSound.SWITCH)
                                             onLanguageSelect(language) 
                                         }
-                                    },
-                                    onRemoveClick = if (onRemoveLanguageClick != null && !language.isCurrent) {
-                                        { 
-                                            soundPlayer.play(AppSound.POP)
-                                            onRemoveLanguageClick(language) 
-                                        }
-                                    } else null
-                                )
+                                    )
+                                }
                             }
                         }
                     }

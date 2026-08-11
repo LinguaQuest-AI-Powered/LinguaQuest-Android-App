@@ -95,10 +95,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideGeminiApiService(
+        okHttpClient: OkHttpClient,
         gson: Gson
     ): GeminiApiService {
         return Retrofit.Builder()
             .baseUrl("https://generativelanguage.googleapis.com/")
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(GeminiApiService::class.java)

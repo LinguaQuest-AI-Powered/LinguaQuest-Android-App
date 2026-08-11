@@ -2,11 +2,11 @@ package com.iti.linguaquest.features.voicegame.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.audio.domain.usecase.PlayAudioPreviewUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.RecordAudioUseCase
 import com.iti.linguaquest.core.audio.domain.usecase.SpeakTextUseCase
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
-import com.iti.linguaquest.core.result.AppError
 import com.iti.linguaquest.core.domain.model.MiniGameReward
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
@@ -17,6 +17,7 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
+import com.iti.linguaquest.features.dailymission.domain.usecase.GetDailyMissionWordUseCase
 import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageNameUseCase
 import com.iti.linguaquest.features.voicegame.domain.usecase.EvaluatePronunciationUseCase
 import com.iti.linguaquest.features.voicegame.domain.usecase.GeneratePronunciationSentenceUseCase
@@ -30,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -41,6 +43,7 @@ class VoiceGameViewModel @Inject constructor(
     private val playAudioPreviewUseCase: PlayAudioPreviewUseCase,
     private val evaluatePronunciationUseCase: EvaluatePronunciationUseCase,
     private val generatePronunciationSentenceUseCase: GeneratePronunciationSentenceUseCase,
+    private val getDailyMissionWordUseCase: GetDailyMissionWordUseCase,
     private val getTargetLanguageNameUseCase: GetTargetLanguageNameUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val getWalletUseCase: GetWalletUseCase,
@@ -72,8 +75,9 @@ class VoiceGameViewModel @Inject constructor(
     private var lessonId: Int = 0
     private var pendingPcmData: ByteArray? = null
     private var previewFile: File? = null
+    private val usedSentences = mutableListOf<String>()
 
-    private val topics = listOf(
+    private val fallbackTopics = listOf(
         "General Conversation",
         "Daily Life",
         "Greetings",
@@ -152,15 +156,30 @@ class VoiceGameViewModel @Inject constructor(
 
                 _state.update { it.copy(targetLanguage = targetLang) }
 
-                val currentTopic = topics.random()
+                val dailyWord = when (val missionResult = getDailyMissionWordUseCase()) {
+                    is LinguaQuestResult.Success -> missionResult.data.word.takeIf { it.isNotBlank() }
+                    is LinguaQuestResult.Failure -> null
+                }
+
+                _state.update { it.copy(dailyWord = dailyWord) }
+
+                val fallbackTopic = fallbackTopics.random()
+
                 when (val result = generatePronunciationSentenceUseCase(
                     targetLanguage = targetLang,
-                    topic = currentTopic
+                    topic = fallbackTopic,
+                    wordOfTheDay = dailyWord,
+                    excludeSentences = usedSentences
                 )) {
                     is LinguaQuestResult.Success -> {
+                        val newSentence = result.data.sentence
+                        usedSentences.add(newSentence)
+                        if (usedSentences.size > 20) {
+                            usedSentences.removeAt(0)
+                        }
                         _state.update {
                             it.copy(
-                                sentence = result.data.sentence,
+                                sentence = newSentence,
                                 phonetic = result.data.phonetic,
                                 translation = result.data.translation,
                                 isLoadingSentence = false
@@ -172,19 +191,21 @@ class VoiceGameViewModel @Inject constructor(
                         _state.update { it.copy(isLoadingSentence = false) }
                         snackbarController.sendEvent(
                             SnackbarEvent(
-                                message = UiText.DynamicString("Failed to generate sentence"),
+                                message = UiText.StringResource(R.string.error_generic),
                                 type = SnackbarType.ERROR
                             )
                         )
                     }
                 }
             } catch (e: Exception) {
+                Timber.e(e, "Failed to generate pronunciation sentence")
                 _state.update { it.copy(isLoadingSentence = false) }
             }
         }
     }
 
     private fun startRecording() {
+        speakTextUseCase.stop()
         recordAudioUseCase.start()
         _state.update {
             it.copy(
@@ -313,7 +334,7 @@ class VoiceGameViewModel @Inject constructor(
                     is LinguaQuestResult.Failure -> {
                         snackbarController.sendEvent(
                             SnackbarEvent(
-                                message = UiText.DynamicString("Failed to evaluate pronunciation"),
+                                message = UiText.StringResource(R.string.error_generic),
                                 type = SnackbarType.ERROR
                             )
                         )
@@ -321,10 +342,10 @@ class VoiceGameViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Timber.e(e, "Failed to evaluate pronunciation")
                 snackbarController.sendEvent(
                     SnackbarEvent(
-                        message = UiText.DynamicString("Error: ${e.localizedMessage ?: "Failed to evaluate"}"),
+                        message = UiText.StringResource(R.string.error_generic),
                         type = SnackbarType.ERROR
                     )
                 )

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.home.presentation.languages.component
+package com.iti.linguaquest.features.home.presentation.languages.mylanguages.view.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,15 +15,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -35,34 +32,30 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.home.presentation.languages.contract.MyLanguageUiModel
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
 
 @Composable
 fun MyLanguageItem(
     language: MyLanguageUiModel,
     onClick: () -> Unit,
-    onRemoveClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     isRemoving: Boolean = false,
-    isEditMode: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val alpha = if (isEditMode && language.isCurrent) 0.5f else 1f
-    val backgroundColor = if (language.isCurrent && !isEditMode) LinguaQuestTheme.colors.ChipBackground else Color.Transparent
-    val borderColor = if (language.isCurrent && !isEditMode) MaterialTheme.colorScheme.primary else Color.Transparent
+    val backgroundColor = if (language.isCurrent) LinguaQuestTheme.colors.ChipBackground else LinguaQuestTheme.colors.whiteColor
+    val borderColor = if (language.isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .alpha(alpha)
             .clip(RoundedCornerShape(32.dp))
             .background(backgroundColor)
             .border(
-                width = if (language.isCurrent && !isEditMode) 1.dp else 0.dp,
+                width = if (language.isCurrent) 1.dp else 0.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(32.dp)
             )
-            .clickable(enabled = enabled && !(isEditMode && language.isCurrent), onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -95,24 +88,15 @@ fun MyLanguageItem(
             )
         }
 
-        if (isRemoving) {
-            LingoSpinningIcon(size = 24.dp)
-        } else if (isEditMode && !language.isCurrent && onRemoveClick != null) {
-            IconButton(onClick = onRemoveClick) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(R.string.remove),
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-        } else if (!isEditMode && language.isCurrent) {
+        if (language.isCurrent) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = stringResource(R.string.cd_selected),
                 tint = LinguaQuestTheme.colors.SuccessAccent,
                 modifier = Modifier.size(24.dp)
             )
+        } else if (isRemoving) {
+            LingoSpinningIcon(size = 24.dp)
         }
     }
 }
