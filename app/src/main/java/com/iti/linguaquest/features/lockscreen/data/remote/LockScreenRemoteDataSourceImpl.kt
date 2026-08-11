@@ -105,14 +105,22 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
             for (index in 0 until array.length()) {
                 val obj = array.optJSONObject(index) ?: continue
                 val word = obj.optString("word").trim()
-                val translation = obj.optString("translation").trim()
-                val exampleSentence = obj.optString("example_sentence").trim()
+                val meaning = obj.optString("meaning").trim()
+                val translation = obj.optString("translation").ifBlank { meaning }.trim()
+                val exampleSentence = obj.optString("exampleSentence")
+                    .ifBlank { obj.optString("example_sentence") }
+                    .trim()
+                val difficulty = obj.optString("difficulty")
+                    .ifBlank { "Medium" }
+                    .trim()
                 if (word.isBlank() || translation.isBlank() || exampleSentence.isBlank()) continue
                 add(
                     GeneratedVocabularyWord(
                         word = word,
                         translation = translation,
-                        exampleSentence = exampleSentence
+                        exampleSentence = exampleSentence,
+                        difficulty = difficulty,
+                        meaning = meaning.ifBlank { translation }
                     )
                 )
             }

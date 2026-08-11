@@ -1,72 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_expanded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_notification_lockscreen_card"
-    android:padding="20dp">
+    android:background="@drawable/bg_notification_card"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="16dp"
+    android:layout_margin="8dp">
 
-    <!-- decorative corners -->
-    <ImageView
-        android:id="@+id/ivFlowerTL"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_flower_corner"
-        android:contentDescription="@null" />
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivFlowerBR"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:rotation="180"
-        android:src="@drawable/ic_flower_corner"
-        android:contentDescription="@null" />
+        <TextView
+            android:id="@+id/tv_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:textColor="#1d2016"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="العربية" />
 
-    <!-- main phrase -->
-    <TextView
-        android:id="@+id/tvWord"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/app_name"
+                android:textColor="#1d2016"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/ic_launcher_default" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Center: Word, Example and Definition -->
+    <LinearLayout
+        android:id="@+id/ll_center_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivFlowerTL"
-        android:layout_marginTop="4dp"
+        android:layout_below="@id/rl_top_bar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:textAlignment="center"
-        android:textColor="#2E2A22"
-        android:textSize="19sp"
-        android:textStyle="bold"
-        android:fontFamily="serif"
-        tools:text="وما توفيقي إلا بالله" />
+        android:orientation="vertical">
 
-    <!-- example sentence -->
-    <TextView
-        android:id="@+id/tvExample"
+        <TextView
+            android:id="@+id/tvWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            tools:text="اجتهاد" />
+
+        <TextView
+            android:id="@+id/tvTranslation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textColor="#4a4c46"
+            android:textSize="15sp"
+            tools:text="بذل الجهد والطاقة في العمل أو الدراسة لتحقيق هدف ما" />
+
+        <TextView
+            android:id="@+id/tvExample"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:textColor="#1d2016"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            tools:text="&quot;It was pure serendipity that we met.&quot;" />
+    </LinearLayout>
+
+    <!-- Bottom Bar -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvWord"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textColor="#5A5346"
-        android:textSize="13sp"
-        android:textStyle="italic"
-        tools:text="&quot;وإن مع العسر يسرا&quot;" />
+        android:layout_below="@id/ll_center_content">
 
-    <!-- translation / meaning -->
-    <TextView
-        android:id="@+id/tvTranslation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvExample"
-        android:layout_above="@id/ivFlowerBR"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textColor="#8A6D3B"
-        android:textSize="12sp"
-        tools:text="ترجمة أو تفسير مختصر" />
+        <TextView
+            android:id="@+id/tvHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/lockscreen_notification_tap_to_open"
+            android:textColor="#4a4c46"
+            android:textSize="13sp"
+            android:drawableStart="@drawable/ic_hand_pointer"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/btn_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_notification_pill"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:textColor="#ffffff"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="متوسط" />
+    </RelativeLayout>
 
 </RelativeLayout>

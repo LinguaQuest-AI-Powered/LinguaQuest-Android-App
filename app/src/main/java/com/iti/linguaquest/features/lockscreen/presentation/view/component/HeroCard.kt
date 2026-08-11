@@ -30,7 +30,10 @@ import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureSta
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenState
 
 @Composable
-  fun HeroCard(state: LockScreenState) {
+fun HeroCard(
+    state: LockScreenState,
+    modifier: Modifier = Modifier
+) {
     val statusLabel = when (state.featureState) {
         LockScreenFeatureState.DISABLED -> stringResource(R.string.lockscreen_vocabulary_state_disabled)
         LockScreenFeatureState.ENABLING -> stringResource(R.string.lockscreen_vocabulary_state_generating)
@@ -45,7 +48,7 @@ import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenS
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -61,7 +64,7 @@ import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenS
                         Icon(
                             painter = painterResource(id = R.drawable.ic_lock_icon),
                             contentDescription = null,
-                            tint = AppColors.OrangeActive,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(26.dp)
                         )
                     }

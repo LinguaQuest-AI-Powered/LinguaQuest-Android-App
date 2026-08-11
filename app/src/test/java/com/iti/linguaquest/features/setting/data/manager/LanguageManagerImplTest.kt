@@ -10,6 +10,7 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import java.util.Locale
+import com.iti.linguaquest.core.language.data.manager.LanguageManagerImpl
 
 class LanguageManagerImplTest {
 

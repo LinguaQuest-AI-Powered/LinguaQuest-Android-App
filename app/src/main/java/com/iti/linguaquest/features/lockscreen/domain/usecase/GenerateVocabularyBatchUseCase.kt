@@ -16,7 +16,7 @@ class GenerateVocabularyBatchUseCase @Inject constructor(
         val params = VocabularyBatchParams(
             batchSize = lockScreenRepository.batchSize.first().takeIf { it > 0 } ?: 10,
             excludeWords = lockScreenRepository.recentGeneratedWords(100),
-            nativeLanguage = userPreferencesRepository.nativeLanguageName.first().orEmpty().ifBlank { "Arabic" },
+            nativeLanguage = userPreferencesRepository.appLanguage.first().orEmpty().ifBlank { "Arabic" },
             targetLanguage = userPreferencesRepository.targetLanguageName.first().orEmpty().ifBlank { "English" },
             proficiencyLevel = userPreferencesRepository.proficiencyLevel.first().orEmpty().ifBlank { "Beginner" }
         )

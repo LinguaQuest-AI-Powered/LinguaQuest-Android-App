@@ -8,12 +8,14 @@ import com.iti.linguaquest.features.gallery.data.datasource.WordLocalDataSource
 import com.iti.linguaquest.features.gallery.data.datasource.remote.WordRemoteDataSource
 import com.iti.linguaquest.features.gallery.data.mapper.toWordEntities
 import com.iti.linguaquest.features.gallery.domain.repository.WordRepository
+import com.iti.linguaquest.core.utils.VaultImageStorageManager
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class WordRepositoryImpl @Inject constructor(
     private val remoteDataSource: WordRemoteDataSource,
-    private val localDataSource: WordLocalDataSource
+    private val localDataSource: WordLocalDataSource,
+    private val vaultImageStorageManager: VaultImageStorageManager
 ) : WordRepository {
 
     override fun getAllWords(): Flow<List<WordEntity>> = localDataSource.getAllWords()
@@ -26,12 +28,21 @@ class WordRepositoryImpl @Inject constructor(
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return when (val result = remoteDataSource.getGalleryWords()) {
             is LinguaQuestResult.Success -> {
-                val words = result.data.words.orEmpty().toWordEntities(
+                val mappedWords = result.data.words.orEmpty().toWordEntities(
                     sourceLanguage = sourceLanguage,
                     targetLanguage = targetLanguage
                 )
+                
+                val finalWords = mappedWords.map { word ->
+                    val localUri = vaultImageStorageManager.getVaultImageUri(word.sourceWord)
+                    if (localUri != null) {
+                        word.copy(imagePath = localUri)
+                    } else {
+                        word
+                    }
+                }
 
-                when (val saveResult = localDataSource.replaceWords(words)) {
+                when (val saveResult = localDataSource.replaceWords(finalWords)) {
                     is LinguaQuestResult.Success -> LinguaQuestResult.Success(Unit)
                     is LinguaQuestResult.Failure -> saveResult
                 }
@@ -52,10 +63,7 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteWord(
-        word: WordEntity
-    ): EmptyResult<LinguaQuestDataError.Local> =
-        localDataSource.deleteWord(word)
+
 
     override suspend fun deleteWordById(
         wordId: Int

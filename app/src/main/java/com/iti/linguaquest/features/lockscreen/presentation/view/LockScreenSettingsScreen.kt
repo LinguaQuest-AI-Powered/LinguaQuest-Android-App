@@ -1,7 +1,10 @@
 package com.iti.linguaquest.features.lockscreen.presentation.view
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -34,15 +37,21 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureState
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.ErrorCard
+
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.HeroCard
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.StatsCard
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.ToggleCard
@@ -52,16 +61,21 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun LockScreenSettingsScreen(
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LockScreenSettingsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val soundPlayer = LocalSoundPlayer.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         viewModel.onIntent(LockScreenIntent.NotificationPermissionResult(granted))
     }
+
+
 
     LaunchedEffect(Unit) {
         val granted = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -85,6 +99,10 @@ fun LockScreenSettingsScreen(
                         viewModel.onIntent(LockScreenIntent.NotificationPermissionResult(true))
                     }
                 }
+                LockScreenEffect.PlayCoinDeductedSound -> {
+                    soundPlayer.play(AppSound.COIN)
+                }
+
             }
         }
     }
@@ -95,7 +113,10 @@ fun LockScreenSettingsScreen(
             title = { Text(stringResource(R.string.lockscreen_vocabulary_enable_title)) },
             text = { Text(stringResource(R.string.lockscreen_vocabulary_enable_message)) },
             confirmButton = {
-                Button(onClick = { viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked) }) {
+                Button(onClick = {
+                    soundPlayer.play(AppSound.SWITCH)
+                    viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked)
+                }) {
                     Text(stringResource(R.string.lockscreen_vocabulary_enable_action))
                 }
             },
@@ -116,6 +137,7 @@ fun LockScreenSettingsScreen(
     )
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             LinguaQuestScreenTopBar(
                 title = stringResource(R.string.lockscreen_vocabulary_title),
@@ -142,8 +164,11 @@ fun LockScreenSettingsScreen(
             ) {
                 HeroCard(state = state)
                 ToggleCard(state = state, onToggle = {
+                    soundPlayer.play(AppSound.SWITCH)
                     viewModel.onIntent(LockScreenIntent.ToggleFeatureClicked(it))
                 })
+
+
                 StatsCard(state = state)
 
                 if (state.errorMessage != null) {
@@ -160,6 +185,7 @@ fun LockScreenSettingsScreen(
 
                 Button(
                     onClick = {
+                        soundPlayer.play(AppSound.SWITCH)
                         if (state.featureState == LockScreenFeatureState.DISABLED) {
                             viewModel.onIntent(LockScreenIntent.ToggleFeatureClicked(true))
                         } else {
@@ -169,15 +195,18 @@ fun LockScreenSettingsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = AppColors.OrangeActive,
-                        contentColor = AppColors.White
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(primaryLabel, fontWeight = FontWeight.SemiBold)
                 }
 
                 OutlinedButton(
-                    onClick = { viewModel.onIntent(LockScreenIntent.DisableClicked) },
+                    onClick = {
+                        soundPlayer.play(AppSound.SWITCH)
+                        viewModel.onIntent(LockScreenIntent.DisableClicked)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = state.featureState != LockScreenFeatureState.DISABLED,
                     shape = RoundedCornerShape(18.dp)
@@ -187,7 +216,10 @@ fun LockScreenSettingsScreen(
 
                 if (state.featureState == LockScreenFeatureState.ACTIVE) {
                     OutlinedButton(
-                        onClick = { viewModel.onIntent(LockScreenIntent.TestNotificationClicked) },
+                        onClick = {
+                            soundPlayer.play(AppSound.POP)
+                            viewModel.onIntent(LockScreenIntent.TestNotificationClicked)
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp)
                     ) {

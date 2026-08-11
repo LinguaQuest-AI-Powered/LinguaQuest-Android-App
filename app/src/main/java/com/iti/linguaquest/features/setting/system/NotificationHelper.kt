@@ -49,6 +49,7 @@ class NotificationHelper @Inject constructor(
                     context.getString(R.string.notification_channel_description)
                 enableVibration(true)
                 setSound(soundUri, audioAttributes)
+                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 
             notificationManager.createNotificationChannel(channel)
@@ -89,6 +90,7 @@ class NotificationHelper @Inject constructor(
                     )
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
             .setContentIntent(contentIntent)
             .build()

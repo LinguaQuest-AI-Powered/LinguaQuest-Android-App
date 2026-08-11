@@ -5,6 +5,7 @@ import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvalua
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import timber.log.Timber
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +41,7 @@ class VocabularyGotItReceiver : BroadcastReceiver() {
             try {
                 repository.markOpened(wordId)
              } catch (e: Exception) {
+                Timber.e(e, "Failed to mark word as opened")
              } finally {
                 val nm =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
