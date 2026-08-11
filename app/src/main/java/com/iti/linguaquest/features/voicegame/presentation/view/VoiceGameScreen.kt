@@ -38,6 +38,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.iti.linguaquest.features.voicegame.presentation.view.components.EvaluatingPhaseContent
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -59,7 +62,6 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.view.components.formatElapsed
-import com.iti.linguaquest.features.voicegame.presentation.view.components.EvaluatingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -138,11 +140,16 @@ fun VoiceGameScreen(
             ) {
                 Spacer(Modifier.height(16.dp))
 
-                if (state.phase == VoiceGamePhase.EVALUATING) {
-                    EvaluatingPhaseContent()
-                } else {
-                    VoiceGameMainContent(state, viewModel)
-                }
+                VoiceGameMainContent(state, viewModel)
+            }
+        }
+
+        if (state.phase == VoiceGamePhase.EVALUATING) {
+            Dialog(
+                onDismissRequest = {},
+                properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
+                EvaluatingPhaseContent()
             }
         }
 
