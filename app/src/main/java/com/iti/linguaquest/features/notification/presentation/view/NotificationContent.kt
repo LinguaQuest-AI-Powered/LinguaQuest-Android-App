@@ -61,7 +61,7 @@ fun NotificationContent(
         ) {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.notifications_title),
-                isTitleCentered = false,
+                isTitleCentered = notifications.isEmpty(),
                 onBackClicked = onBackClick,
                 trailingContent = {
                     if (notifications.isNotEmpty()) {
