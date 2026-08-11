@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.voicegame.presentation.view.contents
+package com.iti.linguaquest.features.voicegame.presentation.view.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
-import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable

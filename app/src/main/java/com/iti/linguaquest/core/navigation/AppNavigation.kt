@@ -82,11 +82,11 @@ import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayScreen
 import com.iti.linguaquest.features.mindreader.presentation.view.MindReaderScreen
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.splashViewModel.SplashViewModel
 import com.iti.linguaquest.features.roleplay.presentation.viewModel.RoleplayViewModel
-import com.iti.linguaquest.features.voicegame.presentation.view.VoiceResultScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.VoiceGameScreen
 import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyMissionCameraScreen
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
+import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)
