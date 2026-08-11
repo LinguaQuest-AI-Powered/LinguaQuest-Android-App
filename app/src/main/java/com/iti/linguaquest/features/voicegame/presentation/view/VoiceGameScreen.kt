@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import com.iti.linguaquest.core.sharedComponents.PushToTalkButton
 import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
@@ -58,7 +59,7 @@ import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.voicegame.presentation.view.components.formatElapsed
-import com.iti.linguaquest.features.voicegame.presentation.view.contents.EvaluatingPhaseContent
+import com.iti.linguaquest.features.voicegame.presentation.view.components.EvaluatingPhaseContent
 import com.iti.linguaquest.features.voicegame.presentation.viewModel.VoiceGameViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -192,9 +193,19 @@ fun VoiceGameMainContent(
         if (state.isLoadingSentence) {
             LingoSpinningIcon(size = 32.dp)
         } else {
+            val isArabic = state.sentence.any {
+                it in '\u0600'..'\u06FF' ||
+                it in '\u0750'..'\u077F' ||
+                it in '\u08A0'..'\u08FF' ||
+                it in '\uFB50'..'\uFDFF' ||
+                it in '\uFE70'..'\uFEFF'
+            }
             Text(
                 text = state.sentence,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    textDirection = if (isArabic) TextDirection.Rtl else TextDirection.ContentOrLtr
+                ),
                 textAlign = TextAlign.Center,
                 color = LinguaQuestTheme.colors.blackColor
             )
