@@ -70,7 +70,7 @@ class VocabularyNotificationReceiver : BroadcastReceiver() {
                         repository.markPosted(word.id)
                     }
                     val pendingCount = repository.pendingCountOnce()
-                    
+
                     if (!forceShow) {
                         Timber.d("VocabularyNotificationReceiver: Scheduling next cycle in 15 mins.")
                         scheduler.scheduleScreenOffNotification()
