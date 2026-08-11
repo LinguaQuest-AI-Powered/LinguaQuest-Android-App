@@ -10,6 +10,8 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
@@ -35,7 +37,8 @@ class MyLanguagesViewModel @Inject constructor(
     private val getMyLanguagesUseCase: GetMyLanguagesUseCase,
     private val setActiveLanguageUseCase: SetActiveLanguageUseCase,
     private val removeLanguagesUseCase: RemoveLanguagesUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyLanguagesState())
@@ -57,6 +60,7 @@ class MyLanguagesViewModel @Inject constructor(
             MyLanguagesIntent.ConfirmRemoveLanguage -> confirmRemoveLanguage()
             MyLanguagesIntent.DismissRemoveDialog -> dismissRemoveDialog()
             MyLanguagesIntent.AddNewLanguageClicked -> sendEffect(MyLanguagesEffect.NavigateToAddLanguages)
+            MyLanguagesIntent.ToggleEditMode -> toggleEditMode()
             MyLanguagesIntent.Dismiss -> sendEffect(MyLanguagesEffect.DismissSheet)
         }
     }
@@ -68,9 +72,11 @@ class MyLanguagesViewModel @Inject constructor(
                 when (result) {
                     is LinguaQuestResult.Success -> {
                         _state.update {
+                            val newLanguages = result.data.map { lang -> lang.toUiModel() }
                             it.copy(
                                 dataStatus = DataStatus.Loaded,
-                                languages = result.data.map { lang -> lang.toUiModel() }
+                                languages = newLanguages,
+                                isEditMode = if (newLanguages.size <= 1) false else it.isEditMode
                             )
                         }
                     }
@@ -126,7 +132,7 @@ class MyLanguagesViewModel @Inject constructor(
                             }
                         )
                     }
-                    sendEffect(MyLanguagesEffect.LanguageSwitched)
+                    sessionEventBus.emit(SessionEvent.LanguageChanged)
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isSettingActive = false) }
@@ -168,10 +174,12 @@ class MyLanguagesViewModel @Inject constructor(
             when (val result = removeLanguagesUseCase(listOf(targetLanguage.id))) {
                 is LinguaQuestResult.Success -> {
                     _state.update { currentState ->
+                        val newLanguages = result.data.map { lang -> lang.toUiModel() }
                         currentState.copy(
                             isRemoving = false,
                             removingLanguageId = null,
-                            languages = result.data.map { lang -> lang.toUiModel() }
+                            languages = newLanguages,
+                            isEditMode = if (newLanguages.size <= 1) false else currentState.isEditMode
                         )
                     }
                     snackbarController.sendEvent(
@@ -196,5 +204,14 @@ class MyLanguagesViewModel @Inject constructor(
 
     private fun sendEffect(effect: MyLanguagesEffect) {
         viewModelScope.launch { _effect.emit(effect) }
+    }
+
+    private fun toggleEditMode() {
+        val hasMultiple = _state.value.languages.size > 1
+        if (hasMultiple) {
+            _state.update { it.copy(isEditMode = !it.isEditMode) }
+        } else {
+            _state.update { it.copy(isEditMode = false) }
+        }
     }
 }

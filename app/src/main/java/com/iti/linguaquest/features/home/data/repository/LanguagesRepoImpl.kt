@@ -34,6 +34,16 @@ class LanguagesRepoImpl @Inject constructor(
         }
     }
 
+    override suspend fun refreshMyLanguages(): LinguaQuestResult<Unit, LinguaQuestDataError> {
+        val remoteResult = remoteDataSource.getMyLanguages()
+        if (remoteResult is LinguaQuestResult.Success) {
+            val domainLanguages = remoteResult.data.map { it.toDomain() }
+            languagesDao.clearAndInsertMyLanguages(domainLanguages.map { it.toEntity() })
+            return LinguaQuestResult.Success(Unit)
+        }
+        return remoteResult as LinguaQuestResult.Failure
+    }
+
     override suspend fun addLanguages(languageIds: List<Int>): LinguaQuestResult<List<UserLanguage>, LinguaQuestDataError> {
         val result = remoteDataSource.addLanguages(languageIds)
         if (result is LinguaQuestResult.Success) {
@@ -65,7 +75,6 @@ class LanguagesRepoImpl @Inject constructor(
     override suspend fun setActiveLanguage(languageId: Int): LinguaQuestResult<UserLanguage, LinguaQuestDataError> {
         val result = remoteDataSource.setActiveLanguage(languageId)
         if (result is LinguaQuestResult.Success) {
-            // Re-sync after setting active language to update all cache correctly
             val myLanguages = remoteDataSource.getMyLanguages()
             if (myLanguages is LinguaQuestResult.Success) {
                 languagesDao.clearAndInsertMyLanguages(myLanguages.data.map { it.toDomain().toEntity() })

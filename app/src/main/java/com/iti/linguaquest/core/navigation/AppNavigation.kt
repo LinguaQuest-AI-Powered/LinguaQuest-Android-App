@@ -147,6 +147,12 @@ fun AppNavigation(
                         navigateSingleTop(RootScreen.Onboarding)
                     }
                 }
+                is SessionEvent.LanguageChanged -> {
+                    rootBackStack.apply {
+                        clear()
+                        navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
+                    }
+                }
             }
         }
     }

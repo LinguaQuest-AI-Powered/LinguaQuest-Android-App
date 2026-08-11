@@ -8,4 +8,5 @@ sealed interface AddLanguagesIntent {
     data object ConfirmRemoveLanguage : AddLanguagesIntent
     data object DismissRemoveDialog : AddLanguagesIntent
     data object AddSelectedClicked : AddLanguagesIntent
+    data object RetryClicked : AddLanguagesIntent
 }

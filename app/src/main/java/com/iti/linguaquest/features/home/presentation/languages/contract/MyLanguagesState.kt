@@ -9,7 +9,8 @@ data class MyLanguagesState(
     val isRemoving: Boolean = false,
     val removingLanguageId: Int? = null,
     val languagePendingRemoval: MyLanguageUiModel? = null,
-    val languagePendingActivation: MyLanguageUiModel? = null
+    val languagePendingActivation: MyLanguageUiModel? = null,
+    val isEditMode: Boolean = false
 ) {
     val hasData: Boolean get() = languages.isNotEmpty()
 }

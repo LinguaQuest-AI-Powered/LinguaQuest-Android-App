@@ -29,6 +29,8 @@ fun HomeOverlays(
             languagePendingRemoval = myLanguagesState.languagePendingRemoval,
             removingLanguageId = myLanguagesState.removingLanguageId,
             languagePendingActivation = myLanguagesState.languagePendingActivation,
+            isEditMode = myLanguagesState.isEditMode,
+            onToggleEditMode = { onMyLanguagesIntent(MyLanguagesIntent.ToggleEditMode) },
             onDismiss = { onMyLanguagesIntent(MyLanguagesIntent.Dismiss) },
             onAddNewLanguageClick = { onMyLanguagesIntent(MyLanguagesIntent.AddNewLanguageClicked) },
             onLanguageSelect = { selectedLang ->

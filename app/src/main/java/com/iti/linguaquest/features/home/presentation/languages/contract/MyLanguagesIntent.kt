@@ -8,5 +8,6 @@ sealed interface MyLanguagesIntent {
     data object ConfirmRemoveLanguage : MyLanguagesIntent
     data object DismissRemoveDialog : MyLanguagesIntent
     data object AddNewLanguageClicked : MyLanguagesIntent
+    data object ToggleEditMode : MyLanguagesIntent
     data object Dismiss : MyLanguagesIntent
 }

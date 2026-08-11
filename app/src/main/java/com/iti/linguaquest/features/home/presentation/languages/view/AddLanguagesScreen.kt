@@ -57,6 +57,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
+import com.iti.linguaquest.features.home.presentation.languages.component.AddLanguagesContent
 
 @Composable
 fun AddLanguagesScreen(
@@ -77,6 +78,7 @@ fun AddLanguagesScreen(
         AppDialog(
             title = stringResource(R.string.remove_language_title),
             message = stringResource(R.string.remove_language_message, state.languagePendingRemoval!!.name),
+            imageRes = R.drawable.lingo_delete_notification,
             onDismissRequest = { viewModel.onIntent(AddLanguagesIntent.DismissRemoveDialog) },
             primaryButtonText = stringResource(R.string.remove),
             onPrimaryClick = { viewModel.onIntent(AddLanguagesIntent.ConfirmRemoveLanguage) },
@@ -89,159 +91,4 @@ fun AddLanguagesScreen(
         state = state,
         onIntent = viewModel::onIntent
     )
-}
-
-@Composable
-fun AddLanguagesContent(
-    state: AddLanguagesState,
-    onIntent: (AddLanguagesIntent) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val focusManager = LocalFocusManager.current
-
-    Scaffold(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            LinguaQuestScreenTopBar(
-                title = stringResource(R.string.add_languages_title),
-                onBackClicked = { onIntent(AddLanguagesIntent.BackClicked) },
-                modifier = Modifier.statusBarsPadding()
-            )
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
-            ) {
-                AppButton3D(
-                    text = stringResource(R.string.add_selected_format, state.selectedLanguageIds.size),
-                    onClick = { onIntent(AddLanguagesIntent.AddSelectedClicked) },
-                    enabled = state.selectedLanguageIds.isNotEmpty(),
-                    isLoading = state.isAdding && state.selectedLanguageIds.isNotEmpty()
-                )
-            }
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.add_languages_select_instruction),
-                style = AppTextStyles.LessonTitle.copy(
-                    fontWeight = FontWeight.Normal,
-                    color = LinguaQuestTheme.colors.titleAndCationsColor
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            OutlinedTextField(
-                value = state.searchQuery,
-                onValueChange = { onIntent(AddLanguagesIntent.SearchQueryChanged(it)) },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.add_languages_search_placeholder),
-                        style = AppTextStyles.Translation,
-                        color = LinguaQuestTheme.colors.textFieldPlaceholder
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.cd_search),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                shape = RoundedCornerShape(50),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = LinguaQuestTheme.colors.whiteColor,
-                    unfocusedContainerColor = LinguaQuestTheme.colors.whiteColor,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = LinguaQuestTheme.colors.textFieldBorder
-                ),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = {
-                    focusManager.clearFocus()
-                }),
-                textStyle = AppTextStyles.Translation.copy(color = LinguaQuestTheme.colors.titleAndCationsColor)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            StatefulContentContainer(
-                dataStatus = state.dataStatus,
-                onRetry = { /* Retry logic goes here, or we can trigger a refresh intent */ },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                val filteredLanguages = state.availableLanguages.filter {
-                    it.name.contains(state.searchQuery, ignoreCase = true)
-                }
-
-                if (filteredLanguages.isEmpty() && state.searchQuery.isNotEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(bottom = 64.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(R.drawable.lingo_empty),
-                                contentDescription = null,
-                                modifier = Modifier.size(350.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                            Spacer(modifier = Modifier.height(24.dp))
-                            Text(
-                                text = stringResource(R.string.add_languages_no_results),
-                                style = AppTextStyles.ScreenTitle.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = LinguaQuestTheme.colors.titleAndCationsColor,
-                                    textAlign = TextAlign.Center
-                                )
-                            )
-                        }
-                    }
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(
-                            items = filteredLanguages,
-                            key = { it.id }
-                        ) { language ->
-                            LanguageSelectionCard(
-                                language = language,
-                                isSelected = state.selectedLanguageIds.contains(language.id),
-                                onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
-                                onRemoveClick = if (language.isAdded) {
-                                    { onIntent(AddLanguagesIntent.RequestRemoveLanguage(language)) }
-                                } else null,
-                                modifier = Modifier.height(180.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+}

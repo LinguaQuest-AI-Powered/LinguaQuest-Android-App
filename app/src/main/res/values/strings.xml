@@ -817,9 +817,10 @@
     <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
     <string name="language_removed_success">Language removed successfully.</string>
     <string name="remove_language_title">Remove Language</string>
-    <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
+    <string name="remove_language_message">Are you sure you want to remove %1$s from your active languages?</string>
     <string name="remove">Remove</string>
-
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="lingos_label">Lingos</string>
     <string name="current_quest_label">CURRENT QUEST</string>
     <string name="find_and_capture_instruction">Find &amp; capture</string>

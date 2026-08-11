@@ -110,6 +110,9 @@ class AddLanguagesViewModel @Inject constructor(
             AddLanguagesIntent.AddSelectedClicked -> {
                 addSelectedLanguages()
             }
+            AddLanguagesIntent.RetryClicked -> {
+                loadAvailableLanguages()
+            }
         }
     }
 
