@@ -62,7 +62,11 @@ fun DailyMissionDialog(
 
             is DailyMissionDialogState.Success -> {
                 soundPlayer.stop(AppSound.GettingWord)
-                soundPlayer.play(AppSound.FoundWord)
+                if (state.isSolved) {
+                    soundPlayer.play(AppSound.CompletedMission)
+                } else {
+                    soundPlayer.play(AppSound.FoundWord)
+                }
             }
 
             is DailyMissionDialogState.Hidden -> {
@@ -75,30 +79,46 @@ fun DailyMissionDialog(
 
     AppDialog(
         title = if (isSuccess) {
-            stringResource(R.string.daily_mission_title_success)
+            if (state is DailyMissionDialogState.Success && state.isSolved) {
+                stringResource(R.string.daily_mission_already_solved_title)
+            } else {
+                stringResource(R.string.daily_mission_title_success)
+            }
         } else {
             stringResource(R.string.daily_mission_title_loading)
         },
         message = if (isSuccess) {
-            stringResource(R.string.daily_mission_message_success)
+            if (state is DailyMissionDialogState.Success && state.isSolved) {
+                stringResource(R.string.daily_mission_already_solved_message)
+            } else {
+                stringResource(R.string.daily_mission_message_success)
+            }
         } else {
             stringResource(R.string.daily_mission_message_loading)
         },
         onDismissRequest = onDismissRequest,
         showCloseIcon = isSuccess,
         primaryButtonText = if (isSuccess) {
-            stringResource(R.string.daily_mission_button_start_camera)
+            if (state is DailyMissionDialogState.Success && state.isSolved) {
+                stringResource(R.string.close)
+            } else {
+                stringResource(R.string.daily_mission_button_start_camera)
+            }
         } else {
             stringResource(R.string.daily_mission_button_loading)
         },
         isPrimaryButtonEnabled = isSuccess,
         onPrimaryClick = {
             if (state is DailyMissionDialogState.Success) {
-                onStartCamera(state.word)
+                if (state.isSolved) {
+                    onDismissRequest()
+                } else {
+                    onStartCamera(state.word)
+                }
             }
         },
-        secondaryButtonText = if (isSuccess) stringResource(R.string.daily_mission_button_later) else null,
-        onSecondaryClick = if (isSuccess) onDismissRequest else null,
+        secondaryButtonText = if (isSuccess && !(state is DailyMissionDialogState.Success && state.isSolved)) stringResource(R.string.daily_mission_button_later) else null,
+        onSecondaryClick = if (isSuccess && !(state is DailyMissionDialogState.Success && state.isSolved)) onDismissRequest else null,
         customContent = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -119,7 +139,8 @@ fun DailyMissionDialog(
                             modifier = Modifier.matchParentSize()
                         )
                     } else if (state is DailyMissionDialogState.Success) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.explor_gift))
+                        val animationRes = if (state.isSolved) R.raw.daily_mission_complete else R.raw.explor_gift
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRes))
                         LottieAnimation(
                             composition = composition,
                             iterations = 1,

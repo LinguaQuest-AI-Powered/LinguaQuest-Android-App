@@ -37,5 +37,5 @@ data class HomeState(
 sealed interface DailyMissionDialogState {
     data object Hidden : DailyMissionDialogState
     data object Loading : DailyMissionDialogState
-    data class Success(val word: String) : DailyMissionDialogState
+    data class Success(val word: String, val isSolved: Boolean) : DailyMissionDialogState
 }

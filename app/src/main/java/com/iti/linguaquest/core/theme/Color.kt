@@ -140,4 +140,14 @@ object AppColors {
     val CameraKnobCoralDark = Color(0xFFD9846A)
     val CameraKnobCoralHighlightLight = Color(0xFFF4C1AB)
     val CameraKnobCoralHighlightDark = Color(0xFFE6A088)
+
+    // Notification Colors
+    val NotificationAchievementLight = Color(0xFFD4A017)
+    val NotificationAchievementDark = Color(0xFFB8860B)
+    val NotificationStreakLight = Color(0xFFE5E7EB)
+    val NotificationStreakDark = Color(0xFF374151)
+    val NotificationDailyRewardLight = Color(0xFFFF9124)
+    val NotificationDailyRewardDark = Color(0xFFE67E22)
+    val NotificationDailyMissionLight = Color(0xFFF5F5DC)
+    val NotificationDailyMissionDark = Color(0xFF8B8B7A)
 }
