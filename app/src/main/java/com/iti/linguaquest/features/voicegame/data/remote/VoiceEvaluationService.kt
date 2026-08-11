@@ -9,7 +9,6 @@ import com.iti.linguaquest.core.ai.network.model.GeminiInlineDataDto
 import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
 import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
 import com.iti.linguaquest.features.voicegame.data.model.VoiceEvaluationResponse
-import timber.log.Timber
 import java.text.Normalizer
 import kotlin.math.roundToInt
 import javax.inject.Inject
@@ -29,45 +28,45 @@ class VoiceEvaluationService @Inject constructor(
         appLanguage: String = "English"
     ): VoiceEvaluationResponse {
         val promptText = """
-            You are a supportive language coach. The user is practicing speaking a sentence.
-            Target Sentence: "$targetSentence"
+            AUDIO TRANSCRIPTION & PRONUNCIATION SCORING INSTRUCTIONS:
+            
+            STEP 1 - TRANSCRIBE THE AUDIO:
+            Listen to the provided audio file carefully.
+            Write down the EXACT words spoken in the audio file in the 'transcription' field of the JSON.
+            - Transcribe ONLY what you hear in the audio file.
+            - DO NOT guess, assume, or hallucinate words that were not spoken in the audio file.
+            - If only a few words (e.g., 2 words out of 4) are spoken in the audio file, the 'transcription' field MUST contain ONLY those spoken words.
+            - If the audio contains only background noise, silence, or no recognizable words, set 'transcription' to "".
+            
+            STEP 2 - EVALUATE AGAINST REFERENCE SENTENCE:
+            Reference Sentence for practice: "$targetSentence"
             Target Language: $targetLanguage
             User's Application Language: $appLanguage
             
-            Analyze the provided audio recording.
-            1. Transcribe the audio recording first in the language of the target sentence. Put this exact transcription in the `transcription` field of the JSON.
-            2. Compare what they actually said (from the transcription) against the Target Sentence word by word.
-            3. Identify correctly pronounced words and put them in `correct_words`.
-            4. Identify words from the Target Sentence that were mispronounced, omitted, or substituted and put them in `wrong_words`.
+            Compare the 'transcription' from STEP 1 against the Reference Sentence:
+            - A word from the Reference Sentence goes into 'correct_words' ONLY if it is present in 'transcription' AND clearly, correctly pronounced.
+            - A word from the Reference Sentence goes into 'wrong_words' if it is missing from 'transcription' (omitted), mispronounced, or substituted.
+            - EVERY single word from the Reference Sentence MUST be placed in either 'correct_words' or 'wrong_words'.
+            - Do NOT include punctuation marks in 'correct_words' or 'wrong_words'.
             
-            CRITICAL TRANSCRIPTION & WORD-MATCHING RULES:
-            - DO NOT copy the Target Sentence blindly. The transcription MUST represent ONLY what was actually spoken in the audio.
-            - If the user only spoke a subset of the words, transcribe ONLY those words. If they spoke nothing or there is only noise/silence, set transcription to "".
-            - EVERY word in the Target Sentence MUST be categorized into EITHER `correct_words` OR `wrong_words`.
-            - `correct_words` and `wrong_words` MUST contain ONLY words present in the Target Sentence.
-            - Do NOT include punctuation marks (like '.', '?', ',', '!') attached to any word in `correct_words` or `wrong_words`.
-            - A word belongs in `correct_words` ONLY if it is present in the Target Sentence AND was clearly, correctly pronounced in the audio.
-            - If the audio is completely silent, incomprehensible, or you cannot hear any speech, set rating to 0, `transcription` to "", `correct_words` to [], put ALL words from the Target Sentence into `wrong_words`, and provide encouraging advice written in $appLanguage explaining that you couldn't hear them clearly and asking them to try speaking again.
+            STEP 3 - RATING & ADVICE:
+            - Calculate the score out of 10 based ONLY on the number of correct words spoken vs total reference words.
+            - If 2 out of 4 reference words are in 'transcription', the rating MUST be 5 out of 10. Do NOT give 10/10 when words are missing.
+            - If the audio is completely silent or no speech is heard, set rating to 0, 'transcription' to "", 'correct_words' to [], put ALL reference words into 'wrong_words', and give encouraging advice in $appLanguage.
+            - Provide a short, encouraging piece of advice (max 2 sentences) written in $appLanguage.
             
-            5. Be extremely strict in your evaluation. If a word is mispronounced, omitted, or substituted, it MUST be put in `wrong_words` and NOT in `correct_words`.
-            6. Provide a score out of 10 based on how many target words were spoken correctly. Do not give a high rating (e.g. 10) if there are mismatching or mispronounced words.
-            7. Provide a short, encouraging piece of advice (max 2 sentences) WRITTEN ENTIRELY IN THE USER'S APPLICATION LANGUAGE ($appLanguage).
-            
-            Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+            Return STRICTLY raw JSON (no markdown, no backticks):
             {
-                "transcription": "what you actually heard in the audio",
+                "transcription": "exact spoken words from audio",
                 "rating": <integer score between 0 and 10>,
-                "correct_words": ["word1", "word2"],
-                "wrong_words": ["word3"],
-                "advice": "a short, encouraging tip for improvement written in $appLanguage"
+                "correct_words": ["word1"],
+                "wrong_words": ["word2"],
+                "advice": "short tip in $appLanguage"
             }
         """.trimIndent()
 
         val wavBytes = pcmToWav(audioBytes)
         val base64Audio = Base64.encodeToString(wavBytes, Base64.NO_WRAP)
-
-        Timber.d("evaluatePronunciation: targetSentence='%s', audioBytes size=%d, wavBytes size=%d", 
-            targetSentence, audioBytes.size, wavBytes.size)
 
         val requestPayload = GeminiRequestDto(
             contents = listOf(
@@ -91,8 +90,6 @@ class VoiceEvaluationService @Inject constructor(
 
         val rawText = geminiRestClient.executeGeminiRequest(requestPayload)
             ?: throw Exception("Empty or invalid response from model")
-
-        Timber.d("Gemini Voice Evaluation response: %s", rawText)
 
         val parsedResponse = try {
             gson.fromJson(rawText, VoiceEvaluationResponse::class.java)

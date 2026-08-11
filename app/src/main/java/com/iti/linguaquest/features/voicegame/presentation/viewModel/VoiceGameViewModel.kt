@@ -205,6 +205,7 @@ class VoiceGameViewModel @Inject constructor(
     }
 
     private fun startRecording() {
+        speakTextUseCase.stop()
         recordAudioUseCase.start()
         _state.update {
             it.copy(

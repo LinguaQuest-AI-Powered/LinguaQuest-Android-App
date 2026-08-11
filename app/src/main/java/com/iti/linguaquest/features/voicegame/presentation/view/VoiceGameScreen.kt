@@ -163,6 +163,7 @@ fun VoiceGameMainContent(
     state: VoiceGameState,
     viewModel: VoiceGameViewModel
 ) {
+    val context = LocalContext.current
     val isRecording = state.phase == VoiceGamePhase.RECORDING
 
     val resolvedTitle = when {
@@ -278,7 +279,16 @@ fun VoiceGameMainContent(
         isRecording = isRecording,
         isEnabled = !state.isLoadingSentence && state.sentence.isNotBlank(),
         onPressStart = {
-            viewModel.onIntent(VoiceGameIntent.RecordClicked)
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (hasPermission) {
+                viewModel.onIntent(VoiceGameIntent.MicPermissionGranted)
+            } else {
+                viewModel.onIntent(VoiceGameIntent.RecordClicked)
+            }
         },
         onPressEnd = {
             viewModel.onIntent(VoiceGameIntent.DoneClicked)

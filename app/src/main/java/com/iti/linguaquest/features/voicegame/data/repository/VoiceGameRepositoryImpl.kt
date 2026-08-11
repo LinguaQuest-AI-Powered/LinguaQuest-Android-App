@@ -86,13 +86,14 @@ class VoiceGameRepositoryImpl @Inject constructor(
         excludeSentences: List<String>
     ): LinguaQuestResult<PronunciationSentence, LinguaQuestDataError> {
         return try {
-            val resolvedTopic = if (!wordOfTheDay.isNullOrBlank()) {
-                "$topic (must include the word: '$wordOfTheDay')"
-            } else {
-                topic
-            }
             val count = if (excludeSentences.isEmpty()) 1 else (excludeSentences.size + 2)
-            val sentences = generatorService.generateSentences(targetLanguage, level, resolvedTopic, count = count)
+            val sentences = generatorService.generateSentences(
+                targetLanguage = targetLanguage,
+                level = level,
+                topic = topic,
+                count = count,
+                wordOfTheDay = wordOfTheDay
+            )
             val generated = sentences.shuffled().firstOrNull { it.sentence !in excludeSentences }
                 ?: sentences.shuffled().firstOrNull()
                 ?: throw IllegalStateException("No sentence generated from AI")

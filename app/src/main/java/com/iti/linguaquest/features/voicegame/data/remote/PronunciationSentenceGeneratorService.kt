@@ -40,9 +40,14 @@ class PronunciationSentenceGeneratorService @Inject constructor(
         targetLanguage: String = "English",
         level: String = "Beginner",
         topic: String = "General Conversation",
-        count: Int = 5
+        count: Int = 5,
+        wordOfTheDay: String? = null
     ): List<GeneratedSentence> {
         return try {
+            val wordRule = if (!wordOfTheDay.isNullOrBlank()) {
+                "\n6. The generated sentences MUST strictly contain the word: '$wordOfTheDay' (case-insensitive)."
+            } else ""
+
             val prompt = """
                 You are a supportive language tutor for beginner language learners.
                 Generate $count short, simple, and easy-to-pronounce practice sentences in $targetLanguage.
@@ -53,7 +58,7 @@ class PronunciationSentenceGeneratorService @Inject constructor(
                 2. Sentence length MUST be between 3 and 6 words max.
                 3. Use common everyday words (e.g. greetings, simple feelings, daily actions).
                 4. NO tongue twisters, complex grammar, or difficult multi-syllable words.
-                5. Include simple phonetic transcription (IPA) and translation.
+                5. Include simple phonetic transcription (IPA) and translation.$wordRule
 
                 Return STRICTLY a JSON object with NO markdown code fences following this schema:
                 {
