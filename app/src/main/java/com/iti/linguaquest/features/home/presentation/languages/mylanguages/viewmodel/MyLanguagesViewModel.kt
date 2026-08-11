@@ -12,6 +12,7 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.session.SessionEvent
 import com.iti.linguaquest.core.session.SessionEventBus
+import com.iti.linguaquest.features.home.domain.usecase.ClearLanguageCacheUseCase
 import com.iti.linguaquest.features.home.domain.usecase.GetMyLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.SetActiveLanguageUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
@@ -37,6 +38,7 @@ class MyLanguagesViewModel @Inject constructor(
     private val getMyLanguagesUseCase: GetMyLanguagesUseCase,
     private val setActiveLanguageUseCase: SetActiveLanguageUseCase,
     private val removeLanguagesUseCase: RemoveLanguagesUseCase,
+    private val clearLanguageCacheUseCase: ClearLanguageCacheUseCase,
     private val snackbarController: SnackbarController,
     private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
@@ -131,6 +133,7 @@ class MyLanguagesViewModel @Inject constructor(
                             }
                         )
                     }
+                    clearLanguageCacheUseCase()
                     sessionEventBus.emit(SessionEvent.LanguageChanged)
                 }
                 is LinguaQuestResult.Failure -> {
