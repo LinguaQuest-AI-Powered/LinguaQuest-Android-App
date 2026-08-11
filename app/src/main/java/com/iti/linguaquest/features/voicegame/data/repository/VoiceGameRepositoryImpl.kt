@@ -3,8 +3,8 @@ package com.iti.linguaquest.features.voicegame.data.repository
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.voicegame.data.remote.PronunciationSentenceGeneratorService
-import com.iti.linguaquest.features.voicegame.data.remote.VoiceEvaluationService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.PronunciationSentenceGeneratorService
+import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import com.iti.linguaquest.features.voicegame.domain.model.PronunciationSentence
 import com.iti.linguaquest.features.voicegame.domain.model.VoiceEvaluation
 import com.iti.linguaquest.features.voicegame.domain.repository.VoiceGameRepository
