@@ -35,11 +35,13 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun NotificationActions(
     isUnread: Boolean,
+    isDeleting: Boolean = false,
     onDeleteClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -78,18 +80,23 @@ fun NotificationActions(
                         deleteBounds = coordinates.boundsInRoot()
                     }
                     .clickable(
+                        enabled = !isDeleting,
                         interactionSource = deleteInteractionSource,
                         indication = null,
                         onClick = { onDeleteClick(deleteBounds) }
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = stringResource(R.string.delete_notification_title),
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                    modifier = Modifier.size(16.dp)
-                )
+                if (isDeleting) {
+                    LingoSpinningIcon(size = 16.dp)
+                } else {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = stringResource(R.string.delete_notification_title),
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
         }
 

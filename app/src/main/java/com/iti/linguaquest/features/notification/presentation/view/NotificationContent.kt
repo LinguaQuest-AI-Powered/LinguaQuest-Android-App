@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.theme.LocalLinguaQuestColors
@@ -69,6 +70,12 @@ fun NotificationContent(
                     if (notifications.isNotEmpty()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Spacer(modifier = Modifier.width(24.dp))
+                            if (state.isDeleting) {
+                                LingoSpinningIcon(
+                                    size = 16.dp,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                            }
                             Text(
                                 text = stringResource(R.string.delete_all),
                                 style = MaterialTheme.typography.titleMedium,
@@ -78,7 +85,7 @@ fun NotificationContent(
                                     .onGloballyPositioned { coordinates ->
                                         deleteAllBounds = coordinates.boundsInRoot()
                                     }
-                                    .clickable { onDeleteAllClick(deleteAllBounds) }
+                                    .clickable(enabled = !state.isDeleting) { onDeleteAllClick(deleteAllBounds) }
                                     .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
@@ -93,6 +100,7 @@ fun NotificationContent(
             NotificationListContainer(
                 notifications = notifications,
                 isLoading = state.isLoading,
+                deletingNotificationId = state.deletingNotificationId,
                 onCardClick = onCardClick,
                 onDeleteClick = onDeleteNotificationClick
             )
