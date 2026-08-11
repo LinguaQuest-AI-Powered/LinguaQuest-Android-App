@@ -6,6 +6,8 @@ import com.iti.linguaquest.features.auth.domain.model.AuthError
 import com.iti.linguaquest.features.auth.domain.model.AuthUser
 import com.iti.linguaquest.features.auth.domain.model.GoogleSignInResult
 import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+
+import com.iti.linguaquest.features.auth.domain.usecase.SyncUserNativeLanguageUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -31,25 +33,41 @@ class SignInWithGoogleUseCaseTest {
 
     @Test
     fun invokeReturnsSuccessWhenGoogleSignInSucceeds() = runTest {
+        // Given
         val idToken = "valid_token"
-        val authUser = AuthUser(1, "test", null, null, true, emptyList())
-        val googleResult = GoogleSignInResult(profileComplete = true, user = authUser)
-        coEvery { authRepository.signInWithGoogle(idToken) } returns LinguaQuestResult.Success(googleResult)
+        val authUser = AuthUser(
+            id = 1,
+            username = "Test User",
+            photo = null,
+            nativeLanguage = null,
+            isVerified = true,
+            targetLanguages = emptyList()
+        )
+        val googleSignInResult = GoogleSignInResult(
+            profileComplete = true,
+            user = authUser
+        )
+        coEvery { authRepository.signInWithGoogle(idToken) } returns LinguaQuestResult.Success(googleSignInResult)
 
+        // When
         val result = useCase(idToken)
 
+        // Then
         assertEquals(LinguaQuestResult.Success(true), result)
         coVerify(exactly = 1) { authRepository.signInWithGoogle(idToken) }
     }
 
     @Test
     fun invokeReturnsErrorWhenGoogleSignInFails() = runTest {
+        // Given
         val idToken = "invalid_token"
         val error: AuthError = AuthError.InvalidIdToken
         coEvery { authRepository.signInWithGoogle(idToken) } returns LinguaQuestResult.Failure(error)
 
+        // When
         val result = useCase(idToken)
 
+        // Then
         assertEquals(LinguaQuestResult.Failure(error), result)
         coVerify(exactly = 1) { authRepository.signInWithGoogle(idToken) }
     }

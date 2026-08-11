@@ -167,7 +167,9 @@
     <string name="settings_label">Settings</string>
     <string name="view_all_label">VIEW ALL</string>
     <string name="you_label">You</string>
-
+    <string name="change_language_title">Change Language</string>
+    <string name="change_language_message">Are you sure you want to switch to %1$s?</string>
+    <string name="confirm">Confirm</string>
     <string name="practice_pronunciation">Practice your\npronunciation</string>
     <!-- WorldDifficulty -->
     <string name="medium">MEDIUM</string>
@@ -826,9 +828,10 @@
     <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
     <string name="language_removed_success">Language removed successfully.</string>
     <string name="remove_language_title">Remove Language</string>
-    <string name="remove_language_message">Are you sure you want to remove %1$s from your target languages?</string>
+    <string name="remove_language_message">Are you sure you want to remove %1$s from your active languages?</string>
     <string name="remove">Remove</string>
-
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="lingos_label">Lingos</string>
     <string name="current_quest_label">CURRENT QUEST</string>
     <string name="find_and_capture_instruction">Find &amp; capture</string>

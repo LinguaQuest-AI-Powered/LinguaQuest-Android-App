@@ -7,7 +7,7 @@ import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
-import com.iti.linguaquest.features.auth.domain.usecase.GetAuthLanguagesUseCase
+import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.setting.domain.usecase.CancelReminderUseCase
@@ -57,7 +57,7 @@ class SettingViewModelTest {
     private val toggleSoundUseCase: ToggleSoundUseCase = mockk(relaxed = true)
     private val toggleNotificationsUseCase: ToggleNotificationsUseCase = mockk(relaxed = true)
     private val logoutUserUseCase: LogoutUserUseCase = mockk(relaxed = true)
-    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase = mockk()
+    private val getSupportedLanguagesUseCase: GetSupportedLanguagesUseCase = mockk()
     private val getReminderEnabledUseCase: GetReminderEnabledUseCase = mockk()
     private val getReminderTimeUseCase: GetReminderTimeUseCase = mockk()
     private val getReminderDaysUseCase: GetReminderDaysUseCase = mockk()
@@ -75,6 +75,7 @@ class SettingViewModelTest {
     fun setUp() {
         // Given
         every { observeNetworkStatusUseCase() } returns flowOf(true)
+        coEvery { getSupportedLanguagesUseCase() } returns LinguaQuestResult.Success(emptyList())
         every { getAppLanguageUseCase() } returns flowOf("en")
         every { getAppThemeUseCase() } returns flowOf("system")
         every { getSoundEnabledUseCase() } returns flowOf(true)
@@ -82,7 +83,6 @@ class SettingViewModelTest {
         every { getReminderEnabledUseCase() } returns flowOf(false)
         every { getReminderTimeUseCase() } returns flowOf("10:00")
         every { getReminderDaysUseCase() } returns flowOf("1,2,3,4,5")
-        coEvery { getAuthLanguagesUseCase() } returns LinguaQuestResult.Success(emptyList())
 
         viewModel = SettingViewModel(
             getAppLanguageUseCase,
@@ -94,7 +94,7 @@ class SettingViewModelTest {
             toggleSoundUseCase,
             toggleNotificationsUseCase,
             logoutUserUseCase,
-            getAuthLanguagesUseCase,
+            getSupportedLanguagesUseCase,
             getReminderEnabledUseCase,
             getReminderTimeUseCase,
             getReminderDaysUseCase,

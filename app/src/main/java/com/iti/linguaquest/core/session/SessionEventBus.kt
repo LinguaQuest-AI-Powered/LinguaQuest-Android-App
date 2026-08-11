@@ -9,6 +9,7 @@ import javax.inject.Singleton
 sealed interface SessionEvent {
     data object SessionExpired : SessionEvent
     data object LoggedOut : SessionEvent
+    data object LanguageChanged : SessionEvent
 }
 
 interface SessionEventBus {

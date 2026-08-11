@@ -4,10 +4,11 @@ import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepositor
 import com.iti.linguaquest.core.language.domain.manager.LanguageManager
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import javax.inject.Inject
 
 class SyncUserNativeLanguageUseCase @Inject constructor(
-    private val getAuthLanguagesUseCase: GetAuthLanguagesUseCase,
+    private val getSupportedLanguagesUseCase: GetSupportedLanguagesUseCase,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val languageManager: LanguageManager
 ) {
@@ -21,7 +22,7 @@ class SyncUserNativeLanguageUseCase @Inject constructor(
             return
         }
 
-        val result = getAuthLanguagesUseCase()
+        val result = getSupportedLanguagesUseCase()
         if (result is LinguaQuestResult.Success) {
             val matchedLang = result.data.find { it.id == nativeLanguageId }
 

@@ -8,6 +8,9 @@ enum class ScenarioId(val rawValue: String) {
     @SerializedName("scenario_market_01")
     SCENARIO_MARKET_01("scenario_market_01"),
 
+    @SerializedName("scenario_artist_01")
+    SCENARIO_ARTIST_01("scenario_artist_01"),
+
     @SerializedName("scenario_cafe_01")
     SCENARIO_CAFE_01("scenario_cafe_01"),
 

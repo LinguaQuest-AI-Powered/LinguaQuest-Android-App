@@ -24,6 +24,7 @@ data class HomeState(
     val worlds: List<WorldItem> = emptyList(),
     val startVoicePractise: Boolean? = false,
     val isLanguageBottomSheetVisible: Boolean = false,
+    val restoreLanguageBottomSheet: Boolean = false,
     val dailyReward: DailyRewardUi? = null,
     val isDailyRewardDialogVisible: Boolean = false,
     val isDailyRewardBannerVisible: Boolean = false,

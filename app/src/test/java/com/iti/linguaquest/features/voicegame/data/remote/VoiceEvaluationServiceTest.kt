@@ -1,9 +1,11 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
+import android.util.Base64
 import com.iti.linguaquest.core.ai.network.GeminiRestClient
 import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -17,6 +19,10 @@ class VoiceEvaluationServiceTest {
 
     @Before
     fun setUp() {
+        mockkStatic(Base64::class)
+        every { Base64.encodeToString(any(), any()) } returns "base64audio"
+        geminiRestClient = mockk()
+        evaluationService = VoiceEvaluationService(geminiRestClient)
         geminiRestClient = mockk()
         evaluationService = VoiceEvaluationService(geminiRestClient)
     }

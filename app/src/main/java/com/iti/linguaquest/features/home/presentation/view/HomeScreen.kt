@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -107,6 +111,14 @@ fun HomeScreen(
         SharedBackgroundState.showBackground = true
     }
 
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && wasOffline) {
+            viewModel.onIntent(HomeIntent.Refresh)
+        }
+        wasOffline = !isOnline
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -128,20 +140,35 @@ fun HomeScreen(
             when (effect) {
                 MyLanguagesEffect.NavigateToAddLanguages -> {
                     guardOnline {
-                        onNavigateToAddLanguages()
+                        viewModel.onIntent(HomeIntent.AddNewLanguageClicked)
                     }
                 }
-                MyLanguagesEffect.Dismiss -> {
+                MyLanguagesEffect.DismissSheet -> {
                     viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
-                    viewModel.onIntent(HomeIntent.Retry)
+                }
+                MyLanguagesEffect.SwitchingLanguage -> {
+                    viewModel.onIntent(HomeIntent.DismissLanguageBottomSheet)
+                    viewModel.onIntent(HomeIntent.PrepareLanguageSwitch)
+                }
+                is MyLanguagesEffect.LanguageSwitchFailed -> {
+                    viewModel.onIntent(HomeIntent.CancelLanguageSwitch)
                 }
             }
         }
     }
 
-    LaunchedEffect(state.isLanguageBottomSheetVisible) {
-        if (state.isLanguageBottomSheetVisible) {
-            myLanguagesViewModel.onIntent(MyLanguagesIntent.LoadMyLanguages)
+
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onIntent(HomeIntent.ScreenResumed)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 

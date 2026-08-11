@@ -56,6 +56,9 @@ import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesState
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
+import com.iti.linguaquest.core.sound.AppSound
+import com.iti.linguaquest.core.sound.LocalSoundPlayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,11 +67,13 @@ fun AddLanguagesContent(
     onIntent: (AddLanguagesIntent) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val soundPlayer = LocalSoundPlayer.current
 
     if (state.languagePendingRemoval != null) {
         AppDialog(
             title = stringResource(R.string.remove_language_title),
             message = stringResource(R.string.remove_language_message, state.languagePendingRemoval.name),
+            imageRes = R.drawable.lingo_delete_notification,
             onDismissRequest = { onIntent(AddLanguagesIntent.DismissRemoveDialog) },
             primaryButtonText = stringResource(R.string.remove),
             onPrimaryClick = { onIntent(AddLanguagesIntent.ConfirmRemoveLanguage) },
@@ -96,7 +101,7 @@ fun AddLanguagesContent(
                     text = stringResource(R.string.add_selected_format, state.selectedLanguageIds.size),
                     onClick = { onIntent(AddLanguagesIntent.AddSelectedClicked) },
                     enabled = state.selectedLanguageIds.isNotEmpty(),
-                    isLoading = state.isLoading && state.selectedLanguageIds.isNotEmpty()
+                    isLoading = state.isAdding && state.selectedLanguageIds.isNotEmpty()
                 )
             }
         }
@@ -163,7 +168,7 @@ fun AddLanguagesContent(
                 it.name.contains(state.searchQuery, ignoreCase = true)
             }
 
-            if (state.isLoading && state.availableLanguages.isEmpty()) {
+            if (state.dataStatus is DataStatus.Loading && state.availableLanguages.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -252,7 +257,10 @@ fun AddLanguagesContent(
                                     LanguageSelectionCard(
                                         language = language,
                                         isSelected = state.selectedLanguageIds.contains(language.id),
-                                        onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                                        onClick = {
+                                            soundPlayer.play(AppSound.SWITCH)
+                                            onIntent(AddLanguagesIntent.LanguageToggled(language.id))
+                                        },
                                         modifier = Modifier.fillMaxSize()
                                     )
                                 }
@@ -261,7 +269,10 @@ fun AddLanguagesContent(
                             LanguageSelectionCard(
                                 language = language,
                                 isSelected = state.selectedLanguageIds.contains(language.id),
-                                onClick = { onIntent(AddLanguagesIntent.LanguageToggled(language.id)) },
+                                onClick = {
+                                    soundPlayer.play(AppSound.SWITCH)
+                                    onIntent(AddLanguagesIntent.LanguageToggled(language.id))
+                                },
                                 modifier = Modifier
                                     .height(180.dp)
                                     .animateItem()

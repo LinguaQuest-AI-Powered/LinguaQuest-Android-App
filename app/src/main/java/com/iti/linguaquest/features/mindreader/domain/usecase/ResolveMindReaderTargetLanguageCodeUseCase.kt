@@ -2,14 +2,14 @@ package com.iti.linguaquest.features.mindreader.domain.usecase
 
 import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.result.LinguaQuestResult
-import com.iti.linguaquest.features.auth.domain.repository.AuthRepository
+import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
 class ResolveMindReaderTargetLanguageCodeUseCase @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val authRepository: AuthRepository
+    private val getSupportedLanguagesUseCase: GetSupportedLanguagesUseCase
 ) {
     suspend operator fun invoke(fallbackLanguageCode: String = "en"): String {
         val targetLanguageId = userPreferencesRepository.targetLanguage.first()
@@ -34,7 +34,7 @@ class ResolveMindReaderTargetLanguageCodeUseCase @Inject constructor(
     }
 
     private suspend fun loadAvailableLanguages(): List<LanguageOption> {
-        return when (val result = authRepository.getAuthLanguages()) {
+        return when (val result = getSupportedLanguagesUseCase()) {
             is LinguaQuestResult.Success -> result.data
             is  LinguaQuestResult.Failure -> emptyList()
         }

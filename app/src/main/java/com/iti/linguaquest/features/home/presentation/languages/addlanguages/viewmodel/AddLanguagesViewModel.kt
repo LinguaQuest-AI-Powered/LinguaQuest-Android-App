@@ -9,6 +9,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.sharedComponents.text.toUiText
+import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.features.home.domain.usecase.GetAvailableLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.AddLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.usecase.RemoveLanguagesUseCase
@@ -16,6 +17,7 @@ import com.iti.linguaquest.features.home.presentation.languages.addlanguages.con
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.AddLanguagesState
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.contract.LanguageUiItem
+import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguageUiModel
 import com.iti.linguaquest.features.home.presentation.mapper.toUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,26 +51,38 @@ class AddLanguagesViewModel @Inject constructor(
 
     private fun loadAvailableLanguages() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            when (val result = getAvailableLanguagesUseCase()) {
-                is LinguaQuestResult.Success -> {
-                    _state.update { state ->
-                        state.copy(
-                            isLoading = false,
-                            availableLanguages = result.data.map { it.toUiItem() }
-                        )
+            _state.update { it.copy(dataStatus = DataStatus.Loading) }
+            getAvailableLanguagesUseCase().collectLatest { result ->
+                when (result) {
+                    is LinguaQuestResult.Success -> {
+                        _state.update { state ->
+                            state.copy(
+                                dataStatus = DataStatus.Loaded,
+                                availableLanguages = result.data.map { it.toUiItem() }
+                            )
+                        }
                     }
-                }
-                is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
-                    snackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = result.error.toUiText(),
-                            type = SnackbarType.ERROR,
-                            actionLabel = UiText.StringResource(R.string.retry),
-                            onAction = { loadAvailableLanguages() }
-                        )
-                    )
+                    is LinguaQuestResult.Failure -> {
+                        val hasCache = _state.value.hasData
+                        val errorUiText = result.error.toUiText()
+                        
+                        _state.update {
+                            it.copy(
+                                dataStatus = if (hasCache) DataStatus.Loaded else DataStatus.Error(errorUiText)
+                            )
+                        }
+                        
+                        if (hasCache) {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = errorUiText,
+                                    type = SnackbarType.ERROR,
+                                    actionLabel = UiText.StringResource(R.string.retry),
+                                    onAction = { loadAvailableLanguages() }
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -96,6 +111,9 @@ class AddLanguagesViewModel @Inject constructor(
             AddLanguagesIntent.AddSelectedClicked -> {
                 addSelectedLanguages()
             }
+            AddLanguagesIntent.RetryClicked -> {
+                loadAvailableLanguages()
+            }
         }
     }
 
@@ -120,7 +138,6 @@ class AddLanguagesViewModel @Inject constructor(
                             type = SnackbarType.SUCCESS
                         )
                     )
-                    loadAvailableLanguages()
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(isRemoving = false) }
@@ -140,14 +157,14 @@ class AddLanguagesViewModel @Inject constructor(
         if (selectedIds.isEmpty()) return
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isAdding = true) }
             when (val result = addLanguagesUseCase(selectedIds)) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(isLoading = false) }
+                    _state.update { it.copy(isAdding = false) }
                     sendEffect(AddLanguagesEffect.NavigateBack)
                 }
                 is LinguaQuestResult.Failure -> {
-                    _state.update { it.copy(isLoading = false) }
+                    _state.update { it.copy(isAdding = false) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),

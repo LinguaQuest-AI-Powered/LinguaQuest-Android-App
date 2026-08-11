@@ -23,6 +23,7 @@ interface SessionManagerDataSource {
     suspend fun getCurrentUserId(): Int
     suspend fun clearSessionData()
     suspend fun clearLocalGeneratedData()
+    suspend fun clearLanguageDependentData()
 }
 
 class SessionManagerDataSourceImpl @Inject constructor(
@@ -70,6 +71,14 @@ class SessionManagerDataSourceImpl @Inject constructor(
     override suspend fun clearLocalGeneratedData() {
         withContext(Dispatchers.IO) {
             appDatabase.wordDao().clearWords()
+        }
+    }
+
+    override suspend fun clearLanguageDependentData() {
+        withContext(Dispatchers.IO) {
+            appDatabase.wordDao().clearWords()
+            appDatabase.profileDao().clearProfile()
+            appDatabase.homeDao().clearHomeSummary()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.setting.data.manager
+package com.iti.linguaquest.core.language.data.manager
 
 import android.content.Context
 import android.content.res.Configuration
@@ -44,7 +44,6 @@ class LanguageManagerImplTest {
         languageManager.changeLanguage(languageCode)
 
         // Then
-        // Without Robolectric, Build.VERSION.SDK_INT is 0, so the else branch executes.
         verify { configuration.setLocale(Locale.forLanguageTag(languageCode)) }
         verify { resources.updateConfiguration(configuration, displayMetrics) }
         assert(Locale.getDefault().toLanguageTag() == languageCode || Locale.getDefault().language == languageCode)
