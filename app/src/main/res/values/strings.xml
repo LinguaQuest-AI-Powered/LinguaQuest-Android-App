@@ -900,6 +900,8 @@
     <string name="tutorial_home_desc">Explore learning worlds, complete levels, and check daily missions.</string>
     <string name="tutorial_gallery_title">Vocabulary Gallery</string>
     <string name="tutorial_gallery_desc">Review words you\'ve learned and practice pronunciation.</string>
+    <string name="tutorial_lingos_title">Lingos - Game Features</string>
+    <string name="tutorial_lingos_desc">Practice speaking with Voice Game, tackle roleplay scenarios, and challenge the Mind Reader.</string>
     <string name="tutorial_profile_title">Your Profile</string>
     <string name="tutorial_profile_desc">Track achievements, check settings, and check leaderboard status.</string>
 </resources>

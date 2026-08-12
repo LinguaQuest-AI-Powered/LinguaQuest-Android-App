@@ -59,8 +59,8 @@ fun GameBottomNavBar(
             val targetId = when (screen) {
                 BottomNavScreen.Home -> "bottom_nav_home"
                 BottomNavScreen.Gallery -> "bottom_nav_gallery"
+                BottomNavScreen.Lingos -> "bottom_nav_lingos"
                 BottomNavScreen.Profile -> "bottom_nav_profile"
-                else -> null
             }
             val targetModifier = if (tutorialManager != null && targetId != null) {
                 Modifier.tutorialTarget(targetId, tutorialManager)

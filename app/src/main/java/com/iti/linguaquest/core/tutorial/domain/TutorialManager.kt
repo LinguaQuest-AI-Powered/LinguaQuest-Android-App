@@ -41,24 +41,33 @@ class TutorialManager(
     private val _effect = MutableSharedFlow<TutorialEffect>(extraBufferCapacity = 16)
     val effect: SharedFlow<TutorialEffect> = _effect.asSharedFlow()
 
-    fun startAppTour(force: Boolean = false) {
+    fun startAppTour(force: Boolean = true) {
         val appTour = TutorialTour(
             tourId = "APP_TOUR",
             steps = listOf(
                 TutorialStep(
                     stepId = "bottom_nav_home",
                     titleRes = R.string.tutorial_home_title,
-                    descriptionRes = R.string.tutorial_home_desc
+                    descriptionRes = R.string.tutorial_home_desc,
+                    lingoImageRes = R.drawable.lingo_map_1
                 ),
                 TutorialStep(
                     stepId = "bottom_nav_gallery",
                     titleRes = R.string.tutorial_gallery_title,
-                    descriptionRes = R.string.tutorial_gallery_desc
+                    descriptionRes = R.string.tutorial_gallery_desc,
+                    lingoImageRes = R.drawable.lingo_gellary_icon
+                ),
+                TutorialStep(
+                    stepId = "bottom_nav_lingos",
+                    titleRes = R.string.tutorial_lingos_title,
+                    descriptionRes = R.string.tutorial_lingos_desc,
+                    lingoImageRes = R.drawable.lingo_mic
                 ),
                 TutorialStep(
                     stepId = "bottom_nav_profile",
                     titleRes = R.string.tutorial_profile_title,
-                    descriptionRes = R.string.tutorial_profile_desc
+                    descriptionRes = R.string.tutorial_profile_desc,
+                    lingoImageRes = R.drawable.lingo_leaderboard
                 )
             )
         )
@@ -70,6 +79,8 @@ class TutorialManager(
             if (!force) {
                 val completed = preferences.isTutorialCompleted(tour.tourId).first()
                 if (completed) return@launch
+            } else {
+                preferences.setTutorialCompleted(tour.tourId, false)
             }
             _state.update {
                 TutorialState(

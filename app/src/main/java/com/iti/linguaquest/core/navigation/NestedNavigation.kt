@@ -70,7 +70,8 @@ fun MainScreen(
                     currentTab = when (effect.tabIndex) {
                         0 -> BottomNavScreen.Home
                         1 -> BottomNavScreen.Gallery
-                        2 -> BottomNavScreen.Profile
+                        2 -> BottomNavScreen.Lingos
+                        3 -> BottomNavScreen.Profile
                         else -> currentTab
                     }
                 }

@@ -202,7 +202,6 @@ fun AppNavigation(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
-            TutorialOverlay(manager = mainViewModel.tutorialManager)
             NavDisplay(
                 backStack = rootBackStack,
                 modifier = Modifier.fillMaxSize(),
@@ -621,6 +620,8 @@ fun AppNavigation(
 
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
+
+            TutorialOverlay(manager = mainViewModel.tutorialManager)
 
             val notificationMessage by globalUiHostViewModel.notificationBannerController.notificationMessage.collectAsState()
             var activeNotification by remember { androidx.compose.runtime.mutableStateOf<com.iti.linguaquest.core.sharedComponents.NotificationBannerState?>(null) }
