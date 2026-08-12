@@ -10,9 +10,8 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Singleton
-class TutorialPreferences @Inject constructor(
-    @UserSettingsDataStore private val dataStore: DataStore<Preferences>
+class TutorialPreferences(
+    private val dataStore: DataStore<Preferences>
 ) {
     fun isTutorialCompleted(tourId: String): Flow<Boolean> {
         val key = booleanPreferencesKey(getCompletedKey(tourId))

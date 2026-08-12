@@ -30,8 +30,7 @@ sealed interface TutorialEffect {
     data class RequestTabSwitch(val tabIndex: Int) : TutorialEffect
 }
 
-@Singleton
-class TutorialManager @Inject constructor(
+class TutorialManager(
     private val preferences: TutorialPreferences
 ) {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
