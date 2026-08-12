@@ -12,4 +12,5 @@
     <color name="notification_text_secondary">#FF4A4A6A</color>
     <color name="notification_accent">#FF6C63FF</color>
     <color name="notification_background">#FFFFFFFF</color>
+    <color name="splash_background">#FF04737D</color>
 </resources>

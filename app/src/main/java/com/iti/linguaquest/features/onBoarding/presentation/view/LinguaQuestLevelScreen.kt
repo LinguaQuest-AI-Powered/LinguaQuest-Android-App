@@ -28,7 +28,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.levelContra
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.tooling.preview.Preview
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
-import com.iti.linguaquest.features.onBoarding.presentation.components.LevelCard
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.LevelCard
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 

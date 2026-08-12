@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding.presentation.components
+package com.iti.linguaquest.features.onBoarding.presentation.view.components
 
 import android.widget.VideoView
 import androidx.annotation.RawRes

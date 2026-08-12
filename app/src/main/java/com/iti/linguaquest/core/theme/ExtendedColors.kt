@@ -16,6 +16,7 @@ data class LinguaQuestColors(
     val iconsColor: Color,
     val splashTopLeftColor: Color,
     val splashBottomRightColor: Color,
+    val splashBackgroundSolid: Color,
     val socialButtonFill: Color,
     val socialButtonText: Color,
     val socialButtonBorder: Color,
