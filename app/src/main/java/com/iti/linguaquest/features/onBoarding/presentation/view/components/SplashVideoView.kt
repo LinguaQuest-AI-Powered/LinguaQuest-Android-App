@@ -72,6 +72,7 @@ fun SplashVideoView(
                             player.setSurface(surface)
                             player.isLooping = true
                             player.setVolume(0f, 0f)
+                            player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
                             
                             player.setOnInfoListener { _, what, _ ->
                                 if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {

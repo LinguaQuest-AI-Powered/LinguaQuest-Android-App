@@ -6,7 +6,7 @@
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
     <string name="loading">تحميل...</string>
-    <string name="new_password_min_length_hint">Minimum 6 characters</string>
+    <string name="new_password_min_length_hint">6 أحرف على الأقل</string>
     <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
@@ -842,7 +842,7 @@
     <string name="mystery_world">عالم غامض</string>
     <string name="word_capture_progress_format">%1$s من %2$s</string>
     <string name="daily_mission_wrong_word">هذه لا تطابق الصوره. حاول مجددا</string>
-    <string name="daily_mission_completed">Mission completed! You earned %1$d XP and %2$d Coins.</string>
+    <string name="daily_mission_completed">اكتملت المهمة! لقد كسبت %1$d نقطة خبرة و %2$d عملة.</string>
     <string name="updating_language_title">اضافة اللغه</string>
     <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
     <!-- أسماء نصوص المهمة اليومية -->
@@ -860,4 +860,34 @@
     <string name="waking_up_lingo">نوقظ لينجو...</string>
     <string name="translating_worlds">نترجم العوالم...</string>
     <string name="almost_there">على وشك الانتهاء...</string>
+
+    <string name="loading_message_1">جاري تجهيز مهمتك...</string>
+    <string name="loading_message_2">جاري تجهيز الببغاء...</string>
+    <string name="loading_message_3">على وشك الانتهاء...</string>
+    <string name="loading_message_4">جاري تجهيز حقائبك...</string>
+    <string name="loading_message_5">جاري استشارة الخرائط...</string>
+
+    <string name="error_email_already_in_use">يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
+    <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
+    <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
+    <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
+    <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
+    <string name="error_email_not_found">لا يوجد حساب مرتبط بهذا البريد الإلكتروني.</string>
+    <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
+
+    <string name="lockscreen_fullscreen_intent_title">إذن شاشة القفل مطلوب</string>
+    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات المفردات على شاشة القفل، يرجى منح إذن "العرض فوق شاشة القفل" في إعدادات جهازك.</string>
+    <string name="lockscreen_fullscreen_intent_action">فتح الإعدادات</string>
+
+    <string name="get_a_hint_title">احصل على تلميح</string>
+    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقاً</string>
+    <string name="mind_reader_choose_category">اختر الفئة</string>
+
+    <string name="gallery_category_all">جميع العناصر</string>
+    <string name="gallery_difficulty_easy">سهل</string>
+    <string name="gallery_difficulty_medium">متوسط</string>
+    <string name="gallery_difficulty_hard">صعب</string>
+    <string name="lockscreen_notification_channel_name">تذكير المفردات</string>
+    <string name="arabic_language">العربية</string>
+    <string name="cd_avatar">الصورة الرمزية</string>
 </resources>
