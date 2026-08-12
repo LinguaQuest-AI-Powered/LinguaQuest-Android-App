@@ -27,12 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
+
 @Composable
 fun GameBottomNavBar(
     items: List<BottomNavScreen>,
     currentRoute: Any?,
     onItemClick: (BottomNavScreen) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tutorialManager: TutorialManager? = null
 ) {
     val barShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
     Row(
@@ -52,10 +56,23 @@ fun GameBottomNavBar(
     ) {
         items.forEach { screen ->
             val isSelected = currentRoute == screen.route
+            val targetId = when (screen) {
+                BottomNavScreen.Home -> "bottom_nav_home"
+                BottomNavScreen.Gallery -> "bottom_nav_gallery"
+                BottomNavScreen.Profile -> "bottom_nav_profile"
+                else -> null
+            }
+            val targetModifier = if (tutorialManager != null && targetId != null) {
+                Modifier.tutorialTarget(targetId, tutorialManager)
+            } else {
+                Modifier
+            }
+
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .padding(4.dp)
+                    .then(targetModifier)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onItemClick(screen) },
                 contentAlignment = Alignment.Center

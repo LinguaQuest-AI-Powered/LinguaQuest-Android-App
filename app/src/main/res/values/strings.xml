@@ -890,4 +890,16 @@
     <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
     <string name="arabic_language">arabic</string>
     <string name="cd_avatar">Avatar</string>
+
+    <string name="next">Next</string>
+    <string name="got_it">Got It</string>
+    <string name="finish">Finish</string>
+    <string name="tutorial_replay_title">Replay App Tour</string>
+    <string name="tutorial_replay_desc">Start the tutorial guide from the beginning.</string>
+    <string name="tutorial_home_title">Home Screen</string>
+    <string name="tutorial_home_desc">Explore learning worlds, complete levels, and check daily missions.</string>
+    <string name="tutorial_gallery_title">Vocabulary Gallery</string>
+    <string name="tutorial_gallery_desc">Review words you\'ve learned and practice pronunciation.</string>
+    <string name="tutorial_profile_title">Your Profile</string>
+    <string name="tutorial_profile_desc">Track achievements, check settings, and check leaderboard status.</string>
 </resources>

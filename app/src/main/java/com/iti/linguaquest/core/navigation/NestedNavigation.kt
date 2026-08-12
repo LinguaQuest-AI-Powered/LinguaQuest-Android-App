@@ -38,6 +38,7 @@ import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
+import com.iti.linguaquest.core.tutorial.domain.TutorialEffect
 
 @Composable
 fun MainScreen(
@@ -60,6 +61,25 @@ fun MainScreen(
             currentTab = BottomNavScreen.Gallery
             openVaultTab = true
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.tutorialManager.effect.collect { effect ->
+            when (effect) {
+                is TutorialEffect.RequestTabSwitch -> {
+                    currentTab = when (effect.tabIndex) {
+                        0 -> BottomNavScreen.Home
+                        1 -> BottomNavScreen.Gallery
+                        2 -> BottomNavScreen.Profile
+                        else -> currentTab
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.tutorialManager.startAppTour()
     }
 
     BackHandler(enabled = currentTab != BottomNavScreen.Home) {
@@ -113,7 +133,8 @@ fun MainScreen(
                     },
                     modifier = Modifier.onGloballyPositioned { coordinates ->
                         SharedBottomBarState.heightPx = coordinates.size.height
-                    }
+                    },
+                    tutorialManager = viewModel.tutorialManager
                 )
             }
         ) { innerPadding ->

@@ -88,6 +88,8 @@ import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyM
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScreen
+import com.iti.linguaquest.core.tutorial.presentation.TutorialOverlay
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -200,6 +202,7 @@ fun AppNavigation(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+            TutorialOverlay(manager = mainViewModel.tutorialManager)
             NavDisplay(
                 backStack = rootBackStack,
                 modifier = Modifier.fillMaxSize(),
