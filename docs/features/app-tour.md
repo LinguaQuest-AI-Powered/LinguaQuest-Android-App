@@ -2,40 +2,37 @@
 
 This document provides a high-level overview of the App Tour/Contextual Spotlight Tutorial system.
 
-## Overview
-The tutorial system is built entirely on custom Canvas drawing and dynamic coordinate registration in Jetpack Compose to avoid dependency version conflicts and ensure stable overlay rendering.
-
 ## Architecture
-- **State Management**: managed via `TutorialManager` (Hilt `@Singleton`), which publishes flow updates to the UI.
-- **Coordination**: targets register their bounds in the layout context using `Modifier.tutorialTarget(stepId, manager)`.
-- **Active Tour (Home Features)**: The app tour highlights the following home features sequentially:
-  1. `tutorial_top_bar_coins` (Coins): Tracks the user's earned coins.
-  2. `tutorial_top_bar_xp` (XP): Tracks the user's experience points.
-  3. `tutorial_top_bar_notifications` (Bell Icon): Points to vocabulary reminders and achievements.
-  4. `tutorial_language_progress` (LanguageProgressCard): Shows the user's selected language, level, learning progress, and streak.
-  5. `tutorial_word_capture` (WordCaptureCard): Directs the user to resume their current lesson.
-  6. `tutorial_world_list` (ExploreWorldsSection): Lists available learning worlds.
-  7. `tutorial_language_button` (FAB): Lets the user switch languages or add new ones.
-  8. `tutorial_daily_mission` (FAB): Points to the daily mission page/rewards.
-- **Active Tour (Gallery Features)**: A contextual tour highlighting:
-  1. `gallery_tab_game_captures` (Game Captures): Reviews words successfully captured in-game.
-  2. `gallery_tab_my_journal` (My Journal): Vocabulary vault containing words ready for review.
-  The `GalleryScreen` automatically monitors the tutorial step index to programmatically switch active tabs when transitioning through this tour.
-- **Active Tour (Lingos Features)**: A contextual tour highlighting:
-  1. `lingos_card_voice` (Voice Practice Card): Details on speaking to practice pronunciation.
-  2. `lingos_card_roleplay` (Roleplay Card): Details on contextual chat conversations.
-  3. `lingos_card_mindreader` (Mind Reader Card): Details on the AI guessing game.
-- **Active Tour (Profile Features)**: A contextual tour highlighting:
-  1. `profile_header_target` (Profile Header): Highlights avatar and user profile information.
-  2. `profile_stats_target` (Stats Grid): Highlights key stats like XP, daily streak, and words.
-  3. `profile_settings_target` (Settings Option): Highlights account settings configuration.
-  4. `profile_achievements_target` (Achievements): Highlights milestones and challenges rewards.
-  5. `profile_leaderboard_target` (Leaderboard): Highlights ranking against friends.
-- **Navigation Integration**: Tab switching effect is bypassed since the tours run contextually within their respective screens.
-- **Persistence**: completed tours are persisted in DataStore via `TutorialPreferences` to avoid displaying them repeatedly.
+
+The tutorial system follows Clean Architecture principles:
+
+- **Domain Layer**:
+  - `TutorialManager`: Hilt `@Singleton` managing tutorial progression, active tour states, and target bounds.
+  - `TourRegistry`: Standalone registry containing step and resource definitions for all app tours.
+  - `TutorialRepository`: Interface defining data persistence contracts (`isTourCompleted`, `setTourCompleted`, `resetAllTours`).
+  - `TourId`: Type-safe enum identifying all supported tours (`APP_TOUR`, `GALLERY_TOUR`, `LINGOS_TOUR`, `PROFILE_TOUR`).
+  - `TargetBounds`: Pure Kotlin domain model representing target UI coordinates `(left, top, width, height)` without Compose or Android dependencies.
+  - `TutorialState` & `TutorialEffect`: Immutable state and effect contracts under `domain.model`.
+
+- **Data Layer**:
+  - `TutorialRepositoryImpl`: Implements `TutorialRepository` using DataStore preferences.
+
+- **Presentation Layer**:
+  - `LocalTutorialManager`: `CompositionLocal` provided at `MainScreen` level to eliminate prop-drilling.
+  - `TutorialOverlay`: Reads `LocalTutorialManager.current` and delegates rendering to `TutorialOverlayContent`.
+  - `TutorialOverlayContent`: Hoisted Composable accepting `TutorialState`, `onNext`, and `onSkip` callbacks.
+  - `Modifier.tutorialTarget(stepId)`: Composable extension registering element layout bounds using `LocalTutorialManager.current`.
+
+## Supported Tours
+
+- **App Tour (Home Features)**: Highlights coins, XP, notifications bell, language progress card, word capture card, world list, language FAB, and daily mission FAB.
+- **Gallery Tour**: Highlights Game Captures tab and My Words tab.
+- **Lingos Tour**: Highlights Voice Practice, Roleplay, and Mind Reader cards.
+- **Profile Tour**: Contextually highlights profile header, stats grid, settings row, achievements, and leaderboard.
 
 ## Adding a New Tour
-1. Define the tour and steps in `TutorialManager.start[Feature]Tour()`.
-2. Register the respective UI elements with `Modifier.tutorialTarget("target_id", manager)`.
-3. Call `manager.startTour(tour)` to initiate the tutorial flow contextually.
 
+1. Add a new `TourId` entry in `TourId.kt`.
+2. Define the step sequence in `TourRegistry.kt`.
+3. Register UI elements using `Modifier.tutorialTarget("target_id")`.
+4. Trigger the tour using `tutorialManager.startTour(tourRegistry.myTour())`.

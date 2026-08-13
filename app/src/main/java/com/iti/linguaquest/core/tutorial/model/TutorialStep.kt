@@ -1,13 +1,16 @@
 package com.iti.linguaquest.core.tutorial.model
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
 data class TutorialStep(
     val stepId: String,
-    val titleRes: Int,
-    val descriptionRes: Int,
-    val lingoImageRes: Int
+    @param:StringRes val titleRes: Int,
+    @param:StringRes val descriptionRes: Int,
+    @param:DrawableRes val lingoImageRes: Int
 )
 
 data class TutorialTour(
-    val tourId: String,
+    val tourId: TourId,
     val steps: List<TutorialStep>
 )

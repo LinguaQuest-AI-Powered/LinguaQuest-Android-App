@@ -9,24 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.tutorial.model.TourId
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
-import com.iti.linguaquest.core.tutorial.domain.TutorialState
-import com.iti.linguaquest.core.tutorial.model.TutorialTour
-import com.iti.linguaquest.core.tutorial.model.TutorialStep
-import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun HomeContent(
@@ -34,17 +32,17 @@ fun HomeContent(
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
     onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
-    modifier: Modifier = Modifier,
-    tutorialManager: TutorialManager? = null
+    modifier: Modifier = Modifier
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
     val scrollState = rememberScrollState()
+    val tutorialManager = LocalTutorialManager.current
 
     if (tutorialManager != null) {
         val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
         LaunchedEffect(tutorialState.currentStepIndex) {
             val tour = tutorialState.activeTour
-            if (tour?.tourId == "APP_TOUR") {
+            if (tour?.tourId == TourId.APP_TOUR) {
                 val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
                 if (currentStep?.stepId == "tutorial_world_list") {
                     scrollState.animateScrollTo(scrollState.maxValue)
@@ -66,11 +64,6 @@ fun HomeContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = -60)
             ) {
-                val progressModifier = if (tutorialManager != null) {
-                    Modifier.tutorialTarget("tutorial_language_progress", tutorialManager)
-                } else {
-                    Modifier
-                }
                 LanguageProgressCard(
                     languageName = progress.languageName,
                     level = progress.level,
@@ -79,7 +72,7 @@ fun HomeContent(
                     flagSource = progress.flagSource,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .then(progressModifier)
+                        .tutorialTarget("tutorial_language_progress")
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -90,11 +83,6 @@ fun HomeContent(
             state = animationState,
             enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
         ) {
-            val wordCaptureModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_word_capture", tutorialManager)
-            } else {
-                Modifier
-            }
             if (state.continueLevel != null) {
                 val level = state.continueLevel
                 WordCaptureCard(
@@ -107,7 +95,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .then(wordCaptureModifier)
+                        .tutorialTarget("tutorial_word_capture")
                 )
             } else {
                 WordCaptureCard(
@@ -121,7 +109,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .then(wordCaptureModifier)
+                        .tutorialTarget("tutorial_word_capture")
                 )
             }
         }
@@ -133,18 +121,13 @@ fun HomeContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = 60)
             ) {
-                val worldListModifier = if (tutorialManager != null) {
-                    Modifier.tutorialTarget("tutorial_world_list", tutorialManager)
-                } else {
-                    Modifier
-                }
                 ExploreWorldsSection(
                     worlds = state.worlds,
                     onSeeMoreClick = onSeeMoreClick,
                     onWorldClick = onWorldClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .then(worldListModifier)
+                        .tutorialTarget("tutorial_world_list")
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))

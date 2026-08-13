@@ -44,7 +44,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,8 +59,7 @@ fun HomeScreen(
     onNavigateToAddLanguages: () -> Unit = {},
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel(),
-    myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel(),
-    tutorialManager: TutorialManager? = null
+    myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -201,8 +199,7 @@ fun HomeScreen(
                 },
                 onContinueLevelClick = { level, anchor ->
                     guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                },
-                tutorialManager = tutorialManager
+                }
             )
         }
 
@@ -212,8 +209,7 @@ fun HomeScreen(
                 onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(20.dp),
-                tutorialManager = tutorialManager
+                    .padding(20.dp)
             )
         }
 

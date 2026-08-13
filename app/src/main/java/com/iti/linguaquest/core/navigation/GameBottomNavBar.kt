@@ -26,8 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
@@ -35,8 +33,7 @@ fun GameBottomNavBar(
     items: List<BottomNavScreen>,
     currentRoute: Any?,
     onItemClick: (BottomNavScreen) -> Unit,
-    modifier: Modifier = Modifier,
-    tutorialManager: TutorialManager? = null
+    modifier: Modifier = Modifier
 ) {
     val barShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
     Row(
@@ -62,17 +59,12 @@ fun GameBottomNavBar(
                 BottomNavScreen.Lingos -> "bottom_nav_lingos"
                 BottomNavScreen.Profile -> "bottom_nav_profile"
             }
-            val targetModifier = if (tutorialManager != null && targetId != null) {
-                Modifier.tutorialTarget(targetId, tutorialManager)
-            } else {
-                Modifier
-            }
 
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .padding(4.dp)
-                    .then(targetModifier)
+                    .tutorialTarget(targetId)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onItemClick(screen) },
                 contentAlignment = Alignment.Center

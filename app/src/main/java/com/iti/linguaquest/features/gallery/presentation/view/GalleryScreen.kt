@@ -47,13 +47,14 @@ import com.iti.linguaquest.core.navigation.SharedBackgroundState
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
+import com.iti.linguaquest.core.tutorial.model.TourId
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
 import com.iti.linguaquest.features.gallery.presentation.viewmodel.GalleryViewModel
 import com.iti.linguaquest.features.home.utils.calculatePopupOffset
 import kotlinx.coroutines.flow.collectLatest
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
-import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 private enum class GalleryTab {
     CAPTURES,
@@ -68,8 +69,7 @@ fun GalleryScreen(
     onNavigateHome: () -> Unit = {},
     onShowLockScreenWordDialog: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: GalleryViewModel = hiltViewModel(),
-    tutorialManager: TutorialManager? = null
+    viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
@@ -80,6 +80,8 @@ fun GalleryScreen(
     var offlinePopupAnchor by remember { mutableStateOf<Rect?>(null) }
     var offlinePopupSize by remember { mutableStateOf(IntSize.Zero) }
 
+    val tutorialManager = LocalTutorialManager.current
+
     LaunchedEffect(openVaultTab) {
         if (openVaultTab) {
             selectedTab = GalleryTab.WORDS
@@ -88,14 +90,14 @@ fun GalleryScreen(
     }
 
     LaunchedEffect(tutorialManager) {
-        tutorialManager?.startGalleryTour(force = true)
+        tutorialManager?.startGalleryTour(force = false)
     }
 
     if (tutorialManager != null) {
         val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
         LaunchedEffect(tutorialState.activeTour, tutorialState.currentStepIndex) {
             val tour = tutorialState.activeTour
-            if (tour?.tourId == "GALLERY_TOUR") {
+            if (tour?.tourId == TourId.GALLERY_TOUR) {
                 selectedTab = when (tutorialState.currentStepIndex) {
                     0 -> GalleryTab.CAPTURES
                     1 -> GalleryTab.WORDS
@@ -211,8 +213,7 @@ fun GalleryScreen(
                     onTabSelected = { selectedTab = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    tutorialManager = tutorialManager
+                        .padding(horizontal = 16.dp)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -287,39 +288,28 @@ fun GalleryScreen(
 private fun GalleryTabsRow(
     selectedTab: GalleryTab,
     onTabSelected: (GalleryTab) -> Unit,
-    modifier: Modifier = Modifier,
-    tutorialManager: TutorialManager? = null
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val capturesModifier = if (tutorialManager != null) {
-            Modifier.tutorialTarget("gallery_tab_game_captures", tutorialManager)
-        } else {
-            Modifier
-        }
         GalleryTabPill(
             label = stringResource(R.string.gallery_game_captures_tab),
             selected = selectedTab == GalleryTab.CAPTURES,
             onClick = { onTabSelected(GalleryTab.CAPTURES) },
             modifier = Modifier
                 .weight(1f)
-                .then(capturesModifier)
+                .tutorialTarget("gallery_tab_game_captures")
         )
 
-        val journalModifier = if (tutorialManager != null) {
-            Modifier.tutorialTarget("gallery_tab_my_journal", tutorialManager)
-        } else {
-            Modifier
-        }
         GalleryTabPill(
             label = stringResource(R.string.gallery_my_words_tab),
             selected = selectedTab == GalleryTab.WORDS,
             onClick = { onTabSelected(GalleryTab.WORDS) },
             modifier = Modifier
                 .weight(1f)
-                .then(journalModifier)
+                .tutorialTarget("gallery_tab_my_journal")
         )
     }
 }

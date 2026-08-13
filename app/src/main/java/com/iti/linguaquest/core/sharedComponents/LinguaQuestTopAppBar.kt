@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.formatCompact
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
@@ -52,8 +51,7 @@ fun LinguaQuestTopAppBar(
     coins: Int,
     unreadCount: Int = 0,
     onBellClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
-    tutorialManager: TutorialManager? = null
+    modifier: Modifier = Modifier
 ) {
     val animatedXp by animateIntAsState(
         targetValue = xp,
@@ -117,39 +115,24 @@ fun LinguaQuestTopAppBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            val xpModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_top_bar_xp", tutorialManager)
-            } else {
-                Modifier
-            }
             StatChip(
                 iconRes = R.drawable.ic_start,
                 value = animatedXp,
                 textColor = MaterialTheme.colorScheme.onSurface,
-                modifier = xpModifier
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_xp")
             )
 
-            val coinsModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_top_bar_coins", tutorialManager)
-            } else {
-                Modifier
-            }
             StatChip(
                 iconRes = R.drawable.ic_coin,
                 value = animatedCoins,
                 textColor = MaterialTheme.colorScheme.onSurface,
-                modifier = coinsModifier
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_coins")
             )
 
-            val notificationsModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_top_bar_notifications", tutorialManager)
-            } else {
-                Modifier
-            }
             NotificationBell(
                 unreadCount = unreadCount,
                 onClick = onBellClick,
-                modifier = notificationsModifier
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_notifications")
             )
         }
     }

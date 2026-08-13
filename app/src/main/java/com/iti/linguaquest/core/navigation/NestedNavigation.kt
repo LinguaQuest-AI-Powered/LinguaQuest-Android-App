@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,7 +39,8 @@ import com.iti.linguaquest.features.home.presentation.view.HomeScreen
 import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
-import com.iti.linguaquest.core.tutorial.domain.TutorialEffect
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialEffect
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
 
 @Composable
 fun MainScreen(
@@ -91,156 +93,152 @@ fun MainScreen(
         onDispose { SharedBottomBarState.heightPx = 0 }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (SharedBackgroundState.showBackground) {
-            Image(
-                painter = painterResource(id = R.drawable.lingo_bg),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                colorFilter = if (SharedBackgroundState.showDarkEffect && LinguaQuestTheme.colors.isDark) {
-                    ColorFilter.tint(
-                        Color.Black.copy(alpha = 0.75f),
-                        BlendMode.SrcOver
-                    )
-                } else null
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            )
-        }
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = Color.Transparent,
-            topBar = {
-                LinguaQuestTopAppBar(
-                    xp = wallet.xp,
-                    coins = wallet.coins,
-                    unreadCount = unreadCount,
-                    onBellClick = {
-                        rootBackStack.navigateSingleTop(RootScreen.Notification)
-                    },
-                    tutorialManager = viewModel.tutorialManager
+    CompositionLocalProvider(LocalTutorialManager provides viewModel.tutorialManager) {
+        Box(modifier = modifier.fillMaxSize()) {
+            if (SharedBackgroundState.showBackground) {
+                Image(
+                    painter = painterResource(id = R.drawable.lingo_bg),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    colorFilter = if (SharedBackgroundState.showDarkEffect && LinguaQuestTheme.colors.isDark) {
+                        ColorFilter.tint(
+                            Color.Black.copy(alpha = 0.75f),
+                            BlendMode.SrcOver
+                        )
+                    } else null
                 )
-            },
-            bottomBar = {
-                GameBottomNavBar(
-                    items = BottomNavScreen.entries,
-                    currentRoute = currentTab.route,
-                    onItemClick = { bottomNavScreen ->
-                        currentTab = bottomNavScreen
-                    },
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        SharedBottomBarState.heightPx = coordinates.size.height
-                    },
-                    tutorialManager = viewModel.tutorialManager
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
                 )
             }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                saveableStateHolder.SaveableStateProvider(key = currentTab) {
-                    when (currentTab) {
-                        BottomNavScreen.Home -> {
-                            HomeScreen(
-                                openDailyMissionRequested = openDailyMissionRequested,
-                                onOpenDailyMissionHandled = onOpenDailyMissionHandled,
-                                onNavigateToAllWorlds = {
-                                    rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
-                                },
-                                onNavigateToWorldMap = { worldId, totalLevels ->
-                                    rootBackStack.navigateSingleTop(
-                                        RootScreen.Map(
-                                            worldId,
-                                            totalLevels
-                                        )
-                                    )
-                                },
-                                onNavigateToAddLanguages = {
-                                    rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
-                                },
-                                onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
-                                    rootBackStack.navigateSingleTop(
-                                        RootScreen.Map(
-                                            worldId,
-                                            totalLevels
-                                        )
-                                    )
-                                    rootBackStack.navigateSingleTop(
-                                        RootScreen.GameFlow(
-                                            worldId = worldId,
-                                            levelId = levelId,
-                                            levelOrder = levelOrder,
-                                            targetWord = targetWord
-                                        )
-                                    )
-                                },
-                                onNavigateToDailyMissionCamera = { word ->
-                                    rootBackStack.navigateSingleTop(
-                                        RootScreen.DailyMissionCamera(
-                                            word
-                                        )
-                                    )
-                                },
-                                tutorialManager = viewModel.tutorialManager
-                            )
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = Color.Transparent,
+                topBar = {
+                    LinguaQuestTopAppBar(
+                        xp = wallet.xp,
+                        coins = wallet.coins,
+                        unreadCount = unreadCount,
+                        onBellClick = {
+                            rootBackStack.navigateSingleTop(RootScreen.Notification)
                         }
-
-                        BottomNavScreen.Gallery -> {
-                            GalleryScreen(
-                                openVaultTab = openVaultTab,
-                                onOpenVaultTabHandled = { openVaultTab = false },
-                                onNavigateToReview = { word ->
-                                    SharedWordHolder.pendingWord = word
-                                    rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
-                                },
-                                onNavigateHome = {
-                                    currentTab = BottomNavScreen.Home
-                                },
-                                onShowLockScreenWordDialog = { wordId ->
-                                    viewModel.showLockScreenWordDialog(wordId)
-                                },
-                                tutorialManager = viewModel.tutorialManager
-                            )
+                    )
+                },
+                bottomBar = {
+                    GameBottomNavBar(
+                        items = BottomNavScreen.entries,
+                        currentRoute = currentTab.route,
+                        onItemClick = { bottomNavScreen ->
+                            currentTab = bottomNavScreen
+                        },
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            SharedBottomBarState.heightPx = coordinates.size.height
                         }
+                    )
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    saveableStateHolder.SaveableStateProvider(key = currentTab) {
+                        when (currentTab) {
+                            BottomNavScreen.Home -> {
+                                HomeScreen(
+                                    openDailyMissionRequested = openDailyMissionRequested,
+                                    onOpenDailyMissionHandled = onOpenDailyMissionHandled,
+                                    onNavigateToAllWorlds = {
+                                        rootBackStack.navigateSingleTop(RootScreen.AllWorlds)
+                                    },
+                                    onNavigateToWorldMap = { worldId, totalLevels ->
+                                        rootBackStack.navigateSingleTop(
+                                            RootScreen.Map(
+                                                worldId,
+                                                totalLevels
+                                            )
+                                        )
+                                    },
+                                    onNavigateToAddLanguages = {
+                                        rootBackStack.navigateSingleTop(RootScreen.AddLanguages)
+                                    },
+                                    onNavigateToLevel = { worldId, levelId, levelOrder, totalLevels, targetWord ->
+                                        rootBackStack.navigateSingleTop(
+                                            RootScreen.Map(
+                                                worldId,
+                                                totalLevels
+                                            )
+                                        )
+                                        rootBackStack.navigateSingleTop(
+                                            RootScreen.GameFlow(
+                                                worldId = worldId,
+                                                levelId = levelId,
+                                                levelOrder = levelOrder,
+                                                targetWord = targetWord
+                                            )
+                                        )
+                                    },
+                                    onNavigateToDailyMissionCamera = { word ->
+                                        rootBackStack.navigateSingleTop(
+                                            RootScreen.DailyMissionCamera(
+                                                word
+                                            )
+                                        )
+                                    }
+                                )
+                            }
 
-                        BottomNavScreen.Lingos -> {
-                            LingosScreen(
-                                onNavigateToVoiceGame = {
-                                    rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
-                                },
-                                onNavigateToRoleplayList = {
-                                    rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
-                                },
-                                onNavigateToMindReader = {
-                                    rootBackStack.navigateSingleTop(RootScreen.MindReader())
-                                },
-                                tutorialManager = viewModel.tutorialManager
-                            )
-                        }
+                            BottomNavScreen.Gallery -> {
+                                GalleryScreen(
+                                    openVaultTab = openVaultTab,
+                                    onOpenVaultTabHandled = { openVaultTab = false },
+                                    onNavigateToReview = { word ->
+                                        SharedWordHolder.pendingWord = word
+                                        rootBackStack.navigateSingleTop(RootScreen.Review(word.id))
+                                    },
+                                    onNavigateHome = {
+                                        currentTab = BottomNavScreen.Home
+                                    },
+                                    onShowLockScreenWordDialog = { wordId ->
+                                        viewModel.showLockScreenWordDialog(wordId)
+                                    }
+                                )
+                            }
 
-                        BottomNavScreen.Profile -> {
-                            ProfileScreen(
-                                onSettingsClick = {
-                                    rootBackStack.navigateSingleTop(RootScreen.Settings)
-                                },
-                                onViewAllLeaderboardClick = {
-                                    rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
-                                },
-                                onViewAllAchievementsClick = {
-                                    rootBackStack.navigateSingleTop(RootScreen.Achievement)
-                                },
-                                onNavigateHome = {
-                                    currentTab = BottomNavScreen.Home
-                                },
-                                tutorialManager = viewModel.tutorialManager
-                            )
+                            BottomNavScreen.Lingos -> {
+                                LingosScreen(
+                                    onNavigateToVoiceGame = {
+                                        rootBackStack.navigateSingleTop(RootScreen.VoiceGame)
+                                    },
+                                    onNavigateToRoleplayList = {
+                                        rootBackStack.navigateSingleTop(RootScreen.RoleplayList)
+                                    },
+                                    onNavigateToMindReader = {
+                                        rootBackStack.navigateSingleTop(RootScreen.MindReader())
+                                    }
+                                )
+                            }
+
+                            BottomNavScreen.Profile -> {
+                                ProfileScreen(
+                                    onSettingsClick = {
+                                        rootBackStack.navigateSingleTop(RootScreen.Settings)
+                                    },
+                                    onViewAllLeaderboardClick = {
+                                        rootBackStack.navigateSingleTop(RootScreen.Leaderboard)
+                                    },
+                                    onViewAllAchievementsClick = {
+                                        rootBackStack.navigateSingleTop(RootScreen.Achievement)
+                                    },
+                                    onNavigateHome = {
+                                        currentTab = BottomNavScreen.Home
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -271,7 +269,5 @@ fun MainScreen(
                 }
             }
         }
-
-
     }
 }

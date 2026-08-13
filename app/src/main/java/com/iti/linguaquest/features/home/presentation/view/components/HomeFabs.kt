@@ -24,15 +24,13 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
-import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun HomeFabs(
     onDailyMissionClick: (Rect?) -> Unit,
     onWorldMapClick: (Rect?) -> Unit,
-    modifier: Modifier = Modifier,
-    tutorialManager: TutorialManager? = null
+    modifier: Modifier = Modifier
 ) {
     var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val animationState = rememberStaggeredAnimationState(count = 2)
@@ -46,16 +44,11 @@ fun HomeFabs(
             state = animationState,
             enter = LingoEntranceAnimations.popUpVertically(offset = 60)
         ) {
-            val dailyMissionModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_daily_mission", tutorialManager)
-            } else {
-                Modifier
-            }
             FloatingActionButton(
                 onClick = { onDailyMissionClick(fabBounds) },
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.background,
-                modifier = Modifier.then(dailyMissionModifier)
+                modifier = Modifier.tutorialTarget("tutorial_daily_mission")
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_streak),
@@ -72,11 +65,6 @@ fun HomeFabs(
             state = animationState,
             enter = LingoEntranceAnimations.popUpVertically(offset = 60)
         ) {
-            val languageButtonModifier = if (tutorialManager != null) {
-                Modifier.tutorialTarget("tutorial_language_button", tutorialManager)
-            } else {
-                Modifier
-            }
             FloatingActionButton(
                 onClick = { onWorldMapClick(fabBounds) },
                 shape = CircleShape,
@@ -85,7 +73,7 @@ fun HomeFabs(
                     .onGloballyPositioned { coordinates ->
                         fabBounds = coordinates.boundsInRoot()
                     }
-                    .then(languageButtonModifier)
+                    .tutorialTarget("tutorial_language_button")
             ) {
                 Image(
                     painter = painterResource(R.drawable.world_home_icon),
