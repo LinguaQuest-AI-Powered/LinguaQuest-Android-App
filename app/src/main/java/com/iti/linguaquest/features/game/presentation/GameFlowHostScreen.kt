@@ -20,7 +20,7 @@ import com.iti.linguaquest.features.game.presentation.result.view.GameResultScre
 import com.iti.linguaquest.features.game.presentation.shared.GameSharedViewModel
 
 @Composable
-fun GameFlowHost(
+fun GameFlowHostScreen(
     worldId: Int,
     levelId: Int,
     levelOrder: Int,

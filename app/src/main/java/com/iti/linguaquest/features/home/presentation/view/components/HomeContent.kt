@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,17 +10,22 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
+import com.iti.linguaquest.core.tutorial.model.TourId
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import kotlinx.coroutines.delay
 
 @Composable
 fun HomeContent(
@@ -33,6 +37,21 @@ fun HomeContent(
     scrollState: ScrollState = rememberScrollState()
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
+    val scrollState = rememberScrollState()
+    val tutorialManager = LocalTutorialManager.current
+
+    if (tutorialManager != null) {
+        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
+        LaunchedEffect(tutorialState.currentStepIndex) {
+            val tour = tutorialState.activeTour
+            if (tour?.tourId == TourId.APP_TOUR) {
+                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
+                if (currentStep?.stepId == "tutorial_world_list") {
+                    scrollState.animateScrollTo(scrollState.maxValue)
+                }
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -53,7 +72,9 @@ fun HomeContent(
                     streakDays = progress.streakDays,
                     progress = progress.progress,
                     flagSource = progress.flagSource,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .tutorialTarget("tutorial_language_progress")
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -76,6 +97,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .tutorialTarget("tutorial_word_capture")
                 )
             } else {
                 WordCaptureCard(
@@ -89,6 +111,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .tutorialTarget("tutorial_word_capture")
                 )
             }
         }
@@ -104,7 +127,9 @@ fun HomeContent(
                     worlds = state.worlds,
                     onSeeMoreClick = onSeeMoreClick,
                     onWorldClick = onWorldClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .tutorialTarget("tutorial_world_list")
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))

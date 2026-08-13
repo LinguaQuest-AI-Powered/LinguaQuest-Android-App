@@ -10,6 +10,8 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.features.setting.domain.usecase.CancelReminderUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
@@ -74,8 +76,13 @@ class SettingViewModel @Inject constructor(
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val tutorialManager: TutorialManager
 ) : ViewModel() {
+
+    fun replayAppTour() {
+        tutorialManager.onIntent(TutorialIntent.ResetAllTours)
+    }
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
 

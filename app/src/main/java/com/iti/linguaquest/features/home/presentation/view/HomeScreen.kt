@@ -36,7 +36,6 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
 import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs

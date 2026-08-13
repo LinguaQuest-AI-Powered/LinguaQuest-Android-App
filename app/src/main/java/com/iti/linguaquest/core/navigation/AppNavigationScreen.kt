@@ -70,7 +70,7 @@ import com.iti.linguaquest.features.achivement.presentation.view.AchievementScre
 import com.iti.linguaquest.features.all_worlds.presentation.view.AllWorldsScreen
 import com.iti.linguaquest.features.auth.presentation.otp.view.screen.OTPScreen
 import com.iti.linguaquest.features.map.presentation.MapScreen
-import com.iti.linguaquest.features.game.presentation.GameFlowHost
+import com.iti.linguaquest.features.game.presentation.GameFlowHostScreen
 import com.iti.linguaquest.features.help.presentation.help.view.HelpScreen
 import com.iti.linguaquest.features.home.presentation.languages.addlanguages.view.AddLanguagesScreen
 import com.iti.linguaquest.features.leaderboard.presentation.view.LeaderboardScreen
@@ -88,11 +88,16 @@ import com.iti.linguaquest.features.dailymission.presentation.camera.view.DailyM
 import com.iti.linguaquest.features.setting.presentation.SettingScreen
 import com.iti.linguaquest.features.setting.presentation.about_app.AboutAppScreen
 import com.iti.linguaquest.features.voicegame.presentation.view.components.VoiceResultScreen
+import com.iti.linguaquest.core.tutorial.presentation.TutorialOverlayScreen
+import com.iti.linguaquest.core.database.word.WordEntity
+import com.iti.linguaquest.features.roleplay.presentation.view.RoleplayListScreen
+import com.iti.linguaquest.core.sharedComponents.NotificationBannerState
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(
+fun AppNavigationScreen(
     openHomeRequested: Boolean = false,
     openDailyMissionRequested: Boolean = false,
     openLockScreenWordId: Int? = null,
@@ -433,7 +438,7 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.GameFlow> { screen ->
-                    GameFlowHost(
+                    GameFlowHostScreen(
                         worldId = screen.worldId,
                         levelId = screen.levelId,
                         levelOrder = screen.levelOrder,
@@ -550,7 +555,7 @@ fun AppNavigation(
                         onBack = { rootBackStack.removeLastOrNull() },
                         onNavigateToReview = { lockScreenWord ->
                             SharedWordHolder.pendingWord =
-                                com.iti.linguaquest.core.database.word.WordEntity(
+                                WordEntity(
                                     id = lockScreenWord.id,
                                     sourceWord = lockScreenWord.word,
                                     translatedWord = lockScreenWord.translation,
@@ -580,7 +585,7 @@ fun AppNavigation(
                 }
 
                 entry<RootScreen.RoleplayList> {
-                    com.iti.linguaquest.features.roleplay.presentation.view.RoleplayListScreen(
+                    RoleplayListScreen(
                         onNavigateBack = { rootBackStack.removeLastOrNull() },
                         onRoleplaySelected = { scenarioId ->
                             rootBackStack.navigateSingleTop(RootScreen.Roleplay(scenarioId))
@@ -619,8 +624,10 @@ fun AppNavigation(
                 GlobalDialogHost(globalUiHostViewModel.dialogController)
             })
 
+            TutorialOverlayScreen(manager = mainViewModel.tutorialManager)
+
             val notificationMessage by globalUiHostViewModel.notificationBannerController.notificationMessage.collectAsState()
-            var activeNotification by remember { androidx.compose.runtime.mutableStateOf<com.iti.linguaquest.core.sharedComponents.NotificationBannerState?>(null) }
+            var activeNotification by remember { mutableStateOf<NotificationBannerState?>(null) }
             
             LaunchedEffect(notificationMessage) {
                 if (notificationMessage != null) {

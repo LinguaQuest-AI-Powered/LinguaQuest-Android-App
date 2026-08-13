@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.utils.formatCompact
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun LinguaQuestTopAppBar(
@@ -117,16 +118,21 @@ fun LinguaQuestTopAppBar(
             StatChip(
                 iconRes = R.drawable.ic_start,
                 value = animatedXp,
-                textColor = MaterialTheme.colorScheme.onSurface
+                textColor = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_xp")
             )
+
             StatChip(
                 iconRes = R.drawable.ic_coin,
                 value = animatedCoins,
-                textColor = MaterialTheme.colorScheme.onSurface
+                textColor = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_coins")
             )
+
             NotificationBell(
                 unreadCount = unreadCount,
-                onClick = onBellClick
+                onClick = onBellClick,
+                modifier = Modifier.tutorialTarget("tutorial_top_bar_notifications")
             )
         }
     }

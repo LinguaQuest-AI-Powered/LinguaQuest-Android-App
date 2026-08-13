@@ -78,6 +78,7 @@ fun SettingContent(
     onLockScreenVocabularyClick: () -> Unit,
     onAboutAppClick: () -> Unit = {},
     onHelpSupportClick: () -> Unit,
+    onReplayAppTour: () -> Unit,
     reminderState: ReminderState,
     onReminderIntent: (ReminderIntent) -> Unit,
     lockScreenState: LockScreenState,
@@ -250,6 +251,14 @@ fun SettingContent(
                 )
                 SectionDivider()
 
+                SettingItem(
+                    icon = painterResource(id = R.drawable.ic_help_icon),
+                    title = stringResource(id = R.string.tutorial_replay_title),
+                    iconTint = MaterialTheme.colorScheme.tertiary,
+                    onClick = onReplayAppTour
+                )
+                SectionDivider()
+
                 var aboutY by remember { mutableFloatStateOf(0f) }
                 SettingItem(
                     modifier = Modifier.onGloballyPositioned { coordinates ->
@@ -338,6 +347,7 @@ fun SettingContentPreview() {
             onEditProfileClick = {},
             onLockScreenVocabularyClick = {},
             onHelpSupportClick = {},
+            onReplayAppTour = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),
@@ -368,6 +378,7 @@ fun SettingContentOfflinePreview() {
             onEditProfileClick = {},
             onLockScreenVocabularyClick = {},
             onHelpSupportClick = {},
+            onReplayAppTour = {},
             reminderState = ReminderState(enabled = true),
             onReminderIntent = {},
             lockScreenState = LockScreenState(),

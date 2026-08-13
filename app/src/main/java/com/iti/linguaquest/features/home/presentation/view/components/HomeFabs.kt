@@ -31,6 +31,7 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun HomeFabs(
@@ -59,7 +60,8 @@ fun HomeFabs(
             FloatingActionButton(
                 onClick = { onDailyMissionClick(fabBounds) },
                 shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.background
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.tutorialTarget("tutorial_daily_mission")
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_daily_mission),
@@ -85,6 +87,7 @@ fun HomeFabs(
                     .onGloballyPositioned { coordinates ->
                         fabBounds = coordinates.boundsInRoot()
                     }
+                    .tutorialTarget("tutorial_language_button")
             ) {
                 Image(
                     painter = painterResource(R.drawable.world_home_icon),
