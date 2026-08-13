@@ -31,7 +31,10 @@ class DailyMissionRepositoryImpl @Inject constructor(
 
         return when (val result = safeApiCall { remoteDataSource.getDailyMission() }) {
             is LinguaQuestResult.Success -> {
-                val mission = DailyMission(word = result.data.data.word)
+                val mission = DailyMission(
+                    word = result.data.data.word,
+                    isSolved = result.data.data.isSolved ?: false
+                )
                 cachedDailyMission = mission
                 LinguaQuestResult.Success(mission)
             }
