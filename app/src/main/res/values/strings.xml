@@ -883,6 +883,10 @@
     <string name="daily_mission_button_start_camera">Start Camera</string>
     <string name="daily_mission_button_loading">Loading…</string>
     <string name="daily_mission_button_later">Later</string>
+
+    <string name="daily_mission_already_solved_title">Mission Accomplished!</string>
+    <string name="daily_mission_already_solved_message">You have already completed today\'s daily mission. Come back tomorrow for a new challenge!</string>
+
     <string name="gallery_category_all">All Items</string>
     <string name="gallery_difficulty_easy">Easy</string>
     <string name="gallery_difficulty_medium">Medium</string>
@@ -890,4 +894,13 @@
     <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
     <string name="arabic_language">arabic</string>
     <string name="cd_avatar">Avatar</string>
+
+    <!-- Loading View -->
+    <string name="loading_quests">Loading quests...</string>
+    <string name="preparing_adventure">Preparing your adventure...</string>
+    <string name="waking_up_lingo">Waking up Lingo...</string>
+    <string name="translating_worlds">Translating worlds...</string>
+    <string name="almost_there">Almost there...</string>
+
+
 </resources>

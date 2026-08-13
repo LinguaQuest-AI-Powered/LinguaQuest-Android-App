@@ -23,7 +23,7 @@ class DailyMissionRepositoryImpl @Inject constructor(
 ) : DailyMissionRepository {
     override suspend fun getDailyMission(): LinguaQuestResult<DailyMission, LinguaQuestDataError> {
         return when (val result = safeApiCall { remoteDataSource.getDailyMission() }) {
-            is LinguaQuestResult.Success -> LinguaQuestResult.Success(DailyMission(word = result.data.data.word))
+            is LinguaQuestResult.Success -> LinguaQuestResult.Success(DailyMission(word = result.data.data.word, isSolved = result.data.data.isSolved ?: false))
             is LinguaQuestResult.Failure -> LinguaQuestResult.Failure(result.error)
         }
     }

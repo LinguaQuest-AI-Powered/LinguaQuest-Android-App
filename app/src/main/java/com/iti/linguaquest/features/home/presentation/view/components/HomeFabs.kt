@@ -1,5 +1,11 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
@@ -29,15 +36,21 @@ import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAni
 fun HomeFabs(
     onDailyMissionClick: (Rect?) -> Unit,
     onWorldMapClick: (Rect?) -> Unit,
+    isVisible: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var fabBounds by remember { mutableStateOf<Rect?>(null) }
     val animationState = rememberStaggeredAnimationState(count = 2)
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = scaleIn(initialScale = 0.8f) + fadeIn(),
+        exit = scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 150)) + fadeOut(animationSpec = tween(durationMillis = 150)),
+        modifier = modifier
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
         StaggeredAnimatedItem(
             index = 0,
             state = animationState,
@@ -49,9 +62,10 @@ fun HomeFabs(
                 containerColor = MaterialTheme.colorScheme.background
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_streak),
+                    painter = painterResource(R.drawable.ic_daily_mission),
                     contentDescription = "daily_mission_content_description",
-                    modifier = Modifier.size(28.dp)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.size(36.dp)
                 )
             }
         }
@@ -78,6 +92,7 @@ fun HomeFabs(
                     modifier = Modifier.size(28.dp)
                 )
             }
+        }
         }
     }
 }
