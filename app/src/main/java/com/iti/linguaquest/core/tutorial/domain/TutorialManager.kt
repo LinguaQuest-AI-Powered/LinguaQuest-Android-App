@@ -117,6 +117,33 @@ class TutorialManager(
         startTour(galleryTour, force)
     }
 
+    fun startLingosTour(force: Boolean = false) {
+        val lingosTour = TutorialTour(
+            tourId = "LINGOS_TOUR",
+            steps = listOf(
+                TutorialStep(
+                    stepId = "lingos_card_voice",
+                    titleRes = R.string.tutorial_lingos_voice_title,
+                    descriptionRes = R.string.tutorial_lingos_voice_desc,
+                    lingoImageRes = R.drawable.lingo_initial_state_voice
+                ),
+                TutorialStep(
+                    stepId = "lingos_card_roleplay",
+                    titleRes = R.string.tutorial_lingos_roleplay_title,
+                    descriptionRes = R.string.tutorial_lingos_roleplay_desc,
+                    lingoImageRes = R.drawable.lingo_hello_review
+                ),
+                TutorialStep(
+                    stepId = "lingos_card_mindreader",
+                    titleRes = R.string.tutorial_lingos_mindreader_title,
+                    descriptionRes = R.string.tutorial_lingos_mindreader_desc,
+                    lingoImageRes = R.drawable.lingo_mind_thinking
+                )
+            )
+        )
+        startTour(lingosTour, force)
+    }
+
     fun startTour(tour: TutorialTour, force: Boolean = false) {
         scope.launch {
             if (!force) {

@@ -17,9 +17,15 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
 import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.domain.TutorialState
+import com.iti.linguaquest.core.tutorial.model.TutorialTour
+import com.iti.linguaquest.core.tutorial.model.TutorialStep
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
@@ -32,11 +38,25 @@ fun HomeContent(
     tutorialManager: TutorialManager? = null
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
+    val scrollState = rememberScrollState()
+
+    if (tutorialManager != null) {
+        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
+        LaunchedEffect(tutorialState.currentStepIndex) {
+            val tour = tutorialState.activeTour
+            if (tour?.tourId == "APP_TOUR") {
+                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
+                if (currentStep?.stepId == "tutorial_world_list") {
+                    scrollState.animateScrollTo(scrollState.maxValue)
+                }
+            }
+        }
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 

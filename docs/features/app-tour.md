@@ -21,6 +21,10 @@ The tutorial system is built entirely on custom Canvas drawing and dynamic coord
   1. `gallery_tab_game_captures` (Game Captures): Reviews words successfully captured in-game.
   2. `gallery_tab_my_journal` (My Journal): Vocabulary vault containing words ready for review.
   The `GalleryScreen` automatically monitors the tutorial step index to programmatically switch active tabs when transitioning through this tour.
+- **Active Tour (Lingos Features)**: A contextual tour highlighting:
+  1. `lingos_card_voice` (Voice Practice Card): Details on speaking to practice pronunciation.
+  2. `lingos_card_roleplay` (Roleplay Card): Details on contextual chat conversations.
+  3. `lingos_card_mindreader` (Mind Reader Card): Details on the AI guessing game.
 - **Navigation Integration**: Tab switching effect is bypassed since the tours run contextually within their respective screens.
 - **Persistence**: completed tours are persisted in DataStore via `TutorialPreferences` to avoid displaying them repeatedly.
 

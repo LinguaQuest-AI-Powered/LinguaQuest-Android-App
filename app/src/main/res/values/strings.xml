@@ -927,4 +927,11 @@
     <string name="tutorial_top_bar_xp_desc">Earn Experience Points (XP) to climb the leaderboards and track your progress.</string>
     <string name="tutorial_top_bar_notifications_title">Notifications</string>
     <string name="tutorial_top_bar_notifications_desc">Stay updated with vocabulary reminders, achievements, and quest details.</string>
+
+    <string name="tutorial_lingos_voice_title">Voice Practice</string>
+    <string name="tutorial_lingos_voice_desc">Speak into the microphone to practice your pronunciation and get real-time feedback.</string>
+    <string name="tutorial_lingos_roleplay_title">Roleplay</string>
+    <string name="tutorial_lingos_roleplay_desc">Engage in interactive conversations to improve your contextual speech skills.</string>
+    <string name="tutorial_lingos_mindreader_title">Mind Reader</string>
+    <string name="tutorial_lingos_mindreader_desc">Challenge the AI to guess the word you are thinking of in this interactive game.</string>
 </resources>

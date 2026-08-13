@@ -220,7 +220,8 @@ fun MainScreen(
                                 },
                                 onNavigateToMindReader = {
                                     rootBackStack.navigateSingleTop(RootScreen.MindReader())
-                                }
+                                },
+                                tutorialManager = viewModel.tutorialManager
                             )
                         }
 
