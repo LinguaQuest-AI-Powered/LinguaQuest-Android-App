@@ -70,7 +70,7 @@ fun TutorialOverlay(
         val cardAligned = if (targetTopDp != null && targetTopDp > 400.dp) {
             Alignment.TopCenter
         } else {
-            Alignment.Center
+            Alignment.BottomCenter
         }
 
         Box(modifier = Modifier.fillMaxSize()) {

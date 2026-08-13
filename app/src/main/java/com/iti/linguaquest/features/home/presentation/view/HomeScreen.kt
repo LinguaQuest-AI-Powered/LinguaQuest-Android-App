@@ -33,7 +33,6 @@ import com.iti.linguaquest.features.home.presentation.contract.HomeIntent
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesEffect
-import com.iti.linguaquest.features.home.presentation.languages.mylanguages.contract.MyLanguagesIntent
 import com.iti.linguaquest.features.home.presentation.languages.mylanguages.viewmodel.MyLanguagesViewModel
 import com.iti.linguaquest.features.home.presentation.view.components.HomeContent
 import com.iti.linguaquest.features.home.presentation.view.components.HomeFabs
@@ -45,6 +44,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +60,8 @@ fun HomeScreen(
     onNavigateToAddLanguages: () -> Unit = {},
     onHeaderDataChanged: (xp: Int, coins: Int) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel(),
-    myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel()
+    myLanguagesViewModel: MyLanguagesViewModel = hiltViewModel(),
+    tutorialManager: TutorialManager? = null
 ) {
     val soundPlayer = LocalSoundPlayer.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -200,7 +201,8 @@ fun HomeScreen(
                 },
                 onContinueLevelClick = { level, anchor ->
                     guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                }
+                },
+                tutorialManager = tutorialManager
             )
         }
 
@@ -210,7 +212,8 @@ fun HomeScreen(
                 onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(20.dp)
+                    .padding(20.dp),
+                tutorialManager = tutorialManager
             )
         }
 

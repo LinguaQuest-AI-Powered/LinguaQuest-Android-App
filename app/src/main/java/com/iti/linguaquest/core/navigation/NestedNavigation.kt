@@ -186,7 +186,8 @@ fun MainScreen(
                                             word
                                         )
                                     )
-                                }
+                                },
+                                tutorialManager = viewModel.tutorialManager
                             )
                         }
 

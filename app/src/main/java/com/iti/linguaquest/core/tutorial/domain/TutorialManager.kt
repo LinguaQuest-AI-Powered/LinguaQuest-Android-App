@@ -5,8 +5,6 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.tutorial.data.TutorialPreferences
 import com.iti.linguaquest.core.tutorial.model.TutorialStep
 import com.iti.linguaquest.core.tutorial.model.TutorialTour
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,28 +44,34 @@ class TutorialManager(
             tourId = "APP_TOUR",
             steps = listOf(
                 TutorialStep(
-                    stepId = "bottom_nav_home",
-                    titleRes = R.string.tutorial_home_title,
-                    descriptionRes = R.string.tutorial_home_desc,
+                    stepId = "tutorial_language_progress",
+                    titleRes = R.string.tutorial_language_progress_title,
+                    descriptionRes = R.string.tutorial_language_progress_desc,
+                    lingoImageRes = R.drawable.lingo_level_language
+                ),
+                TutorialStep(
+                    stepId = "tutorial_word_capture",
+                    titleRes = R.string.tutorial_word_capture_title,
+                    descriptionRes = R.string.tutorial_word_capture_desc,
+                    lingoImageRes = R.drawable.lingo_searching
+                ),
+                TutorialStep(
+                    stepId = "tutorial_world_list",
+                    titleRes = R.string.tutorial_world_list_title,
+                    descriptionRes = R.string.tutorial_world_list_desc,
                     lingoImageRes = R.drawable.lingo_map_1
                 ),
                 TutorialStep(
-                    stepId = "bottom_nav_gallery",
-                    titleRes = R.string.tutorial_gallery_title,
-                    descriptionRes = R.string.tutorial_gallery_desc,
-                    lingoImageRes = R.drawable.lingo_gellary_icon
+                    stepId = "tutorial_language_button",
+                    titleRes = R.string.tutorial_language_button_title,
+                    descriptionRes = R.string.tutorial_language_button_desc,
+                    lingoImageRes = R.drawable.lingo_onboarding_6
                 ),
                 TutorialStep(
-                    stepId = "bottom_nav_lingos",
-                    titleRes = R.string.tutorial_lingos_title,
-                    descriptionRes = R.string.tutorial_lingos_desc,
-                    lingoImageRes = R.drawable.lingo_mic
-                ),
-                TutorialStep(
-                    stepId = "bottom_nav_profile",
-                    titleRes = R.string.tutorial_profile_title,
-                    descriptionRes = R.string.tutorial_profile_desc,
-                    lingoImageRes = R.drawable.lingo_leaderboard
+                    stepId = "tutorial_daily_mission",
+                    titleRes = R.string.tutorial_daily_mission_title,
+                    descriptionRes = R.string.tutorial_daily_mission_desc,
+                    lingoImageRes = R.drawable.lingo_reward
                 )
             )
         )
@@ -152,11 +156,6 @@ class TutorialManager(
     }
 
     private fun triggerSideEffectsForStep(index: Int) {
-        val tour = _state.value.activeTour ?: return
-        if (tour.tourId == "APP_TOUR") {
-            scope.launch {
-                _effect.emit(TutorialEffect.RequestTabSwitch(index))
-            }
-        }
+        // No tab-switching side effects for the home-based tour
     }
 }

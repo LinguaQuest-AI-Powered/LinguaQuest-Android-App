@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.home.presentation.view.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +19,8 @@ import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedIte
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
 import com.iti.linguaquest.features.home.presentation.contract.ContinueLevelUi
 import com.iti.linguaquest.features.home.presentation.contract.HomeState
-import kotlinx.coroutines.delay
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun HomeContent(
@@ -28,7 +28,8 @@ fun HomeContent(
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
     onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tutorialManager: TutorialManager? = null
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
 
@@ -45,13 +46,20 @@ fun HomeContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = -60)
             ) {
+                val progressModifier = if (tutorialManager != null) {
+                    Modifier.tutorialTarget("tutorial_language_progress", tutorialManager)
+                } else {
+                    Modifier
+                }
                 LanguageProgressCard(
                     languageName = progress.languageName,
                     level = progress.level,
                     streakDays = progress.streakDays,
                     progress = progress.progress,
                     flagSource = progress.flagSource,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .then(progressModifier)
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -62,6 +70,11 @@ fun HomeContent(
             state = animationState,
             enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
         ) {
+            val wordCaptureModifier = if (tutorialManager != null) {
+                Modifier.tutorialTarget("tutorial_word_capture", tutorialManager)
+            } else {
+                Modifier
+            }
             if (state.continueLevel != null) {
                 val level = state.continueLevel
                 WordCaptureCard(
@@ -74,6 +87,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .then(wordCaptureModifier)
                 )
             } else {
                 WordCaptureCard(
@@ -87,6 +101,7 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .then(wordCaptureModifier)
                 )
             }
         }
@@ -98,11 +113,18 @@ fun HomeContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpVertically(offset = 60)
             ) {
+                val worldListModifier = if (tutorialManager != null) {
+                    Modifier.tutorialTarget("tutorial_world_list", tutorialManager)
+                } else {
+                    Modifier
+                }
                 ExploreWorldsSection(
                     worlds = state.worlds,
                     onSeeMoreClick = onSeeMoreClick,
                     onWorldClick = onWorldClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(worldListModifier)
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))

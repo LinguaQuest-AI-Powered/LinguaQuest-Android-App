@@ -904,4 +904,15 @@
     <string name="tutorial_lingos_desc">Practice speaking with Voice Game, tackle roleplay scenarios, and challenge the Mind Reader.</string>
     <string name="tutorial_profile_title">Your Profile</string>
     <string name="tutorial_profile_desc">Track achievements, check settings, and check leaderboard status.</string>
+
+    <string name="tutorial_language_progress_title">Learning Progress</string>
+    <string name="tutorial_language_progress_desc">Check your current language, level, learning progress, and streak here.</string>
+    <string name="tutorial_word_capture_title">Current Lesson</string>
+    <string name="tutorial_word_capture_desc">Tap here to continue your current lesson and capture new words.</string>
+    <string name="tutorial_world_list_title">Explore Worlds</string>
+    <string name="tutorial_world_list_desc">Browse and select different learning worlds to explore.</string>
+    <string name="tutorial_language_button_title">Switch Language</string>
+    <string name="tutorial_language_button_desc">Tap here to change your active learning language or add new ones.</string>
+    <string name="tutorial_daily_mission_title">Daily Mission</string>
+    <string name="tutorial_daily_mission_desc">Complete your daily mission to keep your streak alive and earn rewards.</string>
 </resources>
