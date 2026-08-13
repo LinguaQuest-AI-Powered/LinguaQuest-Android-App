@@ -124,7 +124,6 @@ fun AppButton3D(
         label = "buttonPressOffset"
     )
     
-    val soundPlayer = LocalSoundPlayer.current
 
     val visualState = when {
         isLoading -> ButtonVisualState.LOADING

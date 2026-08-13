@@ -26,8 +26,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -66,12 +77,58 @@ fun TutorialOverlay(
         val currentStep = tour.steps.getOrNull(state.currentStepIndex) ?: return@AnimatedVisibility
         val targetRect = state.targets[currentStep.stepId]
 
+        val configuration = LocalConfiguration.current
+        val screenHeightDp = configuration.screenHeightDp.dp
+
+        var cardHeightDp by remember { mutableStateOf(0.dp) }
+
         val targetTopDp = targetRect?.let { with(density) { it.top.toDp() } }
-        val cardAligned = if (targetTopDp != null && targetTopDp > 400.dp) {
-            Alignment.TopCenter
+        val targetBottomDp = targetRect?.let { with(density) { it.bottom.toDp() } }
+
+        val targetY = if (targetTopDp != null) {
+            if (targetTopDp > 400.dp) {
+                (targetTopDp - cardHeightDp - 16.dp).coerceAtLeast(16.dp)
+            } else {
+                (targetBottomDp ?: 0.dp) + 16.dp
+            }
         } else {
-            Alignment.BottomCenter
+            120.dp
         }
+
+        val animatedY by animateDpAsState(
+            targetValue = targetY,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioNoBouncy,
+                stiffness = Spring.StiffnessMediumLow
+            ),
+            label = "tutorial_card_y"
+        )
+
+        val targetLeft = targetRect?.left ?: 0f
+        val targetTop = targetRect?.top ?: 0f
+        val targetWidth = targetRect?.width ?: 0f
+        val targetHeight = targetRect?.height ?: 0f
+
+        val animLeft by animateFloatAsState(
+            targetValue = targetLeft,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "spotlight_left"
+        )
+        val animTop by animateFloatAsState(
+            targetValue = targetTop,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "spotlight_top"
+        )
+        val animWidth by animateFloatAsState(
+            targetValue = targetWidth,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "spotlight_width"
+        )
+        val animHeight by animateFloatAsState(
+            targetValue = targetHeight,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "spotlight_height"
+        )
 
         Box(modifier = Modifier.fillMaxSize()) {
             Canvas(
@@ -82,17 +139,17 @@ fun TutorialOverlay(
                 with(drawContext.canvas.nativeCanvas) {
                     val checkpoint = saveLayer(null, null)
                     drawRect(color = Color.Black.copy(alpha = 0.75f), size = size)
-                    if (targetRect != null) {
+                    if (animWidth > 0f && animHeight > 0f) {
                         val pad = 8.dp.toPx()
                         drawRoundRect(
                             color = Color.Transparent,
                             topLeft = Offset(
-                                (targetRect.left - pad).coerceAtLeast(0f),
-                                (targetRect.top - pad).coerceAtLeast(0f)
+                                (animLeft - pad).coerceAtLeast(0f),
+                                (animTop - pad).coerceAtLeast(0f)
                             ),
                             size = Size(
-                                (targetRect.width + pad * 2).coerceAtMost(size.width),
-                                (targetRect.height + pad * 2).coerceAtMost(size.height)
+                                (animWidth + pad * 2).coerceAtMost(size.width),
+                                (animHeight + pad * 2).coerceAtMost(size.height)
                             ),
                             cornerRadius = CornerRadius(16.dp.toPx()),
                             blendMode = BlendMode.Clear
@@ -105,16 +162,16 @@ fun TutorialOverlay(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-                    .padding(
-                        top = if (cardAligned == Alignment.TopCenter) 80.dp else 0.dp,
-                        bottom = if (cardAligned == Alignment.TopCenter) 0.dp else 120.dp
-                    ),
-                contentAlignment = cardAligned
+                    .padding(horizontal = 20.dp),
+                contentAlignment = Alignment.TopCenter
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .offset(y = animatedY)
+                        .onGloballyPositioned { coordinates ->
+                            cardHeightDp = with(density) { coordinates.size.height.toDp() }
+                        }
                         .background(
                             color = LinguaQuestTheme.colors.ProfileCardColor,
                             shape = RoundedCornerShape(24.dp)
@@ -169,7 +226,7 @@ fun TutorialOverlay(
                                     modifier = Modifier
                                         .size(72.dp)
                                         .background(
-                                            color = LinguaQuestTheme.colors.OrangeActive.copy(alpha = 0.12f),
+                                            color = MaterialTheme.colorScheme.primary,
                                             shape = CircleShape
                                         )
                                         .padding(8.dp)
@@ -194,13 +251,23 @@ fun TutorialOverlay(
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             tour.steps.forEachIndexed { index, _ ->
                                 val isActive = index == state.currentStepIndex
+                                val dotWidth by animateDpAsState(
+                                    targetValue = if (isActive) 20.dp else 8.dp,
+                                    animationSpec = spring(stiffness = Spring.StiffnessMedium),
+                                    label = "dot_width"
+                                )
+                                val dotColor by animateColorAsState(
+                                    targetValue = if (isActive) LinguaQuestTheme.colors.OrangeActive
+                                    else LinguaQuestTheme.colors.BrownText.copy(alpha = 0.3f),
+                                    animationSpec = spring(stiffness = Spring.StiffnessMedium),
+                                    label = "dot_color"
+                                )
                                 Box(
                                     modifier = Modifier
-                                        .width(if (isActive) 20.dp else 8.dp)
+                                        .width(dotWidth)
                                         .height(8.dp)
                                         .background(
-                                            color = if (isActive) LinguaQuestTheme.colors.OrangeActive
-                                            else LinguaQuestTheme.colors.BrownText.copy(alpha = 0.3f),
+                                            color = dotColor,
                                             shape = RoundedCornerShape(4.dp)
                                         )
                                 )

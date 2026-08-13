@@ -122,7 +122,8 @@ fun MainScreen(
                     unreadCount = unreadCount,
                     onBellClick = {
                         rootBackStack.navigateSingleTop(RootScreen.Notification)
-                    }
+                    },
+                    tutorialManager = viewModel.tutorialManager
                 )
             },
             bottomBar = {
@@ -204,7 +205,8 @@ fun MainScreen(
                                 },
                                 onShowLockScreenWordDialog = { wordId ->
                                     viewModel.showLockScreenWordDialog(wordId)
-                                }
+                                },
+                                tutorialManager = viewModel.tutorialManager
                             )
                         }
 

@@ -44,6 +44,24 @@ class TutorialManager(
             tourId = "APP_TOUR",
             steps = listOf(
                 TutorialStep(
+                    stepId = "tutorial_top_bar_coins",
+                    titleRes = R.string.tutorial_top_bar_coins_title,
+                    descriptionRes = R.string.tutorial_top_bar_coins_desc,
+                    lingoImageRes = R.drawable.lingo_on_coins
+                ),
+                TutorialStep(
+                    stepId = "tutorial_top_bar_xp",
+                    titleRes = R.string.tutorial_top_bar_xp_title,
+                    descriptionRes = R.string.tutorial_top_bar_xp_desc,
+                    lingoImageRes = R.drawable.lingo_change_name
+                ),
+                TutorialStep(
+                    stepId = "tutorial_top_bar_notifications",
+                    titleRes = R.string.tutorial_top_bar_notifications_title,
+                    descriptionRes = R.string.tutorial_top_bar_notifications_desc,
+                    lingoImageRes = R.drawable.lingo_help_qw
+                ),
+                TutorialStep(
                     stepId = "tutorial_language_progress",
                     titleRes = R.string.tutorial_language_progress_title,
                     descriptionRes = R.string.tutorial_language_progress_desc,
@@ -53,7 +71,7 @@ class TutorialManager(
                     stepId = "tutorial_word_capture",
                     titleRes = R.string.tutorial_word_capture_title,
                     descriptionRes = R.string.tutorial_word_capture_desc,
-                    lingoImageRes = R.drawable.lingo_searching
+                    lingoImageRes = R.drawable.lingo_gallery_defualt
                 ),
                 TutorialStep(
                     stepId = "tutorial_world_list",
@@ -76,6 +94,27 @@ class TutorialManager(
             )
         )
         startTour(appTour, force)
+    }
+
+    fun startGalleryTour(force: Boolean = false) {
+        val galleryTour = TutorialTour(
+            tourId = "GALLERY_TOUR",
+            steps = listOf(
+                TutorialStep(
+                    stepId = "gallery_tab_game_captures",
+                    titleRes = R.string.tutorial_gallery_captures_title,
+                    descriptionRes = R.string.tutorial_gallery_captures_desc,
+                    lingoImageRes = R.drawable.lingo_gellary_icon
+                ),
+                TutorialStep(
+                    stepId = "gallery_tab_my_journal",
+                    titleRes = R.string.tutorial_gallery_journal_title,
+                    descriptionRes = R.string.tutorial_gallery_journal_desc,
+                    lingoImageRes = R.drawable.lingo_writing
+                )
+            )
+        )
+        startTour(galleryTour, force)
     }
 
     fun startTour(tour: TutorialTour, force: Boolean = false) {

@@ -915,4 +915,16 @@
     <string name="tutorial_language_button_desc">Tap here to change your active learning language or add new ones.</string>
     <string name="tutorial_daily_mission_title">Daily Mission</string>
     <string name="tutorial_daily_mission_desc">Complete your daily mission to keep your streak alive and earn rewards.</string>
+
+    <string name="tutorial_gallery_captures_title">Game Captures</string>
+    <string name="tutorial_gallery_captures_desc">View all the words you have successfully captured in the real world through games.</string>
+    <string name="tutorial_gallery_journal_title">My Journal</string>
+    <string name="tutorial_gallery_journal_desc">Browse words saved in your vocabulary vault and manage your learning review.</string>
+
+    <string name="tutorial_top_bar_coins_title">Your Coins</string>
+    <string name="tutorial_top_bar_coins_desc">Earn coins by completing lessons and missions. Use them to unlock features.</string>
+    <string name="tutorial_top_bar_xp_title">Your XP</string>
+    <string name="tutorial_top_bar_xp_desc">Earn Experience Points (XP) to climb the leaderboards and track your progress.</string>
+    <string name="tutorial_top_bar_notifications_title">Notifications</string>
+    <string name="tutorial_top_bar_notifications_desc">Stay updated with vocabulary reminders, achievements, and quest details.</string>
 </resources>
