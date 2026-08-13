@@ -769,7 +769,6 @@
     <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
 
 
-
     <!-- Mind Reader Game Strings -->
     <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
     <string name="mind_reader_lobby_subtitle">\"سأحاول تخمين كلمتك في 20 سؤالاً... جهّز عقلك!\"</string>
@@ -853,6 +852,8 @@
     <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
     <string name="daily_mission_button_loading">جاري التحميل…</string>
     <string name="daily_mission_button_later">لاحقاً</string>
+    <string name="daily_mission_already_solved_title">المهمة مكتملة!</string>
+    <string name="daily_mission_already_solved_message">لقد أكملت بالفعل مهمة اليوم اليومية. عود غداً لتحدٍ جديد!</string>
 
     <!-- Loading View -->
     <string name="loading_quests">جاري تحميل المهام...</string>
@@ -861,33 +862,31 @@
     <string name="translating_worlds">نترجم العوالم...</string>
     <string name="almost_there">على وشك الانتهاء...</string>
 
-    <string name="loading_message_1">جاري تجهيز مهمتك...</string>
-    <string name="loading_message_2">جاري تجهيز الببغاء...</string>
-    <string name="loading_message_3">على وشك الانتهاء...</string>
-    <string name="loading_message_4">جاري تجهيز حقائبك...</string>
-    <string name="loading_message_5">جاري استشارة الخرائط...</string>
-
-    <string name="error_email_already_in_use">يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
+    <string name="gallery_category_all">كل العناصر</string>
+    <string name="gallery_difficulty_easy">سهل</string>
+    <string name="gallery_difficulty_medium">متوسط</string>
+    <string name="gallery_difficulty_hard">صعب</string>
+    <string name="lockscreen_notification_channel_name">تذكير بالكلمات</string>
+    <string name="arabic_language">العربية</string>
+    <string name="cd_avatar">الصورة الشخصية</string>
+    <string name="mind_reader_choose_category">اختر الفئة</string>
+    <string name="get_a_hint_title">احصل على تلميح</string>
+    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقًا</string>
+    <string name="lockscreen_fullscreen_intent_title">مطلوب إذن شاشة القفل</string>
+    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات الكلمات على شاشة القفل، يرجى تفعيل إذن \"الظهور فوق شاشة القفل\" من إعدادات جهازك.</string>
+    <string name="lockscreen_fullscreen_intent_action">افتح الإعدادات</string>
+    
+    <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
     <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
     <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
     <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
     <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
-    <string name="error_email_not_found">لا يوجد حساب مرتبط بهذا البريد الإلكتروني.</string>
+    <string name="error_email_not_found">لم يتم العثور على حساب بهذا البريد الإلكتروني.</string>
     <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
-
-    <string name="lockscreen_fullscreen_intent_title">إذن شاشة القفل مطلوب</string>
-    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات المفردات على شاشة القفل، يرجى منح إذن "العرض فوق شاشة القفل" في إعدادات جهازك.</string>
-    <string name="lockscreen_fullscreen_intent_action">فتح الإعدادات</string>
-
-    <string name="get_a_hint_title">احصل على تلميح</string>
-    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقاً</string>
-    <string name="mind_reader_choose_category">اختر الفئة</string>
-
-    <string name="gallery_category_all">جميع العناصر</string>
-    <string name="gallery_difficulty_easy">سهل</string>
-    <string name="gallery_difficulty_medium">متوسط</string>
-    <string name="gallery_difficulty_hard">صعب</string>
-    <string name="lockscreen_notification_channel_name">تذكير المفردات</string>
-    <string name="arabic_language">العربية</string>
-    <string name="cd_avatar">الصورة الرمزية</string>
+    
+    <string name="loading_message_1">نجهز مهمتك...</string>
+    <string name="loading_message_2">نُهيّئ الببغاء...</string>
+    <string name="loading_message_3">على وشك الانتهاء...</string>
+    <string name="loading_message_4">نحزم حقائبك...</string>
+    <string name="loading_message_5">نتحقق من الخرائط...</string>
 </resources>

@@ -141,7 +141,7 @@ class HomeViewModel @Inject constructor(
             
             when (val result = getDailyMissionWordUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word)) }
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word, result.data.isSolved)) }
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }

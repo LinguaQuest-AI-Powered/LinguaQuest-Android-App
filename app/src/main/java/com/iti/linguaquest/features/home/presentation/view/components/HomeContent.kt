@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -32,7 +33,8 @@ fun HomeContent(
     onSeeMoreClick: (Rect) -> Unit,
     onWorldClick: (WorldItem, Rect) -> Unit,
     onContinueLevelClick: (ContinueLevelUi, Rect) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState()
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
     val scrollState = rememberScrollState()

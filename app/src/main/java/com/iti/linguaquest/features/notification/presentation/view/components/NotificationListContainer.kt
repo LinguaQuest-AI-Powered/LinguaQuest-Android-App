@@ -16,6 +16,8 @@ import com.iti.linguaquest.features.notification.domain.model.Notification
 fun NotificationListContainer(
     notifications: List<Notification>,
     isLoading: Boolean,
+    isDeleting: Boolean,
+    deletingNotificationId: Long?,
     onCardClick: (Notification, Rect) -> Unit,
     onDeleteClick: (Long, Rect) -> Unit,
     modifier: Modifier = Modifier
@@ -41,6 +43,7 @@ fun NotificationListContainer(
         ) { item ->
             NotificationCard(
                 notification = item,
+                isDeleting = isDeleting && (deletingNotificationId == null || deletingNotificationId == item.id),
                 onCardClick = { anchor -> onCardClick(item, anchor) },
                 onDeleteClick = { anchor -> onDeleteClick(item.id, anchor) }
             )

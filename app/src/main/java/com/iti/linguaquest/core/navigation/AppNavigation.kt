@@ -653,6 +653,7 @@ fun AppNavigation(
                     InAppNotificationBanner(
                         title = notif.title,
                         message = notif.message,
+                        type = notif.type,
                         onClick = {
                             globalUiHostViewModel.notificationBannerController.hideNotification()
                             val isAchievement = notif.type?.contains("ACHIEVEMENT", ignoreCase = true) == true ||

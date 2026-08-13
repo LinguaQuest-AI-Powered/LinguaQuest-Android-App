@@ -883,6 +883,10 @@
     <string name="daily_mission_button_start_camera">Start Camera</string>
     <string name="daily_mission_button_loading">Loading…</string>
     <string name="daily_mission_button_later">Later</string>
+
+    <string name="daily_mission_already_solved_title">Mission Accomplished!</string>
+    <string name="daily_mission_already_solved_message">You have already completed today\'s daily mission. Come back tomorrow for a new challenge!</string>
+
     <string name="gallery_category_all">All Items</string>
     <string name="gallery_difficulty_easy">Easy</string>
     <string name="gallery_difficulty_medium">Medium</string>

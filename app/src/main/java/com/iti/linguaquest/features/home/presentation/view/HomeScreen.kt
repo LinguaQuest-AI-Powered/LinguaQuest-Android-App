@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -65,6 +68,24 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
+
+    val scrollState = rememberScrollState()
+    var previousScrollOffset by remember { mutableIntStateOf(0) }
+    var isFabVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.value }
+            .collect { currentScrollOffset ->
+                val delta = currentScrollOffset - previousScrollOffset
+                if (delta > 0 && currentScrollOffset > 50) {
+                    isFabVisible = false
+                } else if (delta < 0) {
+                    isFabVisible = true
+                }
+                previousScrollOffset = currentScrollOffset
+            }
+    }
+
     var showCoinRain by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
@@ -199,7 +220,8 @@ fun HomeScreen(
                 },
                 onContinueLevelClick = { level, anchor ->
                     guardOnline(anchor) { viewModel.onIntent(HomeIntent.ContinueLevelClicked(level, anchor)) }
-                }
+                },
+                scrollState = scrollState
             )
         }
 
@@ -207,6 +229,7 @@ fun HomeScreen(
             HomeFabs(
                 onDailyMissionClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
                 onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
+                isVisible = isFabVisible,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(20.dp)
