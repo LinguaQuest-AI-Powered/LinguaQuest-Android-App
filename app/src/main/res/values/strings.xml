@@ -895,12 +895,4 @@
     <string name="arabic_language">arabic</string>
     <string name="cd_avatar">Avatar</string>
 
-    <!-- Loading View -->
-    <string name="loading_quests">Loading quests...</string>
-    <string name="preparing_adventure">Preparing your adventure...</string>
-    <string name="waking_up_lingo">Waking up Lingo...</string>
-    <string name="translating_worlds">Translating worlds...</string>
-    <string name="almost_there">Almost there...</string>
-
-
 </resources>
