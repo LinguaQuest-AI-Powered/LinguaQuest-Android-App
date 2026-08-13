@@ -36,6 +36,7 @@ import com.iti.linguaquest.features.profile.presentation.view.components.Profile
 import com.iti.linguaquest.features.profile.presentation.view.components.ProfileOverlays
 import com.iti.linguaquest.features.profile.presentation.viewModel.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +46,8 @@ fun ProfileScreen(
     onViewAllAchievementsClick: () -> Unit = {},
     onViewAllLeaderboardClick: () -> Unit = {},
     onNavigateHome: () -> Unit = {},
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    tutorialManager: TutorialManager? = null
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
@@ -77,6 +79,16 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
+    }
+
+    LaunchedEffect(tutorialManager, uiState.hasData) {
+        if (uiState.hasData) {
+            tutorialManager?.startProfileTour(
+                force = true,
+                hasAchievements = uiState.profile.achievements.isNotEmpty(),
+                hasLeaderboard = uiState.profile.nearbyLeaderboard.isNotEmpty()
+            )
+        }
     }
 
     var wasOffline by remember { mutableStateOf(!isOnline) }
@@ -130,7 +142,8 @@ fun ProfileScreen(
                 onEditAvatarClick = { guardOnline { showAvatarSheet = true } },
                 onViewAllAchievementsClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllAchievementsClicked) } },
                 onViewAllLeaderboardClick = { guardOnline { viewModel.onIntent(ProfileIntent.ViewAllLeaderboardClicked) } },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                tutorialManager = tutorialManager
             )
         }
     }

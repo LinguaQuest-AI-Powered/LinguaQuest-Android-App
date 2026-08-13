@@ -144,6 +144,61 @@ class TutorialManager(
         startTour(lingosTour, force)
     }
 
+    fun startProfileTour(
+        force: Boolean = false,
+        hasAchievements: Boolean = true,
+        hasLeaderboard: Boolean = true
+    ) {
+        val steps = mutableListOf(
+            TutorialStep(
+                stepId = "profile_header_target",
+                titleRes = R.string.tutorial_profile_header_title,
+                descriptionRes = R.string.tutorial_profile_header_desc,
+                lingoImageRes = R.drawable.lingo_change_name
+            ),
+            TutorialStep(
+                stepId = "profile_stats_target",
+                titleRes = R.string.tutorial_profile_stats_title,
+                descriptionRes = R.string.tutorial_profile_stats_desc,
+                lingoImageRes = R.drawable.lingo_acheviment
+            ),
+            TutorialStep(
+                stepId = "profile_settings_target",
+                titleRes = R.string.tutorial_profile_settings_title,
+                descriptionRes = R.string.tutorial_profile_settings_desc,
+                lingoImageRes = R.drawable.lingo_stting
+            )
+        )
+
+        if (hasAchievements) {
+            steps.add(
+                TutorialStep(
+                    stepId = "profile_achievements_target",
+                    titleRes = R.string.tutorial_profile_achievements_title,
+                    descriptionRes = R.string.tutorial_profile_achievements_desc,
+                    lingoImageRes = R.drawable.lingo_acheviment
+                )
+            )
+        }
+
+        if (hasLeaderboard) {
+            steps.add(
+                TutorialStep(
+                    stepId = "profile_leaderboard_target",
+                    titleRes = R.string.tutorial_profile_leaderboard_title,
+                    descriptionRes = R.string.tutorial_profile_leaderboard_desc,
+                    lingoImageRes = R.drawable.lingo_leaderboard
+                )
+            )
+        }
+
+        val profileTour = TutorialTour(
+            tourId = "PROFILE_TOUR",
+            steps = steps
+        )
+        startTour(profileTour, force)
+    }
+
     fun startTour(tour: TutorialTour, force: Boolean = false) {
         scope.launch {
             if (!force) {

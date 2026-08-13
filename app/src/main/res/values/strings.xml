@@ -934,4 +934,16 @@
     <string name="tutorial_lingos_roleplay_desc">Engage in interactive conversations to improve your contextual speech skills.</string>
     <string name="tutorial_lingos_mindreader_title">Mind Reader</string>
     <string name="tutorial_lingos_mindreader_desc">Challenge the AI to guess the word you are thinking of in this interactive game.</string>
+
+    <string name="tutorial_profile_header_title">Your Profile</string>
+    <string name="tutorial_profile_header_desc">Manage your avatar, view your nickname, and check your current learning level.</string>
+    <string name="tutorial_profile_stats_title">Profile Stats</string>
+    <string name="tutorial_profile_stats_desc">Check your daily streak, total experience points, and words captured in real time.</string>
+    <string name="tutorial_profile_settings_title">Account Settings</string>
+    <string name="tutorial_profile_settings_desc">Tap here to open settings, configure notifications, change app theme, or adjust learning goals.</string>
+
+    <string name="tutorial_profile_achievements_title">Achievements</string>
+    <string name="tutorial_profile_achievements_desc">Earn badges and rewards as you hit milestones and complete challenges.</string>
+    <string name="tutorial_profile_leaderboard_title">Leaderboard</string>
+    <string name="tutorial_profile_leaderboard_desc">See how you rank against friends and other learners in the global community.</string>
 </resources>

@@ -25,6 +25,12 @@ The tutorial system is built entirely on custom Canvas drawing and dynamic coord
   1. `lingos_card_voice` (Voice Practice Card): Details on speaking to practice pronunciation.
   2. `lingos_card_roleplay` (Roleplay Card): Details on contextual chat conversations.
   3. `lingos_card_mindreader` (Mind Reader Card): Details on the AI guessing game.
+- **Active Tour (Profile Features)**: A contextual tour highlighting:
+  1. `profile_header_target` (Profile Header): Highlights avatar and user profile information.
+  2. `profile_stats_target` (Stats Grid): Highlights key stats like XP, daily streak, and words.
+  3. `profile_settings_target` (Settings Option): Highlights account settings configuration.
+  4. `profile_achievements_target` (Achievements): Highlights milestones and challenges rewards.
+  5. `profile_leaderboard_target` (Leaderboard): Highlights ranking against friends.
 - **Navigation Integration**: Tab switching effect is bypassed since the tours run contextually within their respective screens.
 - **Persistence**: completed tours are persisted in DataStore via `TutorialPreferences` to avoid displaying them repeatedly.
 

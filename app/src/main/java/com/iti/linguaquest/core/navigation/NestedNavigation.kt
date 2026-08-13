@@ -238,7 +238,8 @@ fun MainScreen(
                                 },
                                 onNavigateHome = {
                                     currentTab = BottomNavScreen.Home
-                                }
+                                },
+                                tutorialManager = viewModel.tutorialManager
                             )
                         }
                     }

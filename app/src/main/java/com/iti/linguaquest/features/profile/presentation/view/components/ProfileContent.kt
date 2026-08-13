@@ -17,6 +17,15 @@ import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimati
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.domain.TutorialState
+import com.iti.linguaquest.core.tutorial.model.TutorialTour
+import com.iti.linguaquest.core.tutorial.model.TutorialStep
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
 @Composable
 fun ProfileContent(
@@ -26,11 +35,36 @@ fun ProfileContent(
     onEditAvatarClick: () -> Unit,
     onViewAllAchievementsClick: () -> Unit,
     onViewAllLeaderboardClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tutorialManager: TutorialManager? = null
 ) {
     val animationState = rememberStaggeredAnimationState(count = 6)
+    val listState = rememberLazyListState()
+
+    if (tutorialManager != null) {
+        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
+        LaunchedEffect(tutorialState.currentStepIndex) {
+            val tour = tutorialState.activeTour
+            if (tour?.tourId == "PROFILE_TOUR") {
+                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
+                when (currentStep?.stepId) {
+                    "profile_achievements_target" -> {
+                        listState.animateScrollToItem(index = 4)
+                    }
+                    "profile_leaderboard_target" -> {
+                        val index = if (state.achievements.isNotEmpty()) 6 else 4
+                        listState.animateScrollToItem(index = index)
+                    }
+                    "profile_settings_target" -> {
+                        listState.animateScrollToItem(index = 3)
+                    }
+                }
+            }
+        }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -41,7 +75,12 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                val headerModifier = if (tutorialManager != null) {
+                    Modifier.tutorialTarget("profile_header_target", tutorialManager)
+                } else {
+                    Modifier
+                }
+                Box(modifier = Modifier.padding(horizontal = 16.dp).then(headerModifier)) {
                     ProfileHeader(state, onEditAvatarClick, isAvatarUploading)
                 }
             }
@@ -52,7 +91,12 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                val statsModifier = if (tutorialManager != null) {
+                    Modifier.tutorialTarget("profile_stats_target", tutorialManager)
+                } else {
+                    Modifier
+                }
+                Box(modifier = Modifier.padding(horizontal = 16.dp).then(statsModifier)) {
                     StatsGrid(state)
                 }
             }
@@ -74,7 +118,12 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                val settingsModifier = if (tutorialManager != null) {
+                    Modifier.tutorialTarget("profile_settings_target", tutorialManager)
+                } else {
+                    Modifier
+                }
+                Box(modifier = Modifier.padding(horizontal = 16.dp).then(settingsModifier)) {
                     SettingsRow(onClick = onSettingsClick)
                 }
             }
@@ -87,7 +136,12 @@ fun ProfileContent(
                     state = animationState,
                     enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
                 ) {
-                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    val achievementsModifier = if (tutorialManager != null) {
+                        Modifier.tutorialTarget("profile_achievements_target", tutorialManager)
+                    } else {
+                        Modifier
+                    }
+                    Box(modifier = Modifier.padding(horizontal = 16.dp).then(achievementsModifier)) {
                         SectionHeader(
                             stringResource(R.string.achievements_title),
                             onViewAllAchievementsClick
@@ -123,7 +177,12 @@ fun ProfileContent(
                     state = animationState,
                     enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
                 ) {
-                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    val leaderboardModifier = if (tutorialManager != null) {
+                        Modifier.tutorialTarget("profile_leaderboard_target", tutorialManager)
+                    } else {
+                        Modifier
+                    }
+                    Box(modifier = Modifier.padding(horizontal = 16.dp).then(leaderboardModifier)) {
                         SectionHeader(
                             title = stringResource(R.string.leaderboard_title),
                             onViewAllClick = onViewAllLeaderboardClick
