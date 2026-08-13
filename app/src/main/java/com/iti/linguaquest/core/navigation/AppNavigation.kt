@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -244,12 +245,15 @@ fun AppNavigation(
                     val splashViewModel: SplashViewModel =
                         hiltViewModel()
                     val destination by splashViewModel.destination.collectAsState()
+                    var shouldStopVideo by remember { mutableStateOf(false) }
 
-                    LinguaQuestSplashScreen()
+                    LinguaQuestSplashScreen(shouldStop = shouldStopVideo)
 
                     LaunchedEffect(destination) {
                         destination?.let { dest ->
                             delay(2000.milliseconds)
+                            shouldStopVideo = true
+                            delay(1000.milliseconds)
                             rootBackStack.apply {
                                 clear()
                                 navigateSingleTop(dest)

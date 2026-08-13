@@ -11,6 +11,11 @@
     <string name="loading_message_3">Almost there...</string>
     <string name="loading_message_4">Packing your bags...</string>
     <string name="loading_message_5">Consulting the maps...</string>
+    <string name="loading_quests">Loading quests...</string>
+    <string name="preparing_adventure">Preparing your adventure...</string>
+    <string name="waking_up_lingo">Waking up Lingo...</string>
+    <string name="translating_worlds">Translating worlds...</string>
+    <string name="almost_there">Almost there...</string>
 
     <string name="choose_your_languages">Choose your languages</string>
     <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>

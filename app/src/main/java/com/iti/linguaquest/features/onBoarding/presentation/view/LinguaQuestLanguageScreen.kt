@@ -16,7 +16,7 @@ import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.AppTextStyles
-import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageDropdown
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.LanguageDropdown
 import com.iti.linguaquest.features.onBoarding.presentation.viewModel.languageViewModel.LanguagesViewModel
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesEffect
 import com.iti.linguaquest.features.onBoarding.presentation.contract.languageContract.LanguagesIntent
@@ -24,7 +24,7 @@ import com.iti.linguaquest.features.onBoarding.presentation.contract.languageCon
 import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import com.iti.linguaquest.features.onBoarding.presentation.components.LanguageMascotVideo
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.LanguageMascotVideo
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

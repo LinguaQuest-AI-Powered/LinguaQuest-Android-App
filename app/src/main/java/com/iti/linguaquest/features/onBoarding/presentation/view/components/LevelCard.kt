@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.onBoarding.presentation.components
+package com.iti.linguaquest.features.onBoarding.presentation.view.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box

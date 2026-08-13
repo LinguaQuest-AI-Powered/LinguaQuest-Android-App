@@ -1,79 +1,58 @@
 package com.iti.linguaquest.features.onBoarding.presentation.view
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.iti.linguaquest.R
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.OrbitingSparklesView
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.RippleRingsView
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.ShimmerLogoView
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.SplashVideoView
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.TwinklingStarsView
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
-    val frames = listOf(
-        R.drawable.lingo_splash_1,
-        R.drawable.lingo_splash_2,
-        R.drawable.lingo_splash_3,
-        R.drawable.lingo_splash_4,
-        R.drawable.lingo_splash_5,
-        R.drawable.lingo_splash_6,
-        R.drawable.lingo_splash_7,
-        R.drawable.lingo_splash_8,
-        R.drawable.lingo_splash_9,
-        R.drawable.lingo_splash_10
-    )
-
-    var currentFrameIndex by remember { mutableIntStateOf(0) }
+fun LinguaQuestSplashScreen(
+    modifier: Modifier = Modifier,
+    shouldStop: Boolean = false
+) {
     var circleVisible by remember { mutableStateOf(false) }
     var logoVisible by remember { mutableStateOf(false) }
-    var birdOffsetY by remember { mutableFloatStateOf(-80f) }
+    var bottomTextVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         logoVisible = true
         circleVisible = true
-        delay(200.milliseconds)
-        while (currentFrameIndex < frames.size - 1) {
-            delay(120.milliseconds)
-            currentFrameIndex++
-            birdOffsetY = when (currentFrameIndex) {
-                0 -> -80f
-                1 -> -60f
-                2 -> -40f
-                3 -> -20f
-                4 -> -10f
-                else -> 0f
-            }
-        }
-        delay(400.milliseconds)
+        delay(700.milliseconds)
+        bottomTextVisible = true
     }
 
     val circleScale by animateFloatAsState(
@@ -98,29 +77,47 @@ fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
         label = "logo_alpha"
     )
 
-    val backgroundBrush = Brush.linearGradient(
-        colors = listOf(
-            LinguaQuestTheme.colors.splashTopLeftColor,
-            LinguaQuestTheme.colors.splashBottomRightColor
-        )
+    val bottomTextOffsetY by animateFloatAsState(
+        targetValue = if (bottomTextVisible) 0f else 50f,
+        animationSpec = tween(800, easing = FastOutSlowInEasing),
+        label = "bottom_text_offset"
+    )
+    val bottomTextAlpha by animateFloatAsState(
+        targetValue = if (bottomTextVisible) 1f else 0f,
+        animationSpec = tween(800, easing = LinearEasing),
+        label = "bottom_text_alpha"
+    )
+
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (shouldStop) 0f else 1f,
+        animationSpec = tween(800, easing = LinearEasing),
+        label = "content_alpha"
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(brush = backgroundBrush)
+            .background(color = LinguaQuestTheme.colors.splashBackgroundSolid)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Box(modifier = Modifier.fillMaxSize().graphicsLayer { alpha = contentAlpha }) {
+            RippleRingsView(modifier = Modifier.align(Alignment.Center))
 
-            Spacer(modifier = Modifier.weight(1f))
+            ShimmerLogoView(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 100.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth(0.88f)
+                    .wrapContentHeight()
+                    .graphicsLayer {
+                        translationY = logoOffsetY
+                        alpha = logoAlpha
+                    }
+            )
 
             Box(
                 modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 20.dp)
                     .fillMaxWidth(1f)
                     .aspectRatio(1f),
                 contentAlignment = Alignment.Center
@@ -138,34 +135,30 @@ fun LinguaQuestSplashScreen(modifier: Modifier = Modifier) {
                     contentScale = ContentScale.Fit
                 )
 
-                Image(
-                    painter = painterResource(id = frames[currentFrameIndex]),
-                    contentDescription = stringResource(R.string.cd_linguaquest_mascot_animation),
+                TwinklingStarsView(modifier = Modifier.fillMaxSize())
+                OrbitingSparklesView(modifier = Modifier.fillMaxSize())
+
+                SplashVideoView(
                     modifier = Modifier
                         .fillMaxSize(0.72f)
-                        .align(BiasAlignment(horizontalBias = -0.12f, verticalBias = 0f))
-                        .graphicsLayer {
-                            translationY = birdOffsetY
-                        },
-                    contentScale = ContentScale.Fit
+                        .align(Alignment.Center),
+                    shouldStop = shouldStop
                 )
             }
 
-
-            Image(
-                painter = painterResource(id = R.drawable.linguaquest_logo),
-                contentDescription = stringResource(R.string.app_name),
+            Text(
+                text = stringResource(id = R.string.app_name),
+                color = LinguaQuestTheme.colors.whiteColor,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .fillMaxWidth(0.88f)
-                    .wrapContentHeight()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 40.dp)
                     .graphicsLayer {
-                        translationY = logoOffsetY
-                        alpha = logoAlpha
-                    },
-                contentScale = ContentScale.FillWidth
+                        translationY = bottomTextOffsetY
+                        alpha = bottomTextAlpha
+                    }
             )
-
-            Spacer(modifier = Modifier.weight(1.2f))
         }
     }
 }

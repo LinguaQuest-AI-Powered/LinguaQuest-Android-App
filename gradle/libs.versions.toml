@@ -14,6 +14,7 @@ mockk = "1.13.17"
 coroutinesTest = "1.8.1"
 turbine = "1.2.0"
 coreTesting = "2.2.0"
+coreSplashscreen = "1.0.1"
 
 ksp = "2.3.9"
 hilt = "2.60.1"
@@ -46,6 +47,7 @@ lottie = "6.4.0"
 [libraries]
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
