@@ -182,11 +182,13 @@ class HomeViewModel @Inject constructor(
             try {
                 val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
                 val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+                val dailyMissionDeferred = async { getDailyMissionWordUseCase(forceRefresh = true) }
                 val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
                 val languagesDeferred = if (isPullToRefresh) async { refreshMyLanguagesUseCase() } else null
 
                 val homeSummaryResult = homeSummaryDeferred.await()
                 val dailyRewardResult = dailyRewardDeferred.await()
+                dailyMissionDeferred.await()
                 walletDeferred?.await()
                 languagesDeferred?.await()
 
