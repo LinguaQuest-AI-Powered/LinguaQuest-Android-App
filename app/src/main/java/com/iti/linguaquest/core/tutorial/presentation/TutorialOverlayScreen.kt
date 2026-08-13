@@ -58,10 +58,11 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialState
 
 @Composable
-fun TutorialOverlay(
+fun TutorialOverlayScreen(
     modifier: Modifier = Modifier,
     manager: TutorialManager? = LocalTutorialManager.current
 ) {
@@ -69,8 +70,8 @@ fun TutorialOverlay(
     val state by manager.state.collectAsState()
     TutorialOverlayContent(
         state = state,
-        onNext = { manager.nextStep() },
-        onSkip = { manager.skipTour() },
+        onNext = { manager.onIntent(TutorialIntent.NextStep) },
+        onSkip = { manager.onIntent(TutorialIntent.SkipTour) },
         modifier = modifier
     )
 }
@@ -146,6 +147,8 @@ fun TutorialOverlayContent(
             label = "spotlight_height"
         )
 
+        val overlayColor = LinguaQuestTheme.colors.blackColor
+
         Box(modifier = Modifier.fillMaxSize()) {
             Canvas(
                 modifier = Modifier
@@ -154,7 +157,7 @@ fun TutorialOverlayContent(
             ) {
                 with(drawContext.canvas.nativeCanvas) {
                     val checkpoint = saveLayer(null, null)
-                    drawRect(color = Color.Black.copy(alpha = 0.75f), size = size)
+                    drawRect(color = overlayColor.copy(alpha = 0.75f), size = size)
                     if (animWidth > 0f && animHeight > 0f) {
                         val pad = 8.dp.toPx()
                         drawRoundRect(

@@ -4,6 +4,9 @@ import com.iti.linguaquest.core.tutorial.data.TutorialRepositoryImpl
 import com.iti.linguaquest.core.tutorial.domain.TourRegistry
 import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.core.tutorial.domain.repository.TutorialRepository
+import com.iti.linguaquest.core.tutorial.domain.usecase.IsTourCompletedUseCase
+import com.iti.linguaquest.core.tutorial.domain.usecase.ResetAllToursUseCase
+import com.iti.linguaquest.core.tutorial.domain.usecase.SetTourCompletedUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,11 +29,19 @@ abstract class TutorialModule {
         @Provides
         @Singleton
         fun provideTutorialManager(
-            repository: TutorialRepository,
+            isTourCompletedUseCase: IsTourCompletedUseCase,
+            setTourCompletedUseCase: SetTourCompletedUseCase,
+            resetAllToursUseCase: ResetAllToursUseCase,
             tourRegistry: TourRegistry,
             scope: CoroutineScope
         ): TutorialManager {
-            return TutorialManager(repository, tourRegistry, scope)
+            return TutorialManager(
+                isTourCompletedUseCase,
+                setTourCompletedUseCase,
+                resetAllToursUseCase,
+                tourRegistry,
+                scope
+            )
         }
     }
 }

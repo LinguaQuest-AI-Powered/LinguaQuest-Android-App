@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.core.tutorial.model.TourId
 import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.lingos.presentation.view.components.MindReaderCard
 import com.iti.linguaquest.features.lingos.presentation.view.components.RoleplayCard
@@ -31,7 +32,7 @@ fun LingosScreen(
     val tutorialManager = LocalTutorialManager.current
 
     LaunchedEffect(tutorialManager) {
-        tutorialManager?.startLingosTour(force = false)
+        tutorialManager?.onIntent(TutorialIntent.StartLingosTour(force = false))
     }
 
     val scrollState = rememberScrollState()

@@ -49,6 +49,7 @@ import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
 import com.iti.linguaquest.core.tutorial.model.TourId
 import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryEffect
 import com.iti.linguaquest.features.gallery.presentation.contract.GalleryIntent
@@ -90,7 +91,7 @@ fun GalleryScreen(
     }
 
     LaunchedEffect(tutorialManager) {
-        tutorialManager?.startGalleryTour(force = false)
+        tutorialManager?.onIntent(TutorialIntent.StartGalleryTour(force = false))
     }
 
     if (tutorialManager != null) {

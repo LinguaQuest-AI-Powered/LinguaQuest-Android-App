@@ -1,10 +1,12 @@
 package com.iti.linguaquest.core.tutorial.domain
 
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialEffect
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialState
-import com.iti.linguaquest.core.tutorial.domain.repository.TutorialRepository
+import com.iti.linguaquest.core.tutorial.domain.usecase.IsTourCompletedUseCase
+import com.iti.linguaquest.core.tutorial.domain.usecase.ResetAllToursUseCase
+import com.iti.linguaquest.core.tutorial.domain.usecase.SetTourCompletedUseCase
 import com.iti.linguaquest.core.tutorial.model.TargetBounds
-import com.iti.linguaquest.core.tutorial.model.TourId
 import com.iti.linguaquest.core.tutorial.model.TutorialTour
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +22,9 @@ import javax.inject.Singleton
 
 @Singleton
 class TutorialManager @Inject constructor(
-    private val repository: TutorialRepository,
+    private val isTourCompletedUseCase: IsTourCompletedUseCase,
+    private val setTourCompletedUseCase: SetTourCompletedUseCase,
+    private val resetAllToursUseCase: ResetAllToursUseCase,
     private val tourRegistry: TourRegistry,
     private val scope: CoroutineScope
 ) {
@@ -31,19 +35,38 @@ class TutorialManager @Inject constructor(
     private val _effect = MutableSharedFlow<TutorialEffect>(extraBufferCapacity = 16)
     val effect: SharedFlow<TutorialEffect> = _effect.asSharedFlow()
 
-    fun startAppTour(force: Boolean = false) {
+    fun onIntent(intent: TutorialIntent) {
+        when (intent) {
+            is TutorialIntent.StartAppTour -> startAppTour(intent.force)
+            is TutorialIntent.StartGalleryTour -> startGalleryTour(intent.force)
+            is TutorialIntent.StartLingosTour -> startLingosTour(intent.force)
+            is TutorialIntent.StartProfileTour -> startProfileTour(
+                intent.force,
+                intent.hasAchievements,
+                intent.hasLeaderboard
+            )
+            is TutorialIntent.StartTour -> startTour(intent.tour, intent.force)
+            is TutorialIntent.RegisterTarget -> registerTarget(intent.stepId, intent.bounds)
+            is TutorialIntent.UnregisterTarget -> unregisterTarget(intent.stepId)
+            TutorialIntent.NextStep -> nextStep()
+            TutorialIntent.SkipTour -> skipTour()
+            TutorialIntent.ResetAllTours -> resetAllTours()
+        }
+    }
+
+    private fun startAppTour(force: Boolean = false) {
         startTour(tourRegistry.appTour(), force)
     }
 
-    fun startGalleryTour(force: Boolean = false) {
+    private fun startGalleryTour(force: Boolean = false) {
         startTour(tourRegistry.galleryTour(), force)
     }
 
-    fun startLingosTour(force: Boolean = false) {
+    private fun startLingosTour(force: Boolean = false) {
         startTour(tourRegistry.lingosTour(), force)
     }
 
-    fun startProfileTour(
+    private fun startProfileTour(
         force: Boolean = false,
         hasAchievements: Boolean = true,
         hasLeaderboard: Boolean = true
@@ -51,13 +74,13 @@ class TutorialManager @Inject constructor(
         startTour(tourRegistry.profileTour(hasAchievements, hasLeaderboard), force)
     }
 
-    fun startTour(tour: TutorialTour, force: Boolean = false) {
+    private fun startTour(tour: TutorialTour, force: Boolean = false) {
         scope.launch {
             if (!force) {
-                val completed = repository.isTourCompleted(tour.tourId)
+                val completed = isTourCompletedUseCase(tour.tourId)
                 if (completed) return@launch
             } else {
-                repository.setTourCompleted(tour.tourId, false)
+                setTourCompletedUseCase(tour.tourId, false)
             }
             _state.update {
                 TutorialState(
@@ -70,19 +93,19 @@ class TutorialManager @Inject constructor(
         }
     }
 
-    fun registerTarget(stepId: String, bounds: TargetBounds) {
+    private fun registerTarget(stepId: String, bounds: TargetBounds) {
         _state.update {
             it.copy(targets = it.targets + (stepId to bounds))
         }
     }
 
-    fun unregisterTarget(stepId: String) {
+    private fun unregisterTarget(stepId: String) {
         _state.update {
             it.copy(targets = it.targets - stepId)
         }
     }
 
-    fun nextStep() {
+    private fun nextStep() {
         val currentState = _state.value
         val tour = currentState.activeTour ?: return
         val nextIndex = currentState.currentStepIndex + 1
@@ -96,13 +119,13 @@ class TutorialManager @Inject constructor(
         }
     }
 
-    fun skipTour() {
+    private fun skipTour() {
         finishTour()
     }
 
-    fun resetAllTours() {
+    private fun resetAllTours() {
         scope.launch {
-            repository.resetAllTours()
+            resetAllToursUseCase()
         }
     }
 
@@ -110,7 +133,7 @@ class TutorialManager @Inject constructor(
         val tour = _state.value.activeTour
         if (tour != null) {
             scope.launch {
-                repository.setTourCompleted(tour.tourId, true)
+                setTourCompletedUseCase(tour.tourId, true)
             }
         }
         _state.update {

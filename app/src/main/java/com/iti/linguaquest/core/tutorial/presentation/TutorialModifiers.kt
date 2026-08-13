@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.iti.linguaquest.core.tutorial.domain.TutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.model.TargetBounds
 
 @Composable
@@ -27,8 +28,8 @@ fun Modifier.tutorialTarget(
             width = rect.width,
             height = rect.height
         )
-        manager.registerTarget(stepId, bounds)
+        manager.onIntent(TutorialIntent.RegisterTarget(stepId, bounds))
     } else {
-        manager.unregisterTarget(stepId)
+        manager.onIntent(TutorialIntent.UnregisterTarget(stepId))
     }
 }

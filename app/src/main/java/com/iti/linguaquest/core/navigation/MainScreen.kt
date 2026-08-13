@@ -40,6 +40,7 @@ import com.iti.linguaquest.features.profile.presentation.view.ProfileScreen
 import com.iti.linguaquest.features.gallery.presentation.view.GalleryScreen
 import com.iti.linguaquest.features.lingos.presentation.view.LingosScreen
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialEffect
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
 
 @Composable
@@ -82,7 +83,7 @@ fun MainScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.tutorialManager.startAppTour()
+        viewModel.tutorialManager.onIntent(TutorialIntent.StartAppTour())
     }
 
     BackHandler(enabled = currentTab != BottomNavScreen.Home) {
@@ -103,7 +104,7 @@ fun MainScreen(
                     contentScale = ContentScale.Crop,
                     colorFilter = if (SharedBackgroundState.showDarkEffect && LinguaQuestTheme.colors.isDark) {
                         ColorFilter.tint(
-                            Color.Black.copy(alpha = 0.75f),
+                            LinguaQuestTheme.colors.blackColor.copy(alpha = 0.75f),
                             BlendMode.SrcOver
                         )
                     } else null
