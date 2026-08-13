@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import kotlin.math.cos
 import kotlin.math.sin
@@ -41,26 +42,29 @@ fun OrbitingSparklesView(modifier: Modifier = Modifier) {
         val baseRadius = 130f
         
         for (i in 0 until sparkleCount) {
-            val angleOffset = (i.toFloat() / sparkleCount) * 2 * Math.PI.toFloat()
-            val radiusMultiplier = 1f + ((i % 3) - 1) * 0.1f 
-            val radius = baseRadius * radiusMultiplier
-            val angle = angleOffset + (progress * 2 * Math.PI.toFloat() * (if (i % 2 == 0) 1 else -1))
-            
-            val xOffset = cos(angle) * radius
-            val yOffset = sin(angle) * radius
-            
-            val opacityPhase = (progress * 5f + i) % 1f
-            val opacity = if (opacityPhase > 0.5f) (1f - opacityPhase) * 2f else opacityPhase * 2f
-
             Icon(
                 imageVector = Icons.Filled.AutoAwesome,
                 contentDescription = null,
                 tint = LinguaQuestTheme.colors.whiteColor,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .offset(x = xOffset.dp, y = yOffset.dp)
                     .size(if (i % 2 == 0) 16.dp else 10.dp)
-                    .alpha(opacity)
+                    .graphicsLayer {
+                        val angleOffset = (i.toFloat() / sparkleCount) * 2 * Math.PI.toFloat()
+                        val radiusMultiplier = 1f + ((i % 3) - 1) * 0.1f 
+                        val radius = baseRadius * radiusMultiplier
+                        val angle = angleOffset + (progress * 2 * Math.PI.toFloat() * (if (i % 2 == 0) 1 else -1))
+                        
+                        val xOffset = cos(angle) * radius
+                        val yOffset = sin(angle) * radius
+                        
+                        val opacityPhase = (progress * 5f + i) % 1f
+                        val opacity = if (opacityPhase > 0.5f) (1f - opacityPhase) * 2f else opacityPhase * 2f
+                        
+                        translationX = xOffset.dp.toPx()
+                        translationY = yOffset.dp.toPx()
+                        alpha = opacity
+                    }
             )
         }
     }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.viewinterop.AndroidView
 import com.iti.linguaquest.R
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +58,7 @@ fun SplashVideoView(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .alpha(videoAlpha),
+                .graphicsLayer { alpha = videoAlpha },
             factory = { ctx ->
                 TextureView(ctx).apply {
                     isOpaque = false

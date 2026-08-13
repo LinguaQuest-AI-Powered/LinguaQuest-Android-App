@@ -11,7 +11,7 @@ class SpeechManager(context: Context) {
     private var queuedLang: String? = null
 
     init {
-        tts = TextToSpeech(context) { status ->
+        tts = TextToSpeech(context.applicationContext) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 isReady = true
                 queuedWord?.let { word ->

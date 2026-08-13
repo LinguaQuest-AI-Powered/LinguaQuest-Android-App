@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ fun ShimmerLogoView(modifier: Modifier = Modifier) {
                 .matchParentSize()
                 .graphicsLayer(alpha = 0.99f)
         ) {
+            val gradientColor = LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.7f)
             Image(
                 painter = painterResource(id = R.drawable.linguaquest_logo),
                 contentDescription = null,
@@ -63,17 +65,20 @@ fun ShimmerLogoView(modifier: Modifier = Modifier) {
                     .graphicsLayer {
                         blendMode = BlendMode.SrcIn
                     }
-                    .background(
-                        brush = Brush.linearGradient(
+                    .drawWithCache {
+                        val brush = Brush.linearGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                LinguaQuestTheme.colors.whiteColor.copy(alpha = 0.7f),
+                                gradientColor,
                                 Color.Transparent
                             ),
                             start = Offset(x = shimmerProgress * 1000f - 200f, y = 0f),
                             end = Offset(x = shimmerProgress * 1000f + 200f, y = 1000f)
                         )
-                    )
+                        onDrawBehind {
+                            drawRect(brush)
+                        }
+                    }
             )
         }
     }

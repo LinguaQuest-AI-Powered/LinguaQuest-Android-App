@@ -179,8 +179,8 @@ fun MapContent(
                                 )
 
                                 Mascot(
-                                    offsetX = animatedOffsetX,
-                                    offsetY = animatedOffsetY + floatOffset.dp
+                                    offsetX = { animatedOffsetX },
+                                    offsetY = { animatedOffsetY + floatOffset.dp }
                                 )
                             }
                         }

@@ -5,6 +5,7 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 konfettiCompose = "2.0.5"
+leakcanaryAndroid = "2.14"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 kotlin = "2.2.10"
@@ -45,6 +46,7 @@ exifinterface = "1.3.6"
 lottie = "6.4.0"
 
 [libraries]
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }

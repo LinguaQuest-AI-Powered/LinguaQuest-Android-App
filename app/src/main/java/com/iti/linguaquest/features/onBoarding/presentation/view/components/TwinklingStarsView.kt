@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.unit.dp
 
@@ -51,7 +52,7 @@ fun TwinklingStarsView(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(BiasAlignment(-0.6f, -0.4f))
                 .size(36.dp)
-                .alpha(star1Opacity)
+                .graphicsLayer { alpha = star1Opacity }
         )
         Icon(
             imageVector = Icons.Filled.Star,
@@ -60,7 +61,7 @@ fun TwinklingStarsView(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(BiasAlignment(0.7f, 0.5f))
                 .size(24.dp)
-                .alpha(star2Opacity)
+                .graphicsLayer { alpha = star2Opacity }
         )
     }
 }

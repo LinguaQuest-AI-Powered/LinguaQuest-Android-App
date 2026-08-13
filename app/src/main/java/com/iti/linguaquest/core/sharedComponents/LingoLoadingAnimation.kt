@@ -191,21 +191,21 @@ fun LingoBouncingDots(
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot1Alpha)
+                .graphicsLayer { alpha = dot1Alpha }
                 .background(dotColor, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot2Alpha)
+                .graphicsLayer { alpha = dot2Alpha }
                 .background(dotColor, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot3Alpha)
+                .graphicsLayer { alpha = dot3Alpha }
                 .background(dotColor, CircleShape)
         )
     }
