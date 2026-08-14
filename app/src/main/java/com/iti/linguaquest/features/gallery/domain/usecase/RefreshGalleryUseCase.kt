@@ -12,12 +12,12 @@ class RefreshGalleryUseCase @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ) {
     suspend operator fun invoke(): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        val sourceLanguage = userPreferencesRepository.targetLanguageName
+        val sourceLanguage = userPreferencesRepository.nativeLanguageName
             .firstOrNull()
             .orEmpty()
             .ifBlank { "English" }
 
-        val targetLanguage = userPreferencesRepository.nativeLanguageName
+        val targetLanguage = userPreferencesRepository.targetLanguageName
             .firstOrNull()
             .orEmpty()
             .ifBlank { "Arabic" }
