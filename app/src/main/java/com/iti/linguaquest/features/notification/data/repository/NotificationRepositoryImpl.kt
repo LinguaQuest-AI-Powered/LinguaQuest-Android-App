@@ -67,21 +67,17 @@ class NotificationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAllNotifications(): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        val backup = localDataSource.getAllNotificationsOnce()
-        localDataSource.deleteAllNotifications()
         val result = remoteDataSource.deleteAllNotifications()
-        if (result is LinguaQuestResult.Failure && backup.isNotEmpty()) {
-            localDataSource.upsertNotifications(backup)
+        if (result is LinguaQuestResult.Success) {
+            localDataSource.deleteAllNotifications()
         }
         return result
     }
 
     override suspend fun deleteNotification(id: Long): LinguaQuestResult<Unit, LinguaQuestDataError> {
-        val backup = localDataSource.getNotificationById(id)
-        localDataSource.deleteNotification(id)
         val result = remoteDataSource.deleteNotification(id)
-        if (result is LinguaQuestResult.Failure && backup != null) {
-            localDataSource.upsertNotification(backup)
+        if (result is LinguaQuestResult.Success) {
+            localDataSource.deleteNotification(id)
         }
         return result
     }

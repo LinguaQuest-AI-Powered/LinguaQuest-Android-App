@@ -5,11 +5,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,9 +22,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.navigation.SharedBackgroundState
-import com.iti.linguaquest.core.sharedComponents.ErrorView
 import com.iti.linguaquest.core.sharedComponents.LoadingView
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.core.utils.createImageCaptureUri
 import com.iti.linguaquest.core.sharedComponents.state.DataStatus
 import com.iti.linguaquest.core.sharedComponents.state.StatefulContentContainer
@@ -36,6 +32,8 @@ import com.iti.linguaquest.features.profile.presentation.view.components.Profile
 import com.iti.linguaquest.features.profile.presentation.view.components.ProfileOverlays
 import com.iti.linguaquest.features.profile.presentation.viewModel.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +45,7 @@ fun ProfileScreen(
     onNavigateHome: () -> Unit = {},
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val tutorialManager = LocalTutorialManager.current
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -77,6 +76,18 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         SharedBackgroundState.showBackground = true
+    }
+
+    LaunchedEffect(tutorialManager, uiState.hasData) {
+        if (uiState.hasData) {
+            tutorialManager?.onIntent(
+                TutorialIntent.StartProfileTour(
+                    force = false,
+                    hasAchievements = uiState.profile.achievements.isNotEmpty(),
+                    hasLeaderboard = uiState.profile.nearbyLeaderboard.isNotEmpty()
+                )
+            )
+        }
     }
 
     var wasOffline by remember { mutableStateOf(!isOnline) }

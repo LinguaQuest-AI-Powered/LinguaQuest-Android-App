@@ -8,14 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
+import com.iti.linguaquest.core.tutorial.model.TourId
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 import com.iti.linguaquest.features.profile.presentation.model.ProfileState
 
 @Composable
@@ -29,8 +36,33 @@ fun ProfileContent(
     modifier: Modifier = Modifier
 ) {
     val animationState = rememberStaggeredAnimationState(count = 6)
+    val listState = rememberLazyListState()
+    val tutorialManager = LocalTutorialManager.current
+
+    if (tutorialManager != null) {
+        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
+        LaunchedEffect(tutorialState.currentStepIndex) {
+            val tour = tutorialState.activeTour
+            if (tour?.tourId == TourId.PROFILE_TOUR) {
+                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
+                when (currentStep?.stepId) {
+                    "profile_achievements_target" -> {
+                        listState.animateScrollToItem(index = 4)
+                    }
+                    "profile_leaderboard_target" -> {
+                        val index = if (state.achievements.isNotEmpty()) 6 else 4
+                        listState.animateScrollToItem(index = index)
+                    }
+                    "profile_settings_target" -> {
+                        listState.animateScrollToItem(index = 3)
+                    }
+                }
+            }
+        }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -41,7 +73,11 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .tutorialTarget("profile_header_target")
+                ) {
                     ProfileHeader(state, onEditAvatarClick, isAvatarUploading)
                 }
             }
@@ -52,7 +88,11 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .tutorialTarget("profile_stats_target")
+                ) {
                     StatsGrid(state)
                 }
             }
@@ -74,7 +114,11 @@ fun ProfileContent(
                 state = animationState,
                 enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .tutorialTarget("profile_settings_target")
+                ) {
                     SettingsRow(onClick = onSettingsClick)
                 }
             }
@@ -87,7 +131,11 @@ fun ProfileContent(
                     state = animationState,
                     enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
                 ) {
-                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .tutorialTarget("profile_achievements_target")
+                    ) {
                         SectionHeader(
                             stringResource(R.string.achievements_title),
                             onViewAllAchievementsClick
@@ -123,7 +171,11 @@ fun ProfileContent(
                     state = animationState,
                     enter = LingoEntranceAnimations.popUpHorizontally(offset = 200)
                 ) {
-                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .tutorialTarget("profile_leaderboard_target")
+                    ) {
                         SectionHeader(
                             title = stringResource(R.string.leaderboard_title),
                             onViewAllClick = onViewAllLeaderboardClick

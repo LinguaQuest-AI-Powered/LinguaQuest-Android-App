@@ -141,7 +141,7 @@ class HomeViewModel @Inject constructor(
             
             when (val result = getDailyMissionWordUseCase()) {
                 is LinguaQuestResult.Success -> {
-                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word)) }
+                    _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Success(result.data.word, result.data.isSolved)) }
                 }
                 is LinguaQuestResult.Failure -> {
                     _state.update { it.copy(dailyMissionState = DailyMissionDialogState.Hidden) }
@@ -182,11 +182,13 @@ class HomeViewModel @Inject constructor(
             try {
                 val homeSummaryDeferred = async { getHomeSummaryUseCase.refresh() }
                 val dailyRewardDeferred = async { getDailyRewardStatusUseCase() }
+                val dailyMissionDeferred = async { getDailyMissionWordUseCase(forceRefresh = true) }
                 val walletDeferred = if (isPullToRefresh) async { refreshWalletUseCase() } else null
                 val languagesDeferred = if (isPullToRefresh) async { refreshMyLanguagesUseCase() } else null
 
                 val homeSummaryResult = homeSummaryDeferred.await()
                 val dailyRewardResult = dailyRewardDeferred.await()
+                dailyMissionDeferred.await()
                 walletDeferred?.await()
                 languagesDeferred?.await()
 

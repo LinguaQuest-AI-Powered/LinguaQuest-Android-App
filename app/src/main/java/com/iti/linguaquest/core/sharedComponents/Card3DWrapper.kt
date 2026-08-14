@@ -26,6 +26,7 @@ fun Card3DWrapper(
     modifier: Modifier = Modifier,
     backgroundColor: Color,
     borderColor: Color,
+    ledgeColor: Color = borderColor,
     onClick: (() -> Unit)? = null,
     ledgeHeight: Dp = 4.dp,
     cornerRadius: Dp = 16.dp,
@@ -52,7 +53,7 @@ fun Card3DWrapper(
                 .matchParentSize()
                 .offset(y = ledgeHeight)
                 .clip(shape)
-                .background(borderColor)
+                .background(ledgeColor)
         )
 
         Surface(

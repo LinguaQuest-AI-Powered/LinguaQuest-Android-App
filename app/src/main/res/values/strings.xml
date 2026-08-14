@@ -895,6 +895,10 @@
     <string name="daily_mission_button_start_camera">Start Camera</string>
     <string name="daily_mission_button_loading">Loading…</string>
     <string name="daily_mission_button_later">Later</string>
+
+    <string name="daily_mission_already_solved_title">Mission Accomplished!</string>
+    <string name="daily_mission_already_solved_message">You have already completed today\'s daily mission. Come back tomorrow for a new challenge!</string>
+
     <string name="gallery_category_all">All Items</string>
     <string name="gallery_difficulty_easy">Easy</string>
     <string name="gallery_difficulty_medium">Medium</string>
@@ -902,4 +906,60 @@
     <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
     <string name="arabic_language">arabic</string>
     <string name="cd_avatar">Avatar</string>
+
+    <string name="next">Next</string>
+    <string name="got_it">Got It</string>
+    <string name="finish">Finish</string>
+    <string name="tutorial_replay_title">Replay App Tour</string>
+    <string name="tutorial_replay_desc">Start the tutorial guide from the beginning.</string>
+    <string name="tutorial_home_title">Home Screen</string>
+    <string name="tutorial_home_desc">Explore learning worlds, complete levels, and check daily missions.</string>
+    <string name="tutorial_gallery_title">Vocabulary Gallery</string>
+    <string name="tutorial_gallery_desc">Review words you\'ve learned and practice pronunciation.</string>
+    <string name="tutorial_lingos_title">Lingos - Game Features</string>
+    <string name="tutorial_lingos_desc">Practice speaking with Voice Game, tackle roleplay scenarios, and challenge the Mind Reader.</string>
+    <string name="tutorial_profile_title">Your Profile</string>
+    <string name="tutorial_profile_desc">Track achievements, check settings, and check leaderboard status.</string>
+
+    <string name="tutorial_language_progress_title">Learning Progress</string>
+    <string name="tutorial_language_progress_desc">Check your current language, level, learning progress, and streak here.</string>
+    <string name="tutorial_word_capture_title">Current Lesson</string>
+    <string name="tutorial_word_capture_desc">Tap here to continue your current lesson and capture new words.</string>
+    <string name="tutorial_world_list_title">Explore Worlds</string>
+    <string name="tutorial_world_list_desc">Browse and select different learning worlds to explore.</string>
+    <string name="tutorial_language_button_title">Switch Language</string>
+    <string name="tutorial_language_button_desc">Tap here to change your active learning language or add new ones.</string>
+    <string name="tutorial_daily_mission_title">Daily Mission</string>
+    <string name="tutorial_daily_mission_desc">Complete your daily mission to keep your streak alive and earn rewards.</string>
+
+    <string name="tutorial_gallery_captures_title">Game Captures</string>
+    <string name="tutorial_gallery_captures_desc">View all the words you have successfully captured in the real world through games.</string>
+    <string name="tutorial_gallery_journal_title">My Journal</string>
+    <string name="tutorial_gallery_journal_desc">Browse words saved in your vocabulary vault and manage your learning review.</string>
+
+    <string name="tutorial_top_bar_coins_title">Your Coins</string>
+    <string name="tutorial_top_bar_coins_desc">Earn coins by completing lessons and missions. Use them to unlock features.</string>
+    <string name="tutorial_top_bar_xp_title">Your XP</string>
+    <string name="tutorial_top_bar_xp_desc">Earn Experience Points (XP) to climb the leaderboards and track your progress.</string>
+    <string name="tutorial_top_bar_notifications_title">Notifications</string>
+    <string name="tutorial_top_bar_notifications_desc">Stay updated with vocabulary reminders, achievements, and quest details.</string>
+
+    <string name="tutorial_lingos_voice_title">Voice Practice</string>
+    <string name="tutorial_lingos_voice_desc">Speak into the microphone to practice your pronunciation and get real-time feedback.</string>
+    <string name="tutorial_lingos_roleplay_title">Roleplay</string>
+    <string name="tutorial_lingos_roleplay_desc">Engage in interactive conversations to improve your contextual speech skills.</string>
+    <string name="tutorial_lingos_mindreader_title">Mind Reader</string>
+    <string name="tutorial_lingos_mindreader_desc">Challenge the AI to guess the word you are thinking of in this interactive game.</string>
+
+    <string name="tutorial_profile_header_title">Your Profile</string>
+    <string name="tutorial_profile_header_desc">Manage your avatar, view your nickname, and check your current learning level.</string>
+    <string name="tutorial_profile_stats_title">Profile Stats</string>
+    <string name="tutorial_profile_stats_desc">Check your daily streak, total experience points, and words captured in real time.</string>
+    <string name="tutorial_profile_settings_title">Account Settings</string>
+    <string name="tutorial_profile_settings_desc">Tap here to open settings, configure notifications, change app theme, or adjust learning goals.</string>
+
+    <string name="tutorial_profile_achievements_title">Achievements</string>
+    <string name="tutorial_profile_achievements_desc">Earn badges and rewards as you hit milestones and complete challenges.</string>
+    <string name="tutorial_profile_leaderboard_title">Leaderboard</string>
+    <string name="tutorial_profile_leaderboard_desc">See how you rank against friends and other learners in the global community.</string>
 </resources>

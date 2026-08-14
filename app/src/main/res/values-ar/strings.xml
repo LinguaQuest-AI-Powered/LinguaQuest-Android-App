@@ -769,7 +769,6 @@
     <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
 
 
-
     <!-- Mind Reader Game Strings -->
     <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
     <string name="mind_reader_lobby_subtitle">\"سأحاول تخمين كلمتك في 20 سؤالاً... جهّز عقلك!\"</string>
@@ -866,6 +865,8 @@
     <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
     <string name="daily_mission_button_loading">جاري التحميل…</string>
     <string name="daily_mission_button_later">لاحقاً</string>
+    <string name="daily_mission_already_solved_title">المهمة مكتملة!</string>
+    <string name="daily_mission_already_solved_message">لقد أكملت بالفعل مهمة اليوم اليومية. عود غداً لتحدٍ جديد!</string>
 
     <!-- Loading View -->
     <string name="loading_quests">جاري تحميل المهام...</string>
@@ -874,33 +875,89 @@
     <string name="translating_worlds">نترجم العوالم...</string>
     <string name="almost_there">على وشك الانتهاء...</string>
 
-    <string name="loading_message_1">جاري تجهيز مهمتك...</string>
-    <string name="loading_message_2">جاري تجهيز الببغاء...</string>
-    <string name="loading_message_3">على وشك الانتهاء...</string>
-    <string name="loading_message_4">جاري تجهيز حقائبك...</string>
-    <string name="loading_message_5">جاري استشارة الخرائط...</string>
-
-    <string name="error_email_already_in_use">يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
+    <string name="gallery_category_all">كل العناصر</string>
+    <string name="gallery_difficulty_easy">سهل</string>
+    <string name="gallery_difficulty_medium">متوسط</string>
+    <string name="gallery_difficulty_hard">صعب</string>
+    <string name="lockscreen_notification_channel_name">تذكير بالكلمات</string>
+    <string name="arabic_language">العربية</string>
+    <string name="cd_avatar">الصورة الشخصية</string>
+    <string name="mind_reader_choose_category">اختر الفئة</string>
+    <string name="get_a_hint_title">احصل على تلميح</string>
+    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقًا</string>
+    <string name="lockscreen_fullscreen_intent_title">مطلوب إذن شاشة القفل</string>
+    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات الكلمات على شاشة القفل، يرجى تفعيل إذن \"الظهور فوق شاشة القفل\" من إعدادات جهازك.</string>
+    <string name="lockscreen_fullscreen_intent_action">افتح الإعدادات</string>
+    
+    <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
     <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
     <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
     <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
     <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
-    <string name="error_email_not_found">لا يوجد حساب مرتبط بهذا البريد الإلكتروني.</string>
+    <string name="error_email_not_found">لم يتم العثور على حساب بهذا البريد الإلكتروني.</string>
     <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
+    
+    <string name="loading_message_1">نجهز مهمتك...</string>
+    <string name="loading_message_2">نُهيّئ الببغاء...</string>
+    <string name="loading_message_3">على وشك الانتهاء...</string>
+    <string name="loading_message_4">نحزم حقائبك...</string>
+    <string name="loading_message_5">نتحقق من الخرائط...</string>
 
-    <string name="lockscreen_fullscreen_intent_title">إذن شاشة القفل مطلوب</string>
-    <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات المفردات على شاشة القفل، يرجى منح إذن "العرض فوق شاشة القفل" في إعدادات جهازك.</string>
-    <string name="lockscreen_fullscreen_intent_action">فتح الإعدادات</string>
+    <string name="next">التالي</string>
+    <string name="got_it">فهمت ذلك</string>
+    <string name="finish">إنهاء</string>
 
-    <string name="get_a_hint_title">احصل على تلميح</string>
-    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقاً</string>
-    <string name="mind_reader_choose_category">اختر الفئة</string>
+    <!-- Tutorial / App Tour Strings -->
+    <string name="tutorial_replay_title">إعادة جولة التطبيق</string>
+    <string name="tutorial_replay_desc">بدء الدليل التعليمي من البداية.</string>
+    <string name="tutorial_home_title">الشاشة الرئيسية</string>
+    <string name="tutorial_home_desc">استكشف عوالم التعلم، وأكمل المستويات، وتحقق من المهام اليومية.</string>
+    <string name="tutorial_gallery_title">معرض المفردات</string>
+    <string name="tutorial_gallery_desc">راجع الكلمات التي تعلمتها وتدرب على النطق.</string>
+    <string name="tutorial_lingos_title">لينجوس - ميزات اللعبة</string>
+    <string name="tutorial_lingos_desc">تدرب على التحدث مع لعبة الصوت، وتحدَّ سيناريوهات تبادل الأدوار، وتحدَّ قارئ الأفكار.</string>
+    <string name="tutorial_profile_title">ملفك الشخصي</string>
+    <string name="tutorial_profile_desc">تتبع الإنجازات، وتحقق من الإعدادات، وتحقق من حالة لوحة المتصدرين.</string>
 
-    <string name="gallery_category_all">جميع العناصر</string>
-    <string name="gallery_difficulty_easy">سهل</string>
-    <string name="gallery_difficulty_medium">متوسط</string>
-    <string name="gallery_difficulty_hard">صعب</string>
-    <string name="lockscreen_notification_channel_name">تذكير المفردات</string>
-    <string name="arabic_language">العربية</string>
-    <string name="cd_avatar">الصورة الرمزية</string>
+    <string name="tutorial_language_progress_title">تقدم التعلم</string>
+    <string name="tutorial_language_progress_desc">تحقق من لغتك الحالية، والمستوى، وتقدم التعلم، وسلسلة التعلم هنا.</string>
+    <string name="tutorial_word_capture_title">الدرس الحالي</string>
+    <string name="tutorial_word_capture_desc">اضغط هنا لمتابعة درسك الحالي واصطياد كلمات جديدة.</string>
+    <string name="tutorial_world_list_title">استكشف العوالم</string>
+    <string name="tutorial_world_list_desc">تصفح واختر عوالم تعلم مختلفة لاستكشافها.</string>
+    <string name="tutorial_language_button_title">تبديل اللغة</string>
+    <string name="tutorial_language_button_desc">اضغط هنا لتغيير لغة التعلم النشطة أو إضافة لغات جديدة.</string>
+    <string name="tutorial_daily_mission_title">المهمة اليومية</string>
+    <string name="tutorial_daily_mission_desc">أكمل مهمتك اليومية للحفاظ على سلسلة التعلم الخاصة بك وكسب المكافآت.</string>
+
+    <string name="tutorial_gallery_captures_title">الكلمات المحفوظة</string>
+    <string name="tutorial_gallery_captures_desc">عرض جميع الكلمات التي نجحت في التقاطها في العالم الحقيقي من خلال الألعاب.</string>
+    <string name="tutorial_gallery_journal_title">خزينتي</string>
+    <string name="tutorial_gallery_journal_desc">تصفح الكلمات المحفوظة في خزينة المفردات وإدارة مراجعة التعلم الخاصة بك.</string>
+
+    <string name="tutorial_top_bar_coins_title">عملاتك</string>
+    <string name="tutorial_top_bar_coins_desc">اكسب العملات المعدنية من خلال إكمال الدروس والمهام. واستخدمها لفتح الميزات.</string>
+    <string name="tutorial_top_bar_xp_title">نقاط الخبرة (XP)</string>
+    <string name="tutorial_top_bar_xp_desc">اكسب نقاط الخبرة (XP) لتسلق لوحات المتصدرين وتتبع تقدمك.</string>
+    <string name="tutorial_top_bar_notifications_title">الإشعارات</string>
+    <string name="tutorial_top_bar_notifications_desc">ابقَ على اطلاع دائم بتذكيرات المفردات والإنجازات وتفاصيل المهام.</string>
+
+    <string name="tutorial_lingos_voice_title">التدريب الصوتي</string>
+    <string name="tutorial_lingos_voice_desc">تحدث في الميكروفون للتدرب على نطقك والحصول على تعليقات فورية.</string>
+    <string name="tutorial_lingos_roleplay_title">تبادل الأدوار</string>
+    <string name="tutorial_lingos_roleplay_desc">انخرط في محادثات تفاعلية لتحسين مهاراتك في التحدث السياقي.</string>
+    <string name="tutorial_lingos_mindreader_title">قارئ الأفكار</string>
+    <string name="tutorial_lingos_mindreader_desc">تحدَّ الذكاء الاصطناعي لتخمين الكلمة التي تفكر فيها في هذه اللعبة التفاعلية.</string>
+
+    <string name="tutorial_profile_header_title">الملف الشخصي</string>
+    <string name="tutorial_profile_header_desc">إدارة صورتك الشخصية، وعرض اسمك المستعار، والتحقق من مستوى التعلم الحالي الخاص بك.</string>
+    <string name="tutorial_profile_stats_title">إحصائيات الملف الشخصي</string>
+    <string name="tutorial_profile_stats_desc">تحقق من سلسلة التعلم اليومية، وإجمالي نقاط الخبرة، والكلمات التي تم جمعها في الوقت الفعلي.</string>
+    <string name="tutorial_profile_settings_title">إعدادات الحساب</string>
+    <string name="tutorial_profile_settings_desc">اضغط هنا لفتح الإعدادات، أو تكوين الإشعارات، أو تغيير مظهر التطبيق، أو ضبط أهداف التعلم.</string>
+
+    <string name="tutorial_profile_achievements_title">الإنجازات</string>
+    <string name="tutorial_profile_achievements_desc">اكسب الشارات والمكافآت عند الوصول إلى الإنجازات وإكمال التحديات.</string>
+    <string name="tutorial_profile_leaderboard_title">لوحة المتصدرين</string>
+    <string name="tutorial_profile_leaderboard_desc">تعرف على ترتيبك مقارنة بأصدقائك والمتعلمين الآخرين في المجتمع العالمي.</string>
 </resources>

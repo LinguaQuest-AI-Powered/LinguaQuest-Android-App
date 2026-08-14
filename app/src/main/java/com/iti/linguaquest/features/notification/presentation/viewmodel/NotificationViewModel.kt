@@ -156,10 +156,11 @@ class NotificationViewModel @Inject constructor(
 
     private fun deleteSingleNotification(id: Long) {
         if (!isOnline.value) return
-        _state.update { it.copy(notificationToDelete = null) }
+        _state.update { it.copy(notificationToDelete = null, deletingNotificationId = id) }
         viewModelScope.launch {
             when (val result = deleteNotificationUseCase(id)) {
                 is LinguaQuestResult.Success -> {
+                    _state.update { it.copy(deletingNotificationId = null) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = UiText.StringResource(R.string.notification_deleted_toast),
@@ -168,6 +169,7 @@ class NotificationViewModel @Inject constructor(
                     )
                 }
                 is LinguaQuestResult.Failure -> {
+                    _state.update { it.copy(deletingNotificationId = null) }
                     snackbarController.sendEvent(
                         SnackbarEvent(
                             message = result.error.toUiText(),

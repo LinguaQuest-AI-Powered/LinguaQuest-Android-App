@@ -120,6 +120,10 @@ fun SettingScreen(
         onLockScreenVocabularyClick = onLockScreenVocabularyClick,
         onHelpSupportClick = onHelpSupportClick,
         onAboutAppClick = onAboutAppClick,
+        onReplayAppTour = {
+            viewModel.replayAppTour()
+            onBack()
+        },
         reminderState = reminderState,
         onReminderIntent = viewModel::onReminderIntent,
         lockScreenState = lockScreenState,

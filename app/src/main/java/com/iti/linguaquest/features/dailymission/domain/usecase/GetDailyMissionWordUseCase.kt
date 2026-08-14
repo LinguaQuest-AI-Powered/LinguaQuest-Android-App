@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetDailyMissionWordUseCase @Inject constructor(
     private val repository: DailyMissionRepository
 ) {
-    suspend operator fun invoke(): LinguaQuestResult<DailyMission, LinguaQuestDataError> {
-        return repository.getDailyMission()
+    suspend operator fun invoke(forceRefresh: Boolean = false): LinguaQuestResult<DailyMission, LinguaQuestDataError> {
+        return repository.getDailyMission(forceRefresh)
     }
 }

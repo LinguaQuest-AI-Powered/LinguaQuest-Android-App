@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.notification.domain.model.Notification
@@ -60,11 +61,11 @@ fun NotificationContent(
         ) {
             LinguaQuestScreenTopBar(
                 title = stringResource(id = R.string.notifications_title),
+                isTitleCentered = notifications.isEmpty(),
                 onBackClicked = onBackClick,
                 trailingContent = {
                     if (notifications.isNotEmpty()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Spacer(modifier = Modifier.width(24.dp))
                             Text(
                                 text = stringResource(R.string.delete_all),
                                 style = MaterialTheme.typography.titleMedium,
@@ -74,7 +75,7 @@ fun NotificationContent(
                                     .onGloballyPositioned { coordinates ->
                                         deleteAllBounds = coordinates.boundsInRoot()
                                     }
-                                    .clickable { onDeleteAllClick(deleteAllBounds) }
+                                    .clickable(enabled = !state.isDeleting) { onDeleteAllClick(deleteAllBounds) }
                                     .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
@@ -89,6 +90,8 @@ fun NotificationContent(
             NotificationListContainer(
                 notifications = notifications,
                 isLoading = state.isLoading,
+                isDeleting = state.isDeleting,
+                deletingNotificationId = state.deletingNotificationId,
                 onCardClick = onCardClick,
                 onDeleteClick = onDeleteNotificationClick
             )

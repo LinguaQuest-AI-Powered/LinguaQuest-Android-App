@@ -8,7 +8,6 @@ import com.iti.linguaquest.features.dailymission.domain.model.DailyMission
 import com.iti.linguaquest.features.dailymission.domain.model.VerifyMissionResult
 import com.iti.linguaquest.features.dailymission.domain.repository.DailyMissionRepository
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -21,9 +20,24 @@ import javax.inject.Inject
 class DailyMissionRepositoryImpl @Inject constructor(
     private val remoteDataSource: DailyMissionRemoteDataSource
 ) : DailyMissionRepository {
-    override suspend fun getDailyMission(): LinguaQuestResult<DailyMission, LinguaQuestDataError> {
+    private var cachedDailyMission: DailyMission? = null
+
+    override suspend fun getDailyMission(forceRefresh: Boolean): LinguaQuestResult<DailyMission, LinguaQuestDataError> {
+        if (!forceRefresh) {
+            cachedDailyMission?.let {
+                return LinguaQuestResult.Success(it)
+            }
+        }
+
         return when (val result = safeApiCall { remoteDataSource.getDailyMission() }) {
-            is LinguaQuestResult.Success -> LinguaQuestResult.Success(DailyMission(word = result.data.data.word))
+            is LinguaQuestResult.Success -> {
+                val mission = DailyMission(
+                    word = result.data.data.word,
+                    isSolved = result.data.data.isSolved ?: false
+                )
+                cachedDailyMission = mission
+                LinguaQuestResult.Success(mission)
+            }
             is LinguaQuestResult.Failure -> LinguaQuestResult.Failure(result.error)
         }
     }

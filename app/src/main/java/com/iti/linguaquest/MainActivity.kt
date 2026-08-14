@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 
-import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -26,7 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-import com.iti.linguaquest.core.navigation.AppNavigation
+import com.iti.linguaquest.core.navigation.AppNavigationScreen
 import com.iti.linguaquest.core.sound.AppSoundPlayer
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -36,7 +35,6 @@ import com.iti.linguaquest.features.lockscreen.notification.VocabularyNotificati
 import com.iti.linguaquest.features.lockscreen.worker.VocabularyWorkScheduler
 import com.iti.linguaquest.features.setting.system.NotificationHelper
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 import javax.inject.Inject
 
 
@@ -82,7 +80,7 @@ class MainActivity : ComponentActivity() {
 
             CompositionLocalProvider(LocalSoundPlayer provides soundPlayer) {
                 LinguaQuestTheme(darkTheme = isDarkTheme) {
-                    AppNavigation(
+                    AppNavigationScreen(
                         openHomeRequested = openHomeRequested,
                         openDailyMissionRequested = openDailyMissionRequested,
                         openLockScreenWordId = openLockScreenWordId,

@@ -8,6 +8,7 @@ import com.iti.linguaquest.core.wallet.domain.model.Wallet
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.RefreshWalletUseCase
 import com.iti.linguaquest.features.auth.domain.usecase.CheckUserLoggedInUseCase
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
@@ -24,7 +25,8 @@ class MainViewModel @Inject constructor(
     getWalletUseCase: GetWalletUseCase,
     private val refreshWalletUseCase: RefreshWalletUseCase,
     private val getUnreadNotificationCountUseCase: GetUnreadNotificationCountUseCase,
-    private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase
+    private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase,
+    val tutorialManager: TutorialManager
 ) : ViewModel() {
 
     val wallet: StateFlow<Wallet> = getWalletUseCase().stateIn(

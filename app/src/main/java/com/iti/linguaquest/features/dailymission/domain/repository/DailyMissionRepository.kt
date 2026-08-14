@@ -7,7 +7,7 @@ import com.iti.linguaquest.features.dailymission.domain.model.VerifyMissionResul
 import java.io.File
 
 interface DailyMissionRepository {
-    suspend fun getDailyMission(): LinguaQuestResult<DailyMission, LinguaQuestDataError>
+    suspend fun getDailyMission(forceRefresh: Boolean = false): LinguaQuestResult<DailyMission, LinguaQuestDataError>
     suspend fun verifyMission(
         imageFile: File,
         word: String
