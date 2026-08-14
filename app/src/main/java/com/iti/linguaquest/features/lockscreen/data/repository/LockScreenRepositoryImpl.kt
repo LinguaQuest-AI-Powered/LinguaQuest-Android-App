@@ -12,16 +12,21 @@ import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParam
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureMetadata
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
 import com.iti.linguaquest.features.lockscreen.domain.repository.LockScreenRepository
+import com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository
 import com.iti.linguaquest.core.cache.data.datasource.SessionManagerDataSource
 import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
 
 class LockScreenRepositoryImpl @Inject constructor(
     private val remoteDataSource: LockScreenRemoteDataSource,
     private val localDataSource: LockScreenLocalDataSource,
-    private val sessionManagerDataSource: SessionManagerDataSource
+    private val sessionManagerDataSource: SessionManagerDataSource,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : LockScreenRepository {
 
     override val featureEnabled: Flow<Boolean> = localDataSource.featureEnabled
@@ -33,9 +38,26 @@ class LockScreenRepositoryImpl @Inject constructor(
     override val lastProficiencyLevel: Flow<String?> = localDataSource.lastProficiencyLevel
     override val pendingOperationId: Flow<String?> = localDataSource.pendingOperationId
     override val lastRewardedMilestoneCount: Flow<Int?> = localDataSource.lastRewardedMilestoneCount
-    override val pendingCount: Flow<Int> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.pendingCount(userId ?: -1) }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val pendingCount: Flow<Int> = combine(
+        sessionManagerDataSource.lastLoggedInUserId,
+        userPreferencesRepository.targetLanguageName
+    ) { userId, targetLanguage ->
+        (userId ?: -1) to (targetLanguage.orEmpty().ifBlank { "English" })
+    }.flatMapLatest { (userId, targetLanguage) ->
+        localDataSource.pendingCount(userId, targetLanguage)
+    }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val allWords: Flow<List<LockScreenWord>> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.allWords(userId ?: -1) }.map { list -> list.map { it.toDomain() } }
-    override val pendingWord: Flow<LockScreenWord?> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.pendingWord(userId ?: -1) }.map { it?.toDomain() }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val pendingWord: Flow<LockScreenWord?> = combine(
+        sessionManagerDataSource.lastLoggedInUserId,
+        userPreferencesRepository.targetLanguageName
+    ) { userId, targetLanguage ->
+        (userId ?: -1) to (targetLanguage.orEmpty().ifBlank { "English" })
+    }.flatMapLatest { (userId, targetLanguage) ->
+        localDataSource.pendingWord(userId, targetLanguage)
+    }.map { it?.toDomain() }
     override val postedOrOpenedWords: Flow<List<LockScreenWord>> = sessionManagerDataSource.lastLoggedInUserId.flatMapLatest { userId -> localDataSource.postedOrOpenedWords(userId ?: -1) }.map { list -> list.map { it.toDomain() } }
 
     override suspend fun enable() {
@@ -171,77 +193,14 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun pendingCountOnce(): Int {
         val userId = sessionManagerDataSource.getCurrentUserId()
-        return localDataSource.pendingCountOnce(userId)
+        val targetLanguage = userPreferencesRepository.targetLanguageName.first().orEmpty().ifBlank { "English" }
+        return localDataSource.pendingCountOnce(userId, targetLanguage)
     }
 
     override suspend fun observePendingOnce(): LockScreenWord? {
         val userId = sessionManagerDataSource.getCurrentUserId()
-        return localDataSource.getRandomPendingWordOnce(userId)?.toDomain()
+        val targetLanguage = userPreferencesRepository.targetLanguageName.first().orEmpty().ifBlank { "English" }
+        return localDataSource.getRandomPendingWordOnce(userId, targetLanguage)?.toDomain()
     }
 
-    private fun buildFallbackVocabulary(
-        targetLanguage: String,
-        batchSize: Int
-    ): List<GeneratedVocabularyWord> {
-        val words = when (targetLanguage.lowercase()) {
-            "spanish" -> spanishFallbackWords()
-            "french" -> frenchFallbackWords()
-            "german" -> germanFallbackWords()
-            "japanese" -> japaneseFallbackWords()
-            else -> spanishFallbackWords()
-        }
-        return words.take(batchSize)
-    }
-
-    private fun spanishFallbackWords(): List<GeneratedVocabularyWord> = listOf(
-        GeneratedVocabularyWord("casa", "house", "Veo una casa azul."),
-        GeneratedVocabularyWord("libro", "book", "Leo un libro tranquilo."),
-        GeneratedVocabularyWord("agua", "water", "Bebo agua fria."),
-        GeneratedVocabularyWord("comer", "to eat", "Quiero comer ahora."),
-        GeneratedVocabularyWord("hablar", "to speak", "Mi amigo habla despacio."),
-        GeneratedVocabularyWord("perro", "dog", "El perro corre rapido."),
-        GeneratedVocabularyWord("mesa", "table", "La mesa esta limpia."),
-        GeneratedVocabularyWord("luz", "light", "La luz es suave."),
-        GeneratedVocabularyWord("amigo", "friend", "Mi amigo sonríe hoy."),
-        GeneratedVocabularyWord("escuela", "school", "La escuela esta abierta.")
-    )
-
-    private fun frenchFallbackWords(): List<GeneratedVocabularyWord> = listOf(
-        GeneratedVocabularyWord("maison", "house", "Je vois une maison bleue."),
-        GeneratedVocabularyWord("livre", "book", "Je lis un livre calme."),
-        GeneratedVocabularyWord("eau", "water", "Je bois de l'eau froide."),
-        GeneratedVocabularyWord("manger", "to eat", "Je veux manger maintenant."),
-        GeneratedVocabularyWord("parler", "to speak", "Mon ami parle doucement."),
-        GeneratedVocabularyWord("chien", "dog", "Le chien court vite."),
-        GeneratedVocabularyWord("table", "table", "La table est propre."),
-        GeneratedVocabularyWord("lumiere", "light", "La lumiere est douce."),
-        GeneratedVocabularyWord("ami", "friend", "Mon ami sourit aujourd'hui."),
-        GeneratedVocabularyWord("ecole", "school", "L'ecole est ouverte.")
-    )
-
-    private fun germanFallbackWords(): List<GeneratedVocabularyWord> = listOf(
-        GeneratedVocabularyWord("Haus", "house", "Ich sehe ein blaues Haus."),
-        GeneratedVocabularyWord("Buch", "book", "Ich lese ein ruhiges Buch."),
-        GeneratedVocabularyWord("Wasser", "water", "Ich trinke kaltes Wasser."),
-        GeneratedVocabularyWord("essen", "to eat", "Ich will jetzt essen."),
-        GeneratedVocabularyWord("sprechen", "to speak", "Mein Freund spricht langsam."),
-        GeneratedVocabularyWord("Hund", "dog", "Der Hund rennt schnell."),
-        GeneratedVocabularyWord("Tisch", "table", "Der Tisch ist sauber."),
-        GeneratedVocabularyWord("Licht", "light", "Das Licht ist weich."),
-        GeneratedVocabularyWord("Freund", "friend", "Mein Freund lachelt heute."),
-        GeneratedVocabularyWord("Schule", "school", "Die Schule ist offen.")
-    )
-
-    private fun japaneseFallbackWords(): List<GeneratedVocabularyWord> = listOf(
-        GeneratedVocabularyWord("いえ", "house", "あおい いえ を みます。"),
-        GeneratedVocabularyWord("ほん", "book", "しずかな ほん を よみます。"),
-        GeneratedVocabularyWord("みず", "water", "つめたい みず を のみます。"),
-        GeneratedVocabularyWord("たべる", "to eat", "いま たべたい です。"),
-        GeneratedVocabularyWord("はなす", "to speak", "ともだち は ゆっくり はなします。"),
-        GeneratedVocabularyWord("いぬ", "dog", "いぬ が はやく はしります。"),
-        GeneratedVocabularyWord("つくえ", "table", "つくえ は きれい です。"),
-        GeneratedVocabularyWord("ひかり", "light", "ひかり は やさしい です。"),
-        GeneratedVocabularyWord("ともだち", "friend", "ともだち は きょう ほほえみます。"),
-        GeneratedVocabularyWord("がっこう", "school", "がっこう は あいています。")
-    )
 }
