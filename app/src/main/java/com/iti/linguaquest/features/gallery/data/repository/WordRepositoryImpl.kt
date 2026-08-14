@@ -38,7 +38,7 @@ class WordRepositoryImpl @Inject constructor(
                     if (localUri != null) {
                         word.copy(imagePath = localUri)
                     } else {
-                        word
+                        word.copy(imagePath = "")
                     }
                 }
 
