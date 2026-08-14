@@ -1,0 +1,92 @@
+[
+  {
+    "id": "airport",
+    "displayName": "Airport",
+    "emoji": "✈️"
+  },
+  {
+    "id": "bathroom",
+    "displayName": "Bathroom",
+    "emoji": "🧼"
+  },
+  {
+    "id": "beach",
+    "displayName": "Beach",
+    "emoji": "🐚"
+  },
+  {
+    "id": "city",
+    "displayName": "City",
+    "emoji": "🚌"
+  },
+  {
+    "id": "farm",
+    "displayName": "Farm",
+    "emoji": "🐄"
+  },
+  {
+    "id": "forest",
+    "displayName": "Forest",
+    "emoji": "🐍"
+  },
+  {
+    "id": "hospital",
+    "displayName": "Hospital",
+    "emoji": "🧑‍⚕️"
+  },
+  {
+    "id": "kitchen",
+    "displayName": "Kitchen",
+    "emoji": "🍎"
+  },
+  {
+    "id": "living_room",
+    "displayName": "Living Room",
+    "emoji": "🛋️"
+  },
+  {
+    "id": "market",
+    "displayName": "Market",
+    "emoji": "🍌"
+  },
+  {
+    "id": "office",
+    "displayName": "Office",
+    "emoji": "🪑"
+  },
+  {
+    "id": "park",
+    "displayName": "Park",
+    "emoji": "🐶"
+  },
+  {
+    "id": "restaurant",
+    "displayName": "Restaurant",
+    "emoji": "📋"
+  },
+  {
+    "id": "school",
+    "displayName": "School",
+    "emoji": "✏️"
+  },
+  {
+    "id": "space",
+    "displayName": "Space",
+    "emoji": "🚀"
+  },
+  {
+    "id": "sports_stadium",
+    "displayName": "Sports Stadium",
+    "emoji": "⚽"
+  },
+  {
+    "id": "train_station",
+    "displayName": "Train Station",
+    "emoji": "🚆"
+  },
+  {
+    "id": "zoo",
+    "displayName": "Zoo",
+    "emoji": "🦁"
+  }
+]

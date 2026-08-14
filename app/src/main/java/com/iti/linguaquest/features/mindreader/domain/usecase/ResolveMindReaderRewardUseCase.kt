@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameConfig
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
@@ -11,7 +12,7 @@ class ResolveMindReaderRewardUseCase @Inject constructor() {
 
     operator fun invoke(
         challenge: MindReaderRewardChallenge,
-        contradictionResult: com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult,
+        contradictionResult: MindReaderContradictionResult,
         config: MindReaderGameConfig,
         history: MindReaderGameHistory
     ): MindReaderResult {
@@ -34,7 +35,7 @@ class ResolveMindReaderRewardUseCase @Inject constructor() {
 
     private fun resolvePopQuiz(
         challenge: MindReaderRewardChallenge.PopQuiz,
-        contradictionResult: com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult,
+        contradictionResult: MindReaderContradictionResult,
         config: MindReaderGameConfig,
         history: MindReaderGameHistory
     ): MindReaderResult {
@@ -66,7 +67,7 @@ class ResolveMindReaderRewardUseCase @Inject constructor() {
 
     private fun resolveStump(
         challenge: MindReaderRewardChallenge.Stump,
-        contradictionResult: com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult,
+        contradictionResult: MindReaderContradictionResult,
         config: MindReaderGameConfig,
         history: MindReaderGameHistory
     ): MindReaderResult {

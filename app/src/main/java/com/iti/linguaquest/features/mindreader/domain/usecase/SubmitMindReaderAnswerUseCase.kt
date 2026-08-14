@@ -15,7 +15,8 @@ class SubmitMindReaderAnswerUseCase @Inject constructor() {
     ): MindReaderGameState {
         val entry = MindReaderHistoryEntry(
             attributeId = question.attributeId,
-            question = question.question,
+            questionTargetText = question.targetText,
+            questionNativeText = question.nativeText,
             answer = answer,
             confidenceAfterAnswer = 0.0
         )

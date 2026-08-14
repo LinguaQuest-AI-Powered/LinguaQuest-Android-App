@@ -1,6 +1,5 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
-import com.iti.linguaquest.features.mindreader.domain.model.LocalizedText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
@@ -19,7 +18,7 @@ class VerifyMindReaderHonestyUseCase @Inject constructor(
         claimedWord: String
     ): MindReaderContradictionResult {
         val historyString = history.turns.joinToString("\n") { turn ->
-            "Q: ${turn.question.resolve(targetLanguage)}\nA: ${turn.answer.rawId}"
+            "Q: ${turn.questionTargetText}\nA: ${turn.answer.rawId}"
         }
 
         val aiResponse = repository.verifyUserWord(
@@ -32,9 +31,9 @@ class VerifyMindReaderHonestyUseCase @Inject constructor(
         val dummyEntity = MindReaderEntity(
             id = UUID.randomUUID().toString(),
             worldKey = categoryContext,
-            translations = LocalizedText(mapOf(targetLanguage to claimedWord)),
-            emoji = "🤔",
-            positiveAttributes = emptySet()
+            targetText = claimedWord,
+            nativeText = "",
+            emoji = "🤔"
         )
 
         return if (aiResponse != null) {
@@ -47,7 +46,7 @@ class VerifyMindReaderHonestyUseCase @Inject constructor(
                 reason = aiResponse.explanation
             )
         } else {
-             MindReaderContradictionResult(
+            MindReaderContradictionResult(
                 evaluatedEntity = dummyEntity,
                 details = emptyList(),
                 contradictionCount = 0,

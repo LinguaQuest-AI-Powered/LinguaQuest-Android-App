@@ -816,6 +816,11 @@
     <string name="mind_reader_coins_value">%1$d عملة</string>
     <string name="mind_reader_trap_speech">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
     <string name="mind_reader_busted_title">كُشفت الحيلة!</string>
+    <string name="mind_reader_trap_input_placeholder">اكتب الكلمة التي كنت تفكر فيها...</string>
+    <string name="mind_reader_error_not_enough_coins">لا توجد عملات كافية للترجمة</string>
+    <string name="mind_reader_error_quota_exceeded">تم الوصول إلى الحد الأقصى للخدمة. يرجى الانتظار والمحاولة مرة أخرى.</string>
+    <string name="mind_reader_error_connection_lost">انقطع الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.</string>
+    <string name="mind_reader_error_generic">حدث خطأ ما. يرجى المحاولة مجدداً.</string>
 
     <string name="cannot_remove_active_language">لا يمكن حذف اللغة النشطة حاليًا.</string>
     <string name="language_removed_success">تم حذف اللغة بنجاح.</string>

@@ -5,56 +5,65 @@ This document tracks our journey of auditing and optimizing Jetpack Compose UI p
 ## 1. Map Screen
 
 ### The Problem
+
 When standing still on the Map Screen, the Layout Inspector showed thousands of continuous recompositions occurring in `MapContent`, `LevelNode`, and `SnowEffect`. The UI was suffering from "Infinite Recomposition Loops" driven by background animations.
 
 ### Causes & Solutions
 
 **Cause 1: Passing animated state directly as variables (Mascot Animation)**
-*   **Issue:** The `MapContent` screen calculated `animatedOffsetX` and `animatedOffsetY` for the floating mascot and passed them as raw `Dp` values into the `Mascot` composable. Because these values changed 60 times a second, they forced the entire `MapContent` (and everything inside it, including the background image and all level nodes) to recompose on every frame.
-*   **Solution:** We updated `Mascot` to accept lambdas (`() -> Dp`) instead of raw values. We then applied these lambdas using the lambda overload of `Modifier.absoluteOffset { IntOffset(...) }`. This technique, called **Deferred State Reading**, ensures the state is only read during the Layout phase, completely bypassing the Composition phase.
+
+* **Issue:** The `MapContent` screen calculated `animatedOffsetX` and `animatedOffsetY` for the floating mascot and passed them as raw `Dp` values into the `Mascot` composable. Because these values changed 60 times a second, they forced the entire `MapContent` (and everything inside it, including the background image and all level nodes) to recompose on every frame.
+* **Solution:** We updated `Mascot` to accept lambdas (`() -> Dp`) instead of raw values. We then applied these lambdas using the lambda overload of `Modifier.absoluteOffset { IntOffset(...) }`. This technique, called **Deferred State Reading**, ensures the state is only read during the Layout phase, completely bypassing the Composition phase.
 
 **Cause 2: Modifiers that read state in Composition (LevelNode Animation)**
-*   **Issue:** The currently active `LevelNode` uses a pulsing glow animation. It was applying this animation using `.scale(pulseScale)` and `.alpha(glowPulse)`. These specific modifier extensions read their values during the Composition phase, forcing the `LevelNode` to redraw continuously.
-*   **Solution:** We replaced `.scale()` and `.alpha()` with `Modifier.graphicsLayer { ... }`. By setting `scaleX`, `scaleY`, and `alpha` directly inside the `graphicsLayer` block, the state reading is deferred straight to the GPU (Draw phase), dropping recompositions to 0.
+
+* **Issue:** The currently active `LevelNode` uses a pulsing glow animation. It was applying this animation using `.scale(pulseScale)` and `.alpha(glowPulse)`. These specific modifier extensions read their values during the Composition phase, forcing the `LevelNode` to redraw continuously.
+* **Solution:** We replaced `.scale()` and `.alpha()` with `Modifier.graphicsLayer { ... }`. By setting `scaleX`, `scaleY`, and `alpha` directly inside the `graphicsLayer` block, the state reading is deferred straight to the GPU (Draw phase), dropping recompositions to 0.
 
 **Observation: Collateral Damage (SnowEffect)**
-*   Initially, `SnowEffect` appeared to be recomposing thousands of times. However, this was just collateral damage from `MapContent` forcing everything to redraw. Once the `MapContent` mascot fix was applied, `SnowEffect` recompositions dropped perfectly to near 0. This is because `SnowEffect`'s animations are read strictly inside a `Canvas` block (`DrawScope`), which is the optimal way to handle particle animations!
+
+* Initially, `SnowEffect` appeared to be recomposing thousands of times. However, this was just collateral damage from `MapContent` forcing everything to redraw. Once the `MapContent` mascot fix was applied, `SnowEffect` recompositions dropped perfectly to near 0. This is because `SnowEffect`'s animations are read strictly inside a `Canvas` block (`DrawScope`), which is the optimal way to handle particle animations!
 
 **Cause 3: Entrance Animations using direct modifiers (LevelNode shape transition)**
-*   **Issue:** The user noticed the nodes still recomposed about 24-28 times after loading. This perfectly matched the ~500ms duration of the entrance animations (`introScale` and `revealScale`). These `Animatable` states were also applied directly using `.scale()` and `.alpha()`, causing the components to recompose once per frame during their initial entrance sequence.
-*   **Solution:** We replaced the entrance `.scale()` and `.alpha()` modifiers with `.graphicsLayer`. Now, even the entrance animations are fully delegated to the GPU, guaranteeing 0 recompositions both during entrance and while resting!
+
+* **Issue:** The user noticed the nodes still recomposed about 24-28 times after loading. This perfectly matched the ~500ms duration of the entrance animations (`introScale` and `revealScale`). These `Animatable` states were also applied directly using `.scale()` and `.alpha()`, causing the components to recompose once per frame during their initial entrance sequence.
+* **Solution:** We replaced the entrance `.scale()` and `.alpha()` modifiers with `.graphicsLayer`. Now, even the entrance animations are fully delegated to the GPU, guaranteeing 0 recompositions both during entrance and while resting!
 
 ---
 
 ## 2. Loading View (LingoBouncingDots)
 
 ### The Problem
+
 When the map screen was loading, the `LoadingView` overlay appeared, and the `LingoBouncingDots` inside it caused severe recompositions (60+ times per second).
 
 ### Causes & Solutions
 
 **Cause 1: Directly applying animated alpha in Modifiers**
-*   **Issue:** The bouncing dots use three separate infinite transitions to animate their opacity (`dot1Alpha`, `dot2Alpha`, `dot3Alpha`). These states were applied directly using `.alpha(dot1Alpha)`, which forces a full recomposition of the dots in the Composition phase on every single frame.
-*   **Solution:** We replaced `.alpha(dotXAlpha)` with `.graphicsLayer { alpha = dotXAlpha }`. This defers the opacity changes directly to the GPU (Draw phase), resulting in a massive performance boost and 0 recompositions while the dots animate continuously.
+
+* **Issue:** The bouncing dots use three separate infinite transitions to animate their opacity (`dot1Alpha`, `dot2Alpha`, `dot3Alpha`). These states were applied directly using `.alpha(dot1Alpha)`, which forces a full recomposition of the dots in the Composition phase on every single frame.
+* **Solution:** We replaced `.alpha(dotXAlpha)` with `.graphicsLayer { alpha = dotXAlpha }`. This defers the opacity changes directly to the GPU (Draw phase), resulting in a massive performance boost and 0 recompositions while the dots animate continuously.
 
 ---
 
 ## 3. Splash Screen
 
 ### The Problem
+
 The `LinguaQuestSplashScreen` contains several nested, continuously animating components (`RippleRingsView`, `ShimmerLogoView`, `TwinklingStarsView`, and `OrbitingSparklesView`). The layout inspector indicated around 77 recompositions per second. While the parent splash screen correctly deferred its entrance animations using `Modifier.graphicsLayer`, the child components did not.
 
 ### Causes & Solutions
 
 **Cause 1: Reading animated variables directly in Modifier extensions**
-*   **Issue:** Across the nested components, `animateFloat` values generated by `rememberInfiniteTransition` were passed directly into `.scale()`, `.alpha()`, `.offset()`, and `.background(Brush)`.
-*   **Solution:** We audited each nested component and migrated all animation state reads out of the Composition phase:
-    *   **RippleRingsView**: Moved `.scale()` and `.alpha()` into `.graphicsLayer`.
-    *   **TwinklingStarsView**: Replaced `.alpha(opacity)` with `.graphicsLayer { alpha = opacity }`.
-    *   **OrbitingSparklesView**: Moved complex `Math.cos`/`sin` offset math out of the main loop and inside a `.graphicsLayer` block, changing `.offset(x,y)` to `translationX` and `translationY`.
-    *   **ShimmerLogoView**: Replaced the `.background()` modifier (which read the state) with `.drawWithCache { onDrawBehind { drawRect(brush) } }`, properly deferring the gradient translation to the Draw phase. 
-    *   **SplashVideoView**: The `AndroidView` holding the video player was fading in using `.alpha(videoAlpha)`. We also moved this to `.graphicsLayer { alpha = videoAlpha }`.
-    
+
+* **Issue:** Across the nested components, `animateFloat` values generated by `rememberInfiniteTransition` were passed directly into `.scale()`, `.alpha()`, `.offset()`, and `.background(Brush)`.
+* **Solution:** We audited each nested component and migrated all animation state reads out of the Composition phase:
+  * **RippleRingsView**: Moved `.scale()` and `.alpha()` into `.graphicsLayer`.
+  * **TwinklingStarsView**: Replaced `.alpha(opacity)` with `.graphicsLayer { alpha = opacity }`.
+  * **OrbitingSparklesView**: Moved complex `Math.cos`/`sin` offset math out of the main loop and inside a `.graphicsLayer` block, changing `.offset(x,y)` to `translationX` and `translationY`.
+  * **ShimmerLogoView**: Replaced the `.background()` modifier (which read the state) with `.drawWithCache { onDrawBehind { drawRect(brush) } }`, properly deferring the gradient translation to the Draw phase.
+  * **SplashVideoView**: The `AndroidView` holding the video player was fading in using `.alpha(videoAlpha)`. We also moved this to `.graphicsLayer { alpha = videoAlpha }`.
+
 These changes guarantee that all of the complex, infinite animations on the splash screen run strictly on the GPU without ever triggering a single Compose recomposition loop!
 
 ---
@@ -62,25 +71,43 @@ These changes guarantee that all of the complex, infinite animations on the spla
 ## 4. Global Components & Home Screen
 
 ### AppSnackbarHost.kt
+
 **Observation: Infinite Snackbar Recomposition**
-*   The `AppSnackbarHost` displayed a countdown bar at the bottom using an animated float `animatedProgress`.
-*   Because the `animatedProgress` was passed to `.fillMaxWidth(fraction = animatedProgress)`, the UI was forced to recalculate its layout size and trigger a full recomposition on every frame until the Snackbar was dismissed.
+
+* The `AppSnackbarHost` displayed a countdown bar at the bottom using an animated float `animatedProgress`.
+* Because the `animatedProgress` was passed to `.fillMaxWidth(fraction = animatedProgress)`, the UI was forced to recalculate its layout size and trigger a full recomposition on every frame until the Snackbar was dismissed.
 
 **Solution: GraphicsLayer Scaling**
-*   We removed the `fraction` argument from `.fillMaxWidth()` and instead applied `.graphicsLayer { scaleX = animatedProgress ; transformOrigin = TransformOrigin(0f, 0.5f) }`. 
-*   This draws the bar at full width but scales it down horizontally using the GPU, entirely bypassing recomposition and layout passes!
+
+* We removed the `fraction` argument from `.fillMaxWidth()` and instead applied `.graphicsLayer { scaleX = animatedProgress ; transformOrigin = TransformOrigin(0f, 0.5f) }`.
+* This draws the bar at full width but scales it down horizontally using the GPU, entirely bypassing recomposition and layout passes!
 
 ### DailyRewardTimeLine.kt (CurrentDayNode)
+
 **Observation: Pulsing Current Day Node Recomposition**
-*   The `CurrentDayNode` features an infinite pulsing animation to draw attention to today's reward.
-*   The `scale` and `alpha` float states were directly plugged into `.scale(scale)` and `.background(color.copy(alpha = alpha))`.
-*   This caused the current node to recompose infinitely in a loop!
+
+* The `CurrentDayNode` features an infinite pulsing animation to draw attention to today's reward.
+* The `scale` and `alpha` float states were directly plugged into `.scale(scale)` and `.background(color.copy(alpha = alpha))`.
+* This caused the current node to recompose infinitely in a loop!
 
 **Solution: Deferring to GraphicsLayer**
-*   We bundled the `scale` and `alpha` modifications into a `.graphicsLayer { scaleX = scale; scaleY = scale; this.alpha = alpha }` block, keeping the main thread composition completely stable.
 
-### LinguaQuestTopAppBar.kt
-**Observation: Top App Bar Recomposes 36 Times When Coins Added**
-*   When money is added, the Top App Bar uses `animateIntAsState` for 600ms to smoothly count up the coins.
-*   Because `Text(text = animatedCoins.toString())` inherently demands a new String to be composed and measured to draw the new characters, the `LinguaQuestTopAppBar` recomposes exactly ~36 times (600ms at 60 frames per second).
-*   **Verdict**: This is **100% normal and correct behavior!** You cannot offload text value changes to the GPU `graphicsLayer` because the actual font glyphs and string length change. Recomposing exactly for the duration of the text counting animation is the optimized and intended approach!
+* We bundled the `scale` and `alpha` modifications into a `.graphicsLayer { scaleX = scale; scaleY = scale; this.alpha = alpha }` block, keeping the main thread composition completely stable.
+
+---
+
+## 5. Global Loading Animations (`LingoSpinningIcon` & `LingoLoadingAnimation`)
+
+### The Problem
+Whenever `LingoSpinningIcon` (our primary spinner used across buttons, dialogs, quest cards, and bottom sheets) or `LingoLoadingAnimation` were visible on screen, the Layout Inspector showed extreme infinite recompositions (60-120 times per second).
+
+### Causes & Solutions
+
+**Cause 1: Directly applying animated rotation in Modifier (`LingoSpinningIcon`)**
+* **Issue:** `LingoSpinningIcon` calculated `val rotation by infiniteTransition.animateFloat(0f, 360f)` and passed it directly to `Modifier.rotate(rotation)`. Because `Modifier.rotate()` reads the `rotation` value during the Composition phase, every frame of the 360° spin forced a full recomposition of `LingoSpinningIcon` and its surrounding container.
+* **Solution:** We replaced `Modifier.rotate(rotation)` with `Modifier.graphicsLayer { rotationZ = rotation }`. Reading `rotation` inside the `graphicsLayer` lambda defers execution directly to the Draw phase (GPU), dropping recompositions to 0.
+
+**Cause 2: Applying animated scale in Composition (`LingoLoadingAnimation`)**
+* **Issue:** In `LingoLoadingAnimation`, while `translationY` was inside `graphicsLayer`, the pulsing `scale` value was applied via `Modifier.scale(scale)`. This caused the animated mascot image to recompose on every frame during its bounce cycle.
+* **Solution:** We combined `scaleX = scale` and `scaleY = scale` directly into the existing `Modifier.graphicsLayer { translationY = translateY ; scaleX = scale ; scaleY = scale }` block.
+

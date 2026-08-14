@@ -1,44 +1,15 @@
-package com.iti.linguaquest.features.mindreader.data.datasource.remote
+package com.iti.linguaquest.features.mindreader.domain.prompt
 
-import com.google.gson.Gson
-import com.iti.linguaquest.core.ai.network.GeminiRestClient
-import com.iti.linguaquest.core.ai.network.model.GeminiContentDto
-import com.iti.linguaquest.core.ai.network.model.GeminiGenerationConfigDto
-import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
-import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
-import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderHonestyResponse
-import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderNextStepResponse
-import com.iti.linguaquest.features.mindreader.data.datasource.remote.mdoel.MindReaderQuizResponse
-import javax.inject.Inject
+object MindReaderPromptFactory {
 
-class MindReaderAiServiceImpl @Inject constructor(
-    private val gson: Gson,
-    private val geminiRestClient: GeminiRestClient
-) : MindReaderAiService {
-
-    private suspend fun generateJson(prompt: String): String? {
-        val requestPayload = GeminiRequestDto(
-            contents = listOf(
-                GeminiContentDto(
-                    parts = listOf(GeminiPartDto(text = prompt))
-                )
-            ),
-            generationConfig = GeminiGenerationConfigDto(
-                temperature = 0.5f,
-                responseMimeType = "application/json"
-            )
-        )
-        return geminiRestClient.executeGeminiRequest(requestPayload)
-    }
-
-    override suspend fun getNextTurn(
+    fun createNextTurnPrompt(
         categoryContext: String,
         targetLanguage: String,
         nativeLanguage: String,
-        historyPrompt: String
-    ): MindReaderNextStepResponse? {
-        val maxTurns = 20
-        val prompt = """
+        historyPrompt: String,
+        maxTurns: Int = 20
+    ): String {
+        return """
         You are the engine behind "Lingo's Mind Reader", an Akinator-style guessing game for language learners. The user is thinking of ONE specific word that belongs to this category:
 
         Category context: "$categoryContext"
@@ -74,22 +45,15 @@ class MindReaderAiServiceImpl @Inject constructor(
           "guessEmoji": "single system emoji accurately representing the word, or null"
         }
         """.trimIndent()
-
-        val jsonString = generateJson(prompt) ?: return null
-        return try {
-            gson.fromJson(jsonString, MindReaderNextStepResponse::class.java)
-        } catch (e: Exception) {
-            null
-        }
     }
 
-    override suspend fun generateQuizChoices(
+    fun createQuizChoicesPrompt(
         categoryContext: String,
         correctWord: String,
         nativeLanguage: String,
         targetLanguage: String
-    ): MindReaderQuizResponse? {
-        val prompt = """
+    ): String {
+        return """
         The user just correctly identified the word "$correctWord" (in $targetLanguage) from this category: "$categoryContext".
 
         Generate exactly 3 answer options for a vocabulary quiz: one is the correct word "$correctWord", and two are plausible-but-wrong words from the same category (in $targetLanguage). Shuffle the order.
@@ -105,22 +69,15 @@ class MindReaderAiServiceImpl @Inject constructor(
           ]
         }
         """.trimIndent()
-
-        val jsonString = generateJson(prompt) ?: return null
-        return try {
-            gson.fromJson(jsonString, MindReaderQuizResponse::class.java)
-        } catch (e: Exception) {
-            null
-        }
     }
 
-    override suspend fun verifyUserWord(
+    fun createHonestyVerificationPrompt(
         categoryContext: String,
         historyPrompt: String,
         claimedWord: String,
         feedbackLanguage: String
-    ): MindReaderHonestyResponse? {
-        val prompt = """
+    ): String {
+        return """
         The user played a guessing game and, when the AI failed to guess, claimed they were thinking of the word "$claimedWord" (category: "$categoryContext").
 
         Here is the full history of questions asked and the user's answers:
@@ -137,12 +94,5 @@ class MindReaderAiServiceImpl @Inject constructor(
           "explanation": "short message in $feedbackLanguage"
         }
         """.trimIndent()
-
-        val jsonString = generateJson(prompt) ?: return null
-        return try {
-            gson.fromJson(jsonString, MindReaderHonestyResponse::class.java)
-        } catch (e: Exception) {
-            null
-        }
     }
 }

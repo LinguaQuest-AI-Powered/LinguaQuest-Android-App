@@ -1,12 +1,12 @@
 package com.iti.linguaquest.features.mindreader.presentation.contract
 
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizChoice
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizQuestion
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate
 
 enum class MindReaderPhase {
     LOBBY,
@@ -46,7 +46,7 @@ data class MindReaderState(
     val xpBalance: Int = 0,
     val maxQuestions: Int = 20,
     val currentQuestionNumber: Int = 0,
-    val currentQuestionCandidate: com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate? = null,
+    val currentQuestionCandidate: MindReaderQuestionCandidate? = null,
     val currentQuestion: String? = null,
     val translatedQuestion: String? = null,
     val showTranslation: Boolean = false,

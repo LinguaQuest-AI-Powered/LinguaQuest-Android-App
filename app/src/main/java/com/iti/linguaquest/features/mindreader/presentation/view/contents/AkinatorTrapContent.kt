@@ -86,7 +86,7 @@ fun AkinatorTrapContent(
                     onValueChange = { onIntent(MindReaderIntent.StumpInputValueChanged(it)) },
                     placeholder = {
                         Text(
-                            text = "Type the word you thought of...",
+                            text = stringResource(id = R.string.mind_reader_trap_input_placeholder),
                             color = LinguaQuestTheme.colors.textFieldPlaceholder,
                             style = MaterialTheme.typography.bodyLarge
                         )

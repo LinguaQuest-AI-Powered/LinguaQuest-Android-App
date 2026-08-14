@@ -1,93 +1,23 @@
 package com.iti.linguaquest.features.mindreader.domain.model
 
-import com.google.gson.TypeAdapter
-import com.google.gson.annotations.JsonAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonToken
-import com.google.gson.stream.JsonWriter
 import java.util.Locale
-
-@JsonAdapter(LocalizedTextAdapter::class)
-data class LocalizedText(
-    val values: Map<String, String>
-) {
-    fun resolve(languageCode: String?, fallbackLanguage: String = "en"): String {
-        val normalizedLanguage = languageCode.orEmpty().trim().lowercase(Locale.ROOT)
-        val normalizedFallback = fallbackLanguage.trim().lowercase(Locale.ROOT)
-
-        if (normalizedLanguage.isNotEmpty()) {
-            values[normalizedLanguage]?.let { return it }
-            normalizedLanguage
-                .takeIf { it.contains('-') || it.contains('_') }
-                ?.let { code ->
-                    val baseCode = code.substringBefore('-').substringBefore('_')
-                    values[baseCode]?.let { return it }
-                }
-        }
-
-        values[normalizedFallback]?.let { return it }
-        return values.entries.firstOrNull()?.value.orEmpty()
-    }
-}
-
-class LocalizedTextAdapter :  TypeAdapter<LocalizedText>() {
-    override fun write(out: JsonWriter, value: LocalizedText?) {
-        out.beginObject()
-        value?.values.orEmpty().forEach { (languageCode, text) ->
-            out.name(languageCode)
-            out.value(text)
-        }
-        out.endObject()
-    }
-
-    override fun read(`in`: JsonReader): LocalizedText {
-        if (`in`.peek() == JsonToken.NULL) {
-            `in`.nextNull()
-            return LocalizedText(emptyMap())
-        }
-
-        val values = linkedMapOf<String, String>()
-        `in`.beginObject()
-        while (`in`.hasNext()) {
-            val name = `in`.nextName()
-            val value = if (`in`.peek() == JsonToken.NULL) {
-                `in`.nextNull()
-                ""
-            } else {
-                `in`.nextString()
-            }
-            values[name.lowercase(Locale.ROOT)] = value
-        }
-        `in`.endObject()
-        return LocalizedText(values)
-    }
-}
-
-data class MindReaderAttribute(
-    val id: String,
-    val question: LocalizedText
-)
 
 data class MindReaderEntity(
     val id: String,
     val worldKey: String,
-    val translations: LocalizedText,
-    val emoji: String,
-    val positiveAttributes: Set<String>
-) {
-    fun hasAttribute(attributeId: String): Boolean = attributeId in positiveAttributes
-
-    fun resolveTranslation(languageCode: String?): String = translations.resolve(languageCode)
-}
+    val targetText: String,
+    val nativeText: String = "",
+    val emoji: String
+)
 
 data class MindReaderGameConfig(
-    val maxQuestions: Int,
-    val guessThreshold: Double,
-    val translationCost: Int,
-    val correctRewardCoins: Int,
-    val correctRewardXp: Int,
-    val stumpBonusCoins: Int,
-    val stumpBonusXp: Int
+    val maxQuestions: Int = 20,
+    val guessThreshold: Double = 0.9,
+    val translationCost: Int = 5,
+    val correctRewardCoins: Int = 20,
+    val correctRewardXp: Int = 40,
+    val stumpBonusCoins: Int = 100,
+    val stumpBonusXp: Int = 80
 )
 
 enum class MindReaderAnswerOption(val rawId: String) {
@@ -96,24 +26,6 @@ enum class MindReaderAnswerOption(val rawId: String) {
     SOMETIMES("sometimes"),
     PROBABLY_NOT("probably_not"),
     NO("no");
-
-    fun likelihood(hasAttribute: Boolean): Double {
-        return when (this) {
-            YES -> if (hasAttribute) 1.0 else 0.05
-            PROBABLY -> if (hasAttribute) 0.85 else 0.15
-            SOMETIMES -> 0.55
-            PROBABLY_NOT -> if (hasAttribute) 0.15 else 0.85
-            NO -> if (hasAttribute) 0.05 else 1.0
-        }
-    }
-
-    fun contradicts(hasAttribute: Boolean): Boolean {
-        return when (this) {
-            YES, PROBABLY -> !hasAttribute
-            NO, PROBABLY_NOT -> hasAttribute
-            SOMETIMES -> false
-        }
-    }
 
     fun resolveLabel(languageCode: String?): String {
         val code = languageCode.orEmpty().trim().lowercase(Locale.ROOT).take(2)
@@ -175,17 +87,11 @@ enum class MindReaderAnswerOption(val rawId: String) {
     }
 }
 
-data class MindReaderCandidateScore(
-    val entity: MindReaderEntity,
-    val weight: Double
-)
-
 data class MindReaderPopQuizChoice(
     val entity: MindReaderEntity
 )
 
 data class MindReaderPopQuizQuestion(
-    val prompt: LocalizedText,
     val correctEntity: MindReaderEntity,
     val choices: List<MindReaderPopQuizChoice>
 ) {
@@ -196,7 +102,7 @@ data class MindReaderPopQuizQuestion(
 
 data class MindReaderContradictionDetail(
     val attributeId: String,
-    val question: LocalizedText,
+    val questionTargetText: String,
     val answer: MindReaderAnswerOption,
     val actualHasAttribute: Boolean,
     val isContradiction: Boolean
@@ -220,7 +126,8 @@ data class MindReaderGuessResult(
 
 data class MindReaderHistoryEntry(
     val attributeId: String,
-    val question: LocalizedText,
+    val questionTargetText: String,
+    val questionNativeText: String,
     val answer: MindReaderAnswerOption,
     val confidenceAfterAnswer: Double
 )
@@ -235,28 +142,22 @@ data class MindReaderGameHistory(
 
 data class MindReaderQuestionCandidate(
     val attributeId: String,
-    val question: LocalizedText
+    val targetText: String,
+    val nativeText: String
 )
 
 data class MindReaderGameState(
     val worldKey: String? = null,
-    val candidates: List<MindReaderCandidateScore> = emptyList(),
     val askedAttributes: Set<String> = emptySet(),
     val questionCount: Int = 0,
     val history: MindReaderGameHistory = MindReaderGameHistory(),
     val pendingGuess: MindReaderGuessResult? = null
 )
 
-data class MindReaderDataset(
-    val attributes: List<MindReaderAttribute>,
-    val entities: List<MindReaderEntity>,
-    val config: MindReaderGameConfig
-)
-
 data class MindReaderGameLaunch(
     val languageCode: String,
     val nativeLanguageCode: String = "en",
-    val dataset: MindReaderDataset,
+    val config: MindReaderGameConfig,
     val state: MindReaderGameState
 )
 
@@ -265,14 +166,20 @@ sealed interface MindReaderAiNextTurn {
         val targetText: String,
         val nativeText: String
     ) : MindReaderAiNextTurn
-    
+
     data class Guess(
         val word: String,
         val translation: String,
         val emoji: String
     ) : MindReaderAiNextTurn
-    
+
     data object Error : MindReaderAiNextTurn
+}
+
+sealed interface MindReaderNextTurn {
+    data class Question(val question: MindReaderQuestionCandidate) : MindReaderNextTurn
+    data class Guess(val guess: MindReaderGuessResult) : MindReaderNextTurn
+    data object Error : MindReaderNextTurn
 }
 
 data class MindReaderAiQuizChoice(

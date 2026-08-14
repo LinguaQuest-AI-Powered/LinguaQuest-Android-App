@@ -75,16 +75,14 @@ fun PopQuizContent(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 MindReaderQuizWordCard(
-                    word = state.popQuizQuestion?.correctEntity?.resolveTranslation(state.nativeLanguageCode)?.uppercase()
-                        ?: state.popQuizQuestion?.correctEntity?.resolveTranslation("en")?.uppercase()
-                        ?: ""
+                    word = state.popQuizQuestion?.correctEntity?.nativeText?.uppercase().orEmpty()
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 state.popQuizQuestion?.choices?.forEach { choice ->
                     MindReaderAnswerButton(
-                        text = choice.entity.resolveTranslation(state.targetLanguageCode),
+                        text = choice.entity.targetText,
                         onClick = { onIntent(MindReaderIntent.PopQuizAnswered(choice)) }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
