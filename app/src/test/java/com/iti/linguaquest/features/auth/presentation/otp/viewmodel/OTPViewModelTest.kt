@@ -70,6 +70,13 @@ class OTPViewModelTest {
         }
         coVerify(exactly = 1) { sendRegistrationOtpUseCase(email) }
         coVerify(exactly = 0) { sendPasswordResetOtpUseCase(any()) }
+        coVerify(exactly = 1) {
+            snackbarController.sendEvent(
+                match { event ->
+                    event.type == SnackbarType.SUCCESS
+                }
+            )
+        }
     }
 
     @Test

@@ -140,7 +140,12 @@ fun SignUpContent(
 
                 AuthTextField(
                     value = password,
-                    onValueChange = { password = it; localPasswordError = false },
+                    onValueChange = { 
+                        if (it.length <= 30) {
+                            password = it
+                            localPasswordError = false 
+                        }
+                    },
                     placeholder = stringResource(id = R.string.login_password),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     imeAction = ImeAction.Next,
@@ -149,6 +154,7 @@ fun SignUpContent(
                     errorMessage = state.passwordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
+                    disableCopyPaste = true,
                     modifier = Modifier
                         .shake(passwordShakeTrigger)
                         .focusRequester(passwordFocusRequester)
@@ -156,7 +162,12 @@ fun SignUpContent(
 
                 AuthTextField(
                     value = confirmPassword,
-                    onValueChange = { confirmPassword = it; localConfirmPasswordError = false },
+                    onValueChange = { 
+                        if (it.length <= 30) {
+                            confirmPassword = it
+                            localConfirmPasswordError = false 
+                        }
+                    },
                     placeholder = stringResource(id = R.string.signup_confirm_password),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     imeAction = ImeAction.Done,
@@ -165,6 +176,7 @@ fun SignUpContent(
                     errorMessage = state.confirmPasswordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
+                    disableCopyPaste = true,
                     modifier = Modifier
                         .shake(confirmPasswordShakeTrigger)
                         .focusRequester(confirmPasswordFocusRequester)

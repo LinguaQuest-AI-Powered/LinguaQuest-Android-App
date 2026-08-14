@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.auth.presentation.otp.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.iti.linguaquest.R
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
@@ -62,7 +63,7 @@ class OTPViewModel @Inject constructor(
             is OTPIntent.Initialize -> {
                 this.email = intent.email
                 this.isPasswordReset = intent.isPasswordReset
-                startTimer()
+                startTimer(isInitialization = true)
             }
             is OTPIntent.OnOtpCodeChanged -> {
                 if (intent.code.length <= 4) {
@@ -76,7 +77,7 @@ class OTPViewModel @Inject constructor(
             }
             OTPIntent.OnVerifyClicked -> verifyOtp()
             OTPIntent.OnResendCodeClicked -> {
-                startTimer()
+                startTimer(isInitialization = false)
             }
             OTPIntent.OnBackClicked -> sendEffect(OTPEffect.NavigateBack)
             OTPIntent.OnBackToLoginClicked -> sendEffect(OTPEffect.NavigateToLogin)
@@ -123,13 +124,28 @@ class OTPViewModel @Inject constructor(
         }
     }
 
-    private fun startTimer() {
+    private fun startTimer(isInitialization: Boolean) {
         viewModelScope.launch {
             if (email.isNotEmpty()) {
                 if (isPasswordReset) {
                     sendPasswordResetOtpUseCase(email)
                 } else {
                     sendRegistrationOtpUseCase(email)
+                    if (isInitialization) {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResource(R.string.signup_success_message),
+                                type = SnackbarType.SUCCESS
+                            )
+                        )
+                    } else {
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResource(R.string.otp_code_resent_message),
+                                type = SnackbarType.SUCCESS
+                            )
+                        )
+                    }
                 }
             }
         }
