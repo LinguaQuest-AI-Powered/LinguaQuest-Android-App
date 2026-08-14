@@ -85,7 +85,7 @@ fun ResultContent(
                 val speechText = if (resultInfo.isVictory) {
                     stringResource(id = R.string.mind_reader_victory_speech)
                 } else {
-                    resultInfo.reason ?: stringResource(id = R.string.mind_reader_busted_title)
+                    resultInfo.reason?.asString() ?: stringResource(id = R.string.mind_reader_busted_title)
                 }
 
                 MessageBubble(title = speechText)

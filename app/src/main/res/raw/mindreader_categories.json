@@ -2,91 +2,622 @@
   {
     "id": "airport",
     "displayName": "Airport",
-    "emoji": "✈️"
+    "displayNames": {
+      "en": "Airport",
+      "ar": "المطار",
+      "es": "Aeropuerto",
+      "fr": "Aéroport",
+      "de": "Flughafen",
+      "it": "Aeroporto",
+      "pt": "Aeroporto"
+    },
+    "emoji": "✈️",
+    "seedQuestions": [
+      {
+        "en": "Is it found inside the airplane?",
+        "ar": "هل هو موجود داخل الطائرة؟",
+        "es": "¿Se encuentra dentro del avión?",
+        "fr": "Est-ce à l'intérieur de l'avion?",
+        "de": "Befindet es sich im Flugzeug?",
+        "it": "Si trova dentro l'aereo?",
+        "pt": "Está dentro do avião?"
+      },
+      {
+        "en": "Is it carried in luggage or worn?",
+        "ar": "هل يُحمل في الأمتعة أو يُرتدى؟",
+        "es": "¿Se lleva en el equipaje o se viste?",
+        "fr": "Est-ce transporté dans les bagages ou porté?",
+        "de": "Wird es im Gepäck getragen oder angezogen?",
+        "it": "Si porta nel bagaglio o si indossa?",
+        "pt": "É transportado na bagagem ou usado?"
+      },
+      {
+        "en": "Is it related to flight tickets or documents?",
+        "ar": "هل يتعلق بتذاكر الطيران أو المستندات؟",
+        "es": "¿Está relacionado con billetes o documentos de vuelo?",
+        "fr": "Est-ce lié aux billets ou documents de vol?",
+        "de": "Hängt es mit Flugtickets oder Dokumenten zusammen?",
+        "it": "È correlato a biglietti o documenti di volo?",
+        "pt": "Está relacionado a passagens ou documentos de voo?"
+      }
+    ]
   },
   {
     "id": "bathroom",
     "displayName": "Bathroom",
-    "emoji": "🧼"
+    "displayNames": {
+      "en": "Bathroom",
+      "ar": "الحمام",
+      "es": "Baño",
+      "fr": "Salle de bain",
+      "de": "Badezimmer",
+      "it": "Bagno",
+      "pt": "Banheiro"
+    },
+    "emoji": "🧼",
+    "seedQuestions": [
+      {
+        "en": "Is it used for cleaning or hygiene?",
+        "ar": "هل يُستخدم للتنظيف أو النظافة الشخصية؟",
+        "es": "¿Se utiliza para la limpieza o higiene?",
+        "fr": "Est-ce utilisé pour le nettoyage ou l'hygiène?",
+        "de": "Wird es zur Reinigung oder Hygiene verwendet?",
+        "it": "Viene utilizzato per la pulizia o l'igiene?",
+        "pt": "É usado para limpeza ou higiene?"
+      },
+      {
+        "en": "Does it use water or electricity?",
+        "ar": "هل يستخدم الماء أو الكهرباء؟",
+        "es": "¿Utiliza agua o electricidad?",
+        "fr": "Utilise-t-il de l'eau ou de l'électricité?",
+        "de": "Verwendet es Wasser oder Strom?",
+        "it": "Utilizza acqua o elettricità?",
+        "pt": "Usa água ou eletricidade?"
+      }
+    ]
   },
   {
     "id": "beach",
     "displayName": "Beach",
-    "emoji": "🐚"
+    "displayNames": {
+      "en": "Beach",
+      "ar": "الشاطئ",
+      "es": "Playa",
+      "fr": "Plage",
+      "de": "Strand",
+      "it": "Spiaggia",
+      "pt": "Praia"
+    },
+    "emoji": "🐚",
+    "seedQuestions": [
+      {
+        "en": "Is it a living creature or animal?",
+        "ar": "هل هو كائن حي أو حيوان؟",
+        "es": "¿Es una criatura viva o animal?",
+        "fr": "Est-ce une créature vivante ou un animal?",
+        "de": "Ist es ein Lebewesen oder ein Tier?",
+        "it": "È una creatura vivente o un animale?",
+        "pt": "É uma criatura viva ou animal?"
+      },
+      {
+        "en": "Is it found inside the water or sea?",
+        "ar": "هل يوجد داخل الماء أو البحر؟",
+        "es": "¿Se encuentra dentro del agua o del mar?",
+        "fr": "Est-ce trouvé dans l'eau ou la mer?",
+        "de": "Findet man es im Wasser oder Meer?",
+        "it": "Si trova nell'acqua o nel mare?",
+        "pt": "Encontra-se dentro da água ou do mar?"
+      }
+    ]
   },
   {
     "id": "city",
     "displayName": "City",
-    "emoji": "🚌"
+    "displayNames": {
+      "en": "City",
+      "ar": "المدينة",
+      "es": "Ciudad",
+      "fr": "Ville",
+      "de": "Stadt",
+      "it": "Città",
+      "pt": "Cidade"
+    },
+    "emoji": "🚌",
+    "seedQuestions": [
+      {
+        "en": "Is it a vehicle or transportation?",
+        "ar": "هل هو وسيلة نقل أو مركبة؟",
+        "es": "¿Es un vehículo o medio de transporte?",
+        "fr": "Est-ce un véhicule ou un moyen de transport?",
+        "de": "Ist es ein Fahrzeug oder Transportmittel?",
+        "it": "È un veicolo o mezzo di trasporto?",
+        "pt": "É um veículo ou meio de transporte?"
+      },
+      {
+        "en": "Is it a building or public place?",
+        "ar": "هل هو مبنى أو مكان عام؟",
+        "es": "¿Es un edificio o lugar público?",
+        "fr": "Est-ce un bâtiment ou un lieu public?",
+        "de": "Ist es ein Gebäude oder öffentlicher Ort?",
+        "it": "È un edificio o luogo pubblico?",
+        "pt": "É um edifício ou local público?"
+      }
+    ]
   },
   {
     "id": "farm",
     "displayName": "Farm",
-    "emoji": "🐄"
+    "displayNames": {
+      "en": "Farm",
+      "ar": "المزرعة",
+      "es": "Granja",
+      "fr": "Ferme",
+      "de": "Bauernhof",
+      "it": "Fattoria",
+      "pt": "Fazenda"
+    },
+    "emoji": "🐄",
+    "seedQuestions": [
+      {
+        "en": "Is it an animal?",
+        "ar": "هل هو حيوان؟",
+        "es": "¿Es un animal?",
+        "fr": "Est-ce un animal?",
+        "de": "Ist es ein Tier?",
+        "it": "È un animale?",
+        "pt": "É um animal?"
+      },
+      {
+        "en": "Is it a tool or vehicle?",
+        "ar": "هل هي أداة أو مركبة؟",
+        "es": "¿Es una herramienta o vehículo?",
+        "fr": "Est-ce un outil ou un véhicule?",
+        "de": "Ist es ein Werkzeug oder Fahrzeug?",
+        "it": "È uno strumento o veicolo?",
+        "pt": "É uma ferramenta ou veículo?"
+      }
+    ]
   },
   {
     "id": "forest",
     "displayName": "Forest",
-    "emoji": "🐍"
+    "displayNames": {
+      "en": "Forest",
+      "ar": "الغابة",
+      "es": "Bosque",
+      "fr": "Forêt",
+      "de": "Wald",
+      "it": "Foresta",
+      "pt": "Floresta"
+    },
+    "emoji": "🐍",
+    "seedQuestions": [
+      {
+        "en": "Is it a plant or tree?",
+        "ar": "هل هو نبات أو شجرة؟",
+        "es": "¿Es una planta o árbol?",
+        "fr": "Est-ce une plante ou un arbre?",
+        "de": "Ist es eine Pflanze oder ein Baum?",
+        "it": "È una pianta o albero?",
+        "pt": "É uma planta ou árvore?"
+      },
+      {
+        "en": "Is it an animal or bird?",
+        "ar": "هل هو حيوان أو طائر؟",
+        "es": "¿Es un animal o un pájaro?",
+        "fr": "Est-ce un animal ou un oiseau?",
+        "de": "Ist es ein Tier oder ein Vogel?",
+        "it": "È un animale o uccello?",
+        "pt": "É um animal ou pássaro?"
+      }
+    ]
   },
   {
     "id": "hospital",
     "displayName": "Hospital",
-    "emoji": "🧑‍⚕️"
+    "displayNames": {
+      "en": "Hospital",
+      "ar": "المستشفى",
+      "es": "Hospital",
+      "fr": "Hôpital",
+      "de": "Krankenhaus",
+      "it": "Ospedale",
+      "pt": "Hospital"
+    },
+    "emoji": "🧑‍⚕️",
+    "seedQuestions": [
+      {
+        "en": "Is it a medical tool or instrument?",
+        "ar": "هل هي أداة أو جهاز طبي؟",
+        "es": "¿Es una herramienta o instrumento médico?",
+        "fr": "Est-ce un outil ou instrument médical?",
+        "de": "Ist es ein medizinisches Werkzeug oder Instrument?",
+        "it": "È uno strumento o dispositivo medico?",
+        "pt": "É uma ferramenta ou instrumento médico?"
+      },
+      {
+        "en": "Is it a person or job title?",
+        "ar": "هل هو شخص أو مسمى وظيفي؟",
+        "es": "¿Es una persona o profesión?",
+        "fr": "Est-ce une personne ou un métier?",
+        "de": "Ist es eine Person oder eine Berufsbezeichnung?",
+        "it": "È una persona o una professione?",
+        "pt": "É uma pessoa ou profissão?"
+      }
+    ]
   },
   {
     "id": "kitchen",
     "displayName": "Kitchen",
-    "emoji": "🍎"
+    "displayNames": {
+      "en": "Kitchen",
+      "ar": "المطبخ",
+      "es": "Cocina",
+      "fr": "Cuisine",
+      "de": "Küche",
+      "it": "Cucina",
+      "pt": "Cozinha"
+    },
+    "emoji": "🍎",
+    "seedQuestions": [
+      {
+        "en": "Is it something you eat or drink?",
+        "ar": "هل هو شيء يؤكل أو يُشرب؟",
+        "es": "¿Es algo que se come o se bebe?",
+        "fr": "Est-ce quelque chose que l'on mange ou boit?",
+        "de": "Ist es etwas zu essen oder zu trinken?",
+        "it": "È qualcosa che si mangia o si beve?",
+        "pt": "É algo que se come ou bebe?"
+      },
+      {
+        "en": "Is it a cooking tool or appliance?",
+        "ar": "هل هي أداة طبخ أو جهاز منزلي؟",
+        "es": "¿Es un utensilio de cocina o electrodoméstico?",
+        "fr": "Est-ce un ustensile de cuisine ou appareil?",
+        "de": "Ist es ein Kochgerät oder Küchenhelfer?",
+        "it": "È un utensile da cucina o elettrodomestico?",
+        "pt": "É um utensílio de cozinha ou eletrodoméstico?"
+      }
+    ]
   },
   {
     "id": "living_room",
     "displayName": "Living Room",
-    "emoji": "🛋️"
+    "displayNames": {
+      "en": "Living Room",
+      "ar": "غرفة المعيشة",
+      "es": "Sala de estar",
+      "fr": "Salon",
+      "de": "Wohnzimmer",
+      "it": "Soggiorno",
+      "pt": "Sala de estar"
+    },
+    "emoji": "🛋️",
+    "seedQuestions": [
+      {
+        "en": "Is it a piece of furniture?",
+        "ar": "هل هي قطعة أثاث؟",
+        "es": "¿Es un mueble?",
+        "fr": "Est-ce un meuble?",
+        "de": "Ist es ein Möbelstück?",
+        "it": "È un mobile?",
+        "pt": "É um móvel?"
+      },
+      {
+        "en": "Is it an electronic entertainment device?",
+        "ar": "هل هو جهاز إلكتروني للترفيه؟",
+        "es": "¿Es un dispositivo electrónico de entretenimiento?",
+        "fr": "Est-ce un appareil électronique de divertissement?",
+        "de": "Ist es ein elektronisches Unterhaltungsgerät?",
+        "it": "È un dispositivo elettronico di intrattenimento?",
+        "pt": "É um dispositivo eletrônico de entretenimento?"
+      }
+    ]
   },
   {
     "id": "market",
     "displayName": "Market",
-    "emoji": "🍌"
+    "displayNames": {
+      "en": "Market",
+      "ar": "السوق",
+      "es": "Mercado",
+      "fr": "Marché",
+      "de": "Markt",
+      "it": "Mercato",
+      "pt": "Mercado"
+    },
+    "emoji": "🍌",
+    "seedQuestions": [
+      {
+        "en": "Is it a fruit or vegetable?",
+        "ar": "هل هي فاكهة أو خضار؟",
+        "es": "¿Es una fruta o verdura?",
+        "fr": "Est-ce un fruit ou un légume?",
+        "de": "Ist es Obst oder Gemüse?",
+        "it": "È un frutto o una verdura?",
+        "pt": "É uma fruta ou vegetal?"
+      },
+      {
+        "en": "Is it related to payment or money?",
+        "ar": "هل يتعلق بالدفع أو المال؟",
+        "es": "¿Está relacionado con el pago o dinero?",
+        "fr": "Est-ce lié au paiement ou à l'argent?",
+        "de": "Hängt es mit Bezahlung oder Geld zusammen?",
+        "it": "È correlato al pagamento o al denaro?",
+        "pt": "Está relacionado a pagamento ou dinheiro?"
+      }
+    ]
   },
   {
     "id": "office",
     "displayName": "Office",
-    "emoji": "🪑"
+    "displayNames": {
+      "en": "Office",
+      "ar": "المكتب",
+      "es": "Oficina",
+      "fr": "Bureau",
+      "de": "Büro",
+      "it": "Ufficio",
+      "pt": "Escritório"
+    },
+    "emoji": "🪑",
+    "seedQuestions": [
+      {
+        "en": "Is it a stationery or paper item?",
+        "ar": "هل هي أدوات مكتبية أو ورقية؟",
+        "es": "¿Es un artículo de papelería o papel?",
+        "fr": "Est-ce de la papeterie ou du papier?",
+        "de": "Ist es Schreibwaren oder Papier?",
+        "it": "È un articolo di cancelleria o carta?",
+        "pt": "É um item de papelaria ou papel?"
+      },
+      {
+        "en": "Is it a computer or tech device?",
+        "ar": "هل هو حاسوب أو جهاز تقني؟",
+        "es": "¿Es un ordenador o dispositivo tecnológico?",
+        "fr": "Est-ce un ordinateur ou appareil technologique?",
+        "de": "Ist es ein Computer oder technisches Gerät?",
+        "it": "È un computer o dispositivo tecnologico?",
+        "pt": "É um computador ou dispositivo tecnológico?"
+      }
+    ]
   },
   {
     "id": "park",
     "displayName": "Park",
-    "emoji": "🐶"
+    "displayNames": {
+      "en": "Park",
+      "ar": "الحديقة",
+      "es": "Parque",
+      "fr": "Parc",
+      "de": "Park",
+      "it": "Parco",
+      "pt": "Parque"
+    },
+    "emoji": "🐶",
+    "seedQuestions": [
+      {
+        "en": "Is it a natural object like a tree or plant?",
+        "ar": "هل هو شيء طبيعي كشجرة أو نبات؟",
+        "es": "¿Es un objeto natural como un árbol o planta?",
+        "fr": "Est-ce un élément naturel comme un arbre ou plante?",
+        "de": "Ist es ein Naturgegenstand wie ein Baum oder eine Pflanze?",
+        "it": "È un elemento naturale come un albero o pianta?",
+        "pt": "É um elemento natural como uma árvore ou planta?"
+      },
+      {
+        "en": "Is it equipment for play or sitting?",
+        "ar": "هل هي أداة للعب أو الجلوس؟",
+        "es": "¿Es un equipo para jugar o sentarse?",
+        "fr": "Est-ce un équipement pour jouer ou s'asseoir?",
+        "de": "Ist es ein Gerät zum Spielen oder Sitzen?",
+        "it": "È un'attrezzatura per giocare o sedersi?",
+        "pt": "É um equipamento para brincar ou sentar?"
+      }
+    ]
   },
   {
     "id": "restaurant",
     "displayName": "Restaurant",
-    "emoji": "📋"
+    "displayNames": {
+      "en": "Restaurant",
+      "ar": "المطعم",
+      "es": "Restaurante",
+      "fr": "Restaurant",
+      "de": "Restaurant",
+      "it": "Ristorante",
+      "pt": "Restaurante"
+    },
+    "emoji": "📋",
+    "seedQuestions": [
+      {
+        "en": "Is it a food item or drink?",
+        "ar": "هل هو طعام أو شراب؟",
+        "es": "¿Es una comida o bebida?",
+        "fr": "Est-ce de la nourriture ou une boisson?",
+        "de": "Ist es ein Lebensmittel oder Getränk?",
+        "it": "È un alimento o bevanda?",
+        "pt": "É uma comida ou bebida?"
+      },
+      {
+        "en": "Is it tableware or cutlery like a fork or plate?",
+        "ar": "هل هي أواني أو أدوات مائدة كالشوكة أو الطبق؟",
+        "es": "¿Es vajilla o cubiertos como tenedor o plato?",
+        "fr": "Est-ce de la vaisselle ou des couverts comme une fourchette?",
+        "de": "Ist es Geschirr oder Besteck wie Gabel oder Teller?",
+        "it": "È una stoviglia o posata come forchetta o piatto?",
+        "pt": "É uma louça ou talher como garfo ou prato?"
+      }
+    ]
   },
   {
     "id": "school",
     "displayName": "School",
-    "emoji": "✏️"
+    "displayNames": {
+      "en": "School",
+      "ar": "المدرسة",
+      "es": "Escuela",
+      "fr": "École",
+      "de": "Schule",
+      "it": "Scuola",
+      "pt": "Escola"
+    },
+    "emoji": "✏️",
+    "seedQuestions": [
+      {
+        "en": "Is it a writing or drawing tool?",
+        "ar": "هل هي أداة للكتابة أو الرسم؟",
+        "es": "¿Es una herramienta de escritura o dibujo?",
+        "fr": "Est-ce un outil d'écriture ou de dessin?",
+        "de": "Ist es ein Schreib- oder Zeichenwerkzeug?",
+        "it": "È uno strumento di scrittura o disegno?",
+        "pt": "É uma ferramenta de escrita ou desenho?"
+      },
+      {
+        "en": "Is it a piece of classroom furniture or board?",
+        "ar": "هل هو أثاث دراسي أو سبورة؟",
+        "es": "¿Es mobiliario escolar o pizarra?",
+        "fr": "Est-ce du mobilier scolaire ou un tableau?",
+        "de": "Ist es ein Schulmöbel oder eine Tafel?",
+        "it": "È un arredo scolastico o una lavagna?",
+        "pt": "É um móvel escolar ou quadro?"
+      }
+    ]
   },
   {
     "id": "space",
     "displayName": "Space",
-    "emoji": "🚀"
+    "displayNames": {
+      "en": "Space",
+      "ar": "الفضاء",
+      "es": "Espacio",
+      "fr": "Espace",
+      "de": "Weltraum",
+      "it": "Spazio",
+      "pt": "Espaço"
+    },
+    "emoji": "🚀",
+    "seedQuestions": [
+      {
+        "en": "Is it a natural celestial body like a star or planet?",
+        "ar": "هل هو جرم سماوي طبيعي كنجم أو كوكب؟",
+        "es": "¿Es un cuerpo celeste natural como una estrella o planeta?",
+        "fr": "Est-ce un corps céleste naturel comme une étoile ou planète?",
+        "de": "Ist es ein natürlicher Himmelskörper wie ein Stern oder Planet?",
+        "it": "È un corpo celeste naturale come una stella o pianeta?",
+        "pt": "É um corpo celeste natural como uma estrela ou planeta?"
+      },
+      {
+        "en": "Is it a man-made vehicle or equipment?",
+        "ar": "هل هي مركبة أو أداة من صنع الإنسان؟",
+        "es": "¿Es un vehículo o equipo fabricado por el hombre?",
+        "fr": "Est-ce un véhicule ou équipement fabriqué par l'homme?",
+        "de": "Ist es ein vom Menschen geschaffenes Fahrzeug oder Gerät?",
+        "it": "È un veicolo o attrezzatura artificiale?",
+        "pt": "É um veículo ou equipamento feito pelo homem?"
+      }
+    ]
   },
   {
     "id": "sports_stadium",
     "displayName": "Sports Stadium",
-    "emoji": "⚽"
+    "displayNames": {
+      "en": "Sports Stadium",
+      "ar": "الملعب الرياضي",
+      "es": "Estadio Deportivo",
+      "fr": "Stade de Sport",
+      "de": "Sportstadion",
+      "it": "Stadio Sportivo",
+      "pt": "Estádio de Esportes"
+    },
+    "emoji": "⚽",
+    "seedQuestions": [
+      {
+        "en": "Is it a ball or equipment used in a sport?",
+        "ar": "هل هي كرة أو أداة تُستخدم في الرياضة؟",
+        "es": "¿Es un balón o equipo usado en un deporte?",
+        "fr": "Est-ce un ballon ou équipement utilisé dans un sport?",
+        "de": "Ist es ein Ball oder Sportgerät?",
+        "it": "È una palla o attrezzatura sportiva?",
+        "pt": "É uma bola ou equipamento usado no esporte?"
+      },
+      {
+        "en": "Is it a person like an athlete or referee?",
+        "ar": "هل هو شخص كرياضي أو حكم؟",
+        "es": "¿Es una persona como un atleta o árbitro?",
+        "fr": "Est-ce une personne comme un athlète ou un arbitre?",
+        "de": "Ist es eine Person wie ein Sportler oder Schiedsrichter?",
+        "it": "È una persona come un atleta o arbitro?",
+        "pt": "É uma pessoa como um atleta ou árbitro?"
+      }
+    ]
   },
   {
     "id": "train_station",
     "displayName": "Train Station",
-    "emoji": "🚆"
+    "displayNames": {
+      "en": "Train Station",
+      "ar": "محطة القطار",
+      "es": "Estación de Tren",
+      "fr": "Gare",
+      "de": "Bahnhof",
+      "it": "Stazione Ferroviaria",
+      "pt": "Estação de Trem"
+    },
+    "emoji": "🚆",
+    "seedQuestions": [
+      {
+        "en": "Is it a part of the train or locomotive?",
+        "ar": "هل هو جزء من القطار أو القاطرة؟",
+        "es": "¿Es parte del tren o locomotora?",
+        "fr": "Est-ce une partie du train ou de la locomotive?",
+        "de": "Ist es ein Teil des Zuges oder der Lokomotive?",
+        "it": "È una parte del treno o locomotiva?",
+        "pt": "É uma parte do trem ou locomotiva?"
+      },
+      {
+        "en": "Is it a structure or object inside the station?",
+        "ar": "هل هو مبنى أو شيء داخل المحطة؟",
+        "es": "¿Es una estructura u objeto dentro de la estación?",
+        "fr": "Est-ce une structure ou objet dans la gare?",
+        "de": "Ist es ein Gebäude oder Gegenstand im Bahnhof?",
+        "it": "È una struttura o oggetto all'interno della stazione?",
+        "pt": "É uma structure ou objeto dentro da estação?"
+      }
+    ]
   },
   {
     "id": "zoo",
     "displayName": "Zoo",
-    "emoji": "🦁"
+    "displayNames": {
+      "en": "Zoo",
+      "ar": "حديقة الحيوان",
+      "es": "Zoológico",
+      "fr": "Zoo",
+      "de": "Zoo",
+      "it": "Zoo",
+      "pt": "Zoológico"
+    },
+    "emoji": "🦁",
+    "seedQuestions": [
+      {
+        "en": "Can it fly or does it have wings?",
+        "ar": "هل يستطيع الطيران أو لديه أجنحة؟",
+        "es": "¿Puede volar o tiene alas?",
+        "fr": "Peut-il voler ou a-t-il des ailes?",
+        "de": "Kann es fliegen oder hat es Flügel?",
+        "it": "Può volare o ha le ali?",
+        "pt": "Consegue voar ou tem asas?"
+      },
+      {
+        "en": "Does it live primarily in water or swim?",
+        "ar": "هل يعيش في الماء بشكل أساسي أو يسبح؟",
+        "es": "¿Vive principalmente en el agua o nada?",
+        "fr": "Vit-il principalement dans l'eau ou nage-t-il?",
+        "de": "Lebt es hauptsächlich im Wasser oder schwimmt es?",
+        "it": "Vive principalmente in acqua o nuota?",
+        "pt": "Vive principalmente na água ou nada?"
+      }
+    ]
   }
 ]

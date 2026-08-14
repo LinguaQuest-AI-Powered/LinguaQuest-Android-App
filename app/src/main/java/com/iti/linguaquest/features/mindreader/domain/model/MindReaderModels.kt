@@ -1,5 +1,7 @@
 package com.iti.linguaquest.features.mindreader.domain.model
 
+import com.iti.linguaquest.core.domain.model.MiniGameReward
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import java.util.Locale
 
 data class MindReaderEntity(
@@ -14,10 +16,10 @@ data class MindReaderGameConfig(
     val maxQuestions: Int = 20,
     val guessThreshold: Double = 0.9,
     val translationCost: Int = 5,
-    val correctRewardCoins: Int = 20,
-    val correctRewardXp: Int = 40,
-    val stumpBonusCoins: Int = 100,
-    val stumpBonusXp: Int = 80
+    val correctRewardCoins: Int = MiniGameReward.MIND_READER_VICTORY.coins,
+    val correctRewardXp: Int = MiniGameReward.MIND_READER_VICTORY.xp,
+    val stumpBonusCoins: Int = MiniGameReward.MIND_READER_STUMP.coins,
+    val stumpBonusXp: Int = MiniGameReward.MIND_READER_STUMP.xp
 )
 
 enum class MindReaderAnswerOption(val rawId: String) {
@@ -121,7 +123,8 @@ data class MindReaderContradictionResult(
 
 data class MindReaderGuessResult(
     val entity: MindReaderEntity,
-    val confidence: Double
+    val confidence: Double,
+    val quizChoices: List<MindReaderAiQuizChoice> = emptyList()
 )
 
 data class MindReaderHistoryEntry(
@@ -170,7 +173,8 @@ sealed interface MindReaderAiNextTurn {
     data class Guess(
         val word: String,
         val translation: String,
-        val emoji: String
+        val emoji: String,
+        val quizChoices: List<MindReaderAiQuizChoice> = emptyList()
     ) : MindReaderAiNextTurn
 
     data object Error : MindReaderAiNextTurn
@@ -230,7 +234,7 @@ sealed interface MindReaderResult {
     data class Busted(
         val guess: MindReaderGuessResult,
         val history: MindReaderGameHistory,
-        val reason: String? = null
+        val reason: UiText? = null
     ) : MindReaderResult
 
     data class Timeout(

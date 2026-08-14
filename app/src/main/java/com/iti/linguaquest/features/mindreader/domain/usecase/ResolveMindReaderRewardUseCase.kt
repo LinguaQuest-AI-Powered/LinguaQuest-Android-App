@@ -1,5 +1,8 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
+import com.iti.linguaquest.R
+import com.iti.linguaquest.core.domain.model.MiniGameReward
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderContradictionResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameConfig
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
@@ -49,18 +52,19 @@ class ResolveMindReaderRewardUseCase @Inject constructor() {
             MindReaderResult.Victory(
                 guess = guess,
                 history = history,
-                rewardCoins = config.correctRewardCoins,
-                rewardXp = config.correctRewardXp
+                rewardCoins = MiniGameReward.MIND_READER_VICTORY.coins,
+                rewardXp = MiniGameReward.MIND_READER_VICTORY.xp
             )
         } else {
+            val reasonText = if (challenge.selectedEntity.id != challenge.correctEntity.id) {
+                UiText.StringResource(R.string.mind_reader_reason_quiz_wrong)
+            } else {
+                UiText.StringResource(R.string.mind_reader_reason_contradiction)
+            }
             MindReaderResult.Busted(
                 guess = guess,
                 history = history,
-                reason = if (challenge.selectedEntity.id != challenge.correctEntity.id) {
-                    "Pop quiz answer was incorrect."
-                } else {
-                    "Answer matched, but gameplay history contradicted the target word."
-                }
+                reason = reasonText
             )
         }
     }
@@ -80,14 +84,14 @@ class ResolveMindReaderRewardUseCase @Inject constructor() {
             MindReaderResult.Victory(
                 guess = guess,
                 history = history,
-                rewardCoins = config.stumpBonusCoins,
-                rewardXp = config.stumpBonusXp
+                rewardCoins = MiniGameReward.MIND_READER_STUMP.coins,
+                rewardXp = MiniGameReward.MIND_READER_STUMP.xp
             )
         } else {
             MindReaderResult.Busted(
                 guess = guess,
                 history = history,
-                reason = "The selected word contradicts the answers given during the game."
+                reason = UiText.StringResource(R.string.mind_reader_reason_stump_contradiction)
             )
         }
     }

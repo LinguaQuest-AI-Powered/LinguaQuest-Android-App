@@ -24,7 +24,9 @@ class MindReaderRepositoryImpl @Inject constructor(
             MindReaderCategory(
                 id = dto.id,
                 displayName = dto.displayName,
-                emoji = dto.emoji
+                displayNames = dto.displayNames ?: emptyMap(),
+                emoji = dto.emoji,
+                seedQuestions = dto.seedQuestions
             )
         }
     }
@@ -51,7 +53,13 @@ class MindReaderRepositoryImpl @Inject constructor(
             MindReaderAiNextTurn.Guess(
                 word = dto.guessWord ?: "",
                 translation = dto.guessTranslation ?: "",
-                emoji = dto.guessEmoji ?: "🤔"
+                emoji = dto.guessEmoji ?: "🤔",
+                quizChoices = dto.quizChoices?.map {
+                    MindReaderAiQuizChoice(
+                        translationText = it.translationText,
+                        isCorrect = it.isCorrect
+                    )
+                } ?: emptyList()
             )
         } else {
             MindReaderAiNextTurn.Question(

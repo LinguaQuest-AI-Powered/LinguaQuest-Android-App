@@ -821,6 +821,14 @@
     <string name="mind_reader_error_quota_exceeded">تم الوصول إلى الحد الأقصى للخدمة. يرجى الانتظار والمحاولة مرة أخرى.</string>
     <string name="mind_reader_error_connection_lost">انقطع الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.</string>
     <string name="mind_reader_error_generic">حدث خطأ ما. يرجى المحاولة مجدداً.</string>
+    <string name="mind_reader_translate_confirm_title">ترجمة السؤال</string>
+    <string name="mind_reader_translate_confirm_message">هل ترغب في إنفاق %1$d عملات لإظهار ترجمة السؤال؟</string>
+    <string name="mind_reader_reason_connection_dropped">انقطع الاتصال! دعنا نحاول مرة أخرى.</string>
+    <string name="mind_reader_reason_max_questions">لم أستطع تخمينها خلال %1$d سؤالاً!</string>
+    <string name="mind_reader_reason_quiz_wrong">إجابة الاختبار القصير كانت غير صحيحة.</string>
+    <string name="mind_reader_reason_contradiction">الإجابة تطابقت، لكن مسار اللعب تعارض مع الكلمة المستهدفة.</string>
+    <string name="mind_reader_reason_stump_contradiction">الكلمة المختارة تتعارض مع الإجابات المعطاة أثناء اللعب.</string>
+    <string name="confirm">تأكيد</string>
 
     <string name="cannot_remove_active_language">لا يمكن حذف اللغة النشطة حاليًا.</string>
     <string name="language_removed_success">تم حذف اللغة بنجاح.</string>

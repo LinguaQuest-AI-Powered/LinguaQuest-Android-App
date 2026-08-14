@@ -834,6 +834,13 @@
     <string name="mind_reader_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
     <string name="mind_reader_error_connection_lost">Connection lost. Please check your internet connection and try again.</string>
     <string name="mind_reader_error_generic">Something went wrong. Please try again.</string>
+    <string name="mind_reader_translate_confirm_title">Translate Question</string>
+    <string name="mind_reader_translate_confirm_message">Do you want to spend %1$d coins to reveal the question translation?</string>
+    <string name="mind_reader_reason_connection_dropped">My connection dropped! Let\'s try again.</string>
+    <string name="mind_reader_reason_max_questions">I couldn\'t guess it in %1$d questions!</string>
+    <string name="mind_reader_reason_quiz_wrong">Pop quiz answer was incorrect.</string>
+    <string name="mind_reader_reason_contradiction">Answer matched, but gameplay history contradicted the target word.</string>
+    <string name="mind_reader_reason_stump_contradiction">The selected word contradicts the answers given during the game.</string>
 
     <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
     <string name="language_removed_success">Language removed successfully.</string>

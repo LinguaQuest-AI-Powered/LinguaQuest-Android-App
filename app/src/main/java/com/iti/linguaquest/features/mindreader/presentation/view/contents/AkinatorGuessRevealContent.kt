@@ -70,7 +70,7 @@ fun GuessRevealContent(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 state.guessResult?.entity?.let { entity ->
-                    val word = entity.targetText
+                    val word = entity.nativeText.ifBlank { entity.targetText }
                     if (word.isNotBlank()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

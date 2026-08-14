@@ -24,10 +24,7 @@ class MindReaderLocalDataSourceImpl @Inject constructor(
         gson.fromJson(jsonString, type) ?: emptyList()
     }
 
-    override suspend fun getGameConfig(): MindReaderGameConfig = withContext(Dispatchers.IO) {
-        val jsonString = readRawResource(R.raw.game_config)
-        gson.fromJson(jsonString, MindReaderGameConfig::class.java)
-    }
+    override suspend fun getGameConfig(): MindReaderGameConfig = MindReaderGameConfig()
 
     private fun readRawResource(rawId: Int): String {
         return context.resources.openRawResource(rawId).bufferedReader().use { it.readText() }

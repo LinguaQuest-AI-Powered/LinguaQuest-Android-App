@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
-import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderAnswerButton
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderQuizWordCard
 
@@ -82,7 +82,7 @@ fun PopQuizContent(
 
                 state.popQuizQuestion?.choices?.forEach { choice ->
                     MindReaderAnswerButton(
-                        text = choice.entity.targetText,
+                        text = choice.entity.targetText.ifBlank { choice.entity.nativeText },
                         onClick = { onIntent(MindReaderIntent.PopQuizAnswered(choice)) }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -104,4 +104,3 @@ private fun PopQuizContentPreview() {
         )
     }
 }
-

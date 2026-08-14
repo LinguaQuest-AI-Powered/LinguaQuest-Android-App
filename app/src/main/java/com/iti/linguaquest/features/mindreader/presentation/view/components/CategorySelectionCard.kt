@@ -24,7 +24,8 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
 @Composable
 fun CategorySelectionCard(
     category: MindReaderCategory?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    languageCode: String? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -49,7 +50,7 @@ fun CategorySelectionCard(
             )
 
             Text(
-                text = category?.displayName ?: "",
+                text = category?.resolveDisplayName(languageCode) ?: "",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = LinguaQuestTheme.colors.BrownText

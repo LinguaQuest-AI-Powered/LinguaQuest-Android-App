@@ -59,56 +59,44 @@ features/mindreader/
 
 ---
 
-## 3. Data Layer
+## 3. Token & Quota Optimizations
 
-### Data Sources
-- **`MindReaderLocalDataSource` / `MindReaderLocalDataSourceImpl`**:
-  - Loads categories from `res/raw/mindreader_categories.json`.
-  - Loads game configuration (turns limit, translation costs, rewards) from `res/raw/game_config.json`.
-- **`MindReaderRemoteDataSource` / `GeminiMindReaderService`**:
-  - Direct integration with `GeminiRestClient` using structured JSON generation.
-  - Handles turn generation, vocabulary pop-quiz distractors, and anti-cheat honesty checks.
+To operate smoothly on free-tier API keys without hitting rate limits (15 RPM) or inflating token consumption, MindReader employs four optimization strategies:
 
-### DTOs
-- `CategoryDto`: Category metadata (`id`, `displayName`, `emoji`).
-- `MindReaderNextTurnDto`: Next question or guess response.
-- `MindReaderQuizDto` & `MindReaderQuizChoiceDto`: Vocabulary quiz choices.
-- `MindReaderHonestyDto`: Anti-cheat verification result (`isHonest`, `explanation`).
+1. **Combined Guess + Pop-Quiz Payload**:
+   - When the AI makes a guess (`type: "guess"`), it generates the 3 vocabulary quiz choices inside the same response.
+   - When the user confirms the guess is correct, the Pop Quiz renders instantly from memory with **0 additional network calls**.
+2. **Instant Local Seed Opening Questions**:
+   - Each category in `res/raw/mindreader_categories.json` includes multilingual broad partition questions.
+   - Turn 1 displays instantly with **0ms latency and 0 network calls**.
+   - The first API call is only made on Turn 2, providing the AI with rich initial context.
+3. **Prompt Token Compression**:
+   - `MindReaderPromptFactory` utilizes high-density, concise prompt schemas, reducing prompt token size by 40–50%.
+4. **Aggressive Binary Partitioning**:
+   - Instructions guide the AI to ask high-entropy 50/50 partition questions and converge towards a guess within 6–8 questions once certainty reaches 80%.
 
 ---
 
-## 4. Domain Layer
+## 4. Localization & In-Game Economy
 
-### Models
-- `MindReaderCategory`: Category representation.
-- `MindReaderGameConfig`: Configuration tokens for max questions, rewards, and translation costs.
-- `MindReaderGameState`: Immutable game state with turns history, question counter, asked attributes, and pending guess.
-- `MindReaderAiNextTurn`: Next action from AI (`Question`, `Guess`, or `Error`).
-- `MindReaderResult`: Final game resolution (`Victory`, `Busted`, `PopQuiz`, `Stump`, `Timeout`, `Playing`).
-
-### Prompt Factory
-- **`MindReaderPromptFactory`**: Centralizes all generative AI prompt engineering for:
-  - Binary-split adaptive property questioning (`createNextTurnPrompt`).
-  - 3-choice vocabulary pop quiz generation (`createQuizChoicesPrompt`).
-  - Historical transcript honesty verification (`createHonestyVerificationPrompt`).
-
-### Use Cases
-- `GetMindReaderCategoriesUseCase`: Retrieves categories from repository.
-- `StartMindReaderGameUseCase`: Initializes game launch config, language codes, and session state.
-- `GetMindReaderNextTurnUseCase`: Orchestrates next turn determination via repository.
-- `SubmitMindReaderAnswerUseCase`: Pure state transformer updating `MindReaderGameState`.
-- `BuildMindReaderPopQuizQuestionUseCase`: Prepares 3-choice translation check upon correct AI guess.
-- `VerifyMindReaderHonestyUseCase`: Calls AI honesty verification against turn history.
-- `ResolveMindReaderRewardUseCase`: Evaluates outcome (Victory vs Busted) and calculates rewards.
+1. **Category Localization**:
+   - All 18 categories define multilingual `displayNames` (`ar`, `en`, `es`, `fr`, `de`, `it`, `pt`) in `mindreader_categories.json`.
+   - Category names dynamically adapt to the user's active native language (`category.resolveDisplayName(state.nativeLanguageCode)`).
+2. **Translation Economy (5 Coins)**:
+   - Revealing question translations in an active game costs 5 coins (`GameCost.MIND_READER_TRANSLATION`).
+   - Tapping the translate button prompts a confirmation dialog via `DialogController` (`DialogUiState`).
+   - If the player has insufficient coins, an error snackbar is displayed via `SnackbarController`.
+3. **Result Screen Reason Localization**:
+   - All result reasons (timeout, contradiction, network loss, wrong quiz answer) use strongly typed `UiText.StringResource` tokens with complete Arabic and English localizations.
 
 ---
 
 ## 5. Presentation Layer (MVI)
 
-- **State (`MindReaderState`)**: Tracks current phase (`LOBBY`, `THINKING`, `PLAYING`, `GUESSING_LOADING`, `GUESS_REVEAL`, `POP_QUIZ`, `STUMP`, `RESULT`), balances, current question candidate, and result info.
+- **State (`MindReaderState`)**: Tracks current phase (`LOBBY`, `THINKING`, `PLAYING`, `GUESSING_LOADING`, `GUESS_REVEAL`, `POP_QUIZ`, `STUMP`, `RESULT`), balances, current question candidate, and result info (`MindReaderResultInfo`).
 - **Intent (`MindReaderIntent`)**: User interactions including `StartGameClicked`, `AnswerClicked`, `GuessVerifiedCorrect/Incorrect`, `PopQuizAnswered`, `StumpSubmitClicked`, and `TranslateClicked`.
-- **Effect (`MindReaderEffect`)**: One-time side effects (`NavigateBack`, `PlayAudio`, `ShowToast`).
-- **Global Error Handling**: Uses the centralized [`AiErrorMapper.kt`](file:///p:/Codes/AndroidStudioProjects/0_ITI/LinguaQuest/app/src/main/java/com/iti/linguaquest/core/sharedComponents/text/AiErrorMapper.kt) for translating 429 quota limits, network timeouts, and Gemini errors into localized `UiText` tokens.
+- **Effect (`MindReaderEffect`)**: One-time side effects (`NavigateBack`, `PlayAudio`).
+- **Global Dialogs & Error Handling**: Leverages `DialogController` for confirmation modals and `SnackbarController` with `AiErrorMapper` for error toasts.
 
 ---
 

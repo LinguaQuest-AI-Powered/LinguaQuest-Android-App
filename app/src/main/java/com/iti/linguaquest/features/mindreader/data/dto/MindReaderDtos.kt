@@ -3,7 +3,9 @@ package com.iti.linguaquest.features.mindreader.data.dto
 data class CategoryDto(
     val id: String,
     val displayName: String,
-    val emoji: String = ""
+    val displayNames: Map<String, String>? = null,
+    val emoji: String = "",
+    val seedQuestions: List<Map<String, String>> = emptyList()
 )
 
 data class MindReaderNextTurnDto(
@@ -12,7 +14,8 @@ data class MindReaderNextTurnDto(
     val questionNativeText: String?,
     val guessWord: String?,
     val guessTranslation: String?,
-    val guessEmoji: String?
+    val guessEmoji: String?,
+    val quizChoices: List<MindReaderQuizChoiceDto>? = null
 )
 
 data class MindReaderQuizChoiceDto(

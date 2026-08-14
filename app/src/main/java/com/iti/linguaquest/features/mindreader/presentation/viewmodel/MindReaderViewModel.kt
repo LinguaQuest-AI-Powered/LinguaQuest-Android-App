@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.domain.model.GameCost
 import com.iti.linguaquest.core.result.LinguaQuestResult
+import com.iti.linguaquest.core.sharedComponents.dialog.DialogController
+import com.iti.linguaquest.core.sharedComponents.dialog.DialogUiState
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
@@ -14,17 +17,24 @@ import com.iti.linguaquest.core.sharedComponents.text.toUiText
 import com.iti.linguaquest.core.wallet.domain.usecase.AdjustWalletUseCase
 import com.iti.linguaquest.core.wallet.domain.usecase.GetWalletUseCase
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameConfig
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameLaunch
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizChoice
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderPopQuizQuestion
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderRewardChallenge
+import kotlinx.coroutines.Job
+import java.util.UUID
 import com.iti.linguaquest.features.mindreader.domain.usecase.BuildMindReaderPopQuizQuestionUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderCategoriesUseCase
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderNextTurn
 import com.iti.linguaquest.features.mindreader.domain.usecase.GetMindReaderNextTurnUseCase
+import com.iti.linguaquest.features.mindreader.domain.usecase.ResolveMindReaderNativeLanguageCodeUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.ResolveMindReaderRewardUseCase
+import com.iti.linguaquest.features.mindreader.domain.usecase.ResolveMindReaderTargetLanguageCodeUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.StartMindReaderGameUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.SubmitMindReaderAnswerUseCase
 import com.iti.linguaquest.features.mindreader.domain.usecase.VerifyMindReaderHonestyUseCase
@@ -57,9 +67,12 @@ class MindReaderViewModel @Inject constructor(
     private val buildMindReaderPopQuizQuestionUseCase: BuildMindReaderPopQuizQuestionUseCase,
     private val verifyMindReaderHonestyUseCase: VerifyMindReaderHonestyUseCase,
     private val getMindReaderCategoriesUseCase: GetMindReaderCategoriesUseCase,
+    private val resolveMindReaderNativeLanguageCodeUseCase: ResolveMindReaderNativeLanguageCodeUseCase,
+    private val resolveMindReaderTargetLanguageCodeUseCase: ResolveMindReaderTargetLanguageCodeUseCase,
     private val getWalletUseCase: GetWalletUseCase,
     private val adjustWalletUseCase: AdjustWalletUseCase,
     private val snackbarController: SnackbarController,
+    private val dialogController: DialogController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -79,6 +92,7 @@ class MindReaderViewModel @Inject constructor(
 
     private var domainState: MindReaderGameState? = null
     private var config: MindReaderGameConfig? = null
+    private var turnJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -95,12 +109,16 @@ class MindReaderViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             try {
+                val nativeLang = resolveMindReaderNativeLanguageCodeUseCase()
+                val targetLang = resolveMindReaderTargetLanguageCodeUseCase()
                 val categories = getMindReaderCategoriesUseCase()
                 _state.update {
                     it.copy(
                         isLoading = false,
                         availableCategories = categories,
-                        selectedCategory = categories.firstOrNull()
+                        selectedCategory = categories.firstOrNull(),
+                        nativeLanguageCode = nativeLang,
+                        targetLanguageCode = targetLang
                     )
                 }
             } catch (e: Exception) {
@@ -162,8 +180,16 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun submitAnswer(answer: MindReaderAnswerOption) {
+        if (_state.value.currentPhase != MindReaderPhase.PLAYING) return
         val currentState = domainState ?: return
         val questionCandidate = _state.value.currentQuestionCandidate ?: return
+
+        _state.update {
+            it.copy(
+                currentPhase = MindReaderPhase.THINKING,
+                lingoEmotion = LingoEmotion.THINKING
+            )
+        }
 
         domainState = submitMindReaderAnswerUseCase(
             state = currentState,
@@ -186,7 +212,10 @@ class MindReaderViewModel @Inject constructor(
                         isVictory = false,
                         xpEarned = 0,
                         coinsEarned = 0,
-                        reason = "I couldn't guess it in ${currentConfig.maxQuestions} questions!"
+                        reason = UiText.StringResource(
+                            R.string.mind_reader_reason_max_questions,
+                            listOf(currentConfig.maxQuestions)
+                        )
                     ),
                     lingoEmotion = LingoEmotion.ANGRY
                 )
@@ -194,7 +223,40 @@ class MindReaderViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
+        if (currentState.questionCount == 0) {
+            val selectedCat = _state.value.selectedCategory
+            val seedList = selectedCat?.seedQuestions.orEmpty()
+            if (seedList.isNotEmpty()) {
+                val seed = seedList.random()
+                val targetLang = _state.value.targetLanguageCode.lowercase().take(2)
+                val nativeLang = _state.value.nativeLanguageCode.lowercase().take(2)
+                val targetText = seed[targetLang] ?: seed["en"] ?: seed.values.firstOrNull().orEmpty()
+                val nativeText = seed[nativeLang] ?: seed["en"] ?: seed.values.firstOrNull().orEmpty()
+
+                if (targetText.isNotBlank()) {
+                    val candidate = MindReaderQuestionCandidate(
+                        attributeId = UUID.randomUUID().toString(),
+                        targetText = targetText,
+                        nativeText = nativeText
+                    )
+                    _state.update {
+                        it.copy(
+                            currentPhase = MindReaderPhase.PLAYING,
+                            currentQuestionCandidate = candidate,
+                            currentQuestion = candidate.targetText,
+                            translatedQuestion = candidate.nativeText,
+                            showTranslation = false,
+                            currentQuestionNumber = 1,
+                            lingoEmotion = LingoEmotion.PUZZLED
+                        )
+                    }
+                    return
+                }
+            }
+        }
+
+        turnJob?.cancel()
+        turnJob = viewModelScope.launch {
             _state.update { it.copy(currentPhase = MindReaderPhase.THINKING, lingoEmotion = LingoEmotion.THINKING) }
 
             val nextTurn = getMindReaderNextTurnUseCase(
@@ -225,7 +287,6 @@ class MindReaderViewModel @Inject constructor(
                             lingoEmotion = LingoEmotion.DETECTIVE
                         )
                     }
-                    delay(2500)
                     _state.update {
                         it.copy(
                             currentPhase = MindReaderPhase.GUESS_REVEAL,
@@ -242,7 +303,7 @@ class MindReaderViewModel @Inject constructor(
                                 isVictory = false,
                                 xpEarned = 0,
                                 coinsEarned = 0,
-                                reason = "My connection dropped! Let's try again."
+                                reason = UiText.StringResource(R.string.mind_reader_reason_connection_dropped)
                             ),
                             lingoEmotion = LingoEmotion.ANGRY
                         )
@@ -253,10 +314,42 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun handleGuessVerification(isCorrect: Boolean) {
+        if (_state.value.currentPhase != MindReaderPhase.GUESS_REVEAL) return
         val guess = _state.value.guessResult ?: return
         val currentConfig = config ?: return
 
         if (isCorrect) {
+            val prebuiltChoices = guess.quizChoices
+            if (prebuiltChoices.isNotEmpty()) {
+                val categoryId = _state.value.selectedCategory?.id ?: ""
+                val choices = prebuiltChoices.map { choice ->
+                    if (choice.isCorrect) {
+                        MindReaderPopQuizChoice(entity = guess.entity)
+                    } else {
+                        val dummyEntity = MindReaderEntity(
+                            id = UUID.randomUUID().toString(),
+                            worldKey = categoryId,
+                            targetText = choice.translationText,
+                            nativeText = "",
+                            emoji = "🤔"
+                        )
+                        MindReaderPopQuizChoice(entity = dummyEntity)
+                    }
+                }.shuffled()
+
+                val popQuizQuestion = MindReaderPopQuizQuestion(
+                    correctEntity = guess.entity,
+                    choices = choices
+                )
+                _state.update {
+                    it.copy(
+                        currentPhase = MindReaderPhase.POP_QUIZ,
+                        popQuizQuestion = popQuizQuestion
+                    )
+                }
+                return
+            }
+
             viewModelScope.launch {
                 _state.update { it.copy(currentPhase = MindReaderPhase.GUESSING_LOADING, lingoEmotion = LingoEmotion.DETECTIVE) }
                 val popQuizQuestion = buildMindReaderPopQuizQuestionUseCase(
@@ -294,6 +387,7 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun handlePopQuizAnswer(choice: MindReaderPopQuizChoice) {
+        if (_state.value.currentPhase != MindReaderPhase.POP_QUIZ) return
         val currentConfig = config ?: return
         val currentState = domainState ?: return
         val categoryId = _state.value.selectedCategory?.id ?: ""
@@ -327,6 +421,7 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun handleStumpSubmit() {
+        if (_state.value.currentPhase != MindReaderPhase.STUMP) return
         val currentConfig = config ?: return
         val currentState = domainState ?: return
         val categoryId = _state.value.selectedCategory?.id ?: ""
@@ -388,13 +483,40 @@ class MindReaderViewModel @Inject constructor(
     }
 
     private fun toggleTranslation() {
-        val cost = config?.translationCost ?: 0
-        if (!_state.value.showTranslation) {
-            if (_state.value.coinBalance >= cost) {
-                if (cost > 0) {
+        if (_state.value.showTranslation) {
+            _state.update { it.copy(showTranslation = false) }
+            return
+        }
+
+        val cost = GameCost.MIND_READER_TRANSLATION.coins
+        if (_state.value.coinBalance < cost) {
+            viewModelScope.launch {
+                snackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = UiText.StringResource(R.string.mind_reader_error_not_enough_coins),
+                        type = SnackbarType.WARNING
+                    )
+                )
+            }
+            return
+        }
+
+        dialogController.show(
+            DialogUiState(
+                title = UiText.StringResource(R.string.mind_reader_translate_confirm_title),
+                message = UiText.StringResource(
+                    R.string.mind_reader_translate_confirm_message,
+                    listOf(cost)
+                ),
+                confirmText = UiText.StringResource(R.string.confirm),
+                dismissText = UiText.StringResource(R.string.cancel),
+                onConfirm = {
+                    dialogController.hide()
                     viewModelScope.launch {
                         when (val result = adjustWalletUseCase(xpDelta = 0, coinsDelta = -cost)) {
-                            is LinguaQuestResult.Success -> Unit
+                            is LinguaQuestResult.Success -> {
+                                _state.update { it.copy(showTranslation = true) }
+                            }
                             is LinguaQuestResult.Failure -> {
                                 snackbarController.sendEvent(
                                     SnackbarEvent(
@@ -405,21 +527,12 @@ class MindReaderViewModel @Inject constructor(
                             }
                         }
                     }
+                },
+                onDismiss = {
+                    dialogController.hide()
                 }
-                _state.update { it.copy(showTranslation = true) }
-            } else {
-                viewModelScope.launch {
-                    snackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = UiText.StringResource(R.string.mind_reader_error_not_enough_coins),
-                            type = SnackbarType.WARNING
-                        )
-                    )
-                }
-            }
-        } else {
-            _state.update { it.copy(showTranslation = false) }
-        }
+            )
+        )
     }
 
     private fun awardRewards(xp: Int, coins: Int) {

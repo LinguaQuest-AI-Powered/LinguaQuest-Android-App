@@ -100,7 +100,8 @@ fun AkinatorLobbyContent(
                     showBottomSheet = showCategoryDropdown,
                     onRequestShowBottomSheet = { showCategoryDropdown = true },
                     onDismissRequest = { showCategoryDropdown = false },
-                    onCategorySelected = { onIntent(MindReaderIntent.CategorySelected(it)) }
+                    onCategorySelected = { onIntent(MindReaderIntent.CategorySelected(it)) },
+                    languageCode = state.nativeLanguageCode
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -133,7 +134,7 @@ fun AkinatorLobbyContent(
             title = stringResource(id = R.string.mind_reader_confirm_dialog_title),
             message = stringResource(
                 id = R.string.mind_reader_confirm_dialog_desc,
-                state.selectedCategory?.displayName ?: ""
+                state.selectedCategory?.resolveDisplayName(state.nativeLanguageCode) ?: ""
             ),
             imageRes = R.drawable.lingo_mind_thinking,
             primaryButtonText = stringResource(id = R.string.mind_reader_yes_lets_go),

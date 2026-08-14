@@ -41,7 +41,11 @@ class GetMindReaderNextTurnUseCase @Inject constructor(
                 )
 
                 MindReaderNextTurn.Guess(
-                    guess = MindReaderGuessResult(entity, 0.9)
+                    guess = MindReaderGuessResult(
+                        entity = entity,
+                        confidence = 0.9,
+                        quizChoices = aiResponse.quizChoices
+                    )
                 )
             }
             is MindReaderAiNextTurn.Question -> {

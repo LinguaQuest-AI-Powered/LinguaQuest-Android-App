@@ -7,42 +7,31 @@ object MindReaderPromptFactory {
         targetLanguage: String,
         nativeLanguage: String,
         historyPrompt: String,
-        maxTurns: Int = 20
+        maxTurns: Int = 12
     ): String {
         return """
-        You are the engine behind "Lingo's Mind Reader", an Akinator-style guessing game for language learners. The user is thinking of ONE specific word that belongs to this category:
-
-        Category context: "$categoryContext"
-
-        Conversation so far (question asked in the target language, and the user's answer):
+        Akinator engine for "$categoryContext". Target lang: $targetLanguage, Native lang: $nativeLanguage.
+        History:
         $historyPrompt
 
-        (If historyPrompt is empty, this is the very first question.)
+        Task:
+        1. Ask high-entropy yes/no questions splitting remaining possibilities in half (~50%).
+        2. Converge quickly. Aim to guess within 6-8 questions as confidence reaches 80%.
+        3. When guessing (type="guess"), guessWord must be in $targetLanguage, guessTranslation in $nativeLanguage, guessEmoji exact emoji, and include 3 quizChoices in $targetLanguage (1 correct word "$targetLanguage", 2 plausible distractors in $targetLanguage from the same category).
 
-        Your job: 
-        1. Analyze the conversation so far carefully. Every new question MUST be logical and strictly build upon the previous answers. Do not ask random questions.
-        2. Pick a yes/no-style question that splits the remaining possibilities roughly in half based on the user's previous answers.
-        3. Never repeat a question already asked.
-        4. If this is the first question, randomly pick an interesting property to ask about (e.g., size, location, usage) so the game feels fresh every time. DO NOT always start with the same question.
-        5. If you are highly confident about the word before reaching $maxTurns questions, STOP asking immediately and make your best guess! You do NOT need to reach $maxTurns questions. $maxTurns is only a maximum limit.
-        6. If the conversation reaches $maxTurns turns, you MUST make a guess.
-
-        Target language: $targetLanguage
-        Native language: $nativeLanguage
-
-        CRITICAL RULE 1: If asking a question, "questionTargetText" MUST be written ONLY in $targetLanguage, and "questionNativeText" MUST be its accurate translation in $nativeLanguage.
-        CRITICAL RULE 2: Only set type to "guess" when you are actually naming a specific concrete word/object, never a category or vague guess.
-        CRITICAL RULE 3: The guessed word must plausibly belong to the given category context.
-        CRITICAL RULE 4: The "guessEmoji" MUST be the exact, most highly relevant single system emoji that directly represents the guessed object visually. Do NOT use generic or loosely related emojis (e.g., if the word is 'Stethoscope', you MUST use 🩺, do NOT use 🩼 or 🏥. If the word is 'Apple', use 🍎). If no exact emoji exists, pick the closest visual match.
-
-        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        JSON schema:
         {
           "type": "question" | "guess",
           "questionTargetText": "string or null",
           "questionNativeText": "string or null",
-          "guessWord": "string or null, in target language",
-          "guessTranslation": "string or null, in native language",
-          "guessEmoji": "single system emoji accurately representing the word, or null"
+          "guessWord": "string or null",
+          "guessTranslation": "string or null",
+          "guessEmoji": "emoji or null",
+          "quizChoices": [
+            {"translationText": "$targetLanguage word", "isCorrect": true},
+            {"translationText": "$targetLanguage distractor", "isCorrect": false},
+            {"translationText": "$targetLanguage distractor", "isCorrect": false}
+          ]
         }
         """.trimIndent()
     }
@@ -54,13 +43,9 @@ object MindReaderPromptFactory {
         targetLanguage: String
     ): String {
         return """
-        The user just correctly identified the word "$correctWord" (in $targetLanguage) from this category: "$categoryContext".
-
-        Generate exactly 3 answer options for a vocabulary quiz: one is the correct word "$correctWord", and two are plausible-but-wrong words from the same category (in $targetLanguage). Shuffle the order.
-
-        CRITICAL RULE: Exactly one option must have "isCorrect": true.
-
-        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        Category: "$categoryContext". Correct word: "$correctWord" ($targetLanguage).
+        Generate 3 vocabulary quiz options in $targetLanguage (1 correct word "$correctWord", 2 plausible distractors in $targetLanguage).
+        JSON schema:
         {
           "choices": [
             {"translationText": "string", "isCorrect": true|false},
@@ -78,20 +63,16 @@ object MindReaderPromptFactory {
         feedbackLanguage: String
     ): String {
         return """
-        The user played a guessing game and, when the AI failed to guess, claimed they were thinking of the word "$claimedWord" (category: "$categoryContext").
-
-        Here is the full history of questions asked and the user's answers:
+        Category: "$categoryContext". Claimed word: "$claimedWord".
+        History:
         $historyPrompt
 
-        Check whether "$claimedWord" is logically consistent with EVERY answer the user gave. A real-world word/object should reasonably match yes/no/sometimes answers about its typical properties. If there is a clear contradiction (e.g. user said "no" to a property that is obviously true for "$claimedWord", or vice versa), the user was not honest.
-
-        CRITICAL RULE 1: Be reasonably lenient — "sometimes" and "probably not" allow for ambiguity, only flag CLEAR contradictions, not borderline cases.
-        CRITICAL RULE 2: "explanation" MUST be written in $feedbackLanguage, must be short (max 2 sentences), friendly if honest, and clearly point out the contradiction if not honest.
-
-        Respond STRICTLY in the following JSON format (no markdown, no backticks, just raw JSON):
+        Verify if "$claimedWord" matches all user answers. Be lenient with "sometimes".
+        Explanation in $feedbackLanguage (max 2 sentences).
+        JSON schema:
         {
           "isHonest": true|false,
-          "explanation": "short message in $feedbackLanguage"
+          "explanation": "short message"
         }
         """.trimIndent()
     }

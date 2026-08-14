@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.mindreader.presentation.contract
 
+import com.iti.linguaquest.core.sharedComponents.text.UiText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
@@ -33,7 +34,7 @@ data class MindReaderResultInfo(
     val isVictory: Boolean,
     val xpEarned: Int,
     val coinsEarned: Int,
-    val reason: String? = null
+    val reason: UiText? = null
 )
 
 data class MindReaderState(
