@@ -34,7 +34,7 @@ class WordRepositoryImpl @Inject constructor(
                 )
                 
                 val finalWords = mappedWords.map { word ->
-                    val localUri = vaultImageStorageManager.getVaultImageUri(word.sourceWord)
+                    val localUri = vaultImageStorageManager.getVaultImageUri(word.sourceWord, word.targetLanguage)
                     if (localUri != null) {
                         word.copy(imagePath = localUri)
                     } else {

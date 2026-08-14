@@ -58,12 +58,13 @@ fun GameProcessingScreen(
         } else if (uri != null) {
             val file = uri.toTempFile(context, "verify_upload_")
             if (file != null) {
-                processingViewModel.verifyImage(
-                    worldId = sharedState.worldId,
-                    levelId = sharedState.levelId,
-                    targetWord = (sharedState.targetWord as? UiText.DynamicString)?.value ?: "",
-                    imageFile = file
-                )
+                    processingViewModel.verifyImage(
+                        worldId = sharedState.worldId,
+                        levelId = sharedState.levelId,
+                        targetWord = (sharedState.targetWord as? UiText.DynamicString)?.value ?: "",
+                        targetLanguage = sharedState.targetLanguage,
+                        imageFile = file
+                    )
             } else {
                 sharedViewModel.setVerificationOutcome(
                     VerificationOutcome.Error(

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SaveVaultImageUseCase @Inject constructor(
     private val vaultImageStorageManager: VaultImageStorageManager
 ) {
-    operator fun invoke(targetWord: String, imageFile: File): File? {
-        return vaultImageStorageManager.saveVaultImage(targetWord, imageFile)
+    operator fun invoke(targetWord: String, language: String, imageFile: File): File? {
+        return vaultImageStorageManager.saveVaultImage(targetWord, language, imageFile)
     }
 }

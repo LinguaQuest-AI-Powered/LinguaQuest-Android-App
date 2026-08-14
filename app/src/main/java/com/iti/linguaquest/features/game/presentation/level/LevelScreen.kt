@@ -97,6 +97,7 @@ fun LevelScreen(
                 LevelEffect.LaunchCamera -> {
                     sharedViewModel.setWorldAndLevelId(worldId, levelId)
                     sharedViewModel.setTargetWord(state.wordToGuess)
+                    sharedViewModel.setTargetLanguage(state.languageCode)
                     onStartCamera()
                 }
 

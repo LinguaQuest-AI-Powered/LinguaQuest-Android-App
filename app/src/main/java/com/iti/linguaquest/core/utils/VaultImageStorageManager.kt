@@ -21,11 +21,12 @@ class VaultImageStorageManager @Inject constructor(
             return dir
         }
 
-    fun saveVaultImage(word: String, sourceFile: File): File? {
-        if (word.isBlank()) return null
+    fun saveVaultImage(word: String, language: String, sourceFile: File): File? {
+        if (word.isBlank() || language.isBlank()) return null
         return try {
             val sanitizedWord = word.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
-            val destFile = File(vaultImagesDir, "$sanitizedWord.jpg")
+            val sanitizedLanguage = language.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
+            val destFile = File(vaultImagesDir, "${sanitizedWord}_${sanitizedLanguage}.jpg")
             sourceFile.copyTo(destFile, overwrite = true)
             destFile
         } catch (e: Exception) {
@@ -33,10 +34,11 @@ class VaultImageStorageManager @Inject constructor(
         }
     }
 
-    fun getVaultImageUri(word: String): String? {
-        if (word.isBlank()) return null
+    fun getVaultImageUri(word: String, language: String): String? {
+        if (word.isBlank() || language.isBlank()) return null
         val sanitizedWord = word.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
-        val file = File(vaultImagesDir, "$sanitizedWord.jpg")
+        val sanitizedLanguage = language.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
+        val file = File(vaultImagesDir, "${sanitizedWord}_${sanitizedLanguage}.jpg")
         return if (file.exists()) {
             Uri.fromFile(file).toString()
         } else {

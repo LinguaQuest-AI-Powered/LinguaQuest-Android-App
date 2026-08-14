@@ -53,6 +53,10 @@ class GameSharedViewModel @Inject constructor(
         _sharedState.update { it.copy(targetWord = UiText.DynamicString(word)) }
     }
 
+    fun setTargetLanguage(language: String) {
+        _sharedState.update { it.copy(targetLanguage = language) }
+    }
+
     fun setCapturedImage(uri: Uri?) {
         _sharedState.update { it.copy(capturedImageUri = uri) }
     }
