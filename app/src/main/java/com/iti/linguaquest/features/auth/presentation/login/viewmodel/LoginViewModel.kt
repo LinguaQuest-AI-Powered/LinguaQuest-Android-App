@@ -115,7 +115,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithEmail(email: String, password: String) {
-
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = loginUserUseCase(email, password)) {
@@ -130,6 +130,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithGoogle(idToken: String) {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = loginWithGoogleUseCase(idToken)) {

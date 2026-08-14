@@ -73,6 +73,9 @@ class OTPViewModel @Inject constructor(
                             isVerifyEnabled = intent.code.length == 4
                         )
                     }
+                    if (intent.code.length == 4) {
+                        verifyOtp()
+                    }
                 }
             }
             OTPIntent.OnVerifyClicked -> verifyOtp()
@@ -85,7 +88,9 @@ class OTPViewModel @Inject constructor(
     }
 
     private fun verifyOtp() {
+        if (_state.value.isLoading) return
         val otpCode = _state.value.otpCode
+        if (otpCode.length != 4) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             if (isPasswordReset) {

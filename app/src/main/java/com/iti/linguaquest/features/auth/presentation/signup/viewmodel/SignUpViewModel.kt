@@ -119,6 +119,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun signUpWithEmail(username: String, email: String, password: String) {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = signUpWithEmailUseCase(email, username, password)) {
@@ -138,6 +139,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun loginWithGoogle(idToken: String) {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = loginWithGoogleUseCase(idToken)) {
@@ -237,6 +239,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun startGoogleSignIn() {
+        if (_state.value.isLoading) return
         _state.update {
             it.copy(
                 googleError = false,

@@ -35,7 +35,7 @@ import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPEffect
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPIntent
 import com.iti.linguaquest.features.auth.presentation.otp.contract.OTPState
 import com.iti.linguaquest.features.auth.presentation.otp.viewmodel.OTPViewModel
-import com.iti.linguaquest.features.auth.presentation.ui.screen.OtpInputField
+import com.iti.linguaquest.features.auth.presentation.otp.view.component.OtpInputField
 import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 
 @Composable

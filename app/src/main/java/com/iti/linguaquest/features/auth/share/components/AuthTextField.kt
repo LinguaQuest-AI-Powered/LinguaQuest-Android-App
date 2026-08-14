@@ -61,7 +61,7 @@ fun AuthTextField(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    val textToolbar = if (disableCopyPaste) {
+    val textToolbar = if (disableCopyPaste || isPassword) {
         object : TextToolbar {
             override fun showMenu(
                 rect: Rect,

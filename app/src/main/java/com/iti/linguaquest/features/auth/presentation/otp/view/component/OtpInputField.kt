@@ -1,4 +1,4 @@
-package com.iti.linguaquest.features.auth.presentation.ui.screen
+package com.iti.linguaquest.features.auth.presentation.otp.view.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

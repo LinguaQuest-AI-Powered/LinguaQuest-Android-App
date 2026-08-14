@@ -121,6 +121,7 @@ fun LoginContent(
                     errorMessage = state.passwordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
+                    disableCopyPaste = true,
                     modifier = Modifier
                         .shake(passwordShakeTrigger)
                         .focusRequester(passwordFocusRequester)
