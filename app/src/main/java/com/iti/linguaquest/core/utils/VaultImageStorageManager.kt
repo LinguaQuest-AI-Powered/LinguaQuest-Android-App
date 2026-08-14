@@ -39,10 +39,6 @@ class VaultImageStorageManager @Inject constructor(
         val sanitizedWord = word.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
         val sanitizedLanguage = language.trim().lowercase().replace(Regex("[^a-z0-9]"), "_")
         val file = File(vaultImagesDir, "${sanitizedWord}_${sanitizedLanguage}.jpg")
-        return if (file.exists()) {
-            Uri.fromFile(file).toString()
-        } else {
-            null
-        }
+        return Uri.fromFile(file).toString()
     }
 }
