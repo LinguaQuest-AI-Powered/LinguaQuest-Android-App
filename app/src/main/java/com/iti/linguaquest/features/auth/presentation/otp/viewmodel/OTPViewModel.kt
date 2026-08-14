@@ -74,7 +74,7 @@ class OTPViewModel @Inject constructor(
                         )
                     }
                     if (intent.code.length == 4) {
-                        verifyOtp()
+                        verifyOtp(intent.code)
                     }
                 }
             }
@@ -87,9 +87,9 @@ class OTPViewModel @Inject constructor(
         }
     }
 
-    private fun verifyOtp() {
+    private fun verifyOtp(code: String? = null) {
         if (_state.value.isLoading) return
-        val otpCode = _state.value.otpCode
+        val otpCode = code ?: _state.value.otpCode
         if (otpCode.length != 4) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
