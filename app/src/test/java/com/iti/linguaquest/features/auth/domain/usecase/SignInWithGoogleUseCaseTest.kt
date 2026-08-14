@@ -32,7 +32,7 @@ class SignInWithGoogleUseCaseTest {
     }
 
     @Test
-    fun invokeReturnsSuccessWhenGoogleSignInSucceeds() = runTest {
+    fun invoke_returnsSuccess_whenGoogleSignInSucceeds() = runTest {
         // Given
         val idToken = "valid_token"
         val authUser = AuthUser(
@@ -58,7 +58,7 @@ class SignInWithGoogleUseCaseTest {
     }
 
     @Test
-    fun invokeReturnsErrorWhenGoogleSignInFails() = runTest {
+    fun invoke_returnsError_whenGoogleSignInFails() = runTest {
         // Given
         val idToken = "invalid_token"
         val error: AuthError = AuthError.InvalidIdToken

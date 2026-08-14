@@ -28,6 +28,7 @@ import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUs
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderEffect
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
+import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -68,6 +69,7 @@ class SettingViewModelTest {
     private val cancelReminderUseCase: CancelReminderUseCase = mockk(relaxed = true)
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase = mockk()
     private val snackbarController: SnackbarController = mockk(relaxed = true)
+    private val tutorialManager: TutorialManager = mockk(relaxed = true)
 
     private lateinit var viewModel: SettingViewModel
 
@@ -104,7 +106,8 @@ class SettingViewModelTest {
             scheduleReminderUseCase,
             cancelReminderUseCase,
             observeNetworkStatusUseCase,
-            snackbarController
+            snackbarController,
+            tutorialManager
         )
     }
 

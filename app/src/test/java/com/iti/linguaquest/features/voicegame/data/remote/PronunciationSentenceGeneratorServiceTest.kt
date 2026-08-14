@@ -1,6 +1,6 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.features.voicegame.data.datasource.remote.PronunciationSentenceGeneratorService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,13 +13,13 @@ import org.junit.Test
 
 class PronunciationSentenceGeneratorServiceTest {
 
-    private lateinit var geminiAiService: GeminiAiService
+    private lateinit var aiClient: AiClient
     private lateinit var generatorService: PronunciationSentenceGeneratorService
 
     @Before
     fun setUp() {
-        geminiAiService = mockk()
-        generatorService = PronunciationSentenceGeneratorService(geminiAiService)
+        aiClient = mockk()
+        generatorService = PronunciationSentenceGeneratorService(aiClient)
     }
 
     @Test
@@ -43,7 +43,7 @@ class PronunciationSentenceGeneratorServiceTest {
             }
         """.trimIndent()
 
-        coEvery { geminiAiService.generateJson(any()) } returns jsonResponse
+        coEvery { aiClient.generateJson(any()) } returns jsonResponse
 
         val result = generatorService.generateSentences(
             targetLanguage = "Spanish",
@@ -61,7 +61,7 @@ class PronunciationSentenceGeneratorServiceTest {
         assertEquals("Buenos días", result[1].sentence)
         assertEquals("Easy", result[1].difficulty)
 
-        coVerify(exactly = 1) { geminiAiService.generateJson(any()) }
+        coVerify(exactly = 1) { aiClient.generateJson(any()) }
     }
 
     @Test
@@ -75,7 +75,7 @@ class PronunciationSentenceGeneratorServiceTest {
             }
         """.trimIndent()
 
-        coEvery { geminiAiService.generateJson(any()) } returns jsonResponse
+        coEvery { aiClient.generateJson(any()) } returns jsonResponse
 
         val result = generatorService.generateSentences(
             targetLanguage = "German",
@@ -93,7 +93,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
     @Test
     fun generateSentences_returnsFallback_whenGeminiReturnsNull() = runTest {
-        coEvery { geminiAiService.generateJson(any()) } returns null
+        coEvery { aiClient.generateJson(any()) } returns null
 
         val result = generatorService.generateSentences(
             targetLanguage = "Spanish",
@@ -108,7 +108,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
     @Test
     fun generateSentences_returnsFallback_whenGeminiReturnsInvalidJson() = runTest {
-        coEvery { geminiAiService.generateJson(any()) } returns "INVALID_JSON_RESPONSE"
+        coEvery { aiClient.generateJson(any()) } returns "INVALID_JSON_RESPONSE"
 
         val result = generatorService.generateSentences(
             targetLanguage = "French",
