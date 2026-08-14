@@ -173,8 +173,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun handleAuthFailure(error: AuthError, email: String? = null) {
-        val emailHasError = error == AuthError.InvalidCredentials || error == AuthError.InvalidEmail
-        val passwordHasError = error == AuthError.InvalidCredentials || error == AuthError.WeakPassword
+        val emailHasError = error == AuthError.InvalidCredentials || error == AuthError.InvalidEmail || error == AuthError.EmailNotFound
+        val passwordHasError = error == AuthError.InvalidCredentials || error == AuthError.WeakPassword || error == AuthError.InvalidPassword
         val isEmailNotVerified = error == AuthError.EmailNotVerified
 
         _state.update {

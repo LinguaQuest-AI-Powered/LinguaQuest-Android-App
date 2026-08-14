@@ -18,6 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalTextToolbar
+import androidx.compose.ui.platform.TextToolbar
+import androidx.compose.ui.platform.TextToolbarStatus
+import androidx.compose.ui.geometry.Rect
 import com.iti.linguaquest.core.sharedComponents.AppTextField
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.FieldError
@@ -88,6 +93,20 @@ fun ChangePasswordCard(
     var isOldPasswordVisible by remember { mutableStateOf(false) }
     var isNewPasswordVisible by remember { mutableStateOf(false) }
 
+    val textToolbar = remember {
+        object : TextToolbar {
+            override fun showMenu(
+                rect: Rect,
+                onCopyRequested: (() -> Unit)?,
+                onPasteRequested: (() -> Unit)?,
+                onCutRequested: (() -> Unit)?,
+                onSelectAllRequested: (() -> Unit)?
+            ) {}
+            override fun hide() {}
+            override val status: TextToolbarStatus = TextToolbarStatus.Hidden
+        }
+    }
+
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
@@ -95,8 +114,9 @@ fun ChangePasswordCard(
         tonalElevation = 1.dp,
         shadowElevation = 3.dp
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
+        CompositionLocalProvider(LocalTextToolbar provides textToolbar) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
                 text = label,
                 style = MaterialTheme.typography.bodyMedium,
                 color = LinguaQuestTheme.colors.iconsColor
@@ -143,6 +163,7 @@ fun ChangePasswordCard(
                     .shakeOnError(isError = newPasswordError.isError, shakeTrigger = newPasswordError.shakeTrigger)
             )
             HelperOrErrorText(fieldError = newPasswordError, helperText = newPasswordHelperText)
+            }
         }
     }
 }

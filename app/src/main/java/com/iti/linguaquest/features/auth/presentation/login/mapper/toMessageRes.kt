@@ -8,6 +8,7 @@ import com.iti.linguaquest.features.auth.domain.model.AuthError
 fun AuthError.toMessageRes(): Int = when (this) {
     AuthError.InvalidEmail -> R.string.login_error_invalid_email
     AuthError.InvalidCredentials -> R.string.login_error_invalid_credentials
+    AuthError.InvalidPassword -> R.string.login_error_invalid_password
     AuthError.EmailNotVerified -> R.string.login_error_email_not_verified
     AuthError.WeakPassword -> R.string.login_error_weak_password
     AuthError.UserDisabled -> R.string.login_error_user_disabled

@@ -105,7 +105,7 @@ class SignUpViewModel @Inject constructor(
             ) }
             sendEffect(SignUpEffect.ShakePassword)
         }
-        if (!passwordsMatch && passwordValid) {
+        if (!passwordsMatch) {
             _state.update { it.copy(
                 confirmPasswordError = true,
                 confirmPasswordErrorRes = R.string.signup_error_passwords_do_not_match
@@ -124,6 +124,12 @@ class SignUpViewModel @Inject constructor(
             when (val result = signUpWithEmailUseCase(email, username, password)) {
                 is LinguaQuestResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
+                    snackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.signup_success_message),
+                            type = SnackbarType.SUCCESS
+                        )
+                    )
                     sendEffect(SignUpEffect.SignUpSucceeded(email))
                 }
                 is LinguaQuestResult.Failure -> handleAuthFailure(result.error)
@@ -174,12 +180,16 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun handleAuthFailure(error: AuthError) {
+        val usernameHasError = error == AuthError.UsernameAlreadyExists
         val emailHasError = error == AuthError.InvalidCredentials || error == AuthError.InvalidEmail
+                || error == AuthError.EmailAlreadyInUse || error == AuthError.EmailAlreadyExists
         val passwordHasError = error == AuthError.InvalidCredentials || error == AuthError.WeakPassword
         _state.update {
             it.copy(
                 isLoading = false,
-                generalErrorRes = if (!emailHasError && !passwordHasError) error.toMessageRes() else null,
+                generalErrorRes = if (!usernameHasError && !emailHasError && !passwordHasError) error.toMessageRes() else null,
+                usernameError = usernameHasError,
+                usernameErrorRes = if (usernameHasError) error.toMessageRes() else null,
                 emailError = emailHasError,
                 emailErrorRes = if (emailHasError) error.toMessageRes() else null,
                 passwordError = passwordHasError,
@@ -188,7 +198,7 @@ class SignUpViewModel @Inject constructor(
             )
         }
 
-        if (!emailHasError && !passwordHasError) {
+        if (!usernameHasError && !emailHasError && !passwordHasError) {
             viewModelScope.launch {
                 snackbarController.sendEvent(
                     SnackbarEvent(
@@ -200,7 +210,8 @@ class SignUpViewModel @Inject constructor(
         }
 
         when (error) {
-            AuthError.InvalidEmail -> sendEffect(SignUpEffect.ShakeEmail)
+            AuthError.UsernameAlreadyExists -> sendEffect(SignUpEffect.ShakeUsername)
+            AuthError.InvalidEmail, AuthError.EmailAlreadyInUse, AuthError.EmailAlreadyExists -> sendEffect(SignUpEffect.ShakeEmail)
             AuthError.WeakPassword -> sendEffect(SignUpEffect.ShakePassword)
             else -> Unit
         }

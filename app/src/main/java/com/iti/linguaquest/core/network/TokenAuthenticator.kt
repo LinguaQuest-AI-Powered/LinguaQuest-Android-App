@@ -32,13 +32,19 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (response.request.url.encodedPath.contains("auth/refresh-token")) {
+        val requestPath = response.request.url.encodedPath
+
+        if (requestPath.contains("auth/refresh-token")) {
             applicationScope.launch {
                 tokensLocalDataSource.clearTokens()
                 sessionManagerDataSource.saveIsLoggedIn(false)
                 sessionManagerDataSource.clearSessionData()
                 sessionEventBus.emit(SessionEvent.SessionExpired)
             }
+            return null
+        }
+
+        if (requestPath.contains("profile/password")) {
             return null
         }
 

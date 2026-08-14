@@ -19,6 +19,7 @@ sealed interface LinguaQuestDataError : AppError {
     enum class Auth : LinguaQuestDataError {
         INVALID_EMAIL,
         INVALID_CREDENTIALS,
+        INVALID_PASSWORD,
         EMAIL_ALREADY_IN_USE,
         WEAK_PASSWORD,
         USER_DISABLED,
