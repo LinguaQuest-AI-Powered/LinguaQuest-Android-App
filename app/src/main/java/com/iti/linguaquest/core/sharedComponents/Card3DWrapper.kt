@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
 @Composable
 fun Card3DWrapper(
     modifier: Modifier = Modifier,
@@ -61,7 +63,7 @@ fun Card3DWrapper(
             color = backgroundColor,
             border = BorderStroke(borderWidth, borderColor),
             modifier = Modifier
-                .offset(y = pressOffset)
+                .graphicsLayer { translationY = pressOffset.toPx() }
                 .then(
                     if (onClick != null) {
                         Modifier.clickable(

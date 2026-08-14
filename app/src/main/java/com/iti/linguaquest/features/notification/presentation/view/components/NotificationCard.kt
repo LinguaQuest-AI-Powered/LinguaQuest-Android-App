@@ -44,7 +44,7 @@ fun NotificationCard(
 ) {
     val type =
         runCatching { NotificationType.valueOf(notification.type) }.getOrDefault(NotificationType.SYSTEM)
-    var cardBounds by remember(notification.id) { mutableStateOf(Rect.Zero) }
+    val cardBounds = remember(notification.id) { arrayOf(Rect.Zero) }
 
     val colors = getCardColors(isUnread = !notification.isRead)
 
@@ -55,10 +55,10 @@ fun NotificationCard(
         borderWidth = colors.borderWidth,
         cornerRadius = 32.dp,
         modifier = modifier.onGloballyPositioned { coordinates ->
-            cardBounds = coordinates.boundsInRoot()
+            cardBounds[0] = coordinates.boundsInRoot()
         },
         onClick = {
-            onCardClick(cardBounds)
+            onCardClick(cardBounds[0])
         }
     ) {
         Row(

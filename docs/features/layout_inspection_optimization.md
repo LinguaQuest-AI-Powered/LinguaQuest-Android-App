@@ -111,3 +111,56 @@ Whenever `LingoSpinningIcon` (our primary spinner used across buttons, dialogs, 
 * **Issue:** In `LingoLoadingAnimation`, while `translationY` was inside `graphicsLayer`, the pulsing `scale` value was applied via `Modifier.scale(scale)`. This caused the animated mascot image to recompose on every frame during its bounce cycle.
 * **Solution:** We combined `scaleX = scale` and `scaleY = scale` directly into the existing `Modifier.graphicsLayer { translationY = translateY ; scaleX = scale ; scaleY = scale }` block.
 
+---
+
+## 6. Scroll Recomposition & Coordinates Caching (Home, Lingos, Profile, Gallery)
+
+### The Problem
+
+When scrolling down or up on the Home, Lingos, Profile, and Gallery screens, the Layout Inspector showed continuous, repeated recompositions of the main container composables (`HomeContent`, `LingosScreen`, `ProfileContent`) and all child cards on every single frame of scrolling.
+
+### Causes & Solutions
+
+**Cause 1: Reading broad StateFlow in the Composition phase for one-off side effects**
+
+* **Issue:** `HomeContent`, `LingosScreen`, and `ProfileContent` were collecting `tutorialManager.state` via `val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()` in their composable body. Because elements decorated with `.tutorialTarget(...)` dispatch coordinate updates during scrolling, `TutorialState.targets` emitted a new state object 60+ times per second. Reading this state in the composable body subscribed the entire screens to every coordinate shift, causing mass recompositions.
+* **Solution:** We removed `collectAsStateWithLifecycle()` from the composition phase and moved flow collection directly into `LaunchedEffect(tutorialManager)` using `.map { it.activeTour to it.currentStepIndex }.distinctUntilChanged()`. The coroutine listens for step transitions to animate scroll offsets without triggering any recompositions of the parent composable.
+
+**Cause 2: Storing layout coordinates in `mutableStateOf` inside card components**
+
+* **Issue:** Interactive cards (`WordCaptureCard`, `ExploreWorldsSection`, `HomeFabs`, `VoicePractiseCard`, `RoleplayCard`, `MindReaderCard`, `WordCard`, `LockScreenWordCard`, `NotificationCard`, and `NotificationActions`) stored their root layout bounds using `var cardBounds by remember { mutableStateOf(Rect.Zero) }` updated via `.onGloballyPositioned { coordinates -> cardBounds = coordinates.boundsInRoot() }`. Because `cardBounds` was an observable Compose state read in lambda scopes, every pixel of scroll mutated state and forced the cards to recompose continuously.
+* **Solution:** We replaced the observable `mutableStateOf` with non-observable reference holders (`remember { arrayOf(Rect.Zero) }`) or removed unused bounds handlers. The `onGloballyPositioned` callbacks now update the coordinate cache silently for click animations without invalidating the Compose hierarchy during scroll passes.
+
+**Cause 3: Holding FAB visibility state in parent HomeScreen scope**
+
+* **Issue:** `HomeScreen` held `isFabVisible` state and passed it directly to `HomeFabs(isVisible = isFabVisible)`. Whenever the user scrolled down or up, `isFabVisible` flipped, invalidating `HomeScreen`, recreating all lambda instances passed to `HomeContent`, and triggering unnecessary recompositions of the entire screen.
+* **Solution:** We encapsulated the scroll delta calculation and visibility state directly inside `HomeFabs(scrollState = scrollState)`. `HomeScreen` no longer holds or reads any FAB visibility state, ensuring that when the FAB animates in or out, only `HomeFabs` recomposes, while `HomeScreen`, `StatefulContentContainer`, and `HomeContent` are completely skipped (0 recompositions).
+
+---
+
+## 7. 3D Button Press & Tutorial Spotlight Animations (`AppButton3D`, `Card3DWrapper`, `TutorialOverlayScreen`)
+
+### The Problem
+
+1. **`AppButton3D` & `Card3DWrapper` Click Storms:** Clicking any 3D button or interactive card triggered 20–30 rapid recompositions of the button and its entire contents (icons, text, internal wrappers) during the 80ms press and 80ms release transitions.
+2. **`TutorialOverlayScreen` Spotlight Jitter:** When tutorial tours activated, the spotlight dialog card and overlay recomposed continuously on every animation frame as the card moved into place.
+3. **Infinite Offline Mascot & Typing Animation Loops:** Mascot float loops in `OfflineMode` and dots in `AiTypingIndicator` triggered continuous recompositions 60–120 times/sec.
+
+### Causes & Solutions
+
+**Cause 1: Passing animated offsets to `Modifier.offset(y: Dp)`**
+
+* **Issue:** `Modifier.offset(y: Dp)` accepts a static `Dp` value and reads state during the **Composition Phase**. When `animateDpAsState` or `infiniteTransition.animateFloat` updates values across consecutive animation frames, Compose re-executes the entire composable function body on every frame.
+* **Solution:** We replaced `Modifier.offset(y = pressOffset)` with `Modifier.graphicsLayer { translationY = pressOffset.toPx() }` across `AppButton3D`, `Card3DWrapper`, `OfflineMode`, `AiTypingIndicator`, `NotificationActions`, and `LeaderboardListItem`. Reading animated values inside the `graphicsLayer` lambda defers execution directly to the GPU (Draw phase), reducing recompositions on click and infinite loop animations to **0**.
+
+**Cause 2: Card offset and un-isolated dot indicators in `TutorialOverlayScreen`**
+
+* **Issue:** `TutorialOverlayContent` applied `.offset(y = animatedY)` to the main dialog card Column and ran four dot size/color animations in the root `Row` scope, causing the entire tutorial dialog to recompose on every animation frame.
+* **Solution:**
+  * Replaced `.offset(y = animatedY)` with `.graphicsLayer { translationY = animatedY.toPx() }`.
+  * Added inequality guards inside `onGloballyPositioned` (`if (cardHeightDp != height) cardHeightDp = height`).
+  * Extracted dot indicators into a dedicated, isolated `@Composable private fun TutorialStepDot(isActive: Boolean)` component so dot size and color transitions only invalidate the dot itself.
+
+
+
+

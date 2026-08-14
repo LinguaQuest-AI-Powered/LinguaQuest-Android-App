@@ -41,7 +41,7 @@ fun ExploreWorldsSection(
     onWorldClick: (WorldItem, Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var seeMoreBounds by remember { mutableStateOf(Rect.Zero) }
+    val seeMoreBounds = remember { arrayOf(Rect.Zero) }
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -69,9 +69,9 @@ fun ExploreWorldsSection(
                 modifier = Modifier
                     .wrapContentSize()
                     .onGloballyPositioned { coordinates ->
-                        seeMoreBounds = coordinates.boundsInRoot()
+                        seeMoreBounds[0] = coordinates.boundsInRoot()
                     }
-                    .clickable { onSeeMoreClick(seeMoreBounds) }
+                    .clickable { onSeeMoreClick(seeMoreBounds[0]) }
             )
         }
 
@@ -82,13 +82,13 @@ fun ExploreWorldsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(worlds, key = { it.id }) { world ->
-                var worldCardBounds by remember(world.id) { mutableStateOf(Rect.Zero) }
+                val worldCardBounds = remember(world.id) { arrayOf(Rect.Zero) }
                 WorldCard(
                     world = world,
-                    onClick = { onWorldClick(world, worldCardBounds) },
+                    onClick = { onWorldClick(world, worldCardBounds[0]) },
                     modifier = Modifier
                         .onGloballyPositioned { coordinates ->
-                            worldCardBounds = coordinates.boundsInRoot()
+                            worldCardBounds[0] = coordinates.boundsInRoot()
                         }
                         .width(240.dp)
                         .heightIn(min = 220.dp)

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,8 +60,10 @@ fun LeaderboardListItem(entry: LeaderboardEntry, index: Int, animatedIds: Mutabl
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .offset(y = offsetY.dp)
-            .alpha(alphaAnim)
+            .graphicsLayer {
+                translationY = offsetY.dp.toPx()
+                alpha = alphaAnim
+            }
             .padding(horizontal = 16.dp)
             .background(borderColor, RoundedCornerShape(20.dp))
             .padding(bottom = if (isYou) 6.dp else 4.dp)

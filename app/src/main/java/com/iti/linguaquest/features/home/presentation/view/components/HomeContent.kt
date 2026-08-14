@@ -11,12 +11,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
@@ -37,19 +37,21 @@ fun HomeContent(
     scrollState: ScrollState = rememberScrollState()
 ) {
     val animationState = rememberStaggeredAnimationState(count = 3)
-    val scrollState = rememberScrollState()
     val tutorialManager = LocalTutorialManager.current
 
     if (tutorialManager != null) {
-        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
-        LaunchedEffect(tutorialState.currentStepIndex) {
-            val tour = tutorialState.activeTour
-            if (tour?.tourId == TourId.APP_TOUR) {
-                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
-                if (currentStep?.stepId == "tutorial_world_list") {
-                    scrollState.animateScrollTo(scrollState.maxValue)
+        LaunchedEffect(tutorialManager) {
+            tutorialManager.state
+                .map { it.activeTour to it.currentStepIndex }
+                .distinctUntilChanged()
+                .collect { (tour, currentStepIndex) ->
+                    if (tour?.tourId == TourId.APP_TOUR) {
+                        val currentStep = tour.steps.getOrNull(currentStepIndex)
+                        if (currentStep?.stepId == "tutorial_world_list") {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
                 }
-            }
         }
     }
 

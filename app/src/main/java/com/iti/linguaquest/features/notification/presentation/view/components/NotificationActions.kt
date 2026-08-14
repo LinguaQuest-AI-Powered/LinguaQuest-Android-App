@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
@@ -40,28 +40,30 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun NotificationActions(
-    isUnread: Boolean,
-    isDeleting: Boolean = false,
+    isUnread: Boolean = false,
+    isDeleting: Boolean,
     onDeleteClick: (Rect) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val deleteBounds = remember { arrayOf(Rect.Zero) }
     val deleteInteractionSource = remember { MutableInteractionSource() }
     val isDeletePressed by deleteInteractionSource.collectIsPressedAsState()
     val deleteOffset by animateDpAsState(
-        targetValue = if (isDeletePressed) 2.dp else 0.dp,
-        animationSpec = tween(durationMillis = 80),
-        label = "deleteOffset"
+        targetValue = if (isDeletePressed) 0.dp else (-2).dp,
+        label = "NotificationActionDeleteOffset"
     )
-    var deleteBounds by remember { mutableStateOf(Rect.Zero) }
 
     Column(
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(vertical = 2.dp)
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Box(modifier = Modifier.size(32.dp)) {
+        Box(
+            modifier = Modifier
+                .size(30.dp)
+                .clip(CircleShape),
+            contentAlignment = Alignment.TopCenter
+        ) {
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -71,19 +73,18 @@ fun NotificationActions(
             )
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp)
-                    .offset(y = deleteOffset)
+                    .size(30.dp)
+                    .graphicsLayer { translationY = deleteOffset.toPx() }
                     .clip(CircleShape)
                     .background(LinguaQuestTheme.colors.textFieldFill)
                     .onGloballyPositioned { coordinates ->
-                        deleteBounds = coordinates.boundsInRoot()
+                        deleteBounds[0] = coordinates.boundsInRoot()
                     }
                     .clickable(
                         enabled = !isDeleting,
                         interactionSource = deleteInteractionSource,
                         indication = null,
-                        onClick = { onDeleteClick(deleteBounds) }
+                        onClick = { onDeleteClick(deleteBounds[0]) }
                     ),
                 contentAlignment = Alignment.Center
             ) {

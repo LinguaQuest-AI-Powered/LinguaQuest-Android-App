@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -44,6 +43,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -187,9 +187,12 @@ fun TutorialOverlayContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(y = animatedY)
+                        .graphicsLayer { translationY = animatedY.toPx() }
                         .onGloballyPositioned { coordinates ->
-                            cardHeightDp = with(density) { coordinates.size.height.toDp() }
+                            val height = with(density) { coordinates.size.height.toDp() }
+                            if (cardHeightDp != height) {
+                                cardHeightDp = height
+                            }
                         }
                         .background(
                             color = LinguaQuestTheme.colors.ProfileCardColor,
@@ -269,27 +272,7 @@ fun TutorialOverlayContent(
                     ) {
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             tour.steps.forEachIndexed { index, _ ->
-                                val isActive = index == state.currentStepIndex
-                                val dotWidth by animateDpAsState(
-                                    targetValue = if (isActive) 20.dp else 8.dp,
-                                    animationSpec = spring(stiffness = Spring.StiffnessMedium),
-                                    label = "dot_width"
-                                )
-                                val dotColor by animateColorAsState(
-                                    targetValue = if (isActive) LinguaQuestTheme.colors.OrangeActive
-                                    else LinguaQuestTheme.colors.BrownText.copy(alpha = 0.3f),
-                                    animationSpec = spring(stiffness = Spring.StiffnessMedium),
-                                    label = "dot_color"
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .width(dotWidth)
-                                        .height(8.dp)
-                                        .background(
-                                            color = dotColor,
-                                            shape = RoundedCornerShape(4.dp)
-                                        )
-                                )
+                                TutorialStepDot(isActive = index == state.currentStepIndex)
                             }
                         }
                         val isLast = state.currentStepIndex == tour.steps.lastIndex
@@ -304,4 +287,31 @@ fun TutorialOverlayContent(
             }
         }
     }
+}
+
+@Composable
+private fun TutorialStepDot(
+    isActive: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val dotWidth by animateDpAsState(
+        targetValue = if (isActive) 20.dp else 8.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "dot_width"
+    )
+    val dotColor by animateColorAsState(
+        targetValue = if (isActive) LinguaQuestTheme.colors.OrangeActive
+        else LinguaQuestTheme.colors.BrownText.copy(alpha = 0.3f),
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "dot_color"
+    )
+    Box(
+        modifier = modifier
+            .width(dotWidth)
+            .height(8.dp)
+            .background(
+                color = dotColor,
+                shape = RoundedCornerShape(4.dp)
+            )
+    )
 }

@@ -94,6 +94,7 @@ class TutorialManager @Inject constructor(
     }
 
     private fun registerTarget(stepId: String, bounds: TargetBounds) {
+        if (_state.value.targets[stepId] == bounds) return
         _state.update {
             it.copy(targets = it.targets + (stepId to bounds))
         }
