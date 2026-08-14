@@ -1,20 +1,14 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
-
-import com.iti.linguaquest.features.mindreader.domain.model.LocalizedText
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderEntity
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGuessResult
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderNextTurn
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderQuestionCandidate
-import java.util.UUID
 import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
+import java.util.UUID
 import javax.inject.Inject
-
-sealed interface MindReaderNextTurn {
-    data class Question(val question: MindReaderQuestionCandidate) : MindReaderNextTurn
-    data class Guess(val guess: MindReaderGuessResult) : MindReaderNextTurn
-    data object Error : MindReaderNextTurn
-}
 
 class GetMindReaderNextTurnUseCase @Inject constructor(
     private val repository: MindReaderRepository
@@ -26,7 +20,7 @@ class GetMindReaderNextTurnUseCase @Inject constructor(
         state: MindReaderGameState
     ): MindReaderNextTurn {
         val historyString = state.history.turns.joinToString("\n") { turn ->
-            "Q: ${turn.question.resolve(targetLanguage)}\nA: ${turn.answer.rawId}"
+            "Q: ${turn.questionTargetText}\nA: ${turn.answer.rawId}"
         }
 
         val aiResponse = repository.getNextTurn(
@@ -36,36 +30,35 @@ class GetMindReaderNextTurnUseCase @Inject constructor(
             historyPrompt = historyString
         )
 
-        return if (aiResponse is com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn.Guess) {
-            val entity = MindReaderEntity(
-                id = UUID.randomUUID().toString(),
-                worldKey = category,
-                translations = LocalizedText(
-                    mapOf(
-                        targetLanguage to aiResponse.word,
-                        nativeLanguage to aiResponse.translation
-                    )
-                ),
-                emoji = aiResponse.emoji,
-                positiveAttributes = emptySet()
-            )
+        return when (aiResponse) {
+            is MindReaderAiNextTurn.Guess -> {
+                val entity = MindReaderEntity(
+                    id = UUID.randomUUID().toString(),
+                    worldKey = category,
+                    targetText = aiResponse.word,
+                    nativeText = aiResponse.translation,
+                    emoji = aiResponse.emoji
+                )
 
-            MindReaderNextTurn.Guess(
-                guess = MindReaderGuessResult(entity, 0.9)
-            )
-        } else if (aiResponse is com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn.Question) {
-            val question = MindReaderQuestionCandidate(
-                attributeId = UUID.randomUUID().toString(),
-                question = LocalizedText(
-                    mapOf(
-                        targetLanguage to aiResponse.targetText,
-                        nativeLanguage to aiResponse.nativeText
+                MindReaderNextTurn.Guess(
+                    guess = MindReaderGuessResult(
+                        entity = entity,
+                        confidence = 0.9,
+                        quizChoices = aiResponse.quizChoices
                     )
                 )
-            )
-            MindReaderNextTurn.Question(question)
-        } else {
-            MindReaderNextTurn.Error
+            }
+            is MindReaderAiNextTurn.Question -> {
+                val question = MindReaderQuestionCandidate(
+                    attributeId = UUID.randomUUID().toString(),
+                    targetText = aiResponse.targetText,
+                    nativeText = aiResponse.nativeText
+                )
+                MindReaderNextTurn.Question(question)
+            }
+            MindReaderAiNextTurn.Error -> {
+                MindReaderNextTurn.Error
+            }
         }
     }
 }

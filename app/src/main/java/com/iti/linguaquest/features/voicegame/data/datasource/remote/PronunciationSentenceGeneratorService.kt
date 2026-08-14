@@ -3,7 +3,7 @@ package com.iti.linguaquest.features.voicegame.data.datasource.remote
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
-import com.iti.linguaquest.core.ai.GeminiAiService
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.features.voicegame.domain.prompt.VoiceGamePromptFactory
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +17,7 @@ data class GeneratedSentence(
 
 @Singleton
 class PronunciationSentenceGeneratorService @Inject constructor(
-    private val geminiAiService: GeminiAiService
+    private val aiClient: AiClient
 ) {
 
     private val gson = Gson()
@@ -53,11 +53,10 @@ class PronunciationSentenceGeneratorService @Inject constructor(
                 wordOfTheDay = wordOfTheDay
             )
 
-            val rawText = geminiAiService.generateJson(prompt)
+            val rawText = aiClient.generateJson(prompt)
             if (rawText == null) {
                 return getRandomFallback(targetLanguage, count)
             }
-
 
             val jsonElement = JsonParser.parseString(rawText)
             val results = mutableListOf<GeneratedSentence>()
@@ -129,9 +128,5 @@ class PronunciationSentenceGeneratorService @Inject constructor(
             else -> fallbackSentences
         }
         return list.shuffled().take(count)
-    }
-
-    private companion object {
-        const val TAG = "GEMINI_DEBUG"
     }
 }

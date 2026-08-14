@@ -1,28 +1,105 @@
-# Mind Reader Feature (Akinator Game)
+# Mind Reader Feature Architecture & Game Flow
 
-## Overview
-Lingo's Mind Reader is an Akinator-style mini-game where the AI tries to guess the word the user is thinking of within a specific world/category by asking up to 20 Yes/No questions. The feature integrates with the Clean Architecture domain logic of LinguaQuest.
+## 1. Overview
+**Lingo's Mind Reader** is an AI-powered, 20-questions Akinator-style vocabulary game where the player thinks of a word in a specific category (e.g., Kitchen, Animals, School), and the mascot (Lingo) attempts to guess it through adaptive yes/no questions in the target language.
 
-## State Management & Architecture
-- **MVI Contract**: 
-    - `MindReaderState`: Central data class capturing game phase (`MindReaderPhase`), emotions, current questions, translation status, result entities, and stats.
-    - `MindReaderIntent`: Triggers all user interactions including `StartGameClicked`, `AnswerClicked`, `GuessVerifiedCorrect/Incorrect`, `PopQuizAnswered`, and `StumpWordSelected`.
-    - `MindReaderEffect`: SharedFlow events for one-shot UI actions such as `NavigateBack` and `PlayAudio`.
-- **ViewModel**: `MindReaderViewModel` orchestrates the flow. It retains the `MindReaderGameState` (domain model) and `MindReaderDataset` internally and utilizes UseCases to advance the state, mapping domain outputs to `MindReaderState` for Compose.
+The feature is structured according to LinguaQuest's Clean Architecture & MVI standards, with its Data and Domain layers architecturally aligned with the Roleplay feature.
 
-## Navigation
-The flow uses Jetpack Navigation 3 standards:
+---
+
+## 2. Layer Separation & Structure
+
+```
+features/mindreader/
+├── data/
+│   ├── datasource/
+│   │   ├── local/
+│   │   │   ├── MindReaderLocalDataSource.kt
+│   │   │   └── MindReaderLocalDataSourceImpl.kt
+│   │   └── remote/
+│   │       ├── MindReaderRemoteDataSource.kt
+│   │       └── GeminiMindReaderService.kt
+│   ├── dto/
+│   │   └── MindReaderDtos.kt
+│   └── repository/
+│       └── MindReaderRepositoryImpl.kt
+├── di/
+│   └── MindReaderModule.kt
+├── domain/
+│   ├── model/
+│   │   ├── MindReaderCategory.kt
+│   │   └── MindReaderModels.kt
+│   ├── prompt/
+│   │   └── MindReaderPromptFactory.kt
+│   ├── repository/
+│   │   └── MindReaderRepository.kt
+│   └── usecase/
+│       ├── BuildMindReaderPopQuizQuestionUseCase.kt
+│       ├── CreateMindReaderSessionUseCase.kt
+│       ├── GetMindReaderCategoriesUseCase.kt
+│       ├── GetMindReaderNextTurnUseCase.kt
+│       ├── ResolveMindReaderNativeLanguageCodeUseCase.kt
+│       ├── ResolveMindReaderRewardUseCase.kt
+│       ├── ResolveMindReaderTargetLanguageCodeUseCase.kt
+│       ├── StartMindReaderGameUseCase.kt
+│       ├── SubmitMindReaderAnswerUseCase.kt
+│       └── VerifyMindReaderHonestyUseCase.kt
+└── presentation/
+    ├── contract/
+    │   ├── MindReaderEffect.kt
+    │   ├── MindReaderIntent.kt
+    │   └── MindReaderState.kt
+    ├── view/
+    │   ├── components/
+    │   ├── contents/
+    │   └── MindReaderScreen.kt
+    └── viewmodel/
+        └── MindReaderViewModel.kt
+```
+
+---
+
+## 3. Token & Quota Optimizations
+
+To operate smoothly on free-tier API keys without hitting rate limits (15 RPM) or inflating token consumption, MindReader employs four optimization strategies:
+
+1. **Combined Guess + Pop-Quiz Payload**:
+   - When the AI makes a guess (`type: "guess"`), it generates the 3 vocabulary quiz choices inside the same response.
+   - When the user confirms the guess is correct, the Pop Quiz renders instantly from memory with **0 additional network calls**.
+2. **Instant Local Seed Opening Questions**:
+   - Each category in `res/raw/mindreader_categories.json` includes multilingual broad partition questions.
+   - Turn 1 displays instantly with **0ms latency and 0 network calls**.
+   - The first API call is only made on Turn 2, providing the AI with rich initial context.
+3. **Prompt Token Compression**:
+   - `MindReaderPromptFactory` utilizes high-density, concise prompt schemas, reducing prompt token size by 40–50%.
+4. **Aggressive Binary Partitioning**:
+   - Instructions guide the AI to ask high-entropy 50/50 partition questions and converge towards a guess within 6–8 questions once certainty reaches 80%.
+
+---
+
+## 4. Localization & In-Game Economy
+
+1. **Category Localization**:
+   - All 18 categories define multilingual `displayNames` (`ar`, `en`, `es`, `fr`, `de`, `it`, `pt`) in `mindreader_categories.json`.
+   - Category names dynamically adapt to the user's active native language (`category.resolveDisplayName(state.nativeLanguageCode)`).
+2. **Translation Economy (5 Coins)**:
+   - Revealing question translations in an active game costs 5 coins (`GameCost.MIND_READER_TRANSLATION`).
+   - Tapping the translate button prompts a confirmation dialog via `DialogController` (`DialogUiState`).
+   - If the player has insufficient coins, an error snackbar is displayed via `SnackbarController`.
+3. **Result Screen Reason Localization**:
+   - All result reasons (timeout, contradiction, network loss, wrong quiz answer) use strongly typed `UiText.StringResource` tokens with complete Arabic and English localizations.
+
+---
+
+## 5. Presentation Layer (MVI)
+
+- **State (`MindReaderState`)**: Tracks current phase (`LOBBY`, `THINKING`, `PLAYING`, `GUESSING_LOADING`, `GUESS_REVEAL`, `POP_QUIZ`, `STUMP`, `RESULT`), balances, current question candidate, and result info (`MindReaderResultInfo`).
+- **Intent (`MindReaderIntent`)**: User interactions including `StartGameClicked`, `AnswerClicked`, `GuessVerifiedCorrect/Incorrect`, `PopQuizAnswered`, `StumpSubmitClicked`, and `TranslateClicked`.
+- **Effect (`MindReaderEffect`)**: One-time side effects (`NavigateBack`, `PlayAudio`).
+- **Global Dialogs & Error Handling**: Leverages `DialogController` for confirmation modals and `SnackbarController` with `AiErrorMapper` for error toasts.
+
+---
+
+## 6. Navigation
 - **NavKey**: `RootScreen.MindReader(val worldId: Int? = null)`
-- **Router**: The `NavDisplay` in `AppNavigation.kt` resolves this key to the `MindReaderScreen` composable.
-
-## Presentation Components
-The UI implements a state-swapping approach within a single `MindReaderScreen` using `Crossfade`, alternating between:
-1. `PreGameLobbyContent`: Category confirmation.
-2. `ActiveGameContent`: Question loop with translation and playback.
-3. `LoadingGuessContent`: Simulated suspense before a reveal.
-4. `GuessRevealContent`: Lingo's final guess.
-5. `PopQuizContent`: Honesty verification via a translation check.
-6. `AkinatorTrapContent`: Stumping the AI and forcing the user to pick their intended word.
-7. `ResultContent`: Final victory or busted outcomes showcasing XP/Coin distribution.
-
-All components utilize `LinguaQuestScreenTopBar` and `AppButton` from the shared core components.
+- **Router**: Registered in `AppNavigation.kt` rendering `MindReaderScreen`.

@@ -11,11 +11,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.animations.LingoEntranceAnimations
 import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedItem
@@ -40,24 +40,27 @@ fun ProfileContent(
     val tutorialManager = LocalTutorialManager.current
 
     if (tutorialManager != null) {
-        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
-        LaunchedEffect(tutorialState.currentStepIndex) {
-            val tour = tutorialState.activeTour
-            if (tour?.tourId == TourId.PROFILE_TOUR) {
-                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
-                when (currentStep?.stepId) {
-                    "profile_achievements_target" -> {
-                        listState.animateScrollToItem(index = 4)
-                    }
-                    "profile_leaderboard_target" -> {
-                        val index = if (state.achievements.isNotEmpty()) 6 else 4
-                        listState.animateScrollToItem(index = index)
-                    }
-                    "profile_settings_target" -> {
-                        listState.animateScrollToItem(index = 3)
+        LaunchedEffect(tutorialManager, state.achievements.isNotEmpty()) {
+            tutorialManager.state
+                .map { it.activeTour to it.currentStepIndex }
+                .distinctUntilChanged()
+                .collect { (tour, currentStepIndex) ->
+                    if (tour?.tourId == TourId.PROFILE_TOUR) {
+                        val currentStep = tour.steps.getOrNull(currentStepIndex)
+                        when (currentStep?.stepId) {
+                            "profile_achievements_target" -> {
+                                listState.animateScrollToItem(index = 4)
+                            }
+                            "profile_leaderboard_target" -> {
+                                val index = if (state.achievements.isNotEmpty()) 6 else 4
+                                listState.animateScrollToItem(index = index)
+                            }
+                            "profile_settings_target" -> {
+                                listState.animateScrollToItem(index = 3)
+                            }
+                        }
                     }
                 }
-            }
         }
     }
 

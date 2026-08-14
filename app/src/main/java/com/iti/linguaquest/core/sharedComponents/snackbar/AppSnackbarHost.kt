@@ -41,7 +41,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -242,8 +244,12 @@ private fun CountdownBar(totalMillis: Long, color: Color) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(fraction = animatedProgress.coerceIn(0f, 1f))
+                .fillMaxWidth()
                 .height(3.dp)
+                .graphicsLayer {
+                    scaleX = animatedProgress.coerceIn(0f, 1f)
+                    transformOrigin = TransformOrigin(0f, 0.5f)
+                }
                 .background(color)
         )
     }

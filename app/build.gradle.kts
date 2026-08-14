@@ -145,4 +145,6 @@ dependencies {
     implementation(libs.konfetti.compose)
     implementation(libs.timber)
     implementation(libs.lottie.compose)
+
+    debugImplementation(libs.leakcanary.android)
 }

@@ -24,6 +24,8 @@ import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
@@ -68,7 +70,7 @@ fun GuessRevealContent(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 state.guessResult?.entity?.let { entity ->
-                    val word = entity.resolveTranslation(state.targetLanguageCode)
+                    val word = entity.nativeText.ifBlank { entity.targetText }
                     if (word.isNotBlank()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -82,7 +84,7 @@ fun GuessRevealContent(
                                 color = LinguaQuestTheme.colors.BrownText,
                                 modifier = Modifier
                                     .padding(horizontal = 24.dp, vertical = 16.dp)
-                                    .border(2.dp, LinguaQuestTheme.colors.OrangeActive, androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                                    .border(2.dp, LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp))
                                     .padding(horizontal = 24.dp, vertical = 16.dp)
                             )
                         }
@@ -109,7 +111,7 @@ fun GuessRevealContent(
                 AppButton3D(
                     text = stringResource(id = R.string.mind_reader_wrong),
                     onClick = { onIntent(MindReaderIntent.GuessVerifiedIncorrect) },
-                    variant = com.iti.linguaquest.core.sharedComponents.ButtonVariant.SECONDARY,
+                    variant = ButtonVariant.SECONDARY,
                     modifier = Modifier.weight(1f)
                 )
 

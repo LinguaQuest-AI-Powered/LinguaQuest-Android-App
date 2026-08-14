@@ -38,7 +38,7 @@ fun ReviewScreen(
     var tts by remember { mutableStateOf<TextToSpeech?>(null) }
 
     DisposableEffect(Unit) {
-        val engine = TextToSpeech(context) { status ->
+        val engine = TextToSpeech(context.applicationContext) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 tts?.language = Locale.ENGLISH
             }

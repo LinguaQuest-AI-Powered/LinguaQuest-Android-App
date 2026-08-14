@@ -1,11 +1,7 @@
 package com.iti.linguaquest.features.roleplay.data.datasource.remote
 
 import com.google.gson.Gson
-import com.iti.linguaquest.core.ai.network.GeminiRestClient
-import com.iti.linguaquest.core.ai.network.model.GeminiContentDto
-import com.iti.linguaquest.core.ai.network.model.GeminiGenerationConfigDto
-import com.iti.linguaquest.core.ai.network.model.GeminiPartDto
-import com.iti.linguaquest.core.ai.network.model.GeminiRequestDto
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.prompt.PromptFactory
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GeminiRoleplayService @Inject constructor(
-    private val geminiRestClient: GeminiRestClient,
+    private val aiClient: AiClient,
     private val gson: Gson
 ) : GeminiRoleplayRemoteDataSource {
 
@@ -25,8 +21,8 @@ class GeminiRoleplayService @Inject constructor(
         audioBytes: ByteArray?
     ): String? = withContext(Dispatchers.IO) {
         try {
-            val responseText = executeGeminiRequest(systemPrompt)
-            cleanJson(responseText)
+            val jsonString = aiClient.generateJson(systemPrompt)
+            cleanJson(jsonString)
         } catch (e: Exception) {
             Timber.e(e, "Error during generateRoleplayTurn")
             null
@@ -48,7 +44,7 @@ class GeminiRoleplayService @Inject constructor(
         )
 
         try {
-            val rawText = executeGeminiRequest(systemPrompt)
+            val rawText = aiClient.generateJson(systemPrompt)
             val jsonString = cleanJson(rawText)
 
             jsonString?.let {
@@ -58,21 +54,6 @@ class GeminiRoleplayService @Inject constructor(
             Timber.e(e, "Error during evaluateBossStage")
             throw e
         }
-    }
-
-    private suspend fun executeGeminiRequest(promptText: String): String? {
-        val requestPayload = GeminiRequestDto(
-            contents = listOf(
-                GeminiContentDto(
-                    parts = listOf(GeminiPartDto(text = promptText))
-                )
-            ),
-            generationConfig = GeminiGenerationConfigDto(
-                temperature = 0.1f,
-                responseMimeType = "application/json"
-            )
-        )
-        return geminiRestClient.executeGeminiRequest(requestPayload)
     }
 
     private fun cleanJson(rawText: String?): String? {
@@ -86,4 +67,3 @@ class GeminiRoleplayService @Inject constructor(
         return null
     }
 }
-

@@ -1,10 +1,9 @@
-package com.iti.linguaquest.features.roleplay.presentation.mapper
+package com.iti.linguaquest.core.sharedComponents.text
 
 import com.iti.linguaquest.R
-import com.iti.linguaquest.core.sharedComponents.text.UiText
 import retrofit2.HttpException
 
-fun Throwable?.toRoleplayUiText(fallbackResId: Int = R.string.roleplay_error_generic): UiText {
+fun Throwable?.toAiErrorUiText(fallbackResId: Int = R.string.error_generic): UiText {
     if (this == null) return UiText.StringResource(fallbackResId)
 
     if (this is HttpException && this.code() == 429) {
@@ -12,10 +11,10 @@ fun Throwable?.toRoleplayUiText(fallbackResId: Int = R.string.roleplay_error_gen
     }
 
     val message = this.message.orEmpty()
-    return message.toRoleplayUiText(fallbackResId)
+    return message.toAiErrorUiText(fallbackResId)
 }
 
-fun String?.toRoleplayUiText(fallbackResId: Int = R.string.roleplay_error_generic): UiText {
+fun String?.toAiErrorUiText(fallbackResId: Int = R.string.error_generic): UiText {
     val message = this?.lowercase().orEmpty()
 
     if (message.isBlank()) {

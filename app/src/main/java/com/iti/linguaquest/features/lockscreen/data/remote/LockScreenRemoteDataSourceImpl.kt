@@ -1,35 +1,22 @@
 package com.iti.linguaquest.features.lockscreen.data.remote
 
-import com.google.firebase.Firebase
-import com.google.firebase.ai.GenerativeModel
-import com.google.firebase.ai.ai
-import com.google.firebase.ai.type.GenerativeBackend
-import com.google.firebase.ai.type.generationConfig
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.core.network.safeApiCall
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.lockscreen.data.remote.dto.DeductCoinsRequestDto
 import com.iti.linguaquest.features.lockscreen.domain.model.GeneratedVocabularyWord
 import com.iti.linguaquest.features.lockscreen.domain.model.VocabularyBatchParams
-import jakarta.inject.Inject
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
+import javax.inject.Inject
 
 class LockScreenRemoteDataSourceImpl @Inject constructor(
     private val promptBuilder: PromptBuilder,
-    private val coinsApiService: CoinsApiService
+    private val coinsApiService: CoinsApiService,
+    private val aiClient: AiClient
 ) : LockScreenRemoteDataSource {
-
-    private val model: GenerativeModel by lazy {
-        Firebase.ai(backend = GenerativeBackend.googleAI())
-            .generativeModel(
-                modelName ="gemini-3.1-flash-lite",
-                generationConfig = generationConfig {
-                    responseMimeType = "application/json"
-                }
-            )
-    }
 
     override suspend fun deductCoins(
         operationId: String,
@@ -52,17 +39,16 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
     ): LinguaQuestResult<List<GeneratedVocabularyWord>, LinguaQuestDataError> {
         return try {
             val prompt = promptBuilder.build(params)
-             val response = model.generateContent(prompt)
-            val text = response.text
+            val jsonText = aiClient.generateJson(prompt)
                 ?: return LinguaQuestResult.Failure(LinguaQuestDataError.Remote.EMPTY_RESULT)
-            val parsed = parseResponse(text)
-             if (parsed.isEmpty()) {
-                 LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)
+            val parsed = parseResponse(jsonText)
+            if (parsed.isEmpty()) {
+                LinguaQuestResult.Failure(LinguaQuestDataError.Remote.SERIALIZATION)
             } else {
                 LinguaQuestResult.Success(parsed)
             }
         } catch (e: Exception) {
-             LinguaQuestResult.Failure(e.toRemoteError())
+            LinguaQuestResult.Failure(e.toRemoteError())
         }
     }
 
@@ -148,7 +134,6 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun Throwable.toRemoteError(): LinguaQuestDataError {
-
         val message = message.orEmpty().lowercase()
         return when {
             message.contains("timeout") -> LinguaQuestDataError.Remote.REQUEST_TIMEOUT
@@ -160,6 +145,4 @@ class LockScreenRemoteDataSourceImpl @Inject constructor(
             else -> LinguaQuestDataError.CustomServerMessage(message.ifBlank { javaClass.simpleName })
         }
     }
-
-
 }

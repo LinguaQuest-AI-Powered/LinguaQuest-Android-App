@@ -22,7 +22,7 @@ fun ComponentActivity.launchGoogleSignIn(
 ) {
     lifecycleScope.launch {
         try {
-            val credentialManager = CredentialManager.create(this@launchGoogleSignIn)
+            val credentialManager = CredentialManager.create(this@launchGoogleSignIn.applicationContext)
             val clientIdResId = resources.getIdentifier("default_web_client_id", "string", packageName)
             val clientId = if (clientIdResId != 0) getString(clientIdResId) else "PLEASE_ENABLE_GOOGLE_AUTH_IN_FIREBASE"
 

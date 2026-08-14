@@ -1,10 +1,19 @@
 package com.iti.linguaquest.features.mindreader.presentation.view.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,35 +26,34 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MindReaderCategoryBottomSheet(
+    modifier: Modifier = Modifier,
     selectedCategory: MindReaderCategory?,
     availableCategories: List<MindReaderCategory>,
     showBottomSheet: Boolean,
     onRequestShowBottomSheet: () -> Unit,
     onDismissRequest: () -> Unit,
     onCategorySelected: (MindReaderCategory) -> Unit,
-    modifier: Modifier = Modifier
+    languageCode: String? = null
 ) {
-    // Render the currently selected category in the main UI
     CategorySelectionCard(
         category = selectedCategory,
-        modifier = modifier.clickable { onRequestShowBottomSheet() }
+        modifier = modifier.clickable { onRequestShowBottomSheet() },
+        languageCode = languageCode
     )
 
-    // And conditionally show the bottom sheet
     if (showBottomSheet) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.surface,
-            dragHandle = { BottomSheetDefaults.DragHandle() },
-            modifier = modifier
+            dragHandle = { BottomSheetDefaults.DragHandle() }
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
+                    .fillMaxHeight(0.6f)
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 32.dp)
             ) {
@@ -58,15 +66,20 @@ fun MindReaderCategoryBottomSheet(
                 )
 
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(availableCategories) { category ->
+                    items(
+                        items = availableCategories,
+                        key = { it.id }
+                    ) { category ->
                         CategorySelectionCard(
                             category = category,
                             modifier = Modifier.clickable {
                                 onCategorySelected(category)
                                 onDismissRequest()
-                            }
+                            },
+                            languageCode = languageCode
                         )
                     }
                 }

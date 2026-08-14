@@ -26,9 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -109,8 +106,9 @@ fun LingoLoadingAnimation(
                 .size(size)
                 .graphicsLayer {
                     translationY = translateY
+                    scaleX = scale
+                    scaleY = scale
                 }
-                .scale(scale)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -141,7 +139,9 @@ fun LingoSpinningIcon(
         contentDescription = "Loading",
         modifier = modifier
             .size(size)
-            .rotate(rotation)
+            .graphicsLayer {
+                rotationZ = rotation
+            }
     )
 }
 
@@ -191,21 +191,21 @@ fun LingoBouncingDots(
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot1Alpha)
+                .graphicsLayer { alpha = dot1Alpha }
                 .background(dotColor, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot2Alpha)
+                .graphicsLayer { alpha = dot2Alpha }
                 .background(dotColor, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(dotSize)
-                .alpha(dot3Alpha)
+                .graphicsLayer { alpha = dot3Alpha }
                 .background(dotColor, CircleShape)
         )
     }

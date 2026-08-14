@@ -13,7 +13,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.iti.linguaquest.core.tutorial.model.TourId
 import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
@@ -38,15 +39,18 @@ fun LingosScreen(
     val scrollState = rememberScrollState()
 
     if (tutorialManager != null) {
-        val tutorialState by tutorialManager.state.collectAsStateWithLifecycle()
-        LaunchedEffect(tutorialState.currentStepIndex) {
-            val tour = tutorialState.activeTour
-            if (tour?.tourId == TourId.LINGOS_TOUR) {
-                val currentStep = tour.steps.getOrNull(tutorialState.currentStepIndex)
-                if (currentStep?.stepId == "lingos_card_mindreader") {
-                    scrollState.animateScrollTo(scrollState.maxValue)
+        LaunchedEffect(tutorialManager) {
+            tutorialManager.state
+                .map { it.activeTour to it.currentStepIndex }
+                .distinctUntilChanged()
+                .collect { (tour, currentStepIndex) ->
+                    if (tour?.tourId == TourId.LINGOS_TOUR) {
+                        val currentStep = tour.steps.getOrNull(currentStepIndex)
+                        if (currentStep?.stepId == "lingos_card_mindreader") {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
                 }
-            }
         }
     }
 
@@ -57,7 +61,7 @@ fun LingosScreen(
             .padding(vertical = 20.dp)
     ) {
         VoicePractiseCard(
-            onStartClick = { _ -> onNavigateToVoiceGame() },
+            onStartClick = onNavigateToVoiceGame,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -67,7 +71,7 @@ fun LingosScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         RoleplayCard(
-            onStartClick = { _ -> onNavigateToRoleplayList() },
+            onStartClick = onNavigateToRoleplayList,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -77,7 +81,7 @@ fun LingosScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         MindReaderCard(
-            onStartClick = { _ -> onNavigateToMindReader() },
+            onStartClick = onNavigateToMindReader,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

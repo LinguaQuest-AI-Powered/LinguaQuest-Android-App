@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -37,19 +38,21 @@ fun RippleRingsView(modifier: Modifier = Modifier) {
 
     Box(modifier = modifier.size(300.dp), contentAlignment = Alignment.Center) {
         for (i in 0..2) {
-            val ringProgress = (progress + (i * 0.33f)) % 1f
-            val scale = 0.5f + (ringProgress * 1.0f)
-            val opacity = if (ringProgress < 0.2f) {
-                ringProgress / 0.2f * 0.6f
-            } else {
-                (1f - ringProgress) / 0.8f * 0.6f
-            }
-            
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .scale(scale)
-                    .alpha(opacity)
+                    .graphicsLayer {
+                        val ringProgress = (progress + (i * 0.33f)) % 1f
+                        val currentScale = 0.5f + (ringProgress * 1.0f)
+                        val opacity = if (ringProgress < 0.2f) {
+                            ringProgress / 0.2f * 0.6f
+                        } else {
+                            (1f - ringProgress) / 0.8f * 0.6f
+                        }
+                        scaleX = currentScale
+                        scaleY = currentScale
+                        alpha = opacity
+                    }
                     .border(2.dp, LinguaQuestTheme.colors.whiteColor, CircleShape)
             )
         }

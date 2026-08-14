@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.linguaquest.R
@@ -26,14 +27,16 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun Mascot(
-    offsetX: Dp,
-    offsetY: Dp,
+    offsetX: () -> Dp,
+    offsetY: () -> Dp,
     modifier: Modifier = Modifier,
     isLastLevel: Boolean = false,
     isLastLevelCompleted: Boolean = false
 ) {
     Box(
-        modifier = modifier.absoluteOffset(x = offsetX, y = offsetY)
+        modifier = modifier.absoluteOffset { 
+            IntOffset(offsetX().roundToPx(), offsetY().roundToPx()) 
+        }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(

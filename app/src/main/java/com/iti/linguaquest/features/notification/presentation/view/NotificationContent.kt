@@ -47,7 +47,7 @@ fun NotificationContent(
     onIntent: (NotificationIntent) -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
-    var deleteAllBounds by remember { mutableStateOf(Rect.Zero) }
+    val deleteAllBounds = remember { arrayOf(Rect.Zero) }
 
     Box(
         modifier = modifier
@@ -73,9 +73,9 @@ fun NotificationContent(
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier
                                     .onGloballyPositioned { coordinates ->
-                                        deleteAllBounds = coordinates.boundsInRoot()
+                                        deleteAllBounds[0] = coordinates.boundsInRoot()
                                     }
-                                    .clickable(enabled = !state.isDeleting) { onDeleteAllClick(deleteAllBounds) }
+                                    .clickable(enabled = !state.isDeleting) { onDeleteAllClick(deleteAllBounds[0]) }
                                     .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }

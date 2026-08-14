@@ -1,9 +1,6 @@
 package com.iti.linguaquest.features.review.data.datasource
 
-import com.google.firebase.Firebase
-import com.google.firebase.ai.GenerativeModel
-import com.google.firebase.ai.ai
-import com.google.firebase.ai.type.GenerativeBackend
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.core.database.word.WordEntity
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
@@ -18,30 +15,22 @@ interface ReviewRemoteDataSource {
     ): LinguaQuestResult<AIReviewResponse, LinguaQuestDataError>
 }
 
-class ReviewRemoteDataSourceImpl @Inject constructor() : ReviewRemoteDataSource {
-
-    private val model: GenerativeModel by lazy {
-        Firebase.ai(backend = GenerativeBackend.googleAI())
-            .generativeModel(modelName = "gemini-3.1-flash-lite")
-    }
+class ReviewRemoteDataSourceImpl @Inject constructor(
+    private val aiClient: AiClient
+) : ReviewRemoteDataSource {
 
     override suspend fun getAIReview(
         word: WordEntity
     ): LinguaQuestResult<AIReviewResponse, LinguaQuestDataError> {
         return try {
             val prompt = buildPrompt(word)
-
-            val response = model.generateContent(prompt)
-
-            val text = response.text
+            val jsonText = aiClient.generateJson(prompt)
                 ?: return LinguaQuestResult.Failure(
                     LinguaQuestDataError.Remote.EMPTY_RESULT
                 )
 
-            val parsed = parseResponse(text)
-
+            val parsed = parseResponse(jsonText)
             LinguaQuestResult.Success(parsed)
-
         } catch (e: Exception) {
             LinguaQuestResult.Failure(
                 LinguaQuestDataError.CustomServerMessage(
@@ -52,13 +41,7 @@ class ReviewRemoteDataSourceImpl @Inject constructor() : ReviewRemoteDataSource 
     }
 
     private fun parseResponse(raw: String): AIReviewResponse {
-        val cleaned = raw
-            .removePrefix("```json")
-            .removePrefix("```")
-            .removeSuffix("```")
-            .trim()
-
-        val json = JSONObject(cleaned)
+        val json = JSONObject(raw)
 
         val sentence = json.optString("sentence", "")
         val translation = json.optString("translation", "")
@@ -88,5 +71,19 @@ class ReviewRemoteDataSourceImpl @Inject constructor() : ReviewRemoteDataSource 
             funFact = fact,
             fullText = fullText
         )
+    }
+
+    private fun buildPrompt(word: WordEntity): String {
+        return """
+            You are a helpful language learning assistant.
+            Generate a helpful learning tip for the word "${word.translatedWord}" (which means "${word.sourceWord}") in ${word.targetLanguage}.
+            Respond strictly in valid JSON format with keys:
+            {
+               "sentence": "An example sentence using the word",
+               "translation": "English translation of the sentence",
+               "tip": "A mnemonic or memory hook to remember it",
+               "fact": "An interesting cultural or linguistic fun fact"
+            }
+        """.trimIndent()
     }
 }

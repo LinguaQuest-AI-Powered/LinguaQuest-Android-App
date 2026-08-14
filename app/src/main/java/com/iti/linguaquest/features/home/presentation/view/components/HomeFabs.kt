@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -15,10 +16,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
@@ -37,11 +41,28 @@ import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 fun HomeFabs(
     onDailyMissionClick: (Rect?) -> Unit,
     onWorldMapClick: (Rect?) -> Unit,
-    isVisible: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState? = null
 ) {
-    var fabBounds by remember { mutableStateOf<Rect?>(null) }
+    val fabBounds = remember { arrayOf<Rect?>(null) }
     val animationState = rememberStaggeredAnimationState(count = 2)
+    var isVisible by remember { mutableStateOf(true) }
+
+    if (scrollState != null) {
+        var previousScrollOffset by remember { mutableIntStateOf(0) }
+        LaunchedEffect(scrollState) {
+            snapshotFlow { scrollState.value }
+                .collect { currentScrollOffset ->
+                    val delta = currentScrollOffset - previousScrollOffset
+                    if (delta > 0 && currentScrollOffset > 50) {
+                        isVisible = false
+                    } else if (delta < 0) {
+                        isVisible = true
+                    }
+                    previousScrollOffset = currentScrollOffset
+                }
+        }
+    }
 
     AnimatedVisibility(
         visible = isVisible,
@@ -58,7 +79,7 @@ fun HomeFabs(
             enter = LingoEntranceAnimations.popUpVertically(offset = 60)
         ) {
             FloatingActionButton(
-                onClick = { onDailyMissionClick(fabBounds) },
+                onClick = { onDailyMissionClick(fabBounds[0]) },
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.background,
                 modifier = Modifier.tutorialTarget("tutorial_daily_mission")
@@ -80,12 +101,12 @@ fun HomeFabs(
             enter = LingoEntranceAnimations.popUpVertically(offset = 60)
         ) {
             FloatingActionButton(
-                onClick = { onWorldMapClick(fabBounds) },
+                onClick = { onWorldMapClick(fabBounds[0]) },
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier
                     .onGloballyPositioned { coordinates ->
-                        fabBounds = coordinates.boundsInRoot()
+                        fabBounds[0] = coordinates.boundsInRoot()
                     }
                     .tutorialTarget("tutorial_language_button")
             ) {

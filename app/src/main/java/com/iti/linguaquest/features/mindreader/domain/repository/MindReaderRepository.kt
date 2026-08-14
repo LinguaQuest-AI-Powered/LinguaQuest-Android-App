@@ -1,12 +1,15 @@
 package com.iti.linguaquest.features.mindreader.domain.repository
 
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderDataset
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiHonestyResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiQuizChoice
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiHonestyResult
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameConfig
 
 interface MindReaderRepository {
-    suspend fun loadDataset(): MindReaderDataset
+    suspend fun getCategories(): List<MindReaderCategory>
+
+    suspend fun getGameConfig(): MindReaderGameConfig
 
     suspend fun getNextTurn(
         categoryContext: String,

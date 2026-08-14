@@ -46,14 +46,14 @@ fun WordCaptureCard(
     buttonText: String = stringResource(R.string.word_capture_continue_button),
     onContinueClick: (Rect) -> Unit = {}
 ) {
-    var cardBounds by remember { mutableStateOf(Rect.Zero) }
+    val cardBounds = remember { arrayOf(Rect.Zero) }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 20.dp)
             .onGloballyPositioned { coordinates ->
-                cardBounds = coordinates.boundsInRoot()
+                cardBounds[0] = coordinates.boundsInRoot()
             }
     ) {
         CameraAccessories()
@@ -65,7 +65,7 @@ fun WordCaptureCard(
             progressText = progressText,
             targetWord = targetWord,
             buttonText = buttonText,
-            onContinueClick = { onContinueClick(cardBounds) }
+            onContinueClick = { onContinueClick(cardBounds[0]) }
         )
     }
 }

@@ -42,19 +42,14 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun MindReaderCard(
-    onStartClick: (Rect) -> Unit,
+    onStartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var cardBounds by remember { mutableStateOf(Rect.Zero) }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(LinguaQuestTheme.colors.whiteColor)
-            .onGloballyPositioned { coordinates ->
-                cardBounds = coordinates.boundsInRoot()
-            }
             .padding(20.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -116,7 +111,7 @@ fun MindReaderCard(
 
         AppButton3D(
             text = stringResource(R.string.start_button),
-            onClick = { onStartClick(cardBounds) },
+            onClick = onStartClick,
             variant = ButtonVariant.PRIMARY,
             icon = rememberVectorPainter(image = Icons.Default.PlayArrow),
             iconPosition = IconPosition.START,

@@ -1,21 +1,38 @@
 package com.iti.linguaquest.features.mindreader.data.repository
 
-import com.iti.linguaquest.features.mindreader.data.datasource.MindReaderDataSource
-import com.iti.linguaquest.features.mindreader.data.datasource.remote.MindReaderAiService
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderDataset
+import com.iti.linguaquest.features.mindreader.data.datasource.local.MindReaderLocalDataSource
+import com.iti.linguaquest.features.mindreader.data.datasource.remote.MindReaderRemoteDataSource
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiHonestyResult
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiQuizChoice
-import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiHonestyResult
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderCategory
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameConfig
+import com.iti.linguaquest.features.mindreader.domain.prompt.MindReaderPromptFactory
 import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MindReaderRepositoryImpl @Inject constructor(
-    private val dataSource: MindReaderDataSource,
-    private val aiService: MindReaderAiService
+    private val localDataSource: MindReaderLocalDataSource,
+    private val remoteDataSource: MindReaderRemoteDataSource
 ) : MindReaderRepository {
 
-    override suspend fun loadDataset(): MindReaderDataset {
-        return dataSource.loadDataset()
+    override suspend fun getCategories(): List<MindReaderCategory> {
+        val dtoList = localDataSource.getCategories()
+        return dtoList.map { dto ->
+            MindReaderCategory(
+                id = dto.id,
+                displayName = dto.displayName,
+                displayNames = dto.displayNames ?: emptyMap(),
+                emoji = dto.emoji,
+                seedQuestions = dto.seedQuestions
+            )
+        }
+    }
+
+    override suspend fun getGameConfig(): MindReaderGameConfig {
+        return localDataSource.getGameConfig()
     }
 
     override suspend fun getNextTurn(
@@ -24,23 +41,30 @@ class MindReaderRepositoryImpl @Inject constructor(
         nativeLanguage: String,
         historyPrompt: String
     ): MindReaderAiNextTurn {
-        val aiResponse = aiService.getNextTurn(
+        val prompt = MindReaderPromptFactory.createNextTurnPrompt(
             categoryContext = categoryContext,
             targetLanguage = targetLanguage,
             nativeLanguage = nativeLanguage,
             historyPrompt = historyPrompt
-        ) ?: return MindReaderAiNextTurn.Error
+        )
+        val dto = remoteDataSource.getNextTurn(prompt) ?: return MindReaderAiNextTurn.Error
 
-        return if (aiResponse.type == "guess" || aiResponse.guessWord != null) {
+        return if (dto.type == "guess" || dto.guessWord != null) {
             MindReaderAiNextTurn.Guess(
-                word = aiResponse.guessWord ?: "",
-                translation = aiResponse.guessTranslation ?: "",
-                emoji = aiResponse.guessEmoji ?: "🤔"
+                word = dto.guessWord ?: "",
+                translation = dto.guessTranslation ?: "",
+                emoji = dto.guessEmoji ?: "🤔",
+                quizChoices = dto.quizChoices?.map {
+                    MindReaderAiQuizChoice(
+                        translationText = it.translationText,
+                        isCorrect = it.isCorrect
+                    )
+                } ?: emptyList()
             )
         } else {
             MindReaderAiNextTurn.Question(
-                targetText = aiResponse.questionTargetText ?: "",
-                nativeText = aiResponse.questionNativeText ?: ""
+                targetText = dto.questionTargetText ?: "",
+                nativeText = dto.questionNativeText ?: ""
             )
         }
     }
@@ -51,12 +75,13 @@ class MindReaderRepositoryImpl @Inject constructor(
         nativeLanguage: String,
         targetLanguage: String
     ): List<MindReaderAiQuizChoice>? {
-        val response = aiService.generateQuizChoices(
+        val prompt = MindReaderPromptFactory.createQuizChoicesPrompt(
             categoryContext = categoryContext,
             correctWord = correctWord,
             nativeLanguage = nativeLanguage,
             targetLanguage = targetLanguage
-        ) ?: return null
+        )
+        val response = remoteDataSource.generateQuizChoices(prompt) ?: return null
 
         return response.choices.map {
             MindReaderAiQuizChoice(
@@ -72,12 +97,13 @@ class MindReaderRepositoryImpl @Inject constructor(
         claimedWord: String,
         feedbackLanguage: String
     ): MindReaderAiHonestyResult? {
-        val response = aiService.verifyUserWord(
+        val prompt = MindReaderPromptFactory.createHonestyVerificationPrompt(
             categoryContext = categoryContext,
             historyPrompt = historyPrompt,
             claimedWord = claimedWord,
             feedbackLanguage = feedbackLanguage
-        ) ?: return null
+        )
+        val response = remoteDataSource.verifyUserWord(prompt) ?: return null
 
         return MindReaderAiHonestyResult(
             isHonest = response.isHonest,

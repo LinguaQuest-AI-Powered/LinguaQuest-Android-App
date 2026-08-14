@@ -49,15 +49,15 @@ fun LockScreenWordCard(
     onSpeakClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var cardBounds by remember(word.id) { mutableStateOf(Rect.Zero) }
+    val cardBounds = remember(word.id) { arrayOf(Rect.Zero) }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .onGloballyPositioned { coordinates ->
-                cardBounds = coordinates.boundsInRoot()
+                cardBounds[0] = coordinates.boundsInRoot()
             }
-            .clickable { onWordClick(word.id, cardBounds) },
+            .clickable { onWordClick(word.id, cardBounds[0]) },
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
             containerColor = LinguaQuestTheme.colors.ProfileCardColor

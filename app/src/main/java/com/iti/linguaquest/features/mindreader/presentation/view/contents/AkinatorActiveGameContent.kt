@@ -23,6 +23,7 @@ import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
+import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderActionRow
@@ -94,37 +95,44 @@ fun ActiveGameContent(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
+                val isInputEnabled = state.currentPhase == MindReaderPhase.PLAYING
+
                 MindReaderAnswerButton(
                     text = MindReaderAnswerOption.YES.resolveLabel(state.targetLanguageCode),
-                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.YES)) }
+                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.YES)) },
+                    enabled = isInputEnabled
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
                     text = MindReaderAnswerOption.NO.resolveLabel(state.targetLanguageCode),
-                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.NO)) }
+                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.NO)) },
+                    enabled = isInputEnabled
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
                     text = MindReaderAnswerOption.SOMETIMES.resolveLabel(state.targetLanguageCode),
-                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.SOMETIMES)) }
+                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.SOMETIMES)) },
+                    enabled = isInputEnabled
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
                     text = MindReaderAnswerOption.PROBABLY_NOT.resolveLabel(state.targetLanguageCode),
-                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY_NOT)) }
+                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY_NOT)) },
+                    enabled = isInputEnabled
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MindReaderAnswerButton(
                     text = MindReaderAnswerOption.PROBABLY.resolveLabel(state.targetLanguageCode),
-                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY)) }
+                    onClick = { onIntent(MindReaderIntent.AnswerClicked(MindReaderAnswerOption.PROBABLY)) },
+                    enabled = isInputEnabled
                 )
             }
 

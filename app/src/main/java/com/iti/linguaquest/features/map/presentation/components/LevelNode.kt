@@ -38,6 +38,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
+import androidx.compose.ui.graphics.graphicsLayer
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import kotlinx.coroutines.launch
@@ -146,7 +147,11 @@ fun LevelNode(
                 y = offsetY
             )
             .size(100.dp)
-            .scale(if (showIntro) introScale.value else 1f)
+            .graphicsLayer {
+                val currentScale = if (showIntro) introScale.value else 1f
+                scaleX = currentScale
+                scaleY = currentScale
+            }
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -158,12 +163,15 @@ fun LevelNode(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                // Large soft outer glow (Sun Corona)
                 Box(
                     modifier = Modifier
                         .size(200.dp)
-                        .scale(if (showIntro) glowPulse else 1f)
-                        .alpha(if (showIntro) glowPulse * 0.7f else 1f)
+                        .graphicsLayer {
+                            val currentScale = if (showIntro) glowPulse else 1f
+                            scaleX = currentScale
+                            scaleY = currentScale
+                            alpha = if (showIntro) glowPulse * 0.7f else 1f
+                        }
                         .background(
                             brush = Brush.radialGradient(
                                 colors = listOf(
@@ -180,7 +188,11 @@ fun LevelNode(
                 Box(
                     modifier = Modifier
                         .size(130.dp)
-                        .scale(if (showIntro) glowPulse else 1f)
+                        .graphicsLayer {
+                            val currentScale = if (showIntro) glowPulse else 1f
+                            scaleX = currentScale
+                            scaleY = currentScale
+                        }
                         .background(
                             brush = Brush.radialGradient(
                                 colors = listOf(
@@ -200,7 +212,11 @@ fun LevelNode(
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
-                        .scale(if (showIntro) 0.9f + (glowPulse - 0.6f) * 0.4f else 1f)
+                        .graphicsLayer {
+                            val currentScale = if (showIntro) 0.9f + (glowPulse - 0.6f) * 0.4f else 1f
+                            scaleX = currentScale
+                            scaleY = currentScale
+                        }
                 )
             }
         }
@@ -239,15 +255,22 @@ fun LevelNode(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .align(Alignment.Center)
-                .alpha(if (showIntro) 0f else 1f)
-                .scale(if (!showIntro) revealScale.value else 1f)
+                .graphicsLayer {
+                    alpha = if (showIntro) 0f else 1f
+                    val currentScale = if (!showIntro) revealScale.value else 1f
+                    scaleX = currentScale
+                    scaleY = currentScale
+                }
         ) {
             if (status == LevelStatus.CURRENT) {
                 val haloSize = if (isLastLevel) 220.dp else 120.dp
                 Box(
                     modifier = Modifier
                         .size(haloSize)
-                        .scale(pulseScale)
+                        .graphicsLayer {
+                            scaleX = pulseScale
+                            scaleY = pulseScale
+                        }
                         .clip(CircleShape)
                         .background(
                             brush = Brush.radialGradient(
@@ -276,7 +299,10 @@ fun LevelNode(
                     contentDescription = "Treasure",
                     modifier = Modifier
                         .size(if (status == LevelStatus.CURRENT) 180.dp else 150.dp)
-                        .scale(pulseScale)
+                        .graphicsLayer {
+                            scaleX = pulseScale
+                            scaleY = pulseScale
+                        }
                 )
             } else {
                 Box(
