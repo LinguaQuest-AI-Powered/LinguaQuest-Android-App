@@ -4,6 +4,12 @@
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
+
     <!-- Camera -->
     <uses-permission android:name="android.permission.CAMERA" />
 

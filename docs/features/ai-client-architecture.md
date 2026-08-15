@@ -93,13 +93,28 @@ abstract class AiModule {
 
 ---
 
-## 6. Consuming Features
+---
 
-All features inject `AiClient` directly:
-- **Review**: `ReviewRemoteDataSourceImpl` (`aiClient.generateJson(prompt)`)
-- **Lock Screen**: `LockScreenRemoteDataSourceImpl` (`aiClient.generateJson(prompt)`)
-- **Voice Game**:
-  - `PronunciationSentenceGeneratorService` (`aiClient.generateJson(prompt)`)
-  - `VoiceEvaluationService` (`aiClient.generateFromAudio(...)`)
-- **Roleplay**: `GeminiRoleplayService` (`aiClient.generateJson(prompt)`)
-- **Mind Reader**: `GeminiMindReaderService` (`aiClient.generateJson(prompt)`)
+## 7. Pluggable Live Roleplay Architecture (`core/ai/roleplay/`)
+
+LinguaQuest abstracts live conversation into a unified data source contract:
+
+```
+core/ai/roleplay/
+├── LiveRoleplayRemoteDataSource.kt  <-- Unified interface for live audio chat
+├── DeepSeekWalkieTalkieService.kt   <-- Implementation 1: STT -> DeepSeek V3.2 -> TTS
+└── GeminiLiveStreamingService.kt    <-- Implementation 2: Realtime WebSocket Audio Streaming
+```
+
+### Swapping Live Roleplay Engines
+In `RoleplayModule.kt`:
+```kotlin
+// Option 1: DeepSeek Walkie-Talkie (Reliable, target-language STT, ITI Gateway)
+@Binds
+@Singleton
+abstract fun bindLiveRoleplayRemoteDataSource(impl: DeepSeekWalkieTalkieService): LiveRoleplayRemoteDataSource
+
+// Option 2: Gemini Live Streaming (Low latency WebSocket duplex audio)
+// abstract fun bindLiveRoleplayRemoteDataSource(impl: GeminiLiveStreamingService): LiveRoleplayRemoteDataSource
+```
+

@@ -3,8 +3,8 @@ package com.iti.linguaquest.features.roleplay.data.repository
 import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
 import com.iti.linguaquest.features.roleplay.data.audio.AudioPlayer
 import com.iti.linguaquest.features.roleplay.data.audio.AudioRecorder
+import com.iti.linguaquest.core.ai.roleplay.LiveRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayRemoteDataSource
-import com.iti.linguaquest.features.roleplay.data.datasource.remote.LiveRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
 import com.iti.linguaquest.features.roleplay.domain.model.BossScenario
 import com.iti.linguaquest.features.roleplay.domain.model.RoleplayLiveEvent
