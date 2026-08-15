@@ -891,7 +891,11 @@
     <string name="lockscreen_fullscreen_intent_title">مطلوب إذن شاشة القفل</string>
     <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات الكلمات على شاشة القفل، يرجى تفعيل إذن \"الظهور فوق شاشة القفل\" من إعدادات جهازك.</string>
     <string name="lockscreen_fullscreen_intent_action">افتح الإعدادات</string>
-    
+    <string name="login_error_invalid_password">كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.</string>
+    <string name="change_language_title">تغيير اللغة</string>
+    <string name="change_language_message">هل أنت متأكد أنك تريد التبديل إلى %1$s؟</string>
+    <string name="edit">تعديل</string>
+    <string name="done">تم</string>
     <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
     <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
     <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
