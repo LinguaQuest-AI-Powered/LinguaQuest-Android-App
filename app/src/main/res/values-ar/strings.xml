@@ -110,6 +110,7 @@
     <string name="signup_error_passwords_do_not_match">كلمتا المرور غير متطابقتين.</string>
     <string name="signup_success_message">تم إنشاء الحساب بنجاح! تم إرسال رمز التحقق إلى بريدك الإلكتروني.</string>
     <string name="otp_code_resent_message">تم إعادة إرسال رمز التحقق بنجاح!</string>
+    <string name="otp_verification_success_message">تم تأكيد البريد الإلكتروني بنجاح! يرجى تسجيل الدخول.</string>
 
     <string name="home_screen">الشاشة الرئيسية</string>
     <string name="profile_screen">شاشة الملف الشخصي</string>

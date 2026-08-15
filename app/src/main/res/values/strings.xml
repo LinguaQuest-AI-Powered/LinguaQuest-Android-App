@@ -88,6 +88,7 @@
     <string name="signup_error_passwords_do_not_match">Passwords do not match.</string>
     <string name="signup_success_message">Account created successfully! Verification code sent to your email.</string>
     <string name="otp_code_resent_message">Verification code resent successfully!</string>
+    <string name="otp_verification_success_message">Email verified successfully! Please log in.</string>
 
     <string name="home_screen">Home Screen</string>
     <string name="profile_screen">Profile Screen</string>

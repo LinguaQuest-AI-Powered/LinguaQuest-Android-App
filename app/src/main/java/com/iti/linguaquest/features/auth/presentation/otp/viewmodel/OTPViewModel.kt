@@ -113,6 +113,12 @@ class OTPViewModel @Inject constructor(
                 when (val result = verifyEmailOtpUseCase(email, otpCode)) {
                     is LinguaQuestResult.Success -> {
                         _state.update { it.copy(isLoading = false) }
+                        snackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResource(R.string.otp_verification_success_message),
+                                type = SnackbarType.SUCCESS
+                            )
+                        )
                         sendEffect(OTPEffect.NavigateToNextScreen(null))
                     }
                     is LinguaQuestResult.Failure -> {
@@ -133,23 +139,46 @@ class OTPViewModel @Inject constructor(
         viewModelScope.launch {
             if (email.isNotEmpty()) {
                 if (isPasswordReset) {
-                    sendPasswordResetOtpUseCase(email)
+                    if (!isInitialization) {
+                        when (val result = sendPasswordResetOtpUseCase(email)) {
+                            is LinguaQuestResult.Success -> {
+                                snackbarController.sendEvent(
+                                    SnackbarEvent(
+                                        message = UiText.StringResource(R.string.otp_code_resent_message),
+                                        type = SnackbarType.SUCCESS
+                                    )
+                                )
+                            }
+                            is LinguaQuestResult.Failure -> {
+                                snackbarController.sendEvent(
+                                    SnackbarEvent(
+                                        message = UiText.StringResource(result.error.toMessageRes()),
+                                        type = SnackbarType.ERROR
+                                    )
+                                )
+                            }
+                        }
+                    }
                 } else {
-                    sendRegistrationOtpUseCase(email)
-                    if (isInitialization) {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(
-                                message = UiText.StringResource(R.string.signup_success_message),
-                                type = SnackbarType.SUCCESS
+                    when (val result = sendRegistrationOtpUseCase(email)) {
+                        is LinguaQuestResult.Success -> {
+                            if (!isInitialization) {
+                                snackbarController.sendEvent(
+                                    SnackbarEvent(
+                                        message = UiText.StringResource(R.string.otp_code_resent_message),
+                                        type = SnackbarType.SUCCESS
+                                    )
+                                )
+                            }
+                        }
+                        is LinguaQuestResult.Failure -> {
+                            snackbarController.sendEvent(
+                                SnackbarEvent(
+                                    message = UiText.StringResource(result.error.toMessageRes()),
+                                    type = SnackbarType.ERROR
+                                )
                             )
-                        )
-                    } else {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(
-                                message = UiText.StringResource(R.string.otp_code_resent_message),
-                                type = SnackbarType.SUCCESS
-                            )
-                        )
+                        }
                     }
                 }
             }
