@@ -30,7 +30,7 @@ class LoginUserUseCaseTest {
     }
 
     @Test
-    fun invokeReturnsSuccessWhenRepositoryLoginSucceeds() = runTest {
+    fun invoke_returnsSuccess_whenRepositoryLoginSucceeds() = runTest {
         // Given
         val email = "test@example.com"
         val password = "password123"
@@ -53,7 +53,7 @@ class LoginUserUseCaseTest {
     }
 
     @Test
-    fun invokeReturnsErrorWhenRepositoryLoginFails() = runTest {
+    fun invoke_returnsError_whenRepositoryLoginFails() = runTest {
         // Given
         val email = "test@example.com"
         val password = "wrongpassword"
@@ -68,3 +68,4 @@ class LoginUserUseCaseTest {
         coVerify(exactly = 1) { authRepository.login(email, password) }
     }
 }
+

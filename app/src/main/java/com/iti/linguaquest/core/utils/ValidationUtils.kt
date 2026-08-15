@@ -7,8 +7,12 @@ import java.util.regex.Pattern
 
 object ValidationUtils {
 
+    private val STRICT_EMAIL_PATTERN = Pattern.compile(
+        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$"
+    )
+
     fun isValidEmail(email: String): Boolean {
-        return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return email.isNotBlank() && STRICT_EMAIL_PATTERN.matcher(email).matches()
     }
 
     fun isValidPassword(password: String): Boolean {

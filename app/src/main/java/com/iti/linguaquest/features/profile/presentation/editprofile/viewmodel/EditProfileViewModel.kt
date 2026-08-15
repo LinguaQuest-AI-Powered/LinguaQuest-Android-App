@@ -11,6 +11,7 @@ import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
 import com.iti.linguaquest.core.sharedComponents.text.UiText
+import com.iti.linguaquest.core.utils.ValidationUtils
 import com.iti.linguaquest.features.profile.domain.usecase.ChangePasswordUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.GetCachedProfileUseCase
 import com.iti.linguaquest.features.profile.domain.usecase.UploadAvatarUseCase
@@ -76,11 +77,17 @@ class EditProfileViewModel @Inject constructor(
             is EditProfileIntent.OnDisplayNameChanged ->
                 _state.update { it.copy(displayName = intent.name, displayNameError = FieldError()) }
 
-            is EditProfileIntent.OnOldPasswordChanged ->
-                _state.update { it.copy(oldPassword = intent.password, oldPasswordError = FieldError()) }
+            is EditProfileIntent.OnOldPasswordChanged -> {
+                if (intent.password.length <= 30) {
+                    _state.update { it.copy(oldPassword = intent.password, oldPasswordError = FieldError()) }
+                }
+            }
 
-            is EditProfileIntent.OnNewPasswordChanged ->
-                _state.update { it.copy(newPassword = intent.password, newPasswordError = FieldError()) }
+            is EditProfileIntent.OnNewPasswordChanged -> {
+                if (intent.password.length <= 30) {
+                    _state.update { it.copy(newPassword = intent.password, newPasswordError = FieldError()) }
+                }
+            }
 
             is EditProfileIntent.UploadPhoto ->
                 uploadPhoto(intent.uri)
@@ -158,10 +165,11 @@ class EditProfileViewModel @Inject constructor(
             )
         } else FieldError()
 
-        val newPasswordError = if (currentState.newPassword.length < 6) {
+        val newPasswordValidationRes = ValidationUtils.getPasswordValidationErrorRes(currentState.newPassword)
+        val newPasswordError = if (newPasswordValidationRes != null) {
             FieldError(
                 isError = true,
-                message = UiText.StringResource(R.string.new_password_min_length),
+                message = UiText.StringResource(newPasswordValidationRes),
                 shakeTrigger = currentState.newPasswordError.shakeTrigger + 1
             )
         } else FieldError()

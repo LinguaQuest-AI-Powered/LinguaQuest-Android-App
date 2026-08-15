@@ -42,6 +42,9 @@ import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 import com.iti.linguaquest.features.auth.share.components.AuthTextField
 import com.iti.linguaquest.features.auth.share.components.shake
 
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+
 @Composable
 fun ForgetPasswordContent(
     state: ForgetPasswordState,
@@ -63,17 +66,18 @@ fun ForgetPasswordContent(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = ForgetPasswordDimens.ScreenPadding)
+            .navigationBarsPadding()
+            .imePadding(),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = ForgetPasswordDimens.BottomSpacing),
+                .padding(horizontal = ForgetPasswordDimens.ScreenPadding, vertical = ForgetPasswordDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(ForgetPasswordDimens.ScreenPadding * 2))
 
             AuthCardLayout(
                 imageRes = resolveHeroImageRes(

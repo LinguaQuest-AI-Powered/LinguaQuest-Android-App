@@ -115,7 +115,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithEmail(email: String, password: String) {
-
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = loginUserUseCase(email, password)) {
@@ -130,6 +130,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithGoogle(idToken: String) {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             when (val result = loginWithGoogleUseCase(idToken)) {
@@ -173,8 +174,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun handleAuthFailure(error: AuthError, email: String? = null) {
-        val emailHasError = error == AuthError.InvalidCredentials || error == AuthError.InvalidEmail
-        val passwordHasError = error == AuthError.InvalidCredentials || error == AuthError.WeakPassword
+        val emailHasError = error == AuthError.InvalidCredentials || error == AuthError.InvalidEmail || error == AuthError.EmailNotFound
+        val passwordHasError = error == AuthError.InvalidCredentials || error == AuthError.WeakPassword || error == AuthError.InvalidPassword
         val isEmailNotVerified = error == AuthError.EmailNotVerified
 
         _state.update {
@@ -189,7 +190,7 @@ class LoginViewModel @Inject constructor(
             )
         }
 
-        if (!emailHasError && !passwordHasError && !isEmailNotVerified) {
+        if (error == AuthError.InvalidCredentials || (!emailHasError && !passwordHasError && !isEmailNotVerified)) {
             viewModelScope.launch {
                 snackbarController.sendEvent(
                     SnackbarEvent(

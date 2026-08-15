@@ -31,9 +31,14 @@ The tutorial system follows Clean Architecture principles:
 - **Lingos Tour**: Highlights Voice Practice, Roleplay, and Mind Reader cards.
 - **Profile Tour**: Contextually highlights profile header, stats grid, settings row, achievements, and leaderboard.
 
-## Adding a New Tour
-
-1. Add a new `TourId` entry in `TourId.kt`.
-2. Define the step sequence in `TourRegistry.kt`.
-3. Register UI elements using `Modifier.tutorialTarget("target_id")`.
-4. Trigger the tour using `tutorialManager.onIntent(TutorialIntent.StartTour(tourRegistry.myTour()))`.
+34: ## Replaying Tours & Tab Navigation
+35: 
+36: - **Screen Lifecycle Integration**: Each main feature screen (`HomeScreen`, `GalleryScreen`, `LingosScreen`, `ProfileScreen`) listens to `LocalTutorialManager.current` via a `LaunchedEffect` and triggers its respective tour (`StartAppTour`, `StartGalleryTour`, `StartLingosTour`, `StartProfileTour`).
+37: - **Reset & Replay Flow**: When the user triggers "Replay App Tour" in Settings, `TutorialManager` processes `TutorialIntent.ResetAllTours`, clears Datastore preferences, resets active tour state, and emits `TutorialEffect.RequestTabSwitch(0)` to navigate `MainScreen` back to the Home tab where `HomeScreen` immediately initiates the Home Tour (`APP_TOUR`).
+38: 
+39: ## Adding a New Tour
+40: 
+41: 1. Add a new `TourId` entry in `TourId.kt`.
+42: 2. Define the step sequence in `TourRegistry.kt`.
+43: 3. Register UI elements using `Modifier.tutorialTarget("target_id")`.
+44: 4. Trigger the tour using `tutorialManager.onIntent(TutorialIntent.StartTour(tourRegistry.myTour()))`.

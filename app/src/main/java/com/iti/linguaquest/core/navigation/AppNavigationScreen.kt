@@ -270,7 +270,7 @@ fun AppNavigationScreen(
                 entry<RootScreen.Onboarding> {
                     OnboardingScreen(
                         onGetStartedClick = {
-                            rootBackStack.navigateSingleTop(RootScreen.Languages())
+                            rootBackStack.navigateSingleTop(RootScreen.Languages(flow = "SIGN_UP"))
                         },
                         onLoginClick = {
                             rootBackStack.navigateSingleTop(RootScreen.Login())
@@ -290,7 +290,7 @@ fun AppNavigationScreen(
                     LevelScreen(
                         onContinue = {
                             when (screen.flow) {
-                                "SIGN_UP" -> rootBackStack.navigateSingleTop(RootScreen.SignUp())
+                                "SIGN_UP", "ONBOARDING" -> rootBackStack.navigateSingleTop(RootScreen.SignUp())
                                 "OAUTH" -> rootBackStack.navigateSingleTop(
                                     RootScreen.Login(
                                         isOAuthLanguageSelectionCompleted = true
@@ -303,7 +303,7 @@ fun AppNavigationScreen(
                                     )
                                 )
 
-                                else -> rootBackStack.navigateSingleTop(RootScreen.Login())
+                                else -> rootBackStack.navigateSingleTop(RootScreen.SignUp())
                             }
                         }
                     )
@@ -389,12 +389,7 @@ fun AppNavigationScreen(
                 entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
                         onBackToLogin = { rootBackStack.popToLogin() },
-                        onResetSuccess = {
-                            rootBackStack.apply {
-                                clear()
-                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
-                            }
-                        },
+                        onResetSuccess = { rootBackStack.popToLogin() },
                         resetToken = screen.resetToken
                     )
                 }

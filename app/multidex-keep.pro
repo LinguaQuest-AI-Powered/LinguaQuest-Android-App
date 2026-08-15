@@ -1,0 +1,3 @@
+-keep class com.iti.linguaquest.LinguaQuestApplication { *; }
+-keep class com.iti.linguaquest.Hilt_LinguaQuestApplication { *; }
+-keep class dagger.hilt.android.internal.managers.** { *; }

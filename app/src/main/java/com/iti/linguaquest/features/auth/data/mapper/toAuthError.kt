@@ -7,6 +7,7 @@ import com.iti.linguaquest.features.auth.domain.model.AuthError
 fun LinguaQuestDataError.Auth.toAuthError(): AuthError = when (this) {
     LinguaQuestDataError.Auth.INVALID_EMAIL -> AuthError.InvalidEmail
     LinguaQuestDataError.Auth.INVALID_CREDENTIALS -> AuthError.InvalidCredentials
+    LinguaQuestDataError.Auth.INVALID_PASSWORD -> AuthError.InvalidPassword
     LinguaQuestDataError.Auth.EMAIL_NOT_VERIFIED -> AuthError.EmailNotVerified
     LinguaQuestDataError.Auth.WEAK_PASSWORD -> AuthError.WeakPassword
     LinguaQuestDataError.Auth.USER_DISABLED -> AuthError.UserDisabled

@@ -48,6 +48,9 @@ import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.features.auth.share.components.shake
 
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+
 @Composable
 fun LoginContent(
     state: LoginState,
@@ -74,17 +77,18 @@ fun LoginContent(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = LoginDimens.ScreenPadding)
+            .navigationBarsPadding()
+            .imePadding(),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = LoginDimens.ScreenPadding * 2),
+                .padding(horizontal = LoginDimens.ScreenPadding, vertical = LoginDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(LoginDimens.ScreenPadding * 2))
             
             AuthCardLayout(
                 imageRes = resolveHeroImageRes(
@@ -121,6 +125,7 @@ fun LoginContent(
                     errorMessage = state.passwordErrorRes?.let { stringResource(id = it) },
                     enabled = true,
                     isPassword = true,
+                    disableCopyPaste = true,
                     modifier = Modifier
                         .shake(passwordShakeTrigger)
                         .focusRequester(passwordFocusRequester)

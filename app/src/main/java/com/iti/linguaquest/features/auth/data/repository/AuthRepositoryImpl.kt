@@ -194,12 +194,12 @@ class AuthRepositoryImpl @Inject constructor(
         return when (this) {
             is LinguaQuestResult.Success -> this
             is LinguaQuestResult.Failure -> {
-                val authError =
-                    if (this.error is LinguaQuestDataError.Auth) {
-                        this.error.toAuthError()
-                    } else {
-                        AuthError.Unknown
-                    }
+                val authError = when (val err = this.error) {
+                    is LinguaQuestDataError.Auth -> err.toAuthError()
+                    LinguaQuestDataError.Remote.UNAUTHORIZED -> AuthError.InvalidCredentials
+                    is LinguaQuestDataError.CustomServerMessage -> AuthError.InvalidCredentials
+                    else -> AuthError.Unknown
+                }
                 LinguaQuestResult.Failure(authError)
             }
         }
