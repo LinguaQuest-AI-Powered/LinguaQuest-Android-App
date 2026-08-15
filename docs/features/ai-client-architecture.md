@@ -3,7 +3,7 @@
 ## 1. Overview
 LinguaQuest utilizes a centralized, provider-agnostic **`AiClient`** interface across all generative AI features (Review, Lock Screen vocabulary, Voice Game pronunciation & sentence generation, Roleplay boss stage evaluations, and Mind Reader).
 
-This architecture decouples the app's business logic from specific AI vendors (Gemini, Firebase, DeepSeek, OpenAI), allowing provider swapping with a single line of code in Hilt DI.
+This architecture decouples the app's business logic from specific AI vendors (ITI Gateway / DeepSeek / Llama, Gemini, Firebase), allowing provider swapping with a single line of code in Hilt DI.
 
 ---
 
@@ -12,14 +12,19 @@ This architecture decouples the app's business logic from specific AI vendors (G
 ```
 core/ai/
 ├── client/
-│   ├── AiClient.kt           <-- Provider-agnostic interface
-│   ├── GeminiAiClient.kt     <-- Implementation 1: Direct Gemini REST + Adaptive Model Caching
-│   └── FirebaseAiClient.kt   <-- Implementation 2: Firebase GoogleAI SDK (Firebase.ai)
+│   ├── AiClient.kt             <-- Provider-agnostic interface
+│   ├── ItiGatewayAiClient.kt   <-- Implementation 1: ITI Multi-Model Gateway (DeepSeek, Llama, Voxtral, etc.)
+│   ├── GatewayModel.kt         <-- Catalog of all 8 supported gateway models
+│   ├── GeminiAiClient.kt       <-- Implementation 2: Direct Gemini REST + Adaptive Model Caching
+│   └── FirebaseAiClient.kt     <-- Implementation 3: Firebase GoogleAI SDK (Firebase.ai)
 ├── di/
-│   └── AiModule.kt           <-- Hilt binding for @Singleton AiClient
+│   └── AiModule.kt             <-- Hilt binding for @Singleton AiClient
 └── network/
-    ├── GeminiApiService.kt   <-- Retrofit REST API interface
-    └── model/                <-- Request/Response DTOs
+    ├── ItiGatewayApiService.kt <-- Retrofit REST API interface for ITI Student AI Gateway
+    ├── GeminiApiService.kt     <-- Retrofit REST API interface for Gemini
+    └── model/
+        ├── GatewayApiDto.kt    <-- OpenAI/Gateway Request/Response DTOs
+        └── GeminiApiDto.kt     <-- Gemini Request/Response DTOs
 ```
 
 ---
@@ -43,26 +48,37 @@ interface AiClient {
 
 ## 4. Implementations
 
-### A. `GeminiAiClient` (Primary Active Provider)
-- Connects directly to Google's Generative Language REST API via Retrofit (`GeminiApiService`).
-- **Sticky Active Model Caching**: Caches the last successful working model in memory to eliminate fallback latency.
-- **Permanent Model Blacklisting**: Blacklists deprecated/non-existent models (404/400) so they are never retried during the session.
-- **Model Priority Queue**:
-  1. `gemini-flash-latest` (Auto-routes to the newest stable Flash version)
-  2. `gemini-2.5-flash`
-  3. `gemini-2.5-flash-lite`
-  4. `gemini-pro-latest`
-  5. `gemini-2.0-flash`
+### A. `ItiGatewayAiClient` (Primary Active Provider)
+- Connects to the ITI Student AI Gateway (`BuildConfig.AI_BASE_URL`, configured via `local.properties`).
+- Uses `BuildConfig.AI_KEY` for bearer authentication.
+- **Task-Aware Multi-Model Routing**:
+  - **JSON & Complex Reasoning** (`generateJson`): Primary `deepseek.v3.2`, fallback to `us.meta.llama3-3-70b-instruct-v1:0` and `openai.gpt-oss-120b-1:0`.
+  - **General Text** (`generateText`): Primary `deepseek.v3.2` / `us.meta.llama3-3-70b-instruct-v1:0`, fallback to `openai.gpt-oss-20b-1:0`.
+  - **Speech & Audio** (`generateFromAudio`): Dispatches to `mistral.voxtral-small-24b-2507` (Voxtral speech model).
+- **Sticky Active Model Caching & Blacklisting**: Automatically caches working models and skips invalid models (HTTP 400/404).
 
-### B. `FirebaseAiClient` (Firebase GoogleAI SDK Provider)
+#### Supported Models Catalog (`GatewayModel`)
+1. `DEEPSEEK_V3_2`: `deepseek.v3.2`
+2. `LLAMA_3_3_70B`: `us.meta.llama3-3-70b-instruct-v1:0`
+3. `VOXTRAL_24B`: `mistral.voxtral-small-24b-2507`
+4. `GPT_OSS_20B`: `openai.gpt-oss-20b-1:0`
+5. `GPT_OSS_120B`: `openai.gpt-oss-120b-1:0`
+6. `QWEN3_VL`: `qwen.qwen3-vl-235b-a22b`
+7. `GPT_OSS_SAFEGUARD_120B`: `openai.gpt-oss-safeguard-120b`
+8. `GPT_OSS_SAFEGUARD_20B`: `openai.gpt-oss-safeguard-20b`
+
+### B. `GeminiAiClient` (Direct Google REST Provider)
+- Connects directly to Google's Generative Language REST API via Retrofit (`GeminiApiService`).
+- Sticky model caching with `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.5-flash`, `gemini-3.7-flash`.
+
+### C. `FirebaseAiClient` (Firebase GoogleAI SDK Provider)
 - Uses `com.google.firebase:firebase-vertexai` / `Firebase.ai` SDK.
-- Available as a drop-in replacement via Hilt binding.
 
 ---
 
 ## 5. Dependency Injection (`AiModule`)
 
-To toggle between AI providers (or introduce a future `DeepSeekAiClient`), simply change the `@Binds` implementation in `AiModule.kt`:
+To toggle between AI providers, change the `@Binds` implementation in `AiModule.kt`:
 
 ```kotlin
 @Module
@@ -71,19 +87,34 @@ abstract class AiModule {
 
     @Binds
     @Singleton
-    abstract fun bindAiClient(impl: GeminiAiClient): AiClient
+    abstract fun bindAiClient(impl: ItiGatewayAiClient): AiClient
 }
 ```
 
 ---
 
-## 6. Consuming Features
+---
 
-All features inject `AiClient` directly:
-- **Review**: `ReviewRemoteDataSourceImpl` (`aiClient.generateJson(prompt)`)
-- **Lock Screen**: `LockScreenRemoteDataSourceImpl` (`aiClient.generateJson(prompt)`)
-- **Voice Game**:
-  - `PronunciationSentenceGeneratorService` (`aiClient.generateJson(prompt)`)
-  - `VoiceEvaluationService` (`aiClient.generateFromAudio(...)`)
-- **Roleplay**: `GeminiRoleplayService` (`aiClient.generateJson(prompt)`)
-- **Mind Reader**: `GeminiMindReaderService` (`aiClient.generateJson(prompt)`)
+## 7. Pluggable Live Roleplay Architecture (`core/ai/roleplay/`)
+
+LinguaQuest abstracts live conversation into a unified data source contract:
+
+```
+core/ai/roleplay/
+├── LiveRoleplayRemoteDataSource.kt  <-- Unified interface for live audio chat
+├── DeepSeekWalkieTalkieService.kt   <-- Implementation 1: STT -> DeepSeek V3.2 -> TTS
+└── GeminiLiveStreamingService.kt    <-- Implementation 2: Realtime WebSocket Audio Streaming
+```
+
+### Swapping Live Roleplay Engines
+In `RoleplayModule.kt`:
+```kotlin
+// Option 1: DeepSeek Walkie-Talkie (Reliable, target-language STT, ITI Gateway)
+@Binds
+@Singleton
+abstract fun bindLiveRoleplayRemoteDataSource(impl: DeepSeekWalkieTalkieService): LiveRoleplayRemoteDataSource
+
+// Option 2: Gemini Live Streaming (Low latency WebSocket duplex audio)
+// abstract fun bindLiveRoleplayRemoteDataSource(impl: GeminiLiveStreamingService): LiveRoleplayRemoteDataSource
+```
+

@@ -2,5 +2,6 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">44.251.247.250</domain>
+        <domain includeSubdomains="true">apiaccess.iti.net.eg</domain>
     </domain-config>
 </network-security-config>

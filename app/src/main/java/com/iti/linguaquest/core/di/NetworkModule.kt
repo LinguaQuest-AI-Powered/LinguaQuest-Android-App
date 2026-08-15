@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.iti.linguaquest.core.network.AuthInterceptor
 import com.iti.linguaquest.core.network.TokenAuthenticator
 import com.iti.linguaquest.core.ai.network.GeminiApiService
+import com.iti.linguaquest.core.ai.network.ItiGatewayApiService
 import com.iti.linguaquest.core.language.data.datasource.remote.LanguageApiService
 import com.iti.linguaquest.features.auth.data.datasource.remote.AuthApiService
 import dagger.Module
@@ -104,5 +105,21 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(GeminiApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideItiGatewayApiService(
+        okHttpClient: OkHttpClient,
+        gson: Gson
+    ): ItiGatewayApiService {
+        val rawBaseUrl = BuildConfig.AI_BASE_URL.ifBlank { "http://apiaccess.iti.net.eg/api/v1/student/" }
+        val normalizedBaseUrl = if (rawBaseUrl.endsWith("/")) rawBaseUrl else "$rawBaseUrl/"
+        return Retrofit.Builder()
+            .baseUrl(normalizedBaseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(ItiGatewayApiService::class.java)
     }
 }

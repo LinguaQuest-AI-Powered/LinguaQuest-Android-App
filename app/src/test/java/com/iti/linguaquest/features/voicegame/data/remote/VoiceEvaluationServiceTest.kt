@@ -1,13 +1,10 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import android.util.Base64
 import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -20,8 +17,6 @@ class VoiceEvaluationServiceTest {
 
     @Before
     fun setUp() {
-        mockkStatic(Base64::class)
-        every { Base64.encodeToString(any(), any()) } returns "base64audio"
         aiClient = mockk()
         evaluationService = VoiceEvaluationService(aiClient)
     }

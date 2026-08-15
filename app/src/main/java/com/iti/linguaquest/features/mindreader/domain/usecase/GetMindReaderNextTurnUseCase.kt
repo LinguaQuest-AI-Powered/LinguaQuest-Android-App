@@ -19,8 +19,14 @@ class GetMindReaderNextTurnUseCase @Inject constructor(
         nativeLanguage: String,
         state: MindReaderGameState
     ): MindReaderNextTurn {
-        val historyString = state.history.turns.joinToString("\n") { turn ->
-            "Q: ${turn.questionTargetText}\nA: ${turn.answer.rawId}"
+        val turnCount = state.history.turns.size
+        val historyString = if (turnCount == 0) {
+            "None (First question, Turn 1)"
+        } else {
+            val list = state.history.turns.mapIndexed { index, turn ->
+                "${index + 1}. Q: ${turn.questionTargetText} (${turn.questionNativeText}) -> Answer: ${turn.answer.rawId}"
+            }.joinToString("\n")
+            "$list\n(Total questions asked so far: $turnCount)"
         }
 
         val aiResponse = repository.getNextTurn(
