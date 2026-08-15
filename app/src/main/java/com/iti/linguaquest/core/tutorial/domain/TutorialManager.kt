@@ -75,6 +75,9 @@ class TutorialManager @Inject constructor(
     }
 
     private fun startTour(tour: TutorialTour, force: Boolean = false) {
+        if (!force && _state.value.activeTour?.tourId == tour.tourId && _state.value.isVisible) {
+            return
+        }
         scope.launch {
             if (!force) {
                 val completed = isTourCompletedUseCase(tour.tourId)
@@ -127,6 +130,15 @@ class TutorialManager @Inject constructor(
     private fun resetAllTours() {
         scope.launch {
             resetAllToursUseCase()
+            _state.update {
+                TutorialState(
+                    activeTour = null,
+                    currentStepIndex = -1,
+                    isVisible = false,
+                    targets = it.targets
+                )
+            }
+            _effect.emit(TutorialEffect.RequestTabSwitch(0))
         }
     }
 

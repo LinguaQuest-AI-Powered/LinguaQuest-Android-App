@@ -46,6 +46,9 @@ import kotlin.time.Duration.Companion.milliseconds
 import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.core.sharedComponents.LoadingView
 
+import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -66,6 +69,15 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val myLanguagesState by myLanguagesViewModel.state.collectAsStateWithLifecycle()
+
+    val tutorialManager = LocalTutorialManager.current
+    val tutorialState by (tutorialManager?.state?.collectAsStateWithLifecycle() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(null) })
+    val currentTutorialStepId = tutorialState?.activeTour?.steps?.getOrNull(tutorialState?.currentStepIndex ?: -1)?.stepId
+    val isLanguageProgressTutorialActive = (tutorialState?.isVisible == true) && (currentTutorialStepId == "tutorial_language_progress")
+
+    LaunchedEffect(tutorialManager) {
+        tutorialManager?.onIntent(TutorialIntent.StartAppTour(force = false))
+    }
 
     val scrollState = rememberScrollState()
 
@@ -220,7 +232,7 @@ fun HomeScreen(
         }
 
         HomeDailyRewardBannerWrapper(
-            isVisible = state.isDailyRewardBannerVisible,
+            isVisible = state.isDailyRewardBannerVisible && !isLanguageProgressTutorialActive,
             showCoinRain = showCoinRain,
             fallZoneHeight = fallZoneHeight,
             bannerHeightPx = bannerHeightPx,

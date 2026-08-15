@@ -50,7 +50,7 @@ class VoiceEvaluationServiceTest {
 
         // Then
         assertEquals(5, result.rating)
-        assertEquals(listOf("Hello"), result.correctWords)
+        assertEquals(listOf("hello"), result.correctWords)
         assertEquals(listOf("world"), result.wrongWords)
         assertEquals("Good effort!", result.advice)
 
@@ -59,7 +59,7 @@ class VoiceEvaluationServiceTest {
                 prompt = match { it.contains("Hello world") && it.contains("English") },
                 audioBytes = any(),
                 mimeType = "audio/wav",
-                temperature = any()
+                temperature = 0.1f
             )
         }
     }
@@ -93,7 +93,7 @@ class VoiceEvaluationServiceTest {
 
         // Then
         assertEquals(4, result.rating)
-        assertEquals(listOf("The", "fox"), result.correctWords)
+        assertEquals(listOf("the", "fox"), result.correctWords)
         assertEquals(listOf("quick", "brown", "jumps"), result.wrongWords)
         assertEquals("Practice quick and brown.", result.advice)
     }

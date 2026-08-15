@@ -42,7 +42,7 @@ data class RegisterResponseDataDto(
     val id: Int,
     val email: String,
     val username: String,
-    val nativeLanguage: TargetLanguageDto?,
+    val nativeLanguage: String?,
     val targetLanguage: String,
     val isVerified: Boolean
 )

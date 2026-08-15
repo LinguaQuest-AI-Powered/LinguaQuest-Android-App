@@ -31,7 +31,8 @@ graph TD
   - Automatically attaches `Authorization: Bearer <token>` to protected endpoints (those without `@NoAuth`).
   - Intercepts responses: if a protected endpoint returns `401` or `403`, it clears `TokensLocalDataSource` and `SessionManagerDataSource`, and emits `SessionEvent.SessionExpired`.
 - **`TokenAuthenticator`**:
-  - Handles `401 Unauthorized` retries by executing `POST /auth/refresh-token`.
+  - Handles `401 Unauthorized` retries on protected endpoints by executing `POST /auth/refresh-token`.
+  - Automatically bypasses endpoints annotated with `@NoAuth` (e.g. login/register) to prevent false refresh attempts and erroneous session expirations.
   - If the refresh token is missing or refresh fails, it cleans up tokens and session data, and emits `SessionEvent.SessionExpired`.
 
 ### 3. Repository Layer

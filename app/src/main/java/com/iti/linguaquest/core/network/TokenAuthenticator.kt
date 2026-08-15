@@ -19,6 +19,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.Route
+import retrofit2.Invocation
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
@@ -32,7 +33,15 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (response.request.url.encodedPath.contains("auth/refresh-token")) {
+        val invocation = response.request.tag(Invocation::class.java)
+        val noAuth = invocation?.method()?.getAnnotation(NoAuth::class.java)
+        if (noAuth != null) {
+            return null
+        }
+
+        val requestPath = response.request.url.encodedPath
+
+        if (requestPath.contains("auth/refresh-token")) {
             applicationScope.launch {
                 tokensLocalDataSource.clearTokens()
                 sessionManagerDataSource.saveIsLoggedIn(false)
@@ -42,9 +51,13 @@ class TokenAuthenticator @Inject constructor(
             return null
         }
 
+        if (requestPath.contains("profile/password")) {
+            return null
+        }
+
         return synchronized(this) {
             val currentToken = tokensLocalDataSource.getAccessTokenImmediate()
-            if (response.request.header("Authorization") != "Bearer $currentToken") {
+            if (!currentToken.isNullOrBlank() && response.request.header("Authorization") != "Bearer $currentToken") {
                 return@synchronized response.request.newBuilder()
                     .header("Authorization", "Bearer $currentToken")
                     .build()

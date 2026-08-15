@@ -1,18 +1,17 @@
 package com.iti.linguaquest.features.mindreader.domain.usecase
 
-import com.iti.linguaquest.features.mindreader.domain.model.LocalizedText
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAiNextTurn
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOption
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameHistory
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderGameState
 import com.iti.linguaquest.features.mindreader.domain.model.MindReaderHistoryEntry
+import com.iti.linguaquest.features.mindreader.domain.model.MindReaderNextTurn
 import com.iti.linguaquest.features.mindreader.domain.repository.MindReaderRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -29,8 +28,8 @@ class GetMindReaderNextTurnUseCaseTest {
     }
 
     @Test
-    fun `invoke with question response returns question entity`() = runTest {
-        // Arrange
+    fun invoke_returnsQuestion_whenResponseIsQuestion() = runTest {
+        // Given
         val categoryContext = "Animals"
         val targetLanguage = "en"
         val nativeLanguage = "ar"
@@ -39,7 +38,8 @@ class GetMindReaderNextTurnUseCaseTest {
                 turns = listOf(
                     MindReaderHistoryEntry(
                         attributeId = "1",
-                        question = LocalizedText(mapOf("en" to "Is it big?")),
+                        questionTargetText = "Is it big?",
+                        questionNativeText = "هل هو كبير؟",
                         answer = MindReaderAnswerOption.YES,
                         confidenceAfterAnswer = 0.5
                     )
@@ -55,14 +55,14 @@ class GetMindReaderNextTurnUseCaseTest {
             repository.getNextTurn(any(), any(), any(), any())
         } returns expectedAiResponse
 
-        // Act
+        // When
         val result = useCase(categoryContext, targetLanguage, nativeLanguage, state)
 
-        // Assert
+        // Then
         assertTrue(result is MindReaderNextTurn.Question)
         val questionResult = result as MindReaderNextTurn.Question
-        assertEquals("Does it have fur?", questionResult.question.question.resolve(targetLanguage))
-        assertEquals("هل لديه فرو؟", questionResult.question.question.resolve(nativeLanguage))
+        assertEquals("Does it have fur?", questionResult.question.targetText)
+        assertEquals("هل لديه فرو؟", questionResult.question.nativeText)
         
         coVerify(exactly = 1) { 
             repository.getNextTurn(any(), any(), any(), any()) 
@@ -70,8 +70,8 @@ class GetMindReaderNextTurnUseCaseTest {
     }
 
     @Test
-    fun `invoke with guess response returns guess entity`() = runTest {
-        // Arrange
+    fun invoke_returnsGuess_whenResponseIsGuess() = runTest {
+        // Given
         val categoryContext = "Animals"
         val targetLanguage = "en"
         val nativeLanguage = "ar"
@@ -80,32 +80,33 @@ class GetMindReaderNextTurnUseCaseTest {
         val expectedAiResponse = MindReaderAiNextTurn.Guess(
             word = "Cat",
             translation = "قطة",
-            emoji = "🐱"
+            emoji = "🐱",
+            quizChoices = emptyList()
         )
         
         coEvery { 
             repository.getNextTurn(any(), any(), any(), any())
         } returns expectedAiResponse
 
-        // Act
+        // When
         val result = useCase(categoryContext, targetLanguage, nativeLanguage, state)
 
-        // Assert
+        // Then
         assertTrue(result is MindReaderNextTurn.Guess)
         val guessResult = result as MindReaderNextTurn.Guess
-        assertEquals("Cat", guessResult.guess.entity.resolveTranslation(targetLanguage))
-        assertEquals("قطة", guessResult.guess.entity.resolveTranslation(nativeLanguage))
+        assertEquals("Cat", guessResult.guess.entity.targetText)
+        assertEquals("قطة", guessResult.guess.entity.nativeText)
         assertEquals("🐱", guessResult.guess.entity.emoji)
     }
 
     @Test(expected = Exception::class)
-    fun `invoke with error throws exception`() = runTest {
-        // Arrange
+    fun invoke_throwsException_whenRepositoryThrowsException() = runTest {
+        // Given
         coEvery { 
             repository.getNextTurn(any(), any(), any(), any())
         } throws Exception("Network error")
 
-        // Act
+        // When
         useCase("test", "en", "ar", MindReaderGameState())
     }
 }

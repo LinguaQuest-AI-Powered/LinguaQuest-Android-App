@@ -46,6 +46,9 @@ import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 import com.iti.linguaquest.features.auth.share.components.AuthTextField
 import com.iti.linguaquest.features.auth.share.components.shake
 
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+
 @Composable
 fun NewPasswordContent(
     state: NewPasswordState,
@@ -76,17 +79,18 @@ fun NewPasswordContent(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = NewPasswordDimens.ScreenPadding)
+            .navigationBarsPadding()
+            .imePadding(),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = NewPasswordDimens.BottomSpacing),
+                .padding(horizontal = NewPasswordDimens.ScreenPadding, vertical = NewPasswordDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(NewPasswordDimens.ScreenPadding * 2))
 
             AuthCardLayout(
                 imageRes = resolveHeroImageRes(
@@ -105,6 +109,7 @@ fun NewPasswordContent(
                     placeholder = stringResource(id = R.string.new_password_hint),
                     leadingIcon = painterResource(id = R.drawable.new_password_key),
                     isPassword = true,
+                    disableCopyPaste = true,
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next,
                     keyboardActions = KeyboardActions(onNext = { confirmPasswordFocusRequester.requestFocus() }),
@@ -121,6 +126,7 @@ fun NewPasswordContent(
                     placeholder = stringResource(id = R.string.confirm_password_hint),
                     leadingIcon = painterResource(id = R.drawable.lock),
                     isPassword = true,
+                    disableCopyPaste = true,
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done,
                     keyboardActions = KeyboardActions(onDone = { onResetClick() }),

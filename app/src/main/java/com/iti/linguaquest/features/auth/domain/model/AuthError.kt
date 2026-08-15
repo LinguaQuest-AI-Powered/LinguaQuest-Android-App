@@ -5,6 +5,7 @@ import com.iti.linguaquest.core.result.AppError
 sealed interface AuthError : AppError {
     data object InvalidEmail : AuthError
     data object InvalidCredentials : AuthError
+    data object InvalidPassword : AuthError
     data object EmailNotVerified : AuthError
     data object WeakPassword : AuthError
     data object UserDisabled : AuthError

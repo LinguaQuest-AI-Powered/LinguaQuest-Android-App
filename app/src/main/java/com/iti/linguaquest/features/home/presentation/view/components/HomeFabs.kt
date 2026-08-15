@@ -37,6 +37,9 @@ import com.iti.linguaquest.core.sharedComponents.animations.StaggeredAnimatedIte
 import com.iti.linguaquest.core.sharedComponents.animations.rememberStaggeredAnimationState
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
+
 @Composable
 fun HomeFabs(
     onDailyMissionClick: (Rect?) -> Unit,
@@ -47,6 +50,13 @@ fun HomeFabs(
     val fabBounds = remember { arrayOf<Rect?>(null) }
     val animationState = rememberStaggeredAnimationState(count = 2)
     var isVisible by remember { mutableStateOf(true) }
+
+    val tutorialManager = LocalTutorialManager.current
+    val tutorialState by (tutorialManager?.state?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(null) })
+    val currentTutorialStepId = tutorialState?.activeTour?.steps?.getOrNull(tutorialState?.currentStepIndex ?: -1)?.stepId
+    val isTutorialActiveOnFabs = (tutorialState?.isVisible == true) && (currentTutorialStepId == "tutorial_language_button" || currentTutorialStepId == "tutorial_daily_mission")
+
+    val fabVisible = isVisible || isTutorialActiveOnFabs
 
     if (scrollState != null) {
         var previousScrollOffset by remember { mutableIntStateOf(0) }
@@ -65,7 +75,7 @@ fun HomeFabs(
     }
 
     AnimatedVisibility(
-        visible = isVisible,
+        visible = fabVisible,
         enter = scaleIn(initialScale = 0.8f) + fadeIn(),
         exit = scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 150)) + fadeOut(animationSpec = tween(durationMillis = 150)),
         modifier = modifier

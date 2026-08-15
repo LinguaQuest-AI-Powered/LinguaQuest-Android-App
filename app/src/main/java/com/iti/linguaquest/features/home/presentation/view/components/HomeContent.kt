@@ -47,8 +47,13 @@ fun HomeContent(
                 .collect { (tour, currentStepIndex) ->
                     if (tour?.tourId == TourId.APP_TOUR) {
                         val currentStep = tour.steps.getOrNull(currentStepIndex)
-                        if (currentStep?.stepId == "tutorial_world_list") {
-                            scrollState.animateScrollTo(scrollState.maxValue)
+                        when (currentStep?.stepId) {
+                            "tutorial_top_bar_coins", "tutorial_top_bar_xp", "tutorial_top_bar_notifications", "tutorial_language_progress" -> {
+                                scrollState.animateScrollTo(0)
+                            }
+                            "tutorial_word_capture", "tutorial_world_list", "tutorial_language_button", "tutorial_daily_mission" -> {
+                                scrollState.animateScrollTo(scrollState.maxValue)
+                            }
                         }
                     }
                 }

@@ -1,0 +1,2 @@
+com/iti/linguaquest/LinguaQuestApplication.class
+com/iti/linguaquest/Hilt_LinguaQuestApplication.class

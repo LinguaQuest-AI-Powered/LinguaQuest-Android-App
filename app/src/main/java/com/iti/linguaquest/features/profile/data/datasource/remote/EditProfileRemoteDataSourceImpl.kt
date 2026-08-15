@@ -15,6 +15,14 @@ class EditProfileRemoteDataSourceImpl @Inject constructor(
     private val api: EditProfileApiService
 ) : EditProfileRemoteDataSource {
 
+    private val mapProfileError: (String, String) -> LinguaQuestDataError = { key, msg ->
+        try {
+            LinguaQuestDataError.Auth.valueOf(key)
+        } catch (e: IllegalArgumentException) {
+            LinguaQuestDataError.CustomServerMessage(msg)
+        }
+    }
+
     override suspend fun updateProfile(
         request: UpdateProfileRequestDto
     ): LinguaQuestResult<ProfileDto, LinguaQuestDataError> {
@@ -43,7 +51,7 @@ class EditProfileRemoteDataSourceImpl @Inject constructor(
         request: UpdatePasswordRequestDto
     ): LinguaQuestResult<PasswordStatusDto, LinguaQuestDataError> {
 
-        val result = safeApiCall { api.changePassword(request) }
+        val result = safeApiCall(mapProfileError) { api.changePassword(request) }
 
         return when (result) {
             is LinguaQuestResult.Success -> LinguaQuestResult.Success(result.data.data)

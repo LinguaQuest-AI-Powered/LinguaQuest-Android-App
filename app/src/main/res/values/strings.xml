@@ -74,6 +74,7 @@
 
     <string name="login_error_invalid_email">Invalid email format.</string>
     <string name="login_error_invalid_credentials">Invalid email or password.</string>
+    <string name="login_error_invalid_password">Incorrect password. Please try again.</string>
     <string name="login_error_email_not_verified">Email not verified.</string>
     <string name="login_error_weak_password">Password is too weak.</string>
     <string name="login_error_user_disabled">User disabled.</string>
@@ -85,6 +86,9 @@
     <string name="signup_error_name_required">Username is required.</string>
     <string name="signup_error_name_too_short">Username must be at least 2 characters.</string>
     <string name="signup_error_passwords_do_not_match">Passwords do not match.</string>
+    <string name="signup_success_message">Account created successfully! Verification code sent to your email.</string>
+    <string name="otp_code_resent_message">Verification code resent successfully!</string>
+    <string name="otp_verification_success_message">Email verified successfully! Please log in.</string>
 
     <string name="home_screen">Home Screen</string>
     <string name="profile_screen">Profile Screen</string>

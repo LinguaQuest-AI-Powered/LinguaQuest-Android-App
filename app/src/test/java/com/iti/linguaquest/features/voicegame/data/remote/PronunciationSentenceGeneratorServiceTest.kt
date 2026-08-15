@@ -24,6 +24,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
     @Test
     fun generateSentences_returnsParsedSentences_whenGeminiReturnsValidJsonObjectWithSentencesArray() = runTest {
+        // Given
         val jsonResponse = """
             {
               "sentences": [
@@ -45,6 +46,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
         coEvery { aiClient.generateJson(any(), any()) } returns jsonResponse
 
+        // When
         val result = generatorService.generateSentences(
             targetLanguage = "Spanish",
             level = "Beginner",
@@ -52,6 +54,7 @@ class PronunciationSentenceGeneratorServiceTest {
             count = 2
         )
 
+        // Then
         assertEquals(2, result.size)
         assertEquals("Hola, ¿cómo estás?", result[0].sentence)
         assertEquals("Easy", result[0].difficulty)
@@ -66,6 +69,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
     @Test
     fun generateSentences_returnsParsedSentence_whenGeminiReturnsSingleJsonObject() = runTest {
+        // Given
         val jsonResponse = """
             {
               "sentence": "Wie geht es dir?",
@@ -77,6 +81,7 @@ class PronunciationSentenceGeneratorServiceTest {
 
         coEvery { aiClient.generateJson(any(), any()) } returns jsonResponse
 
+        // When
         val result = generatorService.generateSentences(
             targetLanguage = "German",
             level = "Beginner",
@@ -84,6 +89,7 @@ class PronunciationSentenceGeneratorServiceTest {
             count = 1
         )
 
+        // Then
         assertEquals(1, result.size)
         assertEquals("Wie geht es dir?", result[0].sentence)
         assertEquals("Easy", result[0].difficulty)
@@ -93,8 +99,10 @@ class PronunciationSentenceGeneratorServiceTest {
 
     @Test
     fun generateSentences_returnsFallback_whenGeminiReturnsNull() = runTest {
+        // Given
         coEvery { aiClient.generateJson(any(), any()) } returns null
 
+        // When
         val result = generatorService.generateSentences(
             targetLanguage = "Spanish",
             level = "Beginner",
@@ -102,13 +110,16 @@ class PronunciationSentenceGeneratorServiceTest {
             count = 3
         )
 
+        // Then
         assertTrue(result.isNotEmpty())
     }
 
     @Test
     fun generateSentences_returnsFallback_whenGeminiReturnsInvalidJson() = runTest {
-        coEvery { aiClient.generateJson(any(), any()) } returns "not a json string"
+        // Given
+        coEvery { aiClient.generateJson(any(), any()) } returns "INVALID_JSON_RESPONSE"
 
+        // When
         val result = generatorService.generateSentences(
             targetLanguage = "French",
             level = "Intermediate",
@@ -116,6 +127,7 @@ class PronunciationSentenceGeneratorServiceTest {
             count = 2
         )
 
+        // Then
         assertTrue(result.isNotEmpty())
     }
 }

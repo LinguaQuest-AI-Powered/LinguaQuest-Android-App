@@ -14,6 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalTextToolbar
+import androidx.compose.ui.platform.TextToolbar
+import androidx.compose.ui.platform.TextToolbarStatus
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,78 +56,98 @@ fun AuthTextField(
     isError: Boolean = false,
     enabled: Boolean = true,
     borderWidth: Dp = 2.dp,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    disableCopyPaste: Boolean = false
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            keyboardActions = keyboardActions,
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth(),
-            enabled = enabled,
-            isError = isError,
-            placeholder = { Text(placeholder, color = LinguaQuestTheme.colors.textFieldPlaceholder) },
-            singleLine = true,
-            shape = RoundedCornerShape(50),
-            leadingIcon = leadingIcon?.let {
-                {
-                    Icon(
-                        painter = it,
-                        contentDescription = null,
-                        tint = LinguaQuestTheme.colors.iconsColor,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            },
-            trailingIcon = {
-                when {
-                    isPassword -> {
-                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                            Icon(
-                                painter = painterResource(
-                                    if (isPasswordVisible) R.drawable.eye else R.drawable.eyelock
-                                ),
-                                contentDescription = stringResource(id = if (isPasswordVisible) R.string.hide_password else R.string.show_password),
-                                tint = LinguaQuestTheme.colors.iconsColor
-                            )
-                        }
-                    }
+    val textToolbar = if (disableCopyPaste || isPassword) {
+        object : TextToolbar {
+            override fun showMenu(
+                rect: Rect,
+                onCopyRequested: (() -> Unit)?,
+                onPasteRequested: (() -> Unit)?,
+                onCutRequested: (() -> Unit)?,
+                onSelectAllRequested: (() -> Unit)?
+            ) {
+            }
+            override fun hide() {}
+            override val status: TextToolbarStatus = TextToolbarStatus.Hidden
+        }
+    } else {
+        LocalTextToolbar.current
+    }
 
-                    trailingIcon != null -> {
-                        IconButton(
-                            onClick = { onTrailingIconClick?.invoke() },
-                            enabled = onTrailingIconClick != null
-                        ) {
-                            Icon(
-                                painter = trailingIcon,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(20.dp)
-                            )
+    Column(modifier = modifier) {
+        CompositionLocalProvider(LocalTextToolbar provides textToolbar) {
+            OutlinedTextField(
+                keyboardActions = keyboardActions,
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enabled = enabled,
+                isError = isError,
+                placeholder = { Text(placeholder, color = LinguaQuestTheme.colors.textFieldPlaceholder) },
+                singleLine = true,
+                shape = RoundedCornerShape(50),
+                leadingIcon = leadingIcon?.let {
+                    {
+                        Icon(
+                            painter = it,
+                            contentDescription = null,
+                            tint = LinguaQuestTheme.colors.iconsColor,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                },
+                trailingIcon = {
+                    when {
+                        isPassword -> {
+                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (isPasswordVisible) R.drawable.eye else R.drawable.eyelock
+                                    ),
+                                    contentDescription = stringResource(id = if (isPasswordVisible) R.string.hide_password else R.string.show_password),
+                                    tint = LinguaQuestTheme.colors.iconsColor
+                                )
+                            }
+                        }
+
+                        trailingIcon != null -> {
+                            IconButton(
+                                onClick = { onTrailingIconClick?.invoke() },
+                                enabled = onTrailingIconClick != null
+                            ) {
+                                Icon(
+                                    painter = trailingIcon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
                     }
-                }
-            },
-            visualTransformation = if (isPassword && !isPasswordVisible)
-                PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = if (isPassword) KeyboardType.Password else keyboardType,
-                imeAction = imeAction
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
-                unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
-                disabledContainerColor = androidx.compose.ui.graphics.Color.Transparent,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = LinguaQuestTheme.colors.socialButtonBorder,
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                cursorColor = MaterialTheme.colorScheme.primary
+                },
+                visualTransformation = if (isPassword && !isPasswordVisible)
+                    PasswordVisualTransformation() else VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = if (isPassword) KeyboardType.Password else keyboardType,
+                    imeAction = imeAction
+                ),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    disabledContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = LinguaQuestTheme.colors.socialButtonBorder,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                )
             )
-        )
+        }
         if (isError && errorMessage != null) {
             Text(
                 text = errorMessage,

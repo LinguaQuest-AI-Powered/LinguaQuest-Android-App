@@ -90,6 +90,7 @@ class NewPasswordViewModel @Inject constructor(
     }
 
     private fun performReset(resetToken: String, newPassword: String) {
+        if (_state.value.isLoading) return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, generalErrorRes = null) }
             val result = setNewPasswordUseCase(newPassword, resetToken)

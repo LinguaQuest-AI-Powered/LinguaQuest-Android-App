@@ -48,6 +48,9 @@ fun ProfileContent(
                     if (tour?.tourId == TourId.PROFILE_TOUR) {
                         val currentStep = tour.steps.getOrNull(currentStepIndex)
                         when (currentStep?.stepId) {
+                            "profile_header_target", "profile_stats_target" -> {
+                                listState.animateScrollToItem(index = 0)
+                            }
                             "profile_achievements_target" -> {
                                 listState.animateScrollToItem(index = 4)
                             }
