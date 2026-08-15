@@ -79,19 +79,19 @@ fun OTPContent(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .imePadding()
+            .navigationBarsPadding()
+            .imePadding(),
+        contentAlignment = Alignment.Center
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = LoginDimens.ScreenPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = LoginDimens.ScreenPadding * 2),
+                .padding(horizontal = LoginDimens.ScreenPadding, vertical = LoginDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(LoginDimens.ScreenPadding * 2))
 
             AuthCardLayout(
                 imageRes = R.drawable.lingo_mail,

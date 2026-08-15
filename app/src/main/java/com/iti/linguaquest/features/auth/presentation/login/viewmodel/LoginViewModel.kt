@@ -190,7 +190,7 @@ class LoginViewModel @Inject constructor(
             )
         }
 
-        if (!emailHasError && !passwordHasError && !isEmailNotVerified) {
+        if (error == AuthError.InvalidCredentials || (!emailHasError && !passwordHasError && !isEmailNotVerified)) {
             viewModelScope.launch {
                 snackbarController.sendEvent(
                     SnackbarEvent(

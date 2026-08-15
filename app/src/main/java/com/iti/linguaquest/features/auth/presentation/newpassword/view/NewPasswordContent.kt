@@ -46,6 +46,9 @@ import com.iti.linguaquest.features.auth.share.components.AuthCardLayout
 import com.iti.linguaquest.features.auth.share.components.AuthTextField
 import com.iti.linguaquest.features.auth.share.components.shake
 
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+
 @Composable
 fun NewPasswordContent(
     state: NewPasswordState,
@@ -76,17 +79,18 @@ fun NewPasswordContent(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = NewPasswordDimens.ScreenPadding)
+            .navigationBarsPadding()
+            .imePadding(),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = NewPasswordDimens.BottomSpacing),
+                .padding(horizontal = NewPasswordDimens.ScreenPadding, vertical = NewPasswordDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(NewPasswordDimens.ScreenPadding * 2))
 
             AuthCardLayout(
                 imageRes = resolveHeroImageRes(

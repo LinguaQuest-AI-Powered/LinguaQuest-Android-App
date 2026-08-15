@@ -46,8 +46,9 @@ fun LingosScreen(
                 .collect { (tour, currentStepIndex) ->
                     if (tour?.tourId == TourId.LINGOS_TOUR) {
                         val currentStep = tour.steps.getOrNull(currentStepIndex)
-                        if (currentStep?.stepId == "lingos_card_mindreader") {
-                            scrollState.animateScrollTo(scrollState.maxValue)
+                        when (currentStep?.stepId) {
+                            "lingos_card_voice" -> scrollState.animateScrollTo(0)
+                            "lingos_card_mindreader" -> scrollState.animateScrollTo(scrollState.maxValue)
                         }
                     }
                 }

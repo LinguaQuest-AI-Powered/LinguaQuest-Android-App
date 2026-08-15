@@ -389,12 +389,7 @@ fun AppNavigationScreen(
                 entry<RootScreen.NewPassword> { screen ->
                     NewPasswordScreen(
                         onBackToLogin = { rootBackStack.popToLogin() },
-                        onResetSuccess = {
-                            rootBackStack.apply {
-                                clear()
-                                navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
-                            }
-                        },
+                        onResetSuccess = { rootBackStack.popToLogin() },
                         resetToken = screen.resetToken
                     )
                 }

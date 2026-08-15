@@ -82,10 +82,6 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.tutorialManager.onIntent(TutorialIntent.StartAppTour())
-    }
-
     BackHandler(enabled = currentTab != BottomNavScreen.Home) {
         currentTab = BottomNavScreen.Home
     }
