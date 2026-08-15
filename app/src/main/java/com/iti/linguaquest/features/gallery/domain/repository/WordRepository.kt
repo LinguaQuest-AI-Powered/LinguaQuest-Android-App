@@ -11,7 +11,8 @@ interface WordRepository {
     fun getWordsWithImages(): Flow<List<WordEntity>>
     suspend fun refreshGalleryWords(
         sourceLanguage: String,
-        targetLanguage: String
+        targetLanguage: String,
+        targetLanguageCode: String
     ): LinguaQuestResult<Unit, LinguaQuestDataError>
 
     suspend fun getWordById(wordId: Int): LinguaQuestResult<WordEntity, LinguaQuestDataError.Local>

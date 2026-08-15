@@ -58,7 +58,8 @@ class LanguagesRemoteDataSourceImpl @Inject constructor(
                     val activeLanguage = result.data.data.activeLanguage
                     save.saveTargetLanguage(
                         languageId = activeLanguage.id,
-                        name = activeLanguage.name
+                        name = activeLanguage.name,
+                        code = activeLanguage.code
                     )
                     LinguaQuestResult.Success(activeLanguage)
                 }

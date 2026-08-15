@@ -5,8 +5,10 @@ import kotlinx.coroutines.flow.Flow
 interface UserPreferencesRepository {
     val targetLanguage: Flow<Int?>
     val targetLanguageName: Flow<String?>
+    val targetLanguageCode: Flow<String?>
     val nativeLanguage: Flow<Int?>
     val nativeLanguageName: Flow<String?>
+    val nativeLanguageCode: Flow<String?>
     val proficiencyLevel: Flow<String?>
     val appTheme: Flow<String>
     val soundEnabled: Flow<Boolean>
@@ -16,8 +18,8 @@ interface UserPreferencesRepository {
     val reminderTime: Flow<String>
     val reminderDays: Flow<String>
 
-    suspend fun saveTargetLanguage(languageId: Int, name: String)
-    suspend fun saveNativeLanguage(languageId: Int, name: String)
+    suspend fun saveTargetLanguage(languageId: Int, name: String, code: String)
+    suspend fun saveNativeLanguage(languageId: Int, name: String, code: String)
     suspend fun saveProficiencyLevel(level: String)
     suspend fun saveAppTheme(theme: String)
     suspend fun saveSoundEnabled(enabled: Boolean)
