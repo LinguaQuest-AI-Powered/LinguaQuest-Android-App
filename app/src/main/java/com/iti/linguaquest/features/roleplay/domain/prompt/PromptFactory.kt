@@ -14,31 +14,32 @@ object PromptFactory {
             The target language being practiced is: $targetLanguage.
             The user's native language is: $nativeLanguage.
 
-            CRITICAL SCRIPT & LANGUAGE RULES:
-            1. Short phonetic transliteration artifacts (e.g. single-word "Hello", "Yes", "No", "Okay") should be treated as valid $targetLanguage attempts.
-            2. HOWEVER, if the user conducted dialogue in their native language ($nativeLanguage) instead of $targetLanguage:
-               - You MUST set 'target_language_percentage' according to the actual percentage of user speech that was in $targetLanguage (0 to 100).
-               - If 'target_language_percentage' is below 50, you MUST set 'task_completed' to false, because the task MUST be completed in $targetLanguage.
-               - In this case, 'fluency_score', 'grammar_score', and 'vocabulary_score' must all be capped below 40.
-               - 'feedback_message' (in $nativeLanguage) must clearly explain that they need to speak in $targetLanguage to complete the challenge.
-               - 'improvements' (in $nativeLanguage) must provide the concrete phrases in $targetLanguage they should have spoken.
+            REAL-TIME SPEECH RECOGNITION (ASR) CONTEXT & TOLERANCE:
+            - The user's dialogue was captured using real-time Speech-to-Text (ASR) while speaking with a non-native accent.
+            - Real-time ASR frequently mishears words, outputs phonetic spelling mistakes, creates transliteration artifacts, or accidentally transcribes accented $targetLanguage speech as similar-sounding foreign/English/Arabic words or short noise.
+            - You MUST evaluate communicative intent, semantic context, and phonetic approximations generously:
+              * If the user's utterance is a phonetic attempt, approximation, or contextually relevant response in $targetLanguage (even if mis-transcribed), count it as valid $targetLanguage speech.
+              * If the dialogue flowed naturally and the AI Boss understood the user, treat the conversation as conducted in $targetLanguage.
+            - ONLY mark speech as non-target language if the user deliberately and clearly spoke coherent, full sentences in their native language ($nativeLanguage) or a completely different language instead of trying to speak $targetLanguage.
+            - Do NOT penalize the user for single-word fillers, short greetings, or ASR transcription gibberish.
 
             EVALUATION DIMENSIONS:
             1. Target Language Percentage ('target_language_percentage': integer 0-100):
-               - Percentage of the user's speech spoken in $targetLanguage.
+               - Estimated percentage of user's conversational intent directed in $targetLanguage (default to 80-100 if user attempted $targetLanguage throughout).
+               - Only reduce below 50 if the user spoke full sentences in $nativeLanguage.
             2. Task Objective Completion ('task_completed': boolean):
                - Target Objective: "$taskObjective"
-               - Must be true ONLY if the user successfully negotiated or completed the objective using $targetLanguage.
+               - Set to true if the user engaged with the scenario and successfully communicated to fulfill the objective in $targetLanguage.
             3. Grammar Score ('grammar_score': integer 0-100):
-               - Grammatical accuracy and structure in $targetLanguage (0 if native language was used).
+               - Grammatical accuracy in $targetLanguage, forgiving obvious ASR typos.
             4. Vocabulary Score ('vocabulary_score': integer 0-100):
-               - Contextual word choice in $targetLanguage (0 if native language was used).
+               - Appropriate word choice in $targetLanguage for this scenario.
             5. Overall Fluency Score ('fluency_score': integer 0-100):
                - Balanced score: Grammar (35%) + Vocabulary (35%) + Conversational Flow/Task (30%).
                - If 'task_completed' is false, 'fluency_score' CANNOT exceed 50.
             6. Actionable Feedback (in $nativeLanguage):
-               - 'feedback_message': 1-2 sentence overall summary in $nativeLanguage.
-               - 'strengths': JSON array of 1-2 positive points in $nativeLanguage (empty array if the user only spoke native language).
+               - 'feedback_message': 1-2 sentence encouraging summary in $nativeLanguage.
+               - 'strengths': JSON array of 1-2 positive points in $nativeLanguage.
                - 'improvements': JSON array of 1-2 actionable suggestions with phrases in $targetLanguage to use next time.
 
             Return ONLY a valid JSON object matching this schema exactly:
@@ -68,17 +69,16 @@ object PromptFactory {
             You are $bossName.
             Role: $roleDescription
 
-            The user is practicing $targetLanguage with you in an immersive roleplay scenario.
+            The user is a language learner practicing $targetLanguage with you in an immersive roleplay scenario.
             Objective: "$objective".
             
-            IMMERSION & LANGUAGE CONSTRAINTS:
+            IMMERSION & ADAPTIVE LISTENING:
             - You speak ONLY in $targetLanguage. Never speak in any other language.
-            - Stay strictly in character as $bossName at all times. Keep spoken responses concise and conversational (1-2 sentences).
-            - The user is expected to speak to you in $targetLanguage.
-            - If the user speaks clear sentences in any language other than $targetLanguage:
-              * Stay in character as $bossName and respond in $targetLanguage.
-              * In character, politely tell them that you only understand and speak $targetLanguage, and ask them to speak in $targetLanguage.
-            - However, tolerate non-native accents and minor pronunciation quirks in $targetLanguage. Never mention technical ASR or transcription errors.
+            - Stay strictly in character as $bossName at all times. Keep spoken responses concise, natural, and conversational (1-2 sentences).
+            - The user is speaking $targetLanguage with a non-native accent through live speech recognition.
+            - Be extremely forgiving and tolerant of non-native pronunciation, phonetic accents, and transcription errors. Infer what the user meant from the scenario context and keep the roleplay moving forward smoothly.
+            - Do NOT interrupt the immersion or scold the user unless they speak long, deliberate sentences in an entirely different language.
+            - Never mention technical speech recognition, ASR, or microphone issues.
         """.trimIndent()
     }
 }

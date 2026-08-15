@@ -36,6 +36,12 @@ android {
 
         val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+
+        val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")?.removeSurrounding("\"") ?: "http://apiaccess.iti.net.eg/api/v1/student/"
+        buildConfigField("String", "AI_BASE_URL", "\"$aiBaseUrl\"")
+
+        val aiKey = localProperties.getProperty("AI_KEY")?.removeSurrounding("\"") ?: ""
+        buildConfigField("String", "AI_KEY", "\"$aiKey\"")
     }
 
     signingConfigs {

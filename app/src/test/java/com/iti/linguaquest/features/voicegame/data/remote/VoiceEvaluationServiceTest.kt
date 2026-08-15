@@ -1,11 +1,9 @@
 package com.iti.linguaquest.features.voicegame.data.remote
 
-import android.util.Base64
-import com.iti.linguaquest.core.ai.network.GeminiRestClient
+import com.iti.linguaquest.core.ai.client.AiClient
 import com.iti.linguaquest.features.voicegame.data.datasource.remote.VoiceEvaluationService
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -14,17 +12,13 @@ import org.junit.Test
 
 class VoiceEvaluationServiceTest {
 
-    private lateinit var geminiRestClient: GeminiRestClient
+    private lateinit var aiClient: AiClient
     private lateinit var evaluationService: VoiceEvaluationService
 
     @Before
     fun setUp() {
-        mockkStatic(Base64::class)
-        every { Base64.encodeToString(any(), any()) } returns "base64audio"
-        geminiRestClient = mockk()
-        evaluationService = VoiceEvaluationService(geminiRestClient)
-        geminiRestClient = mockk()
-        evaluationService = VoiceEvaluationService(geminiRestClient)
+        aiClient = mockk()
+        evaluationService = VoiceEvaluationService(aiClient)
     }
 
     @Test
@@ -43,7 +37,7 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiRestClient.executeGeminiRequest(any())
+            aiClient.generateFromAudio(any(), any(), any(), any())
         } returns jsonResponse
 
         // When
@@ -61,11 +55,11 @@ class VoiceEvaluationServiceTest {
         assertEquals("Good effort!", result.advice)
 
         coVerify(exactly = 1) {
-            geminiRestClient.executeGeminiRequest(
-                match { request ->
-                    val prompt = request.contents.firstOrNull()?.parts?.getOrNull(1)?.text ?: ""
-                    prompt.contains("Hello world") && prompt.contains("English")
-                }
+            aiClient.generateFromAudio(
+                prompt = match { it.contains("Hello world") && it.contains("English") },
+                audioBytes = any(),
+                mimeType = "audio/wav",
+                temperature = any()
             )
         }
     }
@@ -86,7 +80,7 @@ class VoiceEvaluationServiceTest {
         """.trimIndent()
 
         coEvery {
-            geminiRestClient.executeGeminiRequest(any())
+            aiClient.generateFromAudio(any(), any(), any(), any())
         } returns jsonResponse
 
         // When
@@ -108,7 +102,7 @@ class VoiceEvaluationServiceTest {
     fun evaluatePronunciation_throwsException_whenGeminiReturnsNull() = runTest {
         // Given
         coEvery {
-            geminiRestClient.executeGeminiRequest(any())
+            aiClient.generateFromAudio(any(), any(), any(), any())
         } returns null
 
         // When
