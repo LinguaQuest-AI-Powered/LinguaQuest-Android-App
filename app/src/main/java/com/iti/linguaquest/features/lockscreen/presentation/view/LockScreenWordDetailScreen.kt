@@ -38,7 +38,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
-import com.iti.linguaquest.core.sharedComponents.offline.OfflineAwareContent
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.home.presentation.view.components.daily_rewards_components.CoinRainOverlay
 import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenWord
@@ -143,8 +142,6 @@ fun LockScreenWordDetailScreen(
                 }
 
                 else -> {
-                    OfflineAwareContent(isOnline = isOnline) {
-
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -217,7 +214,6 @@ fun LockScreenWordDetailScreen(
                                 )
                             }
                         }
-                    }
                 }
             }
              if (showMilestoneDialog) {

@@ -12,7 +12,7 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
     private val preferences: LockScreenPreferencesLocalDataSource
 ) : LockScreenLocalDataSource {
 
-    override fun pendingCount(userId: Int): Flow<Int> = wordDao.pendingCount(userId)
+    override fun pendingCount(userId: Int, targetLanguage: String): Flow<Int> = wordDao.pendingCount(userId, targetLanguage)
     override val featureEnabled: Flow<Boolean> = preferences.featureEnabled
     override val pendingGeneration: Flow<Boolean> = preferences.pendingGeneration
     override val batchSize: Flow<Int> = preferences.batchSize
@@ -25,7 +25,7 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
 
     override fun allWords(userId: Int): Flow<List<LockScreenWordEntity>> = wordDao.allWords(userId)
 
-    override fun pendingWord(userId: Int): Flow<LockScreenWordEntity?> = wordDao.getPendingWord(userId)
+    override fun pendingWord(userId: Int, targetLanguage: String): Flow<LockScreenWordEntity?> = wordDao.getPendingWord(userId, targetLanguage)
 
     override fun observeWord(wordId: Int): Flow<LockScreenWordEntity?> = wordDao.observeById(wordId)
 
@@ -37,11 +37,11 @@ class LockScreenLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getWord(wordId: Int): LockScreenWordEntity? = wordDao.getById(wordId)
 
-    override suspend fun getPendingWordOnce(userId: Int): LockScreenWordEntity? = wordDao.getPendingWordOnce(userId)
+    override suspend fun getPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity? = wordDao.getPendingWordOnce(userId, targetLanguage)
 
-    override suspend fun getRandomPendingWordOnce(userId: Int): LockScreenWordEntity? = wordDao.getRandomPendingWordOnce(userId)
+    override suspend fun getRandomPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity? = wordDao.getRandomPendingWordOnce(userId, targetLanguage)
 
-    override suspend fun pendingCountOnce(userId: Int): Int = wordDao.pendingCountOnce(userId)
+    override suspend fun pendingCountOnce(userId: Int, targetLanguage: String): Int = wordDao.pendingCountOnce(userId, targetLanguage)
 
     override suspend fun getRecentWords(userId: Int, limit: Int): List<String> = wordDao.getRecentWords(userId, limit)
 

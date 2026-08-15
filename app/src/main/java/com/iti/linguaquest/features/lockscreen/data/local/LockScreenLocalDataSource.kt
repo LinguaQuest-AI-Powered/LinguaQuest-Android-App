@@ -14,17 +14,17 @@ interface LockScreenLocalDataSource {
     val lastRewardedMilestoneCount: Flow<Int?>
 
     fun allWords(userId: Int): Flow<List<LockScreenWordEntity>>
-    fun pendingWord(userId: Int): Flow<LockScreenWordEntity?>
+    fun pendingWord(userId: Int, targetLanguage: String): Flow<LockScreenWordEntity?>
     fun observeWord(wordId: Int): Flow<LockScreenWordEntity?>
     fun postedOrOpenedWords(userId: Int): Flow<List<LockScreenWordEntity>>
 
     suspend fun insertBatch(words: List<LockScreenWordEntity>)
     suspend fun getWord(wordId: Int): LockScreenWordEntity?
-    suspend fun getPendingWordOnce(userId: Int): LockScreenWordEntity?
-    suspend fun getRandomPendingWordOnce(userId: Int): LockScreenWordEntity?
+    suspend fun getPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity?
+    suspend fun getRandomPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity?
     
-    fun pendingCount(userId: Int): Flow<Int>
-    suspend fun pendingCountOnce(userId: Int): Int
+    fun pendingCount(userId: Int, targetLanguage: String): Flow<Int>
+    suspend fun pendingCountOnce(userId: Int, targetLanguage: String): Int
     suspend fun getRecentWords(userId: Int, limit: Int): List<String>
     
     suspend fun updateStatus(wordId: Int, status: String, postedAt: Long? = null, openedAt: Long? = null)

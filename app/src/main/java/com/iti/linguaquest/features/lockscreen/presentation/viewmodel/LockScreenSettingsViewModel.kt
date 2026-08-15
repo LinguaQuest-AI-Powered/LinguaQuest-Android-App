@@ -59,7 +59,6 @@ class LockScreenSettingsViewModel @Inject constructor(
     private val enqueueGenerationWorkUseCase: EnqueueGenerationWorkUseCase,
     private val scheduleNotificationUseCase: ScheduleVocabularyNotificationUseCase,
     private val showTestNotificationUseCase: ShowTestNotificationUseCase,
-    private val vocabularyWorkScheduler: VocabularyWorkScheduler,
     private val snackbarController: SnackbarController
 ) : ViewModel() {
 

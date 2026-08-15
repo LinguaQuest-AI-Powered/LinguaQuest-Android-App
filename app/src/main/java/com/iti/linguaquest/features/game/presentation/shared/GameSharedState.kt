@@ -19,6 +19,7 @@ data class GameSharedState(
     val worldId: Int = 1,
     val levelId: Int = 1,
     val targetWord: UiText = UiText.DynamicString(""),
+    val targetLanguage: String = "en",
     val capturedImageUri: Uri? = null,
     val hintText: String? = null,
     val isHintUsed: Boolean = false,

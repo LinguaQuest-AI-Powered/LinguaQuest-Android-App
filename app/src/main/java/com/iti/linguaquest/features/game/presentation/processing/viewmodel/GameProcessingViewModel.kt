@@ -36,7 +36,7 @@ class GameProcessingViewModel @Inject constructor(
     private val _effect = Channel<GameProcessingEffect>()
     val effect = _effect.receiveAsFlow()
 
-    fun verifyImage(worldId: Int, levelId: Int, targetWord: String, imageFile: File?) {
+    fun verifyImage(worldId: Int, levelId: Int, targetWord: String, targetLanguage: String, imageFile: File?) {
         if (imageFile == null || !imageFile.exists()) {
             sendEffect(GameProcessingEffect.NavigateToError(UiText.StringResource(R.string.game_processing_simulate_error_message)))
             return
@@ -46,7 +46,7 @@ class GameProcessingViewModel @Inject constructor(
                 is LinguaQuestResult.Success -> {
                     val data = result.data
                     if (data.isMatch) {
-                        saveVaultImageUseCase(targetWord, imageFile)
+                        saveVaultImageUseCase(targetWord, targetLanguage, imageFile)
                         sendEffect(
                             GameProcessingEffect.NavigateToSuccess(
                                 xp = data.xpEarned,

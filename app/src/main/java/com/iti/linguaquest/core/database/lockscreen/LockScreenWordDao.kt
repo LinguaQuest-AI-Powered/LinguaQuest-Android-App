@@ -16,20 +16,20 @@ interface LockScreenWordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(word: LockScreenWordEntity)
 
-    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
-    fun getPendingWord(userId: Int): Flow<LockScreenWordEntity?>
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' AND targetLanguage = :targetLanguage ORDER BY createdAt ASC LIMIT 1")
+    fun getPendingWord(userId: Int, targetLanguage: String): Flow<LockScreenWordEntity?>
 
-    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY createdAt ASC LIMIT 1")
-    suspend fun getPendingWordOnce(userId: Int): LockScreenWordEntity?
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' AND targetLanguage = :targetLanguage ORDER BY createdAt ASC LIMIT 1")
+    suspend fun getPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity?
 
-    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomPendingWordOnce(userId: Int): LockScreenWordEntity?
+    @Query("SELECT * FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' AND targetLanguage = :targetLanguage ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomPendingWordOnce(userId: Int, targetLanguage: String): LockScreenWordEntity?
 
-    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING'")
-    fun pendingCount(userId: Int): Flow<Int>
+    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' AND targetLanguage = :targetLanguage")
+    fun pendingCount(userId: Int, targetLanguage: String): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING'")
-    suspend fun pendingCountOnce(userId: Int): Int
+    @Query("SELECT COUNT(*) FROM lock_screen_words WHERE userId = :userId AND status = 'PENDING' AND targetLanguage = :targetLanguage")
+    suspend fun pendingCountOnce(userId: Int, targetLanguage: String): Int
 
     @Query("SELECT * FROM lock_screen_words WHERE userId = :userId ORDER BY createdAt DESC")
     fun allWords(userId: Int): Flow<List<LockScreenWordEntity>>

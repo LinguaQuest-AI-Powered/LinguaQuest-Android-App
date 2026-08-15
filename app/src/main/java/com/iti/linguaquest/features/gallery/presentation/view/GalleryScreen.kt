@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -221,22 +220,16 @@ fun GalleryScreen(
 
                 when (selectedTab) {
                     GalleryTab.CAPTURES -> {
-                        PullToRefreshBox(
-                            isRefreshing = state.dataStatus is DataStatus.Refreshing,
-                            onRefresh = { viewModel.onIntent(GalleryIntent.RefreshWords) },
+                        GalleryContent(
+                            state = state,
+                            onIntent = viewModel::onIntent,
+                            onWordClick = { wordId: Int, anchor: Rect ->
+                                guardOnline(anchor) {
+                                    viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
+                                }
+                            },
                             modifier = Modifier.fillMaxSize()
-                        ) {
-                            GalleryContent(
-                                state = state,
-                                onIntent = viewModel::onIntent,
-                                onWordClick = { wordId: Int, anchor: Rect ->
-                                    guardOnline(anchor) {
-                                        viewModel.onIntent(GalleryIntent.WordItemClicked(wordId))
-                                    }
-                                },
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
+                        )
                     }
 
                     GalleryTab.WORDS -> {
