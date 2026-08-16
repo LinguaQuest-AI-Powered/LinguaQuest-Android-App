@@ -7,8 +7,8 @@ import com.iti.linguaquest.R
   fun getLanguageName(languageCode: String): String {
     return when (languageCode) {
         "es" -> stringResource(id = R.string.lang_spanish)
-        "ja" -> stringResource(id = R.string.lang_japanese)
-        "ge" -> stringResource(id = R.string.lang_german)
+        "fr" -> stringResource(id = R.string.lang_french)
+        "de", "ge" -> stringResource(id = R.string.lang_german)
         "ar" -> stringResource(id = R.string.lang_arabic)
         else -> stringResource(id = R.string.lang_english)
     }

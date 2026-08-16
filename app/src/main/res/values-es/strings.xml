@@ -1,0 +1,983 @@
+<resources>
+    
+    <!-- COMMON / GENERAL / GLOBAL -->
+    
+    <string name="app_name">LinguaQuest</string>
+    <string name="app_logo_description">Logo de LinguaQuest</string>
+    <string name="main_screen">Pantalla principal</string>
+    <string name="go_to_details_1">Ir a Detalles 1</string>
+    <string name="details_screen_id">Pantalla de detalles para el ID: %1$d</string>
+    <string name="pop_screen">Cerrar pantalla</string>
+    <string name="loading">Cargando…</string>
+    <string name="loading_message_1">Preparando tu misión…</string>
+    <string name="loading_message_2">Calentando al loro…</string>
+    <string name="loading_message_3">Casi listo…</string>
+    <string name="loading_message_4">Haciendo las maletas…</string>
+    <string name="loading_message_5">Consultando los mapas…</string>
+    <string name="loading_quests">Cargando misiones…</string>
+    <string name="preparing_adventure">Preparando tu aventura…</string>
+    <string name="waking_up_lingo">Despertando a Lingo…</string>
+    <string name="translating_worlds">Traduciendo mundos…</string>
+    <string name="almost_there">Casi listo…</string>
+    <string name="continue_button">Continuar</string>
+    <string name="start_button">Empezar</string>
+    <string name="back">Atrás</string>
+    <string name="go_back">Atrás</string>
+    <string name="cd_back">Atrás</string>
+    <string name="close">Cerrar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="confirm_button">Confirmar</string>
+    <string name="btn_confirm">Confirmar</string>
+    <string name="save">Guardar</string>
+    <string name="save_changes">Guardar cambios</string>
+    <string name="edit">Editar</string>
+    <string name="done">Listo</string>
+    <string name="next">Siguiente</string>
+    <string name="finish">Finalizar</string>
+    <string name="got_it">Entendido</string>
+    <string name="retry">Reintentar</string>
+    <string name="retry_label">Reintentar</string>
+    <string name="submit">Enviar</string>
+    <string name="skip">Saltar</string>
+    <string name="remove">Eliminar</string>
+    <string name="delete_all">Eliminar todo</string>
+    <string name="expand">Expandir</string>
+    <string name="collapse">Contraer</string>
+    <string name="see_more">Ver más</string>
+    <string name="view_all_label">VER TODO</string>
+    <string name="progress">Progreso</string>
+    <string name="level">Nivel</string>
+    <string name="days">Días</string>
+    <string name="days_count">conteo de días</string>
+    <string name="day_format">Día %1$d</string>
+    <string name="coins">Monedas</string>
+    <string name="coins_label">MONEDAS</string>
+    <string name="coins_description">Monedas</string>
+    <string name="coins_claimed">¡monedas reclamadas!</string>
+    <string name="not_enough_coins">¡No tienes suficientes monedas!</string>
+    <string name="xp">XP</string>
+    <string name="total_xp_label">XP TOTAL</string>
+    <string name="streak_label">RACHA</string>
+    <string name="worlds_label">MUNDOS</string>
+    <string name="all_filter">Todos</string>
+    <string name="congrates">¡Felicidades!</string>
+    <string name="tap_to_zoom">Pellizcar para ampliar · Doble toque</string>
+    <string name="search_icon">Icono de búsqueda</string>
+    <string name="camera_alt">Cámara</string>
+    <string name="mascot_help_text">TÓCAME SI\nNECESITAS AYUDA</string>
+    <string name="mascot_content_desc">Mascota</string>
+    <string name="thinking_mascot_content_desc">Mascota pensando</string>
+    <string name="cd_linguaquest_mascot">Mascota de LinguaQuest</string>
+    <string name="cd_linguaquest_mascot_animation">Animación de la mascota de LinguaQuest</string>
+    <string name="cd_coin">Moneda</string>
+    <string name="cd_coins">Monedas</string>
+    <string name="cd_xp">XP</string>
+    <string name="cd_gift">Regalo</string>
+    <string name="cd_completed">Completado</string>
+    <string name="cd_current">Actual</string>
+    <string name="cd_locked">Bloqueado</string>
+    <string name="cd_navigate">Navegar</string>
+    <string name="cd_treasure">Tesoro</string>
+    <string name="cd_star">Estrella</string>
+    <string name="cd_avatar">Avatar</string>
+    <string name="cd_add">Añadir</string>
+    <string name="cd_details">Detalles</string>
+    <string name="cd_pronounce">Pronunciar</string>
+    <string name="cd_search">Buscar</string>
+    <string name="cd_selected">Seleccionado</string>
+    <string name="mascot_camera_cd">Mascota con cámara</string>
+    <string name="camera_icon_cd">Icono de cámara</string>
+
+    <!-- Generic Error Messages -->
+    <string name="general_error">Ocurrió un error. Por favor, inténtalo de nuevo.</string>
+    <string name="error_generic">Algo salió mal. Por favor, inténtalo de nuevo.</string>
+    <string name="error_no_internet">Sin conexión a Internet. Por favor, comprueba tu red e inténtalo de nuevo.</string>
+    <string name="error_timeout">Tiempo de espera agotado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_server">Ocurrió un error en el servidor. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="error_bad_request">Solicitud no válida. Por favor, inténtalo de nuevo.</string>
+    <string name="error_unauthorized">La sesión ha caducado. Por favor, inicia sesión de nuevo.</string>
+    <string name="error_too_many_requests">Demasiadas solicitudes. Por favor, espera un momento e inténtalo de nuevo.</string>
+    <string name="error_insufficient_balance">No tienes saldo suficiente para realizar esta acción.</string>
+    <string name="error_disk_full">El espacio de almacenamiento está lleno.</string>
+    <string name="no_internet_title">Sin conexión a Internet</string>
+    <string name="no_internet_subtitle">Comprueba tu red e inténtalo de nuevo</string>
+    <string name="no_internet_short">Sin Internet</string>
+    <string name="no_internet_image_desc">Ilustración de sin conexión a Internet</string>
+    <string name="offline_title">Estás sin conexión</string>
+    <string name="offline_msg">Mostrando tu perfil guardado; se actualizará automáticamente en cuanto vuelvas a estar en línea.</string>
+
+    
+    <!-- ONBOARDING & PROFICIENCY LEVELS -->
+    
+    <string name="onboarding_title_p1">¡Aprende idiomas explorando el </string>
+    <string name="onboarding_title_p2">mundo real!</string>
+    <string name="get_started">Empezar</string>
+    <string name="already_have_an_account">Ya tengo una cuenta</string>
+    <string name="choose_your_languages">Elige tus idiomas</string>
+    <string name="let_set_up_your_learning_journey">¡Configuremos tu viaje de aprendizaje!</string>
+    <string name="i_speak">HABLO…</string>
+    <string name="i_want_to_learn">QUIERO APRENDER…</string>
+    <string name="popular_choices">Opciones populares</string>
+    <string name="What_is_your_level">¿Cuál es tu nivel?</string>
+    <string name="choose_where_your_journey_begins">¡Elige dónde comienza tu viaje, aventurero! Te guiaré por el camino que mejor se adapte a ti.</string>
+    <string name="level_beginner">Principiante</string>
+    <string name="level_beginner_description">Apenas estoy comenzando mi aventura</string>
+    <string name="level_intermediate">Intermedio</string>
+    <string name="level_intermediate_description">Puedo desenvolverme en situaciones básicas</string>
+    <string name="level_advanced">Avanzado</string>
+    <string name="level_advanced_description">Listo para grandes desafíos</string>
+
+    
+    <!-- AUTHENTICATION & ONBOARDING (LOGIN / SIGNUP / OTP / PASSWORD RESET) -->
+    
+    <string name="login_welcome_back">¡Te damos la bienvenida de nuevo!</string>
+    <string name="login_ready_to_continue">¿Listo para continuar?</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_subtitle">Inicia sesión en tu cuenta</string>
+    <string name="login_email_address">Correo electrónico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_log_in">Iniciar sesión</string>
+    <string name="login_or_continue_with">O continuar con</string>
+    <string name="login_google">Google</string>
+    <string name="login_continue_as_guest">Continuar como invitado</string>
+    <string name="login_new_here">¿Eres nuevo aquí?</string>
+    <string name="login_sign_up">Registrarse</string>
+    <string name="login_error_invalid_email">Formato de correo electrónico no válido.</string>
+    <string name="login_error_invalid_credentials">Correo electrónico o contraseña no válidos.</string>
+    <string name="login_error_invalid_password">Contraseña incorrecta. Inténtalo de nuevo.</string>
+    <string name="login_error_email_not_verified">Correo electrónico no verificado.</string>
+    <string name="login_error_weak_password">La contraseña es demasiado débil.</string>
+    <string name="login_error_user_disabled">Usuario inhabilitado.</string>
+    <string name="login_error_token_not_valid">La sesión ha caducado.</string>
+    <string name="login_error_operation_not_allowed">Operación no permitida.</string>
+    <string name="login_error_generic">Algo salió mal.</string>
+    <string name="login_error_password_required">La contraseña es obligatoria.</string>
+    <string name="login_error_email_required">El correo electrónico es obligatorio.</string>
+    <string name="login_error_email_already_in_use">El correo electrónico ya está en uso.</string>
+    <string name="login_error_email_not_found">No se encontró la dirección de correo electrónico.</string>
+    <string name="login_error_username_already_exists">El nombre de usuario ya existe.</string>
+    <string name="login_error_invalid_reset_token">Token de restablecimiento de contraseña no válido.</string>
+    <string name="login_error_reset_token_expired">El token de restablecimiento de contraseña ha caducado.</string>
+    <string name="login_error_validation_error">Ocurrió un error de validación.</string>
+    <string name="login_error_no_internet">Sin conexión a Internet. Por favor, comprueba tu red e inténtalo de nuevo.</string>
+    <string name="error_email_already_in_use">Ya existe una cuenta con este correo electrónico.</string>
+    <string name="error_username_already_exists">El nombre de usuario ya está en uso.</string>
+    <string name="error_email_not_found">No se encontró ninguna cuenta con este correo electrónico.</string>
+
+    <string name="sign_up_screen">Pantalla de registro</string>
+    <string name="signup_title">Crea tu cuenta</string>
+    <string name="signup_subtitle">Crea una cuenta para comenzar tu viaje de aprendizaje de idiomas.</string>
+    <string name="signup_username">Nombre de usuario</string>
+    <string name="signup_confirm_password">Confirmar contraseña</string>
+    <string name="signup_button">Crear cuenta</string>
+    <string name="signup_already_have_account">¿Ya tienes una cuenta?</string>
+    <string name="signup_error_name_required">El nombre de usuario es obligatorio.</string>
+    <string name="signup_error_name_too_short">El nombre de usuario debe tener al menos 2 caracteres.</string>
+    <string name="signup_error_passwords_do_not_match">Las contraseñas no coinciden.</string>
+    <string name="signup_success_message">¡Cuenta creada con éxito! Código de verificación enviado a tu correo electrónico.</string>
+    <string name="hide_password">Ocultar contraseña</string>
+    <string name="show_password">Mostrar contraseña</string>
+
+    <string name="forgot_password_screen">Pantalla de restablecer contraseña</string>
+    <string name="forget_password_title">¿Olvidaste tu\ncontraseña?</string>
+    <string name="forget_password_subtitle">¡No te preocupes, Lingo te ayudará a encontrarla! Introduce tu correo para recibir un enlace de restablecimiento.</string>
+    <string name="forget_password_email_hint">Introduce tu correo electrónico</string>
+    <string name="forget_password_send_button">Enviar enlace de restablecimiento</string>
+    <string name="forget_password_error_invalid_email">Por favor, introduce una dirección de correo electrónico válida.</string>
+
+    <string name="new_password_title">Nueva\ncontraseña</string>
+    <string name="new_password_subtitle">¡Volvamos a aprender! Elige una contraseña segura.</string>
+    <string name="new_password_hint">Introduce la nueva contraseña</string>
+    <string name="confirm_password_hint">Confirma la nueva contraseña</string>
+    <string name="new_password_min_length_hint">Mínimo 6 caracteres</string>
+    <string name="new_password_strength_label">Seguridad de la contraseña</string>
+    <string name="new_password_reset_button">Restablecer contraseña</string>
+    <string name="new_password_back_to_login">← Volver a Iniciar sesión</string>
+    <string name="new_password_error_required">La contraseña es obligatoria.</string>
+    <string name="new_password_error_too_short">La contraseña debe tener al menos 8 caracteres.</string>
+    <string name="new_password_error_no_uppercase">La contraseña debe contener al menos una letra mayúscula.</string>
+    <string name="new_password_error_no_number">La contraseña debe contener al menos un número.</string>
+    <string name="new_password_error_no_match">Las contraseñas no coinciden.</string>
+    <string name="new_password_error_confirm_required">Por favor, confirma tu contraseña.</string>
+    <string name="new_password_error_generic">Algo salió mal. Por favor, inténtalo de nuevo.</string>
+
+    <string name="otp_verify_title">Verifica tu correo electrónico</string>
+    <string name="otp_verify_subtitle">Hemos enviado un código a tu bandeja de entrada. Introdúcelo a continuación.</string>
+    <string name="otp_resend_code">Reenviar código</string>
+    <string name="otp_verify_button">Verificar</string>
+    <string name="otp_back_to_login">Volver a Iniciar sesión</string>
+    <string name="otp_error_invalid">Código OTP no válido.</string>
+    <string name="otp_error_expired">El código OTP ha caducado.</string>
+    <string name="otp_code_resent_message">¡Código de verificación reenviado con éxito!</string>
+    <string name="otp_verification_success_message">¡Correo electrónico verificado con éxito! Por favor, inicia sesión.</string>
+    <string name="otp_timer_content_description">Temporizador de reenvío de OTP</string>
+    <string name="error_invalid_otp">Código de verificación no válido.</string>
+    <string name="error_otp_expired">El código de verificación ha caducado.</string>
+    <string name="error_otp_not_found">Código de verificación no encontrado. Por favor, solicita uno nuevo.</string>
+
+    
+    <!-- HOME & MAP SECTION -->
+    
+    <string name="home_label">Inicio</string>
+    <string name="home_screen">Pantalla de inicio</string>
+    <string name="map_lets_learn">¡Aprendamos!</string>
+    <string name="continue_lesson">CONTINUAR LECCIÓN</string>
+    <string name="explore_worlds">Explorar mundos</string>
+    <string name="all_worlds_title">Todos los mundos</string>
+    <string name="all_worlds_subtitle">Elige tu próxima aventura</string>
+    <string name="worlds_count_format">%1$d mundos</string>
+    <string name="mystery_world">Mundo misterioso</string>
+    <string name="dummy_world_name">Mundo de la cocina</string>
+    <string name="dummy_progress_text">4 de 10</string>
+    <string name="dummy_target_word">la taza</string>
+    <string name="start_hunting">Empezar a cazar</string>
+    <string name="current_quest_label">MISIÓN ACTUAL</string>
+    <string name="find_and_capture_instruction">Busca y captura</string>
+    <string name="word_capture_continue_button">Continuar</string>
+    <string name="word_capture_progress_format">%1$s de %2$s</string>
+    <string name="level_title">Nivel %1$d</string>
+    <string name="unlock_at_level_format">Se desbloquea en el nivel %1$d</string>
+    <string name="easy">FÁCIL</string>
+    <string name="medium">MEDIO</string>
+    <string name="hard">DIFÍCIL</string>
+
+    
+    <!-- DAILY MISSIONS & DAILY REWARDS -->
+    
+    <string name="daily_reward_title">¡Recompensa\ndiaria!</string>
+    <string name="daily_reward_subtitle">Encontraste un tesoro en tu\naventura de hoy.</string>
+    <string name="daily_reward_coins_format">+%1$d Monedas</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
+    <string name="claim_reward">Reclamar recompensa</string>
+    <string name="daily_streak_bonus">¡Bono de racha diaria!</string>
+    <string name="claim_your_daily_reward">¡Reclama tu recompensa diaria!</string>
+    <string name="cd_daily_reward">Recompensa diaria</string>
+    <string name="daily_mission_title_success">¡Misión diaria!</string>
+    <string name="daily_mission_title_loading">Descifrando…</string>
+    <string name="daily_mission_message_success">Tu objetivo para hoy es:</string>
+    <string name="daily_mission_message_loading">Espera un momento mientras obtenemos la palabra secreta de hoy…</string>
+    <string name="daily_mission_button_start_camera">Iniciar cámara</string>
+    <string name="daily_mission_button_loading">Cargando…</string>
+    <string name="daily_mission_button_later">Más tarde</string>
+    <string name="daily_mission_already_solved_title">¡Misión cumplida!</string>
+    <string name="daily_mission_already_solved_message">Ya has completado la misión diaria de hoy. ¡Vuelve mañana para un nuevo desafío!</string>
+    <string name="daily_mission_wrong_word">No coincide con la palabra. ¡Inténtalo de nuevo!</string>
+    <string name="daily_mission_completed">¡Misión completada! Ganaste %1$d XP y %2$d Monedas.</string>
+
+    
+    <!-- CAMERA & REAL WORLD HUNTING -->
+    
+    <string name="open_camera">Abrir cámara</string>
+    <string name="find_label">Encuentra:</string>
+    <string name="captured_preview">Vista previa capturada</string>
+    <string name="toggle_flash">Alternar flash</string>
+    <string name="flip_camera">Cambiar de cámara</string>
+    <string name="need_a_hint">¿Necesitas una pista?</string>
+    <string name="get_a_hint_title">Obtener una pista</string>
+    <string name="reveal_first_letter">Mostrar primera letra</string>
+    <string name="show_category_clue">Mostrar pista de categoría</string>
+    <string name="use_hint">Usar pista</string>
+    <string name="scan_hint_format">Escanea un(a) %1$s en tu entorno real usando la cámara para completar esta misión.</string>
+    <string name="change_word">Cambiar palabra</string>
+    <string name="change_word_hint">Puedes cambiar la palabra si te has atascado</string>
+    <string name="change_word_confirm_title">¿Cambiar la palabra?</string>
+    <string name="change_word_confirm_message">Esto descontará 50 monedas.</string>
+    <string name="change_word_confirm_action">Cambiar palabra</string>
+    <string name="change_word_cancel_action">Cancelar</string>
+    <string name="camera_permission_required">Se requiere permiso de cámara.</string>
+    <string name="camera_permission_title">Permiso de cámara requerido</string>
+    <string name="camera_permission_blocked_desc">El permiso de cámara está bloqueado. Por favor, actívalo en Ajustes.</string>
+    <string name="camera_permission_desc">LinguaQuest necesita acceso a la cámara para capturar objetos para el aprendizaje de idiomas.</string>
+    <string name="grant_permission">Conceder permiso</string>
+    <string name="open_settings">Abrir ajustes</string>
+
+    
+    <!-- GAME PROCESSING & AI VERIFICATION -->
+    
+    <string name="game_processing_ai_thinking">La IA está pensando…</string>
+    <string name="game_processing_coins_counter">Monedas: %1$d</string>
+    <string name="game_processing_captured_image_desc">Imagen capturada</string>
+    <string name="game_processing_catchable_lingo_desc">Lingo atrapable</string>
+    <string name="game_processing_catch_lingo_hint">✨ ¡Atrapa a Lingo para jugar! ✨</string>
+    <string name="game_processing_btn_whack_lingo">¡Toca a Lingo!</string>
+    <string name="game_processing_status_analyzing">Analizando píxeles…</string>
+    <string name="game_processing_status_inspecting">Lingo está inspeccionando los píxeles…</string>
+    <string name="game_processing_status_consulting">Consultando el diccionario…</string>
+    <string name="game_processing_status_comparing">Comparando con el diccionario…</string>
+    <string name="game_processing_status_squinting">Mirando muy de cerca…</string>
+    <string name="game_processing_status_evaluating">Evaluando tus habilidades fotográficas…</string>
+    <string name="game_processing_status_thinking">Pensando detenidamente…</string>
+    <string name="game_processing_status_almost_there">Casi listo…</string>
+    <string name="game_processing_btn_success">Éxito</string>
+    <string name="game_processing_btn_fail">Fallo</string>
+    <string name="game_processing_btn_error">Error</string>
+    <string name="game_processing_simulate_failure_reason">¡Eso parece un zapato, no una manzana!</string>
+    <string name="game_processing_simulate_error_message">La conexión ha caducado.</string>
+
+    
+    <!-- GAME RESULTS -->
+    
+    <string name="game_result_loading">Cargando resultado…</string>
+    <string name="game_result_invalid_state">Estado no válido. No se generó ningún resultado.</string>
+    <string name="game_result_default_failure_reason">Elemento no reconocido.</string>
+    <string name="game_result_default_error_message">Ocurrió un error de red.</string>
+    <string name="game_result_error_title">Error de conexión</string>
+    <string name="game_result_retry_connection">Reintentar conexión</string>
+    <string name="game_result_exit_game">Salir del juego</string>
+    <string name="game_result_level_progress">Progreso del nivel %1$d</string>
+    <string name="game_result_percent_progress">%1$d%%</string>
+    <string name="game_result_success_title">¡Perfecto!</string>
+    <string name="game_result_success_subtitle">¡Lo encontraste!</string>
+    <string name="game_result_xp_format">+%1$d</string>
+    <string name="game_result_coins_format">+%1$d</string>
+    <string name="game_result_next_level">Siguiente nivel</string>
+    <string name="game_result_fail_title">¡Casi!</string>
+    <string name="game_result_fail_message_format">Lingo no vio ningún %1$s ahí.\n¡Intenta enfocarlo de otra manera!</string>
+    <string name="game_result_hint_button">¡Asegúrate de que haya buena luz!</string>
+    <string name="game_result_retry_camera">Reintentar cámara</string>
+    <string name="game_result_change_word">Cambiar palabra</string>
+
+    
+    <!-- LINGO REVIEW -->
+    
+    <string name="review_screen_title">Repaso con Lingo</string>
+    <string name="review_back_content_description">Atrás</string>
+    <string name="review_loading_message">La IA está revisando tu palabra…</string>
+    <string name="review_error_emoji">😔</string>
+    <string name="review_retry_button">Intentar de nuevo</string>
+    <string name="review_ai_badge_label">✦ Revisión de IA</string>
+    <string name="review_stop_speaking_description">Dejar de hablar</string>
+    <string name="review_speak_description">Hablar</string>
+    <string name="review_captured_word">Palabra capturada</string>
+    <string name="review_language_arrow"> → </string>
+    <string name="review_section_welcome_label">BIENVENIDO</string>
+    <string name="review_section_welcome_message">¡Hola! Repasemos %1$s juntos, escena por escena.</string>
+    <string name="review_section_sentence_emoji">📖</string>
+    <string name="review_section_sentence_label">ORACIÓN</string>
+    <string name="review_section_translation_emoji">🌍</string>
+    <string name="review_section_translation_label">TRADUCCIÓN</string>
+    <string name="review_section_memory_emoji">🧠</string>
+    <string name="review_section_memory_label">TRUCO DE MEMORIA</string>
+    <string name="review_section_fun_emoji">💡</string>
+    <string name="review_section_fun_label">¿SABÍAS QUE…?</string>
+    <string name="play_sound">Reproducir sonido</string>
+
+    
+    <!-- GALLERY & JOURNAL -->
+    
+    <string name="gallery_label">Galería</string>
+    <string name="gallery_game_captures_tab">Capturas del juego</string>
+    <string name="gallery_my_words_tab">Mi diario</string>
+    <string name="my_captures">Mis capturas</string>
+    <string name="objects_collected">%1$d objetos recolectados</string>
+    <string name="captures_so_far">0 capturas hasta el momento</string>
+    <string name="empty_gallery_title">Aún no hay capturas</string>
+    <string name="empty_gallery_desc">Todavía no has capturado ninguna palabra.\nToca el botón de arriba para añadir tu primera captura.</string>
+    <string name="add_new">Añadir nuevo</string>
+    <string name="Add_New">Añadir nuevo</string>
+    <string name="gallery_category_all">Todos los elementos</string>
+    <string name="gallery_difficulty_easy">Fácil</string>
+    <string name="gallery_difficulty_medium">Medio</string>
+    <string name="gallery_difficulty_hard">Difícil</string>
+
+    
+    <!-- LINGOS / MINI-GAMES HUB -->
+    
+    <string name="lingos_label">Lingos</string>
+
+    
+    <!-- VOICE PRACTICE & PRONUNCIATION GAME -->
+    
+    <string name="voice_practise">Práctica de voz</string>
+    <string name="voice_game_title">Pronunciación</string>
+    <string name="practice_pronunciation">Practica tu\npronunciación</string>
+    <string name="voice_evaluating">Evaluando pronunciación…</string>
+    <string name="listening_to_your_pronunciation">Escuchando atentamente tu pronunciación.</string>
+    <string name="voice_idle_yo_can_do_it">¡Tú puedes hacerlo!</string>
+    <string name="voice_idle_pronounce_this">Pronuncia esta oración:</string>
+    <string name="voice_idle_listen">Escuchar</string>
+    <string name="voice_idle_tap_hold_record">Mantén pulsado para grabar</string>
+    <string name="voice_idle_skip">Saltar</string>
+    <string name="voice_recording_paused">En pausa…</string>
+    <string name="voice_recording_listening">Escuchando…</string>
+    <string name="voice_recording_cancel">Cancelar</string>
+    <string name="voice_recording_done">Listo</string>
+    <string name="voice_result_great_job">¡Excelente trabajo!</string>
+    <string name="voice_result_not_quite">¡Casi lo logras!</string>
+    <string name="voice_result_sentence_review">Revisión de la oración</string>
+    <string name="voice_result_coins_earned">Monedas ganadas</string>
+    <string name="voice_result_continue">Continuar</string>
+    <string name="voice_result_return_home">Volver al inicio</string>
+    <string name="voice_result_retry">Reintentar</string>
+    <string name="voice_result_score">Puntuación</string>
+    <string name="dialog_voice_confirmation_review_recording">Revisar grabación</string>
+    <string name="dialog_voice_confirmation_sub_title">Escucha tu audio antes de evaluarlo</string>
+    <string name="dialog_voice_confirmation_discard">Descartar</string>
+    <string name="dialog_voice_confirmation_process">Evaluar</string>
+
+    
+    <!-- ROLEPLAY FEATURE -->
+    
+    <string name="roleplay_label">Juego de rol</string>
+    <string name="roleplay_interactive_scenarios">Escenarios interactivos</string>
+    <string name="roleplay_browse_roleplays">Explorar juegos de rol</string>
+    <string name="roleplay_interactive_roleplays">Juegos de rol interactivos</string>
+    <string name="roleplay_no_roleplays_available">No hay juegos de rol disponibles.</string>
+    <string name="roleplay_boss_level">Nivel de Jefe</string>
+    <string name="roleplay_boss_stage">Fase de Jefe</string>
+    <string name="roleplay_meet_boss">Conoce a %1$s</string>
+    <string name="roleplay_objective">Objetivo</string>
+    <string name="roleplay_your_objective">Tu objetivo</string>
+    <string name="roleplay_objective_format">Objetivo: %1$s</string>
+    <string name="roleplay_read_carefully">(Lee atentamente en tu lengua materna antes de comenzar)</string>
+    <string name="roleplay_start_roleplay">Iniciar juego de rol</string>
+    <string name="roleplay_connecting">Conectando…</string>
+    <string name="roleplay_not_connected">No conectado.</string>
+    <string name="roleplay_start_recording">Iniciar grabación</string>
+    <string name="roleplay_stop_recording">Detener grabación</string>
+    <string name="roleplay_tap_to_speak">Toca para hablar</string>
+    <string name="roleplay_tap_to_stop">Toca para detener</string>
+    <string name="roleplay_hold_to_speak">Mantén presionado para hablar</string>
+    <string name="roleplay_release_to_send">Suelta para enviar</string>
+    <string name="roleplay_ai_thinking">La IA está pensando…</string>
+    <string name="roleplay_ai_speaking">La IA está hablando…</string>
+    <string name="roleplay_finish_stage">Terminar fase</string>
+    <string name="roleplay_finish_stage_question">¿Terminar fase?</string>
+    <string name="roleplay_finish_stage_message">¿Estás listo para finalizar la conversación y recibir tu evaluación?</string>
+    <string name="roleplay_yes_evaluate">¡Sí, evaluar!</string>
+    <string name="roleplay_keep_talking">Seguir hablando</string>
+    <string name="roleplay_evaluating">Evaluando…</string>
+    <string name="roleplay_ai_analyzing">La IA está analizando tu conversación para calcular tu puntuación.</string>
+    <string name="roleplay_victory">¡Victoria!</string>
+    <string name="roleplay_stage_failed">Fase fallida</string>
+    <string name="roleplay_try_again">Intentar de nuevo</string>
+    <string name="roleplay_next_world">Terminar</string>
+    <string name="roleplay_exit">Salir</string>
+    <string name="roleplay_oops">¡Ups!</string>
+    <string name="roleplay_xp">XP</string>
+    <string name="roleplay_coins">Monedas</string>
+    <string name="roleplay_overall_fluency">Fluidez</string>
+    <string name="roleplay_grammar">Gramática</string>
+    <string name="roleplay_vocabulary">Vocabulario</string>
+    <string name="roleplay_strengths">Puntos fuertes</string>
+    <string name="roleplay_improvements">Aspectos a mejorar</string>
+    <string name="roleplay_stars_1">¡Buen esfuerzo!</string>
+    <string name="roleplay_stars_2">¡Buen trabajo!</string>
+    <string name="roleplay_stars_3">¡Sobresaliente!</string>
+    <string name="roleplay_no_speech">¡No dijiste nada! Por favor, inténtalo de nuevo y háblale al personaje.</string>
+    <string name="roleplay_short_conversation">La conversación fue demasiado corta. Intenta decir al menos 2–3 oraciones para completar la fase.</string>
+    <string name="roleplay_failed_connect">Error al conectar: %1$s</string>
+    <string name="roleplay_connection_lost">Conexión perdida: %1$s</string>
+    <string name="roleplay_error_quota_exceeded">Se alcanzó el límite del servicio de IA. Espera un momento e inténtalo de nuevo.</string>
+    <string name="roleplay_error_connection_lost">Conexión perdida. Por favor, comprueba tu conexión a Internet e inténtalo de nuevo.</string>
+    <string name="roleplay_error_failed_connect">No se pudo conectar con el personaje de IA. Inténtalo de nuevo.</string>
+    <string name="roleplay_error_evaluation_failed">Error al evaluar la conversación. Inténtalo de nuevo.</string>
+    <string name="roleplay_error_session_ended">La sesión del juego de rol ha finalizado. Por favor, empieza de nuevo.</string>
+    <string name="roleplay_error_generic">Algo salió mal. Por favor, inténtalo de nuevo.</string>
+
+    
+    <!-- MIND READER GAME -->
+    
+    <string name="mind_reader_card_title">Lector de Mentes</string>
+    <string name="mind_reader_card_desc">¡Deja que Lingo adivine tu palabra!</string>
+    <string name="mind_reader_lobby_title">Lector de Mentes de Lingo</string>
+    <string name="mind_reader_lobby_subtitle">\"Intentaré adivinarlo en 20 preguntas… ¡prepara tu mente!\"</string>
+    <string name="mind_reader_choose_category">Elegir categoría</string>
+    <string name="mind_reader_think_of_a_word">¡PIENSA EN UNA PALABRA DE LA CATEGORÍA ELEGIDA!</string>
+    <string name="mind_reader_current_category">CATEGORÍA ACTUAL</string>
+    <string name="mind_reader_change_category">Cambiar</string>
+    <string name="mind_reader_start_game">EMPEZAR JUEGO ⚡</string>
+    <string name="mind_reader_confirm_dialog_title">¿Tienes una palabra en mente?</string>
+    <string name="mind_reader_confirm_dialog_desc">¡Asegúrate de que encaje en el mundo %1$s!</string>
+    <string name="mind_reader_not_yet">Aún no</string>
+    <string name="mind_reader_yes_lets_go">¡Sí, vamos! ✓</string>
+    <string name="mind_reader_question_progress">Pregunta %1$d de %2$d</string>
+    <string name="mind_reader_progress_complete">%1$d%% Completado</string>
+    <string name="mind_reader_translate">Traducir</string>
+    <string name="mind_reader_answer_yes">Sí</string>
+    <string name="mind_reader_answer_no">No</string>
+    <string name="mind_reader_answer_sometimes">A veces</string>
+    <string name="mind_reader_answer_probably_not">Probablemente no</string>
+    <string name="mind_reader_answer_dont_know">No lo sé</string>
+    <string name="mind_reader_thinking">Lingo está pensando mucho…</string>
+    <string name="mind_reader_i_think_its">Creo que es…</string>
+    <string name="mind_reader_wrong">✕ ¡No, te equivocaste!</string>
+    <string name="mind_reader_correct">✓ ¡Sí, acertaste!</string>
+    <string name="mind_reader_pop_quiz_title">Traduce esta palabra</string>
+    <string name="mind_reader_pop_quiz_speech">¡GENIAL! TOCA LA TRADUCCIÓN CORRECTA PARA RECLAMAR TU RECOMPENSA.</string>
+    <string name="mind_reader_victory_speech">TUS HABILIDADES LINGÜÍSTICAS SON LEGENDARIAS.</string>
+    <string name="mind_reader_busted">¡Descubierto!</string>
+    <string name="mind_reader_busted_title">¡DESCUBIERTO!</string>
+    <string name="mind_reader_stumped">¡Atrapado!</string>
+    <string name="mind_reader_stumped_title">¡Dejaste perplejo\na Lingo!</string>
+    <string name="mind_reader_stumped_desc">¡Me rindo! Tú ganas.</string>
+    <string name="mind_reader_experience">EXPERIENCIA</string>
+    <string name="mind_reader_earnings">GANANCIAS</string>
+    <string name="mind_reader_xp_value">%1$d XP</string>
+    <string name="mind_reader_coins_value">%1$d Monedas</string>
+    <string name="mind_reader_try_again">Jugar de nuevo</string>
+    <string name="mind_reader_play_again">Jugar de nuevo</string>
+    <string name="mind_reader_return_home">Volver al inicio</string>
+    <string name="mind_reader_return_to_home">Volver al inicio</string>
+    <string name="mind_reader_trap_title">¡ME RINDO! ¿EN QUÉ ESTABAS PENSANDO?</string>
+    <string name="mind_reader_trap_speech">¡ME RINDO! ¿EN QUÉ ESTABAS PENSANDO?</string>
+    <string name="mind_reader_trap_dropdown_title">Vocabulario de %1$s</string>
+    <string name="mind_reader_trap_dropdown_hint">Selecciona tu palabra…</string>
+    <string name="mind_reader_trap_input_placeholder">Escribe la palabra en la que pensaste…</string>
+    <string name="mind_reader_trap_submit">Enviar ▷</string>
+    <string name="mind_reader_translate_confirm_title">Traducir pregunta</string>
+    <string name="mind_reader_translate_confirm_message">¿Deseas gastar %1$d monedas para revelar la traducción de la pregunta?</string>
+    <string name="mind_reader_error_not_enough_coins">No hay suficientes monedas para la traducción</string>
+    <string name="mind_reader_error_quota_exceeded">Se alcanzó el límite del servicio de IA. Espera un momento e inténtalo de nuevo.</string>
+    <string name="mind_reader_error_connection_lost">Conexión perdida. Por favor, comprueba tu conexión a Internet e inténtalo de nuevo.</string>
+    <string name="mind_reader_error_generic">Algo salió mal. Por favor, inténtalo de nuevo.</string>
+    <string name="mind_reader_reason_connection_dropped">¡Se me cayó la conexión! Intentémoslo de nuevo.</string>
+    <string name="mind_reader_reason_max_questions">¡No pude adivinarlo en %1$d preguntas!</string>
+    <string name="mind_reader_reason_quiz_wrong">La respuesta de la prueba sorpresa fue incorrecta.</string>
+    <string name="mind_reader_reason_contradiction">La respuesta coincidía, pero el historial de juego contradecía la palabra objetivo.</string>
+    <string name="mind_reader_reason_stump_contradiction">La palabra seleccionada contradice las respuestas dadas durante el juego.</string>
+
+    
+    <!-- LOCK SCREEN VOCABULARY & VAULT -->
+    
+    <string name="lock_screen_vocabulary_title">Vocabulario en pantalla de bloqueo</string>
+    <string name="lock_screen_vocabulary_desc">Aprende palabras directamente\ndesde tu pantalla de bloqueo</string>
+    <string name="lockscreen_vocabulary_title">Vocabulario en pantalla de bloqueo</string>
+    <string name="lockscreen_vocabulary_subtitle">Convierte tu pantalla de bloqueo en un pequeño ciclo de aprendizaje que mantiene activo tu vocabulario todo el día.</string>
+    <string name="settings_lock_screen_vocabulary">Vocabulario en pantalla de bloqueo</string>
+    <string name="enable_lock_screen_title">¿Activar vocabulario en\npantalla de bloqueo?</string>
+    <string name="enable_lock_screen_subtitle">Usa %1$d monedas para recibir palabras generadas por IA en tu pantalla de bloqueo a lo largo del día.</string>
+    <string name="enable_lock_screen_desc">Usa %d monedas para recibir palabras generadas por IA en tu pantalla de bloqueo a lo largo del día.</string>
+    <string name="lockscreen_vocabulary_enable_title">¿Activar vocabulario en la pantalla de bloqueo?</string>
+    <string name="lockscreen_vocabulary_enable_message">Esto consume 50 monedas una sola vez y continuará mostrando notificaciones de vocabulario en tu pantalla de bloqueo.</string>
+    <string name="lockscreen_vocabulary_enable_action">Activar</string>
+    <string name="lockscreen_vocabulary_cancel_action">Cancelar</string>
+    <string name="lockscreen_vocabulary_cost_chip">50 monedas</string>
+    <string name="lockscreen_vocabulary_schedule_chip">Cada 2 horas</string>
+    <string name="lockscreen_vocabulary_status_label">Estado</string>
+    <string name="lockscreen_vocabulary_state_ready">Listo</string>
+    <string name="lockscreen_vocabulary_state_generating">Preparando</string>
+    <string name="lockscreen_vocabulary_state_active">Activo</string>
+    <string name="lockscreen_vocabulary_state_disabled">Desactivado</string>
+    <string name="lockscreen_vocabulary_state_error">Requiere atención</string>
+    <string name="lockscreen_vocabulary_pending_words">Palabras pendientes</string>
+    <string name="lockscreen_vocabulary_batch_size">Tamaño del lote</string>
+    <string name="lockscreen_vocabulary_last_generated">Última generación</string>
+    <string name="lockscreen_vocabulary_target_language">Idioma de destino</string>
+    <string name="lockscreen_vocabulary_level">Nivel</string>
+    <string name="lockscreen_vocabulary_retry">Reintentar generación</string>
+    <string name="lockscreen_vocabulary_disable">Desactivar función</string>
+    <string name="lockscreen_vocabulary_loading">Cargando vocabulario…</string>
+    <string name="lockscreen_vocabulary_enabled">Vocabulario en pantalla de bloqueo activado.</string>
+    <string name="lockscreen_vocabulary_disabled">Vocabulario en pantalla de bloqueo desactivado.</string>
+    <string name="lockscreen_vocabulary_notifications_scheduled">Notificaciones de vocabulario programadas.</string>
+    <string name="lockscreen_notifications_scheduled">Notificaciones de vocabulario programadas.</string>
+    <string name="lockscreen_vocabulary_test_notification">Probar notificación ahora</string>
+    <string name="lockscreen_test_notification_scheduled">Bloquea la pantalla ahora. La notificación de prueba aparecerá en 5 segundos.</string>
+    <string name="lockscreen_test_notification_failed">No se pudo mostrar la notificación de prueba. Asegúrate de tener las notificaciones activadas y al menos una palabra guardada.</string>
+    <string name="lockscreen_fullscreen_intent_title">Se requiere permiso de pantalla de bloqueo</string>
+    <string name="lockscreen_fullscreen_intent_message">Para mostrar notificaciones de vocabulario en tu pantalla de bloqueo, concede el permiso \"Mostrar en la pantalla de bloqueo\" en los ajustes de tu dispositivo.</string>
+    <string name="lockscreen_fullscreen_intent_action">Abrir ajustes</string>
+    <string name="lockscreen_vocabulary_error_permission">Se requiere permiso de notificaciones para activar esta función.</string>
+    <string name="lockscreen_notification_permission_required">Se requiere permiso de notificaciones para activar esta función.</string>
+    <string name="lockscreen_vocabulary_error_enable">No se pudo activar el vocabulario en la pantalla de bloqueo.</string>
+    <string name="lockscreen_enable_error">No se pudo activar el vocabulario en la pantalla de bloqueo.</string>
+    <string name="lockscreen_required_inputs_error">Selecciona un idioma de destino y un nivel de dominio antes de activar el vocabulario en pantalla de bloqueo.</string>
+    <string name="lockscreen_vocabulary_error_retry">Reintentando la generación más tarde.</string>
+    <string name="lockscreen_error_no_internet_retry">No se pudieron generar palabras en este momento. Se reintentará automáticamente.</string>
+    <string name="lockscreen_error_no_internet">No se pudieron generar palabras en este momento. Inténtalo de nuevo más tarde.</string>
+    <string name="lockscreen_error_bad_format">La respuesta de la IA no tenía el formato esperado. Inténtalo de nuevo más tarde.</string>
+    <string name="lockscreen_error_generate_failed">Error al generar nuevas palabras. Inténtalo de nuevo.</string>
+    <string name="error_fetch_generated_word">Error al obtener la palabra recién generada.</string>
+    <string name="error_generate_words">Error al generar nuevas palabras. Inténtalo de nuevo.</string>
+    <string name="lockscreen_milestone_reward_error">No se pudo reclamar la recompensa del hito en este momento. Inténtalo de nuevo.</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 ¡Hito alcanzado!</string>
+    <string name="lockscreen_milestone_dialog_message">¡Has aprendido %1$d palabras!\nGanaste +%2$d monedas. ¡Sigue así!</string>
+    <string name="lockscreen_milestone_dialog_button">¡Genial! 🚀</string>
+    <string name="lockscreen_vocabulary_word_detail_title">Detalle de la palabra</string>
+    <string name="lockscreen_vocabulary_word_label">Palabra</string>
+    <string name="lockscreen_vocabulary_translation_label">Traducción</string>
+    <string name="lockscreen_vocabulary_example_label">Oración de ejemplo</string>
+    <string name="lockscreen_vocabulary_word_status">Estado de la palabra</string>
+    <string name="lockscreen_vocabulary_back">Atrás</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+    <string name="lockscreen_vocabulary_vault_title">Baúl de vocabulario</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d palabras recolectadas</string>
+    <string name="lockscreen_vocabulary_words_collected">%1$d palabras recolectadas</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">¡Aún no hay palabras!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">Las palabras de tus notificaciones de pantalla de bloqueo aparecerán aquí.</string>
+    <string name="lockscreen_vocabulary_new_badge">NUEVO</string>
+    <string name="lockscreen_badge_new">NUEVO</string>
+    <string name="lockscreen_search_placeholder">Buscar en tu baúl…</string>
+    <string name="lockscreen_no_words_found_title">No se encontraron palabras</string>
+    <string name="lockscreen_no_words_found_subtitle">Intenta buscar otra palabra o traducción.</string>
+    <string name="lockscreen_example_usage_label">EJEMPLO DE USO</string>
+    <string name="lockscreen_got_it">Entendido</string>
+    <string name="lockscreen_sample_coins">1.250</string>
+    <string name="lockscreen_notification_channel_name">Recordatorio de vocabulario</string>
+    <string name="lockscreen_notification_channel_description">Recordatorios periódicos de vocabulario en la pantalla de bloqueo</string>
+    <string name="lockscreen_notification_action_go">Ir</string>
+    <string name="lockscreen_notification_now">Ahora</string>
+    <string name="lockscreen_notification_got_it">Entendido</string>
+    <string name="lockscreen_notification_tap_to_open">Toca en cualquier lugar para abrir</string>
+    <string name="lockscreen_notification_translation_label">Traducción: %1$s</string>
+    <string name="lockscreen_notification_example_label">Ejemplo: %1$s</string>
+
+    
+    <!-- PROFILE & LEADERBOARD & ACHIEVEMENTS -->
+    
+    <string name="profile_label">Perfil</string>
+    <string name="profile_screen">Pantalla de perfil</string>
+    <string name="you_label">Tú</string>
+    <string name="leaderboard_title">Tabla de clasificación</string>
+    <string name="achievements_title">Logros</string>
+    <string name="milestone_progress_label">XP PARA EL PRÓXIMO HITO</string>
+    <string name="edit_profile_title">Editar perfil</string>
+    <string name="personal_info">Información personal</string>
+    <string name="security">Seguridad</string>
+    <string name="display_name_label">Nombre visible</string>
+    <string name="display_name_empty">El nombre visible no puede estar vacío</string>
+    <string name="explorer_tagline_label">Lema de explorador</string>
+    <string name="profile_visibility_note">Tu nombre y biografía son visibles para otros exploradores en la clasificación.</string>
+    <string name="profile_updated_successfully">Perfil actualizado con éxito</string>
+    <string name="failed_update_profile">Error al actualizar el perfil</string>
+    <string name="change_photo">Cambiar foto</string>
+    <string name="update_profile_photo">Actualizar foto de perfil</string>
+    <string name="take_photo">Hacer foto</string>
+    <string name="choose_from_gallery">Elegir de la galería</string>
+    <string name="choose_a_source">Elige un origen</string>
+    <string name="uploading_photo_msg">Subiendo tu foto, esto puede tomar unos momentos…</string>
+    <string name="photo_uploaded_successfully">Foto subida con éxito</string>
+    <string name="profile_photo_updated_successfully">Foto de perfil actualizada con éxito</string>
+    <string name="failed_upload_photo">Error al subir la foto</string>
+    <string name="change_password_label">Cambiar contraseña</string>
+    <string name="old_password_placeholder">contraseña actual</string>
+    <string name="new_password_placeholder">nueva contraseña</string>
+    <string name="enter_current_password">Introduce tu contraseña actual</string>
+    <string name="incorrect_old_password">Contraseña actual incorrecta</string>
+    <string name="new_password_min_length">La nueva contraseña debe tener al menos 6 caracteres</string>
+    <string name="password_updated_successfully">Contraseña actualizada con éxito</string>
+    <string name="failed_update_password">Error al actualizar la contraseña</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="logout_dialog_message">¿Seguro que deseas cerrar sesión? Tendrás que iniciar sesión de nuevo para acceder a tu progreso.</string>
+
+    <string name="achievement_tab_all">Todos</string>
+    <string name="achievement_tab_earned">Obtenidos</string>
+    <string name="achievement_tab_locked">Bloqueados</string>
+    <string name="achievement_stat_earned">OBTENIDOS</string>
+    <string name="achievement_stat_in_progress">EN PROGRESO</string>
+    <string name="achievement_stat_xp_gained">XP GANADO</string>
+    <string name="achievement_claim_rewards">Reclamar recompensas semanales</string>
+    <string name="achievement_header_trophies_cd">Mis trofeos</string>
+    <string name="achievement_header_subtitle">Cada palabra es un paso más en tu\naventura.</string>
+    <string name="achievement_card_icon_cd">Icono de logro</string>
+    <string name="achievement_detail_rewards">Recompensas</string>
+    <string name="achievement_detail_progress">Progreso</string>
+    <string name="achievement_detail_earned_on">Obtenido el %1$s</string>
+    <string name="achievement_detail_status_locked">BLOQUEADO</string>
+    <string name="achievement_detail_status_in_progress">EN PROGRESO</string>
+    <string name="achievement_detail_status_completed">COMPLETADO</string>
+    <string name="achievement_detail_close">Cerrar</string>
+    <string name="achievement_detail_keep_going">¡Completa más misiones para desbloquear este trofeo!</string>
+    <string name="achievement_detail_xp_format">+%1$d XP</string>
+    <string name="achievement_detail_coins_format">+%1$d Monedas</string>
+
+    
+    <!-- LANGUAGES & LOCALIZATION -->
+    
+    <string name="learning_label">Aprendiendo</string>
+    <string name="currently_language">APRENDIENDO ACTUALMENTE</string>
+    <string name="change_label">Cambiar</string>
+    <string name="select_language">Seleccionar idioma</string>
+    <string name="change_language_title">Cambiar idioma</string>
+    <string name="change_language_message">¿Seguro que deseas cambiar a %1$s?</string>
+    <string name="updating_language_title">Actualizando idioma</string>
+    <string name="updating_language_desc">Espera mientras configuramos tu nuevo idioma…</string>
+    <string name="my_languages_title">Mis idiomas</string>
+    <string name="my_languages_level_format">Nivel %1$d</string>
+    <string name="add_languages_title">Añadir idiomas</string>
+    <string name="add_new_language">+ Añadir nuevo idioma</string>
+    <string name="add_languages_select_instruction">Selecciona los idiomas que te gustaría aprender</string>
+    <string name="add_languages_search_placeholder">Buscar idiomas…</string>
+    <string name="add_selected_format">Añadir seleccionados (%1$d)</string>
+    <string name="add_languages_no_results">No se encontraron idiomas</string>
+    <string name="error_loading_languages">No se pudieron cargar los idiomas. Por favor, inténtalo de nuevo.</string>
+    <string name="no_languages_available">No hay idiomas disponibles</string>
+    <string name="remove_language_title">Eliminar idioma</string>
+    <string name="remove_language_message">¿Seguro que deseas eliminar %1$s de tus idiomas activos?</string>
+    <string name="cannot_remove_active_language">No se puede eliminar el idioma actualmente activo.</string>
+    <string name="language_removed_success">Idioma eliminado con éxito.</string>
+    <string name="english_language_displayName">Inglés</string>
+    <string name="spanish_language_displayName">Español</string>
+    <string name="germany_language_displayName">Alemán</string>
+    <string name="arabic_language">Árabe</string>
+    <string name="english_language_code">en</string>
+    <string name="spanish_language_code">es</string>
+    <string name="germany_language_code">ge</string>
+    <string name="lang_english">Inglés</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_german">Alemán</string>
+    <string name="lang_french">Francés</string>
+    <string name="lang_arabic">Árabe</string>
+
+    
+    <!-- SETTINGS & PREFERENCES -->
+    
+    <string name="settings_label">Ajustes</string>
+    <string name="settings_customize_journey">Personaliza tu viaje de aprendizaje</string>
+    <string name="settings_category_account">CUENTA Y VIAJE</string>
+    <string name="settings_edit_profile">Editar perfil</string>
+    <string name="settings_learning_language">Idioma de aprendizaje</string>
+    <string name="settings_app_language">Idioma de la aplicación</string>
+    <string name="settings_daily_goal">Meta diaria</string>
+    <string name="settings_learning_streak">Racha de aprendizaje</string>
+    <string name="settings_category_app_experience">EXPERIENCIA DE LA APLICACIÓN</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_dark_mode">Modo oscuro</string>
+    <string name="settings_sound_effects">Efectos de sonido</string>
+    <string name="settings_privacy_security">Privacidad y seguridad</string>
+    <string name="settings_help_support">Ayuda y soporte</string>
+    <string name="settings_about_app">Acerca de la app</string>
+    <string name="settings_log_out">Cerrar sesión</string>
+    <string name="settings_delete_account">Eliminar cuenta</string>
+
+    
+    <!-- NOTIFICATIONS & DAILY REMINDER -->
+    
+    <string name="notifications_title">Notificaciones</string>
+    <string name="new_notification">Nueva notificación</string>
+    <string name="no_notifications_found">¡Aún no hay notificaciones!</string>
+    <string name="no_notifications_desc">Cuando recibas actualizaciones, recordatorios o recompensas, aparecerán aquí.</string>
+    <string name="notifications_on_msg">Notificaciones activadas.</string>
+    <string name="notifications_off_msg">Notificaciones desactivadas. Recordatorio diario pausado.</string>
+    <string name="notifications_load_error">No se pudieron cargar las notificaciones. Inténtalo de nuevo.</string>
+    <string name="delete_notification_title">Eliminar notificación</string>
+    <string name="delete_notification_message">¿Seguro que deseas eliminar esta notificación?</string>
+    <string name="notification_dismiss">Cancelar</string>
+    <string name="notification_delete_confirm">Eliminar</string>
+    <string name="clear_all_notifications_title">¿Borrar todas las notificaciones?</string>
+    <string name="clear_all_notifications_message">¿Seguro que deseas eliminar todas las notificaciones? Esta acción no se puede deshacer.</string>
+    <string name="notification_delete_all_confirm">Eliminar todo</string>
+    <string name="notification_deleted_toast">Notificación eliminada.</string>
+    <string name="notifications_all_deleted_toast">Todas las notificaciones fueron eliminadas.</string>
+    <string name="daily_reminder">Recordatorio diario</string>
+    <string name="reminder_time">Hora del recordatorio</string>
+    <string name="select_reminder_time">Seleccionar hora del recordatorio</string>
+    <string name="repeat">Repetir</string>
+    <string name="every_day">Todos los días</string>
+    <string name="weekdays">Días laborables</string>
+    <string name="weekends">Fines de semana</string>
+    <string name="custom">Personalizado</string>
+    <string name="reminder_turned_on">Recordatorio activado. Te ayudaremos a mantenerte al día.</string>
+    <string name="reminder_turned_off">Recordatorio desactivado.</string>
+    <string name="reminder_time_updated">Hora del recordatorio actualizada.</string>
+    <string name="reminder_repeat_updated">Repetición del recordatorio actualizada.</string>
+    <string name="notification_channel_name">Recordatorio diario</string>
+    <string name="notification_channel_description">Te recuerda completar tu lección diaria de idioma</string>
+    <string name="notification_title">¿Listo para la lección de hoy?</string>
+    <string name="notification_message">Abre LinguaQuest y mantén viva tu racha.</string>
+    <string name="day_sun_short">D</string>
+    <string name="day_mon_short">L</string>
+    <string name="day_tue_short">M</string>
+    <string name="day_wed_short">X</string>
+    <string name="day_thu_short">J</string>
+    <string name="day_fri_short">V</string>
+    <string name="day_sat_short">S</string>
+
+    
+    <!-- HELP, SUPPORT & CONTACT US -->
+    
+    <string name="help_support_title">Ayuda y soporte</string>
+    <string name="help_hero_title">¡Estamos aquí para ayudarte!</string>
+    <string name="help_hero_subtitle">Elige un tema a continuación y te guiaremos.</string>
+    <string name="help_how_can_we_help">¿Cómo podemos ayudarte?</string>
+    <string name="help_banner_speech_bubble">¿Cómo te puedo ayudar hoy?</string>
+    <string name="help_still_need_help_title">¿Aún necesitas ayuda?</string>
+    <string name="help_contact_support_action">Contactar a soporte</string>
+    <string name="help_report_bug_action">Informar de un error</string>
+    <string name="help_reply_footer">Nuestro equipo suele responder en un plazo de 24 horas</string>
+    <string name="help_support_coming_soon_title">Próximamente</string>
+    <string name="help_support_coming_soon_message">Esta función de soporte estará disponible pronto.</string>
+    <string name="help_support_coming_soon_action">Aceptar</string>
+    <string name="about_app_banner_title">Ayuda y soporte</string>
+    <string name="about_app_banner_subtitle">Explora preguntas frecuentes, contacta a soporte o lee la guía de usuario para aprovechar tu viaje al máximo.</string>
+    <string name="about_app_section_title">Temas de soporte</string>
+    <string name="help_contact_title">Contáctanos</string>
+    <string name="help_contact_subtitle">Estamos aquí para ayudarte. Escríbenos en cualquier momento.</string>
+    <string name="help_contact_detail">¿Necesitas más ayuda? Ponte en contacto con el equipo y te responderemos lo antes posible.</string>
+    <string name="about_app_contact_title">Contáctanos</string>
+    <string name="about_app_contact_subtitle">Ponte en contacto con nuestro equipo de soporte para resolver cualquier duda o comentario.</string>
+    <string name="contact_us_banner_title">Contáctanos</string>
+    <string name="contact_us_banner_subtitle">¿Tienes alguna pregunta o comentario? Déjanos un mensaje a continuación.</string>
+    <string name="contact_intro_title">Resolvámoslo juntos</string>
+    <string name="contact_intro_subtitle">Envíanos un mensaje breve indicando lo que sucedió para poder ayudarte más rápido.</string>
+    <string name="contact_email_label">ENVÍANOS UN CORREO</string>
+    <string name="contact_us_email_card_title">Soporte por correo</string>
+    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
+    <string name="contact_us_subject_label">Asunto</string>
+    <string name="contact_us_subject_placeholder">¿Con qué necesitas ayuda?</string>
+    <string name="contact_us_message_label">Mensaje</string>
+    <string name="contact_us_message_placeholder">Describe tu problema o comentario detalladamente…</string>
+    <string name="contact_us_send_button">Enviar mensaje</string>
+    <string name="contact_section_1_title">Problemas de la app</string>
+    <string name="contact_section_1_desc">Si algo falla, se bloquea o no carga, cuéntanos qué estabas haciendo antes de que ocurriera.</string>
+    <string name="contact_section_2_title">Cuenta y progreso</string>
+    <string name="contact_section_2_desc">Utiliza esto para problemas de inicio de sesión, progreso perdido, recompensas no reflejadas o dudas del perfil.</string>
+    <string name="contact_section_3_title">Sugerencias de funciones</string>
+    <string name="contact_section_3_desc">Comparte cualquier idea para mejorar LinguaQuest. Nos encanta saber qué desean los exploradores.</string>
+
+    
+    <!-- FAQS -->
+    
+    <string name="help_faqs_title">Preguntas frecuentes</string>
+    <string name="help_faqs_subtitle">Respuestas rápidas a dudas comunes</string>
+    <string name="help_faqs_detail">Encuentra respuestas sobre lecciones, progreso, recompensas y el funcionamiento de la app.</string>
+    <string name="help_faq_section_title">Preguntas frecuentes</string>
+    <string name="about_app_faqs_title">Preguntas frecuentes</string>
+    <string name="about_app_faqs_subtitle">Respuestas rápidas a preguntas comunes sobre tu cuenta, lecciones y recompensas.</string>
+    <string name="faqs_intro_title">Cinco preguntas rápidas</string>
+    <string name="faqs_intro_subtitle">Respuestas útiles seleccionadas de la app para que vuelvas a aprender rápidamente.</string>
+    <string name="faq_question_label">PREGUNTA</string>
+    <string name="faq_answer_label">RESPUESTA</string>
+    <string name="faq_item_1_question">¿Cómo comienzo a aprender en LinguaQuest?</string>
+    <string name="faq_item_1_answer">Elige tus idiomas durante la incorporación y ve a Inicio para empezar misiones, lecciones y práctica.</string>
+    <string name="faqs_q1">¿Cómo comienzo a aprender en LinguaQuest?</string>
+    <string name="faqs_a1">Elige tus idiomas durante la incorporación y ve a Inicio para empezar misiones, lecciones y práctica.</string>
+    <string name="faq_item_2_question">¿Qué es Caza con Cámara?</string>
+    <string name="faq_item_2_answer">Caza con Cámara te pide capturar un objeto del mundo real y emparejarlo con la palabra de vocabulario objetivo.</string>
+    <string name="faqs_q2">¿Qué es Caza con Cámara?</string>
+    <string name="faqs_a2">Caza con Cámara te pide capturar un objeto del mundo real y emparejarlo con la palabra de vocabulario objetivo.</string>
+    <string name="faq_item_3_question">¿Cómo funciona la verificación de imágenes por IA?</string>
+    <string name="faq_item_3_answer">Tras tomar una foto, la IA comprueba si el objeto coincide con la palabra antes de otorgar recompensas.</string>
+    <string name="faqs_q3">¿Cómo funciona la verificación de imágenes por IA?</string>
+    <string name="faqs_a3">Tras tomar una foto, la IA comprueba si el objeto coincide con la palabra antes de otorgar recompensas.</string>
+    <string name="faq_item_4_question">¿Cómo practico la pronunciación?</string>
+    <string name="faq_item_4_answer">Usa Desafío de Voz o Repaso para hablar en voz alta y recibir retroalimentación instantánea de pronunciación.</string>
+    <string name="faqs_q4">¿Cómo practico la pronunciación?</string>
+    <string name="faqs_a4">Usa Desafío de Voz o Repaso para hablar en voz alta y recibir retroalimentación instantánea de pronunciación.</string>
+    <string name="faq_item_5_question">¿Cómo funcionan las recompensas y las rachas?</string>
+    <string name="faq_item_5_answer">Ganas XP, monedas, recompensas diarias y avanzas en tu racha al seguir aprendiendo todos los días.</string>
+    <string name="faq_earn_coins_question">¿Cómo gano monedas?</string>
+    <string name="faq_earn_coins_answer">Completa lecciones y desafíos para ganar monedas.</string>
+    <string name="faq_lock_screen_question">¿Cómo funciona el vocabulario en la pantalla de bloqueo?</string>
+    <string name="faq_lock_screen_answer">Ve a Ajustes para activar las notificaciones en la pantalla de bloqueo para desafíos de palabras diarios.</string>
+    <string name="faq_change_language_question">¿Puedo cambiar mi idioma de aprendizaje?</string>
+    <string name="faq_change_language_answer">¡Sí! Puedes cambiar tu idioma de destino en los ajustes del perfil.</string>
+    <string name="faq_maintain_streak_question">¿Cómo mantengo mi racha?</string>
+    <string name="faq_maintain_streak_answer">¡Completa al menos una lección o desafío cada día para mantener tu racha viva!</string>
+
+
+    <!-- USER GUIDE -->
+
+    <string name="help_guide_title">Guía de usuario</string>
+    <string name="help_guide_subtitle">Aprende a usar la aplicación</string>
+    <string name="help_guide_detail">Una guía rápida de las funciones principales, la navegación y la mejor manera de comenzar.</string>
+    <string name="about_app_user_guide_title">Guía de usuario</string>
+    <string name="about_app_user_guide_subtitle">Aprende a navegar por las funciones, juegos y rutas de aprendizaje de LinguaQuest.</string>
+    <string name="user_guide_overview_label">¿Qué contiene la guía?</string>
+    <string name="user_guide_product_vision_label">Visión del producto</string>
+    <string name="user_guide_product_vision_desc">Una experiencia lúdica de aprendizaje con IA que combina interacción real, práctica oral y retroalimentación personalizada para un aprendizaje natural y eficaz.</string>
+    <string name="user_guide_step1_title">Exploración y misiones</string>
+    <string name="user_guide_step1_desc">Recorre diferentes mundos en el mapa, completa misiones interactivas y recolecta palabras.</string>
+    <string name="user_guide_step2_title">Voz y pronunciación</string>
+    <string name="user_guide_step2_desc">Practica hablando en tiempo real con retroalimentación de pronunciación por IA y escenarios interactivos.</string>
+    <string name="user_guide_step3_title">Cámara y mundo real</string>
+    <string name="user_guide_step3_desc">Encuentra objetos en tu entorno, captúralos con tu cámara y aprende vocabulario en contexto.</string>
+    <string name="user_guide_step4_title">Pantalla de bloqueo y baúl</string>
+    <string name="user_guide_step4_desc">Sigue aprendiendo sobre la marcha con notificaciones en la pantalla de bloqueo y repasa tus palabras en el baúl.</string>
+    <string name="user_guide_item_1_title">Caza con Cámara</string>
+    <string name="user_guide_item_1_desc">Captura objetos reales con la cámara de tu dispositivo y emparéjalos con las palabras de vocabulario.</string>
+    <string name="user_guide_item_2_title">Verificación de imagen por IA</string>
+    <string name="user_guide_item_2_desc">Utiliza reconocimiento de imágenes por IA para verificar si el objeto coincide con el vocabulario requerido.</string>
+    <string name="user_guide_item_3_title">Desafío de Voz</string>
+    <string name="user_guide_item_3_desc">Practica pronunciando palabras y frases por el micrófono y recibe retroalimentación al instante.</string>
+    <string name="user_guide_item_4_title">Juego de pronunciación de oraciones</string>
+    <string name="user_guide_item_4_desc">Escucha oraciones, repítelas en voz alta y recibe una puntuación de IA basada en pronunciación, fluidez y claridad.</string>
+    <string name="user_guide_item_5_title">Tutor de conversación IA</string>
+    <string name="user_guide_item_5_desc">Practica conversaciones de la vida real con un tutor de idiomas por IA mediante interacción por voz.</string>
+    <string name="user_guide_item_6_title">Aprendizaje en pantalla de bloqueo</string>
+    <string name="user_guide_item_6_desc">Aprende vocabulario desde tu pantalla de bloqueo con palabras diarias, traducciones, oraciones y pronunciación.</string>
+    <string name="user_guide_item_7_title">Centro educativo</string>
+    <string name="user_guide_item_7_desc">Accede a lecciones estructuradas sobre vocabulario, gramática y aspectos culturales más allá del juego.</string>
+    <string name="user_guide_item_8_title">Galería de fotos capturadas</string>
+    <string name="user_guide_item_8_desc">Repasa los objetos capturados anteriormente con sus nombres, traducciones y pronunciaciones para reforzar la memoria.</string>
+    <string name="user_guide_item_9_title">Progreso y recompensas</string>
+    <string name="user_guide_item_9_desc">Gana XP y monedas, completa misiones diarias, mantén rachas y haz un seguimiento de tu aprendizaje.</string>
+    <string name="user_guide_item_10_title">Soporte multilingüe</string>
+    <string name="user_guide_item_10_desc">Aprende varios idiomas, cambia entre cursos con facilidad y mantén un progreso independiente para cada uno.</string>
+
+    
+    <!-- APP TOUR & TUTORIALS -->
+    
+    <string name="tutorial_replay_title">Repetir recorrido de la app</string>
+    <string name="tutorial_replay_desc">Iniciar la guía del tutorial desde el principio.</string>
+    <string name="tutorial_home_title">Pantalla de inicio</string>
+    <string name="tutorial_home_desc">Explora mundos de aprendizaje, completa niveles y revisa misiones diarias.</string>
+    <string name="tutorial_gallery_title">Galería de vocabulario</string>
+    <string name="tutorial_gallery_desc">Repasa las palabras que has aprendido y practica la pronunciación.</string>
+    <string name="tutorial_lingos_title">Lingos - Modos de juego</string>
+    <string name="tutorial_lingos_desc">Practica el habla con el Juego de Voz, afronta escenarios de rol y desafía al Lector de Mentes.</string>
+    <string name="tutorial_profile_title">Tu perfil</string>
+    <string name="tutorial_profile_desc">Haz un seguimiento de logros, revisa ajustes y consulta tu posición en la tabla de clasificación.</string>
+    <string name="tutorial_language_progress_title">Progreso de aprendizaje</string>
+    <string name="tutorial_language_progress_desc">Consulta aquí tu idioma actual, nivel, avance de aprendizaje y racha.</string>
+    <string name="tutorial_word_capture_title">Lección actual</string>
+    <string name="tutorial_word_capture_desc">Toca aquí para continuar tu lección actual y capturar nuevas palabras.</string>
+    <string name="tutorial_world_list_title">Explorar mundos</string>
+    <string name="tutorial_world_list_desc">Navega y selecciona diferentes mundos de aprendizaje para explorar.</string>
+    <string name="tutorial_language_button_title">Cambiar idioma</string>
+    <string name="tutorial_language_button_desc">Toca aquí para cambiar tu idioma de aprendizaje activo o añadir nuevos.</string>
+    <string name="tutorial_daily_mission_title">Misión diaria</string>
+    <string name="tutorial_daily_mission_desc">Completa tu misión diaria para mantener tu racha viva y ganar recompensas.</string>
+    <string name="tutorial_gallery_captures_title">Capturas del juego</string>
+    <string name="tutorial_gallery_captures_desc">Consulta todas las palabras que has capturado con éxito en el mundo real a través de los juegos.</string>
+    <string name="tutorial_gallery_journal_title">Mi diario</string>
+    <string name="tutorial_gallery_journal_desc">Explora las palabras guardadas en tu baúl de vocabulario y organiza tus repasos.</string>
+    <string name="tutorial_top_bar_coins_title">Tus monedas</string>
+    <string name="tutorial_top_bar_coins_desc">Gana monedas completando lecciones y misiones. Úsalas para desbloquear funciones.</string>
+    <string name="tutorial_top_bar_xp_title">Tu XP</string>
+    <string name="tutorial_top_bar_xp_desc">Gana Puntos de Experiencia (XP) para subir en las clasificaciones y registrar tu progreso.</string>
+    <string name="tutorial_top_bar_notifications_title">Notificaciones</string>
+    <string name="tutorial_top_bar_notifications_desc">Mantente al día con recordatorios de vocabulario, logros y detalles de misiones.</string>
+    <string name="tutorial_lingos_voice_title">Práctica de voz</string>
+    <string name="tutorial_lingos_voice_desc">Habla por el micrófono para practicar tu pronunciación y obtener comentarios en tiempo real.</string>
+    <string name="tutorial_lingos_roleplay_title">Juego de rol</string>
+    <string name="tutorial_lingos_roleplay_desc">Participa en conversaciones interactivas para mejorar tu expresión oral contextual.</string>
+    <string name="tutorial_lingos_mindreader_title">Lector de Mentes</string>
+    <string name="tutorial_lingos_mindreader_desc">Desafía a la IA a adivinar la palabra en la que estás pensando en este juego interactivo.</string>
+    <string name="tutorial_profile_header_title">Tu perfil</string>
+    <string name="tutorial_profile_header_desc">Gestiona tu avatar, consulta tu apodo y revisa tu nivel de aprendizaje actual.</string>
+    <string name="tutorial_profile_stats_title">Estadísticas del perfil</string>
+    <string name="tutorial_profile_stats_desc">Revisa tu racha diaria, tus puntos de experiencia totales y las palabras capturadas en tiempo real.</string>
+    <string name="tutorial_profile_settings_title">Ajustes de la cuenta</string>
+    <string name="tutorial_profile_settings_desc">Toca aquí para abrir ajustes, configurar notificaciones, cambiar el tema o ajustar metas.</string>
+    <string name="tutorial_profile_achievements_title">Logros</string>
+    <string name="tutorial_profile_achievements_desc">Gana insignias y recompensas a medida que alcanzas hitos y completas desafíos.</string>
+    <string name="tutorial_profile_leaderboard_title">Tabla de clasificación</string>
+    <string name="tutorial_profile_leaderboard_desc">Descubre tu puesto frente a tus amigos y otros estudiantes de la comunidad global.</string>
+
+    
+    <!-- ABOUT APP & LEGAL -->
+    
+    <string name="about_app_title">Acerca de</string>
+    <string name="about_app_name">LinguaQuest</string>
+    <string name="about_app_description">LinguaQuest te ayuda a aprender idiomas mediante divertidos juegos, lecciones con IA y desafíos diarios.</string>
+    <string name="about_app_rate_app">Calificar la aplicación</string>
+    <string name="about_app_follow_instagram">Síguenos en Instagram</string>
+    <string name="about_app_visit_website">Visitar nuestro sitio web</string>
+    <string name="about_app_terms_service">Términos de servicio</string>
+    <string name="about_app_privacy_policy">Política de privacidad</string>
+    <string name="about_app_licenses_credits">Licencias y créditos</string>
+    <string name="about_app_footer_made_with">Hecho con 💛 por el equipo de Lingo</string>
+    <string name="about_app_footer_copyright">© 2026 LinguaQuest. Todos los derechos reservados.</string>
+    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
+    <string name="about_app_website_url">https://linguaquest.app</string>
+    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
+    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
+    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
+</resources>
