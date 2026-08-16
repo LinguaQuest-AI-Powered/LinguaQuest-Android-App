@@ -58,3 +58,21 @@ Switching the active target language drastically changes the app's entire learni
 If the `setActiveLanguageUseCase` request successfully completes on the server, but the client disconnects before receiving the response, the local Room database (`LanguagesDao`) will fail to update. 
 - **The Symptom:** The global Home screen might fetch the new language upon reconnection, but `MyLanguagesViewModel` (which only reads from local cache) will still show the old language as active.
 - **The Solution:** The `refreshFromRemote(isPullToRefresh = true)` inside `HomeViewModel` explicitly fires `RefreshMyLanguagesUseCase()`. This forces a direct call to `remoteDataSource.getMyLanguages()` and completely overwrites the local Room cache. If desynchronization occurs, the user can easily pull-to-refresh on the Home screen to self-correct the entire application state.
+
+---
+
+## 4. Settings Native Language Change Flow
+
+Changing the application/native language in Settings also invokes the global `SessionEvent.LanguageChanged` flow to ensure total consistency across the application.
+
+### Step-by-Step Flow:
+1. **Language Selection:** User taps a native language option inside `LanguageSelectionBottomSheet`.
+2. **Confirmation Modal (`AppDialog`):** `SettingViewModel` sets `pendingLanguage` on `LanguagesUiState` and presents an `AppDialog` modal prompting the user to confirm the switch.
+3. **Execution on Confirmation:**
+   - `ChangeAppLanguageUseCase` saves the new language code & name in preferences, updates `LanguageManager` (applying Android `LocaleManager` or locale configuration), and syncs the native language with the backend.
+   - `ClearLanguageCacheUseCase` invokes `sessionManagerRepository.clearLanguageDependentData()` to immediately purge stale cached home/profile/gallery data.
+   - `SettingViewModel` emits `SessionEvent.LanguageChanged` onto `SessionEventBus`.
+4. **Pop to HomeScreen & MainScreen Re-instantiation:**
+   - `AppNavigationScreen` catches `SessionEvent.LanguageChanged`, clears the backstack (popping Settings screen), and routes to `RootScreen.Main(System.currentTimeMillis())`.
+   - All ViewModels (Home, Profile, Gallery) are cleanly re-instantiated and reload fresh localized content and stats directly from the network/cache.
+

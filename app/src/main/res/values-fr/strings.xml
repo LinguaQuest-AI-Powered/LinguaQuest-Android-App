@@ -176,7 +176,10 @@
     <string name="signup_button">Créer un compte</string>
     <string name="signup_already_have_account">Vous avez déjà un compte ?</string>
     <string name="signup_error_name_required">Le nom d\'utilisateur est requis.</string>
-    <string name="signup_error_name_too_short">Le nom d\'utilisateur doit comporter au moins 2 caractères.</string>
+    <string name="signup_error_name_too_short">Le nom d\'utilisateur doit comporter au moins 3 caractères.</string>
+    <string name="signup_error_name_too_long">Le nom d\'utilisateur ne peut pas dépasser 30 caractères.</string>
+    <string name="signup_error_name_invalid_chars">Le nom d\'utilisateur ne peut contenir que des lettres, des chiffres et des traits de soulignement.</string>
+    <string name="change_password_same_password_error">Le nouveau mot de passe ne peut pas être identique à l\'ancien.</string>
     <string name="signup_error_passwords_do_not_match">Les mots de passe ne correspondent pas.</string>
     <string name="signup_success_message">Compte créé avec succès ! Code de vérification envoyé à votre e-mail.</string>
     <string name="hide_password">Masquer le mot de passe</string>
@@ -641,6 +644,7 @@
     <string name="security">Sécurité</string>
     <string name="display_name_label">Nom d\'affichage</string>
     <string name="display_name_empty">Le nom d\'affichage ne peut pas être vide</string>
+    <string name="edit_profile_same_username_error">Le nouveau nom d\'utilisateur ne peut pas être identique au nom actuel.</string>
     <string name="explorer_tagline_label">Slogan d\'explorateur</string>
     <string name="profile_visibility_note">Votre nom et votre bio sont visibles par les autres explorateurs dans le classement.</string>
     <string name="profile_updated_successfully">Profil mis à jour avec succès</string>

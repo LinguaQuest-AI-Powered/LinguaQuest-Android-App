@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -112,6 +113,7 @@ fun MainScreen(
                         .background(MaterialTheme.colorScheme.background)
                 )
             }
+
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = Color.Transparent,
@@ -124,24 +126,12 @@ fun MainScreen(
                             rootBackStack.navigateSingleTop(RootScreen.Notification)
                         }
                     )
-                },
-                bottomBar = {
-                    GameBottomNavBar(
-                        items = BottomNavScreen.entries,
-                        currentRoute = currentTab.route,
-                        onItemClick = { bottomNavScreen ->
-                            currentTab = bottomNavScreen
-                        },
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            SharedBottomBarState.heightPx = coordinates.size.height
-                        }
-                    )
                 }
             ) { innerPadding ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(top = innerPadding.calculateTopPadding())
                 ) {
                     saveableStateHolder.SaveableStateProvider(key = currentTab) {
                         when (currentTab) {
@@ -238,6 +228,19 @@ fun MainScreen(
                             }
                         }
                     }
+
+                    GameBottomNavBar(
+                        items = BottomNavScreen.entries,
+                        currentRoute = currentTab.route,
+                        onItemClick = { bottomNavScreen ->
+                            currentTab = bottomNavScreen
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .onGloballyPositioned { coordinates ->
+                                SharedBottomBarState.heightPx = coordinates.size.height
+                            }
+                    )
                 }
             }
 

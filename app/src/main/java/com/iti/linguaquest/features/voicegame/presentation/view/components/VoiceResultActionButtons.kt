@@ -11,9 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
-import com.iti.linguaquest.core.theme.AppColors
 
 @Composable
 fun VoiceResultActionButtons(
@@ -29,10 +27,10 @@ fun VoiceResultActionButtons(
             variant = ButtonVariant.PRIMARY
         )
         Spacer(Modifier.height(12.dp))
-        AppOutlinedButton(
+        AppButton3D(
             text = stringResource(R.string.voice_result_return_home),
             onClick = onHome,
-            color = AppColors.DialogSecondaryButtonOutline
+            variant = ButtonVariant.SECONDARY
         )
     } else {
         AppButton3D(
@@ -42,10 +40,10 @@ fun VoiceResultActionButtons(
             variant = ButtonVariant.PRIMARY
         )
         Spacer(Modifier.height(12.dp))
-        AppOutlinedButton(
+        AppButton3D(
             text = stringResource(R.string.voice_result_return_home),
             onClick = onHome,
-            color = AppColors.DialogSecondaryButtonOutline
+            variant = ButtonVariant.SECONDARY
         )
     }
 }

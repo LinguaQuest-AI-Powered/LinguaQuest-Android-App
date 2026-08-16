@@ -60,9 +60,9 @@ fun ButtonVariant.toStyle(): ButtonStyle =
         )
 
         ButtonVariant.SECONDARY -> ButtonStyle(
-            background = MaterialTheme.colorScheme.secondary,
-            content = MaterialTheme.colorScheme.onSecondary,
-            borderColor = null
+            background = MaterialTheme.colorScheme.surface,
+            content = MaterialTheme.colorScheme.tertiary,
+            borderColor = MaterialTheme.colorScheme.tertiary
         )
 
         ButtonVariant.SOCIAL -> ButtonStyle(
@@ -106,12 +106,24 @@ fun AppButton3D(
     val style = variant.toStyle()
 
     val resolvedBackgroundColor = backgroundColorOverride ?: backgroundColor ?: style.background
-    val resolvedContentColor = if (isError) MaterialTheme.colorScheme.error else (contentColorOverride ?: textColor ?: style.content)
-    val resolvedBorderColor = if (isError) MaterialTheme.colorScheme.error else (borderColorOverride ?: style.borderColor)
+    val resolvedContentColor = if (isError) {
+        MaterialTheme.colorScheme.error
+    } else if (!enabled) {
+        (contentColorOverride ?: textColor ?: style.content).copy(alpha = 0.5f)
+    } else {
+        (contentColorOverride ?: textColor ?: style.content)
+    }
+    val resolvedBorderColor = if (isError) {
+        MaterialTheme.colorScheme.error
+    } else if (!enabled) {
+        (borderColorOverride ?: style.borderColor)?.copy(alpha = 0.5f)
+    } else {
+        (borderColorOverride ?: style.borderColor)
+    }
 
     val resolvedLedgeColor = ledgeColorOverride ?: ledgeColor ?: when (variant) {
-        ButtonVariant.PRIMARY -> LinguaQuestTheme.colors.ShadowOrange
-        ButtonVariant.SECONDARY -> MaterialTheme.colorScheme.secondaryContainer
+        ButtonVariant.PRIMARY -> if (enabled) LinguaQuestTheme.colors.ShadowOrange else LinguaQuestTheme.colors.ShadowOrange.copy(alpha = 0.5f)
+        ButtonVariant.SECONDARY -> (resolvedBorderColor ?: MaterialTheme.colorScheme.tertiary).copy(alpha = if (enabled) 0.35f else 0.18f)
         ButtonVariant.SOCIAL -> (resolvedBorderColor ?: LinguaQuestTheme.colors.socialButtonBorder).copy(alpha = 0.4f)
     }
 

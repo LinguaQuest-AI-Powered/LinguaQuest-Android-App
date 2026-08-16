@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.NetworkMonitor
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
@@ -64,6 +65,7 @@ class EditProfileViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         displayName = cached.username,
+                        initialDisplayName = cached.username,
                         avatarModel = cached.photoUrl
                     )
                 }
@@ -106,15 +108,27 @@ class EditProfileViewModel @Inject constructor(
 
 
     private fun validateAndSaveName() {
-        val currentName = _state.value.displayName
+        val currentName = _state.value.displayName.trim()
+        val initialName = _state.value.initialDisplayName.trim()
+        val usernameValidationRes = ValidationUtils.getUsernameValidationErrorRes(currentName)
 
-        val displayNameError = if (currentName.isBlank()) {
-            FieldError(
-                isError = true,
-                message = UiText.StringResource(R.string.display_name_empty),
-                shakeTrigger = _state.value.displayNameError.shakeTrigger + 1
-            )
-        } else FieldError()
+        val displayNameError = when {
+            usernameValidationRes != null -> {
+                FieldError(
+                    isError = true,
+                    message = UiText.StringResource(usernameValidationRes),
+                    shakeTrigger = _state.value.displayNameError.shakeTrigger + 1
+                )
+            }
+            initialName.isNotEmpty() && currentName == initialName -> {
+                FieldError(
+                    isError = true,
+                    message = UiText.StringResource(R.string.edit_profile_same_username_error),
+                    shakeTrigger = _state.value.displayNameError.shakeTrigger + 1
+                )
+            }
+            else -> FieldError()
+        }
 
         _state.update { it.copy(displayNameError = displayNameError) }
 
@@ -139,12 +153,28 @@ class EditProfileViewModel @Inject constructor(
                             type = SnackbarType.SUCCESS
                         )
                     )
-                    _state.update { it.copy(isNameUpdateSuccess = true) }
+                    _state.update {
+                        it.copy(
+                            isNameUpdateSuccess = true,
+                            displayName = displayName,
+                            initialDisplayName = displayName
+                        )
+                    }
                 }
                 is LinguaQuestResult.Failure -> {
+                    val errorUiText = result.error.toUiText()
+                    _state.update {
+                        it.copy(
+                            displayNameError = FieldError(
+                                isError = true,
+                                message = errorUiText,
+                                shakeTrigger = it.displayNameError.shakeTrigger + 1
+                            )
+                        )
+                    }
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            message = UiText.StringResource(R.string.failed_update_profile),
+                            message = errorUiText,
                             type = SnackbarType.ERROR
                         )
                     )
@@ -166,13 +196,23 @@ class EditProfileViewModel @Inject constructor(
         } else FieldError()
 
         val newPasswordValidationRes = ValidationUtils.getPasswordValidationErrorRes(currentState.newPassword)
-        val newPasswordError = if (newPasswordValidationRes != null) {
-            FieldError(
-                isError = true,
-                message = UiText.StringResource(newPasswordValidationRes),
-                shakeTrigger = currentState.newPasswordError.shakeTrigger + 1
-            )
-        } else FieldError()
+        val newPasswordError = when {
+            newPasswordValidationRes != null -> {
+                FieldError(
+                    isError = true,
+                    message = UiText.StringResource(newPasswordValidationRes),
+                    shakeTrigger = currentState.newPasswordError.shakeTrigger + 1
+                )
+            }
+            currentState.oldPassword == currentState.newPassword -> {
+                FieldError(
+                    isError = true,
+                    message = UiText.StringResource(R.string.change_password_same_password_error),
+                    shakeTrigger = currentState.newPasswordError.shakeTrigger + 1
+                )
+            }
+            else -> FieldError()
+        }
 
         val hasError = oldPasswordError.isError || newPasswordError.isError
 
@@ -213,17 +253,43 @@ class EditProfileViewModel @Inject constructor(
                     }
                 }
                 is LinguaQuestResult.Failure -> {
+                    val error = result.error
+                    val errorUiText = error.toUiText()
+
+                    val isOldPasswordError = error == LinguaQuestDataError.Auth.INVALID_PASSWORD ||
+                            error == LinguaQuestDataError.Auth.INVALID_CREDENTIALS ||
+                            (error is LinguaQuestDataError.CustomServerMessage &&
+                                    (error.message.contains("old", ignoreCase = true) ||
+                                            error.message.contains("current", ignoreCase = true) ||
+                                            error.message.contains("incorrect", ignoreCase = true)))
+
+                    val isNewPasswordError = error == LinguaQuestDataError.Auth.WEAK_PASSWORD ||
+                            (error is LinguaQuestDataError.CustomServerMessage &&
+                                    (error.message.contains("new", ignoreCase = true) ||
+                                            error.message.contains("same", ignoreCase = true)))
+
                     _state.update {
                         it.copy(
-                            oldPasswordError = FieldError(
-                                isError = true,
-                                message = UiText.StringResource(R.string.incorrect_old_password)
-                            )
+                            oldPasswordError = if (isOldPasswordError) {
+                                FieldError(
+                                    isError = true,
+                                    message = if (error is LinguaQuestDataError.CustomServerMessage) errorUiText else UiText.StringResource(R.string.incorrect_old_password),
+                                    shakeTrigger = it.oldPasswordError.shakeTrigger + 1
+                                )
+                            } else it.oldPasswordError,
+                            newPasswordError = if (isNewPasswordError) {
+                                FieldError(
+                                    isError = true,
+                                    message = errorUiText,
+                                    shakeTrigger = it.newPasswordError.shakeTrigger + 1
+                                )
+                            } else it.newPasswordError
                         )
                     }
+
                     snackbarController.sendEvent(
                         SnackbarEvent(
-                            message = UiText.StringResource(R.string.failed_update_password),
+                            message = errorUiText,
                             type = SnackbarType.ERROR
                         )
                     )

@@ -1,5 +1,6 @@
 package com.iti.linguaquest.features.setting.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -99,13 +100,19 @@ fun SettingScreen(
             }
         }
     }
+
+    BackHandler(enabled = availableLanguages.isUpdatingLanguage) {
+    }
+
     SettingContent(
         isOnline = isOnline,
         onBackClick = onBack,
         appLanguage = appLanguage,
         availableLanguagesState = availableLanguages,
         onRetryLanguages = viewModel::retryLoadLanguages,
-        onChangeAppLanguage = viewModel::changeAppLanguage,
+        onChangeAppLanguage = viewModel::requestChangeAppLanguage,
+        onConfirmChangeLanguage = viewModel::confirmChangeAppLanguage,
+        onDismissChangeLanguageDialog = viewModel::dismissChangeLanguageDialog,
         appTheme = appTheme,
         onChangeAppTheme = viewModel::changeAppTheme,
         soundEnabled = soundEnabled,

@@ -118,5 +118,7 @@ fun LingosScreen(
                     .tutorialTarget(card.tutorialTargetId)
             )
         }
+
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }

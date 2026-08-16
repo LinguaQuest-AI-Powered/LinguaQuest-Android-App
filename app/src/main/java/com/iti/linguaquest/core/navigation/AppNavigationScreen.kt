@@ -161,6 +161,8 @@ fun AppNavigationScreen(
                         navigateSingleTop(RootScreen.Main(System.currentTimeMillis()))
                     }
                 }
+                is SessionEvent.LevelCompleted,
+                is SessionEvent.WordChanged -> Unit
             }
         }
     }

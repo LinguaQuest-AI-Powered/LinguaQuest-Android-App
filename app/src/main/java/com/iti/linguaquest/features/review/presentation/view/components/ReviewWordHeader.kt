@@ -42,7 +42,7 @@ fun ReviewWordHeader(
     modifier: Modifier = Modifier
 ) {
     val heroModel = if (word.imagePath.isBlank()) {
-        R.drawable.lingo_gallery_defualt
+        R.drawable.lingo_camera
     } else {
         word.imagePath
     }

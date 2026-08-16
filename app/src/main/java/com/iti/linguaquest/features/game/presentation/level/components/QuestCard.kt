@@ -48,7 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import com.iti.linguaquest.core.sharedComponents.AppGradientBackgroundBox
 import androidx.compose.foundation.Image
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 
 @Composable
@@ -177,9 +176,10 @@ fun QuestCard(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    AppOutlinedButton(
+                    AppButton3D(
                         text = stringResource(id = R.string.change_word),
                         onClick = onChangeWordClick,
+                        variant = ButtonVariant.SECONDARY,
                         enabled = isChangeWordEnabled
                     )
 

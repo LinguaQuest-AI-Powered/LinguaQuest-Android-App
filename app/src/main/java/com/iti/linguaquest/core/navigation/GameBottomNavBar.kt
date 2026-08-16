@@ -17,16 +17,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iti.linguaquest.core.theme.AppColors
+import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
+
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun GameBottomNavBar(
@@ -35,20 +40,28 @@ fun GameBottomNavBar(
     onItemClick: (BottomNavScreen) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val barShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+    val barShape = RoundedCornerShape(36.dp)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .shadow(
+                elevation = 10.dp,
+                shape = barShape,
+                spotColor = LinguaQuestTheme.colors.blackColor.copy(alpha = 0.15f),
+                ambientColor = LinguaQuestTheme.colors.blackColor.copy(alpha = 0.06f)
+            )
             .clip(barShape)
             .background(LinguaQuestTheme.colors.ProfileCardColor)
             .border(
                 width = 1.dp,
-                color = LinguaQuestTheme.colors.ProfileCardBorderColor,
+                color = LinguaQuestTheme.colors.ProfileCardBorderColor.copy(alpha = 0.6f),
                 shape = barShape
             )
-            .navigationBarsPadding()
-            .padding(horizontal = 8.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+            .padding(horizontal = 6.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEach { screen ->
@@ -60,31 +73,29 @@ fun GameBottomNavBar(
                 BottomNavScreen.Profile -> "bottom_nav_profile"
             }
 
+            val activeColor = MaterialTheme.colorScheme.tertiary
+            val inactiveColor = LinguaQuestTheme.colors.iconsColor
+            val activeBackground = if (LinguaQuestTheme.colors.isDark) {
+                MaterialTheme.colorScheme.tertiary.copy(alpha = 0.22f)
+            } else {
+                LinguaQuestTheme.colors.DialogGradientTopRight
+            }
+
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(4.dp)
+                    .clip(RoundedCornerShape(26.dp))
+                    .background(if (isSelected) activeBackground else Color.Transparent)
+                    .clickable { onItemClick(screen) }
                     .tutorialTarget(targetId)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { onItemClick(screen) },
+                    .padding(vertical = 8.dp, horizontal = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(LinguaQuestTheme.colors.ShadowOrange, RoundedCornerShape(16.dp))
-                            .padding(bottom = 4.dp)
-                            .background(LinguaQuestTheme.colors.OrangeActive, RoundedCornerShape(16.dp))
-                            .padding(vertical = 10.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ItemContent(screen = screen, color = Color.Black, isSelected = true)
-                    }
-                } else {
-                    ItemContent(screen = screen, color = LinguaQuestTheme.colors.BrownText, isSelected = false)
-                }
+                ItemContent(
+                    screen = screen,
+                    color = if (isSelected) activeColor else inactiveColor,
+                    isSelected = isSelected
+                )
             }
         }
     }
@@ -93,7 +104,8 @@ fun GameBottomNavBar(
 @Composable
 private fun ItemContent(screen: BottomNavScreen, color: Color, isSelected: Boolean) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Icon(
             imageVector = screen.icon,
@@ -101,12 +113,14 @@ private fun ItemContent(screen: BottomNavScreen, color: Color, isSelected: Boole
             tint = color,
             modifier = Modifier.size(24.dp)
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = stringResource(id = screen.labelRes),
             color = color,
-            fontSize = 12.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold
+            fontSize = 11.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

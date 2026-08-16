@@ -1,18 +1,14 @@
 package com.iti.linguaquest.features.onBoarding.presentation.view
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,15 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -44,6 +37,7 @@ import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
+import com.iti.linguaquest.features.onBoarding.presentation.view.components.OnboardingHeroView
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -53,14 +47,6 @@ fun OnboardingScreen(
     onLoginClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val frames = listOf(
-        R.drawable.lingo_onboarding_1,
-        R.drawable.lingo_onboarding_6,
-        R.drawable.lingo_onboarding_3,
-        R.drawable.lingo_onboarding_7
-    )
-
-    var currentFrameIndex by remember { mutableIntStateOf(0) }
     var textVisible by remember { mutableStateOf(false) }
     var buttonsVisible by remember { mutableStateOf(false) }
 
@@ -69,13 +55,6 @@ fun OnboardingScreen(
         textVisible = true
         delay(250.milliseconds)
         buttonsVisible = true
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000.milliseconds)
-            currentFrameIndex = (currentFrameIndex + 1) % frames.size
-        }
     }
 
     val textAlpha by animateFloatAsState(
@@ -115,21 +94,7 @@ fun OnboardingScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        Crossfade(
-            targetState = frames[currentFrameIndex],
-            animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .aspectRatio(1f),
-            label = "mascot_crossfade"
-        ) { frameRes ->
-            Image(
-                painter = painterResource(id = frameRes),
-                contentDescription = stringResource(R.string.cd_linguaquest_mascot),
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
-            )
-        }
+        OnboardingHeroView()
 
         Spacer(modifier = Modifier.weight(0.14f))
 
