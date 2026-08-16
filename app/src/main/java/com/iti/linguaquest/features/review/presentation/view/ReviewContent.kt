@@ -164,7 +164,7 @@ fun ReviewStoryContent(
                                     onIntent(
                                         ReviewIntent.SpeakSection(
                                             text = response.memoryTip,
-                                            language = word.sourceLanguage,
+                                            language = word.targetLanguage,
                                             sectionId = ReviewSectionIds.MEMORY
                                         )
                                     )
@@ -184,7 +184,7 @@ fun ReviewStoryContent(
                                     onIntent(
                                         ReviewIntent.SpeakSection(
                                             text = response.funFact,
-                                            language = word.sourceLanguage,
+                                            language = word.targetLanguage,
                                             sectionId = ReviewSectionIds.FUN_FACT
                                         )
                                     )
