@@ -54,7 +54,7 @@ fun AchievementCard(
                 contentAlignment = Alignment.Center
             ) {
                 ImageWrapper(
-                    model = R.drawable.ic_cup,
+                    model = achievement.icon,
                     contentDescription = achievement.title,
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit

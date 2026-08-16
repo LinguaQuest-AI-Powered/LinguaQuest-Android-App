@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
@@ -35,6 +37,7 @@ import com.iti.linguaquest.features.setting.presentation.contract.RepeatPreset
 import com.iti.linguaquest.features.auth.domain.usecase.LogoutUserUseCase
 import com.iti.linguaquest.core.language.domain.usecase.GetSupportedLanguagesUseCase
 import com.iti.linguaquest.features.home.domain.model.LanguageOption
+import com.iti.linguaquest.features.home.domain.usecase.ClearLanguageCacheUseCase
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.setting.presentation.utils.parseDays
 import com.iti.linguaquest.features.setting.presentation.utils.toReminderSettings
@@ -77,7 +80,9 @@ class SettingViewModel @Inject constructor(
     private val cancelReminderUseCase: CancelReminderUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val snackbarController: SnackbarController,
-    private val tutorialManager: TutorialManager
+    private val tutorialManager: TutorialManager,
+    private val sessionEventBus: SessionEventBus,
+    private val clearLanguageCacheUseCase: ClearLanguageCacheUseCase
 ) : ViewModel() {
 
     fun replayAppTour() {
@@ -305,12 +310,29 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-fun changeAppLanguage(language: LanguageOption) {
-    viewModelScope.launch {
-        changeAppLanguageUseCase(language.id, language.code, language.name)
-        _languageChanged.emit(Unit)
+    fun requestChangeAppLanguage(language: LanguageOption) {
+        if (language.code == appLanguage.value) return
+        _availableLanguages.update { it.copy(pendingLanguage = language) }
     }
-}
+
+    fun dismissChangeLanguageDialog() {
+        _availableLanguages.update { it.copy(pendingLanguage = null) }
+    }
+
+    fun confirmChangeAppLanguage() {
+        val language = _availableLanguages.value.pendingLanguage ?: return
+        _availableLanguages.update { it.copy(pendingLanguage = null, isUpdatingLanguage = true) }
+        viewModelScope.launch {
+            try {
+                changeAppLanguageUseCase(language.id, language.code, language.name)
+                clearLanguageCacheUseCase()
+                sessionEventBus.emit(SessionEvent.LanguageChanged)
+                _languageChanged.emit(Unit)
+            } finally {
+                _availableLanguages.update { it.copy(isUpdatingLanguage = false) }
+            }
+        }
+    }
 
     fun changeAppTheme(theme: String) {
         viewModelScope.launch { changeAppThemeUseCase(theme) }

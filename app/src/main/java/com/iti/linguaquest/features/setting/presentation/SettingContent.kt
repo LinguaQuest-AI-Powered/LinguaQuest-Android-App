@@ -29,10 +29,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sharedComponents.offline.NoInternetMiniPopup
 import com.iti.linguaquest.core.sound.AppSound
@@ -66,6 +75,8 @@ fun SettingContent(
     availableLanguagesState: LanguagesUiState,
     onRetryLanguages: () -> Unit,
     onChangeAppLanguage: (LanguageOption) -> Unit,
+    onConfirmChangeLanguage: () -> Unit = {},
+    onDismissChangeLanguageDialog: () -> Unit = {},
     appTheme: String,
     onChangeAppTheme: (String) -> Unit,
     soundEnabled: Boolean,
@@ -125,10 +136,71 @@ fun SettingContent(
         LanguageSelectionBottomSheet(
             currentLanguage = appLanguage,
             languagesState = availableLanguagesState,
-            onLanguageSelected = onChangeAppLanguage,
+            onLanguageSelected = { language ->
+                showLanguageDialog = false
+                onChangeAppLanguage(language)
+            },
             onRetry = onRetryLanguages,
             onDismissRequest = { showLanguageDialog = false }
         )
+    }
+
+    if (availableLanguagesState.pendingLanguage != null) {
+        AppDialog(
+            title = stringResource(R.string.change_language_title),
+            message = stringResource(
+                R.string.change_language_message,
+                availableLanguagesState.pendingLanguage.name
+            ),
+            imageRes = R.drawable.lingo_hint,
+            onDismissRequest = onDismissChangeLanguageDialog,
+            primaryButtonText = stringResource(R.string.confirm),
+            onPrimaryClick = onConfirmChangeLanguage,
+            secondaryButtonText = stringResource(R.string.cancel),
+            onSecondaryClick = onDismissChangeLanguageDialog
+        )
+    }
+
+    if (availableLanguagesState.isUpdatingLanguage) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        ) {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LingoSpinningIcon(size = 80.dp)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.updating_language_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.updating_language_desc),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
     }
 
     if (reminderState.showTimePicker) {
@@ -336,6 +408,8 @@ fun SettingContentPreview() {
             availableLanguagesState = LanguagesUiState(),
             onRetryLanguages = {},
             onChangeAppLanguage = {},
+            onConfirmChangeLanguage = {},
+            onDismissChangeLanguageDialog = {},
             appTheme = "system",
             onChangeAppTheme = {},
             soundEnabled = true,
@@ -367,6 +441,8 @@ fun SettingContentOfflinePreview() {
             availableLanguagesState = LanguagesUiState(),
             onRetryLanguages = {},
             onChangeAppLanguage = {},
+            onConfirmChangeLanguage = {},
+            onDismissChangeLanguageDialog = {},
             appTheme = "system",
             onChangeAppTheme = {},
             soundEnabled = true,
