@@ -78,7 +78,8 @@ class SignUpViewModel @Inject constructor(
         password: String,
         confirmPassword: String
     ) {
-        val usernameValid = ValidationUtils.isValidName(username)
+        val usernameValidationError = ValidationUtils.getUsernameValidationErrorRes(username)
+        val usernameValid = usernameValidationError == null
         val emailValid = ValidationUtils.isValidEmail(email)
         val passwordValidationError = ValidationUtils.getPasswordValidationErrorRes(password)
         val passwordValid = passwordValidationError == null
@@ -87,7 +88,7 @@ class SignUpViewModel @Inject constructor(
         if (!usernameValid) {
             _state.update { it.copy(
                 usernameError = true, 
-                usernameErrorRes = if (username.isBlank()) R.string.signup_error_name_required else R.string.signup_error_name_too_short
+                usernameErrorRes = usernameValidationError
             ) }
             sendEffect(SignUpEffect.ShakeUsername)
         }

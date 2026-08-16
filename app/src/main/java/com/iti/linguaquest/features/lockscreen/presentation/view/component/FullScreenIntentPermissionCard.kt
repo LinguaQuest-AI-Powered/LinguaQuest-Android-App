@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
@@ -75,19 +74,14 @@ fun FullScreenIntentPermissionCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Button(
+                AppButton3D(
+                    text = stringResource(R.string.lockscreen_fullscreen_intent_action),
                     onClick = onOpenSettings,
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = LinguaQuestTheme.colors.Amber,
-                        contentColor = AppColors.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(R.string.lockscreen_fullscreen_intent_action),
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                    backgroundColorOverride = LinguaQuestTheme.colors.Amber,
+                    ledgeColorOverride = LinguaQuestTheme.colors.Amber.copy(alpha = 0.6f),
+                    contentColorOverride = AppColors.White,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

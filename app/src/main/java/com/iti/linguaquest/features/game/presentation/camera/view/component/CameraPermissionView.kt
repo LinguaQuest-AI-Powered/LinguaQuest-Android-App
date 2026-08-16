@@ -22,7 +22,6 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.game.presentation.camera.contract.PermissionStatus
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 
 @Composable
@@ -79,9 +78,10 @@ fun CameraPermissionView(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AppOutlinedButton(
+        AppButton3D(
             text = stringResource(id = R.string.go_back),
             onClick = onBackClicked,
+            variant = ButtonVariant.SECONDARY,
             modifier = Modifier.padding(horizontal = 32.dp)
         )
     }

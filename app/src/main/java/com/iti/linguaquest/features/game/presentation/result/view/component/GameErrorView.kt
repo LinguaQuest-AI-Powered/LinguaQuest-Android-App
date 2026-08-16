@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.theme.AppTextStyles
 import com.iti.linguaquest.features.game.presentation.result.contract.GameResultUiState
@@ -69,9 +68,10 @@ fun GameErrorView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            AppOutlinedButton(
+            AppButton3D(
                 text = stringResource(R.string.game_result_exit_game),
-                onClick = onExit
+                onClick = onExit,
+                variant = ButtonVariant.SECONDARY
             )
         }
     }

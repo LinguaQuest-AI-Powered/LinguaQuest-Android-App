@@ -88,5 +88,7 @@ fun LingosScreen(
                 .padding(horizontal = 16.dp)
                 .tutorialTarget("lingos_card_mindreader")
         )
+
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }

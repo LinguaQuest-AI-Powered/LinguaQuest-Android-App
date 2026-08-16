@@ -54,7 +54,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import com.iti.linguaquest.core.sharedComponents.PushToTalkButton
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
@@ -305,16 +306,16 @@ fun VoiceGameMainContent(
     Spacer(Modifier.height(20.dp))
 
     if (!isRecording) {
-        AppOutlinedButton(
+        AppButton3D(
             text = stringResource(R.string.voice_idle_skip),
             onClick = { viewModel.onIntent(VoiceGameIntent.SkipClicked) },
-            color = AppColors.DialogSecondaryButtonOutline
+            variant = ButtonVariant.SECONDARY
         )
     } else {
-        AppOutlinedButton(
+        AppButton3D(
             text = stringResource(R.string.voice_recording_cancel),
             onClick = { viewModel.onIntent(VoiceGameIntent.CancelRecordingClicked) },
-            color = AppColors.DialogSecondaryButtonOutline
+            variant = ButtonVariant.SECONDARY
         )
     }
     Spacer(Modifier.height(16.dp))

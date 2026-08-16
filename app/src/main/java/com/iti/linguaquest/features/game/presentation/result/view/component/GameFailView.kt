@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.AppMascotGradientBox
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.text.UiText
@@ -116,9 +115,10 @@ fun GameFailView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            AppOutlinedButton(
+            AppButton3D(
                 text = stringResource(R.string.game_result_change_word),
-                onClick = onChangeWord
+                onClick = onChangeWord,
+                variant = ButtonVariant.SECONDARY
             )
         }
     }

@@ -17,7 +17,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
-import com.iti.linguaquest.core.sharedComponents.AppOutlinedButton
+import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.theme.AppColors
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
@@ -107,10 +107,10 @@ fun EnableLockScreenDialog(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    AppOutlinedButton(
+                    AppButton3D(
                         text = stringResource(R.string.btn_cancel),
                         onClick = onCancel,
-                        color = MaterialTheme.colorScheme.primary
+                        variant = ButtonVariant.SECONDARY
                     )
                 }
             }

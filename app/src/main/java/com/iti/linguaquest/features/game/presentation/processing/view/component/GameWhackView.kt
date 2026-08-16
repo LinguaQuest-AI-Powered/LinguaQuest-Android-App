@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,8 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
-import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackState
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
+import com.iti.linguaquest.features.game.presentation.processing.contract.GameWhackState
 
 @Composable
 fun GameWhackView(
@@ -48,12 +48,13 @@ fun GameWhackView(
         }
 
         if (state.isLingoVisible) {
-            Button(
+            AppButton3D(
+                text = stringResource(id = R.string.game_processing_btn_whack_lingo),
                 onClick = onLingoWhacked,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(stringResource(id = R.string.game_processing_btn_whack_lingo))
-            }
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 32.dp)
+            )
         }
     }
 }

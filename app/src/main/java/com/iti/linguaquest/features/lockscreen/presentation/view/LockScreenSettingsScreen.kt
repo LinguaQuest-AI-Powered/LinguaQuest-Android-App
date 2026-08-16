@@ -18,11 +18,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +38,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
+import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.LinguaQuestScreenTopBar
+import com.iti.linguaquest.core.sharedComponents.dialog.AppDialog
 import com.iti.linguaquest.core.sound.AppSound
 import com.iti.linguaquest.core.sound.LocalSoundPlayer
 import com.iti.linguaquest.core.theme.AppColors
@@ -51,7 +50,6 @@ import com.iti.linguaquest.features.lockscreen.domain.model.LockScreenFeatureSta
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenEffect
 import com.iti.linguaquest.features.lockscreen.presentation.contract.LockScreenIntent
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.ErrorCard
-
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.HeroCard
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.StatsCard
 import com.iti.linguaquest.features.lockscreen.presentation.view.component.ToggleCard
@@ -74,8 +72,6 @@ fun LockScreenSettingsScreen(
     ) { granted ->
         viewModel.onIntent(LockScreenIntent.NotificationPermissionResult(granted))
     }
-
-
 
     LaunchedEffect(Unit) {
         val granted = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -102,29 +98,23 @@ fun LockScreenSettingsScreen(
                 LockScreenEffect.PlayCoinDeductedSound -> {
                     soundPlayer.play(AppSound.COIN)
                 }
-
             }
         }
     }
 
     if (state.isConfirmDialogVisible) {
-        AlertDialog(
+        AppDialog(
+            title = stringResource(R.string.lockscreen_vocabulary_enable_title),
+            message = stringResource(R.string.lockscreen_vocabulary_enable_message),
+            imageRes = R.drawable.lingo_lockscreen,
             onDismissRequest = { viewModel.onIntent(LockScreenIntent.CancelEnableClicked) },
-            title = { Text(stringResource(R.string.lockscreen_vocabulary_enable_title)) },
-            text = { Text(stringResource(R.string.lockscreen_vocabulary_enable_message)) },
-            confirmButton = {
-                Button(onClick = {
-                    soundPlayer.play(AppSound.SWITCH)
-                    viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked)
-                }) {
-                    Text(stringResource(R.string.lockscreen_vocabulary_enable_action))
-                }
+            primaryButtonText = stringResource(R.string.lockscreen_vocabulary_enable_action),
+            onPrimaryClick = {
+                soundPlayer.play(AppSound.SWITCH)
+                viewModel.onIntent(LockScreenIntent.ConfirmEnableClicked)
             },
-            dismissButton = {
-                OutlinedButton(onClick = { viewModel.onIntent(LockScreenIntent.CancelEnableClicked) }) {
-                    Text(stringResource(R.string.lockscreen_vocabulary_cancel_action))
-                }
-            }
+            secondaryButtonText = stringResource(R.string.lockscreen_vocabulary_cancel_action),
+            onSecondaryClick = { viewModel.onIntent(LockScreenIntent.CancelEnableClicked) }
         )
     }
 
@@ -168,7 +158,6 @@ fun LockScreenSettingsScreen(
                     viewModel.onIntent(LockScreenIntent.ToggleFeatureClicked(it))
                 })
 
-
                 StatsCard(state = state)
 
                 if (state.errorMessage != null) {
@@ -183,7 +172,8 @@ fun LockScreenSettingsScreen(
                     LockScreenFeatureState.ACTIVE -> stringResource(R.string.lockscreen_vocabulary_retry)
                 }
 
-                Button(
+                AppButton3D(
+                    text = primaryLabel,
                     onClick = {
                         soundPlayer.play(AppSound.SWITCH)
                         if (state.featureState == LockScreenFeatureState.DISABLED) {
@@ -192,39 +182,30 @@ fun LockScreenSettingsScreen(
                             viewModel.onIntent(LockScreenIntent.RetryClicked)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Text(primaryLabel, fontWeight = FontWeight.SemiBold)
-                }
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                OutlinedButton(
+                AppButton3D(
+                    text = stringResource(R.string.lockscreen_vocabulary_disable),
                     onClick = {
                         soundPlayer.play(AppSound.SWITCH)
                         viewModel.onIntent(LockScreenIntent.DisableClicked)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = state.featureState != LockScreenFeatureState.DISABLED,
-                    shape = RoundedCornerShape(18.dp)
-                ) {
-                    Text(stringResource(R.string.lockscreen_vocabulary_disable))
-                }
+                    variant = ButtonVariant.SECONDARY,
+                    enabled = state.featureState != LockScreenFeatureState.DISABLED
+                )
 
                 if (state.featureState == LockScreenFeatureState.ACTIVE) {
-                    OutlinedButton(
+                    AppButton3D(
+                        text = stringResource(R.string.lockscreen_vocabulary_test_notification),
                         onClick = {
                             soundPlayer.play(AppSound.POP)
                             viewModel.onIntent(LockScreenIntent.TestNotificationClicked)
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp)
-                    ) {
-                        Text(stringResource(R.string.lockscreen_vocabulary_test_notification))
-                    }
+                        variant = ButtonVariant.SECONDARY
+                    )
                 }
             }
         }
