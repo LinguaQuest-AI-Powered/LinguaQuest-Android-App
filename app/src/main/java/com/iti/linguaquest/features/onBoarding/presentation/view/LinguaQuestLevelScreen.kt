@@ -76,7 +76,7 @@ fun LevelScreenContent(
         Spacer(Modifier.height(20.dp))
 
         Image(
-            painter = painterResource(R.drawable.lingo_level_language),
+            painter = painterResource(R.drawable.lingo_onboarding_level),
             contentDescription = null,
             modifier = Modifier
                 .size(140.dp)

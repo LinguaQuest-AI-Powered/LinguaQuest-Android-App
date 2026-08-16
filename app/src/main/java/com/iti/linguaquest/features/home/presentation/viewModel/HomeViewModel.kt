@@ -27,6 +27,8 @@ import com.iti.linguaquest.features.home.presentation.mapper.toUiWorldItem
 import com.iti.linguaquest.features.home.presentation.contract.DailyMissionDialogState
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.result.LinguaQuestDataError
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import timber.log.Timber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,7 +54,8 @@ class HomeViewModel @Inject constructor(
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
     private val refreshWalletUseCase: RefreshWalletUseCase,
-    private val refreshMyLanguagesUseCase: RefreshMyLanguagesUseCase
+    private val refreshMyLanguagesUseCase: RefreshMyLanguagesUseCase,
+    private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -72,6 +75,7 @@ class HomeViewModel @Inject constructor(
         )
     init {
         observeLocalCache()
+        observeSessionEvents()
         refreshFromRemote()
     }
 
@@ -172,6 +176,18 @@ class HomeViewModel @Inject constructor(
                         continueLevel = summary.toContinueLevelUi(),
                         startVoicePractise = true
                     )
+                }
+            }
+        }
+    }
+
+    private fun observeSessionEvents() {
+        viewModelScope.launch {
+            sessionEventBus.events.collect { event ->
+                when (event) {
+                    is SessionEvent.LevelCompleted,
+                    is SessionEvent.WordChanged -> refreshFromRemote()
+                    else -> Unit
                 }
             }
         }
