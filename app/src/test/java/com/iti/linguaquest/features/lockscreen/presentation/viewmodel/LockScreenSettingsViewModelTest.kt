@@ -79,7 +79,6 @@ class LockScreenSettingsViewModelTest {
             enqueueGenerationWorkUseCase,
             scheduleNotificationUseCase,
             showTestNotificationUseCase,
-            vocabularyWorkScheduler,
             snackbarController
         )
     }
