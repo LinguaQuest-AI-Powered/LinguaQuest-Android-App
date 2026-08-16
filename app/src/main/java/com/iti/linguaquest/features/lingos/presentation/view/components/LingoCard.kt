@@ -1,6 +1,7 @@
 package com.iti.linguaquest.features.lingos.presentation.view.components
 
-
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,31 +19,37 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iti.linguaquest.R
 import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import com.iti.linguaquest.core.sharedComponents.ButtonVariant
 import com.iti.linguaquest.core.sharedComponents.IconPosition
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
+data class LingoCardItem(
+    val id: String,
+    @StringRes val chipTitleRes: Int,
+    @StringRes val descriptionRes: Int,
+    @StringRes val bubbleTitleRes: Int,
+    @StringRes val buttonTextRes: Int,
+    @DrawableRes val imageRes: Int,
+    val tutorialTargetId: String
+)
+
 @Composable
-fun VoicePractiseCard(
+fun LingoCard(
+    chipTitle: String,
+    description: String,
+    bubbleTitle: String,
+    buttonText: String,
+    @DrawableRes imageRes: Int,
     onStartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -62,7 +69,7 @@ fun VoicePractiseCard(
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.voice_practise),
+                        text = chipTitle,
                         color = LinguaQuestTheme.colors.iconsColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -73,7 +80,7 @@ fun VoicePractiseCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = stringResource(R.string.practice_pronunciation),
+                    text = description,
                     color = LinguaQuestTheme.colors.blackColor,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -86,10 +93,10 @@ fun VoicePractiseCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MessageBubble(
-                    title = stringResource(R.string.voice_practise)
+                    title = bubbleTitle
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
                     modifier = Modifier
@@ -100,7 +107,7 @@ fun VoicePractiseCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.lingo_mic),
+                        painter = painterResource(id = imageRes),
                         contentDescription = null,
                         modifier = Modifier.size(70.dp)
                     )
@@ -111,7 +118,7 @@ fun VoicePractiseCard(
         Spacer(modifier = Modifier.height(14.dp))
 
         AppButton3D(
-            text = stringResource(R.string.start_button),
+            text = buttonText,
             onClick = onStartClick,
             variant = ButtonVariant.PRIMARY,
             icon = rememberVectorPainter(image = Icons.Default.PlayArrow),
