@@ -170,7 +170,21 @@ fun WordCard(
     }
 }
 private fun compactLanguageLabel(language: String): String {
-    val cleaned = language.trim().filter { it.isLetterOrDigit() }
-    if (cleaned.isBlank()) return "--"
-    return cleaned.take(2).uppercase()
+    val lower = language.trim().lowercase()
+    return when {
+        lower in listOf("arabic", "ar", "العربية") -> "AR"
+        lower in listOf("english", "en", "الإنجليزية", "الانجليزية") -> "EN"
+        lower in listOf("spanish", "español", "es", "الإسبانية", "الاسبانية") -> "ES"
+        lower in listOf("french", "français", "fr", "الفرنسية") -> "FR"
+        lower in listOf("german", "deutsch", "de", "الألمانية", "الالمانية") -> "DE"
+        lower in listOf("italian", "italiano", "it", "الإيطالية", "الايطالية") -> "IT"
+        lower in listOf("chinese", "中文", "zh", "الصينية") -> "ZH"
+        lower in listOf("japanese", "日本語", "ja", "اليابانية") -> "JA"
+        lower in listOf("korean", "한국어", "ko", "الكورية") -> "KO"
+        lower in listOf("portuguese", "português", "pt", "البرتغالية") -> "PT"
+        else -> {
+            val cleaned = lower.filter { it.isLetterOrDigit() }
+            if (cleaned.isBlank()) "--" else cleaned.take(2).uppercase()
+        }
+    }
 }
