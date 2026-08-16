@@ -1,10 +1,13 @@
 <resources>
+
+    <!-- COMMON / GENERAL / GLOBAL-->
+
     <string name="app_name">LinguaQuest</string>
     <string name="app_logo_description">LinguaQuest Logo</string>
-    <string name="onboarding_title_p1">Learn languages by exploring the </string>
-    <string name="onboarding_title_p2">real world!</string>
-    <string name="get_started">Get Started</string>
-    <string name="already_have_an_account">I already have an account</string>
+    <string name="main_screen">Main Screen</string>
+    <string name="go_to_details_1">Go to Details 1</string>
+    <string name="details_screen_id">Details Screen for ID: %1$d</string>
+    <string name="pop_screen">Pop Screen</string>
     <string name="loading">Loading...</string>
     <string name="loading_message_1">Preparing your quest...</string>
     <string name="loading_message_2">Warming up the parrot...</string>
@@ -16,37 +19,120 @@
     <string name="waking_up_lingo">Waking up Lingo...</string>
     <string name="translating_worlds">Translating worlds...</string>
     <string name="almost_there">Almost there...</string>
+    <string name="continue_button">Continue</string>
+    <string name="start_button">Start</string>
+    <string name="back">Back</string>
+    <string name="go_back">Go Back</string>
+    <string name="cd_back">Back</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="got_it">Got It</string>
+    <string name="retry">Retry</string>
+    <string name="retry_label">Retry</string>
+    <string name="submit">Submit</string>
+    <string name="skip">Skip</string>
+    <string name="remove">Remove</string>
+    <string name="delete_all">Delete All</string>
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
+    <string name="see_more">See more</string>
+    <string name="view_all_label">VIEW ALL</string>
+    <string name="progress">Progress</string>
+    <string name="level">Level</string>
+    <string name="days">Days</string>
+    <string name="days_count">days count</string>
+    <string name="day_format">Day %1$d</string>
+    <string name="coins">Coins</string>
+    <string name="coins_label">COINS</string>
+    <string name="coins_description">Coins</string>
+    <string name="coins_claimed">coins claimed!</string>
+    <string name="not_enough_coins">Not enough coins!</string>
+    <string name="xp">XP</string>
+    <string name="total_xp_label">TOTAL XP</string>
+    <string name="streak_label">STREAK</string>
+    <string name="worlds_label">WORLDS</string>
+    <string name="all_filter">All</string>
+    <string name="congrates">Congratulations</string>
+    <string name="tap_to_zoom">Pinch to zoom · Double-tap</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="camera_alt">Camera</string>
+    <string name="mascot_help_text">TAP ME IF YOU\nWANT HELP</string>
+    <string name="mascot_content_desc">Mascot</string>
+    <string name="thinking_mascot_content_desc">Thinking Mascot</string>
+    <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
+    <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
+    <string name="cd_coin">Coin</string>
+    <string name="cd_coins">Coins</string>
+    <string name="cd_xp">XP</string>
+    <string name="cd_gift">Gift</string>
+    <string name="cd_completed">Completed</string>
+    <string name="cd_current">Current</string>
+    <string name="cd_locked">Locked</string>
+    <string name="cd_navigate">Navigate</string>
+    <string name="cd_treasure">Treasure</string>
+    <string name="cd_star">Star</string>
+    <string name="cd_avatar">Avatar</string>
+    <string name="cd_add">Add</string>
+    <string name="cd_details">Details</string>
+    <string name="cd_pronounce">Pronounce</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_selected">Selected</string>
+    <string name="mascot_camera_cd">Camera Mascot</string>
+    <string name="camera_icon_cd">Camera Icon</string>
 
+    <!-- Generic Error Messages -->
+
+    <string name="general_error">An error occurred. Please try again.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_internet">No internet connection. Please check your network and try again.</string>
+    <string name="error_timeout">Request timed out. Please try again.</string>
+    <string name="error_server">Server error occurred. Please try again later.</string>
+    <string name="error_bad_request">Invalid request. Please try again.</string>
+    <string name="error_unauthorized">Session expired. Please log in again.</string>
+    <string name="error_too_many_requests">Too many requests. Please wait a moment and try again.</string>
+    <string name="error_insufficient_balance">You do not have enough balance to perform this action.</string>
+    <string name="error_disk_full">Storage space is full.</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_subtitle">Check your network and try again</string>
+    <string name="no_internet_short">No internet</string>
+    <string name="no_internet_image_desc">No internet connection illustration</string>
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
+
+
+    <!-- ONBOARDING & PROFICIENCY LEVELS -->
+
+    <string name="onboarding_title_p1">Learn languages by exploring the </string>
+    <string name="onboarding_title_p2">real world!</string>
+    <string name="get_started">Get Started</string>
+    <string name="already_have_an_account">I already have an account</string>
     <string name="choose_your_languages">Choose your languages</string>
     <string name="let_set_up_your_learning_journey">Let\'s set up your learning journey!</string>
     <string name="i_speak">I SPEAK...</string>
     <string name="i_want_to_learn">I WANT TO LEARN...</string>
     <string name="popular_choices">Popular Choices</string>
-    <string name="continue_button">Continue</string>
-    <string name="start_button">Start</string>
     <string name="What_is_your_level">What\'s your level?</string>
     <string name="choose_where_your_journey_begins">Choose where your journey begins, adventurer! I\'ll guide you through the path that fits you best.</string>
+    <string name="level_beginner">Beginner</string>
+    <string name="level_beginner_description">I\'m just starting my adventure</string>
+    <string name="level_intermediate">Intermediate</string>
+    <string name="level_intermediate_description">I can navigate basic paths</string>
+    <string name="level_advanced">Advanced</string>
+    <string name="level_advanced_description">Ready for grand challenges</string>
 
-    <string name="dummy_world_name">Kitchen World</string>
-    <string name="dummy_progress_text">4 of 10</string>
-    <string name="dummy_target_word">la taza</string>
 
-    // Languages displayed name
-    <string name="spanish_language_displayName">Spanish</string>
-    <string name="japanese_language_displayName">Japanese</string>
-    <string name="english_language_displayName">English</string>
-    <string name="germany_language_displayName">Germany</string>
-    <string name="new_password_min_length_hint">Minimum 6 characters</string>
-    <string name="personal_info">Personal Info</string>
-    <string name="security">Security</string>
-    // Languages code
-    <string name="spanish_language_code">es</string>
-    <string name="japanese_language_code">ja</string>
-    <string name="english_language_code">en</string>
-    <string name="germany_language_code">ge</string>
-
-    <string name="select_language">Select language</string>
-
+    <!-- AUTHENTICATION & ONBOARDING (LOGIN / SIGNUP / OTP / PASSWORD RESET) -->
 
     <string name="login_welcome_back">Welcome back!</string>
     <string name="login_ready_to_continue">Ready to continue?</string>
@@ -61,17 +147,6 @@
     <string name="login_continue_as_guest">Continue as guest</string>
     <string name="login_new_here">New here?</string>
     <string name="login_sign_up">Sign up</string>
-    <string name="signup_title">Create your account</string>
-    <string name="signup_subtitle">Create an account to start your language learning journey.</string>
-    <string name="signup_username">Username</string>
-    <string name="signup_confirm_password">Confirm Password</string>
-    <string name="signup_button">Create Account</string>
-    <string name="signup_already_have_account">Already have an account?</string>
-    <string name="hide_password">Hide password</string>
-    <string name="show_password">Show password</string>
-    <string name="home_label">Home</string>
-    <string name="profile_label">Profile</string>
-
     <string name="login_error_invalid_email">Invalid email format.</string>
     <string name="login_error_invalid_credentials">Invalid email or password.</string>
     <string name="login_error_invalid_password">Incorrect password. Please try again.</string>
@@ -83,26 +158,43 @@
     <string name="login_error_generic">Something went wrong.</string>
     <string name="login_error_password_required">Password is required.</string>
     <string name="login_error_email_required">Email is required.</string>
+    <string name="login_error_email_already_in_use">Email is already in use.</string>
+    <string name="login_error_email_not_found">Email address not found.</string>
+    <string name="login_error_username_already_exists">Username already exists.</string>
+    <string name="login_error_invalid_reset_token">Invalid password reset token.</string>
+    <string name="login_error_reset_token_expired">Password reset token has expired.</string>
+    <string name="login_error_validation_error">Validation error occurred.</string>
+    <string name="login_error_no_internet">No internet connection. Please check your network and try again.</string>
+    <string name="error_email_already_in_use">An account with this email already exists.</string>
+    <string name="error_username_already_exists">Username is already taken.</string>
+    <string name="error_email_not_found">No account found with this email.</string>
+
+    <string name="sign_up_screen">Sign Up Screen</string>
+    <string name="signup_title">Create your account</string>
+    <string name="signup_subtitle">Create an account to start your language learning journey.</string>
+    <string name="signup_username">Username</string>
+    <string name="signup_confirm_password">Confirm Password</string>
+    <string name="signup_button">Create Account</string>
+    <string name="signup_already_have_account">Already have an account?</string>
     <string name="signup_error_name_required">Username is required.</string>
     <string name="signup_error_name_too_short">Username must be at least 2 characters.</string>
     <string name="signup_error_passwords_do_not_match">Passwords do not match.</string>
     <string name="signup_success_message">Account created successfully! Verification code sent to your email.</string>
-    <string name="otp_code_resent_message">Verification code resent successfully!</string>
-    <string name="otp_verification_success_message">Email verified successfully! Please log in.</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
 
-    <string name="home_screen">Home Screen</string>
-    <string name="profile_screen">Profile Screen</string>
-    <string name="go_to_details_1">Go to Details 1</string>
-    <string name="main_screen">Main Screen</string>
-    <string name="sign_up_screen">Sign Up Screen</string>
     <string name="forgot_password_screen">Forgot Password Screen</string>
-    <string name="details_screen_id">Details Screen for ID: %1$d</string>
-    <string name="pop_screen">Pop Screen</string>
+    <string name="forget_password_title">Forget\npassword?</string>
+    <string name="forget_password_subtitle">Don\'t worry, Lingo will help you find it! Enter your email to receive a reset link.</string>
+    <string name="forget_password_email_hint">Enter your email</string>
+    <string name="forget_password_send_button">Send reset link</string>
+    <string name="forget_password_error_invalid_email">Please enter a valid email address.</string>
 
     <string name="new_password_title">New\npassword</string>
     <string name="new_password_subtitle">Let\'s get you back to learning! Choose a strong password.</string>
     <string name="new_password_hint">Enter new password</string>
     <string name="confirm_password_hint">Confirm new password</string>
+    <string name="new_password_min_length_hint">Minimum 6 characters</string>
     <string name="new_password_strength_label">Password Strength</string>
     <string name="new_password_reset_button">Reset Password</string>
     <string name="new_password_back_to_login">← Back to Login</string>
@@ -114,11 +206,6 @@
     <string name="new_password_error_confirm_required">Please confirm your password.</string>
     <string name="new_password_error_generic">Something went wrong. Please try again.</string>
 
-    <string name="forget_password_title">Forget\npassword?</string>
-    <string name="forget_password_subtitle">Don\'t worry, Lingo will help you find it! Enter your email to receive a reset link.</string>
-    <string name="forget_password_email_hint">Enter your email</string>
-    <string name="forget_password_send_button">Send reset link</string>
-    <string name="forget_password_error_invalid_email">Please enter a valid email address.</string>
     <string name="otp_verify_title">Verify your email</string>
     <string name="otp_verify_subtitle">We sent a code to your inbox. Please enter it below.</string>
     <string name="otp_resend_code">Resend code</string>
@@ -126,376 +213,115 @@
     <string name="otp_back_to_login">Back to Login</string>
     <string name="otp_error_invalid">Invalid OTP code.</string>
     <string name="otp_error_expired">OTP code has expired.</string>
-    <string name="cd_linguaquest_mascot">LinguaQuest mascot</string>
-    <string name="cd_linguaquest_mascot_animation">LinguaQuest mascot animation</string>
-    <string name="level_beginner">Beginner</string>
-    <string name="level_beginner_description">I\'m just starting my adventure</string>
-    <string name="level_intermediate">Intermediate</string>
-    <string name="level_intermediate_description">I can navigate basic paths</string>
-    <string name="level_advanced">Advanced</string>
-    <string name="level_advanced_description">Ready for grand challenges</string>
-    <string name="go_back">Go Back</string>
-    <string name="captured_preview">Captured Preview</string>
-    <string name="find_label">Find:</string>
-    <string name="retry">Retry</string>
-    <string name="submit">Submit</string>
-    <string name="search_icon">Search Icon</string>
-    <string name="toggle_flash">Toggle Flash</string>
-    <string name="flip_camera">Flip Camera</string>
-    <string name="camera_alt">Camera</string>
-    <string name="gallery_label">Gallery</string>
-    <string name="gallery_game_captures_tab">Game Captures</string>
-    <string name="gallery_my_words_tab">My Journal</string>
-    <string name="Add_New">Add New</string>
+    <string name="otp_code_resent_message">Verification code resent successfully!</string>
+    <string name="otp_verification_success_message">Email verified successfully! Please log in.</string>
+    <string name="otp_timer_content_description">OTP resend timer</string>
+    <string name="error_invalid_otp">Invalid verification code.</string>
+    <string name="error_otp_expired">Verification code has expired.</string>
+    <string name="error_otp_not_found">Verification code not found. Please request a new one.</string>
 
-    <string name="my_captures">My Captures</string>
-    <string name="objects_collected">%1$d objects collected</string>
-    <string name="captures_so_far">0 captures so far</string>
-    <string name="empty_gallery_title">No Captures Yet</string>
-    <string name="empty_gallery_desc">You haven\'t captured any words yet.\nTap the button above to add your first capture.</string>
-    <string name="add_new">Add New</string>
-    <string name="general_error">An error occurred. Please try again.</string>
-    <string name="not_enough_coins">Not enough coins!</string>
-    <string name="progress">Progress</string>
-    <string name="see_more">See more</string>
-    <string name="explore_worlds">Explore Worlds</string>
-    <string name="currently_language">CURRENTLY LEARNING</string>
-    <string name="level">Level</string>
-    <string name="days">Days</string>
-    <string name="coins_label">COINS</string>
-    <string name="total_xp_label">TOTAL XP</string>
-    <string name="streak_label">STREAK</string>
-    <string name="worlds_label">WORLDS</string>
+    <!-- HOME & MAP SECTION -->
+
+    <string name="home_label">Home</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="map_lets_learn">Let\'s Learn!</string>
     <string name="continue_lesson">CONTINUE LESSON</string>
-    <string name="voice_practise">Voice Practice</string>
-    <string name="leaderboard_title">Leaderboard</string>
-    <string name="achievements_title">Achievements</string>
-    <string name="learning_label">Learning</string>
-    <string name="change_label">Change</string>
-    <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
-    <string name="settings_label">Settings</string>
-    <string name="view_all_label">VIEW ALL</string>
-    <string name="you_label">You</string>
-    <string name="change_language_title">Change Language</string>
-    <string name="change_language_message">Are you sure you want to switch to %1$s?</string>
-    <string name="confirm">Confirm</string>
-    <string name="practice_pronunciation">Practice your\npronunciation</string>
-    <!-- WorldDifficulty -->
-    <string name="medium">MEDIUM</string>
+    <string name="explore_worlds">Explore Worlds</string>
+    <string name="all_worlds_title">All Worlds</string>
+    <string name="all_worlds_subtitle">Choose your next adventure</string>
+    <string name="worlds_count_format">%1$d worlds</string>
+    <string name="mystery_world">Mystery World</string>
+    <string name="dummy_world_name">Kitchen World</string>
+    <string name="dummy_progress_text">4 of 10</string>
+    <string name="dummy_target_word">la taza</string>
+    <string name="start_hunting">Start Hunting</string>
+    <string name="current_quest_label">CURRENT QUEST</string>
+    <string name="find_and_capture_instruction">Find &amp; capture</string>
+    <string name="word_capture_continue_button">Continue</string>
+    <string name="word_capture_progress_format">%1$s of %2$s</string>
+    <string name="level_title">Level %1$d</string>
+    <string name="unlock_at_level_format">Unlock at Level %1$d</string>
     <string name="easy">EASY</string>
+    <string name="medium">MEDIUM</string>
     <string name="hard">HARD</string>
 
-    <!-- Review Screen -->
-    <string name="review_screen_title">Lingo Review</string>
-    <string name="review_back_content_description">Back</string>
-    <string name="review_loading_message">AI is reviewing your word…</string>
-    <string name="review_error_emoji">😔</string>
-    <string name="review_retry_button">Try Again</string>
-    <string name="review_ai_badge_label">✦ AI Review</string>
-    <string name="review_stop_speaking_description">Stop speaking</string>
-    <string name="review_speak_description">Speak</string>
-    <string name="review_section_sentence_emoji">📖</string>
-    <string name="review_section_sentence_label">SENTENCE</string>
-    <string name="review_section_translation_emoji">🌍</string>
-    <string name="review_section_translation_label">TRANSLATION</string>
-    <string name="review_section_memory_emoji">🧠</string>
-    <string name="review_section_memory_label">MEMORY TRICK</string>
-    <string name="review_section_fun_emoji">💡</string>
-    <string name="review_section_fun_label">DID YOU KNOW?</string>
-    <string name="review_language_arrow"> → </string>
-    <string name="review_section_welcome_label">WELCOME</string>
-    <string name="review_section_welcome_message">Hey there! Let\'s review %1$s together, scene by scene.</string>
-    // Level Feature
-    <string name="review_captured_word">Captured word</string>
-    <string name="level_title">Level %1$d</string>
-    <string name="back">Back</string>
-    <string name="coins">Coins</string>
-    <string name="mascot_help_text">TAP ME IF YOU\nWANT HELP</string>
-    <string name="mascot_content_desc">Mascot</string>
-    <string name="play_sound">Play Sound</string>
-    <string name="open_camera">Open Camera</string>
-    <string name="skip">Skip</string>
-    <string name="close">Close</string>
-    <string name="thinking_mascot_content_desc">Thinking Mascot</string>
-    <string name="need_a_hint">Need a hint?</string>
-    <string name="reveal_first_letter">Reveal first letter</string>
-    <string name="show_category_clue">Show category clue</string>
-    <string name="use_hint">Use Hint</string>
-    <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
-    <string name="change_word_confirm_title">Change the word?</string>
-    <string name="change_word_confirm_message">This will deduct 50 coins.</string>
-    <string name="change_word_confirm_action">Change Word</string>
-    <string name="change_word_cancel_action">Cancel</string>
 
+    <!-- DAILY MISSIONS & DAILY REWARDS -->
 
-    <string name="xp">XP</string>
-    <!-- Settings Screen -->
-    <string name="settings_customize_journey">Customize your learning journey</string>
-    <string name="settings_category_account">ACCOUNT &amp; JOURNEY</string>
-    <string name="settings_edit_profile">Edit Profile</string>
-    <string name="settings_learning_language">Learning Language</string>
-    <string name="settings_app_language">App Language</string>
-    <string name="settings_daily_goal">Daily Goal</string>
-    <string name="settings_learning_streak">Learning Streak</string>
-    <string name="settings_category_app_experience">APP EXPERIENCE</string>
-    <string name="settings_notifications">Notifications</string>
-    <string name="settings_dark_mode">Dark Mode</string>
-    <string name="settings_sound_effects">Sound Effects</string>
-    <string name="settings_privacy_security">Privacy &amp; Security</string>
-    <string name="settings_help_support">Help &amp; Support</string>
-    <string name="settings_about_app">About App</string>
-    <string name="settings_log_out">Log Out</string>
-    <string name="settings_delete_account">Delete Account</string>
-    <string name="lockscreen_vocabulary_title">Lock Screen Vocabulary</string>
-    <string name="lockscreen_vocabulary_subtitle">Turn your lock screen into a tiny learning loop that keeps vocabulary moving all day.</string>
-    <string name="lockscreen_vocabulary_cost_chip">50 coins</string>
-    <string name="lockscreen_vocabulary_schedule_chip">Every 2 hours</string>
-    <string name="lockscreen_vocabulary_state_ready">Ready</string>
-    <string name="lockscreen_vocabulary_state_generating">Preparing</string>
-    <string name="lockscreen_vocabulary_state_active">Active</string>
-    <string name="lockscreen_vocabulary_state_disabled">Disabled</string>
-    <string name="lockscreen_vocabulary_state_error">Needs attention</string>
-    <string name="lockscreen_vocabulary_pending_words">Pending words</string>
-    <string name="lockscreen_vocabulary_batch_size">Batch size</string>
-    <string name="lockscreen_vocabulary_last_generated">Last generated</string>
-    <string name="lockscreen_vocabulary_target_language">Target language</string>
-    <string name="lockscreen_vocabulary_level">Level</string>
-    <string name="lockscreen_vocabulary_enable_title">Enable lock screen vocabulary?</string>
-    <string name="lockscreen_vocabulary_enable_message">This uses 50 coins once, then keeps showing vocabulary notifications on your lock screen.</string>
-    <string name="lockscreen_vocabulary_enable_action">Enable</string>
-    <string name="lockscreen_vocabulary_cancel_action">Cancel</string>
-    <string name="lockscreen_vocabulary_retry">Retry generation</string>
-    <string name="lockscreen_vocabulary_disable">Disable feature</string>
-    <string name="lockscreen_vocabulary_loading">Loading vocabulary...</string>
-    <string name="lockscreen_vocabulary_status_label">Status</string>
-    <string name="lockscreen_vocabulary_error_permission">Notification permission is required to enable this feature.</string>
-    <string name="lockscreen_vocabulary_error_enable">Could not enable lock screen vocabulary.</string>
-    <string name="lockscreen_vocabulary_error_retry">Retrying generation later.</string>
-    <string name="lockscreen_vocabulary_enabled">Lock screen vocabulary enabled.</string>
-    <string name="lockscreen_vocabulary_disabled">Lock screen vocabulary disabled.</string>
-    <string name="lockscreen_vocabulary_notifications_scheduled">Vocabulary notifications scheduled.</string>
-    <string name="lockscreen_milestone_reward_error">Could not claim the milestone reward right now. Please try again.</string>
-    <string name="lockscreen_vocabulary_word_detail_title">Word detail</string>
-    <string name="lockscreen_vocabulary_example_label">Example sentence</string>
-    <string name="lockscreen_vocabulary_translation_label">Translation</string>
-    <string name="lockscreen_vocabulary_word_label">Word</string>
-    <string name="lockscreen_vocabulary_word_status">Word status</string>
-    <string name="lockscreen_vocabulary_back">Back</string>
-
-    <!-- Vocabulary Vault (lock screen word list) -->
-    <string name="lockscreen_vocabulary_vault_title">Vocabulary Vault</string>
-    <string name="lockscreen_vocabulary_vault_count">%1$d words collected</string>
-    <string name="lockscreen_vocabulary_vault_empty_title">No words yet!</string>
-    <string name="lockscreen_vocabulary_vault_empty_subtitle">Words from your lock screen notifications will appear here.</string>
-    <string name="lockscreen_vocabulary_new_badge">NEW</string>
-
-    <!-- Notification -->
-    <string name="lockscreen_notification_channel_description">Periodic lock screen vocabulary reminders</string>
-    <string name="lockscreen_notification_action_go">Go</string>
-    <string name="lockscreen_notification_now">Now</string>
-    <string name="lockscreen_notification_got_it">Got it</string>
-    <string name="lockscreen_notification_tap_to_open">Tap anywhere to open</string>
-    <string name="lockscreen_notification_translation_label">Translation: %1$s</string>
-    <string name="lockscreen_notification_example_label">Example: %1$s</string>
-
-    <!-- Daily Rewards -->
     <string name="daily_reward_title">Daily\nReward!</string>
     <string name="daily_reward_subtitle">You found a treasure on your\nadventure today.</string>
     <string name="daily_reward_coins_format">+%1$d Coins</string>
     <string name="daily_reward_xp_format">+%1$d XP</string>
     <string name="claim_reward">Claim Reward</string>
-    <string name="day_format">Day %1$d</string>
     <string name="daily_streak_bonus">Daily Streak Bonus!</string>
     <string name="claim_your_daily_reward">Claim your daily reward!</string>
     <string name="cd_daily_reward">Daily Reward</string>
-    <string name="cd_coin">Coin</string>
-    <string name="cd_xp">XP</string>
-    <string name="cd_gift">Gift</string>
-    <string name="cd_completed">Completed</string>
-    <string name="cd_current">Current</string>
-    <string name="cd_locked">Locked</string>
-    <string name="cd_navigate">Navigate</string>
+    <string name="daily_mission_title_success">Daily Mission!</string>
+    <string name="daily_mission_title_loading">Decrypting…</string>
+    <string name="daily_mission_message_success">Your target for today is:</string>
+    <string name="daily_mission_message_loading">Stand by while we fetch today\'s secret word…</string>
+    <string name="daily_mission_button_start_camera">Start Camera</string>
+    <string name="daily_mission_button_loading">Loading…</string>
+    <string name="daily_mission_button_later">Later</string>
+    <string name="daily_mission_already_solved_title">Mission Accomplished!</string>
+    <string name="daily_mission_already_solved_message">You have already completed today\'s daily mission. Come back tomorrow for a new challenge!</string>
+    <string name="daily_mission_wrong_word">That doesn\'t match the word. Try again!</string>
+    <string name="daily_mission_completed">Mission completed! You earned %1$d XP and %2$d Coins.</string>
 
-    <string name="error_no_internet">No internet connection. Please check your network and try again.</string>
-    <string name="error_timeout">Request timed out. Please try again.</string>
-    <string name="error_server">Server error occurred. Please try again later.</string>
-    <string name="error_generic">Something went wrong. Please try again.</string>
-    <string name="error_bad_request">Invalid request. Please try again.</string>
-    <string name="error_unauthorized">Session expired. Please log in again.</string>
-    <string name="error_too_many_requests">Too many requests. Please wait a moment and try again.</string>
-    <string name="error_insufficient_balance">You do not have enough balance to perform this action.</string>
-    <string name="error_email_already_in_use">An account with this email already exists.</string>
-    <string name="error_username_already_exists">Username is already taken.</string>
-    <string name="error_invalid_otp">Invalid verification code.</string>
-    <string name="error_otp_expired">Verification code has expired.</string>
-    <string name="error_otp_not_found">Verification code not found. Please request a new one.</string>
-    <string name="error_email_not_found">No account found with this email.</string>
-    <string name="error_disk_full">Storage space is full.</string>
 
-    <string name="map_lets_learn">Let\'s Learn!</string>
-    <string name="cd_treasure">Treasure</string>
-    <string name="cd_star">Star</string>
+    <!-- CAMERA & REAL WORLD HUNTING  -->
 
-    <!-- All Worlds Screen -->
-    <string name="all_worlds_title">All Worlds</string>
-    <string name="all_worlds_subtitle">Choose your next adventure</string>
-    <string name="worlds_count_format">%1$d worlds</string>
-    <string name="all_filter">All</string>
-    <string name="help_support_title">Help &amp; Support</string>
-    <string name="help_banner_speech_bubble">How can I help you today?</string>
-    <string name="help_faq_section_title">Frequently Asked Questions</string>
-    <string name="help_still_need_help_title">Still need help?</string>
-    <string name="help_contact_support_action">Contact Support</string>
-    <string name="help_report_bug_action">Report a Bug</string>
-    <string name="help_reply_footer">Our team usually replies within 24 hours</string>
-    <string name="help_hero_title">We\'re here to help!</string>
-    <string name="help_hero_subtitle">Choose a topic below and we\'ll guide you.</string>
-    <string name="help_how_can_we_help">How can we help you?</string>
-    <string name="help_faqs_title">FAQs</string>
-    <string name="help_faqs_subtitle">Quick answers to common questions</string>
-    <string name="help_contact_title">Contact Us</string>
-    <string name="help_contact_subtitle">We\'re here to help. Contact us anytime.</string>
-    <string name="help_guide_title">User Guide</string>
-    <string name="help_guide_subtitle">Learn how to use the app</string>
-    <string name="help_faqs_detail">Find answers about lessons, progress, rewards, and how the app works.</string>
-    <string name="help_contact_detail">Need more help? Reach out to the team and we\'ll get back to you as soon as we can.</string>
-    <string name="help_guide_detail">A quick guide to the main features, navigation, and the best way to get started.</string>
-    <string name="contact_intro_title">Let\'s solve it together</string>
-    <string name="contact_intro_subtitle">Send us a quick message and include what happened, so we can help you faster.</string>
-    <string name="contact_email_label">EMAIL US</string>
-    <string name="help_support_coming_soon_title">Coming Soon</string>
-    <string name="help_support_coming_soon_message">This support feature will be available soon.</string>
-    <string name="help_support_coming_soon_action">OK</string>
-    <string name="contact_section_1_title">App issues</string>
-    <string name="contact_section_1_desc">If something crashes, freezes, or won\'t load, tell us what you were doing before it happened.</string>
-    <string name="contact_section_2_title">Account &amp; progress</string>
-    <string name="contact_section_2_desc">Use this for login problems, lost progress, rewards not appearing, or questions about your profile.</string>
-    <string name="contact_section_3_title">Feature requests</string>
-    <string name="contact_section_3_desc">Share any ideas that could make LinguaQuest better. We love hearing what explorers want next.</string>
-    <string name="faqs_intro_title">Five quick questions</string>
-    <string name="faqs_intro_subtitle">A few useful answers picked from the app so you can get back to learning fast.</string>
-    <string name="faq_question_label">QUESTION</string>
-    <string name="faq_answer_label">ANSWER</string>
-    <string name="faq_item_1_question">How do I start learning in LinguaQuest?</string>
-    <string name="faq_item_1_answer">Choose your languages during onboarding, then continue to Home to start quests, lessons, and practice.</string>
-    <string name="faq_item_2_question">What is Camera Hunt?</string>
-    <string name="faq_item_2_answer">Camera Hunt asks you to capture a real-world object and match it with the target vocabulary word.</string>
-    <string name="faq_item_3_question">How does AI Image Verification work?</string>
-    <string name="faq_item_3_answer">After you take a photo, AI checks whether the object matches the target word before you earn rewards.</string>
-    <string name="faq_item_4_question">How do I practice speaking?</string>
-    <string name="faq_item_4_answer">Use Voice Challenge or Review to speak out loud, then listen to instant pronunciation feedback.</string>
-    <string name="faq_item_5_question">How do rewards and streaks work?</string>
-    <string name="faq_item_5_answer">You earn XP, coins, daily rewards, and streak progress as you keep learning every day.</string>
-    <string name="user_guide_overview_label">What\'s inside the guide?</string>
-    <string name="user_guide_product_vision_label">Product vision</string>
-    <string name="user_guide_product_vision_desc">A gamified AI-powered language learning experience that combines real-world interaction, speech practice, and personalized feedback to make learning natural, engaging, and effective.</string>
-    <string name="user_guide_item_1_title">Camera Hunt</string>
-    <string name="user_guide_item_1_desc">Capture real-world objects using the device camera and match them with target vocabulary words.</string>
-    <string name="user_guide_item_2_title">AI Image Verification</string>
-    <string name="user_guide_item_2_desc">Use AI-powered image recognition to check whether the captured object matches the required vocabulary.</string>
-    <string name="user_guide_item_3_title">Voice Challenge</string>
-    <string name="user_guide_item_3_desc">Practice speaking words and phrases through the microphone and get instant pronunciation feedback.</string>
-    <string name="user_guide_item_4_title">Sentence Pronunciation Game</string>
-    <string name="user_guide_item_4_desc">Listen to sentences, repeat them aloud, and receive an AI score based on pronunciation, fluency, and clarity.</string>
-    <string name="user_guide_item_5_title">AI Conversation Tutor</string>
-    <string name="user_guide_item_5_desc">Practice real-life conversations with an AI language tutor through voice interaction.</string>
-    <string name="user_guide_item_6_title">Lock Screen Learning</string>
-    <string name="user_guide_item_6_desc">Learn vocabulary from the lock screen with daily words, translations, example sentences, and pronunciation guidance.</string>
-    <string name="user_guide_item_7_title">Education Center</string>
-    <string name="user_guide_item_7_desc">Access structured lessons covering vocabulary, grammar, and cultural insights beyond the gameplay experience.</string>
-    <string name="user_guide_item_8_title">Captured Photos Gallery</string>
-    <string name="user_guide_item_8_desc">Review previously captured objects with their vocabulary names, translations, and pronunciation to strengthen memory.</string>
-    <string name="user_guide_item_9_title">Progress &amp; Rewards</string>
-    <string name="user_guide_item_9_desc">Earn XP and coins, complete daily missions, maintain streaks, and track your learning journey.</string>
-    <string name="user_guide_item_10_title">Multi-Language Support</string>
-    <string name="user_guide_item_10_desc">Learn multiple languages, switch between courses easily, and keep progress separate for each language.</string>
-    <string name="unlock_at_level_format">Unlock at Level %1$d</string>
-    <string name="cd_back">Back</string>
-    <!-- Game Processing Package Strings -->
-    <string name="game_processing_simulate_failure_reason">That looks like a shoe, not an apple!</string>
-    <string name="game_processing_simulate_error_message">Connection timed out.</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="find_label">Find:</string>
+    <string name="captured_preview">Captured Preview</string>
+    <string name="toggle_flash">Toggle Flash</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="need_a_hint">Need a hint?</string>
+    <string name="get_a_hint_title">Get a hint</string>
+    <string name="reveal_first_letter">Reveal first letter</string>
+    <string name="show_category_clue">Show category clue</string>
+    <string name="use_hint">Use Hint</string>
+    <string name="scan_hint_format">Scan a %1$s in your real environment using the camera to complete this quest.</string>
+    <string name="change_word">Change Word</string>
+    <string name="change_word_hint">You can change the word if you are stuck</string>
+    <string name="change_word_confirm_title">Change the word?</string>
+    <string name="change_word_confirm_message">This will deduct 50 coins.</string>
+    <string name="change_word_confirm_action">Change Word</string>
+    <string name="change_word_cancel_action">Cancel</string>
+    <string name="camera_permission_required">Camera permission is required.</string>
+    <string name="camera_permission_title">Camera Permission Required</string>
+    <string name="camera_permission_blocked_desc">Camera permission is blocked. Please enable it in Settings.</string>
+    <string name="camera_permission_desc">LinguaQuest needs camera access to capture objects for language learning.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="open_settings">Open Settings</string>
+
+    
+    <!-- GAME PROCESSING & AI VERIFICATION -->
+    
+    <string name="game_processing_ai_thinking">AI is thinking...</string>
+    <string name="game_processing_coins_counter">Coins: %1$d</string>
+    <string name="game_processing_captured_image_desc">Captured Image</string>
+    <string name="game_processing_catchable_lingo_desc">Catchable Lingo</string>
+    <string name="game_processing_catch_lingo_hint">✨ Catch Lingo to play a game! ✨</string>
+    <string name="game_processing_btn_whack_lingo">Whack Lingo!</string>
+    <string name="game_processing_status_analyzing">Analyzing pixels...</string>
+    <string name="game_processing_status_inspecting">Lingo is inspecting the pixels...</string>
+    <string name="game_processing_status_consulting">Consulting the dictionary...</string>
+    <string name="game_processing_status_comparing">Comparing with dictionary...</string>
+    <string name="game_processing_status_squinting">Squinting really hard...</string>
+    <string name="game_processing_status_evaluating">Evaluating your photography skills...</string>
+    <string name="game_processing_status_thinking">Thinking hard...</string>
+    <string name="game_processing_status_almost_there">Almost there...</string>
     <string name="game_processing_btn_success">Success</string>
     <string name="game_processing_btn_fail">Fail</string>
     <string name="game_processing_btn_error">Error</string>
-    <string name="game_processing_catchable_lingo_desc">Catchable Lingo</string>
-    <string name="game_processing_catch_lingo_hint">✨ Catch Lingo to play a game! ✨</string>
-    <string name="game_processing_ai_thinking">AI is thinking...</string>
-    <string name="game_processing_coins_counter">Coins: %1$d</string>
-    <string name="game_processing_btn_whack_lingo">Whack Lingo!</string>
-    <string name="game_processing_captured_image_desc">Captured Image</string>
-    <string name="game_processing_status_inspecting">Lingo is inspecting the pixels...</string>
-    <string name="game_processing_status_consulting">Consulting the dictionary...</string>
-    <string name="game_processing_status_squinting">Squinting really hard...</string>
-    <string name="game_processing_status_evaluating">Evaluating your photography skills...</string>
-    <string name="game_processing_status_almost_there">Almost there...</string>
+    <string name="game_processing_simulate_failure_reason">That looks like a shoe, not an apple!</string>
+    <string name="game_processing_simulate_error_message">Connection timed out.</string>
 
-
-    <!-- Achievements Screen -->
-    <string name="achievement_tab_all">All</string>
-    <string name="achievement_tab_earned">Earned</string>
-    <string name="achievement_tab_locked">Locked</string>
-    <string name="achievement_stat_earned">EARNED</string>
-    <string name="achievement_stat_in_progress">IN PROGRESS</string>
-    <string name="achievement_stat_xp_gained">XP GAINED</string>
-    <string name="achievement_claim_rewards">Claim Weekly Rewards</string>
-    <string name="achievement_header_trophies_cd">My Trophies</string>
-    <string name="achievement_header_subtitle">Every word is a step deeper into the\nquest.</string>
-    <string name="achievement_card_icon_cd">Achievement Icon</string>
-    <string name="achievement_detail_rewards">Rewards</string>
-    <string name="achievement_detail_progress">Progress</string>
-    <string name="achievement_detail_earned_on">Earned on %1$s</string>
-    <string name="achievement_detail_status_locked">LOCKED</string>
-    <string name="achievement_detail_status_in_progress">IN PROGRESS</string>
-    <string name="achievement_detail_status_completed">COMPLETED</string>
-    <string name="achievement_detail_close">Close</string>
-    <string name="achievement_detail_keep_going">Complete more quests to unlock this trophy!</string>
-    <string name="achievement_detail_xp_format">+%1$d XP</string>
-    <string name="achievement_detail_coins_format">+%1$d Coins</string>
-
-    <!-- Languages Feature -->
-    <string name="add_languages_title">Add languages</string>
-    <string name="add_languages_select_instruction">Select the languages you\'d like to learn</string>
-    <string name="add_languages_search_placeholder">Search languages…</string>
-    <string name="add_selected_format">Add Selected (%1$d)</string>
-    <string name="my_languages_title">My Languages</string>
-    <string name="add_new_language">+ Add New Language</string>
-    <string name="my_languages_level_format">Level %1$d</string>
-    <string name="cd_selected">Selected</string>
-    <string name="cd_search">Search</string>
-
-
-    <string name="update_profile_photo">Update profile photo</string>
-    <string name="take_photo">Take photo</string>
-    <string name="choose_from_gallery">Choose from gallery</string>
-    <string name="coins_claimed">coins claimed!</string>
-
-
-    <string name="tap_to_zoom">Pinch to zoom · Double-tap</string>
-
-
-    <string name="daily_reminder">Daily Reminder</string>
-    <string name="reminder_time">Reminder Time</string>
-    <string name="repeat">Repeat</string>
-    <string name="every_day">Every Day</string>
-    <string name="weekdays">Weekdays</string>
-    <string name="weekends">Weekends</string>
-    <string name="custom">Custom</string>
-    <string name="save">Save</string>
-    <string name="select_reminder_time">Select Reminder Time</string>
-    <string name="notification_channel_name">Daily Reminder</string>
-    <string name="notification_channel_description">Reminds you to complete your daily language lesson</string>
-    <string name="notification_title">Ready for today\'s lesson?</string>
-    <string name="notification_message">Open LinguaQuest and keep your streak alive.</string>
-    <string name="day_sun_short">S</string>
-    <string name="day_mon_short">M</string>
-    <string name="day_tue_short">T</string>
-    <string name="day_wed_short">W</string>
-    <string name="day_thu_short">T</string>
-    <string name="day_fri_short">F</string>
-    <string name="day_sat_short">S</string>
-
-    <!-- Game Result Feature -->
-    <string name="game_result_loading">Loading result...</string>
+    
+    <!-- GAME RESULTS -->
+    
+    <string name="game_result_loading">Loading result…</string>
     <string name="game_result_invalid_state">Invalid state. No outcome generated.</string>
     <string name="game_result_default_failure_reason">Item not recognized.</string>
     <string name="game_result_default_error_message">Network error occurred.</string>
@@ -514,71 +340,61 @@
     <string name="game_result_hint_button">Make Sure it\'s well lit!</string>
     <string name="game_result_retry_camera">Retry Camera</string>
     <string name="game_result_change_word">Change Word</string>
-    <string name="edit_profile_title">Edit Profile</string>
-    <string name="change_photo">Change Photo</string>
-    <string name="display_name_label">Display Name</string>
-    <string name="explorer_tagline_label">Explorer\'s Tagline</string>
-    <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="cancel">Cancel</string>
-    <string name="logout">Log Out</string>
-    <string name="days_count">days count</string>
-    <string name="lang_english">English</string>
-    <string name="lang_spanish">Spanish</string>
-    <string name="lang_japanese">Japanese</string>
-    <string name="lang_german">German</string>
-    <string name="lang_arabic">Arabic</string>
-    <string name="settings_lock_screen_vocabulary">Lock Screen Vocabulary</string>
-    <string name="reminder_turned_on">Reminder turned on. We\'ll keep you on track.</string>
-    <string name="reminder_turned_off">Reminder turned off.</string>
-    <string name="reminder_time_updated">Reminder time updated.</string>
-    <string name="reminder_repeat_updated">Reminder repeat updated.</string>
-    <string name="notifications_title">Notifications</string>
-    <string name="notifications_off_msg">Notifications off. Daily reminder paused.</string>
-    <string name="notifications_on_msg">Notifications enabled.</string>
-    <string name="enable_lock_screen_desc">Spend %d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
-    <string name="cd_coins">Coins</string>
-    <string name="btn_confirm">Confirm</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="enable_lock_screen_title">Enable Lock Screen\nVocabulary?</string>
-    <string name="enable_lock_screen_subtitle">Spend %1$d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
-    <string name="coins_description">Coins</string>
-    <string name="confirm_button">Confirm</string>
-    <string name="cancel_button">Cancel</string>
-    <string name="lock_screen_vocabulary_title">Lock Screen Vocabulary</string>
-    <string name="lock_screen_vocabulary_desc">Learn new words right\nfrom your lock screen</string>
-    <string name="error_fetch_generated_word">Failed to fetch newly generated word.</string>
-    <string name="error_generate_words">Failed to generate new words. Please try again.</string>
-    <string name="lockscreen_vocabulary_test_notification">Test Notification Now</string>
-    <string name="lockscreen_fullscreen_intent_title">Lock Screen Permission Required</string>
-    <string name="lockscreen_fullscreen_intent_message">To show vocabulary notifications on your lock screen, grant the \"Display over lock screen\" permission in your device settings.</string>
-    <string name="lockscreen_fullscreen_intent_action">Open Settings</string>
-    <string name="lockscreen_vocabulary_dash">—</string>
-    <string name="cd_add">Add</string>
-    <string name="cd_pronounce">Pronounce</string>
-    <string name="cd_details">Details</string>
-    <string name="lockscreen_vocabulary_words_collected">%1$d words collected</string>
-    <string name="lockscreen_milestone_dialog_title">🎉 Milestone Reached!</string>
-    <string name="lockscreen_milestone_dialog_message">You\'ve learned %1$d words!\nYou earned +%2$d coins. Keep it up!</string>
-    <string name="lockscreen_milestone_dialog_button">Awesome! 🚀</string>
-    <string name="lockscreen_example_usage_label">EXAMPLE USAGE</string>
-    <string name="lockscreen_got_it">Got it</string>
-    <string name="lockscreen_search_placeholder">Search your vault…</string>
-    <string name="lockscreen_no_words_found_title">No words found</string>
-    <string name="lockscreen_no_words_found_subtitle">Try searching for a different word or translation.</string>
-    <string name="lockscreen_badge_new">NEW</string>
-    <string name="lockscreen_sample_coins">1,250</string>
-    <string name="lockscreen_notification_permission_required">Notification permission is required to enable the feature.</string>
-    <string name="lockscreen_notifications_scheduled">Vocabulary notifications scheduled.</string>
-    <string name="lockscreen_test_notification_scheduled">Lock the screen now. The test notification will appear in 5 seconds.</string>
-    <string name="lockscreen_test_notification_failed">Test notification could not be shown. Make sure notifications are enabled and at least one lock screen word is saved.</string>
-    <string name="lockscreen_required_inputs_error">Select a target language and proficiency level before enabling lock screen vocabulary.</string>
-    <string name="lockscreen_enable_error">Could not enable lock screen vocabulary.</string>
-    <string name="lockscreen_error_no_internet_retry">We could not generate words right now. We will retry automatically.</string>
-    <string name="lockscreen_error_no_internet">We could not generate words right now. Please try again later.</string>
-    <string name="lockscreen_error_bad_format">The AI response was not in the expected format. Please try again later.</string>
-    <string name="lockscreen_error_generate_failed">Failed to generate new words. Please try again.</string>
+
+    
+    <!-- LINGO REVIEW -->
+    
+    <string name="review_screen_title">Lingo Review</string>
+    <string name="review_back_content_description">Back</string>
+    <string name="review_loading_message">AI is reviewing your word…</string>
+    <string name="review_error_emoji">😔</string>
+    <string name="review_retry_button">Try Again</string>
+    <string name="review_ai_badge_label">✦ AI Review</string>
+    <string name="review_stop_speaking_description">Stop speaking</string>
+    <string name="review_speak_description">Speak</string>
+    <string name="review_captured_word">Captured word</string>
+    <string name="review_language_arrow"> → </string>
+    <string name="review_section_welcome_label">WELCOME</string>
+    <string name="review_section_welcome_message">Hey there! Let\'s review %1$s together, scene by scene.</string>
+    <string name="review_section_sentence_emoji">📖</string>
+    <string name="review_section_sentence_label">SENTENCE</string>
+    <string name="review_section_translation_emoji">🌍</string>
+    <string name="review_section_translation_label">TRANSLATION</string>
+    <string name="review_section_memory_emoji">🧠</string>
+    <string name="review_section_memory_label">MEMORY TRICK</string>
+    <string name="review_section_fun_emoji">💡</string>
+    <string name="review_section_fun_label">DID YOU KNOW?</string>
+    <string name="play_sound">Play Sound</string>
+
+    
+    <!-- GALLERY & JOURNAL -->
+    
+    <string name="gallery_label">Gallery</string>
+    <string name="gallery_game_captures_tab">Game Captures</string>
+    <string name="gallery_my_words_tab">My Journal</string>
+    <string name="my_captures">My Captures</string>
+    <string name="objects_collected">%1$d objects collected</string>
+    <string name="captures_so_far">0 captures so far</string>
+    <string name="empty_gallery_title">No Captures Yet</string>
+    <string name="empty_gallery_desc">You haven\'t captured any words yet.\nTap the button above to add your first capture.</string>
+    <string name="add_new">Add New</string>
+    <string name="Add_New">Add New</string>
+    <string name="gallery_category_all">All Items</string>
+    <string name="gallery_difficulty_easy">Easy</string>
+    <string name="gallery_difficulty_medium">Medium</string>
+    <string name="gallery_difficulty_hard">Hard</string>
+
+    
+    <!-- LINGOS / MINI-GAMES HUB -->
+    
+    <string name="lingos_label">Lingos</string>
+
+    
+    <!-- VOICE PRACTICE & PRONUNCIATION GAME  -->
+    
+    <string name="voice_practise">Voice Practice</string>
     <string name="voice_game_title">Pronunciation</string>
+    <string name="practice_pronunciation">Practice your\npronunciation</string>
     <string name="voice_evaluating">Evaluating Pronunciation…</string>
     <string name="listening_to_your_pronunciation">Listening carefully to your speech.</string>
     <string name="voice_idle_yo_can_do_it">You can do it!</string>
@@ -602,96 +418,58 @@
     <string name="dialog_voice_confirmation_sub_title">Listen to your audio before evaluating</string>
     <string name="dialog_voice_confirmation_discard">Discard</string>
     <string name="dialog_voice_confirmation_process">Evaluate</string>
-    <string name="failed_upload_photo">Failed to upload photo</string>
-    <!-- Auth & Error Strings -->
-    <string name="login_error_email_already_in_use">Email is already in use.</string>
-    <string name="login_error_email_not_found">Email address not found.</string>
-    <string name="login_error_username_already_exists">Username already exists.</string>
-    <string name="login_error_invalid_reset_token">Invalid password reset token.</string>
-    <string name="login_error_reset_token_expired">Password reset token has expired.</string>
-    <string name="login_error_validation_error">Validation error occurred.</string>
-    <string name="otp_timer_content_description">OTP resend timer</string>
 
-    <!-- Camera Strings -->
-    <string name="change_password_label">Change password</string>
-    <string name="old_password_placeholder">old password</string>
-    <string name="new_password_placeholder">new password</string>
-    <string name="choose_a_source">Choose a source</string>
-    <!-- Snackbars messages -->
-    <string name="congrates">Congratulations</string>
-    <string name="change_word">Change Word</string>
-
-    <string name="display_name_empty">Display name can\'t be empty</string>
-    <string name="enter_current_password">Enter your current password</string>
-    <string name="new_password_min_length">New password must be at least 6 characters</string>
-    <string name="incorrect_old_password">Incorrect current password</string>
-
-    <string name="profile_updated_successfully">Profile updated successfully</string>
-    <string name="failed_update_profile">Failed to update profile</string>
-
-    <string name="password_updated_successfully">Password updated successfully</string>
-    <string name="failed_update_password">Failed to update password</string>
-
-    <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
-    <string name="add_languages_no_results">No languages found</string>
-    <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
-    <string name="error_loading_languages">Could not load languages. Please try again.</string>
-    <string name="no_languages_available">No languages available</string>
-    <string name="logout_dialog_message">Are you sure you want to log out? You will need to sign in again to access your progress.</string>
-
-    <string name="camera_permission_required">Camera permission is required.</string>
-    <string name="camera_permission_title">Camera Permission Required</string>
-    <string name="camera_permission_blocked_desc">Camera permission is blocked. Please enable it in Settings.</string>
-    <string name="camera_permission_desc">LinguaQuest needs camera access to capture objects for language learning.</string>
-    <string name="open_settings">Open Settings</string>
-    <string name="grant_permission">Grant Permission</string>
-
-    <!-- Roleplay Feature Strings -->
+    
+    <!-- ROLEPLAY FEATURE -->
+    
+    <string name="roleplay_label">Roleplay</string>
+    <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
+    <string name="roleplay_browse_roleplays">Browse Roleplays</string>
+    <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
+    <string name="roleplay_no_roleplays_available">No roleplays available.</string>
     <string name="roleplay_boss_level">Boss Level</string>
     <string name="roleplay_boss_stage">Boss Stage</string>
-    <string name="roleplay_stop_recording">Stop recording</string>
-    <string name="roleplay_start_recording">Start recording</string>
-    <string name="roleplay_victory">Victory!</string>
-    <string name="roleplay_next_world">Finish</string>
-    <string name="roleplay_stage_failed">Stage Failed</string>
-    <string name="roleplay_try_again">Try Again</string>
-    <string name="roleplay_evaluating">Evaluating...</string>
-    <string name="roleplay_ai_analyzing">AI is analyzing your conversation to calculate your score.</string>
-    <string name="roleplay_oops">Oops!</string>
-    <string name="roleplay_exit">Exit</string>
-    <string name="roleplay_finish_stage_question">Finish Stage?</string>
-    <string name="roleplay_finish_stage_message">Are you ready to end the conversation and receive your evaluation?</string>
-    <string name="roleplay_yes_evaluate">Yes, Evaluate!</string>
-    <string name="roleplay_keep_talking">Keep Talking</string>
+    <string name="roleplay_meet_boss">Meet %1$s</string>
+    <string name="roleplay_objective">Objective</string>
+    <string name="roleplay_your_objective">Your Objective</string>
     <string name="roleplay_objective_format">Objective: %1$s</string>
+    <string name="roleplay_read_carefully">(Read carefully in your native language before starting)</string>
+    <string name="roleplay_start_roleplay">Start Roleplay</string>
     <string name="roleplay_connecting">Connecting...</string>
     <string name="roleplay_not_connected">Not connected.</string>
-    <string name="roleplay_tap_to_stop">Tap to Stop</string>
+    <string name="roleplay_start_recording">Start recording</string>
+    <string name="roleplay_stop_recording">Stop recording</string>
     <string name="roleplay_tap_to_speak">Tap to Speak</string>
+    <string name="roleplay_tap_to_stop">Tap to Stop</string>
     <string name="roleplay_hold_to_speak">Hold to Speak</string>
     <string name="roleplay_release_to_send">Release to Send</string>
     <string name="roleplay_ai_thinking">AI is thinking...</string>
     <string name="roleplay_ai_speaking">AI is speaking...</string>
     <string name="roleplay_finish_stage">Finish Stage</string>
-    <string name="roleplay_meet_boss">Meet %1$s</string>
-    <string name="roleplay_your_objective">Your Objective</string>
-    <string name="roleplay_read_carefully">(Read carefully in your native language before starting)</string>
-    <string name="roleplay_start_roleplay">Start Roleplay</string>
+    <string name="roleplay_finish_stage_question">Finish Stage?</string>
+    <string name="roleplay_finish_stage_message">Are you ready to end the conversation and receive your evaluation?</string>
+    <string name="roleplay_yes_evaluate">Yes, Evaluate!</string>
+    <string name="roleplay_keep_talking">Keep Talking</string>
+    <string name="roleplay_evaluating">Evaluating...</string>
+    <string name="roleplay_ai_analyzing">AI is analyzing your conversation to calculate your score.</string>
+    <string name="roleplay_victory">Victory!</string>
+    <string name="roleplay_stage_failed">Stage Failed</string>
+    <string name="roleplay_try_again">Try Again</string>
+    <string name="roleplay_next_world">Finish</string>
+    <string name="roleplay_exit">Exit</string>
+    <string name="roleplay_oops">Oops!</string>
     <string name="roleplay_xp">XP</string>
     <string name="roleplay_coins">Coins</string>
-    <string name="no_internet_title">No Internet Connection</string>
-    <string name="no_internet_subtitle">Check your network and try again</string>
-    <string name="retry_label">Retry</string>
-    <string name="no_internet_image_desc">No internet connection illustration</string>
-    <string name="login_error_no_internet">No internet connection. Please check your network and try again.</string>
-    <string name="roleplay_interactive_scenarios">Interactive Scenarios</string>
-    <string name="roleplay_browse_roleplays">Browse Roleplays</string>
-    <string name="roleplay_interactive_roleplays">Interactive Roleplays</string>
-    <string name="daily_mission_wrong_word">That doesn\'t match the word. Try again!</string>
-    <string name="daily_mission_completed">Mission completed! You earned %1$d XP and %2$d Coins.</string>
-    <string name="roleplay_no_roleplays_available">No roleplays available.</string>
-    <string name="roleplay_objective">Objective</string>
-    <string name="roleplay_label">Roleplay</string>
+    <string name="roleplay_overall_fluency">Fluency</string>
+    <string name="roleplay_grammar">Grammar</string>
+    <string name="roleplay_vocabulary">Vocabulary</string>
+    <string name="roleplay_strengths">What went well</string>
+    <string name="roleplay_improvements">Areas to improve</string>
+    <string name="roleplay_stars_1">Good Effort!</string>
+    <string name="roleplay_stars_2">Great Job!</string>
+    <string name="roleplay_stars_3">Outstanding!</string>
+    <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
+    <string name="roleplay_short_conversation">Conversation was too brief. Try to speak at least 2–3 sentences to complete the stage.</string>
     <string name="roleplay_failed_connect">Failed to connect: %1$s</string>
     <string name="roleplay_connection_lost">Connection Lost: %1$s</string>
     <string name="roleplay_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
@@ -700,100 +478,19 @@
     <string name="roleplay_error_evaluation_failed">Failed to evaluate the conversation. Please try again.</string>
     <string name="roleplay_error_session_ended">The roleplay session has ended. Please start again.</string>
     <string name="roleplay_error_generic">Something went wrong. Please try again.</string>
-    <string name="no_internet_short">No internet</string>
-    <string name="roleplay_no_speech">You didn\'t say anything! Please try again and speak to the character.</string>
-    <string name="roleplay_overall_fluency">Fluency</string>
-    <string name="roleplay_grammar">Grammar</string>
-    <string name="roleplay_vocabulary">Vocabulary</string>
-    <string name="roleplay_strengths">What went well</string>
-    <string name="roleplay_improvements">Areas to improve</string>
-    <string name="roleplay_stars_3">Outstanding!</string>
-    <string name="roleplay_stars_2">Great Job!</string>
-    <string name="roleplay_stars_1">Good Effort!</string>
-    <string name="roleplay_short_conversation">Conversation was too brief. Try to speak at least 2–3 sentences to complete the stage.</string>
-    <!-- New profile strings -->
-    <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
-    <string name="offline_title">You\'re offline</string>
-    <string name="offline_msg">Showing your saved profile - it\'ll refresh automatically once you\'re back online.</string>
 
-    <!-- About App Strings -->
-    <string name="about_app_title">About</string>
-    <string name="about_app_name">LinguaQuest</string>
-    <string name="about_app_description">LinguaQuest helps you learn languages through fun games, AI-powered lessons, and daily challenges.</string>
-    <string name="about_app_rate_app">Rate the App</string>
-    <string name="about_app_follow_instagram">Follow us on Instagram</string>
-    <string name="about_app_visit_website">Visit our Website</string>
-    <string name="about_app_terms_service">Terms of Service</string>
-    <string name="about_app_privacy_policy">Privacy Policy</string>
-    <string name="about_app_licenses_credits">Licenses &amp; Credits</string>
-    <string name="about_app_footer_made_with">Made with 💛 by The Lingo Team</string>
-    <string name="about_app_footer_copyright">© 2026 LinguaQuest. All rights reserved.</string>
-    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
-    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
-    <string name="about_app_website_url">https://linguaquest.app</string>
-    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
-    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
-    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
-
-    <!-- Help, Support & FAQs Strings -->
-    <string name="about_app_banner_title">Help &amp; Support</string>
-    <string name="about_app_banner_subtitle">Explore FAQs, contact support, or read the user guide to get the most out of your journey.</string>
-    <string name="about_app_section_title">Support Topics</string>
-    <string name="about_app_faqs_title">Frequently Asked Questions</string>
-    <string name="about_app_faqs_subtitle">Quick answers to common questions about your account, lessons, and rewards.</string>
-    <string name="about_app_contact_title">Contact Us</string>
-    <string name="about_app_contact_subtitle">Reach out to our support team for help with any issues or feedback.</string>
-    <string name="about_app_user_guide_title">User Guide</string>
-    <string name="about_app_user_guide_subtitle">Learn how to navigate LinguaQuest features, games, and learning paths.</string>
-
-    <string name="faqs_q1">How do I start learning in LinguaQuest?</string>
-    <string name="faqs_a1">Choose your languages during onboarding, then continue to Home to start quests, lessons, and practice.</string>
-    <string name="faqs_q2">What is Camera Hunt?</string>
-    <string name="faqs_a2">Camera Hunt asks you to capture a real-world object and match it with the target vocabulary word.</string>
-    <string name="faqs_q3">How does AI Image Verification work?</string>
-    <string name="faqs_a3">After you take a photo, AI checks whether the object matches the target word before you earn rewards.</string>
-    <string name="faqs_q4">How do I practice speaking?</string>
-    <string name="faqs_a4">Use Voice Challenge or Review to speak out loud, then listen to instant pronunciation feedback.</string>
-
-    <string name="user_guide_step1_title">Explore &amp; Quests</string>
-    <string name="user_guide_step1_desc">Navigate through different worlds on the map, complete interactive quests, and collect words.</string>
-    <string name="user_guide_step2_title">Voice &amp; Pronunciation</string>
-    <string name="user_guide_step2_desc">Practice speaking in real-time with AI-powered pronunciation feedback and interactive scenarios.</string>
-    <string name="user_guide_step3_title">Camera &amp; Real World</string>
-    <string name="user_guide_step3_desc">Find objects in your environment, capture them with your camera, and learn vocabulary in context.</string>
-    <string name="user_guide_step4_title">Lock Screen &amp; Vault</string>
-    <string name="user_guide_step4_desc">Keep learning on the go with lock screen notifications and review your collected words in the vault.</string>
-
-    <string name="contact_us_banner_title">Contact Us</string>
-    <string name="contact_us_banner_subtitle">Have a question or feedback? Drop us a message below.</string>
-    <string name="contact_us_email_card_title">Email Support</string>
-    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
-    <string name="contact_us_subject_label">Subject</string>
-    <string name="contact_us_subject_placeholder">What do you need help with?</string>
-    <string name="contact_us_message_label">Message</string>
-    <string name="contact_us_message_placeholder">Describe your issue or feedback in detail...</string>
-    <string name="contact_us_send_button">Send Message</string>
-    <string name="faq_earn_coins_question">How do I earn coins?</string>
-    <string name="faq_earn_coins_answer">Complete lessons and challenges to earn coins.</string>
-
-    <string name="expand">Expand</string>
-    <string name="collapse">Collapse</string>
-
-    <string name="faq_lock_screen_question">How does Lock Screen Vocabulary work?</string>
-    <string name="faq_lock_screen_answer">Go to Settings to enable lock screen notifications for daily word challenges.</string>
-
-    <string name="faq_change_language_question">Can I change my target language?</string>
-    <string name="faq_change_language_answer">Yes! You can change your target language in the profile settings.</string>
-
-    <string name="faq_maintain_streak_question">How do I maintain my streak?</string>
-    <string name="faq_maintain_streak_answer">Complete at least one lesson or challenge every day to keep your streak alive!</string>
-    <!-- Mind Reader Game Strings -->
+    
+    <!-- MIND READER GAME -->
+    
+    <string name="mind_reader_card_title">Mind Reader</string>
+    <string name="mind_reader_card_desc">Let Lingo guess your word!</string>
     <string name="mind_reader_lobby_title">Lingo\'s Mind Reader</string>
     <string name="mind_reader_lobby_subtitle">\"I\'ll try to guess it in 20 questions... prepare your mind!\"</string>
+    <string name="mind_reader_choose_category">Choose Category</string>
     <string name="mind_reader_think_of_a_word">THINK OF A WORD IN YOUR CHOSEN CATEGORY!</string>
     <string name="mind_reader_current_category">CURRENT CATEGORY</string>
-    <string name="mind_reader_start_game">START GAME ⚡</string>
     <string name="mind_reader_change_category">Change</string>
+    <string name="mind_reader_start_game">START GAME ⚡</string>
     <string name="mind_reader_confirm_dialog_title">Do you have a word in mind?</string>
     <string name="mind_reader_confirm_dialog_desc">Make sure it fits the %1$s world!</string>
     <string name="mind_reader_not_yet">Not yet</string>
@@ -811,109 +508,411 @@
     <string name="mind_reader_wrong">✕ No, you\'re wrong!</string>
     <string name="mind_reader_correct">✓ Yes, you got it!</string>
     <string name="mind_reader_pop_quiz_title">Translate This Word</string>
+    <string name="mind_reader_pop_quiz_speech">AWESOME! TAP THE CORRECT TRANSLATION TO CLAIM YOUR REWARD.</string>
+    <string name="mind_reader_victory_speech">YOUR LANGUAGE SKILLS ARE LEGENDARY.</string>
     <string name="mind_reader_busted">Busted!</string>
+    <string name="mind_reader_busted_title">BUSTED!</string>
     <string name="mind_reader_stumped">Stumped!</string>
+    <string name="mind_reader_stumped_title">You Stumped\nLingo!</string>
     <string name="mind_reader_stumped_desc">I surrender! You win.</string>
     <string name="mind_reader_experience">EXPERIENCE</string>
     <string name="mind_reader_earnings">EARNINGS</string>
-    <string name="mind_reader_try_again">Play Again</string>
-    <string name="mind_reader_return_home">Return Home</string>
-    <string name="mind_reader_card_title">Mind Reader</string>
-    <string name="mind_reader_card_desc">Let Lingo guess your word!</string>
-    <string name="mind_reader_trap_title">I GIVE UP! WHAT WERE YOU THINKING OF?</string>
-    <string name="mind_reader_trap_dropdown_title">%1$s Vocabulary</string>
-    <string name="mind_reader_trap_dropdown_hint">Select your word...</string>
-    <string name="mind_reader_trap_submit">Submit ▷</string>
-    <string name="mind_reader_pop_quiz_speech">AWESOME! TAP THE CORRECT TRANSLATION TO CLAIM YOUR REWARD.</string>
-    <string name="mind_reader_victory_speech">YOUR LANGUAGE SKILLS ARE LEGENDARY.</string>
-    <string name="mind_reader_stumped_title">You Stumped\nLingo!</string>
-    <string name="mind_reader_return_to_home">Return to Home</string>
-    <string name="mind_reader_play_again">Play Again</string>
     <string name="mind_reader_xp_value">%1$d XP</string>
     <string name="mind_reader_coins_value">%1$d Coins</string>
+    <string name="mind_reader_try_again">Play Again</string>
+    <string name="mind_reader_play_again">Play Again</string>
+    <string name="mind_reader_return_home">Return Home</string>
+    <string name="mind_reader_return_to_home">Return to Home</string>
+    <string name="mind_reader_trap_title">I GIVE UP! WHAT WERE YOU THINKING OF?</string>
     <string name="mind_reader_trap_speech">I GIVE UP! WHAT WERE YOU THINKING OF?</string>
-    <string name="mind_reader_busted_title">BUSTED!</string>
+    <string name="mind_reader_trap_dropdown_title">%1$s Vocabulary</string>
+    <string name="mind_reader_trap_dropdown_hint">Select your word...</string>
     <string name="mind_reader_trap_input_placeholder">Type the word you thought of...</string>
+    <string name="mind_reader_trap_submit">Submit ▷</string>
+    <string name="mind_reader_translate_confirm_title">Translate Question</string>
+    <string name="mind_reader_translate_confirm_message">Do you want to spend %1$d coins to reveal the question translation?</string>
     <string name="mind_reader_error_not_enough_coins">Not enough coins for translation</string>
     <string name="mind_reader_error_quota_exceeded">AI service limit reached. Please wait a moment and try again.</string>
     <string name="mind_reader_error_connection_lost">Connection lost. Please check your internet connection and try again.</string>
     <string name="mind_reader_error_generic">Something went wrong. Please try again.</string>
-    <string name="mind_reader_translate_confirm_title">Translate Question</string>
-    <string name="mind_reader_translate_confirm_message">Do you want to spend %1$d coins to reveal the question translation?</string>
     <string name="mind_reader_reason_connection_dropped">My connection dropped! Let\'s try again.</string>
     <string name="mind_reader_reason_max_questions">I couldn\'t guess it in %1$d questions!</string>
     <string name="mind_reader_reason_quiz_wrong">Pop quiz answer was incorrect.</string>
     <string name="mind_reader_reason_contradiction">Answer matched, but gameplay history contradicted the target word.</string>
     <string name="mind_reader_reason_stump_contradiction">The selected word contradicts the answers given during the game.</string>
 
-    <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
-    <string name="language_removed_success">Language removed successfully.</string>
-    <string name="remove_language_title">Remove Language</string>
-    <string name="remove_language_message">Are you sure you want to remove %1$s from your active languages?</string>
-    <string name="remove">Remove</string>
-    <string name="edit">Edit</string>
-    <string name="done">Done</string>
-    <string name="lingos_label">Lingos</string>
-    <string name="current_quest_label">CURRENT QUEST</string>
-    <string name="find_and_capture_instruction">Find &amp; capture</string>
-    <string name="word_capture_continue_button">Continue</string>
-    <string name="mascot_camera_cd">Camera Mascot</string>
-    <string name="camera_icon_cd">Camera Icon</string>
+    
+    <!-- LOCK SCREEN VOCABULARY & VAULT -->
+    
+    <string name="lock_screen_vocabulary_title">Lock Screen Vocabulary</string>
+    <string name="lock_screen_vocabulary_desc">Learn new words right\nfrom your lock screen</string>
+    <string name="lockscreen_vocabulary_title">Lock Screen Vocabulary</string>
+    <string name="lockscreen_vocabulary_subtitle">Turn your lock screen into a tiny learning loop that keeps vocabulary moving all day.</string>
+    <string name="settings_lock_screen_vocabulary">Lock Screen Vocabulary</string>
+    <string name="enable_lock_screen_title">Enable Lock Screen\nVocabulary?</string>
+    <string name="enable_lock_screen_subtitle">Spend %1$d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
+    <string name="enable_lock_screen_desc">Spend %d coins to get AI-generated vocabulary words delivered to your lock screen throughout the day.</string>
+    <string name="lockscreen_vocabulary_enable_title">Enable lock screen vocabulary?</string>
+    <string name="lockscreen_vocabulary_enable_message">This uses 50 coins once, then keeps showing vocabulary notifications on your lock screen.</string>
+    <string name="lockscreen_vocabulary_enable_action">Enable</string>
+    <string name="lockscreen_vocabulary_cancel_action">Cancel</string>
+    <string name="lockscreen_vocabulary_cost_chip">50 coins</string>
+    <string name="lockscreen_vocabulary_schedule_chip">Every 2 hours</string>
+    <string name="lockscreen_vocabulary_status_label">Status</string>
+    <string name="lockscreen_vocabulary_state_ready">Ready</string>
+    <string name="lockscreen_vocabulary_state_generating">Preparing</string>
+    <string name="lockscreen_vocabulary_state_active">Active</string>
+    <string name="lockscreen_vocabulary_state_disabled">Disabled</string>
+    <string name="lockscreen_vocabulary_state_error">Needs attention</string>
+    <string name="lockscreen_vocabulary_pending_words">Pending words</string>
+    <string name="lockscreen_vocabulary_batch_size">Batch size</string>
+    <string name="lockscreen_vocabulary_last_generated">Last generated</string>
+    <string name="lockscreen_vocabulary_target_language">Target language</string>
+    <string name="lockscreen_vocabulary_level">Level</string>
+    <string name="lockscreen_vocabulary_retry">Retry generation</string>
+    <string name="lockscreen_vocabulary_disable">Disable feature</string>
+    <string name="lockscreen_vocabulary_loading">Loading vocabulary...</string>
+    <string name="lockscreen_vocabulary_enabled">Lock screen vocabulary enabled.</string>
+    <string name="lockscreen_vocabulary_disabled">Lock screen vocabulary disabled.</string>
+    <string name="lockscreen_vocabulary_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_notifications_scheduled">Vocabulary notifications scheduled.</string>
+    <string name="lockscreen_vocabulary_test_notification">Test Notification Now</string>
+    <string name="lockscreen_test_notification_scheduled">Lock the screen now. The test notification will appear in 5 seconds.</string>
+    <string name="lockscreen_test_notification_failed">Test notification could not be shown. Make sure notifications are enabled and at least one lock screen word is saved.</string>
+    <string name="lockscreen_fullscreen_intent_title">Lock Screen Permission Required</string>
+    <string name="lockscreen_fullscreen_intent_message">To show vocabulary notifications on your lock screen, grant the \"Display over lock screen\" permission in your device settings.</string>
+    <string name="lockscreen_fullscreen_intent_action">Open Settings</string>
+    <string name="lockscreen_vocabulary_error_permission">Notification permission is required to enable this feature.</string>
+    <string name="lockscreen_notification_permission_required">Notification permission is required to enable the feature.</string>
+    <string name="lockscreen_vocabulary_error_enable">Could not enable lock screen vocabulary.</string>
+    <string name="lockscreen_enable_error">Could not enable lock screen vocabulary.</string>
+    <string name="lockscreen_required_inputs_error">Select a target language and proficiency level before enabling lock screen vocabulary.</string>
+    <string name="lockscreen_vocabulary_error_retry">Retrying generation later.</string>
+    <string name="lockscreen_error_no_internet_retry">We could not generate words right now. We will retry automatically.</string>
+    <string name="lockscreen_error_no_internet">We could not generate words right now. Please try again later.</string>
+    <string name="lockscreen_error_bad_format">The AI response was not in the expected format. Please try again later.</string>
+    <string name="lockscreen_error_generate_failed">Failed to generate new words. Please try again.</string>
+    <string name="error_fetch_generated_word">Failed to fetch newly generated word.</string>
+    <string name="error_generate_words">Failed to generate new words. Please try again.</string>
+    <string name="lockscreen_milestone_reward_error">Could not claim the milestone reward right now. Please try again.</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 Milestone Reached!</string>
+    <string name="lockscreen_milestone_dialog_message">You\'ve learned %1$d words!\nYou earned +%2$d coins. Keep it up!</string>
+    <string name="lockscreen_milestone_dialog_button">Awesome! 🚀</string>
+    <string name="lockscreen_vocabulary_word_detail_title">Word detail</string>
+    <string name="lockscreen_vocabulary_word_label">Word</string>
+    <string name="lockscreen_vocabulary_translation_label">Translation</string>
+    <string name="lockscreen_vocabulary_example_label">Example sentence</string>
+    <string name="lockscreen_vocabulary_word_status">Word status</string>
+    <string name="lockscreen_vocabulary_back">Back</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+    <string name="lockscreen_vocabulary_vault_title">Vocabulary Vault</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d words collected</string>
+    <string name="lockscreen_vocabulary_words_collected">%1$d words collected</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">No words yet!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">Words from your lock screen notifications will appear here.</string>
+    <string name="lockscreen_vocabulary_new_badge">NEW</string>
+    <string name="lockscreen_badge_new">NEW</string>
+    <string name="lockscreen_search_placeholder">Search your vault…</string>
+    <string name="lockscreen_no_words_found_title">No words found</string>
+    <string name="lockscreen_no_words_found_subtitle">Try searching for a different word or translation.</string>
+    <string name="lockscreen_example_usage_label">EXAMPLE USAGE</string>
+    <string name="lockscreen_got_it">Got it</string>
+    <string name="lockscreen_sample_coins">1,250</string>
+    <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
+    <string name="lockscreen_notification_channel_description">Periodic lock screen vocabulary reminders</string>
+    <string name="lockscreen_notification_action_go">Go</string>
+    <string name="lockscreen_notification_now">Now</string>
+    <string name="lockscreen_notification_got_it">Got it</string>
+    <string name="lockscreen_notification_tap_to_open">Tap anywhere to open</string>
+    <string name="lockscreen_notification_translation_label">Translation: %1$s</string>
+    <string name="lockscreen_notification_example_label">Example: %1$s</string>
 
+    
+    <!-- PROFILE & LEADERBOARD & ACHIEVEMENTS -->
+    
+    <string name="profile_label">Profile</string>
+    <string name="profile_screen">Profile Screen</string>
+    <string name="you_label">You</string>
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="achievements_title">Achievements</string>
+    <string name="milestone_progress_label">XP TO NEXT MILESTONE</string>
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="security">Security</string>
+    <string name="display_name_label">Display Name</string>
+    <string name="display_name_empty">Display name can\'t be empty</string>
+    <string name="explorer_tagline_label">Explorer\'s Tagline</string>
+    <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="failed_update_profile">Failed to update profile</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="update_profile_photo">Update profile photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="choose_a_source">Choose a source</string>
+    <string name="uploading_photo_msg">Uploading your photo, this may take a moment...</string>
+    <string name="photo_uploaded_successfully">Photo uploaded successfully</string>
+    <string name="profile_photo_updated_successfully">Profile photo updated successfully</string>
+    <string name="failed_upload_photo">Failed to upload photo</string>
+    <string name="change_password_label">Change password</string>
+    <string name="old_password_placeholder">old password</string>
+    <string name="new_password_placeholder">new password</string>
+    <string name="enter_current_password">Enter your current password</string>
+    <string name="incorrect_old_password">Incorrect current password</string>
+    <string name="new_password_min_length">New password must be at least 6 characters</string>
+    <string name="password_updated_successfully">Password updated successfully</string>
+    <string name="failed_update_password">Failed to update password</string>
+    <string name="logout">Log Out</string>
+    <string name="logout_dialog_message">Are you sure you want to log out? You will need to sign in again to access your progress.</string>
 
-    <string name="delete_all">Delete All</string>
-    <string name="clear_all_notifications_title">Clear All Notifications?</string>
+    <string name="achievement_tab_all">All</string>
+    <string name="achievement_tab_earned">Earned</string>
+    <string name="achievement_tab_locked">Locked</string>
+    <string name="achievement_stat_earned">EARNED</string>
+    <string name="achievement_stat_in_progress">IN PROGRESS</string>
+    <string name="achievement_stat_xp_gained">XP GAINED</string>
+    <string name="achievement_claim_rewards">Claim Weekly Rewards</string>
+    <string name="achievement_header_trophies_cd">My Trophies</string>
+    <string name="achievement_header_subtitle">Every word is a step deeper into the\nquest.</string>
+    <string name="achievement_card_icon_cd">Achievement Icon</string>
+    <string name="achievement_detail_rewards">Rewards</string>
+    <string name="achievement_detail_progress">Progress</string>
+    <string name="achievement_detail_earned_on">Earned on %1$s</string>
+    <string name="achievement_detail_status_locked">LOCKED</string>
+    <string name="achievement_detail_status_in_progress">IN PROGRESS</string>
+    <string name="achievement_detail_status_completed">COMPLETED</string>
+    <string name="achievement_detail_close">Close</string>
+    <string name="achievement_detail_keep_going">Complete more quests to unlock this trophy!</string>
+    <string name="achievement_detail_xp_format">+%1$d XP</string>
+    <string name="achievement_detail_coins_format">+%1$d Coins</string>
 
-    <string name="clear_all_notifications_message">Are you sure you want to delete all notifications? This action cannot be undone.</string>
-    <string name="delete_notification_title">Delete Notification</string>
-    <string name="delete_notification_message">Are you sure you want to remove this notification?</string>
-    <string name="no_notifications_found">No notifications yet!</string>
-    <string name="no_notifications_desc">When you get updates, reminders, or rewards, they will show up right here.</string>
-    <string name="notification_dismiss">Cancel</string>
-    <string name="notification_delete_confirm">Delete</string>
-    <string name="notification_delete_all_confirm">Delete All</string>
-    <string name="notifications_load_error">Could not load notifications. Please try again.</string>
-    <string name="notification_deleted_toast">Notification deleted.</string>
-    <string name="notifications_all_deleted_toast">All notifications deleted.</string>
-
-    <string name="new_notification">New Notification</string>
-    <string name="start_hunting">Start Hunting</string>
-    <string name="mystery_world">Mystery World</string>
-    <string name="word_capture_progress_format">%1$s of %2$s</string>
-
-    <string name="get_a_hint_title">Get a hint</string>
-    <string name="change_word_hint">You can change the word if you are stuck</string>
+    
+    <!-- LANGUAGES & LOCALIZATION -->
+    
+    <string name="learning_label">Learning</string>
+    <string name="currently_language">CURRENTLY LEARNING</string>
+    <string name="change_label">Change</string>
+    <string name="select_language">Select language</string>
+    <string name="change_language_title">Change Language</string>
+    <string name="change_language_message">Are you sure you want to switch to %1$s?</string>
     <string name="updating_language_title">Updating Language</string>
     <string name="updating_language_desc">Please wait while we set up your new language…</string>
-    <string name="game_processing_status_analyzing">Analyzing pixels...</string>
-    <string name="game_processing_status_comparing">Comparing with dictionary...</string>
-    <string name="game_processing_status_thinking">Thinking hard...</string>
-
-    <string name="mind_reader_choose_category">Choose Category</string>
-
-    <!-- Daily Mission Dialog Strings -->
-    <string name="daily_mission_title_success">Daily Mission!</string>
-    <string name="daily_mission_title_loading">Decrypting…</string>
-    <string name="daily_mission_message_success">Your target for today is:</string>
-    <string name="daily_mission_message_loading">Stand by while we fetch today\'s secret word…</string>
-    <string name="daily_mission_button_start_camera">Start Camera</string>
-    <string name="daily_mission_button_loading">Loading…</string>
-    <string name="daily_mission_button_later">Later</string>
-
-    <string name="daily_mission_already_solved_title">Mission Accomplished!</string>
-    <string name="daily_mission_already_solved_message">You have already completed today\'s daily mission. Come back tomorrow for a new challenge!</string>
-
-    <string name="gallery_category_all">All Items</string>
-    <string name="gallery_difficulty_easy">Easy</string>
-    <string name="gallery_difficulty_medium">Medium</string>
-    <string name="gallery_difficulty_hard">Hard</string>
-    <string name="lockscreen_notification_channel_name">Vocabulary Reminder</string>
+    <string name="my_languages_title">My Languages</string>
+    <string name="my_languages_level_format">Level %1$d</string>
+    <string name="add_languages_title">Add languages</string>
+    <string name="add_new_language">+ Add New Language</string>
+    <string name="add_languages_select_instruction">Select the languages you\'d like to learn</string>
+    <string name="add_languages_search_placeholder">Search languages…</string>
+    <string name="add_selected_format">Add Selected (%1$d)</string>
+    <string name="add_languages_no_results">No languages found</string>
+    <string name="error_loading_languages">Could not load languages. Please try again.</string>
+    <string name="no_languages_available">No languages available</string>
+    <string name="remove_language_title">Remove Language</string>
+    <string name="remove_language_message">Are you sure you want to remove %1$s from your active languages?</string>
+    <string name="cannot_remove_active_language">Cannot remove the currently active language.</string>
+    <string name="language_removed_success">Language removed successfully.</string>
+    <string name="english_language_displayName">English</string>
+    <string name="spanish_language_displayName">Spanish</string>
+    <string name="germany_language_displayName">Germany</string>
     <string name="arabic_language">arabic</string>
-    <string name="cd_avatar">Avatar</string>
+    <string name="english_language_code">en</string>
+    <string name="spanish_language_code">es</string>
+    <string name="germany_language_code">ge</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Spanish</string>
+    <string name="lang_french">French</string>
+    <string name="lang_german">German</string>
+    <string name="lang_arabic">Arabic</string>
 
-    <string name="next">Next</string>
-    <string name="got_it">Got It</string>
-    <string name="finish">Finish</string>
+    
+    <!-- SETTINGS & PREFERENCES -->
+    
+    <string name="settings_label">Settings</string>
+    <string name="settings_customize_journey">Customize your learning journey</string>
+    <string name="settings_category_account">ACCOUNT &amp; JOURNEY</string>
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_learning_language">Learning Language</string>
+    <string name="settings_app_language">App Language</string>
+    <string name="settings_daily_goal">Daily Goal</string>
+    <string name="settings_learning_streak">Learning Streak</string>
+    <string name="settings_category_app_experience">APP EXPERIENCE</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_sound_effects">Sound Effects</string>
+    <string name="settings_privacy_security">Privacy &amp; Security</string>
+    <string name="settings_help_support">Help &amp; Support</string>
+    <string name="settings_about_app">About App</string>
+    <string name="settings_log_out">Log Out</string>
+    <string name="settings_delete_account">Delete Account</string>
+
+    
+    <!-- NOTIFICATIONS & DAILY REMINDER -->
+    
+    <string name="notifications_title">Notifications</string>
+    <string name="new_notification">New Notification</string>
+    <string name="no_notifications_found">No notifications yet!</string>
+    <string name="no_notifications_desc">When you get updates, reminders, or rewards, they will show up right here.</string>
+    <string name="notifications_on_msg">Notifications enabled.</string>
+    <string name="notifications_off_msg">Notifications off. Daily reminder paused.</string>
+    <string name="notifications_load_error">Could not load notifications. Please try again.</string>
+    <string name="delete_notification_title">Delete Notification</string>
+    <string name="delete_notification_message">Are you sure you want to remove this notification?</string>
+    <string name="notification_dismiss">Cancel</string>
+    <string name="notification_delete_confirm">Delete</string>
+    <string name="clear_all_notifications_title">Clear All Notifications?</string>
+    <string name="clear_all_notifications_message">Are you sure you want to delete all notifications? This action cannot be undone.</string>
+    <string name="notification_delete_all_confirm">Delete All</string>
+    <string name="notification_deleted_toast">Notification deleted.</string>
+    <string name="notifications_all_deleted_toast">All notifications deleted.</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="select_reminder_time">Select Reminder Time</string>
+    <string name="repeat">Repeat</string>
+    <string name="every_day">Every Day</string>
+    <string name="weekdays">Weekdays</string>
+    <string name="weekends">Weekends</string>
+    <string name="custom">Custom</string>
+    <string name="reminder_turned_on">Reminder turned on. We\'ll keep you on track.</string>
+    <string name="reminder_turned_off">Reminder turned off.</string>
+    <string name="reminder_time_updated">Reminder time updated.</string>
+    <string name="reminder_repeat_updated">Reminder repeat updated.</string>
+    <string name="notification_channel_name">Daily Reminder</string>
+    <string name="notification_channel_description">Reminds you to complete your daily language lesson</string>
+    <string name="notification_title">Ready for today\'s lesson?</string>
+    <string name="notification_message">Open LinguaQuest and keep your streak alive.</string>
+    <string name="day_sun_short">S</string>
+    <string name="day_mon_short">M</string>
+    <string name="day_tue_short">T</string>
+    <string name="day_wed_short">W</string>
+    <string name="day_thu_short">T</string>
+    <string name="day_fri_short">F</string>
+    <string name="day_sat_short">S</string>
+
+    
+    <!-- HELP, SUPPORT & CONTACT US -->
+    
+    <string name="help_support_title">Help &amp; Support</string>
+    <string name="help_hero_title">We\'re here to help!</string>
+    <string name="help_hero_subtitle">Choose a topic below and we\'ll guide you.</string>
+    <string name="help_how_can_we_help">How can we help you?</string>
+    <string name="help_banner_speech_bubble">How can I help you today?</string>
+    <string name="help_still_need_help_title">Still need help?</string>
+    <string name="help_contact_support_action">Contact Support</string>
+    <string name="help_report_bug_action">Report a Bug</string>
+    <string name="help_reply_footer">Our team usually replies within 24 hours</string>
+    <string name="help_support_coming_soon_title">Coming Soon</string>
+    <string name="help_support_coming_soon_message">This support feature will be available soon.</string>
+    <string name="help_support_coming_soon_action">OK</string>
+    <string name="about_app_banner_title">Help &amp; Support</string>
+    <string name="about_app_banner_subtitle">Explore FAQs, contact support, or read the user guide to get the most out of your journey.</string>
+    <string name="about_app_section_title">Support Topics</string>
+    <string name="help_contact_title">Contact Us</string>
+    <string name="help_contact_subtitle">We\'re here to help. Contact us anytime.</string>
+    <string name="help_contact_detail">Need more help? Reach out to the team and we\'ll get back to you as soon as we can.</string>
+    <string name="about_app_contact_title">Contact Us</string>
+    <string name="about_app_contact_subtitle">Reach out to our support team for help with any issues or feedback.</string>
+    <string name="contact_us_banner_title">Contact Us</string>
+    <string name="contact_us_banner_subtitle">Have a question or feedback? Drop us a message below.</string>
+    <string name="contact_intro_title">Let\'s solve it together</string>
+    <string name="contact_intro_subtitle">Send us a quick message and include what happened, so we can help you faster.</string>
+    <string name="contact_email_label">EMAIL US</string>
+    <string name="contact_us_email_card_title">Email Support</string>
+    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
+    <string name="contact_us_subject_label">Subject</string>
+    <string name="contact_us_subject_placeholder">What do you need help with?</string>
+    <string name="contact_us_message_label">Message</string>
+    <string name="contact_us_message_placeholder">Describe your issue or feedback in detail...</string>
+    <string name="contact_us_send_button">Send Message</string>
+    <string name="contact_section_1_title">App issues</string>
+    <string name="contact_section_1_desc">If something crashes, freezes, or won\'t load, tell us what you were doing before it happened.</string>
+    <string name="contact_section_2_title">Account &amp; progress</string>
+    <string name="contact_section_2_desc">Use this for login problems, lost progress, rewards not appearing, or questions about your profile.</string>
+    <string name="contact_section_3_title">Feature requests</string>
+    <string name="contact_section_3_desc">Share any ideas that could make LinguaQuest better. We love hearing what explorers want next.</string>
+
+    
+    <!-- FAQS -->
+    
+    <string name="help_faqs_title">FAQs</string>
+    <string name="help_faqs_subtitle">Quick answers to common questions</string>
+    <string name="help_faqs_detail">Find answers about lessons, progress, rewards, and how the app works.</string>
+    <string name="help_faq_section_title">Frequently Asked Questions</string>
+    <string name="about_app_faqs_title">Frequently Asked Questions</string>
+    <string name="about_app_faqs_subtitle">Quick answers to common questions about your account, lessons, and rewards.</string>
+    <string name="faqs_intro_title">Five quick questions</string>
+    <string name="faqs_intro_subtitle">A few useful answers picked from the app so you can get back to learning fast.</string>
+    <string name="faq_question_label">QUESTION</string>
+    <string name="faq_answer_label">ANSWER</string>
+    <string name="faq_item_1_question">How do I start learning in LinguaQuest?</string>
+    <string name="faq_item_1_answer">Choose your languages during onboarding, then continue to Home to start quests, lessons, and practice.</string>
+    <string name="faqs_q1">How do I start learning in LinguaQuest?</string>
+    <string name="faqs_a1">Choose your languages during onboarding, then continue to Home to start quests, lessons, and practice.</string>
+    <string name="faq_item_2_question">What is Camera Hunt?</string>
+    <string name="faq_item_2_answer">Camera Hunt asks you to capture a real-world object and match it with the target vocabulary word.</string>
+    <string name="faqs_q2">What is Camera Hunt?</string>
+    <string name="faqs_a2">Camera Hunt asks you to capture a real-world object and match it with the target vocabulary word.</string>
+    <string name="faq_item_3_question">How does AI Image Verification work?</string>
+    <string name="faq_item_3_answer">After you take a photo, AI checks whether the object matches the target word before you earn rewards.</string>
+    <string name="faqs_q3">How does AI Image Verification work?</string>
+    <string name="faqs_a3">After you take a photo, AI checks whether the object matches the target word before you earn rewards.</string>
+    <string name="faq_item_4_question">How do I practice speaking?</string>
+    <string name="faq_item_4_answer">Use Voice Challenge or Review to speak out loud, then listen to instant pronunciation feedback.</string>
+    <string name="faqs_q4">How do I practice speaking?</string>
+    <string name="faqs_a4">Use Voice Challenge or Review to speak out loud, then listen to instant pronunciation feedback.</string>
+    <string name="faq_item_5_question">How do rewards and streaks work?</string>
+    <string name="faq_item_5_answer">You earn XP, coins, daily rewards, and streak progress as you keep learning every day.</string>
+    <string name="faq_earn_coins_question">How do I earn coins?</string>
+    <string name="faq_earn_coins_answer">Complete lessons and challenges to earn coins.</string>
+    <string name="faq_lock_screen_question">How does Lock Screen Vocabulary work?</string>
+    <string name="faq_lock_screen_answer">Go to Settings to enable lock screen notifications for daily word challenges.</string>
+    <string name="faq_change_language_question">Can I change my target language?</string>
+    <string name="faq_change_language_answer">Yes! You can change your target language in the profile settings.</string>
+    <string name="faq_maintain_streak_question">How do I maintain my streak?</string>
+    <string name="faq_maintain_streak_answer">Complete at least one lesson or challenge every day to keep your streak alive!</string>
+
+    
+    <!-- USER GUIDE -->
+    
+    <string name="help_guide_title">User Guide</string>
+    <string name="help_guide_subtitle">Learn how to use the app</string>
+    <string name="help_guide_detail">A quick guide to the main features, navigation, and the best way to get started.</string>
+    <string name="about_app_user_guide_title">User Guide</string>
+    <string name="about_app_user_guide_subtitle">Learn how to navigate LinguaQuest features, games, and learning paths.</string>
+    <string name="user_guide_overview_label">What\'s inside the guide?</string>
+    <string name="user_guide_product_vision_label">Product vision</string>
+    <string name="user_guide_product_vision_desc">A gamified AI-powered language learning experience that combines real-world interaction, speech practice, and personalized feedback to make learning natural, engaging, and effective.</string>
+    <string name="user_guide_step1_title">Explore &amp; Quests</string>
+    <string name="user_guide_step1_desc">Navigate through different worlds on the map, complete interactive quests, and collect words.</string>
+    <string name="user_guide_step2_title">Voice &amp; Pronunciation</string>
+    <string name="user_guide_step2_desc">Practice speaking in real-time with AI-powered pronunciation feedback and interactive scenarios.</string>
+    <string name="user_guide_step3_title">Camera &amp; Real World</string>
+    <string name="user_guide_step3_desc">Find objects in your environment, capture them with your camera, and learn vocabulary in context.</string>
+    <string name="user_guide_step4_title">Lock Screen &amp; Vault</string>
+    <string name="user_guide_step4_desc">Keep learning on the go with lock screen notifications and review your collected words in the vault.</string>
+    <string name="user_guide_item_1_title">Camera Hunt</string>
+    <string name="user_guide_item_1_desc">Capture real-world objects using the device camera and match them with target vocabulary words.</string>
+    <string name="user_guide_item_2_title">AI Image Verification</string>
+    <string name="user_guide_item_2_desc">Use AI-powered image recognition to check whether the captured object matches the required vocabulary.</string>
+    <string name="user_guide_item_3_title">Voice Challenge</string>
+    <string name="user_guide_item_3_desc">Practice speaking words and phrases through the microphone and get instant pronunciation feedback.</string>
+    <string name="user_guide_item_4_title">Sentence Pronunciation Game</string>
+    <string name="user_guide_item_4_desc">Listen to sentences, repeat them aloud, and receive an AI score based on pronunciation, fluency, and clarity.</string>
+    <string name="user_guide_item_5_title">AI Conversation Tutor</string>
+    <string name="user_guide_item_5_desc">Practice real-life conversations with an AI language tutor through voice interaction.</string>
+    <string name="user_guide_item_6_title">Lock Screen Learning</string>
+    <string name="user_guide_item_6_desc">Learn vocabulary from the lock screen with daily words, translations, example sentences, and pronunciation guidance.</string>
+    <string name="user_guide_item_7_title">Education Center</string>
+    <string name="user_guide_item_7_desc">Access structured lessons covering vocabulary, grammar, and cultural insights beyond the gameplay experience.</string>
+    <string name="user_guide_item_8_title">Captured Photos Gallery</string>
+    <string name="user_guide_item_8_desc">Review previously captured objects with their vocabulary names, translations, and pronunciation to strengthen memory.</string>
+    <string name="user_guide_item_9_title">Progress &amp; Rewards</string>
+    <string name="user_guide_item_9_desc">Earn XP and coins, complete daily missions, maintain streaks, and track your learning journey.</string>
+    <string name="user_guide_item_10_title">Multi-Language Support</string>
+    <string name="user_guide_item_10_desc">Learn multiple languages, switch between courses easily, and keep progress separate for each language.</string>
+
+    
+    <!-- APP TOUR & TUTORIALS -->
+    
     <string name="tutorial_replay_title">Replay App Tour</string>
     <string name="tutorial_replay_desc">Start the tutorial guide from the beginning.</string>
     <string name="tutorial_home_title">Home Screen</string>
@@ -924,7 +923,6 @@
     <string name="tutorial_lingos_desc">Practice speaking with Voice Game, tackle roleplay scenarios, and challenge the Mind Reader.</string>
     <string name="tutorial_profile_title">Your Profile</string>
     <string name="tutorial_profile_desc">Track achievements, check settings, and check leaderboard status.</string>
-
     <string name="tutorial_language_progress_title">Learning Progress</string>
     <string name="tutorial_language_progress_desc">Check your current language, level, learning progress, and streak here.</string>
     <string name="tutorial_word_capture_title">Current Lesson</string>
@@ -935,35 +933,50 @@
     <string name="tutorial_language_button_desc">Tap here to change your active learning language or add new ones.</string>
     <string name="tutorial_daily_mission_title">Daily Mission</string>
     <string name="tutorial_daily_mission_desc">Complete your daily mission to keep your streak alive and earn rewards.</string>
-
     <string name="tutorial_gallery_captures_title">Game Captures</string>
     <string name="tutorial_gallery_captures_desc">View all the words you have successfully captured in the real world through games.</string>
     <string name="tutorial_gallery_journal_title">My Journal</string>
     <string name="tutorial_gallery_journal_desc">Browse words saved in your vocabulary vault and manage your learning review.</string>
-
     <string name="tutorial_top_bar_coins_title">Your Coins</string>
     <string name="tutorial_top_bar_coins_desc">Earn coins by completing lessons and missions. Use them to unlock features.</string>
     <string name="tutorial_top_bar_xp_title">Your XP</string>
     <string name="tutorial_top_bar_xp_desc">Earn Experience Points (XP) to climb the leaderboards and track your progress.</string>
     <string name="tutorial_top_bar_notifications_title">Notifications</string>
     <string name="tutorial_top_bar_notifications_desc">Stay updated with vocabulary reminders, achievements, and quest details.</string>
-
     <string name="tutorial_lingos_voice_title">Voice Practice</string>
     <string name="tutorial_lingos_voice_desc">Speak into the microphone to practice your pronunciation and get real-time feedback.</string>
     <string name="tutorial_lingos_roleplay_title">Roleplay</string>
     <string name="tutorial_lingos_roleplay_desc">Engage in interactive conversations to improve your contextual speech skills.</string>
     <string name="tutorial_lingos_mindreader_title">Mind Reader</string>
     <string name="tutorial_lingos_mindreader_desc">Challenge the AI to guess the word you are thinking of in this interactive game.</string>
-
     <string name="tutorial_profile_header_title">Your Profile</string>
     <string name="tutorial_profile_header_desc">Manage your avatar, view your nickname, and check your current learning level.</string>
     <string name="tutorial_profile_stats_title">Profile Stats</string>
     <string name="tutorial_profile_stats_desc">Check your daily streak, total experience points, and words captured in real time.</string>
     <string name="tutorial_profile_settings_title">Account Settings</string>
     <string name="tutorial_profile_settings_desc">Tap here to open settings, configure notifications, change app theme, or adjust learning goals.</string>
-
     <string name="tutorial_profile_achievements_title">Achievements</string>
     <string name="tutorial_profile_achievements_desc">Earn badges and rewards as you hit milestones and complete challenges.</string>
     <string name="tutorial_profile_leaderboard_title">Leaderboard</string>
     <string name="tutorial_profile_leaderboard_desc">See how you rank against friends and other learners in the global community.</string>
+
+    <!-- ABOUT APP & LEGAL-->
+
+    <string name="about_app_title">About</string>
+    <string name="about_app_name">LinguaQuest</string>
+    <string name="about_app_description">LinguaQuest helps you learn languages through fun games, AI-powered lessons, and daily challenges.</string>
+    <string name="about_app_rate_app">Rate the App</string>
+    <string name="about_app_follow_instagram">Follow us on Instagram</string>
+    <string name="about_app_visit_website">Visit our Website</string>
+    <string name="about_app_terms_service">Terms of Service</string>
+    <string name="about_app_privacy_policy">Privacy Policy</string>
+    <string name="about_app_licenses_credits">Licenses &amp; Credits</string>
+    <string name="about_app_footer_made_with">Made with 💛 by The Lingo Team</string>
+    <string name="about_app_footer_copyright">© 2026 LinguaQuest. All rights reserved.</string>
+    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
+    <string name="about_app_website_url">https://linguaquest.app</string>
+    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
+    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
+    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
 </resources>

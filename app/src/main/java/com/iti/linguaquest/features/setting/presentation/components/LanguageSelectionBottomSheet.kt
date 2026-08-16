@@ -1,4 +1,5 @@
 package com.iti.linguaquest.features.setting.presentation.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -80,6 +81,7 @@ fun LanguageSelectionBottomSheet(
                 languagesState.isLoading -> {
                     LoadingView()
                 }
+
                 languagesState.isError -> {
                     ErrorView(
                         message = stringResource(R.string.error_loading_languages),
@@ -87,6 +89,7 @@ fun LanguageSelectionBottomSheet(
                         modifier = Modifier.height(200.dp)
                     )
                 }
+
                 languagesState.languages.isEmpty() -> {
                     ErrorView(
                         message = stringResource(R.string.no_languages_available),
@@ -94,6 +97,7 @@ fun LanguageSelectionBottomSheet(
                         modifier = Modifier.height(200.dp)
                     )
                 }
+
                 else -> {
                     languagesState.languages.forEach { language ->
                         val isSelected = currentLanguage == language.code

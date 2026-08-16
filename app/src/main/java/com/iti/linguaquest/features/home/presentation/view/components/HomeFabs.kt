@@ -52,9 +52,12 @@ fun HomeFabs(
     var isVisible by remember { mutableStateOf(true) }
 
     val tutorialManager = LocalTutorialManager.current
-    val tutorialState by (tutorialManager?.state?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(null) })
-    val currentTutorialStepId = tutorialState?.activeTour?.steps?.getOrNull(tutorialState?.currentStepIndex ?: -1)?.stepId
-    val isTutorialActiveOnFabs = (tutorialState?.isVisible == true) && (currentTutorialStepId == "tutorial_language_button" || currentTutorialStepId == "tutorial_daily_mission")
+    val tutorialState by (tutorialManager?.state?.collectAsStateWithLifecycle()
+        ?: remember { mutableStateOf(null) })
+    val currentTutorialStepId =
+        tutorialState?.activeTour?.steps?.getOrNull(tutorialState?.currentStepIndex ?: -1)?.stepId
+    val isTutorialActiveOnFabs =
+        (tutorialState?.isVisible == true) && (currentTutorialStepId == "tutorial_language_button" || currentTutorialStepId == "tutorial_daily_mission")
 
     val fabVisible = isVisible || isTutorialActiveOnFabs
 
@@ -77,56 +80,58 @@ fun HomeFabs(
     AnimatedVisibility(
         visible = fabVisible,
         enter = scaleIn(initialScale = 0.8f) + fadeIn(),
-        exit = scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 150)) + fadeOut(animationSpec = tween(durationMillis = 150)),
+        exit = scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 150)) + fadeOut(
+            animationSpec = tween(durationMillis = 150)
+        ),
         modifier = modifier
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-        StaggeredAnimatedItem(
-            index = 0,
-            state = animationState,
-            enter = LingoEntranceAnimations.popUpVertically(offset = 60)
-        ) {
-            FloatingActionButton(
-                onClick = { onDailyMissionClick(fabBounds[0]) },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.background,
-                modifier = Modifier.tutorialTarget("tutorial_daily_mission")
+            StaggeredAnimatedItem(
+                index = 0,
+                state = animationState,
+                enter = LingoEntranceAnimations.popUpVertically(offset = 60)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_daily_mission),
-                    contentDescription = "daily_mission_content_description",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.size(36.dp)
-                )
+                FloatingActionButton(
+                    onClick = { onDailyMissionClick(fabBounds[0]) },
+                    shape = CircleShape,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.tutorialTarget("tutorial_daily_mission")
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_daily_mission),
+                        contentDescription = "daily_mission_content_description",
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
             }
-        }
-        
-        Spacer(modifier = Modifier.height(16.dp))
 
-        StaggeredAnimatedItem(
-            index = 1,
-            state = animationState,
-            enter = LingoEntranceAnimations.popUpVertically(offset = 60)
-        ) {
-            FloatingActionButton(
-                onClick = { onWorldMapClick(fabBounds[0]) },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier
-                    .onGloballyPositioned { coordinates ->
-                        fabBounds[0] = coordinates.boundsInRoot()
-                    }
-                    .tutorialTarget("tutorial_language_button")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            StaggeredAnimatedItem(
+                index = 1,
+                state = animationState,
+                enter = LingoEntranceAnimations.popUpVertically(offset = 60)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.world_home_icon),
-                    contentDescription = "world_map_content_description",
-                    modifier = Modifier.size(28.dp)
-                )
+                FloatingActionButton(
+                    onClick = { onWorldMapClick(fabBounds[0]) },
+                    shape = CircleShape,
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                            fabBounds[0] = coordinates.boundsInRoot()
+                        }
+                        .tutorialTarget("tutorial_language_button")
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.world_home_icon),
+                        contentDescription = "world_map_content_description",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
-        }
         }
     }
 }
