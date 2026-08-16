@@ -1,70 +1,138 @@
 <resources>
+     
+    <!-- COMMON / GENERAL / GLOBAL -->
+     
     <string name="app_name">لينجوا كويست</string>
     <string name="app_logo_description">شعار LinguaQuest</string>
+    <string name="main_screen">الشاشة الأساسية</string>
+    <string name="go_to_details_1">الانتقال إلى التفاصيل 1</string>
+    <string name="details_screen_id">شاشة التفاصيل للمعرف: %1$d</string>
+    <string name="pop_screen">رجوع للشاشة السابقة</string>
+    <string name="loading">تحميل...</string>
+    <string name="loading_message_1">نجهز مهمتك...</string>
+    <string name="loading_message_2">نُهيّئ الببغاء...</string>
+    <string name="loading_message_3">على وشك الانتهاء...</string>
+    <string name="loading_message_4">نحزم حقائبك...</string>
+    <string name="loading_message_5">نتحقق من الخرائط...</string>
+    <string name="loading_quests">جاري تحميل المهام...</string>
+    <string name="preparing_adventure">نجهز مغامرتك...</string>
+    <string name="waking_up_lingo">نوقظ لينجو...</string>
+    <string name="translating_worlds">نترجم العوالم...</string>
+    <string name="almost_there">على وشك الانتهاء...</string>
+    <string name="continue_button">متابعة</string>
+    <string name="start_button">ابدأ</string>
+    <string name="back">رجوع</string>
+    <string name="go_back">رجوع</string>
+    <string name="cd_back">رجوع</string>
+    <string name="close">إغلاق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="cancel_button">إلغاء</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="confirm">تأكيد</string>
+    <string name="confirm_button">تأكيد</string>
+    <string name="btn_confirm">تأكيد</string>
+    <string name="save">حفظ</string>
+    <string name="save_changes">حفظ التغييرات</string>
+    <string name="edit">تعديل</string>
+    <string name="done">تم</string>
+    <string name="next">التالي</string>
+    <string name="finish">إنهاء</string>
+    <string name="got_it">فهمت ذلك</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="retry_label">إعادة المحاولة</string>
+    <string name="submit">إرسال</string>
+    <string name="skip">تخطي</string>
+    <string name="remove">حذف</string>
+    <string name="delete_all">حذف الكل</string>
+    <string name="expand">عرض المزيد</string>
+    <string name="collapse">عرض أقل</string>
+    <string name="see_more">عرض المزيد</string>
+    <string name="view_all_label">عرض الكل</string>
+    <string name="progress">التقدم</string>
+    <string name="level">المستوى</string>
+    <string name="days">أيام</string>
+    <string name="days_count"> عدد الايام </string>
+    <string name="day_format">اليوم %1$d</string>
+    <string name="coins">العملات</string>
+    <string name="coins_label">العملات</string>
+    <string name="coins_description">عملات</string>
+    <string name="coins_claimed">تم استلام العملات!</string>
+    <string name="not_enough_coins">عملات غير كافية!</string>
+    <string name="xp">XP</string>
+    <string name="total_xp_label">إجمالي الـ XP</string>
+    <string name="streak_label">الحماس المتواصل</string>
+    <string name="worlds_label">العوالم</string>
+    <string name="all_filter">الكل</string>
+    <string name="congrates">تهانينا</string>
+    <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
+    <string name="search_icon">أيقونة البحث</string>
+    <string name="camera_alt">الكاميرا</string>
+    <string name="mascot_help_text">اضغط عليّ إذا كنت\nتريد المساعدة</string>
+    <string name="mascot_content_desc">التميمة</string>
+    <string name="thinking_mascot_content_desc">التميمة وهي تفكر</string>
+    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
+    <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
+    <string name="cd_coin">عملة نقدية</string>
+    <string name="cd_coins">العملات</string>
+    <string name="cd_xp">XP</string>
+    <string name="cd_gift">هدية</string>
+    <string name="cd_completed">مكتمل</string>
+    <string name="cd_current">الحالي</string>
+    <string name="cd_locked">مغلق</string>
+    <string name="cd_navigate">التنقل</string>
+    <string name="cd_treasure">كنز</string>
+    <string name="cd_star">نجمة</string>
+    <string name="cd_avatar">الصورة الشخصية</string>
+    <string name="cd_add">إضافة</string>
+    <string name="cd_details">تفاصيل</string>
+    <string name="cd_pronounce">نطق</string>
+    <string name="cd_search">بحث</string>
+    <string name="cd_selected">محدد</string>
+    <string name="mascot_camera_cd">تميمة الكاميرا</string>
+    <string name="camera_icon_cd">أيقونة الكاميرا</string>
+
+    <!-- Generic Error Messages -->
+    <string name="general_error">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="error_generic">حدث خطأ عام</string>
+    <string name="error_no_internet">خطأ، لا يوجد اتصال بالإنترنت</string>
+    <string name="error_timeout">خطأ، انتهت مهلة الاتصال</string>
+    <string name="error_server">خطأ في الخادم (Server Error)</string>
+    <string name="error_bad_request">طلب غير صالح (Bad Request)</string>
+    <string name="error_unauthorized">غير مصرح به (Unauthorized)</string>
+    <string name="error_too_many_requests">طلبات كثيرة جداً (Too Many Requests)</string>
+    <string name="error_insufficient_balance">رصيدك غير كافٍ.</string>
+    <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
+    <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
+    <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
+    <string name="no_internet_short">لا يوجد إنترنت</string>
+    <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
+    <string name="offline_title">أنت غير متصل بالإنترنت</string>
+    <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
+
+     
+    <!-- ONBOARDING & PROFICIENCY LEVELS -->
+     
     <string name="onboarding_title_p1">تعلم اللغات من خلال استكشاف </string>
     <string name="onboarding_title_p2">العالم الحقيقي!</string>
     <string name="get_started">ابدأ الآن</string>
     <string name="already_have_an_account">لدي حساب بالفعل</string>
-    <string name="loading">تحميل...</string>
-    <string name="new_password_min_length_hint">6 أحرف على الأقل</string>
-    <string name="coins_claimed">تم استلام العملات!</string>
     <string name="choose_your_languages">اختر لغاتك</string>
     <string name="let_set_up_your_learning_journey">لنقم بإعداد رحلتك التعليمية!</string>
     <string name="i_speak">أنا أتحدث...</string>
     <string name="i_want_to_learn">أريد أن أتعلم...</string>
     <string name="popular_choices">خيارات شائعة</string>
-    <string name="continue_button">متابعة</string>
-    <string name="start_button">ابدأ</string>
-    <string name="help_support_coming_soon_title">قريبًا</string>
-    <string name="help_support_coming_soon_message">ستتوفر ميزة الدعم هذه قريبً.</string>
-    <string name="help_support_coming_soon_action">حسنًا</string>
     <string name="What_is_your_level">ما هو مستواك؟</string>
     <string name="choose_where_your_journey_begins">اختر من أين تبدأ رحلتك يا مغامر! سأرشدك عبر المسار الذي يناسبك تمامًا.</string>
-    <string name="daily_reminder">التذكير اليومي</string>
-    <string name="reminder_time">وقت التذكير</string>
-    <string name="notification_channel_name">التذكير اليومي</string>
-    <string name="notification_channel_description">يذكرك بإكمال درس اللغة اليومي</string>
-    <string name="select_reminder_time">اختر وقت التذكير</string>
-    <string name="notification_title">هل أنت مستعد لدرس اليوم؟</string>
-    <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
-    <string name="repeat">التكرار</string>
-    // Languages displayed name
-    <string name="login_error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة والمحاولة مرة أخرى.</string>
-    <string name="spanish_language_displayName">الإسبانية</string>
-    <string name="japanese_language_displayName">اليابانية</string>
-    <string name="english_language_displayName">الإنجليزية</string>
-    <string name="germany_language_displayName">الألمانية</string>
-    <string name="logout">تسجيل الخروج</string>
-    // Languages code
-    <string name="spanish_language_code">es</string>
-    <string name="japanese_language_code">ja</string>
-    <string name="english_language_code">en</string>
-    <string name="germany_language_code">ge</string>
-    <string name="cd_xp">XP</string>
-    <string name="daily_reward_xp_format">+%1$d XP</string>
-    <string name="not_enough_coins">عملات غير كافية!</string>
-    <string name="dummy_world_name">عالم المطبخ</string>
-    <string name="dummy_progress_text">4 من 10</string>
-    <string name="dummy_target_word">la taza</string>
-    <string name="lingos_label">لينجوز</string>
-    <string name="current_quest_label">المهمة الحالية</string>
-    <string name="find_and_capture_instruction">ابحث والتقط</string>
-    <string name="word_capture_continue_button">متابعة</string>
-    <string name="mascot_camera_cd">تميمة الكاميرا</string>
-    <string name="camera_icon_cd">أيقونة الكاميرا</string>
-    <string name="select_language">اختر اللغة</string>
-    <string name="every_day">كل يوم</string>
-    <string name="weekdays">أيام الأسبوع</string>
-    <string name="weekends">عطلة نهاية الأسبوع</string>
-    <string name="custom">مخصص</string>
-    <string name="save">حفظ</string>
-    <string name="day_sun_short">ح</string>
-    <string name="day_mon_short">ن</string>
-    <string name="day_tue_short">ث</string>
-    <string name="day_wed_short">ر</string>
-    <string name="day_thu_short">خ</string>
-    <string name="day_fri_short">ج</string>
-    <string name="day_sat_short">س</string>
+    <string name="level_beginner">مبتدئ</string>
+    <string name="level_beginner_description">ابدأ من الصفر مع الكلمات والجمل الأساسية.</string>
+    <string name="level_intermediate">متوسط</string>
+    <string name="level_intermediate_description">وسّع مفرداتك وأتقن المحادثات اليومية.</string>
+    <string name="level_advanced">متقدم</string>
+    <string name="level_advanced_description">حقق الطلاقة مع القواعد المعقدة والتحدث السريع.</string>
+
+     
+    <!-- AUTHENTICATION & ONBOARDING (LOGIN / SIGNUP / OTP / PASSWORD RESET) -->
+     
     <string name="login_welcome_back">مرحباً بعودتك!</string>
     <string name="login_ready_to_continue">هل أنت جاهز للمتابعة؟</string>
     <string name="login_title">تسجيل الدخول</string>
@@ -78,53 +146,54 @@
     <string name="login_continue_as_guest">المتابعة كضيف</string>
     <string name="login_new_here">مستخدم جديد؟</string>
     <string name="login_sign_up">إنشاء حساب</string>
-    <string name="signup_title">إنشاء حسابك</string>
-    <string name="signup_subtitle">أنشئ حساباً لتبدأ رحلتك في تعلم اللغات.</string>
-    <string name="signup_username">اسم المستخدم</string>
-    <string name="signup_confirm_password">تأكيد كلمة المرور</string>
-    <string name="signup_button">إنشاء الحساب</string>
-    <string name="signup_already_have_account">لديك حساب بالفعل؟</string>
-    <string name="hide_password">إخفاء كلمة المرور</string>
-    <string name="show_password">إظهار كلمة المرور</string>
-    <string name="home_label">الرئيسية</string>
-    <string name="profile_label">الملف الشخصي</string>
-
     <string name="login_error_invalid_email">صيغة البريد الإلكتروني غير صحيحة.</string>
     <string name="login_error_invalid_credentials">البريد الإلكتروني أو كلمة المرور غير صحيحة.</string>
+    <string name="login_error_invalid_password">كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.</string>
     <string name="login_error_email_not_verified">البريد الإلكتروني غير مؤكد.</string>
     <string name="login_error_weak_password">كلمة المرور ضعيفة جداً.</string>
     <string name="login_error_user_disabled">تم تعطيل حساب هذا المستخدم.</string>
     <string name="login_error_token_not_valid">انتهت صلاحية الجلسة.</string>
     <string name="login_error_operation_not_allowed">العملية غير مسموح بها.</string>
     <string name="login_error_generic">حدث خطأ ما.</string>
+    <string name="login_error_password_required">كلمة المرور مطلوبة.</string>
+    <string name="login_error_email_required">البريد الإلكتروني مطلوب.</string>
     <string name="login_error_email_already_in_use">البريد الإلكتروني مستخدم بالفعل.</string>
     <string name="login_error_email_not_found">البريد الإلكتروني غير موجود.</string>
     <string name="login_error_username_already_exists">اسم المستخدم موجود بالفعل.</string>
     <string name="login_error_invalid_reset_token">رمز إعادة التعيين غير صالح.</string>
     <string name="login_error_reset_token_expired">انتهت صلاحية رمز إعادة التعيين.</string>
     <string name="login_error_validation_error">حدث خطأ في التحقق.</string>
-    <string name="login_error_password_required">كلمة المرور مطلوبة.</string>
-    <string name="login_error_email_required">البريد الإلكتروني مطلوب.</string>
+    <string name="login_error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة والمحاولة مرة أخرى.</string>
+    <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
+    <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
+    <string name="error_email_not_found">لم يتم العثور على حساب بهذا البريد الإلكتروني.</string>
+
+    <string name="sign_up_screen">شاشة إنشاء الحساب</string>
+    <string name="signup_title">إنشاء حسابك</string>
+    <string name="signup_subtitle">أنشئ حساباً لتبدأ رحلتك في تعلم اللغات.</string>
+    <string name="signup_username">اسم المستخدم</string>
+    <string name="signup_confirm_password">تأكيد كلمة المرور</string>
+    <string name="signup_button">إنشاء الحساب</string>
+    <string name="signup_already_have_account">لديك حساب بالفعل؟</string>
     <string name="signup_error_name_required">اسم المستخدم مطلوب.</string>
     <string name="signup_error_name_too_short">يجب أن يتكون اسم المستخدم من حرفين على الأقل.</string>
     <string name="signup_error_passwords_do_not_match">كلمتا المرور غير متطابقتين.</string>
     <string name="signup_success_message">تم إنشاء الحساب بنجاح! تم إرسال رمز التحقق إلى بريدك الإلكتروني.</string>
-    <string name="otp_code_resent_message">تم إعادة إرسال رمز التحقق بنجاح!</string>
-    <string name="otp_verification_success_message">تم تأكيد البريد الإلكتروني بنجاح! يرجى تسجيل الدخول.</string>
+    <string name="hide_password">إخفاء كلمة المرور</string>
+    <string name="show_password">إظهار كلمة المرور</string>
 
-    <string name="home_screen">الشاشة الرئيسية</string>
-    <string name="profile_screen">شاشة الملف الشخصي</string>
-    <string name="go_to_details_1">الانتقال إلى التفاصيل 1</string>
-    <string name="main_screen">الشاشة الأساسية</string>
-    <string name="sign_up_screen">شاشة إنشاء الحساب</string>
     <string name="forgot_password_screen">شاشة نسيت كلمة المرور</string>
-    <string name="details_screen_id">شاشة التفاصيل للمعرف: %1$d</string>
-    <string name="pop_screen">رجوع للشاشة السابقة</string>
+    <string name="forget_password_title">نسيت\nكلمة المرور؟</string>
+    <string name="forget_password_subtitle">لا تقلق، سوف يساعدك لينجو في العثور عليها! أدخل بريدك الإلكتروني لاستلام رابط إعادة التعيين.</string>
+    <string name="forget_password_email_hint">أدخل بريدك الإلكتروني</string>
+    <string name="forget_password_send_button">إرسال رابط إعادة التعيين</string>
+    <string name="forget_password_error_invalid_email">يرجى أدخال عنوان بريد إلكتروني صحيح.</string>
 
     <string name="new_password_title">كلمة مرور\nجديدة</string>
     <string name="new_password_subtitle">دعنا نُعيدك إلى التعلم! اختر كلمة مرور قوية.</string>
     <string name="new_password_hint">أدخل كلمة المرور الجديدة</string>
     <string name="confirm_password_hint">تأكيد كلمة المرور الجديدة</string>
+    <string name="new_password_min_length_hint">6 أحرف على الأقل</string>
     <string name="new_password_strength_label">قوة كلمة المرور</string>
     <string name="new_password_reset_button">إعادة تعيين كلمة المرور</string>
     <string name="new_password_back_to_login">→ العودة لتسجيل الدخول</string>
@@ -136,11 +205,6 @@
     <string name="new_password_error_confirm_required">يرجى تأكيد كلمة المرور الخاصة بك.</string>
     <string name="new_password_error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
 
-    <string name="forget_password_title">نسيت\nكلمة المرور؟</string>
-    <string name="forget_password_subtitle">لا تقلق، سوف يساعدك لينجو في العثور عليها! أدخل بريدك الإلكتروني لاستلام رابط إعادة التعيين.</string>
-    <string name="forget_password_email_hint">أدخل بريدك الإلكتروني</string>
-    <string name="forget_password_send_button">إرسال رابط إعادة التعيين</string>
-    <string name="forget_password_error_invalid_email">يرجى أدخال عنوان بريد إلكتروني صحيح.</string>
     <string name="otp_verify_title">تأكيد بريدك الإلكتروني</string>
     <string name="otp_verify_subtitle">لقد أرسلنا رمزاً إلى بريدك الوارد. يرجى إدخاله أدناه.</string>
     <string name="otp_resend_code">إعادة إرسال الرمز</string>
@@ -148,316 +212,115 @@
     <string name="otp_back_to_login">العودة لتسجيل الدخول</string>
     <string name="otp_error_invalid">رمز التفعيل (OTP) غير صحيح.</string>
     <string name="otp_error_expired">انتهت صلاحية رمز التفعيل (OTP).</string>
-    <string name="camera_permission_required">صلاحية الكاميرا مطلوبة.</string>
-    <string name="camera_permission_title">هل كاميرتك جاهزة؟</string>
-    <string name="camera_permission_blocked_desc">نحتاج إلى الوصول للكاميرا للعب، ولكن يبدو أنه محظور. يرجى تمكينه من إعدادات جهازك.</string>
-    <string name="camera_permission_desc">يحتاج LinguaQuest إلى كاميرتك للعثور على الأشياء وكسب النقاط!</string>
-    <string name="open_settings">فتح الإعدادات</string>
-    <string name="grant_permission">منح الصلاحية</string>
-    <string name="go_back">رجوع</string>
-    <string name="captured_preview">معاينة الصورة الملتقطة</string>
-    <string name="find_label">ابحث عن:</string>
-    <string name="retry">إعادة المحاولة</string>
-    <string name="submit">إرسال</string>
-    <string name="search_icon">أيقونة البحث</string>
-    <string name="toggle_flash">تشغيل/إيقاف الفلاش</string>
-    <string name="flip_camera">قلب الكاميرا</string>
-    <string name="camera_alt">الكاميرا</string>
-    <string name="gallery_label">المعرض</string>
-    <string name="gallery_game_captures_tab">التقاطات اللعبة</string>
-    <string name="gallery_my_words_tab">مذكرتي</string>
-    <string name="Add_New">إضافة جديد</string>
+    <string name="otp_code_resent_message">تم إعادة إرسال رمز التحقق بنجاح!</string>
+    <string name="otp_verification_success_message">تم تأكيد البريد الإلكتروني بنجاح! يرجى تسجيل الدخول.</string>
+    <string name="otp_timer_content_description">المؤقت</string>
+    <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
+    <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
+    <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
 
-    <string name="my_captures">التقاطاتي</string>
-    <string name="objects_collected">تم جمع %1$d من العناصر</string>
-    <string name="captures_so_far">0 التقاطات حتى الآن</string>
-    <string name="empty_gallery_title">لا توجد التقاطات بعد</string>
-    <string name="empty_gallery_desc">لم تقم بالتقاط أي كلمات بعد.\nاضغط على الزر أعلاه لإضافة أول التقاط لك.</string>
-    <string name="add_new">إضافة جديد</string>
-    <string name="general_error">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
-    <string name="progress">التقدم</string>
-    <string name="see_more">عرض المزيد</string>
-    <string name="explore_worlds">استكشاف العوالم</string>
-    <string name="currently_language">يتعلم حالياً</string>
-    <string name="level">المستوى</string>
-    <string name="days">أيام</string>
-    <string name="coins_label">العملات</string>
-    <string name="total_xp_label">إجمالي الـ XP</string>
-    <string name="streak_label">الحماس المتواصل</string>
-    <string name="worlds_label">العوالم</string>
+     
+    <!-- HOME & MAP SECTION -->
+     
+    <string name="home_label">الرئيسية</string>
+    <string name="home_screen">الشاشة الرئيسية</string>
+    <string name="map_lets_learn">هيا نتعلم!</string>
     <string name="continue_lesson">متابعة الدرس</string>
-    <string name="voice_practise">تمرين الصوت</string>
-    <string name="leaderboard_title">قائمة المتصدرين</string>
-    <string name="achievements_title">الإنجازات</string>
-    <string name="learning_label">التعلم</string>
-    <string name="change_label">تغيير</string>
-    <string name="milestone_progress_label">الـ XP المطلوب للمرحلة التالية</string>
-    <string name="settings_label">الإعدادات</string>
-    <string name="view_all_label">عرض الكل</string>
-    <string name="you_label">أنت</string>
-    <string name="practice_pronunciation">تدرّب على\nالنطق</string>
-    // WorldDifficulty
-    <string name="medium">متوسط</string>
+    <string name="explore_worlds">استكشاف العوالم</string>
+    <string name="all_worlds_title">جميع العوالم</string>
+    <string name="all_worlds_subtitle">اختر مغامرتك القادمة</string>
+    <string name="worlds_count_format">%1$d من العوالم</string>
+    <string name="mystery_world">عالم غامض</string>
+    <string name="dummy_world_name">عالم المطبخ</string>
+    <string name="dummy_progress_text">4 من 10</string>
+    <string name="dummy_target_word">la taza</string>
+    <string name="start_hunting">أبدا مغامرتك</string>
+    <string name="current_quest_label">المهمة الحالية</string>
+    <string name="find_and_capture_instruction">ابحث والتقط</string>
+    <string name="word_capture_continue_button">متابعة</string>
+    <string name="word_capture_progress_format">%1$s من %2$s</string>
+    <string name="level_title">المستوى %1$d</string>
+    <string name="unlock_at_level_format">يفتح في المستوى %1$d</string>
     <string name="easy">سهل</string>
+    <string name="medium">متوسط</string>
     <string name="hard">صعب</string>
 
-    <!-- Review Screen -->
-    <string name="review_back_content_description">رجوع</string>
-    <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
-    <string name="review_error_emoji">😔</string>
-    <string name="review_retry_button">حاول مرة أخرى</string>
-    <string name="review_ai_badge_label">✦ مراجعة الذكاء الاصطناعي</string>
-    <string name="review_stop_speaking_description">إيقاف التحدث</string>
-    <string name="review_speak_description">تحدث</string>
-    <string name="review_section_sentence_emoji">📖</string>
-    <string name="review_section_sentence_label">الجملة</string>
-    <string name="review_section_translation_emoji">🌍</string>
-    <string name="review_section_translation_label">الترجمة</string>
-    <string name="review_section_memory_emoji">🧠</string>
-    <string name="review_section_memory_label">حيلة للذاكرة</string>
-    <string name="review_section_fun_emoji">💡</string>
-    <string name="review_section_fun_label">هل تعلم؟</string>
-    <string name="review_language_arrow"> ← </string>
+     
+    <!-- DAILY MISSIONS & DAILY REWARDS -->
+     
+    <string name="daily_reward_title">المكافأة\nاليومية!</string>
+    <string name="daily_reward_subtitle">لقد عثرت على كنز في مغامرتك اليوم.</string>
+    <string name="daily_reward_coins_format">+%1$d عملة</string>
+    <string name="daily_reward_xp_format">+%1$d XP</string>
+    <string name="claim_reward">اقتناص المكافأة</string>
+    <string name="daily_streak_bonus">مكافأة الحماس اليومي المتواصل!</string>
+    <string name="claim_your_daily_reward">احصل على مكافأتك اليومية!</string>
+    <string name="cd_daily_reward">المكافأة اليومية</string>
+    <string name="daily_mission_title_success">المهمة اليومية!</string>
+    <string name="daily_mission_title_loading">جاري التفكيك…</string>
+    <string name="daily_mission_message_success">هدف اليوم هو:</string>
+    <string name="daily_mission_message_loading">انتظر قليلاً بينما نجلب الكلمة السرية لليوم…</string>
+    <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
+    <string name="daily_mission_button_loading">جاري التحميل…</string>
+    <string name="daily_mission_button_later">لاحقاً</string>
+    <string name="daily_mission_already_solved_title">المهمة مكتملة!</string>
+    <string name="daily_mission_already_solved_message">لقد أكملت بالفعل مهمة اليوم اليومية. عود غداً لتحدٍ جديد!</string>
+    <string name="daily_mission_wrong_word">هذه لا تطابق الصوره. حاول مجددا</string>
+    <string name="daily_mission_completed">اكتملت المهمة! لقد كسبت %1$d نقطة خبرة و %2$d عملة.</string>
 
-    // Level Feature
-    <string name="level_title">المستوى %1$d</string>
-    <string name="back">رجوع</string>
-    <string name="coins">العملات</string>
-    <string name="mascot_help_text">اضغط عليّ إذا كنت\nتريد المساعدة</string>
-    <string name="mascot_content_desc">التميمة</string>
-    <string name="play_sound">تشغيل الصوت</string>
+     
+    <!-- CAMERA & REAL WORLD HUNTING -->
+     
     <string name="open_camera">فتح الكاميرا</string>
-    <string name="skip">تخطي</string>
-    <string name="close">إغلاق</string>
-    <string name="thinking_mascot_content_desc">التميمة وهي تفكر</string>
+    <string name="find_label">ابحث عن:</string>
+    <string name="captured_preview">معاينة الصورة الملتقطة</string>
+    <string name="toggle_flash">تشغيل/إيقاف الفلاش</string>
+    <string name="flip_camera">قلب الكاميرا</string>
     <string name="need_a_hint">هل تحتاج إلى تلميح؟</string>
+    <string name="get_a_hint_title">احصل على تلميح</string>
     <string name="reveal_first_letter">كشف الحرف الأول</string>
     <string name="show_category_clue">إظهار تلميح الفئة</string>
     <string name="use_hint">استخدام تلميح</string>
     <string name="scan_hint_format">قم بمسح %1$s في بيئتك الحقيقية باستخدام الكاميرا لإكمال هذا التحدي.</string>
+    <string name="change_word">تغيير الكلمة</string>
+    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقًا</string>
     <string name="change_word_confirm_title">تغيير الكلمة؟</string>
     <string name="change_word_confirm_message">سيتم خصم 50 عملة مرة واحدة.</string>
     <string name="change_word_confirm_action">تغيير الكلمة</string>
     <string name="change_word_cancel_action">إلغاء</string>
+    <string name="camera_permission_required">صلاحية الكاميرا مطلوبة.</string>
+    <string name="camera_permission_title">هل كاميرتك جاهزة؟</string>
+    <string name="camera_permission_blocked_desc">نحتاج إلى الوصول للكاميرا للعب، ولكن يبدو أنه محظور. يرجى تمكينه من إعدادات جهازك.</string>
+    <string name="camera_permission_desc">يحتاج LinguaQuest إلى كاميرتك للعثور على الأشياء وكسب النقاط!</string>
+    <string name="grant_permission">منح الصلاحية</string>
+    <string name="open_settings">فتح الإعدادات</string>
 
-    <string name="xp">XP</string>
-    <!-- Settings Screen -->
-    <string name="settings_customize_journey">خصص رحلتك التعليمية</string>
-    <string name="settings_category_account">الحساب والرحلة التعليمية</string>
-    <string name="settings_edit_profile">تعديل الملف الشخصي</string>
-    <string name="settings_learning_language">اللغة المراد تعلمها</string>
-    <string name="settings_app_language">لغة التطبيق</string>
-    <string name="settings_daily_goal">الهدف اليومي</string>
-    <string name="settings_learning_streak">أيام الحماس المتواصل</string>
-    <string name="settings_category_app_experience">تجربة التطبيق</string>
-    <string name="settings_notifications">الإشعارات</string>
-    <string name="settings_dark_mode">الوضع الداكن</string>
-    <string name="settings_sound_effects">المؤثرات الصوتية</string>
-    <string name="settings_privacy_security">الخصوصية والأمان</string>
-    <string name="settings_help_support">المساعدة والدعم</string>
-    <string name="settings_about_app">حول التطبيق</string>
-    <string name="settings_log_out">تسجيل الخروج</string>
-    <string name="settings_delete_account">حذف الحساب</string>
-    <string name="lockscreen_vocabulary_title">مفردات شاشة القفل</string>
-    <string name="lockscreen_vocabulary_subtitle">حوّل شاشة القفل إلى حلقة تعلم صغيرة تُبقي المفردات حاضرة طوال اليوم.</string>
-    <string name="lockscreen_vocabulary_cost_chip">50 عملة</string>
-    <string name="lockscreen_vocabulary_schedule_chip">كل ساعتين</string>
-    <string name="lockscreen_vocabulary_state_ready">جاهز</string>
-    <string name="lockscreen_vocabulary_state_generating">جارٍ الإعداد</string>
-    <string name="lockscreen_vocabulary_state_active">مفعّل</string>
-    <string name="lockscreen_vocabulary_state_disabled">متوقف</string>
-    <string name="lockscreen_vocabulary_state_error">يحتاج تدخل</string>
-    <string name="lockscreen_vocabulary_pending_words">الكلمات المتبقية</string>
-    <string name="lockscreen_vocabulary_batch_size">حجم الدفعة</string>
-    <string name="lockscreen_vocabulary_last_generated">آخر توليد</string>
-    <string name="lockscreen_vocabulary_target_language">اللغة الهدف</string>
-    <string name="lockscreen_vocabulary_level">المستوى</string>
-    <string name="lockscreen_vocabulary_enable_title">تفعيل مفردات شاشة القفل؟</string>
-    <string name="lockscreen_vocabulary_enable_message">سيتم خصم 50 عملة مرة واحدة، ثم ستظهر مفردات على شاشة القفل بشكل دوري.</string>
-    <string name="lockscreen_vocabulary_enable_action">تفعيل</string>
-    <string name="lockscreen_vocabulary_cancel_action">إلغاء</string>
-    <string name="lockscreen_vocabulary_retry">إعادة المحاولة</string>
-    <string name="lockscreen_vocabulary_disable">تعطيل الميزة</string>
-    <string name="lockscreen_vocabulary_loading">جارٍ تحميل المفردات...</string>
-    <string name="lockscreen_vocabulary_status_label">الحالة</string>
-    <string name="lockscreen_vocabulary_error_permission">صلاحية الإشعارات مطلوبة لتفعيل هذه الميزة.</string>
-    <string name="lockscreen_vocabulary_error_enable">تعذر تفعيل مفردات شاشة القفل.</string>
-    <string name="lockscreen_vocabulary_error_retry">ستتم إعادة محاولة التوليد لاحقًا.</string>
-    <string name="lockscreen_vocabulary_enabled">تم تفعيل مفردات شاشة القفل.</string>
-    <string name="lockscreen_vocabulary_disabled">تم تعطيل مفردات شاشة القفل.</string>
-    <string name="lockscreen_vocabulary_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
-    <string name="lockscreen_vocabulary_word_detail_title">تفاصيل الكلمة</string>
-    <string name="lockscreen_vocabulary_example_label">مثال</string>
-    <string name="lockscreen_vocabulary_translation_label">الترجمة</string>
-    <string name="lockscreen_vocabulary_word_label">الكلمة</string>
-    <string name="lockscreen_vocabulary_word_status">حالة الكلمة</string>
-    <string name="lockscreen_vocabulary_back">رجوع</string>
-
-    <!-- Vocabulary Vault (lock screen word list) -->
-    <string name="lockscreen_vocabulary_vault_title">خزينة المفردات</string>
-    <string name="lockscreen_vocabulary_vault_count">%1$d كلمة تم جمعها</string>
-    <string name="lockscreen_vocabulary_vault_empty_title">لا كلمات بعد!</string>
-    <string name="lockscreen_vocabulary_vault_empty_subtitle">ستظهر هنا الكلمات من إشعارات شاشة القفل.</string>
-    <string name="lockscreen_vocabulary_new_badge">جديد</string>
-
-    <!-- Notification -->
-    <string name="lockscreen_notification_channel_description">تذكيرات دورية بالمفردات على شاشة القفل</string>
-    <string name="lockscreen_notification_action_go">فتح</string>
-
-    <string name="lockscreen_notification_now">الآن</string>
-    <string name="lockscreen_notification_got_it">تم</string>
-    <string name="lockscreen_notification_tap_to_open">اضغط في أي مكان للفتح</string>
-    <string name="lockscreen_notification_translation_label">الترجمة: %1$s</string>
-    <string name="lockscreen_notification_example_label">المثال: %1$s</string>
-
-    <!-- Daily Rewards -->
-    <string name="daily_reward_title">المكافأة\nاليومية!</string>
-    <string name="daily_reward_subtitle">لقد عثرت على كنز في مغامرتك اليوم.</string>
-    <string name="daily_reward_coins_format">+%1$d عملة</string>
-    <string name="claim_reward">اقتناص المكافأة</string>
-    <string name="day_format">اليوم %1$d</string>
-    <string name="daily_streak_bonus">مكافأة الحماس اليومي المتواصل!</string>
-    <string name="claim_your_daily_reward">احصل على مكافأتك اليومية!</string>
-    <string name="cd_daily_reward">المكافأة اليومية</string>
-    <string name="cd_coin">عملة نقدية</string>
-    <string name="cd_gift">هدية</string>
-    <string name="cd_completed">مكتمل</string>
-    <string name="cd_current">الحالي</string>
-    <string name="cd_locked">مغلق</string>
-    <string name="cd_navigate">التنقل</string>
-
-    <string name="error_no_internet">خطأ، لا يوجد اتصال بالإنترنت</string>
-    <string name="error_timeout">خطأ، انتهت مهلة الاتصال</string>
-    <string name="error_server">خطأ في الخادم (Server Error)</string>
-    <string name="error_generic">حدث خطأ عام</string>
-    <string name="error_bad_request">طلب غير صالح (Bad Request)</string>
-    <string name="error_unauthorized">غير مصرح به (Unauthorized)</string>
-    <string name="error_too_many_requests">طلبات كثيرة جداً (Too Many Requests)</string>
-
-    <!-- All Worlds Screen -->
-    <string name="all_worlds_title">جميع العوالم</string>
-    <string name="all_worlds_subtitle">اختر مغامرتك القادمة</string>
-    <string name="worlds_count_format">%1$d من العوالم</string>
-    <string name="all_filter">الكل</string>
-    <string name="help_support_title">المساعدة والدعم</string>
-    <string name="help_hero_title">إحنا هنا عشان نساعدك</string>
-    <string name="help_hero_subtitle">اختار موضوع من تحت وهنرشدك خطوة بخطوة.</string>
-    <string name="help_how_can_we_help">إزاي نقدر نساعدك؟</string>
-    <string name="help_faqs_title">الأسئلة الشائعة</string>
-    <string name="help_faqs_subtitle">إجابات سريعة على الأسئلة المتكررة</string>
-    <string name="help_contact_title">تواصل معنا</string>
-    <string name="help_contact_subtitle">نحن هنا لمساعدتك. تواصل معنا في أي وقت.</string>
-    <string name="help_guide_title">دليل الاستخدام</string>
-    <string name="help_guide_subtitle">تعلّم إزاي تستخدم التطبيق</string>
-    <string name="help_faqs_detail">هتلاقي هنا إجابات عن الدروس، التقدم، المكافآت، وإزاي التطبيق بيشتغل.</string>
-    <string name="help_contact_detail">محتاج مساعدة أكتر؟ ابعت للفريق وهنرد عليك في أسرع وقت ممكن.</string>
-    <string name="help_guide_detail">دليل سريع لأهم المميزات وطريقة التنقل وأفضل بداية للتطبيق.</string>
-    <string name="contact_intro_title">خلينا نحلها مع بعض</string>
-    <string name="contact_intro_subtitle">ابعتلنا رسالة قصيرة واذكر اللي حصل عشان نقدر نساعدك أسرع.</string>
-    <string name="contact_email_label">راسلنا على البريد</string>
-    <string name="contact_section_1_title">مشاكل في التطبيق</string>
-    <string name="contact_section_1_desc">لو التطبيق وقف أو علّق أو ما اشتغلش، اشرح لنا كنت بتعمل إيه قبلها.</string>
-    <string name="contact_section_2_title">الحساب والتقدم</string>
-    <string name="contact_section_2_desc">استخدم ده لمشاكل تسجيل الدخول، فقدان التقدم، عدم ظهور المكافآت، أو أسئلة الملف الشخصي.</string>
-    <string name="contact_section_3_title">اقتراحات ومميزات جديدة</string>
-    <string name="contact_section_3_desc">ابعت أي أفكار ممكن تخلي LinguaQuest أحسن. بنحب نسمع اقتراحات المستكشفين.</string>
-    <string name="faqs_intro_title">خمس أسئلة سريعة</string>
-    <string name="faqs_intro_subtitle">إجابات مختصرة ومفيدة من داخل التطبيق عشان ترجع للتعلم بسرعة.</string>
-    <string name="faq_question_label">السؤال</string>
-    <string name="faq_answer_label">الإجابة</string>
-    <string name="faq_item_1_question">إزاي أبدأ أتعلم في LinguaQuest؟</string>
-    <string name="faq_item_1_answer">اختار اللغات أثناء البداية، وبعدها ادخل على الصفحة الرئيسية وابدأ المهام والدروس والتدريب.</string>
-    <string name="faq_item_2_question">إيه هي Camera Hunt؟</string>
-    <string name="faq_item_2_answer">Camera Hunt بتطلب منك تصوّر شيء حقيقي وتطابقه مع كلمة المفردات المطلوبة.</string>
-    <string name="faq_item_3_question">إزاي بيشتغل التحقق من الصورة بالذكاء الاصطناعي؟</string>
-    <string name="faq_item_3_answer">بعد ما تلتقط الصورة، الذكاء الاصطناعي بيشوف هل الشيء مطابق للكلمة المستهدفة قبل ما تكسب المكافآت.</string>
-    <string name="faq_item_4_question">إزاي أتمرن على النطق؟</string>
-    <string name="faq_item_4_answer">استخدم Voice Challenge أو Review وكرر بصوتك، وبعدها هتسمع ملاحظات فورية على النطق.</string>
-    <string name="faq_item_5_question">إزاي المكافآت والسلاسل بتشتغل؟</string>
-    <string name="faq_item_5_answer">بتكسب XP وعملات ومكافآت يومية وتقدم في السلاسل كل ما تواصل التعلم يوميًا.</string>
-    <string name="user_guide_overview_label">إيه اللي موجود في الدليل؟</string>
-    <string name="user_guide_product_vision_label">رؤية المنتج</string>
-    <string name="user_guide_product_vision_desc">تجربة تعلم لغة مدعومة بالذكاء الاصطناعي ومُصممة كلعبة، تجمع بين التفاعل مع العالم الحقيقي، وتدريب النطق، والملاحظات الشخصية لتجعل التعلم طبيعيًا وممتعًا وفعالًا.</string>
-    <string name="user_guide_item_1_title">مطاردة بالكاميرا</string>
-    <string name="user_guide_item_1_desc">صوّر الأشياء الحقيقية بالكاميرا وطابقها مع كلمات المفردات المستهدفة.</string>
-    <string name="user_guide_item_2_title">التحقق من الصورة بالذكاء الاصطناعي</string>
-    <string name="user_guide_item_2_desc">استخدم التعرف الذكي على الصور للتأكد أن الشيء المصوَّر يطابق الكلمة المطلوبة.</string>
-    <string name="user_guide_item_3_title">تحدي الصوت</string>
-    <string name="user_guide_item_3_desc">تدرّب على نطق الكلمات والعبارات من خلال الميكروفون واحصل على ملاحظات فورية.</string>
-    <string name="user_guide_item_4_title">لعبة نطق الجمل</string>
-    <string name="user_guide_item_4_desc">استمع للجمل وكررها بصوتك، ثم احصل على تقييم يعتمد على النطق والطلاقة والوضوح.</string>
-    <string name="user_guide_item_5_title">مدرب المحادثة بالذكاء الاصطناعي</string>
-    <string name="user_guide_item_5_desc">تدرّب على محادثات واقعية مع مدرب لغة ذكي باستخدام الصوت.</string>
-    <string name="user_guide_item_6_title">التعلم من شاشة القفل</string>
-    <string name="user_guide_item_6_desc">تعلم المفردات من شاشة القفل مع كلمات يومية وترجمات وأمثلة ونطق.</string>
-    <string name="user_guide_item_7_title">مركز التعليم</string>
-    <string name="user_guide_item_7_desc">ادخل دروسًا منظمة في المفردات والقواعد والمعلومات الثقافية بعيدًا عن اللعب.</string>
-    <string name="user_guide_item_8_title">معرض الصور الملتقطة</string>
-    <string name="user_guide_item_8_desc">راجع الصور التي التقطتها سابقًا مع اسم الكلمة وترجمتها والنطق لتقوية الحفظ.</string>
-    <string name="user_guide_item_9_title">التقدم والمكافآت</string>
-    <string name="user_guide_item_9_desc">اكسب XP وعملات، وأنجز المهام اليومية، وحافظ على السلسلة، وتابع رحلتك التعليمية.</string>
-    <string name="user_guide_item_10_title">دعم تعدد اللغات</string>
-    <string name="user_guide_item_10_desc">تعلم عدة لغات، وبدّل بين المسارات بسهولة، واحتفظ بتقدم مستقل لكل لغة.</string>
-    <string name="unlock_at_level_format">يفتح في المستوى %1$d</string>
-    <string name="cd_back">رجوع</string>
-    <!-- Game Processing Package Strings -->
-    <string name="game_processing_simulate_failure_reason">يبدو هذا كحذاء، وليس تفاحة!</string>
-    <string name="game_processing_simulate_error_message">انتهت مهلة الاتصال.</string>
+     
+    <!-- GAME PROCESSING & AI VERIFICATION -->
+     
+    <string name="game_processing_ai_thinking">الذكاء الاصطناعي يفكر...</string>
+    <string name="game_processing_coins_counter">العملات: %1$d</string>
+    <string name="game_processing_captured_image_desc">الصورة الملتقطة</string>
+    <string name="game_processing_catchable_lingo_desc">لينجو قابل للإمساك</string>
+    <string name="game_processing_catch_lingo_hint">✨ أمسك بلينجو لبدء لعبة! ✨</string>
+    <string name="game_processing_btn_whack_lingo">اضرب لينجو!</string>
+    <string name="game_processing_status_analyzing">يقوم بتحليل البيكسلات...</string>
+    <string name="game_processing_status_inspecting">لينجو يفحص البيكسلات الآن...</string>
+    <string name="game_processing_status_consulting">يتحقق من القاموس...</string>
+    <string name="game_processing_status_comparing">يقارن مع القاموس...</string>
+    <string name="game_processing_status_squinting">ينظر بدقة شديدة...</string>
+    <string name="game_processing_status_evaluating">يقيم مهارات التصوير الفوتوغرافي لديك...</string>
+    <string name="game_processing_status_thinking">يفكر بعمق...</string>
+    <string name="game_processing_status_almost_there">أوشك على الانتهاء...</string>
     <string name="game_processing_btn_success">نجاح</string>
     <string name="game_processing_btn_fail">فشل</string>
     <string name="game_processing_btn_error">خطأ</string>
-    <string name="game_processing_catchable_lingo_desc">لينجو قابل للإمساك</string>
-    <string name="game_processing_catch_lingo_hint">✨ أمسك بلينجو لبدء لعبة! ✨</string>
-    <string name="game_processing_ai_thinking">الذكاء الاصطناعي يفكر...</string>
-    <string name="game_processing_coins_counter">العملات: %1$d</string>
-    <string name="game_processing_btn_whack_lingo">اضرب لينجو!</string>
-    <string name="game_processing_captured_image_desc">الصورة الملتقطة</string>
-    <string name="game_processing_status_inspecting">لينجو يفحص البيكسلات الآن...</string>
-    <string name="game_processing_status_consulting">يتحقق من القاموس...</string>
-    <string name="game_processing_status_squinting">ينظر بدقة شديدة...</string>
-    <string name="game_processing_status_evaluating">يقيم مهارات التصوير الفوتوغرافي لديك...</string>
-    <string name="game_processing_status_almost_there">أوشك على الانتهاء...</string>
-    <string name="game_processing_status_analyzing">يقوم بتحليل البيكسلات...</string>
-    <string name="game_processing_status_comparing">يقارن مع القاموس...</string>
-    <string name="game_processing_status_thinking">يفكر بعمق...</string>
-    <!-- Achievements Screen -->
-    <string name="achievement_tab_all">الكل</string>
-    <string name="achievement_tab_earned">المكتسبة</string>
-    <string name="achievement_tab_locked">المغلقة</string>
-    <string name="achievement_stat_earned">مُكتسب</string>
-    <string name="achievement_stat_in_progress">قيد التقدم</string>
-    <string name="achievement_stat_xp_gained">الـ XP المكتسب</string>
-    <string name="achievement_claim_rewards">المطالبة بالمكافآت الأسبوعية</string>
-    <string name="achievement_header_trophies_cd">كؤوسي</string>
-    <string name="achievement_header_subtitle">كل كلمة هي خطوة أعمق في المغامرة.</string>
-    <string name="achievement_card_icon_cd">أيقونة الإنجاز</string>
-    <string name="achievement_detail_rewards">المكافآت</string>
-    <string name="achievement_detail_progress">التقدم</string>
-    <string name="achievement_detail_earned_on">تم الحصول عليه في %1$s</string>
-    <string name="achievement_detail_status_locked">مغلق</string>
-    <string name="achievement_detail_status_in_progress">قيد التقدم</string>
-    <string name="achievement_detail_status_completed">مكتمل</string>
-    <string name="achievement_detail_close">إغلاق</string>
-    <string name="achievement_detail_keep_going">أكمل المزيد من المهام لفتح هذا الكأس!</string>
-    <string name="achievement_detail_xp_format">+%1$d XP</string>
-    <string name="achievement_detail_coins_format">+%1$d عملة</string>
+    <string name="game_processing_simulate_failure_reason">يبدو هذا كحذاء، وليس تفاحة!</string>
+    <string name="game_processing_simulate_error_message">انتهت مهلة الاتصال.</string>
 
-    <!-- Languages Feature -->
-    <string name="add_languages_title">إضافة لغات</string>
-    <string name="add_languages_select_instruction">اختر اللغات التي ترغب في تعلمها</string>
-    <string name="add_languages_search_placeholder">البحث عن لغات…</string>
-    <string name="add_selected_format">إضافة المحدد (%1$d)</string>
-    <string name="my_languages_title">لغاتي</string>
-    <string name="add_new_language">+ إضافة لغة جديدة</string>
-    <string name="my_languages_level_format">المستوى %1$d</string>
-    <string name="cd_selected">محدد</string>
-    <string name="cd_search">بحث</string>
-
-    <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
-    <string name="take_photo">التقاط صورة</string>
-    <string name="choose_from_gallery">اختيار من المعرض</string>
-
-    <!-- Game Result Feature -->
+     
+    <!-- GAME RESULTS -->
+     
     <string name="game_result_loading">جاري تحميل النتيجة...</string>
     <string name="game_result_invalid_state">حالة غير صالحة. لم يتم إنشاء أي نتيجة.</string>
     <string name="game_result_default_failure_reason">العنصر غير معروف.</string>
@@ -477,72 +340,61 @@
     <string name="game_result_hint_button">تأكد من أن الإضاءة جيدة!</string>
     <string name="game_result_retry_camera">إعادة محاولة الكاميرا</string>
     <string name="game_result_change_word">تغيير الكلمة</string>
-    <string name="edit_profile_title">تعديل الملف الشخصي</string>
-    <string name="change_photo">تغيير الصورة</string>
-    <string name="display_name_label">اسم العرض</string>
-    <string name="explorer_tagline_label">نبذة المستكشف</string>
-    <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
-    <string name="save_changes">حفظ التغييرات</string>
-    <string name="cancel">إلغاء</string>
 
-    <string name="days_count"> عدد الايام </string>
+     
+    <!-- LINGO REVIEW -->
+     
+    <string name="review_screen_title">مراجعة لنجو</string>
+    <string name="review_back_content_description">رجوع</string>
+    <string name="review_loading_message">يقوم الذكاء الاصطناعي بمراجعة كلمتك…</string>
+    <string name="review_error_emoji">😔</string>
+    <string name="review_retry_button">حاول مرة أخرى</string>
+    <string name="review_ai_badge_label">✦ مراجعة الذكاء الاصطناعي</string>
+    <string name="review_stop_speaking_description">إيقاف التحدث</string>
+    <string name="review_speak_description">تحدث</string>
+    <string name="review_captured_word">الكلمة المحفوظة</string>
+    <string name="review_language_arrow"> ← </string>
+    <string name="review_section_welcome_label">أهلاً بك</string>
+    <string name="review_section_welcome_message">مرحباً! لنراجع \"%1$s\" معاً، مشهداً بمشهد.</string>
+    <string name="review_section_sentence_emoji">📖</string>
+    <string name="review_section_sentence_label">الجملة</string>
+    <string name="review_section_translation_emoji">🌍</string>
+    <string name="review_section_translation_label">الترجمة</string>
+    <string name="review_section_memory_emoji">🧠</string>
+    <string name="review_section_memory_label">حيلة للذاكرة</string>
+    <string name="review_section_fun_emoji">💡</string>
+    <string name="review_section_fun_label">هل تعلم؟</string>
+    <string name="play_sound">تشغيل الصوت</string>
 
-    <string name="lang_english">الإنجليزية</string>
-    <string name="lang_spanish">الإسبانية</string>
-    <string name="lang_japanese">اليابانية</string>
-    <string name="lang_german">الألمانية</string>
-    <string name="lang_arabic">العربية</string>
-    <string name="settings_lock_screen_vocabulary">مفردات شاشة القفل</string>
-    <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
-    <string name="reminder_turned_off">تم إيقاف التذكير.</string>
-    <string name="reminder_time_updated">تم تحديث وقت التذكير.</string>
-    <string name="reminder_repeat_updated">تم تحديث تكرار التذكير.</string>
-    <string name="notifications_title">الإشعارات</string>
-    <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
-    <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
-    <string name="otp_timer_content_description">المؤقت</string>
-    <string name="enable_lock_screen_desc">أنفق %d من العملات للحصول على مفردات مُنشأة بالذكاء الاصطناعي تصل إلى شاشة قفلك على مدار اليوم.</string>
-    <string name="cd_coins">العملات</string>
-    <string name="btn_confirm">تأكيد</string>
-    <string name="btn_cancel">إلغاء</string>
-    <string name="lock_screen_vocabulary_title">مفردات شاشة القفل</string>
-    <string name="lock_screen_vocabulary_desc">تعلم كلمات جديدة مباشرةً\nمن شاشة قفلك</string>
-    <string name="error_fetch_generated_word">تعذر جلب الكلمة المُنشأة حديثاً.</string>
-    <string name="error_generate_words">تعذر إنشاء كلمات جديدة. يرجى المحاولة مرة أخرى.</string>
-    <string name="lockscreen_vocabulary_test_notification">اختبار الإشعار الآن</string>
-    <string name="lockscreen_vocabulary_dash">—</string>
+     
+    <!-- GALLERY & JOURNAL -->
+     
+    <string name="gallery_label">المعرض</string>
+    <string name="gallery_game_captures_tab">التقاطات اللعبة</string>
+    <string name="gallery_my_words_tab">مذكرتي</string>
+    <string name="my_captures">التقاطاتي</string>
+    <string name="objects_collected">تم جمع %1$d من العناصر</string>
+    <string name="captures_so_far">0 التقاطات حتى الآن</string>
+    <string name="empty_gallery_title">لا توجد التقاطات بعد</string>
+    <string name="empty_gallery_desc">لم تقم بالتقاط أي كلمات بعد.\nاضغط على الزر أعلاه لإضافة أول التقاط لك.</string>
+    <string name="add_new">إضافة جديد</string>
+    <string name="Add_New">إضافة جديد</string>
+    <string name="gallery_category_all">كل العناصر</string>
+    <string name="gallery_difficulty_easy">سهل</string>
+    <string name="gallery_difficulty_medium">متوسط</string>
+    <string name="gallery_difficulty_hard">صعب</string>
 
-    <!-- وصف المكونات / إمكانية الوصول -->
-    <string name="cd_add">إضافة</string>
-    <string name="cd_pronounce">نطق</string>
-    <string name="cd_details">تفاصيل</string>
+     
+    <!-- LINGOS / MINI-GAMES HUB -->
+     
+    <string name="lingos_label">لينجوز</string>
 
-    <!-- شاشة تفاصيل خزينة المفردات -->
-    <string name="lockscreen_vocabulary_words_collected">تم جمع %1$d كلمة</string>
-    <string name="lockscreen_milestone_dialog_title">🎉 تم تحقيق إنجاز!</string>
-    <string name="lockscreen_milestone_dialog_message">لقد تعلمت %1$d كلمة!\nحصلت على +%2$d عملة. واصل التقدم!</string>
-    <string name="lockscreen_milestone_dialog_button">رائع! 🚀</string>
-    <string name="lockscreen_example_usage_label">مثال للاستخدام</string>
-    <string name="lockscreen_got_it">فهمت ذلك</string>
-    <string name="lockscreen_search_placeholder">ابحث في خزينتك…</string>
-    <string name="lockscreen_no_words_found_title">لم يتم العثور على كلمات</string>
-    <string name="lockscreen_no_words_found_subtitle">جرّب البحث عن كلمة أخرى أو ترجمة مختلفة.</string>
-    <string name="lockscreen_badge_new">جديد</string>
-    <string name="lockscreen_sample_coins">١٬٢٥٠</string>
-    <!-- Accessibility / Content Descriptions -->
-    <string name="lockscreen_error_no_internet_retry">تعذر توليد الكلمات الآن. ستتم إعادة المحاولة تلقائياً.</string>
-    <string name="lockscreen_error_no_internet">تعذر توليد الكلمات الآن. حاول مرة أخرى لاحقاً.</string>
-    <string name="lockscreen_error_bad_format">استجابة الذكاء الاصطناعي لم تكن بالتنسيق المتوقع. حاول مرة أخرى لاحقاً.</string>
-    <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
-    <string name="lockscreen_notification_permission_required">إذن الإشعارات مطلوب لتفعيل الميزة.</string>
-    <string name="lockscreen_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
-    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن. سيظهر إشعار الاختبار خلال 5 ثوانٍ.</string>
-    <string name="lockscreen_test_notification_failed">تعذر عرض إشعار الاختبار. تأكد من تفعيل الإشعارات ووجود كلمة محفوظة للوك سكرين.</string>
-    <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
-    <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
-    <string name="error_insufficient_balance">رصيدك غير كافٍ.</string>
-    <!-- Game Voice Feature -->
+     
+    <!-- VOICE PRACTICE & PRONUNCIATION GAME -->
+     
+    <string name="voice_practise">تمرين الصوت</string>
     <string name="voice_game_title">تدريب النطق</string>
+    <string name="practice_pronunciation">تدرّب على\nالنطق</string>
     <string name="voice_evaluating">جارٍ تقييم النطق…</string>
     <string name="listening_to_your_pronunciation">جارٍ الاستماع إلى نطقك بعناية.</string>
     <string name="voice_idle_yo_can_do_it">يمكنك فعلها!</string>
@@ -567,86 +419,57 @@
     <string name="dialog_voice_confirmation_discard">الغاء</string>
     <string name="dialog_voice_confirmation_process">مراجعة</string>
 
-    <string name="map_lets_learn">هيا نتعلم!</string>
-    <string name="cd_treasure">كنز</string>
-    <string name="cd_star">نجمة</string>
-    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
-    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
-    <string name="coins_description">عملات</string>
-    <string name="confirm_button">تأكيد</string>
-    <string name="cancel_button">إلغاء</string>
-
-    <!-- Level Strings -->
-    <string name="level_beginner">مبتدئ</string>
-    <string name="level_beginner_description">ابدأ من الصفر مع الكلمات والجمل الأساسية.</string>
-    <string name="level_intermediate">متوسط</string>
-    <string name="level_intermediate_description">وسّع مفرداتك وأتقن المحادثات اليومية.</string>
-    <string name="level_advanced">متقدم</string>
-    <string name="level_advanced_description">حقق الطلاقة مع القواعد المعقدة والتحدث السريع.</string>
-    <string name="change_password_label">تغيير كلمة المرور</string>
-    <string name="old_password_placeholder">كلمة المرور الحالية</string>
-    <string name="new_password_placeholder">كلمة المرور الجديدة</string>
-    <!-- Content Descriptions -->
-    <string name="cd_linguaquest_mascot">تميمة LinguaQuest</string>
-    <string name="cd_linguaquest_mascot_animation">رسوم تميمة LinguaQuest المتحركة</string>
-    <string name="choose_a_source">اختر مصدر</string>
-    <!-- Snackbars messages -->
-    <string name="congrates">تهانينا</string>
-    <string name="change_word">تغيير الكلمة</string>
-    <string name="display_name_empty">الاسم لا يمكن أن يكون فارغًا</string>
-    <string name="enter_current_password">أدخل كلمة المرور الحالية</string>
-    <string name="new_password_min_length">يجب أن تكون كلمة المرور الجديدة 6 أحرف على الأقل</string>
-    <string name="incorrect_old_password">كلمة المرور الحالية غير صحيحة</string>
-
-    <string name="profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
-    <string name="failed_update_profile">فشل تحديث الملف الشخصي</string>
-    <string name="failed_upload_photo">فشل رفع الصورة</string>
-    <string name="password_updated_successfully">تم تحديث كلمة المرور بنجاح</string>
-    <string name="failed_update_password">فشل تحديث كلمة المرور</string>
-    <string name="profile_photo_updated_successfully">تم تحديث صورة الملف الشخصي بنجاح</string>
-    <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
-    <string name="add_languages_no_results">لم يتم العثور على لغات</string>
-    <string name="tap_to_zoom">اضغط للتقريب . اضغط ضغطتين</string>
-
-    <!-- Roleplay Feature Strings -->
+     
+    <!-- ROLEPLAY FEATURE -->
+     
+    <string name="roleplay_label">تبادل الأدوار</string>
+    <string name="roleplay_interactive_scenarios">سيناريوهات تفاعلية</string>
+    <string name="roleplay_browse_roleplays">تصفح تبادل الأدوار</string>
+    <string name="roleplay_interactive_roleplays">تبادل أدوار تفاعلي</string>
+    <string name="roleplay_no_roleplays_available">لا توجد سيناريوهات تبادل أدوار متاحة.</string>
     <string name="roleplay_boss_level">مستوى الزعيم</string>
     <string name="roleplay_boss_stage">مرحلة الزعيم</string>
-    <string name="roleplay_stop_recording">إيقاف التسجيل</string>
-    <string name="roleplay_start_recording">بدء التسجيل</string>
-    <string name="roleplay_victory">انتصار!</string>
-    <string name="roleplay_next_world">انهاء</string>
-    <string name="roleplay_stage_failed">فشلت المرحلة</string>
-    <string name="roleplay_try_again">حاول مرة أخرى</string>
-    <string name="roleplay_evaluating">جاري التقييم...</string>
-    <string name="roleplay_ai_analyzing">يقوم الذكاء الاصطناعي بتحليل محادثتك لحساب نتيجتك.</string>
-    <string name="roleplay_oops">عذراً!</string>
-    <string name="roleplay_exit">خروج</string>
-    <string name="roleplay_finish_stage_question">إنهاء المرحلة؟</string>
-    <string name="roleplay_finish_stage_message">هل أنت مستعد لإنهاء المحادثة والحصول على تقييمك؟</string>
-    <string name="roleplay_yes_evaluate">نعم، قيم أدائي!</string>
-    <string name="roleplay_keep_talking">الاستمرار في التحدث</string>
+    <string name="roleplay_meet_boss">قابل %1$s</string>
+    <string name="roleplay_objective">الهدف</string>
+    <string name="roleplay_your_objective">هدفك</string>
     <string name="roleplay_objective_format">الهدف: %1$s</string>
+    <string name="roleplay_read_carefully">(اقرأ بعناية بلغتك الأم قبل البدء)</string>
+    <string name="roleplay_start_roleplay">بدء تبادل الأدوار</string>
     <string name="roleplay_connecting">جاري الاتصال...</string>
     <string name="roleplay_not_connected">غير متصل.</string>
-    <string name="roleplay_tap_to_stop">انقر للإيقاف</string>
+    <string name="roleplay_start_recording">بدء التسجيل</string>
+    <string name="roleplay_stop_recording">إيقاف التسجيل</string>
     <string name="roleplay_tap_to_speak">انقر للتحدث</string>
+    <string name="roleplay_tap_to_stop">انقر للإيقاف</string>
     <string name="roleplay_hold_to_speak">اضغط مع الاستمرار للتحدث</string>
     <string name="roleplay_release_to_send">اترك للإرسال</string>
     <string name="roleplay_ai_thinking">الذكاء الاصطناعي يفكر...</string>
     <string name="roleplay_ai_speaking">الذكاء الاصطناعي يتحدث...</string>
     <string name="roleplay_finish_stage">إنهاء المرحلة</string>
-    <string name="roleplay_meet_boss">قابل %1$s</string>
-    <string name="roleplay_your_objective">هدفك</string>
-    <string name="roleplay_read_carefully">(اقرأ بعناية بلغتك الأم قبل البدء)</string>
-    <string name="roleplay_start_roleplay">بدء تبادل الأدوار</string>
+    <string name="roleplay_finish_stage_question">إنهاء المرحلة؟</string>
+    <string name="roleplay_finish_stage_message">هل أنت مستعد لإنهاء المحادثة والحصول على تقييمك؟</string>
+    <string name="roleplay_yes_evaluate">نعم، قيم أدائي!</string>
+    <string name="roleplay_keep_talking">الاستمرار في التحدث</string>
+    <string name="roleplay_evaluating">جاري التقييم...</string>
+    <string name="roleplay_ai_analyzing">يقوم الذكاء الاصطناعي بتحليل محادثتك لحساب نتيجتك.</string>
+    <string name="roleplay_victory">انتصار!</string>
+    <string name="roleplay_stage_failed">فشلت المرحلة</string>
+    <string name="roleplay_try_again">حاول مرة أخرى</string>
+    <string name="roleplay_next_world">انهاء</string>
+    <string name="roleplay_exit">خروج</string>
+    <string name="roleplay_oops">عذراً!</string>
     <string name="roleplay_xp">XP</string>
     <string name="roleplay_coins">العملات</string>
-    <string name="roleplay_interactive_scenarios">سيناريوهات تفاعلية</string>
-    <string name="roleplay_browse_roleplays">تصفح تبادل الأدوار</string>
-    <string name="roleplay_interactive_roleplays">تبادل أدوار تفاعلي</string>
-    <string name="roleplay_no_roleplays_available">لا توجد سيناريوهات تبادل أدوار متاحة.</string>
-    <string name="roleplay_objective">الهدف</string>
-    <string name="roleplay_label">تبادل الأدوار</string>
+    <string name="roleplay_overall_fluency">الطلاقة العامة</string>
+    <string name="roleplay_grammar">القواعد</string>
+    <string name="roleplay_vocabulary">المفردات</string>
+    <string name="roleplay_strengths">نقاط القوة</string>
+    <string name="roleplay_improvements">نقاط للتحسين</string>
+    <string name="roleplay_stars_1">محاولة جيدة!</string>
+    <string name="roleplay_stars_2">عمل رائع!</string>
+    <string name="roleplay_stars_3">متميز جداً!</string>
+    <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
+    <string name="roleplay_short_conversation">المحادثة كانت قصيرة جداً. حاول التحدث بجملتين أو ثلاث على الأقل لإكمال المرحلة.</string>
     <string name="roleplay_failed_connect">فشل الاتصال: %1$s</string>
     <string name="roleplay_connection_lost">فقد الاتصال: %1$s</string>
     <string name="roleplay_error_quota_exceeded">تم الوصول إلى الحد الأقصى لخدمة الذكاء الاصطناعي. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.</string>
@@ -655,130 +478,19 @@
     <string name="roleplay_error_evaluation_failed">تعذر تقييم المحادثة. يرجى المحاولة مرة أخرى.</string>
     <string name="roleplay_error_session_ended">انتهت جلسة تبادل الأدوار. يرجى البدء من جديد.</string>
     <string name="roleplay_error_generic">حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.</string>
-    <string name="roleplay_no_speech">لم تقل شيئًا! يرجى المحاولة مرة أخرى والتحدث إلى الشخصية.</string>
-    <string name="roleplay_overall_fluency">الطلاقة العامة</string>
-    <string name="roleplay_grammar">القواعد</string>
-    <string name="roleplay_vocabulary">المفردات</string>
-    <string name="roleplay_strengths">نقاط القوة</string>
-    <string name="roleplay_improvements">نقاط للتحسين</string>
-    <string name="roleplay_stars_3">متميز جداً!</string>
-    <string name="roleplay_stars_2">عمل رائع!</string>
-    <string name="roleplay_stars_1">محاولة جيدة!</string>
-    <string name="roleplay_short_conversation">المحادثة كانت قصيرة جداً. حاول التحدث بجملتين أو ثلاث على الأقل لإكمال المرحلة.</string>
-    <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
-    <string name="no_languages_available">لا توجد لغات متاحة</string>
-    <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
-    <string name="lockscreen_milestone_reward_error">تعذَّر الحصول على مكافأة الإنجاز حالياً. يُرجى المحاولة مرة أخرى.</string>
-    <string name="personal_info">المعلومات الشخصية</string>
-    <string name="security">الأمان</string>
-    <!-- New profile strings -->
-    <string name="review_captured_word">الكلمة المحفوظة</string>
-    <string name="review_section_welcome_label">أهلاً بك</string>
-    <string name="review_section_welcome_message">مرحباً! لنراجع \"%1$s\" معاً، مشهداً بمشهد.</string>
-    <string name="review_screen_title">مراجعة لنجو</string>
-    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت…</string>
-    <string name="offline_title">أنت غير متصل بالإنترنت</string>
-    <string name="offline_msg">عرض ملفك الشخصي المحفوظ - سيتم تحديثه تلقائيًا بمجرد عودتك للاتصال.</string>
-    <string name="no_internet_title">معدّش في اتصال بالإنترنت</string>
-    <string name="no_internet_subtitle">اتأكد من الشبكة عندك وحاول تاني</string>
-    <string name="retry_label">إعادة المحاولة</string>
-    <string name="no_internet_short">لا يوجد إنترنت</string>
-    <string name="no_internet_image_desc">لا يوجد اتصال بالإنترنت</string>
 
-    <!-- About App Strings -->
-    <string name="about_app_title">حول</string>
-    <string name="about_app_name">LinguaQuest</string>
-    <string name="about_app_description">يساعدك LinguaQuest على تعلم اللغات من خلال ألعاب ممتعة، ودروس مدعومة بالذكاء الاصطناعي، وتحديات يومية.</string>
-    <string name="about_app_rate_app">تقييم التطبيق</string>
-    <string name="about_app_follow_instagram">تابعنا على إنستغرام</string>
-    <string name="about_app_visit_website">زيارة موقعنا</string>
-    <string name="about_app_terms_service">شروط الخدمة</string>
-    <string name="about_app_privacy_policy">سياسة الخصوصية</string>
-    <string name="about_app_licenses_credits">التراخيص والاعتمادات</string>
-    <string name="about_app_footer_made_with">صُنع بـ 💛 بواسطة فريق Lingo</string>
-    <string name="about_app_footer_copyright">© 2026 LinguaQuest. جميع الحقوق محفوظة.</string>
-    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
-    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
-    <string name="about_app_website_url">https://linguaquest.app</string>
-    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
-    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
-    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
-    <!-- Help, Support & FAQs Strings -->
-    <string name="about_app_banner_title">المساعدة والدعم</string>
-    <string name="about_app_banner_subtitle">استكشف الأسئلة الشائعة، وتواصل مع الدعم، أو اطّلع على دليل المستخدم لتحقيق أقصى استفادة من رحلتك التعليمية.</string>
-    <string name="about_app_section_title">مواضيع الدعم</string>
-    <string name="about_app_faqs_title">الأسئلة الشائعة</string>
-    <string name="about_app_faqs_subtitle">إجابات سريعة عن الأسئلة الأكثر شيوعًا حول حسابك، والدروس، والمكافآت.</string>
-    <string name="about_app_contact_title">تواصل معنا</string>
-    <string name="about_app_contact_subtitle">تواصل مع فريق الدعم لدينا إذا واجهت أي مشكلة أو كان لديك أي اقتراح.</string>
-    <string name="about_app_user_guide_title">دليل المستخدم</string>
-    <string name="about_app_user_guide_subtitle">تعرّف على كيفية استخدام ميزات LinguaQuest والألعاب ومسارات التعلّم.</string>
-
-    <string name="faqs_q1">كيف أبدأ التعلّم في LinguaQuest؟</string>
-    <string name="faqs_a1">اختر لغاتك أثناء الإعداد الأولي، ثم انتقل إلى الصفحة الرئيسية لبدء المهام والدروس والتدريب.</string>
-
-    <string name="faqs_q2">ما هي ميزة Camera Hunt؟</string>
-    <string name="faqs_a2">تطلب منك ميزة Camera Hunt التقاط صورة لعنصر حقيقي ومطابقته مع الكلمة المستهدفة.</string>
-
-    <string name="faqs_q3">كيف تعمل ميزة التحقق بالذكاء الاصطناعي من الصور؟</string>
-    <string name="faqs_a3">بعد التقاط الصورة، يتحقق الذكاء الاصطناعي من مطابقتها للكلمة المستهدفة قبل منحك المكافآت.</string>
-
-    <string name="faqs_q4">كيف يمكنني التدرب على التحدث؟</string>
-    <string name="faqs_a4">استخدم تحدي الصوت أو المراجعة للتحدث بصوت عالٍ، ثم استمع إلى ملاحظات فورية لتحسين النطق.</string>
-
-    <string name="user_guide_step1_title">الاستكشاف والمهام</string>
-    <string name="user_guide_step1_desc">تنقّل بين العوالم المختلفة على الخريطة، وأكمل المهام التفاعلية، واجمع الكلمات الجديدة.</string>
-
-    <string name="user_guide_step2_title">الصوت والنطق</string>
-    <string name="user_guide_step2_desc">تدرّب على التحدث في الوقت الفعلي مع ملاحظات نطق مدعومة بالذكاء الاصطناعي وسيناريوهات تفاعلية.</string>
-
-    <string name="user_guide_step3_title">الكاميرا والعالم الحقيقي</string>
-    <string name="user_guide_step3_desc">اعثر على العناصر من حولك، والتقط صورًا لها بالكاميرا، وتعلّم المفردات في سياقها الحقيقي.</string>
-
-    <string name="user_guide_step4_title">شاشة القفل والخزنة</string>
-    <string name="user_guide_step4_desc">واصل التعلّم أثناء التنقل من خلال إشعارات شاشة القفل، وراجع الكلمات التي جمعتها داخل الخزنة.</string>
-
-    <string name="contact_us_banner_title">تواصل معنا</string>
-    <string name="contact_us_banner_subtitle">هل لديك سؤال أو اقتراح؟ أرسل لنا رسالة عبر النموذج أدناه.</string>
-
-    <string name="contact_us_email_card_title">دعم البريد الإلكتروني</string>
-    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
-
-    <string name="contact_us_subject_label">الموضوع</string>
-    <string name="contact_us_subject_placeholder">بماذا يمكننا مساعدتك؟</string>
-
-    <string name="contact_us_message_label">الرسالة</string>
-    <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل…</string>
-    <string name="help_banner_speech_bubble">كيف يمكنني مساعدتك اليوم؟</string>
-    <string name="help_faq_section_title">الأسئلة الشائعة</string>
-    <string name="help_still_need_help_title">هل ما زلت بحاجة إلى المساعدة؟</string>
-    <string name="help_contact_support_action">التواصل مع الدعم</string>
-    <string name="help_report_bug_action">الإبلاغ عن خطأ</string>
-    <string name="help_reply_footer">يرد فريقنا عادةً خلال 24 ساعة</string>
-    <string name="contact_us_send_button">إرسال الرسالة</string>
-    <string name="faq_earn_coins_question">كيف أكسب العملات؟</string>
-    <string name="faq_earn_coins_answer">أكمل الدروس والتحديات لكسب العملات.</string>
-
-    <string name="expand">عرض المزيد</string>
-    <string name="collapse">عرض أقل</string>
-
-    <string name="faq_lock_screen_question">كيف تعمل ميزة مفردات شاشة القفل؟</string>
-    <string name="faq_lock_screen_answer">انتقل إلى الإعدادات لتفعيل إشعارات شاشة القفل الخاصة بتحديات الكلمات اليومية.</string>
-
-    <string name="faq_change_language_question">هل يمكنني تغيير اللغة التي أتعلمها؟</string>
-    <string name="faq_change_language_answer">نعم! يمكنك تغيير اللغة التي تتعلمها من إعدادات الملف الشخصي.</string>
-
-    <string name="faq_maintain_streak_question">كيف أحافظ على سلسلة التعلم؟</string>
-    <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
-
-
-    <!-- Mind Reader Game Strings -->
+     
+    <!-- MIND READER GAME -->
+     
+    <string name="mind_reader_card_title">قارئ الأفكار</string>
+    <string name="mind_reader_card_desc">دع لينجو يخمن كلمتك!</string>
     <string name="mind_reader_lobby_title">قارئ أفكار لينجو</string>
     <string name="mind_reader_lobby_subtitle">\"سأحاول تخمين كلمتك في 20 سؤالاً... جهّز عقلك!\"</string>
+    <string name="mind_reader_choose_category">اختر الفئة</string>
     <string name="mind_reader_think_of_a_word">فكر في كلمة من فئتك المختارة!</string>
     <string name="mind_reader_current_category">الفئة الحالية</string>
-    <string name="mind_reader_start_game">ابدأ اللعبة ⚡</string>
     <string name="mind_reader_change_category">تغيير</string>
+    <string name="mind_reader_start_game">ابدأ اللعبة ⚡</string>
     <string name="mind_reader_confirm_dialog_title">هل لديك كلمة في ذهنك؟</string>
     <string name="mind_reader_confirm_dialog_desc">تأكد من أنها تنتمي لعالم %1$s!</string>
     <string name="mind_reader_not_yet">ليس بعد</string>
@@ -796,125 +508,411 @@
     <string name="mind_reader_wrong">✕ لا، أنت مخطئ!</string>
     <string name="mind_reader_correct">✓ نعم، لقد عرفتها!</string>
     <string name="mind_reader_pop_quiz_title">ترجم هذه الكلمة</string>
+    <string name="mind_reader_pop_quiz_speech">رائع! اضغط على الترجمة الصحيحة لاستلام مكافأتك.</string>
+    <string name="mind_reader_victory_speech">مهاراتك اللغوية أسطورية حقاً.</string>
     <string name="mind_reader_busted">كُشفت الحيلة!</string>
+    <string name="mind_reader_busted_title">كُشفت الحيلة!</string>
     <string name="mind_reader_stumped">حيّرت لينجو!</string>
+    <string name="mind_reader_stumped_title">لقد حيّرت\nلينجو!</string>
     <string name="mind_reader_stumped_desc">أنا أستسلم! لقد فزت.</string>
     <string name="mind_reader_experience">الخبرة</string>
     <string name="mind_reader_earnings">المكافآت</string>
-    <string name="mind_reader_try_again">العب مرة أخرى</string>
-    <string name="mind_reader_return_home">العودة للرئيسية</string>
-    <string name="mind_reader_card_title">قارئ الأفكار</string>
-    <string name="mind_reader_card_desc">دع لينجو يخمن كلمتك!</string>
-    <string name="mind_reader_trap_title">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
-    <string name="mind_reader_trap_dropdown_title">مفردات %1$s</string>
-    <string name="mind_reader_trap_dropdown_hint">اختر كلمتك...</string>
-    <string name="mind_reader_trap_submit">إرسال ▷</string>
-    <string name="mind_reader_pop_quiz_speech">رائع! اضغط على الترجمة الصحيحة لاستلام مكافأتك.</string>
-    <string name="mind_reader_victory_speech">مهاراتك اللغوية أسطورية حقاً.</string>
-    <string name="mind_reader_stumped_title">لقد حيّرت\nلينجو!</string>
-    <string name="mind_reader_return_to_home">العودة إلى الرئيسية</string>
-    <string name="mind_reader_play_again">العب مجدداً</string>
     <string name="mind_reader_xp_value">%1$d نقطة خبرة</string>
     <string name="mind_reader_coins_value">%1$d عملة</string>
+    <string name="mind_reader_try_again">العب مرة أخرى</string>
+    <string name="mind_reader_play_again">العب مجدداً</string>
+    <string name="mind_reader_return_home">العودة للرئيسية</string>
+    <string name="mind_reader_return_to_home">العودة إلى الرئيسية</string>
+    <string name="mind_reader_trap_title">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
     <string name="mind_reader_trap_speech">استسلمت! ما الكلمة التي كنت تفكر فيها؟</string>
-    <string name="mind_reader_busted_title">كُشفت الحيلة!</string>
+    <string name="mind_reader_trap_dropdown_title">مفردات %1$s</string>
+    <string name="mind_reader_trap_dropdown_hint">اختر كلمتك...</string>
     <string name="mind_reader_trap_input_placeholder">اكتب الكلمة التي كنت تفكر فيها...</string>
+    <string name="mind_reader_trap_submit">إرسال ▷</string>
+    <string name="mind_reader_translate_confirm_title">ترجمة السؤال</string>
+    <string name="mind_reader_translate_confirm_message">هل ترغب في إنفاق %1$d عملات لإظهار ترجمة السؤال؟</string>
     <string name="mind_reader_error_not_enough_coins">لا توجد عملات كافية للترجمة</string>
     <string name="mind_reader_error_quota_exceeded">تم الوصول إلى الحد الأقصى للخدمة. يرجى الانتظار والمحاولة مرة أخرى.</string>
     <string name="mind_reader_error_connection_lost">انقطع الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.</string>
     <string name="mind_reader_error_generic">حدث خطأ ما. يرجى المحاولة مجدداً.</string>
-    <string name="mind_reader_translate_confirm_title">ترجمة السؤال</string>
-    <string name="mind_reader_translate_confirm_message">هل ترغب في إنفاق %1$d عملات لإظهار ترجمة السؤال؟</string>
     <string name="mind_reader_reason_connection_dropped">انقطع الاتصال! دعنا نحاول مرة أخرى.</string>
     <string name="mind_reader_reason_max_questions">لم أستطع تخمينها خلال %1$d سؤالاً!</string>
     <string name="mind_reader_reason_quiz_wrong">إجابة الاختبار القصير كانت غير صحيحة.</string>
     <string name="mind_reader_reason_contradiction">الإجابة تطابقت، لكن مسار اللعب تعارض مع الكلمة المستهدفة.</string>
     <string name="mind_reader_reason_stump_contradiction">الكلمة المختارة تتعارض مع الإجابات المعطاة أثناء اللعب.</string>
-    <string name="confirm">تأكيد</string>
 
-    <string name="cannot_remove_active_language">لا يمكن حذف اللغة النشطة حاليًا.</string>
-    <string name="language_removed_success">تم حذف اللغة بنجاح.</string>
-    <string name="remove_language_title">حذف اللغة</string>
-    <string name="remove_language_message">هل أنت متأكد من أنك تريد حذف %1$s من اللغات المستهدفة؟</string>
-    <string name="remove">حذف</string>
-
-    <string name="delete_all">حذف الكل</string>
-    <string name="clear_all_notifications_title">حذف كافة الإشعارات؟</string>
-
-    <string name="clear_all_notifications_message">هل أنت متأكد من رغبتك في حذف كافة الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.</string>
-    <string name="delete_notification_title">حذف الإشعار</string>
-    <string name="delete_notification_message">هل أنت متأكد من رغبتك في حذف هذا الإشعار؟</string>
-    <string name="no_notifications_found">لا توجد إشعارات حتى الآن!</string>
-    <string name="no_notifications_desc">عندما تتلقى تحديثات، تنبيهات أو مكافآت، ستظهر لك هنا مباشرة.</string>
-    <string name="notification_dismiss">إلغاء</string>
-    <string name="notification_delete_confirm">حذف</string>
-    <string name="notification_delete_all_confirm">حذف الكل</string>
-    <string name="notifications_load_error">تعذر تحميل الإشعارات. يرجى المحاولة مرة أخرى.</string>
-    <string name="notification_deleted_toast">تم حذف الإشعار.</string>
-    <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
-    <string name="new_notification">اشعار جديد</string>
-    <string name="start_hunting">أبدا مغامرتك</string>
-    <string name="mystery_world">عالم غامض</string>
-    <string name="word_capture_progress_format">%1$s من %2$s</string>
-    <string name="daily_mission_wrong_word">هذه لا تطابق الصوره. حاول مجددا</string>
-    <string name="daily_mission_completed">اكتملت المهمة! لقد كسبت %1$d نقطة خبرة و %2$d عملة.</string>
-    <string name="updating_language_title">اضافة اللغه</string>
-    <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
-    <!-- أسماء نصوص المهمة اليومية -->
-    <string name="daily_mission_title_success">المهمة اليومية!</string>
-    <string name="daily_mission_title_loading">جاري التفكيك…</string>
-    <string name="daily_mission_message_success">هدف اليوم هو:</string>
-    <string name="daily_mission_message_loading">انتظر قليلاً بينما نجلب الكلمة السرية لليوم…</string>
-    <string name="daily_mission_button_start_camera">تشغيل الكاميرا</string>
-    <string name="daily_mission_button_loading">جاري التحميل…</string>
-    <string name="daily_mission_button_later">لاحقاً</string>
-    <string name="daily_mission_already_solved_title">المهمة مكتملة!</string>
-    <string name="daily_mission_already_solved_message">لقد أكملت بالفعل مهمة اليوم اليومية. عود غداً لتحدٍ جديد!</string>
-
-    <!-- Loading View -->
-    <string name="loading_quests">جاري تحميل المهام...</string>
-    <string name="preparing_adventure">نجهز مغامرتك...</string>
-    <string name="waking_up_lingo">نوقظ لينجو...</string>
-    <string name="translating_worlds">نترجم العوالم...</string>
-    <string name="almost_there">على وشك الانتهاء...</string>
-
-    <string name="gallery_category_all">كل العناصر</string>
-    <string name="gallery_difficulty_easy">سهل</string>
-    <string name="gallery_difficulty_medium">متوسط</string>
-    <string name="gallery_difficulty_hard">صعب</string>
-    <string name="lockscreen_notification_channel_name">تذكير بالكلمات</string>
-    <string name="arabic_language">العربية</string>
-    <string name="cd_avatar">الصورة الشخصية</string>
-    <string name="mind_reader_choose_category">اختر الفئة</string>
-    <string name="get_a_hint_title">احصل على تلميح</string>
-    <string name="change_word_hint">يمكنك تغيير الكلمة إذا كنت عالقًا</string>
+     
+    <!-- LOCK SCREEN VOCABULARY & VAULT -->
+     
+    <string name="lock_screen_vocabulary_title">مفردات شاشة القفل</string>
+    <string name="lock_screen_vocabulary_desc">تعلم كلمات جديدة مباشرةً\nمن شاشة قفلك</string>
+    <string name="lockscreen_vocabulary_title">مفردات شاشة القفل</string>
+    <string name="lockscreen_vocabulary_subtitle">حوّل شاشة القفل إلى حلقة تعلم صغيرة تُبقي المفردات حاضرة طوال اليوم.</string>
+    <string name="settings_lock_screen_vocabulary">مفردات شاشة القفل</string>
+    <string name="enable_lock_screen_title">تفعيل مفردات\nشاشة القفل؟</string>
+    <string name="enable_lock_screen_subtitle">أنفق %1$d عملة للحصول على مفردات مولدة بالذكاء الاصطناعي تظهر على شاشة القفل طوال اليوم.</string>
+    <string name="enable_lock_screen_desc">أنفق %d من العملات للحصول على مفردات مُنشأة بالذكاء الاصطناعي تصل إلى شاشة قفلك على مدار اليوم.</string>
+    <string name="lockscreen_vocabulary_enable_title">تفعيل مفردات شاشة القفل؟</string>
+    <string name="lockscreen_vocabulary_enable_message">سيتم خصم 50 عملة مرة واحدة، ثم ستظهر مفردات على شاشة القفل بشكل دوري.</string>
+    <string name="lockscreen_vocabulary_enable_action">تفعيل</string>
+    <string name="lockscreen_vocabulary_cancel_action">إلغاء</string>
+    <string name="lockscreen_vocabulary_cost_chip">50 عملة</string>
+    <string name="lockscreen_vocabulary_schedule_chip">كل ساعتين</string>
+    <string name="lockscreen_vocabulary_status_label">الحالة</string>
+    <string name="lockscreen_vocabulary_state_ready">جاهز</string>
+    <string name="lockscreen_vocabulary_state_generating">جارٍ الإعداد</string>
+    <string name="lockscreen_vocabulary_state_active">مفعّل</string>
+    <string name="lockscreen_vocabulary_state_disabled">متوقف</string>
+    <string name="lockscreen_vocabulary_state_error">يحتاج تدخل</string>
+    <string name="lockscreen_vocabulary_pending_words">الكلمات المتبقية</string>
+    <string name="lockscreen_vocabulary_batch_size">حجم الدفعة</string>
+    <string name="lockscreen_vocabulary_last_generated">آخر توليد</string>
+    <string name="lockscreen_vocabulary_target_language">اللغة الهدف</string>
+    <string name="lockscreen_vocabulary_level">المستوى</string>
+    <string name="lockscreen_vocabulary_retry">إعادة المحاولة</string>
+    <string name="lockscreen_vocabulary_disable">تعطيل الميزة</string>
+    <string name="lockscreen_vocabulary_loading">جارٍ تحميل المفردات...</string>
+    <string name="lockscreen_vocabulary_enabled">تم تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_disabled">تم تعطيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
+    <string name="lockscreen_notifications_scheduled">تمت جدولة إشعارات المفردات.</string>
+    <string name="lockscreen_vocabulary_test_notification">اختبار الإشعار الآن</string>
+    <string name="lockscreen_test_notification_scheduled">اقفل الشاشة الآن. سيظهر إشعار الاختبار خلال 5 ثوانٍ.</string>
+    <string name="lockscreen_test_notification_failed">تعذر عرض إشعار الاختبار. تأكد من تفعيل الإشعارات ووجود كلمة محفوظة للوك سكرين.</string>
     <string name="lockscreen_fullscreen_intent_title">مطلوب إذن شاشة القفل</string>
     <string name="lockscreen_fullscreen_intent_message">لعرض إشعارات الكلمات على شاشة القفل، يرجى تفعيل إذن \"الظهور فوق شاشة القفل\" من إعدادات جهازك.</string>
     <string name="lockscreen_fullscreen_intent_action">افتح الإعدادات</string>
-    <string name="login_error_invalid_password">كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.</string>
+    <string name="lockscreen_vocabulary_error_permission">صلاحية الإشعارات مطلوبة لتفعيل هذه الميزة.</string>
+    <string name="lockscreen_notification_permission_required">إذن الإشعارات مطلوب لتفعيل الميزة.</string>
+    <string name="lockscreen_vocabulary_error_enable">تعذر تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_enable_error">تعذر تفعيل ميزة مفردات شاشة القفل.</string>
+    <string name="lockscreen_required_inputs_error">اختر اللغة المستهدفة ومستوى الإتقان قبل تفعيل مفردات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_error_retry">ستتم إعادة محاولة التوليد لاحقًا.</string>
+    <string name="lockscreen_error_no_internet_retry">تعذر توليد الكلمات الآن. ستتم إعادة المحاولة تلقائياً.</string>
+    <string name="lockscreen_error_no_internet">تعذر توليد الكلمات الآن. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_bad_format">استجابة الذكاء الاصطناعي لم تكن بالتنسيق المتوقع. حاول مرة أخرى لاحقاً.</string>
+    <string name="lockscreen_error_generate_failed">فشل توليد كلمات جديدة. حاول مرة أخرى.</string>
+    <string name="error_fetch_generated_word">تعذر جلب الكلمة المُنشأة حديثاً.</string>
+    <string name="error_generate_words">تعذر إنشاء كلمات جديدة. يرجى المحاولة مرة أخرى.</string>
+    <string name="lockscreen_milestone_reward_error">تعذَّر الحصول على مكافأة الإنجاز حالياً. يُرجى المحاولة مرة أخرى.</string>
+    <string name="lockscreen_milestone_dialog_title">🎉 تم تحقيق إنجاز!</string>
+    <string name="lockscreen_milestone_dialog_message">لقد تعلمت %1$d كلمة!\nحصلت على +%2$d عملة. واصل التقدم!</string>
+    <string name="lockscreen_milestone_dialog_button">رائع! 🚀</string>
+    <string name="lockscreen_vocabulary_word_detail_title">تفاصيل الكلمة</string>
+    <string name="lockscreen_vocabulary_word_label">الكلمة</string>
+    <string name="lockscreen_vocabulary_translation_label">الترجمة</string>
+    <string name="lockscreen_vocabulary_example_label">مثال</string>
+    <string name="lockscreen_vocabulary_word_status">حالة الكلمة</string>
+    <string name="lockscreen_vocabulary_back">رجوع</string>
+    <string name="lockscreen_vocabulary_dash">—</string>
+    <string name="lockscreen_vocabulary_vault_title">خزينة المفردات</string>
+    <string name="lockscreen_vocabulary_vault_count">%1$d كلمة تم جمعها</string>
+    <string name="lockscreen_vocabulary_words_collected">تم جمع %1$d كلمة</string>
+    <string name="lockscreen_vocabulary_vault_empty_title">لا كلمات بعد!</string>
+    <string name="lockscreen_vocabulary_vault_empty_subtitle">ستظهر هنا الكلمات من إشعارات شاشة القفل.</string>
+    <string name="lockscreen_vocabulary_new_badge">جديد</string>
+    <string name="lockscreen_badge_new">جديد</string>
+    <string name="lockscreen_search_placeholder">ابحث في خزينتك…</string>
+    <string name="lockscreen_no_words_found_title">لم يتم العثور على كلمات</string>
+    <string name="lockscreen_no_words_found_subtitle">جرّب البحث عن كلمة أخرى أو ترجمة مختلفة.</string>
+    <string name="lockscreen_example_usage_label">مثال للاستخدام</string>
+    <string name="lockscreen_got_it">فهمت ذلك</string>
+    <string name="lockscreen_sample_coins">١٬٢٥٠</string>
+    <string name="lockscreen_notification_channel_name">تذكير بالكلمات</string>
+    <string name="lockscreen_notification_channel_description">تذكيرات دورية بالمفردات على شاشة القفل</string>
+    <string name="lockscreen_notification_action_go">فتح</string>
+    <string name="lockscreen_notification_now">الآن</string>
+    <string name="lockscreen_notification_got_it">تم</string>
+    <string name="lockscreen_notification_tap_to_open">اضغط في أي مكان للفتح</string>
+    <string name="lockscreen_notification_translation_label">الترجمة: %1$s</string>
+    <string name="lockscreen_notification_example_label">المثال: %1$s</string>
+
+     
+    <!-- PROFILE & LEADERBOARD & ACHIEVEMENTS -->
+     
+    <string name="profile_label">الملف الشخصي</string>
+    <string name="profile_screen">شاشة الملف الشخصي</string>
+    <string name="you_label">أنت</string>
+    <string name="leaderboard_title">قائمة المتصدرين</string>
+    <string name="achievements_title">الإنجازات</string>
+    <string name="milestone_progress_label">الـ XP المطلوب للمرحلة التالية</string>
+    <string name="edit_profile_title">تعديل الملف الشخصي</string>
+    <string name="personal_info">المعلومات الشخصية</string>
+    <string name="security">الأمان</string>
+    <string name="display_name_label">اسم العرض</string>
+    <string name="display_name_empty">الاسم لا يمكن أن يكون فارغًا</string>
+    <string name="explorer_tagline_label">نبذة المستكشف</string>
+    <string name="profile_visibility_note">سيكون اسمك ونبذتك الشخصية مرئيين للمستكشفين الآخرين في لوحة المتصدرين.</string>
+    <string name="profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
+    <string name="failed_update_profile">فشل تحديث الملف الشخصي</string>
+    <string name="change_photo">تغيير الصورة</string>
+    <string name="update_profile_photo">تحديث صورة الملف الشخصي</string>
+    <string name="take_photo">التقاط صورة</string>
+    <string name="choose_from_gallery">اختيار من المعرض</string>
+    <string name="choose_a_source">اختر مصدر</string>
+    <string name="uploading_photo_msg">جاري رفع صورتك، قد يستغرق هذا بعض الوقت…</string>
+    <string name="photo_uploaded_successfully">تم رفع الصورة بنجاح</string>
+    <string name="profile_photo_updated_successfully">تم تحديث صورة الملف الشخصي بنجاح</string>
+    <string name="failed_upload_photo">فشل رفع الصورة</string>
+    <string name="change_password_label">تغيير كلمة المرور</string>
+    <string name="old_password_placeholder">كلمة المرور الحالية</string>
+    <string name="new_password_placeholder">كلمة المرور الجديدة</string>
+    <string name="enter_current_password">أدخل كلمة المرور الحالية</string>
+    <string name="incorrect_old_password">كلمة المرور الحالية غير صحيحة</string>
+    <string name="new_password_min_length">يجب أن تكون كلمة المرور الجديدة 6 أحرف على الأقل</string>
+    <string name="password_updated_successfully">تم تحديث كلمة المرور بنجاح</string>
+    <string name="failed_update_password">فشل تحديث كلمة المرور</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="logout_dialog_message">هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى تقدمك.</string>
+
+    <string name="achievement_tab_all">الكل</string>
+    <string name="achievement_tab_earned">المكتسبة</string>
+    <string name="achievement_tab_locked">المغلقة</string>
+    <string name="achievement_stat_earned">مُكتسب</string>
+    <string name="achievement_stat_in_progress">قيد التقدم</string>
+    <string name="achievement_stat_xp_gained">الـ XP المكتسب</string>
+    <string name="achievement_claim_rewards">المطالبة بالمكافآت الأسبوعية</string>
+    <string name="achievement_header_trophies_cd">كؤوسي</string>
+    <string name="achievement_header_subtitle">كل كلمة هي خطوة أعمق في المغامرة.</string>
+    <string name="achievement_card_icon_cd">أيقونة الإنجاز</string>
+    <string name="achievement_detail_rewards">المكافآت</string>
+    <string name="achievement_detail_progress">التقدم</string>
+    <string name="achievement_detail_earned_on">تم الحصول عليه في %1$s</string>
+    <string name="achievement_detail_status_locked">مغلق</string>
+    <string name="achievement_detail_status_in_progress">قيد التقدم</string>
+    <string name="achievement_detail_status_completed">مكتمل</string>
+    <string name="achievement_detail_close">إغلاق</string>
+    <string name="achievement_detail_keep_going">أكمل المزيد من المهام لفتح هذا الكأس!</string>
+    <string name="achievement_detail_xp_format">+%1$d XP</string>
+    <string name="achievement_detail_coins_format">+%1$d عملة</string>
+
+     
+    <!-- LANGUAGES & LOCALIZATION -->
+     
+    <string name="learning_label">التعلم</string>
+    <string name="currently_language">يتعلم حالياً</string>
+    <string name="change_label">تغيير</string>
+    <string name="select_language">اختر اللغة</string>
     <string name="change_language_title">تغيير اللغة</string>
     <string name="change_language_message">هل أنت متأكد أنك تريد التبديل إلى %1$s؟</string>
-    <string name="edit">تعديل</string>
-    <string name="done">تم</string>
-    <string name="error_email_already_in_use">هناك حساب مسجل بهذا البريد الإلكتروني بالفعل.</string>
-    <string name="error_username_already_exists">اسم المستخدم مأخوذ بالفعل.</string>
-    <string name="error_invalid_otp">رمز التحقق غير صحيح.</string>
-    <string name="error_otp_expired">انتهت صلاحية رمز التحقق.</string>
-    <string name="error_otp_not_found">رمز التحقق غير موجود. يرجى طلب رمز جديد.</string>
-    <string name="error_email_not_found">لم يتم العثور على حساب بهذا البريد الإلكتروني.</string>
-    <string name="error_disk_full">مساحة التخزين ممتلئة.</string>
-    
-    <string name="loading_message_1">نجهز مهمتك...</string>
-    <string name="loading_message_2">نُهيّئ الببغاء...</string>
-    <string name="loading_message_3">على وشك الانتهاء...</string>
-    <string name="loading_message_4">نحزم حقائبك...</string>
-    <string name="loading_message_5">نتحقق من الخرائط...</string>
+    <string name="updating_language_title">اضافة اللغه</string>
+    <string name="updating_language_desc">من فضلك انتظر حتي نؤكد لك اللغه…</string>
+    <string name="my_languages_title">لغاتي</string>
+    <string name="my_languages_level_format">المستوى %1$d</string>
+    <string name="add_languages_title">إضافة لغات</string>
+    <string name="add_new_language">+ إضافة لغة جديدة</string>
+    <string name="add_languages_select_instruction">اختر اللغات التي ترغب في تعلمها</string>
+    <string name="add_languages_search_placeholder">البحث عن لغات…</string>
+    <string name="add_selected_format">إضافة المحدد (%1$d)</string>
+    <string name="add_languages_no_results">لم يتم العثور على لغات</string>
+    <string name="error_loading_languages">تعذر تحميل اللغات. يرجى المحاولة مرة أخرى.</string>
+    <string name="no_languages_available">لا توجد لغات متاحة</string>
+    <string name="remove_language_title">حذف اللغة</string>
+    <string name="remove_language_message">هل أنت متأكد من أنك تريد حذف %1$s من اللغات المستهدفة؟</string>
+    <string name="cannot_remove_active_language">لا يمكن حذف اللغة النشطة حاليًا.</string>
+    <string name="language_removed_success">تم حذف اللغة بنجاح.</string>
+    <string name="english_language_displayName">الإنجليزية</string>
+    <string name="spanish_language_displayName">الإسبانية</string>
+    <string name="germany_language_displayName">الألمانية</string>
+    <string name="arabic_language">العربية</string>
+    <string name="english_language_code">en</string>
+    <string name="spanish_language_code">es</string>
+    <string name="germany_language_code">ge</string>
+    <string name="lang_english">الإنجليزية</string>
+    <string name="lang_spanish">الإسبانية</string>
+    <string name="lang_german">الألمانية</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_french">الفرنسية</string>
 
-    <string name="next">التالي</string>
-    <string name="got_it">فهمت ذلك</string>
-    <string name="finish">إنهاء</string>
+     
+    <!-- SETTINGS & PREFERENCES -->
+     
+    <string name="settings_label">الإعدادات</string>
+    <string name="settings_customize_journey">خصص رحلتك التعليمية</string>
+    <string name="settings_category_account">الحساب والرحلة التعليمية</string>
+    <string name="settings_edit_profile">تعديل الملف الشخصي</string>
+    <string name="settings_learning_language">اللغة المراد تعلمها</string>
+    <string name="settings_app_language">لغة التطبيق</string>
+    <string name="settings_daily_goal">الهدف اليومي</string>
+    <string name="settings_learning_streak">أيام الحماس المتواصل</string>
+    <string name="settings_category_app_experience">تجربة التطبيق</string>
+    <string name="settings_notifications">الإشعارات</string>
+    <string name="settings_dark_mode">الوضع الداكن</string>
+    <string name="settings_sound_effects">المؤثرات الصوتية</string>
+    <string name="settings_privacy_security">الخصوصية والأمان</string>
+    <string name="settings_help_support">المساعدة والدعم</string>
+    <string name="settings_about_app">حول التطبيق</string>
+    <string name="settings_log_out">تسجيل الخروج</string>
+    <string name="settings_delete_account">حذف الحساب</string>
 
-    <!-- Tutorial / App Tour Strings -->
+     
+    <!-- NOTIFICATIONS & DAILY REMINDER -->
+     
+    <string name="notifications_title">الإشعارات</string>
+    <string name="new_notification">اشعار جديد</string>
+    <string name="no_notifications_found">لا توجد إشعارات حتى الآن!</string>
+    <string name="no_notifications_desc">عندما تتلقى تحديثات، تنبيهات أو مكافآت، ستظهر لك هنا مباشرة.</string>
+    <string name="notifications_on_msg">تم تفعيل الإشعارات.</string>
+    <string name="notifications_off_msg">الإشعارات معطلة. تم إيقاف التذكير اليومي مؤقتاً.</string>
+    <string name="notifications_load_error">تعذر تحميل الإشعارات. يرجى المحاولة مرة أخرى.</string>
+    <string name="delete_notification_title">حذف الإشعار</string>
+    <string name="delete_notification_message">هل أنت متأكد من رغبتك في حذف هذا الإشعار؟</string>
+    <string name="notification_dismiss">إلغاء</string>
+    <string name="notification_delete_confirm">حذف</string>
+    <string name="clear_all_notifications_title">حذف كافة الإشعارات؟</string>
+    <string name="clear_all_notifications_message">هل أنت متأكد من رغبتك في حذف كافة الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="notification_delete_all_confirm">حذف الكل</string>
+    <string name="notification_deleted_toast">تم حذف الإشعار.</string>
+    <string name="notifications_all_deleted_toast">تم حذف كافة الإشعارات.</string>
+    <string name="daily_reminder">التذكير اليومي</string>
+    <string name="reminder_time">وقت التذكير</string>
+    <string name="select_reminder_time">اختر وقت التذكير</string>
+    <string name="repeat">التكرار</string>
+    <string name="every_day">كل يوم</string>
+    <string name="weekdays">أيام الأسبوع</string>
+    <string name="weekends">عطلة نهاية الأسبوع</string>
+    <string name="custom">مخصص</string>
+    <string name="reminder_turned_on">تم تفعيل التذكير. سنحافظ على استمرارك!</string>
+    <string name="reminder_turned_off">تم إيقاف التذكير.</string>
+    <string name="reminder_time_updated">تم تحديث وقت التذكير.</string>
+    <string name="reminder_repeat_updated">تم تحديث تكرار التذكير.</string>
+    <string name="notification_channel_name">التذكير اليومي</string>
+    <string name="notification_channel_description">يذكرك بإكمال درس اللغة اليومي</string>
+    <string name="notification_title">هل أنت مستعد لدرس اليوم؟</string>
+    <string name="notification_message">افتح LinguaQuest وحافظ على سلسلة التعلم.</string>
+    <string name="day_sun_short">ح</string>
+    <string name="day_mon_short">ن</string>
+    <string name="day_tue_short">ث</string>
+    <string name="day_wed_short">ر</string>
+    <string name="day_thu_short">خ</string>
+    <string name="day_fri_short">ج</string>
+    <string name="day_sat_short">س</string>
+
+     
+    <!-- HELP, SUPPORT & CONTACT US -->
+     
+    <string name="help_support_title">المساعدة والدعم</string>
+    <string name="help_hero_title">إحنا هنا عشان نساعدك</string>
+    <string name="help_hero_subtitle">اختار موضوع من تحت وهنرشدك خطوة بخطوة.</string>
+    <string name="help_how_can_we_help">إزاي نقدر نساعدك؟</string>
+    <string name="help_banner_speech_bubble">كيف يمكنني مساعدتك اليوم؟</string>
+    <string name="help_still_need_help_title">هل ما زلت بحاجة إلى المساعدة؟</string>
+    <string name="help_contact_support_action">التواصل مع الدعم</string>
+    <string name="help_report_bug_action">الإبلاغ عن خطأ</string>
+    <string name="help_reply_footer">يرد فريقنا عادةً خلال 24 ساعة</string>
+    <string name="help_support_coming_soon_title">قريبًا</string>
+    <string name="help_support_coming_soon_message">ستتوفر ميزة الدعم هذه قريبً.</string>
+    <string name="help_support_coming_soon_action">حسنًا</string>
+    <string name="about_app_banner_title">المساعدة والدعم</string>
+    <string name="about_app_banner_subtitle">استكشف الأسئلة الشائعة، وتواصل مع الدعم، أو اطّلع على دليل المستخدم لتحقيق أقصى استفادة من رحلتك التعليمية.</string>
+    <string name="about_app_section_title">مواضيع الدعم</string>
+    <string name="help_contact_title">تواصل معنا</string>
+    <string name="help_contact_subtitle">نحن هنا لمساعدتك. تواصل معنا في أي وقت.</string>
+    <string name="help_contact_detail">محتاج مساعدة أكتر؟ ابعت للفريق وهنرد عليك في أسرع وقت ممكن.</string>
+    <string name="about_app_contact_title">تواصل معنا</string>
+    <string name="about_app_contact_subtitle">تواصل مع فريق الدعم لدينا إذا واجهت أي مشكلة أو كان لديك أي اقتراح.</string>
+    <string name="contact_us_banner_title">تواصل معنا</string>
+    <string name="contact_us_banner_subtitle">هل لديك سؤال أو اقتراح؟ أرسل لنا رسالة عبر النموذج أدناه.</string>
+    <string name="contact_intro_title">خلينا نحلها مع بعض</string>
+    <string name="contact_intro_subtitle">ابعتلنا رسالة قصيرة واذكر اللي حصل عشان نقدر نساعدك أسرع.</string>
+    <string name="contact_email_label">راسلنا على البريد</string>
+    <string name="contact_us_email_card_title">دعم البريد الإلكتروني</string>
+    <string name="contact_us_email_card_sub">support@linguaquest.com</string>
+    <string name="contact_us_subject_label">الموضوع</string>
+    <string name="contact_us_subject_placeholder">بماذا يمكننا مساعدتك؟</string>
+    <string name="contact_us_message_label">الرسالة</string>
+    <string name="contact_us_message_placeholder">اشرح مشكلتك أو شاركنا ملاحظاتك بالتفصيل…</string>
+    <string name="contact_us_send_button">إرسال الرسالة</string>
+    <string name="contact_section_1_title">مشاكل في التطبيق</string>
+    <string name="contact_section_1_desc">لو التطبيق وقف أو علّق أو ما اشتغلش، اشرح لنا كنت بتعمل إيه قبلها.</string>
+    <string name="contact_section_2_title">الحساب والتقدم</string>
+    <string name="contact_section_2_desc">استخدم ده لمشاكل تسجيل الدخول، فقدان التقدم، عدم ظهور المكافآت، أو أسئلة الملف الشخصي.</string>
+    <string name="contact_section_3_title">اقتراحات ومميزات جديدة</string>
+    <string name="contact_section_3_desc">ابعت أي أفكار ممكن تخلي LinguaQuest أحسن. بنحب نسمع اقتراحات المستكشفين.</string>
+
+     
+    <!-- FAQS -->
+     
+    <string name="help_faqs_title">الأسئلة الشائعة</string>
+    <string name="help_faqs_subtitle">إجابات سريعة على الأسئلة المتكررة</string>
+    <string name="help_faqs_detail">هتلاقي هنا إجابات عن الدروس، التقدم، المكافآت، وإزاي التطبيق بيشتغل.</string>
+    <string name="help_faq_section_title">الأسئلة الشائعة</string>
+    <string name="about_app_faqs_title">الأسئلة الشائعة</string>
+    <string name="about_app_faqs_subtitle">إجابات سريعة عن الأسئلة الأكثر شيوعًا حول حسابك، والدروس، والمكافآت.</string>
+    <string name="faqs_intro_title">خمس أسئلة سريعة</string>
+    <string name="faqs_intro_subtitle">إجابات مختصرة ومفيدة من داخل التطبيق عشان ترجع للتعلم بسرعة.</string>
+    <string name="faq_question_label">السؤال</string>
+    <string name="faq_answer_label">الإجابة</string>
+    <string name="faq_item_1_question">إزاي أبدأ أتعلم في LinguaQuest؟</string>
+    <string name="faq_item_1_answer">اختار اللغات أثناء البداية، وبعدها ادخل على الصفحة الرئيسية وابدأ المهام والدروس والتدريب.</string>
+    <string name="faqs_q1">كيف أبدأ التعلّم في LinguaQuest؟</string>
+    <string name="faqs_a1">اختر لغاتك أثناء الإعداد الأولي، ثم انتقل إلى الصفحة الرئيسية لبدء المهام والدروس والتدريب.</string>
+    <string name="faq_item_2_question">إيه هي Camera Hunt؟</string>
+    <string name="faq_item_2_answer">Camera Hunt بتطلب منك تصوّر شيء حقيقي وتطابقه مع كلمة المفردات المطلوبة.</string>
+    <string name="faqs_q2">ما هي ميزة Camera Hunt؟</string>
+    <string name="faqs_a2">تطلب منك ميزة Camera Hunt التقاط صورة لعنصر حقيقي ومطابقته مع الكلمة المستهدفة.</string>
+    <string name="faq_item_3_question">إزاي بيشتغل التحقق من الصورة بالذكاء الاصطناعي؟</string>
+    <string name="faq_item_3_answer">بعد ما تلتقط الصورة، الذكاء الاصطناعي بيشوف هل الشيء مطابق للكلمة المستهدفة قبل ما تكسب المكافآت.</string>
+    <string name="faqs_q3">كيف تعمل ميزة التحقق بالذكاء الاصطناعي من الصور؟</string>
+    <string name="faqs_a3">بعد التقاط الصورة، يتحقق الذكاء الاصطناعي من مطابقتها للكلمة المستهدفة قبل منحك المكافآت.</string>
+    <string name="faq_item_4_question">إزاي أتمرن على النطق؟</string>
+    <string name="faq_item_4_answer">استخدم Voice Challenge أو Review وكرر بصوتك، وبعدها هتسمع ملاحظات فورية على النطق.</string>
+    <string name="faqs_q4">كيف يمكنني التدرب على التحدث؟</string>
+    <string name="faqs_a4">استخدم تحدي الصوت أو المراجعة للتحدث بصوت عالٍ، ثم استمع إلى ملاحظات فورية لتحسين النطق.</string>
+    <string name="faq_item_5_question">إزاي المكافآت والسلاسل بتشتغل؟</string>
+    <string name="faq_item_5_answer">بتكسب XP وعملات ومكافآت يومية وتقدم في السلاسل كل ما تواصل التعلم يوميًا.</string>
+    <string name="faq_earn_coins_question">كيف أكسب العملات؟</string>
+    <string name="faq_earn_coins_answer">أكمل الدروس والتحديات لكسب العملات.</string>
+    <string name="faq_lock_screen_question">كيف تعمل ميزة مفردات شاشة القفل؟</string>
+    <string name="faq_lock_screen_answer">انتقل إلى الإعدادات لتفعيل إشعارات شاشة القفل الخاصة بتحديات الكلمات اليومية.</string>
+    <string name="faq_change_language_question">هل يمكنني تغيير اللغة التي أتعلمها؟</string>
+    <string name="faq_change_language_answer">نعم! يمكنك تغيير اللغة التي تتعلمها من إعدادات الملف الشخصي.</string>
+    <string name="faq_maintain_streak_question">كيف أحافظ على سلسلة التعلم؟</string>
+    <string name="faq_maintain_streak_answer">أكمل درسًا أو تحديًا واحدًا على الأقل كل يوم للحفاظ على سلسلة التعلم الخاصة بك!</string>
+
+     
+    <!-- USER GUIDE -->
+     
+    <string name="help_guide_title">دليل الاستخدام</string>
+    <string name="help_guide_subtitle">تعلّم إزاي تستخدم التطبيق</string>
+    <string name="help_guide_detail">دليل سريع لأهم المميزات وطريقة التنقل وأفضل بداية للتطبيق.</string>
+    <string name="about_app_user_guide_title">دليل المستخدم</string>
+    <string name="about_app_user_guide_subtitle">تعرّف على كيفية استخدام ميزات LinguaQuest والألعاب ومسارات التعلّم.</string>
+    <string name="user_guide_overview_label">إيه اللي موجود في الدليل؟</string>
+    <string name="user_guide_product_vision_label">رؤية المنتج</string>
+    <string name="user_guide_product_vision_desc">تجربة تعلم لغة مدعومة بالذكاء الاصطناعي ومُصممة كلعبة، تجمع بين التفاعل مع العالم الحقيقي، وتدريب النطق، والملاحظات الشخصية لتجعل التعلم طبيعيًا وممتعًا وفعالًا.</string>
+    <string name="user_guide_step1_title">الاستكشاف والمهام</string>
+    <string name="user_guide_step1_desc">تنقّل بين العوالم المختلفة على الخريطة، وأكمل المهام التفاعلية، واجمع الكلمات الجديدة.</string>
+    <string name="user_guide_step2_title">الصوت والنطق</string>
+    <string name="user_guide_step2_desc">تدرّب على التحدث في الوقت الفعلي مع ملاحظات نطق مدعومة بالذكاء الاصطناعي وسيناريوهات تفاعلية.</string>
+    <string name="user_guide_step3_title">الكاميرا والعالم الحقيقي</string>
+    <string name="user_guide_step3_desc">اعثر على العناصر من حولك، والتقط صورًا لها بالكاميرا، وتعلّم المفردات في سياقها الحقيقي.</string>
+    <string name="user_guide_step4_title">شاشة القفل والخزنة</string>
+    <string name="user_guide_step4_desc">واصل التعلّم أثناء التنقل من خلال إشعارات شاشة القفل، وراجع الكلمات التي جمعتها داخل الخزنة.</string>
+    <string name="user_guide_item_1_title">مطاردة بالكاميرا</string>
+    <string name="user_guide_item_1_desc">صوّر الأشياء الحقيقية بالكاميرا وطابقها مع كلمات المفردات المستهدفة.</string>
+    <string name="user_guide_item_2_title">التحقق من الصورة بالذكاء الاصطناعي</string>
+    <string name="user_guide_item_2_desc">استخدم التعرف الذكي على الصور للتأكد أن الشيء المصوَّر يطابق الكلمة المطلوبة.</string>
+    <string name="user_guide_item_3_title">تحدي الصوت</string>
+    <string name="user_guide_item_3_desc">تدرّب على نطق الكلمات والعبارات من خلال الميكروفون واحصل على ملاحظات فورية.</string>
+    <string name="user_guide_item_4_title">لعبة نطق الجمل</string>
+    <string name="user_guide_item_4_desc">استمع للجمل وكررها بصوتك، ثم احصل على تقييم يعتمد على النطق والطلاقة والوضوح.</string>
+    <string name="user_guide_item_5_title">مدرب المحادثة بالذكاء الاصطناعي</string>
+    <string name="user_guide_item_5_desc">تدرّب على محادثات واقعية مع مدرب لغة ذكي باستخدام الصوت.</string>
+    <string name="user_guide_item_6_title">التعلم من شاشة القفل</string>
+    <string name="user_guide_item_6_desc">تعلم المفردات من شاشة القفل مع كلمات يومية وترجمات وأمثلة ونطق.</string>
+    <string name="user_guide_item_7_title">مركز التعليم</string>
+    <string name="user_guide_item_7_desc">ادخل دروسًا منظمة في المفردات والقواعد والمعلومات الثقافية بعيدًا عن اللعب.</string>
+    <string name="user_guide_item_8_title">معرض الصور الملتقطة</string>
+    <string name="user_guide_item_8_desc">راجع الصور التي التقطتها سابقًا مع اسم الكلمة وترجمتها والنطق لتقوية الحفظ.</string>
+    <string name="user_guide_item_9_title">التقدم والمكافآت</string>
+    <string name="user_guide_item_9_desc">اكسب XP وعملات، وأنجز المهام اليومية، وحافظ على السلسلة، وتابع رحلتك التعليمية.</string>
+    <string name="user_guide_item_10_title">دعم تعدد اللغات</string>
+    <string name="user_guide_item_10_desc">تعلم عدة لغات، وبدّل بين المسارات بسهولة، واحتفظ بتقدم مستقل لكل لغة.</string>
+
+     
+    <!-- APP TOUR & TUTORIALS -->
+     
     <string name="tutorial_replay_title">إعادة جولة التطبيق</string>
     <string name="tutorial_replay_desc">بدء الدليل التعليمي من البداية.</string>
     <string name="tutorial_home_title">الشاشة الرئيسية</string>
@@ -925,7 +923,6 @@
     <string name="tutorial_lingos_desc">تدرب على التحدث مع لعبة الصوت، وتحدَّ سيناريوهات تبادل الأدوار، وتحدَّ قارئ الأفكار.</string>
     <string name="tutorial_profile_title">ملفك الشخصي</string>
     <string name="tutorial_profile_desc">تتبع الإنجازات، وتحقق من الإعدادات، وتحقق من حالة لوحة المتصدرين.</string>
-
     <string name="tutorial_language_progress_title">تقدم التعلم</string>
     <string name="tutorial_language_progress_desc">تحقق من لغتك الحالية، والمستوى، وتقدم التعلم، وسلسلة التعلم هنا.</string>
     <string name="tutorial_word_capture_title">الدرس الحالي</string>
@@ -936,35 +933,51 @@
     <string name="tutorial_language_button_desc">اضغط هنا لتغيير لغة التعلم النشطة أو إضافة لغات جديدة.</string>
     <string name="tutorial_daily_mission_title">المهمة اليومية</string>
     <string name="tutorial_daily_mission_desc">أكمل مهمتك اليومية للحفاظ على سلسلة التعلم الخاصة بك وكسب المكافآت.</string>
-
     <string name="tutorial_gallery_captures_title">الكلمات المحفوظة</string>
     <string name="tutorial_gallery_captures_desc">عرض جميع الكلمات التي نجحت في التقاطها في العالم الحقيقي من خلال الألعاب.</string>
     <string name="tutorial_gallery_journal_title">خزينتي</string>
     <string name="tutorial_gallery_journal_desc">تصفح الكلمات المحفوظة في خزينة المفردات وإدارة مراجعة التعلم الخاصة بك.</string>
-
     <string name="tutorial_top_bar_coins_title">عملاتك</string>
     <string name="tutorial_top_bar_coins_desc">اكسب العملات المعدنية من خلال إكمال الدروس والمهام. واستخدمها لفتح الميزات.</string>
     <string name="tutorial_top_bar_xp_title">نقاط الخبرة (XP)</string>
     <string name="tutorial_top_bar_xp_desc">اكسب نقاط الخبرة (XP) لتسلق لوحات المتصدرين وتتبع تقدمك.</string>
     <string name="tutorial_top_bar_notifications_title">الإشعارات</string>
     <string name="tutorial_top_bar_notifications_desc">ابقَ على اطلاع دائم بتذكيرات المفردات والإنجازات وتفاصيل المهام.</string>
-
     <string name="tutorial_lingos_voice_title">التدريب الصوتي</string>
     <string name="tutorial_lingos_voice_desc">تحدث في الميكروفون للتدرب على نطقك والحصول على تعليقات فورية.</string>
     <string name="tutorial_lingos_roleplay_title">تبادل الأدوار</string>
     <string name="tutorial_lingos_roleplay_desc">انخرط في محادثات تفاعلية لتحسين مهاراتك في التحدث السياقي.</string>
     <string name="tutorial_lingos_mindreader_title">قارئ الأفكار</string>
     <string name="tutorial_lingos_mindreader_desc">تحدَّ الذكاء الاصطناعي لتخمين الكلمة التي تفكر فيها في هذه اللعبة التفاعلية.</string>
-
     <string name="tutorial_profile_header_title">الملف الشخصي</string>
     <string name="tutorial_profile_header_desc">إدارة صورتك الشخصية، وعرض اسمك المستعار، والتحقق من مستوى التعلم الحالي الخاص بك.</string>
     <string name="tutorial_profile_stats_title">إحصائيات الملف الشخصي</string>
     <string name="tutorial_profile_stats_desc">تحقق من سلسلة التعلم اليومية، وإجمالي نقاط الخبرة، والكلمات التي تم جمعها في الوقت الفعلي.</string>
     <string name="tutorial_profile_settings_title">إعدادات الحساب</string>
     <string name="tutorial_profile_settings_desc">اضغط هنا لفتح الإعدادات، أو تكوين الإشعارات، أو تغيير مظهر التطبيق، أو ضبط أهداف التعلم.</string>
-
     <string name="tutorial_profile_achievements_title">الإنجازات</string>
     <string name="tutorial_profile_achievements_desc">اكسب الشارات والمكافآت عند الوصول إلى الإنجازات وإكمال التحديات.</string>
     <string name="tutorial_profile_leaderboard_title">لوحة المتصدرين</string>
     <string name="tutorial_profile_leaderboard_desc">تعرف على ترتيبك مقارنة بأصدقائك والمتعلمين الآخرين في المجتمع العالمي.</string>
+
+     
+    <!-- ABOUT APP & LEGAL -->
+     
+    <string name="about_app_title">حول</string>
+    <string name="about_app_name">LinguaQuest</string>
+    <string name="about_app_description">يساعدك LinguaQuest على تعلم اللغات من خلال ألعاب ممتعة، ودروس مدعومة بالذكاء الاصطناعي، وتحديات يومية.</string>
+    <string name="about_app_rate_app">تقييم التطبيق</string>
+    <string name="about_app_follow_instagram">تابعنا على إنستغرام</string>
+    <string name="about_app_visit_website">زيارة موقعنا</string>
+    <string name="about_app_terms_service">شروط الخدمة</string>
+    <string name="about_app_privacy_policy">سياسة الخصوصية</string>
+    <string name="about_app_licenses_credits">التراخيص والاعتمادات</string>
+    <string name="about_app_footer_made_with">صُنع بـ 💛 بواسطة فريق Lingo</string>
+    <string name="about_app_footer_copyright">© 2026 LinguaQuest. جميع الحقوق محفوظة.</string>
+    <string name="about_app_play_store_url">https://play.google.com/store/apps/details?id=com.iti.linguaquest</string>
+    <string name="about_app_instagram_url">https://instagram.com/linguaquest</string>
+    <string name="about_app_website_url">https://linguaquest.app</string>
+    <string name="about_app_privacy_url">https://linguaquest.app/privacy</string>
+    <string name="about_app_terms_url">https://linguaquest.app/terms</string>
+    <string name="about_app_licenses_url">https://linguaquest.app/licenses</string>
 </resources>

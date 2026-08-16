@@ -51,6 +51,7 @@ fun HomeContent(
                             "tutorial_top_bar_coins", "tutorial_top_bar_xp", "tutorial_top_bar_notifications", "tutorial_language_progress" -> {
                                 scrollState.animateScrollTo(0)
                             }
+
                             "tutorial_word_capture", "tutorial_world_list", "tutorial_language_button", "tutorial_daily_mission" -> {
                                 scrollState.animateScrollTo(scrollState.maxValue)
                             }
@@ -97,7 +98,11 @@ fun HomeContent(
                 WordCaptureCard(
                     worldName = level.worldName.asString(),
                     targetWord = level.targetWord.asString(),
-                    progressText = stringResource(R.string.word_capture_progress_format, level.levelOrder.toString(), level.totalLevels.toString()),
+                    progressText = stringResource(
+                        R.string.word_capture_progress_format,
+                        level.levelOrder.toString(),
+                        level.totalLevels.toString()
+                    ),
                     onContinueClick = { rect ->
                         onContinueLevelClick(level, rect)
                     },
@@ -111,7 +116,11 @@ fun HomeContent(
                     buttonText = stringResource(R.string.start_hunting),
                     worldName = stringResource(R.string.mystery_world),
                     targetWord = "\uD83E\uDD14",
-                    progressText = stringResource(R.string.word_capture_progress_format, "\uD83E\uDD14", "10"),
+                    progressText = stringResource(
+                        R.string.word_capture_progress_format,
+                        "\uD83E\uDD14",
+                        "10"
+                    ),
                     onContinueClick = { rect ->
                         onSeeMoreClick(rect)
                     },
