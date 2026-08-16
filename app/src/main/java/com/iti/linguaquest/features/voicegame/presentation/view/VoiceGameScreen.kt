@@ -183,9 +183,8 @@ fun VoiceGameMainContent(
         isRecording -> R.drawable.lingo_mic
         else -> R.drawable.lingo_initial_state_voice
     }
-
+    Spacer(Modifier.height(50.dp))
     MessageBubble(title = resolvedTitle)
-    Spacer(Modifier.height(8.dp))
 
     AppMascotGradientBox(
         imageRes = resolvedMascot,

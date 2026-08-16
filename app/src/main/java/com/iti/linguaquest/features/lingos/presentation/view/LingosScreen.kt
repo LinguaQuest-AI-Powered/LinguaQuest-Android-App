@@ -15,13 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.distinctUntilChanged
+import androidx.compose.ui.res.stringResource
+import com.iti.linguaquest.R
 import com.iti.linguaquest.core.tutorial.model.TourId
 import com.iti.linguaquest.core.tutorial.presentation.LocalTutorialManager
 import com.iti.linguaquest.core.tutorial.domain.model.TutorialIntent
 import com.iti.linguaquest.core.tutorial.presentation.tutorialTarget
-import com.iti.linguaquest.features.lingos.presentation.view.components.MindReaderCard
-import com.iti.linguaquest.features.lingos.presentation.view.components.RoleplayCard
-import com.iti.linguaquest.features.lingos.presentation.view.components.VoicePractiseCard
+import androidx.compose.runtime.remember
+import com.iti.linguaquest.features.lingos.presentation.view.components.LingoCard
+import com.iti.linguaquest.features.lingos.presentation.view.components.LingoCardItem
 
 @Composable
 fun LingosScreen(
@@ -55,39 +57,67 @@ fun LingosScreen(
         }
     }
 
+    val cards = remember {
+        listOf(
+            LingoCardItem(
+                id = "voice",
+                chipTitleRes = R.string.voice_practise,
+                descriptionRes = R.string.practice_pronunciation,
+                bubbleTitleRes = R.string.voice_practise,
+                buttonTextRes = R.string.start_button,
+                imageRes = R.drawable.lingo_mic,
+                tutorialTargetId = "lingos_card_voice"
+            ),
+            LingoCardItem(
+                id = "roleplay",
+                chipTitleRes = R.string.roleplay_label,
+                descriptionRes = R.string.roleplay_interactive_scenarios,
+                bubbleTitleRes = R.string.roleplay_label,
+                buttonTextRes = R.string.roleplay_browse_roleplays,
+                imageRes = R.drawable.lingo_writing,
+                tutorialTargetId = "lingos_card_roleplay"
+            ),
+            LingoCardItem(
+                id = "mindreader",
+                chipTitleRes = R.string.mind_reader_card_title,
+                descriptionRes = R.string.mind_reader_card_desc,
+                bubbleTitleRes = R.string.mind_reader_card_title,
+                buttonTextRes = R.string.start_button,
+                imageRes = R.drawable.lingo_mind_thinking,
+                tutorialTargetId = "lingos_card_mindreader"
+            )
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(vertical = 20.dp)
     ) {
-        VoicePractiseCard(
-            onStartClick = onNavigateToVoiceGame,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .tutorialTarget("lingos_card_voice")
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        RoleplayCard(
-            onStartClick = onNavigateToRoleplayList,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .tutorialTarget("lingos_card_roleplay")
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MindReaderCard(
-            onStartClick = onNavigateToMindReader,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .tutorialTarget("lingos_card_mindreader")
-        )
+        cards.forEachIndexed { index, card ->
+            if (index > 0) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            LingoCard(
+                chipTitle = stringResource(id = card.chipTitleRes),
+                description = stringResource(id = card.descriptionRes),
+                bubbleTitle = stringResource(id = card.bubbleTitleRes),
+                buttonText = stringResource(id = card.buttonTextRes),
+                imageRes = card.imageRes,
+                onStartClick = {
+                    when (card.id) {
+                        "voice" -> onNavigateToVoiceGame()
+                        "roleplay" -> onNavigateToRoleplayList()
+                        "mindreader" -> onNavigateToMindReader()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .tutorialTarget(card.tutorialTargetId)
+            )
+        }
 
         Spacer(modifier = Modifier.height(100.dp))
     }
