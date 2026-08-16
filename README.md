@@ -203,6 +203,24 @@ LinguaQuest features automated Continuous Integration via GitHub Actions:
 
 ---
 
+## 👥 Team Members
+
+| Name |
+| :--- |
+| **Alaa Hany** |
+| **Amr Abdulrahim** |
+| **Mohamed Ali** |
+| **Sherry Ahmos** |
+
+---
+
+## 📱 Screenshots
+
+
+
+
+---
+
 ## 📜 License
 
 This project is developed as part of the ITI Final Project under the **LinguaQuest** team. All rights reserved.
