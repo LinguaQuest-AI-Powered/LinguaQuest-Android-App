@@ -3285,12 +3285,16 @@ paths:
                           word:
                             type: string
                             example: Flask
+                          isSolved:
+                            type: boolean
+                            example: false
               examples:
                 default:
                   value:
                     success: true
                     data:
                       word: Flask
+                      isSolved: false
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':

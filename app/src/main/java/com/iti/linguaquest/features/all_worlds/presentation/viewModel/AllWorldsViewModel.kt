@@ -18,6 +18,8 @@ import com.iti.linguaquest.features.all_worlds.domain.model.World
 import com.iti.linguaquest.features.all_worlds.domain.model.WorldDifficulty as DomainWorldDifficulty
 import com.iti.linguaquest.R
 import com.iti.linguaquest.core.connectivity.domain.ObserveNetworkStatusUseCase
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -35,6 +37,7 @@ import javax.inject.Inject
 class AllWorldsViewModel @Inject constructor(
     private val getWorldsUseCase: GetWorldsUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -52,7 +55,19 @@ class AllWorldsViewModel @Inject constructor(
     val effect: SharedFlow<AllWorldsEffect> = _effect.asSharedFlow()
 
     init {
+        observeSessionEvents()
         loadWorlds()
+    }
+
+    private fun observeSessionEvents() {
+        viewModelScope.launch {
+            sessionEventBus.events.collect { event ->
+                when (event) {
+                    is SessionEvent.LevelCompleted -> loadWorlds()
+                    else -> Unit
+                }
+            }
+        }
     }
 
     private fun loadWorlds() {

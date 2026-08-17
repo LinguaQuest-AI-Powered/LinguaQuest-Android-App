@@ -57,6 +57,11 @@ import com.iti.linguaquest.features.profile.presentation.view.components.AvatarP
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+
 @Composable
 fun EditProfileScreenContent(
     displayName: String,
@@ -81,6 +86,13 @@ fun EditProfileScreenContent(
     oldPasswordError: FieldError = FieldError(),
     newPasswordError: FieldError = FieldError()
 ) {
+    val focusManager = LocalFocusManager.current
+    val newPasswordFocusRequester = remember { FocusRequester() }
+    val onSave = {
+        focusManager.clearFocus()
+        onSaveClick()
+    }
+
     var showAvatarSheet by remember { mutableStateOf(false) }
     var showNameSavedTick by remember { mutableStateOf(false) }
     var wasSavingName by remember { mutableStateOf(false) }
@@ -119,7 +131,7 @@ fun EditProfileScreenContent(
             ) {
                 AppButton3D(
                     text = stringResource(R.string.save_changes),
-                    onClick = onSaveClick,
+                    onClick = onSave,
                     isLoading = if (selectedTab == EditProfileTab.PERSONAL_INFO) isSavingName else isSavingPassword,
                     isSuccess = if (selectedTab == EditProfileTab.PERSONAL_INFO) showNameSavedTick else showPasswordSavedTick
                 )
@@ -224,6 +236,8 @@ fun EditProfileScreenContent(
                                     value = displayName,
                                     onValueChange = onDisplayNameChange,
                                     singleLine = true,
+                                    imeAction = ImeAction.Done,
+                                    keyboardActions = KeyboardActions(onDone = { onSave() }),
                                     trailingIcon = { DisplayNameTrailingIcon() },
                                     fieldError = displayNameError
                                 )
@@ -253,7 +267,10 @@ fun EditProfileScreenContent(
                                     newPasswordPlaceholder = stringResource(R.string.new_password_placeholder),
                                     oldPasswordError = oldPasswordError,
                                     newPasswordError = newPasswordError,
-                                    newPasswordHelperText = stringResource(R.string.new_password_min_length_hint)
+                                    newPasswordHelperText = stringResource(R.string.new_password_min_length_hint),
+                                    newPasswordFocusRequester = newPasswordFocusRequester,
+                                    onOldPasswordNext = { newPasswordFocusRequester.requestFocus() },
+                                    onNewPasswordDone = { onSave() }
                                 )
                             }
                         }

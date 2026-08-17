@@ -176,7 +176,10 @@
     <string name="signup_button">Konto erstellen</string>
     <string name="signup_already_have_account">Hast du bereits ein Konto?</string>
     <string name="signup_error_name_required">Benutzername ist erforderlich.</string>
-    <string name="signup_error_name_too_short">Benutzername muss mindestens 2 Zeichen lang sein.</string>
+    <string name="signup_error_name_too_short">Benutzername muss mindestens 3 Zeichen lang sein.</string>
+    <string name="signup_error_name_too_long">Der Benutzername darf maximal 30 Zeichen lang sein.</string>
+    <string name="signup_error_name_invalid_chars">Der Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.</string>
+    <string name="change_password_same_password_error">Das neue Passwort darf nicht mit dem alten Passwort übereinstimmen.</string>
     <string name="signup_error_passwords_do_not_match">Passwörter stimmen nicht überein.</string>
     <string name="signup_success_message">Konto erfolgreich erstellt! Bestätigungscode wurde an deine E-Mail gesendet.</string>
     <string name="hide_password">Passwort verbergen</string>
@@ -641,6 +644,7 @@
     <string name="security">Sicherheit</string>
     <string name="display_name_label">Anzeigename</string>
     <string name="display_name_empty">Anzeigename darf nicht leer sein</string>
+    <string name="edit_profile_same_username_error">Der neue Benutzername darf nicht mit dem aktuellen Benutzernamen übereinstimmen.</string>
     <string name="explorer_tagline_label">Entdecker-Motto</string>
     <string name="profile_visibility_note">Dein Name und deine Biografie sind für andere Entdecker in der Bestenliste sichtbar.</string>
     <string name="profile_updated_successfully">Profil erfolgreich aktualisiert</string>

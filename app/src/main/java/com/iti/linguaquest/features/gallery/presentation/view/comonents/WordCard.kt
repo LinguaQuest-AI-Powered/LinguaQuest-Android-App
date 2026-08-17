@@ -74,9 +74,9 @@ fun WordCard(
                     model = word.imagePath.takeIf { it.isNotBlank() },
                     contentDescription = word.sourceWord,
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.lingo_gallery_defualt),
-                    error = painterResource(id = R.drawable.lingo_gallery_defualt),
-                    fallback = painterResource(id = R.drawable.lingo_gallery_defualt),
+                    placeholder = painterResource(id = R.drawable.lingo_camera),
+                    error = painterResource(id = R.drawable.lingo_camera),
+                    fallback = painterResource(id = R.drawable.lingo_camera),
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))

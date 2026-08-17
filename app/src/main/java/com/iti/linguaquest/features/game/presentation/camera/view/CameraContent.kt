@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import com.iti.linguaquest.core.sharedComponents.AppButton3D
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -112,9 +112,11 @@ fun CameraContent(
                 color = LinguaQuestTheme.colors.whiteColor
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            Button(onClick = onBackClicked) {
-                Text(stringResource(R.string.go_back))
-            }
+            AppButton3D(
+                text = stringResource(R.string.go_back),
+                onClick = onBackClicked,
+                modifier = Modifier.padding(horizontal = 32.dp)
+            )
         }
     }
 }

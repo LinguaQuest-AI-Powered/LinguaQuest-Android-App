@@ -85,12 +85,11 @@ fun AchievementContent(
                 onClaimClick = onClaimClick
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = Color.Transparent
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
                 .padding(top = 8.dp)
         ) {
             LinguaQuestScreenTopBar(

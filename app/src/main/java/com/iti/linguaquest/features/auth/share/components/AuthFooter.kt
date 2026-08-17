@@ -1,11 +1,13 @@
 package com.iti.linguaquest.features.auth.share.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +34,9 @@ fun AuthFooter(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
         )
-        androidx.compose.material3.TextButton(
+        TextButton(
             onClick = onActionClick,
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(start = 4.dp, top = 0.dp, end = 0.dp, bottom = 0.dp)
+            contentPadding = PaddingValues(start = 4.dp, top = 0.dp, end = 0.dp, bottom = 0.dp)
         ) {
             Text(
                 text = stringResource(id = actionRes),

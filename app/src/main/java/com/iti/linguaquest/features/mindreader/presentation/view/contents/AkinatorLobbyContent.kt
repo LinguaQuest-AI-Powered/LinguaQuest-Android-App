@@ -119,9 +119,7 @@ fun AkinatorLobbyContent(
                     text = stringResource(id = R.string.mind_reader_change_category),
                     onClick = { showCategoryDropdown = true },
                     modifier = Modifier.fillMaxWidth(),
-                    variant = ButtonVariant.SOCIAL,
-                    contentColorOverride = AppColors.Teal,
-                    borderColorOverride = AppColors.Teal
+                    variant = ButtonVariant.SECONDARY
                 )
             }
 

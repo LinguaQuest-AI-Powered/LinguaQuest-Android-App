@@ -10,6 +10,8 @@ sealed interface SessionEvent {
     data object SessionExpired : SessionEvent
     data object LoggedOut : SessionEvent
     data object LanguageChanged : SessionEvent
+    data object LevelCompleted : SessionEvent
+    data object WordChanged : SessionEvent
 }
 
 interface SessionEventBus {

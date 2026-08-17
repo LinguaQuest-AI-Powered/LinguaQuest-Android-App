@@ -64,51 +64,43 @@ fun LinguaQuestTopAppBar(
         label = "livesAnim"
     )
 
+    val barShape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                shape = barShape,
+                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+            )
+            .clip(barShape)
             .background(MaterialTheme.colorScheme.background)
             .border(
-                width = 0.5.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                shape = RoundedCornerShape(0.dp)
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.10f),
+                shape = barShape
             )
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.lingo_app_bar),
-                contentDescription = stringResource(R.string.app_logo_description),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(MaterialTheme.colorScheme.background, CircleShape)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        shape = CircleShape
-                    )
-                    .padding(3.dp)
-                    .clip(CircleShape)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.app_name),
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = (-0.3).sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false)
-            )
-        }
+        Image(
+            painter = painterResource(id = R.drawable.lingo_app_bar),
+            contentDescription = stringResource(R.string.app_logo_description),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(44.dp)
+                .background(MaterialTheme.colorScheme.background, CircleShape)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    shape = CircleShape
+                )
+                .padding(3.dp)
+                .clip(CircleShape)
+        )
 
         Row(
             modifier = Modifier.padding(start = 4.dp),
@@ -116,7 +108,7 @@ fun LinguaQuestTopAppBar(
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             StatChip(
-                iconRes = R.drawable.ic_start,
+                iconRes = R.drawable.ic_xp,
                 value = animatedXp,
                 textColor = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.tutorialTarget("tutorial_top_bar_xp")

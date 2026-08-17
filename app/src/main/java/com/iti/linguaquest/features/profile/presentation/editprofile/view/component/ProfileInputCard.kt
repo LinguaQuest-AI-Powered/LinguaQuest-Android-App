@@ -28,6 +28,13 @@ import com.iti.linguaquest.core.theme.LinguaQuestTheme
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.FieldError
 import com.iti.linguaquest.features.profile.presentation.editprofile.utils.shakeOnError
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+
 @Composable
 fun ProfileInputCard(
     label: String,
@@ -37,6 +44,8 @@ fun ProfileInputCard(
     placeholder: String? = "new name",
     singleLine: Boolean = true,
     minLines: Int = 1,
+    imeAction: ImeAction = ImeAction.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     trailingIcon: (@Composable () -> Unit)? = null,
     fieldError: FieldError = FieldError(),
     helperText: String? = null
@@ -63,6 +72,8 @@ fun ProfileInputCard(
                 placeholder = placeholder ?: "",
                 singleLine = singleLine,
                 minLines = minLines,
+                keyboardOptions = KeyboardOptions(imeAction = imeAction),
+                keyboardActions = keyboardActions,
                 trailingIcon = trailingIcon,
                 isError = fieldError.isError,
                 modifier = Modifier
@@ -88,7 +99,10 @@ fun ChangePasswordCard(
     newPasswordPlaceholder: String? = null,
     oldPasswordError: FieldError = FieldError(),
     newPasswordError: FieldError = FieldError(),
-    newPasswordHelperText: String? = null
+    newPasswordHelperText: String? = null,
+    newPasswordFocusRequester: FocusRequester? = null,
+    onOldPasswordNext: (() -> Unit)? = null,
+    onNewPasswordDone: (() -> Unit)? = null
 ) {
     var isOldPasswordVisible by remember { mutableStateOf(false) }
     var isNewPasswordVisible by remember { mutableStateOf(false) }
@@ -129,6 +143,11 @@ fun ChangePasswordCard(
                 onValueChange = onOldPasswordChange,
                 placeholder = oldPasswordPlaceholder ?: "",
                 visualTransformation = if (isOldPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = if (onOldPasswordNext != null) ImeAction.Next else ImeAction.Default
+                ),
+                keyboardActions = KeyboardActions(onNext = { onOldPasswordNext?.invoke() }),
                 leadingIcon = { PasswordFieldLockIcon() },
                 trailingIcon = {
                     PasswordVisibilityToggleIcon(
@@ -150,6 +169,11 @@ fun ChangePasswordCard(
                 onValueChange = onNewPasswordChange,
                 placeholder = newPasswordPlaceholder ?: "",
                 visualTransformation = if (isNewPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = if (onNewPasswordDone != null) ImeAction.Done else ImeAction.Default
+                ),
+                keyboardActions = KeyboardActions(onDone = { onNewPasswordDone?.invoke() }),
                 leadingIcon = { PasswordFieldLockIcon() },
                 trailingIcon = {
                     PasswordVisibilityToggleIcon(
@@ -160,6 +184,7 @@ fun ChangePasswordCard(
                 isError = newPasswordError.isError,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .let { if (newPasswordFocusRequester != null) it.focusRequester(newPasswordFocusRequester) else it }
                     .shakeOnError(isError = newPasswordError.isError, shakeTrigger = newPasswordError.shakeTrigger)
             )
             HelperOrErrorText(fieldError = newPasswordError, helperText = newPasswordHelperText)

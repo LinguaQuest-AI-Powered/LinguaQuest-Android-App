@@ -57,8 +57,6 @@ class RoleplayRepositoryImplTest {
         repository = RoleplayRepositoryImpl(
             liveService = liveService,
             geminiService = geminiService,
-            audioRecorder = audioRecorder,
-            audioPlayer = audioPlayer,
             userPreferences = userPreferences
         )
     }

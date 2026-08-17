@@ -22,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.iti.linguaquest.core.navigation.SharedBottomBarState
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iti.linguaquest.R
@@ -221,13 +223,17 @@ fun HomeScreen(
         }
 
         if (state.dataStatus is DataStatus.Loaded || state.dataStatus is DataStatus.Refreshing) {
+            val density = LocalDensity.current
+            val bottomBarHeightDp = with(density) { SharedBottomBarState.heightPx.toDp() }
+            val fabBottomPadding = if (bottomBarHeightDp > 0.dp) bottomBarHeightDp + 16.dp else 100.dp
+
             HomeFabs(
                 onDailyMissionClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.TriggerDailyMission) } },
                 onWorldMapClick = { anchor -> guardOnline(anchor) { viewModel.onIntent(HomeIntent.FabClicked) } },
                 scrollState = scrollState,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(20.dp)
+                    .padding(end = 20.dp, bottom = fabBottomPadding)
             )
         }
 

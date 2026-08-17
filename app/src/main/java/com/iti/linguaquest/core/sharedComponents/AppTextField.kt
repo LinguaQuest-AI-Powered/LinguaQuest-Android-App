@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +40,8 @@ fun AppTextField(
     enabled: Boolean = true,
     isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     cornerRadius: Dp = 14.dp
@@ -86,6 +90,8 @@ fun AppTextField(
                 singleLine = singleLine,
                 minLines = minLines,
                 visualTransformation = visualTransformation,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = if (isError) MaterialTheme.colorScheme.error else LinguaQuestTheme.colors.BrownText
                 ),

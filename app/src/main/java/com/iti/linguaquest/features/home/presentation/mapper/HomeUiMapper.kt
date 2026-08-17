@@ -60,7 +60,7 @@ fun HomeSummary.toContinueLevelUi(): ContinueLevelUi? {
     return ContinueLevelUi(
         worldId = level.worldId,
         levelId = level.levelId,
-        worldName = UiText.DynamicString("${level.worldName} World"),
+        worldName = UiText.DynamicString((matchingWorld?.name ?: level.worldName).removeSuffix(" World")),
         targetWord = UiText.DynamicString(level.word),
         levelOrder = level.levelOrder,
         totalLevels = totalLevels

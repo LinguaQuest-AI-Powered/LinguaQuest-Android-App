@@ -177,7 +177,10 @@
     <string name="signup_button">Create Account</string>
     <string name="signup_already_have_account">Already have an account?</string>
     <string name="signup_error_name_required">Username is required.</string>
-    <string name="signup_error_name_too_short">Username must be at least 2 characters.</string>
+    <string name="signup_error_name_too_short">Username must be at least 3 characters.</string>
+    <string name="signup_error_name_too_long">Username cannot exceed 30 characters.</string>
+    <string name="signup_error_name_invalid_chars">Username can only contain letters, numbers, and underscores.</string>
+    <string name="change_password_same_password_error">New password cannot be the same as the old password.</string>
     <string name="signup_error_passwords_do_not_match">Passwords do not match.</string>
     <string name="signup_success_message">Account created successfully! Verification code sent to your email.</string>
     <string name="hide_password">Hide password</string>
@@ -641,6 +644,7 @@
     <string name="security">Security</string>
     <string name="display_name_label">Display Name</string>
     <string name="display_name_empty">Display name can\'t be empty</string>
+    <string name="edit_profile_same_username_error">New username cannot be the same as the current username.</string>
     <string name="explorer_tagline_label">Explorer\'s Tagline</string>
     <string name="profile_visibility_note">Your name and bio are visible to other explorers in the Leaderboard.</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>

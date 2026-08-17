@@ -69,10 +69,14 @@ fun LeaderboardContent(
         }
     }
 
+    val remainingEntries = remember(leaderboard.entries, leaderboard.topThree) {
+        val topThreeUserIds = leaderboard.topThree.map { it.userId }.toSet()
+        leaderboard.entries.filter { it.userId !in topThreeUserIds && it.rank > 3 }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
             .padding(top = 8.dp, bottom = 24.dp)
     ) {
         LinguaQuestScreenTopBar(
@@ -99,7 +103,7 @@ fun LeaderboardContent(
             }
 
             itemsIndexed(
-                items = leaderboard.entries,
+                items = remainingEntries,
                 key = { _, entry -> entry.userId }
             ) { index, entry ->
                 LeaderboardListItem(

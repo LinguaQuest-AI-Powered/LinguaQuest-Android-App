@@ -157,12 +157,9 @@ fun AppDialogContent(
                     AppButton3D(
                         text = secondaryButtonText,
                         onClick = onSecondaryClick,
-                        variant = ButtonVariant.SOCIAL,
+                        variant = ButtonVariant.SECONDARY,
                         icon = secondaryButtonIcon?.let { painterResource(it) },
-                        iconPosition = if (secondaryButtonIcon != null) IconPosition.START else IconPosition.NONE,
-                        contentColorOverride = secondaryButtonOutlineColor,
-                        borderColorOverride = secondaryButtonOutlineColor,
-                        backgroundColorOverride = MaterialTheme.colorScheme.surface
+                        iconPosition = if (secondaryButtonIcon != null) IconPosition.START else IconPosition.NONE
                     )
                 }
             }

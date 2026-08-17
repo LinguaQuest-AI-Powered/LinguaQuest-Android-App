@@ -143,9 +143,7 @@ fun AkinatorTrapContent(
                         onIntent(MindReaderIntent.ReturnToHomeClicked)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    variant = ButtonVariant.SOCIAL,
-                    contentColorOverride = AppColors.Teal,
-                    borderColorOverride = AppColors.Teal
+                    variant = ButtonVariant.SECONDARY
                 )
             }
 
