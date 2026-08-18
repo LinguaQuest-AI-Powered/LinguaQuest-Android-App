@@ -21,13 +21,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.iti.linguaquest.R
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.theme.LinguaQuestTheme
 
 @Composable
 fun MindReaderActionRow(
     onTranslateClick: () -> Unit,
     onPlayAudioClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isTranslating: Boolean = false
 ) {
     Row(
         modifier = modifier,
@@ -39,13 +41,17 @@ fun MindReaderActionRow(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .background(LinguaQuestTheme.colors.MindReaderCream)
-                .clickable(onClick = onTranslateClick)
+                .clickable(enabled = !isTranslating, onClick = onTranslateClick)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
-            Text(
-                text = "\uD83C\uDF10",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            if (isTranslating) {
+                LingoSpinningIcon(size = 16.dp)
+            } else {
+                Text(
+                    text = "\uD83C\uDF10",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(id = R.string.mind_reader_translate),

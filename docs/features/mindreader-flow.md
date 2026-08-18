@@ -72,8 +72,9 @@ To operate smoothly on free-tier API keys without hitting rate limits (15 RPM) o
    - The first API call is only made on Turn 2, providing the AI with rich initial context.
 3. **Prompt Token Compression**:
    - `MindReaderPromptFactory` utilizes high-density, concise prompt schemas, reducing prompt token size by 40–50%.
-4. **Aggressive Binary Partitioning**:
-   - Instructions guide the AI to ask high-entropy 50/50 partition questions and converge towards a guess within 6–8 questions once certainty reaches 80%.
+4. **Smart Information-Gain Binary Deduction**:
+   - The deduction prompt guides the AI to maintain an active hypothesis set and select high-entropy 50/50 partition questions that eliminate contradictions and narrow the search space rapidly.
+   - When confidence reaches >= 75% (typically within 4–7 questions), the AI initiates the guess without artificial pacing delays.
 
 ---
 
@@ -82,20 +83,22 @@ To operate smoothly on free-tier API keys without hitting rate limits (15 RPM) o
 1. **Category Localization**:
    - All 18 categories define multilingual `displayNames` (`ar`, `en`, `es`, `fr`, `de`, `it`, `pt`) in `mindreader_categories.json`.
    - Category names dynamically adapt to the user's active native language (`category.resolveDisplayName(state.nativeLanguageCode)`).
-2. **Translation Economy (5 Coins)**:
+2. **Translation Economy & Loading (5 Coins)**:
    - Revealing question translations in an active game costs 5 coins (`GameCost.MIND_READER_TRANSLATION`).
    - Tapping the translate button prompts a confirmation dialog via `DialogController` (`DialogUiState`).
+   - During transaction and translation creation, `LingoSpinningIcon` is displayed in both the action row chip and the translation box until the text resolves.
    - If the player has insufficient coins, an error snackbar is displayed via `SnackbarController`.
 3. **Result Screen Reason Localization**:
    - All result reasons (timeout, contradiction, network loss, wrong quiz answer) use strongly typed `UiText.StringResource` tokens with complete Arabic and English localizations.
 
 ---
 
-## 5. Presentation Layer (MVI)
+## 5. Presentation Layer (MVI) & UI Transitions
 
-- **State (`MindReaderState`)**: Tracks current phase (`LOBBY`, `THINKING`, `PLAYING`, `GUESSING_LOADING`, `GUESS_REVEAL`, `POP_QUIZ`, `STUMP`, `RESULT`), balances, current question candidate, and result info (`MindReaderResultInfo`).
+- **State (`MindReaderState`)**: Tracks current phase (`LOBBY`, `THINKING`, `PLAYING`, `GUESSING_LOADING`, `GUESS_REVEAL`, `POP_QUIZ`, `STUMP`, `RESULT`), balances, current question candidate, translation loading (`isTranslating`), and result info (`MindReaderResultInfo`).
 - **Intent (`MindReaderIntent`)**: User interactions including `StartGameClicked`, `AnswerClicked`, `GuessVerifiedCorrect/Incorrect`, `PopQuizAnswered`, `StumpSubmitClicked`, and `TranslateClicked`.
 - **Effect (`MindReaderEffect`)**: One-time side effects (`NavigateBack`, `PlayAudio`).
+- **Overlay Loading Pattern**: Following the `VoiceGame` UX pattern, asynchronous phases (`THINKING` and `GUESSING_LOADING`) render `LoadingView` as a modal dialog overlay directly on top of the underlying active view (`ActiveGameContent`, `PopQuizContent`, `AkinatorTrapContent`, `GuessRevealContent`) rather than replacing the screen inside `Crossfade`. During this time, input interactions in `ActiveGameContent` are automatically disabled (`isInputEnabled = state.currentPhase == MindReaderPhase.PLAYING`).
 - **Global Dialogs & Error Handling**: Leverages `DialogController` for confirmation modals and `SnackbarController` with `AiErrorMapper` for error toasts.
 
 ---

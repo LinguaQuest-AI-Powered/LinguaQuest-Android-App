@@ -45,6 +45,7 @@ import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderP
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderResultInfo
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -513,11 +514,14 @@ class MindReaderViewModel @Inject constructor(
                 onConfirm = {
                     dialogController.hide()
                     viewModelScope.launch {
+                        _state.update { it.copy(isTranslating = true) }
                         when (val result = adjustWalletUseCase(xpDelta = 0, coinsDelta = -cost)) {
                             is LinguaQuestResult.Success -> {
-                                _state.update { it.copy(showTranslation = true) }
+                                delay(350.milliseconds)
+                                _state.update { it.copy(isTranslating = false, showTranslation = true) }
                             }
                             is LinguaQuestResult.Failure -> {
+                                _state.update { it.copy(isTranslating = false) }
                                 snackbarController.sendEvent(
                                     SnackbarEvent(
                                         message = result.error.toUiText(),
