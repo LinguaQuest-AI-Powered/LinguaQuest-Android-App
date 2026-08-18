@@ -51,6 +51,7 @@ data class MindReaderState(
     val currentQuestion: String? = null,
     val translatedQuestion: String? = null,
     val showTranslation: Boolean = false,
+    val isTranslating: Boolean = false,
     val targetLanguageCode: String = "en",
     val nativeLanguageCode: String = "en",
     val guessResult: MindReaderGuessResult? = null,

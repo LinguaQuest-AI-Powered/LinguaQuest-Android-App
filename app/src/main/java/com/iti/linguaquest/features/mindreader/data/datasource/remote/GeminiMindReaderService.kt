@@ -19,7 +19,7 @@ class GeminiMindReaderService @Inject constructor(
 
     override suspend fun getNextTurn(prompt: String): MindReaderNextTurnDto? = withContext(Dispatchers.IO) {
         try {
-            val jsonString = aiClient.generateJson(prompt, temperature = 0.5f)
+            val jsonString = aiClient.generateJson(prompt, temperature = 0.3f)
             val cleaned = cleanJson(jsonString) ?: return@withContext null
             gson.fromJson(cleaned, MindReaderNextTurnDto::class.java)
         } catch (e: Exception) {

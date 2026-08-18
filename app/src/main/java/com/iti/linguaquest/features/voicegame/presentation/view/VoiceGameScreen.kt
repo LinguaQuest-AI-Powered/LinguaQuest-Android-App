@@ -226,27 +226,60 @@ fun VoiceGameMainContent(
                     color = LinguaQuestTheme.colors.iconsColor
                 )
             }
+            if (state.showTranslation && !state.translation.isNullOrBlank()) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = state.translation,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
 
         Spacer(Modifier.height(12.dp))
         Row(
-            modifier = Modifier.clickable(enabled = !state.isLoadingSentence && state.sentence.isNotBlank()) {
-                viewModel.onIntent(VoiceGameIntent.ListenClicked)
-            },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                contentDescription = null,
-                tint = LinguaQuestTheme.colors.iconsColor,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(
-                text = stringResource(R.string.voice_idle_listen),
-                color = LinguaQuestTheme.colors.iconsColor,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.clickable(enabled = !state.isLoadingSentence && state.sentence.isNotBlank()) {
+                    viewModel.onIntent(VoiceGameIntent.ListenClicked)
+                },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = null,
+                    tint = LinguaQuestTheme.colors.iconsColor,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = stringResource(R.string.voice_idle_listen),
+                    color = LinguaQuestTheme.colors.iconsColor,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(Modifier.width(24.dp))
+
+            Row(
+                modifier = Modifier.clickable(enabled = !state.isLoadingSentence && !state.translation.isNullOrBlank()) {
+                    viewModel.onIntent(VoiceGameIntent.ToggleTranslationClicked)
+                },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "\uD83C\uDF10",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = stringResource(R.string.mind_reader_translate),
+                    color = LinguaQuestTheme.colors.iconsColor,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 

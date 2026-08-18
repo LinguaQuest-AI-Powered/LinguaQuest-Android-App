@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarController
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarEvent
 import com.iti.linguaquest.core.sharedComponents.snackbar.SnackbarType
@@ -30,12 +31,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val getMapLevelsUseCase: GetMapLevelsUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = observeNetworkStatusUseCase()
@@ -52,6 +55,26 @@ class MapViewModel @Inject constructor(
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
+
+    init {
+        observeSessionEvents()
+    }
+
+    private fun observeSessionEvents() {
+        viewModelScope.launch {
+            sessionEventBus.events.collect { event ->
+                when (event) {
+                    is SessionEvent.LevelCompleted -> {
+                        val currentWorldId = _state.value.worldId
+                        if (currentWorldId != 0) {
+                            loadLevels(currentWorldId, force = true)
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+        }
+    }
 
     fun onIntent(intent: MapIntent) {
         when (intent) {
@@ -77,10 +100,14 @@ class MapViewModel @Inject constructor(
         if (!force && _state.value.levels.isNotEmpty() && _state.value.worldId == worldId && !_state.value.hasError) return
 
         viewModelScope.launch {
-            if (_state.value.levels.isEmpty()) {
-                _state.update { it.copy(isLoading = true, worldId = worldId, hasError = false, errorMessage = null) }
-            } else {
-                _state.update { it.copy(worldId = worldId, hasError = false, errorMessage = null) }
+            _state.update {
+                it.copy(
+                    isLoading = true,
+                    worldId = worldId,
+                    hasError = false,
+                    errorMessage = null,
+                    isRevealed = false
+                )
             }
             val result = getMapLevelsUseCase(worldId)
             
@@ -112,11 +139,12 @@ class MapViewModel @Inject constructor(
                         levels = uiLevels,
                         currentLevelIndex = currentIndex,
                         hasError = false,
-                        errorMessage = null
+                        errorMessage = null,
+                        isRevealed = false
                     )
                 }
                 
-                delay(100)
+                delay(400)
                 _state.update { it.copy(isRevealed = true) }
             }.onFailure { error ->
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()

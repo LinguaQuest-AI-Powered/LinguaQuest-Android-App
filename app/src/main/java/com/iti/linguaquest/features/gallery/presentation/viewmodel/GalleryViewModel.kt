@@ -32,6 +32,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +43,8 @@ class GalleryViewModel @Inject constructor(
     private val deleteWordUseCase: DeleteWordUseCase,
     private val getLockScreenPostedOrOpenedWordsUseCase: GetLockScreenPostedOrOpenedWordsUseCase,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val snackbarController: SnackbarController
+    private val snackbarController: SnackbarController,
+    private val sessionEventBus: SessionEventBus
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GalleryState())
@@ -59,7 +62,19 @@ class GalleryViewModel @Inject constructor(
     init {
         observeWords()
         observeLockScreenWords()
+        observeSessionEvents()
         refreshWords()
+    }
+
+    private fun observeSessionEvents() {
+        viewModelScope.launch {
+            sessionEventBus.events.collect { event ->
+                when (event) {
+                    is SessionEvent.LevelCompleted -> refreshWords()
+                    else -> Unit
+                }
+            }
+        }
     }
 
     fun onIntent(intent: GalleryIntent) {

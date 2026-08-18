@@ -83,8 +83,8 @@ fun MapContent(
                 computeMapHeight(state.levels.size).coerceAtLeast(maxHeight)
             }
 
-            LaunchedEffect(state.currentLevelIndex, viewportHeightPx, state.isRevealed) {
-                if (state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
+            LaunchedEffect(state.currentLevelIndex, viewportHeightPx, state.isRevealed, state.isLoading) {
+                if (!state.isLoading && state.isRevealed && state.currentLevelIndex in nodePositions.indices && viewportHeightPx > 0) {
                     val nodeTopYDp = nodePositions[state.currentLevelIndex].second
                     val nodeTopYPx = with(density) { nodeTopYDp.toPx() }
                     val nodeCenterYPx = nodeTopYPx + with(density) { 50.dp.toPx() }
@@ -93,10 +93,8 @@ fun MapContent(
                         .coerceAtLeast(0f)
                         .toInt()
 
-                    if (state.isRevealed) {
-                        scrollState.animateScrollTo(scrollTarget)
-                    }
-                } else if (!state.isRevealed && viewportHeightPx > 0) {
+                    scrollState.animateScrollTo(scrollTarget)
+                } else if ((state.isLoading || !state.isRevealed) && viewportHeightPx > 0) {
                     scrollState.scrollTo(scrollState.maxValue)
                 }
             }
@@ -129,6 +127,7 @@ fun MapContent(
                             MapPath(nodePositions = nodePositions)
                         }
 
+                        val isNodeRevealed = !state.isLoading && state.isRevealed
                         state.levels.forEachIndexed { index, level ->
                             val (x, y) = nodePositions.getOrNull(index) ?: return@forEachIndexed
                             LevelNode(
@@ -138,16 +137,15 @@ fun MapContent(
                                 offsetX = x,
                                 offsetY = y,
                                 isLastLevel = index == state.levels.lastIndex,
-                                isRevealed = state.isRevealed,
+                                isRevealed = isNodeRevealed,
                                 index = index,
                                 onClick = { onLevelClick(level.levelId) }
                             )
                         }
 
-                        // Add snow effect falling over the map
                         SnowEffect(modifier = Modifier.fillMaxSize())
 
-                        if (state.isRevealed && state.currentLevelIndex in nodePositions.indices) {
+                        if (!state.isLoading && state.isRevealed && state.currentLevelIndex in nodePositions.indices) {
                             val isLastLevel = state.currentLevelIndex == state.levels.lastIndex
                             val isLastLevelCompleted = isLastLevel && state.levels.getOrNull(state.currentLevelIndex)?.status == LevelStatus.COMPLETED
 

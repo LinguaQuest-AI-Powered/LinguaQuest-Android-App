@@ -15,4 +15,5 @@ sealed interface VoiceGameIntent {
     data object ConfirmProcessClicked : VoiceGameIntent
     data object SkipClicked : VoiceGameIntent
     data object GenerateNewSentenceClicked : VoiceGameIntent
+    data object ToggleTranslationClicked : VoiceGameIntent
 }

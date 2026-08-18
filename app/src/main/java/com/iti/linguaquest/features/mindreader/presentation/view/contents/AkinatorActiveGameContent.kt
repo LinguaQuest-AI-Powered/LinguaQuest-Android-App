@@ -25,6 +25,7 @@ import com.iti.linguaquest.features.mindreader.domain.model.MindReaderAnswerOpti
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderIntent
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderPhase
 import com.iti.linguaquest.features.mindreader.presentation.contract.MindReaderState
+import com.iti.linguaquest.core.sharedComponents.LingoSpinningIcon
 import com.iti.linguaquest.core.sharedComponents.MessageBubble
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderActionRow
 import com.iti.linguaquest.features.mindreader.presentation.view.components.MindReaderAnswerButton
@@ -69,24 +70,29 @@ fun ActiveGameContent(
             MindReaderActionRow(
                 onTranslateClick = { onIntent(MindReaderIntent.TranslateClicked) },
                 onPlayAudioClick = { onIntent(MindReaderIntent.PlayAudioClicked) },
+                isTranslating = state.isTranslating,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-           Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .height(60.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (state.showTranslation && state.translatedQuestion != null) {
-                    Text(
-                        text = state.translatedQuestion,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+            if (state.isTranslating || (state.showTranslation && state.translatedQuestion != null)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .height(60.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (state.isTranslating) {
+                        LingoSpinningIcon(size = 28.dp)
+                    } else if (state.translatedQuestion != null) {
+                        Text(
+                            text = state.translatedQuestion,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
                 }
             }
 

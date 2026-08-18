@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -72,8 +74,13 @@ fun MindReaderScreen(
         coinsCount = state.coinBalance,
         modifier = Modifier.fillMaxSize()
     ) {
+        var lastActivePhase by remember { mutableStateOf(state.currentPhase) }
+        if (state.currentPhase != MindReaderPhase.THINKING && state.currentPhase != MindReaderPhase.GUESSING_LOADING) {
+            lastActivePhase = state.currentPhase
+        }
+
         Crossfade(
-            targetState = state.currentPhase,
+            targetState = lastActivePhase,
             label = "PhaseCrossfade",
             modifier = Modifier
                 .fillMaxSize()
@@ -84,14 +91,11 @@ fun MindReaderScreen(
                     state = state,
                     onIntent = viewModel::onIntent
                 )
-                MindReaderPhase.PLAYING -> ActiveGameContent(
+                MindReaderPhase.PLAYING,
+                MindReaderPhase.THINKING,
+                MindReaderPhase.GUESSING_LOADING -> ActiveGameContent(
                     state = state,
                     onIntent = viewModel::onIntent
-                )
-                MindReaderPhase.THINKING,
-                MindReaderPhase.GUESSING_LOADING -> LoadingView(
-                    message = stringResource(id = R.string.mind_reader_thinking),
-                    imageRes = R.drawable.lingo_mind_processing
                 )
                 MindReaderPhase.GUESS_REVEAL -> GuessRevealContent(
                     state = state,
@@ -110,6 +114,13 @@ fun MindReaderScreen(
                     onIntent = viewModel::onIntent
                 )
             }
+        }
+
+        if (state.currentPhase == MindReaderPhase.THINKING || state.currentPhase == MindReaderPhase.GUESSING_LOADING) {
+            LoadingView(
+                message = stringResource(id = R.string.mind_reader_thinking),
+                imageRes = R.drawable.lingo_mind_processing
+            )
         }
     }
 }
