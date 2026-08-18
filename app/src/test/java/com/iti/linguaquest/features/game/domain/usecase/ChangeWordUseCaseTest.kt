@@ -3,6 +3,7 @@ package com.iti.linguaquest.features.game.domain.usecase
 import com.iti.linguaquest.core.result.LinguaQuestDataError
 import com.iti.linguaquest.core.result.LinguaQuestResult
 import com.iti.linguaquest.features.game.domain.repository.LevelRepository
+import com.iti.linguaquest.core.session.SessionEventBus
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -14,11 +15,12 @@ import org.junit.Test
 class ChangeWordUseCaseTest {
 
     private val repository: LevelRepository = mockk()
+    private val sessionEventBus: SessionEventBus = mockk(relaxed = true)
     private lateinit var useCase: ChangeWordUseCase
 
     @Before
     fun setUp() {
-        useCase = ChangeWordUseCase(repository)
+        useCase = ChangeWordUseCase(repository, sessionEventBus)
     }
 
     @Test

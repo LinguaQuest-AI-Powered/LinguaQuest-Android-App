@@ -41,7 +41,7 @@ class ChangeAppLanguageUseCaseTest {
 
         // Then
         coVerify { userPreferencesRepository.saveAppLanguage(languageCode) }
-        coVerify { userPreferencesRepository.saveNativeLanguage(languageId, languageName) }
+        coVerify { userPreferencesRepository.saveNativeLanguage(languageId, languageName, languageCode) }
         coVerify { languageManager.changeLanguage(languageCode) }
         coVerify { languagesRepo.setNativeLanguage(languageId) }
     }

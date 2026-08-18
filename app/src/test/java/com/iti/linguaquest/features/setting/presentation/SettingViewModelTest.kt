@@ -13,6 +13,7 @@ import com.iti.linguaquest.features.home.domain.model.LanguageOption
 import com.iti.linguaquest.features.setting.domain.usecase.CancelReminderUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.ChangeAppThemeUseCase
+import com.iti.linguaquest.features.home.domain.usecase.ClearLanguageCacheUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetAppLanguageUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetAppThemeUseCase
 import com.iti.linguaquest.features.setting.domain.usecase.GetNotificationsEnabledUseCase
@@ -28,6 +29,8 @@ import com.iti.linguaquest.features.setting.domain.usecase.ToggleNotificationsUs
 import com.iti.linguaquest.features.setting.domain.usecase.ToggleSoundUseCase
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderEffect
 import com.iti.linguaquest.features.setting.presentation.contract.ReminderIntent
+import com.iti.linguaquest.core.session.SessionEvent
+import com.iti.linguaquest.core.session.SessionEventBus
 import com.iti.linguaquest.core.tutorial.domain.TutorialManager
 import com.iti.linguaquest.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -70,6 +73,8 @@ class SettingViewModelTest {
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase = mockk()
     private val snackbarController: SnackbarController = mockk(relaxed = true)
     private val tutorialManager: TutorialManager = mockk(relaxed = true)
+    private val sessionEventBus: SessionEventBus = mockk(relaxed = true)
+    private val clearLanguageCacheUseCase: ClearLanguageCacheUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: SettingViewModel
 
@@ -107,7 +112,9 @@ class SettingViewModelTest {
             cancelReminderUseCase,
             observeNetworkStatusUseCase,
             snackbarController,
-            tutorialManager
+            tutorialManager,
+            sessionEventBus,
+            clearLanguageCacheUseCase
         )
     }
 
@@ -298,16 +305,19 @@ class SettingViewModelTest {
     }
 
     @Test
-    fun changeAppLanguage_callsUseCaseAndEmitsEvent() = runTest {
+    fun confirmChangeAppLanguage_callsUseCasesAndEmitsEvents() = runTest {
         // Given
         val language = LanguageOption(id = 1, code = "fr", name = "French", imageUrl = "", isAdded = false)
+        viewModel.requestChangeAppLanguage(language)
 
         viewModel.languageChanged.test {
             // When
-            viewModel.changeAppLanguage(language)
+            viewModel.confirmChangeAppLanguage()
 
             // Then
             coVerify { changeAppLanguageUseCase(language.id, language.code, language.name) }
+            coVerify { clearLanguageCacheUseCase() }
+            coVerify { sessionEventBus.emit(SessionEvent.LanguageChanged) }
             val effect = awaitItem()
             assertEquals(Unit, effect)
             cancelAndIgnoreRemainingEvents()
