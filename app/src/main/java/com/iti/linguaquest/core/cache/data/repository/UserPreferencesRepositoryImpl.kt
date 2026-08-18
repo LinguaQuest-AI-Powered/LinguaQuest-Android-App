@@ -11,9 +11,11 @@ class UserPreferencesRepositoryImpl @Inject constructor(
 
     override val targetLanguage: Flow<Int?> = localDataSource.targetLanguage
     override val targetLanguageName: Flow<String?> = localDataSource.targetLanguageName
+    override val targetLanguageCode: Flow<String?> = localDataSource.targetLanguageCode
 
     override val nativeLanguage: Flow<Int?> = localDataSource.nativeLanguage
     override val nativeLanguageName: Flow<String?> = localDataSource.nativeLanguageName
+    override val nativeLanguageCode: Flow<String?> = localDataSource.nativeLanguageCode
 
     override val proficiencyLevel: Flow<String?> = localDataSource.proficiencyLevel
     override val appTheme: Flow<String> = localDataSource.appTheme
@@ -24,14 +26,16 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override val reminderTime: Flow<String> = localDataSource.reminderTime
     override val reminderDays: Flow<String> = localDataSource.reminderDays
 
-    override suspend fun saveTargetLanguage(languageId: Int, name: String) {
+    override suspend fun saveTargetLanguage(languageId: Int, name: String, code: String) {
         localDataSource.saveTargetLanguage(languageId)
         localDataSource.saveTargetLanguageName(name)
+        localDataSource.saveTargetLanguageCode(code)
     }
 
-    override suspend fun saveNativeLanguage(languageId: Int, name: String) {
+    override suspend fun saveNativeLanguage(languageId: Int, name: String, code: String) {
         localDataSource.saveNativeLanguage(languageId)
         localDataSource.saveNativeLanguageName(name)
+        localDataSource.saveNativeLanguageCode(code)
     }
 
     override suspend fun saveProficiencyLevel(level: String) {

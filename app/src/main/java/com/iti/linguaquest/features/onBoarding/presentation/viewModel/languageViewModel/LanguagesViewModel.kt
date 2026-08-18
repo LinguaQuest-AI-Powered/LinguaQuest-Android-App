@@ -123,8 +123,8 @@ class LanguagesViewModel @Inject constructor(
         val target = current.targetLanguage ?: return
         val native = current.nativeLanguage ?: return
         viewModelScope.launch {
-            saveNativeLanguageUseCase(native.id, native.name)
-            saveTargetLanguageUseCase(target.id, target.name)
+            saveNativeLanguageUseCase(native.id, native.name, native.code)
+            saveTargetLanguageUseCase(target.id, target.name, target.code)
             _effect.emit(LanguagesEffect.NavigateToLevelScreen)
         }
     }

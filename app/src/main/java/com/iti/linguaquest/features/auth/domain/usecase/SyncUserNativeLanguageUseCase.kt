@@ -16,7 +16,7 @@ class SyncUserNativeLanguageUseCase @Inject constructor(
         if (nativeLanguage == null && nativeLanguageId == null) return
 
         if (nativeLanguage != null) {
-            userPreferencesRepository.saveNativeLanguage(nativeLanguage.id, nativeLanguage.name)
+            userPreferencesRepository.saveNativeLanguage(nativeLanguage.id, nativeLanguage.name, nativeLanguage.code)
             userPreferencesRepository.saveAppLanguage(nativeLanguage.code)
             languageManager.changeLanguage(nativeLanguage.code)
             return
@@ -27,7 +27,7 @@ class SyncUserNativeLanguageUseCase @Inject constructor(
             val matchedLang = result.data.find { it.id == nativeLanguageId }
 
             if (matchedLang != null) {
-                userPreferencesRepository.saveNativeLanguage(matchedLang.id, matchedLang.name)
+                userPreferencesRepository.saveNativeLanguage(matchedLang.id, matchedLang.name, matchedLang.code)
                 userPreferencesRepository.saveAppLanguage(matchedLang.code)
                 languageManager.changeLanguage(matchedLang.code)
             }

@@ -26,16 +26,16 @@ class SpeechManager(context: Context) {
     fun speak(word: String, languageCode: String) {
         if (isReady) {
             val locale = when (languageCode.trim().lowercase()) {
-                "arabic", "ar" -> Locale.forLanguageTag("ar")
-                "spanish", "español", "es" -> Locale.forLanguageTag("es")
-                "japanese", "日本語", "ja" -> Locale.JAPANESE
-                "german", "deutsch", "de" -> Locale.GERMAN
-                "french", "français", "fr" -> Locale.FRENCH
-                "chinese", "中文", "zh" -> Locale.CHINESE
-                "italian", "italiano", "it" -> Locale.ITALIAN
-                "portuguese", "português", "pt" -> Locale.forLanguageTag("pt")
-                "korean", "한국어", "ko" -> Locale.KOREAN
-                "english", "en" -> Locale.ENGLISH
+                "arabic", "ar", "العربية" -> Locale.forLanguageTag("ar")
+                "spanish", "español", "es", "الإسبانية", "الاسبانية" -> Locale.forLanguageTag("es")
+                "japanese", "日本語", "ja", "اليابانية" -> Locale.JAPANESE
+                "german", "deutsch", "de", "الألمانية", "الالمانية" -> Locale.GERMAN
+                "french", "français", "fr", "الفرنسية" -> Locale.FRENCH
+                "chinese", "中文", "zh", "الصينية" -> Locale.CHINESE
+                "italian", "italiano", "it", "الإيطالية", "الايطالية" -> Locale.ITALIAN
+                "portuguese", "português", "pt", "البرتغالية" -> Locale.forLanguageTag("pt")
+                "korean", "한국어", "ko", "الكورية" -> Locale.KOREAN
+                "english", "en", "الإنجليزية", "الانجليزية" -> Locale.ENGLISH
                 else -> Locale.forLanguageTag(languageCode)
             }
             tts?.language = locale

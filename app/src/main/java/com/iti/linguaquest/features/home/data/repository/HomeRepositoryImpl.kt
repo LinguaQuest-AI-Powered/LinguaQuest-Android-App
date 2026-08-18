@@ -28,8 +28,8 @@ class HomeRepositoryImpl @Inject constructor(
         return when (val result = remoteDataSource.getHomeSummary()) {
             is LinguaQuestResult.Success -> {
                 result.data.activeLanguage?.let { activeLang ->
-                    if (activeLang.id != null && !activeLang.name.isNullOrBlank()) {
-                        userPreferencesRepository.saveTargetLanguage(activeLang.id, activeLang.name)
+                    if (activeLang.id != null && !activeLang.name.isNullOrBlank() && !activeLang.code.isNullOrBlank()) {
+                        userPreferencesRepository.saveTargetLanguage(activeLang.id, activeLang.name, activeLang.code)
                     }
                 }
                 localDataSource.upsertHomeSummary(result.data)

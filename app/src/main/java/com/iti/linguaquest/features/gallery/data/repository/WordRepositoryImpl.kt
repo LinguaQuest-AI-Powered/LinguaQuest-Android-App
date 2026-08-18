@@ -24,7 +24,8 @@ class WordRepositoryImpl @Inject constructor(
 
     override suspend fun refreshGalleryWords(
         sourceLanguage: String,
-        targetLanguage: String
+        targetLanguage: String,
+        targetLanguageCode: String
     ): LinguaQuestResult<Unit, LinguaQuestDataError> {
         return when (val result = remoteDataSource.getGalleryWords()) {
             is LinguaQuestResult.Success -> {
@@ -34,7 +35,7 @@ class WordRepositoryImpl @Inject constructor(
                 )
                 
                 val finalWords = mappedWords.map { word ->
-                    val localUri = vaultImageStorageManager.getVaultImageUri(word.sourceWord, word.targetLanguage)
+                    val localUri = vaultImageStorageManager.getVaultImageUri(word.sourceWord, targetLanguageCode)
                     if (localUri != null) {
                         word.copy(imagePath = localUri)
                     } else {

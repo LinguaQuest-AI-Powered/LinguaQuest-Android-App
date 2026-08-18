@@ -64,13 +64,13 @@ translation
 - Natural and fluent
 
 tip
-- Write the memory hook in ${word.sourceLanguage}.
+- Write the memory hook in ${word.targetLanguage}.
 - Prefer sound association, funny image, mini-story, or word shape.
 - Don't simply describe the object.
 - Maximum 2 short sentences.
 
 fact
-- Write the fact in ${word.sourceLanguage}.
+- Write the fact in ${word.targetLanguage}.
 - Give one genuinely interesting fact about the word, its origin, or the "${word.category}" category.
 - Avoid obvious facts.
 - Maximum 2 short sentences.
