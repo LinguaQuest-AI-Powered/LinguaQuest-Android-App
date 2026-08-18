@@ -7,8 +7,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 object PreferencesKeys {
     val TARGET_LANGUAGE = intPreferencesKey("target_language")
     val TARGET_LANGUAGE_NAME = stringPreferencesKey("target_language_name")
+    val TARGET_LANGUAGE_CODE = stringPreferencesKey("target_language_code")
     val NATIVE_LANGUAGE = intPreferencesKey("native_language")
     val NATIVE_LANGUAGE_NAME = stringPreferencesKey("native_language_name")
+    val NATIVE_LANGUAGE_CODE = stringPreferencesKey("native_language_code")
     val PROFICIENCY_LEVEL = stringPreferencesKey("proficiency_level")
     val APP_THEME = stringPreferencesKey("app_theme")
     val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")

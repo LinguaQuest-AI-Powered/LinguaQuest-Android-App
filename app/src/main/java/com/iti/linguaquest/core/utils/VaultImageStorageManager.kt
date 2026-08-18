@@ -23,25 +23,25 @@ class VaultImageStorageManager @Inject constructor(
 
     private fun getStandardLanguageCode(language: String): String {
         return when (language.trim().lowercase()) {
-            "spanish", "es" -> "es"
-            "french", "fr" -> "fr"
-            "german", "de" -> "de"
-            "arabic", "ar" -> "ar"
-            "english", "en" -> "en"
-            "chinese", "zh" -> "zh"
-            "italian", "it" -> "it"
-            "korean", "ko" -> "ko"
-            "japanese", "ja" -> "ja"
-            "portuguese", "pt" -> "pt"
+            "spanish", "es", "الإسبانية", "الاسبانية" -> "es"
+            "french", "fr", "الفرنسية" -> "fr"
+            "german", "de", "الألمانية", "الالمانية" -> "de"
+            "arabic", "ar", "العربية" -> "ar"
+            "english", "en", "الإنجليزية", "الانجليزية" -> "en"
+            "chinese", "zh", "الصينية" -> "zh"
+            "italian", "it", "الإيطالية", "الايطالية" -> "it"
+            "korean", "ko", "الكورية" -> "ko"
+            "japanese", "ja", "اليابانية" -> "ja"
+            "portuguese", "pt", "البرتغالية" -> "pt"
             else -> language.trim().lowercase().take(2)
         }
     }
 
-    fun saveVaultImage(word: String, language: String, sourceFile: File): File? {
-        if (word.isBlank() || language.isBlank()) return null
+    fun saveVaultImage(word: String, languageCode: String, sourceFile: File): File? {
+        if (word.isBlank() || languageCode.isBlank()) return null
         return try {
             val sanitizedWord = word.trim().lowercase().replace(Regex("[^\\p{L}\\p{N}]"), "_")
-            val langCode = getStandardLanguageCode(language)
+            val langCode = getStandardLanguageCode(languageCode)
             val destFile = File(vaultImagesDir, "${sanitizedWord}_${langCode}.jpg")
             sourceFile.copyTo(destFile, overwrite = true)
             destFile
@@ -50,10 +50,10 @@ class VaultImageStorageManager @Inject constructor(
         }
     }
 
-    fun getVaultImageUri(word: String, language: String): String? {
-        if (word.isBlank() || language.isBlank()) return null
+    fun getVaultImageUri(word: String, languageCode: String): String? {
+        if (word.isBlank() || languageCode.isBlank()) return null
         val sanitizedWord = word.trim().lowercase().replace(Regex("[^\\p{L}\\p{N}]"), "_")
-        val langCode = getStandardLanguageCode(language)
+        val langCode = getStandardLanguageCode(languageCode)
         val file = File(vaultImagesDir, "${sanitizedWord}_${langCode}.jpg")
         return if (file.exists()) {
             Uri.fromFile(file).toString()

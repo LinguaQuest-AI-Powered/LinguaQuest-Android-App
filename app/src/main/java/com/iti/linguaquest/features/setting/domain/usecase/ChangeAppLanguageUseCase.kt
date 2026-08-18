@@ -12,7 +12,7 @@ class ChangeAppLanguageUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(languageId: Int, languageCode: String, languageName: String) {
         userPreferencesRepository.saveAppLanguage(languageCode)
-        userPreferencesRepository.saveNativeLanguage(languageId, languageName)
+        userPreferencesRepository.saveNativeLanguage(languageId, languageName, languageCode)
         languageManager.changeLanguage(languageCode)
         languagesRepo.setNativeLanguage(languageId)
     }

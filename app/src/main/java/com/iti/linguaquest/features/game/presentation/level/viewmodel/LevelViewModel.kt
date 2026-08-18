@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 import com.iti.linguaquest.core.result.LinguaQuestDataError
@@ -44,6 +45,7 @@ class LevelViewModel @Inject constructor(
     private val getWalletUseCase: GetWalletUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val userPreferencesRepository: com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -114,7 +116,7 @@ class LevelViewModel @Inject constructor(
             when (val result = startLevelUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
                     val targetWordResult = result.data.ifEmpty { if (worldId == 1 && levelOrder == 3) "PAN" else "APPLE" }
-                    val languageCode = if (worldId == 1) "es" else "en"
+                    val languageCode = userPreferencesRepository.targetLanguageCode.firstOrNull() ?: "en"
 
                     _state.update {
                         it.copy(

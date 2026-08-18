@@ -22,9 +22,15 @@ class RefreshGalleryUseCase @Inject constructor(
             .orEmpty()
             .ifBlank { "Arabic" }
 
+        val targetLanguageCode = userPreferencesRepository.targetLanguageCode
+            .firstOrNull()
+            .orEmpty()
+            .ifBlank { "ar" } // fallback to Arabic code if empty for older installs
+
         return wordRepository.refreshGalleryWords(
             sourceLanguage = sourceLanguage,
-            targetLanguage = targetLanguage
+            targetLanguage = targetLanguage,
+            targetLanguageCode = targetLanguageCode
         )
     }
 }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 class SaveNativeLanguageUseCase @Inject constructor(
     private val repository: UserPreferencesRepository
 ) {
-    suspend operator fun invoke(languageId: Int, name: String) {
-        repository.saveNativeLanguage(languageId, name)
+    suspend operator fun invoke(languageId: Int, name: String, code: String) {
+        repository.saveNativeLanguage(languageId, name, code)
     }
 }
