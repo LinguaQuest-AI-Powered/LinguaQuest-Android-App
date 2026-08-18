@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import com.iti.linguaquest.core.domain.model.GameCost
 import com.iti.linguaquest.features.game.domain.usecase.StartLevelUseCase
+import com.iti.linguaquest.features.onBoarding.domain.usecase.GetTargetLanguageCodeUseCase
 
 @HiltViewModel
 class LevelViewModel @Inject constructor(
@@ -45,7 +46,7 @@ class LevelViewModel @Inject constructor(
     private val getWalletUseCase: GetWalletUseCase,
     private val snackbarController: SnackbarController,
     private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
-    private val userPreferencesRepository: com.iti.linguaquest.core.cache.domain.repository.UserPreferencesRepository,
+    private val getTargetLanguageCodeUseCase: GetTargetLanguageCodeUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -116,7 +117,7 @@ class LevelViewModel @Inject constructor(
             when (val result = startLevelUseCase(worldId, levelId)) {
                 is LinguaQuestResult.Success -> {
                     val targetWordResult = result.data.ifEmpty { if (worldId == 1 && levelOrder == 3) "PAN" else "APPLE" }
-                    val languageCode = userPreferencesRepository.targetLanguageCode.firstOrNull() ?: "en"
+                    val languageCode = getTargetLanguageCodeUseCase().firstOrNull() ?: "en"
 
                     _state.update {
                         it.copy(
