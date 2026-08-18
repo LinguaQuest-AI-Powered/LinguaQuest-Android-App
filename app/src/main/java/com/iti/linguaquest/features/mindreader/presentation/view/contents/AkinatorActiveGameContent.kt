@@ -74,23 +74,25 @@ fun ActiveGameContent(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .height(60.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (state.isTranslating) {
-                    LingoSpinningIcon(size = 28.dp)
-                } else if (state.showTranslation && state.translatedQuestion != null) {
-                    Text(
-                        text = state.translatedQuestion,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+            if (state.isTranslating || (state.showTranslation && state.translatedQuestion != null)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .height(60.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (state.isTranslating) {
+                        LingoSpinningIcon(size = 28.dp)
+                    } else if (state.translatedQuestion != null) {
+                        Text(
+                            text = state.translatedQuestion,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
                 }
             }
 

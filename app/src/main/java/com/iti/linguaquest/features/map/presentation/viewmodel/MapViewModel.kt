@@ -100,10 +100,14 @@ class MapViewModel @Inject constructor(
         if (!force && _state.value.levels.isNotEmpty() && _state.value.worldId == worldId && !_state.value.hasError) return
 
         viewModelScope.launch {
-            if (_state.value.levels.isEmpty()) {
-                _state.update { it.copy(isLoading = true, worldId = worldId, hasError = false, errorMessage = null) }
-            } else {
-                _state.update { it.copy(worldId = worldId, hasError = false, errorMessage = null) }
+            _state.update {
+                it.copy(
+                    isLoading = true,
+                    worldId = worldId,
+                    hasError = false,
+                    errorMessage = null,
+                    isRevealed = false
+                )
             }
             val result = getMapLevelsUseCase(worldId)
             
@@ -135,11 +139,12 @@ class MapViewModel @Inject constructor(
                         levels = uiLevels,
                         currentLevelIndex = currentIndex,
                         hasError = false,
-                        errorMessage = null
+                        errorMessage = null,
+                        isRevealed = false
                     )
                 }
                 
-                delay(100)
+                delay(400)
                 _state.update { it.copy(isRevealed = true) }
             }.onFailure { error ->
                 val uiText = (error as? LinguaQuestDataError)?.toUiText()

@@ -15,5 +15,6 @@ data class VoiceGameState(
     val isLoadingSentence: Boolean = false,
     val phonetic: String? = null,
     val translation: String? = null,
-    val dailyWord: String? = null
+    val dailyWord: String? = null,
+    val showTranslation: Boolean = false
 )

@@ -106,6 +106,7 @@ class VoiceGameViewModel @Inject constructor(
             VoiceGameIntent.GenerateNewSentenceClicked -> generateNewSentence()
 
             VoiceGameIntent.ListenClicked -> speakTextUseCase(_state.value.sentence)
+            VoiceGameIntent.ToggleTranslationClicked -> _state.update { it.copy(showTranslation = !it.showTranslation) }
             VoiceGameIntent.RecordClicked -> sendEffect(VoiceGameEffect.RequestMicPermission)
             VoiceGameIntent.MicPermissionGranted -> startRecording()
             VoiceGameIntent.MicPermissionDenied -> viewModelScope.launch {
@@ -182,7 +183,8 @@ class VoiceGameViewModel @Inject constructor(
                                 sentence = newSentence,
                                 phonetic = result.data.phonetic,
                                 translation = result.data.translation,
-                                isLoadingSentence = false
+                                isLoadingSentence = false,
+                                showTranslation = false
                             )
                         }
                     }
