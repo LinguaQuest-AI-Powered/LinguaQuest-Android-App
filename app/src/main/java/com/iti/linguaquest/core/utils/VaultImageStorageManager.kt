@@ -38,10 +38,10 @@ class VaultImageStorageManager @Inject constructor(
     }
 
     fun saveVaultImage(word: String, languageCode: String, sourceFile: File): File? {
-        if (word.isBlank() || languageCode.isBlank()) return null
+        if (word.isBlank()) return null
         return try {
             val sanitizedWord = word.trim().lowercase().replace(Regex("[^\\p{L}\\p{N}]"), "_")
-            val langCode = getStandardLanguageCode(languageCode)
+            val langCode = if (languageCode.isBlank()) "en" else getStandardLanguageCode(languageCode)
             val destFile = File(vaultImagesDir, "${sanitizedWord}_${langCode}.jpg")
             sourceFile.copyTo(destFile, overwrite = true)
             destFile
@@ -51,14 +51,16 @@ class VaultImageStorageManager @Inject constructor(
     }
 
     fun getVaultImageUri(word: String, languageCode: String): String? {
-        if (word.isBlank() || languageCode.isBlank()) return null
+        if (word.isBlank()) return null
         val sanitizedWord = word.trim().lowercase().replace(Regex("[^\\p{L}\\p{N}]"), "_")
-        val langCode = getStandardLanguageCode(languageCode)
+        val langCode = if (languageCode.isBlank()) "en" else getStandardLanguageCode(languageCode)
         val file = File(vaultImagesDir, "${sanitizedWord}_${langCode}.jpg")
-        return if (file.exists()) {
-            Uri.fromFile(file).toString()
-        } else {
-            null
+        if (file.exists()) {
+            return Uri.fromFile(file).toString()
         }
+        val fallbackFile = vaultImagesDir.listFiles()?.firstOrNull {
+            it.name.startsWith("${sanitizedWord}_") || it.name == "${sanitizedWord}.jpg"
+        }
+        return fallbackFile?.let { Uri.fromFile(it).toString() }
     }
 }

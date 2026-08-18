@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#e4e8d3" />
-    <corners android:radius="24dp" />
+    <solid android:color="@color/notification_card_bg" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/notification_card_border" />
+    <corners android:radius="20dp" />
 </shape>

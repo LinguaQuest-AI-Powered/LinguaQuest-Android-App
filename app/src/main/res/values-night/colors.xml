@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notification_card_bg">#181825</color>
+    <color name="notification_card_border">#313244</color>
+    <color name="notification_title_color">#F8FAFC</color>
+    <color name="notification_subtitle_color">#CBD5E1</color>
+    <color name="notification_accent_color">#2DD4BF</color>
+    <color name="notification_example_color">#E2E8F0</color>
+    <color name="notification_hint_color">#94A3B8</color>
+    <color name="notification_pill_bg">#F59E0B</color>
+    <color name="notification_pill_text_color">#0F172A</color>
+</resources>

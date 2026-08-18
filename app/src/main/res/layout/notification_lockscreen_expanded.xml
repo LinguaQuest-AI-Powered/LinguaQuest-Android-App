@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:textColor="#1d2016"
+            android:textColor="@color/notification_accent_color"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:text="العربية" />
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="@string/app_name"
-                android:textColor="#1d2016"
+                android:textColor="@color/notification_accent_color"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
             android:id="@+id/tvWord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/notification_title_color"
             android:textSize="26sp"
             android:textStyle="bold"
             tools:text="اجتهاد" />
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:textColor="#4a4c46"
+            android:textColor="@color/notification_subtitle_color"
             android:textSize="15sp"
             tools:text="بذل الجهد والطاقة في العمل أو الدراسة لتحقيق هدف ما" />
 
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:textColor="#1d2016"
+            android:textColor="@color/notification_example_color"
             android:textSize="14sp"
             android:textStyle="italic"
             tools:text="&quot;It was pure serendipity that we met.&quot;" />
@@ -106,7 +106,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="@string/lockscreen_notification_tap_to_open"
-            android:textColor="#4a4c46"
+            android:textColor="@color/notification_hint_color"
             android:textSize="13sp"
             android:drawableStart="@drawable/ic_hand_pointer"
             android:drawablePadding="6dp"
@@ -121,7 +121,7 @@
             android:background="@drawable/bg_notification_pill"
             android:paddingHorizontal="16dp"
             android:paddingVertical="6dp"
-            android:textColor="#ffffff"
+            android:textColor="@color/notification_pill_text_color"
             android:textSize="13sp"
             android:textStyle="bold"
             tools:text="متوسط" />
