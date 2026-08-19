@@ -44,6 +44,8 @@ class OTPViewModelTest {
     @Before
     fun setup() {
         every { observeNetworkStatusUseCase() } returns flowOf(true)
+        coEvery { sendRegistrationOtpUseCase(any()) } returns LinguaQuestResult.Success(Unit)
+        coEvery { sendPasswordResetOtpUseCase(any()) } returns LinguaQuestResult.Success(Unit)
 
         viewModel = OTPViewModel(
             verifyEmailOtpUseCase = verifyEmailOtpUseCase,

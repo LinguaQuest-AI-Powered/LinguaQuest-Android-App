@@ -93,6 +93,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakeUsername, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -116,6 +117,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakeUsername, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -139,6 +141,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakeEmail, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -162,6 +165,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakeEmail, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -185,6 +189,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakePassword, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -208,6 +213,7 @@ class SignUpViewModelTest {
         viewModel.effects.test {
             val effect = awaitItem()
             assertEquals(SignUpEffect.ShakeConfirmPassword, effect)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

@@ -32,11 +32,13 @@ class RefreshGalleryUseCaseTest {
         // Given
         val expectedSource = "Spanish"
         val expectedTarget = "English"
+        val expectedTargetCode = "en"
         
-        every { userPreferencesRepository.targetLanguageName } returns flowOf(expectedSource)
-        every { userPreferencesRepository.nativeLanguageName } returns flowOf(expectedTarget)
+        every { userPreferencesRepository.targetLanguageName } returns flowOf(expectedTarget)
+        every { userPreferencesRepository.nativeLanguageName } returns flowOf(expectedSource)
+        every { userPreferencesRepository.targetLanguageCode } returns flowOf(expectedTargetCode)
         coEvery { 
-            wordRepository.refreshGalleryWords(sourceLanguage = expectedSource, targetLanguage = expectedTarget) 
+            wordRepository.refreshGalleryWords(sourceLanguage = expectedSource, targetLanguage = expectedTarget, targetLanguageCode = expectedTargetCode) 
         } returns LinguaQuestResult.Success(Unit)
 
         // When
@@ -45,7 +47,7 @@ class RefreshGalleryUseCaseTest {
         // Then
         assertEquals(LinguaQuestResult.Success(Unit), result)
         coVerify(exactly = 1) { 
-            wordRepository.refreshGalleryWords(sourceLanguage = expectedSource, targetLanguage = expectedTarget)
+            wordRepository.refreshGalleryWords(sourceLanguage = expectedSource, targetLanguage = expectedTarget, targetLanguageCode = expectedTargetCode)
         }
     }
 
@@ -54,11 +56,13 @@ class RefreshGalleryUseCaseTest {
         // Given
         val defaultSource = "English"
         val defaultTarget = "Arabic"
+        val defaultTargetCode = "ar"
         
         every { userPreferencesRepository.targetLanguageName } returns flowOf("")
         every { userPreferencesRepository.nativeLanguageName } returns flowOf("  ")
+        every { userPreferencesRepository.targetLanguageCode } returns flowOf("  ")
         coEvery { 
-            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget) 
+            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget, targetLanguageCode = defaultTargetCode) 
         } returns LinguaQuestResult.Success(Unit)
 
         // When
@@ -67,7 +71,7 @@ class RefreshGalleryUseCaseTest {
         // Then
         assertEquals(LinguaQuestResult.Success(Unit), result)
         coVerify(exactly = 1) { 
-            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget)
+            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget, targetLanguageCode = defaultTargetCode)
         }
     }
 
@@ -76,13 +80,15 @@ class RefreshGalleryUseCaseTest {
         // Given
         val defaultSource = "English"
         val defaultTarget = "Arabic"
+        val defaultTargetCode = "ar"
         val expectedError = LinguaQuestDataError.Remote.NO_INTERNET
         
         every { userPreferencesRepository.targetLanguageName } returns flowOf("")
         every { userPreferencesRepository.nativeLanguageName } returns flowOf("")
+        every { userPreferencesRepository.targetLanguageCode } returns flowOf("")
         
         coEvery { 
-            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget) 
+            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget, targetLanguageCode = defaultTargetCode) 
         } returns LinguaQuestResult.Failure(expectedError)
 
         // When
@@ -91,7 +97,7 @@ class RefreshGalleryUseCaseTest {
         // Then
         assertEquals(LinguaQuestResult.Failure(expectedError), result)
         coVerify(exactly = 1) { 
-            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget)
+            wordRepository.refreshGalleryWords(sourceLanguage = defaultSource, targetLanguage = defaultTarget, targetLanguageCode = defaultTargetCode)
         }
     }
 }

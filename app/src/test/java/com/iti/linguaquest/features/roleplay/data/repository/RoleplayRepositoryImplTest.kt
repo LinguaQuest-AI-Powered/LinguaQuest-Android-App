@@ -1,8 +1,6 @@
 package com.iti.linguaquest.features.roleplay.data.repository
 
 import com.iti.linguaquest.core.cache.data.datasource.UserPreferencesLocalDataSource
-import com.iti.linguaquest.features.roleplay.data.audio.AudioPlayer
-import com.iti.linguaquest.features.roleplay.data.audio.AudioRecorder
 import com.iti.linguaquest.core.ai.roleplay.LiveRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.data.datasource.remote.GeminiRoleplayRemoteDataSource
 import com.iti.linguaquest.features.roleplay.domain.model.BossEvaluationResult
@@ -26,8 +24,6 @@ class RoleplayRepositoryImplTest {
 
     private lateinit var liveService: LiveRoleplayRemoteDataSource
     private lateinit var geminiService: GeminiRoleplayRemoteDataSource
-    private lateinit var audioRecorder: AudioRecorder
-    private lateinit var audioPlayer: AudioPlayer
     private lateinit var userPreferences: UserPreferencesLocalDataSource
 
     private lateinit var repository: RoleplayRepositoryImpl
@@ -45,13 +41,10 @@ class RoleplayRepositoryImplTest {
     fun setUp() {
         liveService = mockk(relaxed = true)
         geminiService = mockk()
-        audioRecorder = mockk(relaxed = true)
-        audioPlayer = mockk(relaxed = true)
         userPreferences = mockk()
 
         every { userPreferences.targetLanguageName } returns flowOf("French")
         every { userPreferences.nativeLanguageName } returns flowOf("English")
-        every { audioRecorder.startRecording() } returns emptyFlow()
         every { liveService.observeServerEvents() } returns emptyFlow()
 
         repository = RoleplayRepositoryImpl(
@@ -70,11 +63,10 @@ class RoleplayRepositoryImplTest {
         coVerify(exactly = 1) {
             liveService.connect(
                 match { it.contains("Pierre") && it.contains("French") },
-                "Puck"
+                "Puck",
+                "French"
             )
         }
-        verify(exactly = 1) { audioPlayer.start() }
-        verify(atLeast = 1) { audioRecorder.startRecording() }
         verify(atLeast = 1) { liveService.observeServerEvents() }
     }
 
@@ -148,7 +140,7 @@ class RoleplayRepositoryImplTest {
         repository.startMicrophone()
 
         // Then
-        verify(exactly = 1) { audioRecorder.resumeSending() }
+        verify(exactly = 1) { liveService.startMicrophone() }
     }
 
     @Test
@@ -157,7 +149,7 @@ class RoleplayRepositoryImplTest {
         repository.stopMicrophone()
 
         // Then
-        verify(exactly = 1) { audioRecorder.pauseSending() }
+        verify(exactly = 1) { liveService.stopMicrophone() }
     }
 
     @Test
@@ -166,9 +158,6 @@ class RoleplayRepositoryImplTest {
         repository.disconnect()
 
         // Then
-        verify(atLeast = 1) { audioRecorder.pauseSending() }
-        verify(exactly = 1) { audioRecorder.stopRecording() }
-        verify(exactly = 1) { audioPlayer.stop() }
         coVerify(exactly = 1) { liveService.close() }
     }
 }

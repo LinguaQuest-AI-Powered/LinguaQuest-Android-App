@@ -60,6 +60,7 @@ class LevelViewModelTest {
             getWalletUseCase,
             snackbarController,
             observeNetworkStatusUseCase,
+            mockk(relaxed = true),
             mockk(relaxed = true)
         )
     }

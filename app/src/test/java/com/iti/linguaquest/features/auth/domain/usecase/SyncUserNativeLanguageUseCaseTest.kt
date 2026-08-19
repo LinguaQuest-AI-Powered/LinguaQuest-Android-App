@@ -37,7 +37,7 @@ class SyncUserNativeLanguageUseCaseTest {
         useCase(nativeLanguage = languageOption)
 
         // Then
-        coVerify(exactly = 1) { userPreferencesRepository.saveNativeLanguage(1, "Arabic") }
+        coVerify(exactly = 1) { userPreferencesRepository.saveNativeLanguage(1, "Arabic", "ar") }
         coVerify(exactly = 1) { userPreferencesRepository.saveAppLanguage("ar") }
         coVerify(exactly = 1) { languageManager.changeLanguage("ar") }
     }
@@ -56,7 +56,7 @@ class SyncUserNativeLanguageUseCaseTest {
 
         // Then
         coVerify(exactly = 1) { getSupportedLanguagesUseCase() }
-        coVerify(exactly = 1) { userPreferencesRepository.saveNativeLanguage(2, "English") }
+        coVerify(exactly = 1) { userPreferencesRepository.saveNativeLanguage(2, "English", "en") }
         coVerify(exactly = 1) { userPreferencesRepository.saveAppLanguage("en") }
         coVerify(exactly = 1) { languageManager.changeLanguage("en") }
     }
@@ -68,7 +68,7 @@ class SyncUserNativeLanguageUseCaseTest {
 
         // Then
         coVerify(exactly = 0) { getSupportedLanguagesUseCase() }
-        coVerify(exactly = 0) { userPreferencesRepository.saveNativeLanguage(any(), any()) }
+        coVerify(exactly = 0) { userPreferencesRepository.saveNativeLanguage(any(), any(), any()) }
         coVerify(exactly = 0) { languageManager.changeLanguage(any()) }
     }
 }

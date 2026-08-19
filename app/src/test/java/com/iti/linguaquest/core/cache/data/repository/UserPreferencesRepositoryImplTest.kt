@@ -40,13 +40,15 @@ class UserPreferencesRepositoryImplTest {
         // Given
         val languageId = 1
         val name = "English"
+        val code = "en"
 
         // When
-        repository.saveTargetLanguage(languageId, name)
+        repository.saveTargetLanguage(languageId, name, code)
 
         // Then
         coVerify { localDataSource.saveTargetLanguage(languageId) }
         coVerify { localDataSource.saveTargetLanguageName(name) }
+        coVerify { localDataSource.saveTargetLanguageCode(code) }
     }
 
     @Test
@@ -54,13 +56,15 @@ class UserPreferencesRepositoryImplTest {
         // Given
         val languageId = 2
         val name = "Spanish"
+        val code = "es"
 
         // When
-        repository.saveNativeLanguage(languageId, name)
+        repository.saveNativeLanguage(languageId, name, code)
 
         // Then
         coVerify { localDataSource.saveNativeLanguage(languageId) }
         coVerify { localDataSource.saveNativeLanguageName(name) }
+        coVerify { localDataSource.saveNativeLanguageCode(code) }
     }
 
     @Test
