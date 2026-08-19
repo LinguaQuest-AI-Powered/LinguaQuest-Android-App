@@ -24,9 +24,9 @@ class VocabularyWorkSchedulerImpl @Inject constructor(
 
     override fun scheduleImmediateNotification() {
         scheduleAlarm(
-            delayMillis = 30000L,
+            delayMillis = 1000L,
             requestCode = IMMEDIATE_ALARM_REQUEST_CODE,
-            forceShow = false
+            forceShow = true
         )
     }
 

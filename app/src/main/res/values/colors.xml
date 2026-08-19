@@ -13,4 +13,14 @@
     <color name="notification_accent">#FF6C63FF</color>
     <color name="notification_background">#FFFFFFFF</color>
     <color name="splash_background">#FF04737D</color>
+
+    <color name="notification_card_bg">#FAF9F5</color>
+    <color name="notification_card_border">#E2E8F0</color>
+    <color name="notification_title_color">#0F172A</color>
+    <color name="notification_subtitle_color">#475569</color>
+    <color name="notification_accent_color">#0D9488</color>
+    <color name="notification_example_color">#334155</color>
+    <color name="notification_hint_color">#64748B</color>
+    <color name="notification_pill_bg">#D97706</color>
+    <color name="notification_pill_text_color">#FFFFFF</color>
 </resources>
