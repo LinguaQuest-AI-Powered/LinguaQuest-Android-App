@@ -10,7 +10,27 @@
 
 **LinguaQuest** is a cutting-edge, AI-powered interactive language learning Android application. Designed around immersive gamification, real-world object recognition, bidirectional voice roleplay, and pedagogical assessment, LinguaQuest transforms language acquisition into an interactive adventure.
 
+
+<div align="center">
+  <img src="docs/screenshots/title.png" width="100%" alt="LinguaQuest Hero Banner" />
+</div>
+
+<div align="center" style="margin-top: 15px;">
+  <img src="docs/screenshots/101shots_so.png" width="49%" alt="Camera Word Capture & AI Validation" />
+  <img src="docs/screenshots/102shots_so.png" width="49%" alt="Voice Game & Pronunciation" />
+</div>
+
+<div align="center" style="margin-top: 10px;">
+  <img src="docs/screenshots/103shots_so.png" width="49%" alt="Mind Reader AI" />
+  <img src="docs/screenshots/104shots_so.png" width="49%" alt="World Progression Map" />
+</div>
+
+<div align="center" style="margin-top: 10px;">
+  <img src="docs/screenshots/105shots_so.png" width="49%" alt="Global Leaderboard & Badges" />
+</div>
+
 ---
+
 
 ## 🌟 Primary Feature: Real-World Word Capture Game
 
@@ -211,13 +231,6 @@ LinguaQuest features automated Continuous Integration via GitHub Actions:
 | **Amr Abdulrahim** |
 | **Mohamed Ali** |
 | **Sherry Ahmos** |
-
----
-
-## 📱 Screenshots
-
-
-
 
 ---
 
